@@ -77,7 +77,7 @@ class DevelopmentAdmin extends Controller
      */
     private static $deny_non_cli = false;
 
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -142,7 +142,7 @@ class DevelopmentAdmin extends Controller
         }
     }
 
-    public function runRegisteredController(HTTPRequest $request)
+    public function runRegisteredController(HTTPRequest $request): SilverStripe\Dev\DevBuildController
     {
         $controllerClass = null;
 

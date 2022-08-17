@@ -16,7 +16,7 @@ class SessionStore extends AbstractRequestAwareStore implements StateStore
      * @param array $state
      * @return array
      */
-    public function save($id, array $state)
+    public function save(string $id, array $state): array
     {
         $this->getRequest()->getSession()->set($id, $state);
 
@@ -30,7 +30,7 @@ class SessionStore extends AbstractRequestAwareStore implements StateStore
      * @param string $id
      * @return array
      */
-    public function load($id)
+    public function load(string $id): array
     {
         return (array) $this->getRequest()->getSession()->get($id);
     }

@@ -72,7 +72,7 @@ class Module implements Serializable
      * @param string $path Absolute filesystem path to this module
      * @param string $basePath base path for the application this module is installed in
      */
-    public function __construct($path, $basePath)
+    public function __construct(string $path, string $basePath): void
     {
         $this->path = Path::normalise($path);
         $this->basePath = Path::normalise($basePath);
@@ -87,7 +87,7 @@ class Module implements Serializable
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->getComposerName() ?: $this->getShortName();
     }
@@ -97,7 +97,7 @@ class Module implements Serializable
      *
      * @return string|null
      */
-    public function getComposerName()
+    public function getComposerName(): null|string
     {
         if (isset($this->composerData['name'])) {
             return $this->composerData['name'];
@@ -126,7 +126,7 @@ class Module implements Serializable
      *
      * @return string
      */
-    public function getShortName()
+    public function getShortName(): string
     {
         // If installed in the root directory we need to infer from composer
         if ($this->path === $this->basePath && $this->composerData) {
@@ -154,7 +154,7 @@ class Module implements Serializable
      * Only applicable when reading the composer file for the main project.
      * @return string
      */
-    public function getResourcesDir()
+    public function getResourcesDir(): string
     {
         return isset($this->composerData['extra']['resources-dir'])
             ? $this->composerData['extra']['resources-dir']
@@ -166,7 +166,7 @@ class Module implements Serializable
      *
      * @return string Path with no trailing slash E.g. /var/www/module
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -177,7 +177,7 @@ class Module implements Serializable
      *
      * @return string Path with trimmed slashes. E.g. vendor/silverstripe/module.
      */
-    public function getRelativePath()
+    public function getRelativePath(): string
     {
         if ($this->path === $this->basePath) {
             return '';
@@ -230,7 +230,7 @@ class Module implements Serializable
     /**
      * Activate _config.php for this module, if one exists
      */
-    public function activate()
+    public function activate(): void
     {
         $config = "{$this->path}/_config.php";
         if (file_exists($config ?? '')) {
@@ -241,7 +241,7 @@ class Module implements Serializable
     /**
      * @throws Exception
      */
-    protected function loadComposer()
+    protected function loadComposer(): void
     {
         // Load composer data
         $path = "{$this->path}/composer.json";
@@ -262,7 +262,7 @@ class Module implements Serializable
      * @param string $path
      * @return ModuleResource
      */
-    public function getResource($path)
+    public function getResource(string $path): SilverStripe\Core\Manifest\ModuleResource
     {
         $path = Path::normalise($path, true);
         if (empty($path)) {
@@ -403,7 +403,7 @@ class Module implements Serializable
      * @param string[] $modules
      * @return false|string
      */
-    private function requireDevConstraint(array $modules)
+    private function requireDevConstraint(array $modules): string|bool
     {
         if (empty($this->composerData['require-dev']) || !is_array($this->composerData['require-dev'])) {
             return false;

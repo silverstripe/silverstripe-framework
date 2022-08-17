@@ -12,7 +12,7 @@ use SilverStripe\Security\Member;
 class CMSMemberAuthenticator extends MemberAuthenticator
 {
 
-    public function supportedServices()
+    public function supportedServices(): int
     {
         return BaseAuthenticator::CMS_LOGIN;
     }
@@ -24,7 +24,7 @@ class CMSMemberAuthenticator extends MemberAuthenticator
      * @param Member|null $member
      * @return Member
      */
-    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
+    protected function authenticateMember(array $data, ValidationResult &$result = null, Member $member = null): SilverStripe\Security\Member
     {
         // Attempt to identify by temporary ID
         if (!empty($data['tempid'])) {
@@ -42,7 +42,7 @@ class CMSMemberAuthenticator extends MemberAuthenticator
      * @param string $link
      * @return CMSLoginHandler
      */
-    public function getLoginHandler($link)
+    public function getLoginHandler(string $link): SilverStripe\Security\MemberAuthenticator\CMSLoginHandler
     {
         return CMSLoginHandler::create($link, $this);
     }

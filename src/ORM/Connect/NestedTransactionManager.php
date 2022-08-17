@@ -34,7 +34,7 @@ class NestedTransactionManager implements TransactionManager
      * Create a NestedTransactionManager
      * @param TransactionManager $child The transaction manager that will handle the topmost transaction
      */
-    public function __construct(TransactionManager $child)
+    public function __construct(TransactionManager $child): void
     {
         $this->child = $child;
     }
@@ -44,7 +44,7 @@ class NestedTransactionManager implements TransactionManager
      * @throws DatabaseException on failure
      * @return bool True on success
      */
-    public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
+    public function transactionStart(bool|string $transactionMode = false, bool $sessionCharacteristics = false): void
     {
         if ($this->transactionNesting <= 0) {
             $this->transactionNesting = 1;
@@ -57,7 +57,7 @@ class NestedTransactionManager implements TransactionManager
         }
     }
 
-    public function transactionEnd($chain = false)
+    public function transactionEnd($chain = false): void
     {
         if ($this->mustRollback) {
             throw new DatabaseException("Child transaction was rolled back, so parent can't be committed");
@@ -78,7 +78,7 @@ class NestedTransactionManager implements TransactionManager
         }
     }
 
-    public function transactionRollback($savepoint = null)
+    public function transactionRollback(bool $savepoint = null): void
     {
         if ($this->transactionNesting < 1) {
             throw new DatabaseException("Not within a transaction, so can't roll back");
@@ -110,7 +110,7 @@ class NestedTransactionManager implements TransactionManager
      *
      * @return int
      */
-    public function transactionDepth()
+    public function transactionDepth(): int
     {
         return $this->transactionNesting;
     }
@@ -120,7 +120,7 @@ class NestedTransactionManager implements TransactionManager
         return $this->child->transactionSavepoint($savepoint);
     }
 
-    public function supportsSavepoints()
+    public function supportsSavepoints(): bool
     {
         return $this->child->supportsSavepoints();
     }

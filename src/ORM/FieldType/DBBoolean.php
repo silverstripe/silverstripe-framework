@@ -11,14 +11,14 @@ use SilverStripe\ORM\DB;
  */
 class DBBoolean extends DBField
 {
-    public function __construct($name = null, $defaultVal = 0)
+    public function __construct(string|int $name = null, int|bool $defaultVal = 0): void
     {
         $this->defaultVal = ($defaultVal) ? 1 : 0;
 
         parent::__construct($name);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'tinyint',
@@ -42,7 +42,7 @@ class DBBoolean extends DBField
         return ($this->value) ? 'true' : 'false';
     }
 
-    public function saveInto($dataObject)
+    public function saveInto(DNADesign\Elemental\Models\ElementContent $dataObject): void
     {
         $fieldName = $this->name;
         if ($fieldName) {
@@ -53,12 +53,12 @@ class DBBoolean extends DBField
         }
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\CheckboxField
     {
         return CheckboxField::create($this->name, $title);
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): SilverStripe\Forms\DropdownField
     {
         $anyText = _t(__CLASS__ . '.ANY', 'Any');
         $source = [
@@ -71,12 +71,12 @@ class DBBoolean extends DBField
             ->setEmptyString($anyText);
     }
 
-    public function nullValue()
+    public function nullValue(): int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(bool|int|string|float|array $value): int
     {
         if (is_bool($value)) {
             return $value ? 1 : 0;

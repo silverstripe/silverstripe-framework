@@ -23,22 +23,22 @@ class GlobalsTestState implements TestState
      */
     protected $vars = [];
 
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         $this->vars = Environment::getVariables();
     }
 
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
         Environment::setVariables($this->vars);
     }
 
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         $this->staticVars = Environment::getVariables();
     }
 
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
         Environment::setVariables($this->staticVars);
     }

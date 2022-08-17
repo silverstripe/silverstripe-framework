@@ -8,7 +8,7 @@ namespace SilverStripe\Forms\GridField;
 class GridState_Component extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
 
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [
             'before' => $gridField->getState(false)->Field()

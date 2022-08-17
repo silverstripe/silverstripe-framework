@@ -265,13 +265,13 @@ class Member extends DataObject
     /**
      * Ensure the locale is set to something sensible by default.
      */
-    public function populateDefaults()
+    public function populateDefaults(): void
     {
         parent::populateDefaults();
         $this->Locale = i18n::config()->get('default_locale');
     }
 
-    public function requireDefaultRecords()
+    public function requireDefaultRecords(): void
     {
         parent::requireDefaultRecords();
         // Default groups should've been built by Group->requireDefaultRecords() already
@@ -299,7 +299,7 @@ class Member extends DataObject
      * @param  string $password
      * @return ValidationResult
      */
-    public function checkPassword($password)
+    public function checkPassword(string $password): SilverStripe\ORM\ValidationResult
     {
         Deprecation::notice('5.0', 'Use Authenticator::checkPassword() instead');
 
@@ -330,7 +330,7 @@ class Member extends DataObject
      *
      * @return bool
      */
-    public function canLogin()
+    public function canLogin(): bool
     {
         return $this->validateCanLogin()->isValid();
     }
@@ -344,7 +344,7 @@ class Member extends DataObject
      * @param ValidationResult $result Optional result to add errors to
      * @return ValidationResult
      */
-    public function validateCanLogin(ValidationResult &$result = null)
+    public function validateCanLogin(ValidationResult &$result = null): SilverStripe\ORM\ValidationResult
     {
         $result = $result ?: ValidationResult::create();
         if ($this->isLockedOut()) {
@@ -369,7 +369,7 @@ class Member extends DataObject
      * @skipUpgrade
      * @return bool
      */
-    public function isLockedOut()
+    public function isLockedOut(): bool
     {
         /** @var DBDatetime $lockedOutUntilObj */
         $lockedOutUntilObj = $this->dbObject('LockedOutUntil');
@@ -414,7 +414,7 @@ class Member extends DataObject
      *
      * @param PasswordValidator $validator
      */
-    public static function set_password_validator(PasswordValidator $validator = null)
+    public static function set_password_validator(PasswordValidator $validator = null): void
     {
         // Override existing config
         Config::modify()->remove(Injector::class, PasswordValidator::class);
@@ -430,7 +430,7 @@ class Member extends DataObject
      *
      * @return PasswordValidator
      */
-    public static function password_validator()
+    public static function password_validator(): SilverStripe\Security\PasswordValidator
     {
         if (Injector::inst()->has(PasswordValidator::class)) {
             return Injector::inst()->get(PasswordValidator::class);
@@ -438,7 +438,7 @@ class Member extends DataObject
         return null;
     }
 
-    public function isPasswordExpired()
+    public function isPasswordExpired(): bool
     {
         if (!$this->PasswordExpiry) {
             return false;
@@ -451,7 +451,7 @@ class Member extends DataObject
      * @deprecated 5.0.0 Use Security::setCurrentUser() or IdentityStore::logIn()
      *
      */
-    public function logIn()
+    public function logIn(): void
     {
         Deprecation::notice(
             '5.0.0',
@@ -463,7 +463,7 @@ class Member extends DataObject
     /**
      * Called before a member is logged in via session/cookie/etc
      */
-    public function beforeMemberLoggedIn()
+    public function beforeMemberLoggedIn(): void
     {
         // @todo Move to middleware on the AuthenticationMiddleware IdentityStore
         $this->extend('beforeMemberLoggedIn');
@@ -472,7 +472,7 @@ class Member extends DataObject
     /**
      * Called after a member is logged in via session/cookie/etc
      */
-    public function afterMemberLoggedIn()
+    public function afterMemberLoggedIn(): void
     {
         // Clear the incorrect log-in count
         $this->registerSuccessfulLogin();
@@ -493,7 +493,7 @@ class Member extends DataObject
      * This should be performed any time the user presents their normal identification (normally Email)
      * and is successfully authenticated.
      */
-    public function regenerateTempID()
+    public function regenerateTempID(): void
     {
         $generator = new RandomGenerator();
         $lifetime = self::config()->get('temp_id_lifetime');
@@ -547,7 +547,7 @@ class Member extends DataObject
      *
      * @param HTTPRequest|null $request
      */
-    public function beforeMemberLoggedOut(HTTPRequest $request = null)
+    public function beforeMemberLoggedOut(HTTPRequest $request = null): void
     {
         $this->extend('beforeMemberLoggedOut', $request);
     }
@@ -557,7 +557,7 @@ class Member extends DataObject
      *
      * @param HTTPRequest|null $request
      */
-    public function afterMemberLoggedOut(HTTPRequest $request = null)
+    public function afterMemberLoggedOut(HTTPRequest $request = null): void
     {
         $this->extend('afterMemberLoggedOut', $request);
     }
@@ -569,7 +569,7 @@ class Member extends DataObject
      * @return string
      * @throws PasswordEncryptor_NotFoundException
      */
-    public function encryptWithUserSettings($string)
+    public function encryptWithUserSettings(string $string): string
     {
         if (!$string) {
             return null;
@@ -595,7 +595,7 @@ class Member extends DataObject
      *                           the Member.auto_login_token_lifetime config value
      * @return string Token that should be passed to the client (but NOT persisted).
      */
-    public function generateAutologinTokenAndStoreHash($lifetime = null)
+    public function generateAutologinTokenAndStoreHash($lifetime = null): string
     {
         if ($lifetime !== null) {
             Deprecation::notice(
@@ -632,7 +632,7 @@ class Member extends DataObject
      *
      * @returns bool Is token valid?
      */
-    public function validateAutoLoginToken($autologinToken)
+    public function validateAutoLoginToken(string $autologinToken): bool
     {
         $hash = $this->encryptWithUserSettings($autologinToken);
         $member = self::member_from_autologinhash($hash, false);
@@ -649,7 +649,7 @@ class Member extends DataObject
      * @return Member the matching member, if valid
      * @return Member
      */
-    public static function member_from_autologinhash($hash, $login = false)
+    public static function member_from_autologinhash(string $hash, bool $login = false): null|SilverStripe\Security\Member
     {
         /** @var Member $member */
         $member = static::get()->filter([
@@ -670,7 +670,7 @@ class Member extends DataObject
      * @param string $tempid
      * @return Member
      */
-    public static function member_from_tempid($tempid)
+    public static function member_from_tempid(string $tempid): SilverStripe\Security\Member|null
     {
         $members = static::get()
             ->filter('TempIDHash', $tempid);
@@ -719,7 +719,7 @@ class Member extends DataObject
      *
      * @return ConfirmedPasswordField
      */
-    public function getMemberPasswordField()
+    public function getMemberPasswordField(): SilverStripe\Forms\ConfirmedPasswordField
     {
         $editingPassword = $this->isInDB();
         $label = $editingPassword
@@ -756,7 +756,7 @@ class Member extends DataObject
      *
      * @return Member_Validator
      */
-    public function getValidator()
+    public function getValidator(): SilverStripe\Security\Member_Validator
     {
         $validator = Member_Validator::create();
         $validator->setForMember($this);
@@ -773,7 +773,7 @@ class Member extends DataObject
      *
      * @return Member
      */
-    public static function currentUser()
+    public static function currentUser(): SilverStripe\Security\Member|null
     {
         Deprecation::notice(
             '5.0.0',
@@ -799,7 +799,7 @@ class Member extends DataObject
      * @param callable $callback
      * @return mixed Result of $callback
      */
-    public static function actAs($member, $callback)
+    public static function actAs(SilverStripe\Security\Member $member, callable $callback): string|bool|null|SilverStripe\Control\HTTPResponse
     {
         $previousUser = Security::getCurrentUser();
 
@@ -823,7 +823,7 @@ class Member extends DataObject
      *
      * @return int Returns the ID of the current logged in user or 0.
      */
-    public static function currentUserID()
+    public static function currentUserID(): int
     {
         Deprecation::notice(
             '5.0.0',
@@ -869,7 +869,7 @@ class Member extends DataObject
     /**
      * Event handler called before writing to the database.
      */
-    public function onBeforeWrite()
+    public function onBeforeWrite(): void
     {
         // Remove any line-break or space characters accidentally added during a copy-paste operation
         if ($this->Email) {
@@ -947,7 +947,7 @@ class Member extends DataObject
         parent::onBeforeWrite();
     }
 
-    public function onAfterWrite()
+    public function onAfterWrite(): void
     {
         parent::onAfterWrite();
 
@@ -958,7 +958,7 @@ class Member extends DataObject
         }
     }
 
-    public function onAfterDelete()
+    public function onAfterDelete(): void
     {
         parent::onAfterDelete();
 
@@ -972,7 +972,7 @@ class Member extends DataObject
      *
      * @return $this
      */
-    protected function deletePasswordLogs()
+    protected function deletePasswordLogs(): SilverStripe\Security\Member
     {
         foreach ($this->LoggedPasswords() as $password) {
             $password->delete();
@@ -989,7 +989,7 @@ class Member extends DataObject
      * @param array $ids Database IDs of Group records
      * @return bool True if the change can be accepted
      */
-    public function onChangeGroups($ids)
+    public function onChangeGroups(array $ids): bool
     {
         // Ensure none of these match disallowed list
         $disallowedGroupIDs = $this->disallowedGroups();
@@ -1001,7 +1001,7 @@ class Member extends DataObject
      *
      * @return int[] List of group IDs
      */
-    protected function disallowedGroups()
+    protected function disallowedGroups(): array
     {
         // unless the current user is an admin already OR the logged in user is an admin
         if (Permission::check('ADMIN') || Permission::checkMember($this, 'ADMIN')) {
@@ -1020,7 +1020,7 @@ class Member extends DataObject
      * @param boolean $strict Only determine direct group membership if set to true (Default: false)
      * @return bool Returns TRUE if the member is in one of the given groups, otherwise FALSE.
      */
-    public function inGroups($groups, $strict = false)
+    public function inGroups(SilverStripe\Auditor\AuditHookManyManyList|array $groups, bool $strict = false): bool
     {
         if ($groups) {
             foreach ($groups as $group) {
@@ -1041,7 +1041,7 @@ class Member extends DataObject
      * @param boolean $strict Only determine direct group membership if set to TRUE (Default: FALSE)
      * @return bool Returns TRUE if the member is in the given group, otherwise FALSE.
      */
-    public function inGroup($group, $strict = false)
+    public function inGroup(SilverStripe\Security\Group|string $group, bool $strict = false): bool
     {
         if (is_numeric($group)) {
             $groupCheckObj = DataObject::get_by_id(Group::class, $group);
@@ -1078,7 +1078,7 @@ class Member extends DataObject
      * @param string $groupcode
      * @param string $title Title of the group
      */
-    public function addToGroupByCode($groupcode, $title = "")
+    public function addToGroupByCode(string $groupcode, string $title = ""): void
     {
         $group = DataObject::get_one(Group::class, [
             '"Group"."Code"' => $groupcode
@@ -1105,7 +1105,7 @@ class Member extends DataObject
      *
      * @param string $groupcode
      */
-    public function removeFromGroupByCode($groupcode)
+    public function removeFromGroupByCode(string $groupcode): void
     {
         $group = Group::get()->filter(['Code' => $groupcode])->first();
 
@@ -1140,7 +1140,7 @@ class Member extends DataObject
      *
      * @return string
      */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->Surname;
     }
@@ -1155,7 +1155,7 @@ class Member extends DataObject
      * @return string Returns the first- and surname of the member. If the ID
      *  of the member is equal 0, only the surname is returned.
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         $format = static::config()->get('title_format');
         if ($format) {
@@ -1215,7 +1215,7 @@ class Member extends DataObject
      *
      * @return string Returns the first- and surname of the member.
      */
-    public function getName()
+    public function getName(): string|null
     {
         return ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
     }
@@ -1229,7 +1229,7 @@ class Member extends DataObject
      *
      * @param string $name The name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $nameParts = explode(' ', $name ?? '');
         $this->Surname = array_pop($nameParts);
@@ -1254,7 +1254,7 @@ class Member extends DataObject
      *
      * @return string ISO date format
      */
-    public function getDateFormat()
+    public function getDateFormat(): string
     {
         $formatter = new IntlDateFormatter(
             $this->getLocale(),
@@ -1271,7 +1271,7 @@ class Member extends DataObject
     /**
      * Get user locale, falling back to the configured default locale
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         $locale = $this->getField('Locale');
         if ($locale) {
@@ -1287,7 +1287,7 @@ class Member extends DataObject
      *
      * @return string ISO date format
      */
-    public function getTimeFormat()
+    public function getTimeFormat(): string
     {
         $formatter = new IntlDateFormatter(
             $this->getLocale(),
@@ -1312,7 +1312,7 @@ class Member extends DataObject
      * @todo Push all this logic into Member_GroupSet's getIterator()?
      * @return Member_Groupset
      */
-    public function Groups()
+    public function Groups(): SilverStripe\Auditor\AuditHookMemberGroupSet
     {
         $groups = Member_GroupSet::create(Group::class, 'Group_Members', 'GroupID', 'MemberID');
         $groups = $groups->forForeignID($this->ID);
@@ -1325,7 +1325,7 @@ class Member extends DataObject
     /**
      * @return ManyManyList|UnsavedRelationList
      */
-    public function DirectGroups()
+    public function DirectGroups(): SilverStripe\ORM\UnsavedRelationList
     {
         return $this->getManyManyComponents('Groups');
     }
@@ -1338,7 +1338,7 @@ class Member extends DataObject
      * @param mixed $groups - takes a SS_List, an array or a single Group.ID
      * @return Map Returns an Map that returns all Member data.
      */
-    public static function map_in_groups($groups = null)
+    public static function map_in_groups(int $groups = null): SilverStripe\ORM\Map
     {
         $groupIDList = [];
 
@@ -1475,7 +1475,7 @@ class Member extends DataObject
      * @return FieldList Return a FieldList of fields that would appropriate for
      *                   editing this member.
      */
-    public function getCMSFields()
+    public function getCMSFields(): SilverStripe\Forms\FieldList
     {
         $this->beforeUpdateCMSFields(function (FieldList $fields) {
             /** @var TabSet $rootTabSet */
@@ -1562,7 +1562,7 @@ class Member extends DataObject
      * @param bool $includerelations Indicate if the labels returned include relation fields
      * @return array
      */
-    public function fieldLabels($includerelations = true)
+    public function fieldLabels(bool $includerelations = true): array
     {
         $labels = parent::fieldLabels($includerelations);
 
@@ -1597,7 +1597,7 @@ class Member extends DataObject
      * @param Member $member
      * @return bool
      */
-    public function canView($member = null)
+    public function canView($member = null): bool
     {
         //get member
         if (!$member) {
@@ -1629,7 +1629,7 @@ class Member extends DataObject
      * @param Member $member
      * @return bool
      */
-    public function canEdit($member = null)
+    public function canEdit(SilverStripe\Security\Member $member = null): bool
     {
         //get member
         if (!$member) {
@@ -1666,7 +1666,7 @@ class Member extends DataObject
      * @param Member $member
      * @return bool
      */
-    public function canDelete($member = null)
+    public function canDelete(SilverStripe\Security\Member $member = null): bool
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -1703,7 +1703,7 @@ class Member extends DataObject
     /**
      * Validate this member object.
      */
-    public function validate()
+    public function validate(): SilverStripe\ORM\ValidationResult
     {
         // If validation is disabled, skip this step
         if (!DataObject::config()->uninherited('validation_enabled')) {
@@ -1734,7 +1734,7 @@ class Member extends DataObject
      * @param bool $write Whether to write the member afterwards
      * @return ValidationResult
      */
-    public function changePassword($password, $write = true)
+    public function changePassword(string $password, bool $write = true): SilverStripe\ORM\ValidationResult
     {
         $this->Password = $password;
         $result = $this->validate();
@@ -1759,7 +1759,7 @@ class Member extends DataObject
      *
      * @return $this
      */
-    protected function encryptPassword()
+    protected function encryptPassword(): SilverStripe\Security\Member
     {
         // reset salt so that it gets regenerated - this will invalidate any persistent login cookies
         // or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
@@ -1795,7 +1795,7 @@ class Member extends DataObject
      * Tell this member that someone made a failed attempt at logging in as them.
      * This can be used to lock the user out temporarily if too many failed attempts are made.
      */
-    public function registerFailedLogin()
+    public function registerFailedLogin(): void
     {
         $lockOutAfterCount = self::config()->get('lock_out_after_incorrect_logins');
         if ($lockOutAfterCount) {
@@ -1815,7 +1815,7 @@ class Member extends DataObject
     /**
      * Tell this member that a successful login has been made
      */
-    public function registerSuccessfulLogin()
+    public function registerSuccessfulLogin(): void
     {
         if (self::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
@@ -1832,7 +1832,7 @@ class Member extends DataObject
      *
      * @return string
      */
-    public function getHtmlEditorConfigForCMS()
+    public function getHtmlEditorConfigForCMS(): string
     {
         $currentName = '';
         $currentPriority = 0;

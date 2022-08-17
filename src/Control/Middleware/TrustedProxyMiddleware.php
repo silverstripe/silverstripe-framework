@@ -53,7 +53,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      *
      * @return string
      */
-    public function getTrustedProxyIPs()
+    public function getTrustedProxyIPs(): string
     {
         return $this->trustedProxyIPs;
     }
@@ -65,7 +65,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * @param string $trustedProxyIPs
      * @return $this
      */
-    public function setTrustedProxyIPs($trustedProxyIPs)
+    public function setTrustedProxyIPs(string $trustedProxyIPs): SilverStripe\Control\Middleware\TrustedProxyMiddleware
     {
         $this->trustedProxyIPs = $trustedProxyIPs;
         return $this;
@@ -76,7 +76,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      *
      * @return array
      */
-    public function getProxyHostHeaders()
+    public function getProxyHostHeaders(): array
     {
         return $this->proxyHostHeaders;
     }
@@ -120,7 +120,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      *
      * @return array
      */
-    public function getProxySchemeHeaders()
+    public function getProxySchemeHeaders(): array
     {
         return $this->proxySchemeHeaders;
     }
@@ -138,7 +138,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
         return $this;
     }
 
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         // If this is a trust proxy
         if ($this->isTrustedProxy($request)) {
@@ -182,7 +182,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request
      * @return bool True if the request's source IP is a trusted proxy
      */
-    protected function isTrustedProxy(HTTPRequest $request)
+    protected function isTrustedProxy(HTTPRequest $request): bool
     {
         $trustedIPs = $this->getTrustedProxyIPs();
 
@@ -212,7 +212,7 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * @param string $headerValue The value from a trusted header
      * @return string The IP address
      */
-    protected function getIPFromHeaderValue($headerValue)
+    protected function getIPFromHeaderValue(string $headerValue): string
     {
         // Sometimes the IP from a load balancer could be "x.x.x.x, y.y.y.y, z.z.z.z"
         // so we need to find the most likely candidate

@@ -12,7 +12,7 @@ class EmailField extends TextField
     /**
      * {@inheritdoc}
      */
-    public function Type()
+    public function Type(): string
     {
         return 'email text';
     }
@@ -27,7 +27,7 @@ class EmailField extends TextField
      *
      * @return string
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         $this->value = trim($this->value ?? '');
 

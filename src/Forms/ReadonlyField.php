@@ -32,7 +32,7 @@ class ReadonlyField extends FormField
      * @param boolean $includeHiddenField
      * @return $this
      */
-    public function setIncludeHiddenField($includeHiddenField)
+    public function setIncludeHiddenField(bool $includeHiddenField): SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly
     {
         $this->includeHiddenField = $includeHiddenField;
         return $this;
@@ -41,22 +41,22 @@ class ReadonlyField extends FormField
     /**
      * @return bool
      */
-    public function getIncludeHiddenField()
+    public function getIncludeHiddenField(): bool
     {
         return $this->includeHiddenField;
     }
 
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\ReadonlyField
     {
         return clone $this;
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'readonly';
     }
 
-    public function castingHelper($field)
+    public function castingHelper(string $field): string
     {
         // Get dynamic cast for 'Value' field
         if (strcasecmp($field ?? '', 'Value') === 0) {
@@ -67,7 +67,7 @@ class ReadonlyField extends FormField
         return parent::castingHelper($field);
     }
 
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $state = parent::getSchemaStateDefaults();
         $state['value'] = $this->dataValue();
@@ -79,7 +79,7 @@ class ReadonlyField extends FormField
     /**
      * @return mixed|string
      */
-    public function Value()
+    public function Value(): string
     {
         // Get raw value
         $value = $this->dataValue();
@@ -97,7 +97,7 @@ class ReadonlyField extends FormField
      *
      * @return string
      */
-    public function getValueCast()
+    public function getValueCast(): string
     {
         // Casting class for 'none' text
         $value = $this->dataValue();

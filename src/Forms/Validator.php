@@ -18,7 +18,7 @@ abstract class Validator
     use Configurable;
     use Extensible;
 
-    public function __construct()
+    public function __construct(): void
     {
         $this->resetResult();
     }
@@ -42,7 +42,7 @@ abstract class Validator
      * @param Form $form
      * @return $this
      */
-    public function setForm($form)
+    public function setForm(SilverStripe\CMS\Search\SearchForm $form): SilverStripe\Forms\RequiredFields
     {
         $this->form = $form;
         return $this;
@@ -53,7 +53,7 @@ abstract class Validator
      *
      * @return ValidationResult
      */
-    public function validate()
+    public function validate(): SilverStripe\ORM\ValidationResult
     {
         $this->resetResult();
         if ($this->getEnabled()) {
@@ -78,11 +78,11 @@ abstract class Validator
      * @return $this
      */
     public function validationError(
-        $fieldName,
+        string $fieldName,
         $message,
         $messageType = ValidationResult::TYPE_ERROR,
         $cast = ValidationResult::CAST_TEXT
-    ) {
+    ): SilverStripe\Security\Member_Validator {
         $this->result->addFieldError($fieldName, $message, $messageType, null, $cast);
         return $this;
     }
@@ -102,7 +102,7 @@ abstract class Validator
      *
      * @return null|array
      */
-    public function getErrors()
+    public function getErrors(): array
     {
         if ($this->result) {
             return $this->result->getMessages();
@@ -115,7 +115,7 @@ abstract class Validator
      *
      * @return ValidationResult
      */
-    public function getResult()
+    public function getResult(): SilverStripe\ORM\ValidationResult
     {
         return $this->result;
     }
@@ -128,7 +128,7 @@ abstract class Validator
      *
      * @return bool
      */
-    public function fieldIsRequired($fieldName)
+    public function fieldIsRequired(string $fieldName): bool
     {
         return false;
     }
@@ -144,7 +144,7 @@ abstract class Validator
      * @param bool $enabled
      * @return $this
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled): SilverStripe\Forms\RequiredFields
     {
         $this->enabled = (bool)$enabled;
         return $this;
@@ -153,7 +153,7 @@ abstract class Validator
     /**
      * @return bool
      */
-    public function getEnabled()
+    public function getEnabled(): bool
     {
         return $this->enabled;
     }
@@ -161,7 +161,7 @@ abstract class Validator
     /**
      * @return $this
      */
-    public function removeValidation()
+    public function removeValidation(): SilverStripe\Forms\RequiredFields
     {
         $this->setEnabled(false);
         $this->resetResult();
@@ -185,7 +185,7 @@ abstract class Validator
      *
      * @return $this
      */
-    protected function resetResult()
+    protected function resetResult(): SilverStripe\Forms\RequiredFields
     {
         $this->result = ValidationResult::create();
         return $this;

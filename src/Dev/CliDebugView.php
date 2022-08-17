@@ -21,7 +21,7 @@ class CliDebugView extends DebugView
      * @param HTTPRequest $httpRequest
      * @return string
      */
-    public function renderHeader($httpRequest = null)
+    public function renderHeader($httpRequest = null): null
     {
         return null;
     }
@@ -29,7 +29,7 @@ class CliDebugView extends DebugView
     /**
      * Render HTML footer for development views
      */
-    public function renderFooter()
+    public function renderFooter(): void
     {
     }
 
@@ -43,7 +43,7 @@ class CliDebugView extends DebugView
      * @param int $errline
      * @return string
      */
-    public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
+    public function renderError(string $httpRequest, int $errno, string $errstr, string $errfile, int $errline): string
     {
         if (!isset(self::$error_types[$errno])) {
             $errorTypeTitle = "UNKNOWN TYPE, ERRNO $errno";
@@ -63,7 +63,7 @@ class CliDebugView extends DebugView
      * @param int $errline Index of the line in $lines which has the error
      * @return string
      */
-    public function renderSourceFragment($lines, $errline)
+    public function renderSourceFragment(array $lines, int $errline): string
     {
         $output = "Source\n======\n";
         foreach ($lines as $offset => $line) {
@@ -82,7 +82,7 @@ class CliDebugView extends DebugView
      * @param array $trace
      * @return string
      */
-    public function renderTrace($trace = null)
+    public function renderTrace(array $trace = null): string
     {
         $output = "Trace\n=====\n";
         $output .= Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
@@ -90,7 +90,7 @@ class CliDebugView extends DebugView
         return $output;
     }
 
-    public function renderParagraph($text)
+    public function renderParagraph(string $text): string
     {
         return wordwrap($text ?? '', self::config()->columns ?? 0) . "\n\n";
     }
@@ -103,7 +103,7 @@ class CliDebugView extends DebugView
      * @param string $description
      * @return string
      */
-    public function renderInfo($title, $subtitle, $description = null)
+    public function renderInfo(string $title, string $subtitle, string $description = null): string
     {
         $output = wordwrap(strtoupper($title ?? ''), self::config()->columns ?? 0) . "\n";
         $output .= wordwrap($subtitle ?? '', self::config()->columns ?? 0) . "\n";
@@ -140,7 +140,7 @@ class CliDebugView extends DebugView
      * @param bool $showHeader
      * @return string
      */
-    public function debugVariable($val, $caller, $showHeader = true)
+    public function debugVariable(string|array|SilverStripe\Dev\Tests\DebugViewTest\ObjectWithDebug $val, array $caller, $showHeader = true): string
     {
         $text = $this->debugVariableText($val);
         if ($showHeader) {
@@ -157,7 +157,7 @@ class CliDebugView extends DebugView
      * @param mixed $val
      * @return string
      */
-    public function debugVariableText($val)
+    public function debugVariableText(string|array|SilverStripe\Dev\Tests\DebugViewTest\ObjectWithDebug $val): string
     {
         // Check debug
         if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {

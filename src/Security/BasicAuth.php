@@ -87,7 +87,7 @@ class BasicAuth
         $realm,
         $permissionCode = null,
         $tryUsingSessionLogin = true
-    ) {
+    ): SilverStripe\Security\Member {
         if ((Director::is_cli() && static::config()->get('ignore_cli'))) {
             return true;
         }
@@ -188,7 +188,7 @@ class BasicAuth
      *  of the permission codes a user has.
      * @param string $message
      */
-    public static function protect_entire_site($protect = true, $code = self::AUTH_PERMISSION, $message = null)
+    public static function protect_entire_site(bool $protect = true, $code = self::AUTH_PERMISSION, $message = null): void
     {
         static::config()
             ->set('entire_site_protected', $protect)
@@ -208,7 +208,7 @@ class BasicAuth
      * @param HTTPRequest|null $request
      * @throws HTTPResponse_Exception
      */
-    public static function protect_site_if_necessary(HTTPRequest $request = null)
+    public static function protect_site_if_necessary(HTTPRequest $request = null): void
     {
         $config = static::config();
 

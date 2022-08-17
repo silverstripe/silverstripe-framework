@@ -22,7 +22,7 @@ class DefaultFormFactory implements FormFactory
 {
     use Extensible;
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -33,7 +33,7 @@ class DefaultFormFactory implements FormFactory
      * @return Form
      * @throws InvalidArgumentException When required context is missing
      */
-    public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])
+    public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, array $context = []): SilverStripe\Forms\Form
     {
         // Validate context
         foreach ($this->getRequiredContext() as $required) {
@@ -64,7 +64,7 @@ class DefaultFormFactory implements FormFactory
      * @param array $context
      * @return FieldList
      */
-    protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormFields(RequestHandler $controller = null, string $name, array $context = []): SilverStripe\Forms\FieldList
     {
         // Fall back to standard "getCMSFields" which itself uses the FormScaffolder as a fallback
         // @todo Deprecate or formalise support for getCMSFields()
@@ -81,7 +81,7 @@ class DefaultFormFactory implements FormFactory
      * @param array $context
      * @return FieldList
      */
-    protected function getFormActions(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormActions(RequestHandler $controller = null, string $name, array $context = []): SilverStripe\Forms\FieldList
     {
         // @todo Deprecate or formalise support for getCMSActions()
         $actions = $context['Record']->getCMSActions();
@@ -95,7 +95,7 @@ class DefaultFormFactory implements FormFactory
      * @param array $context
      * @return null|Validator
      */
-    protected function getFormValidator(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormValidator(RequestHandler $controller = null, string $name, array $context = []): SilverStripe\Forms\CompositeValidator
     {
         if (!$context['Record'] instanceof DataObject) {
             return null;
@@ -119,7 +119,7 @@ class DefaultFormFactory implements FormFactory
      *
      * @return mixed
      */
-    public function getRequiredContext()
+    public function getRequiredContext(): array
     {
         return ['Record'];
     }

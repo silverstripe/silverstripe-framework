@@ -24,7 +24,7 @@ class ConfigLoader
     /**
      * @return self
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Core\Config\ConfigLoader
     {
         return self::$instance ? self::$instance : self::$instance = new static();
     }
@@ -35,7 +35,7 @@ class ConfigLoader
      *
      * @return ConfigCollectionInterface
      */
-    public function getManifest()
+    public function getManifest(): SilverStripe\Config\Collections\CachedConfigCollection
     {
         if ($this !== self::$instance) {
             throw new BadMethodCallException(
@@ -63,7 +63,7 @@ class ConfigLoader
      *
      * @param ConfigCollectionInterface $manifest
      */
-    public function pushManifest(ConfigCollectionInterface $manifest)
+    public function pushManifest(ConfigCollectionInterface $manifest): void
     {
         $this->manifests[] = $manifest;
     }
@@ -71,7 +71,7 @@ class ConfigLoader
     /**
      * @return ConfigCollectionInterface
      */
-    public function popManifest()
+    public function popManifest(): SilverStripe\Config\Collections\DeltaConfigCollection
     {
         return array_pop($this->manifests);
     }
@@ -81,7 +81,7 @@ class ConfigLoader
      *
      * @return int
      */
-    public function countManifests()
+    public function countManifests(): int
     {
         return count($this->manifests ?? []);
     }
@@ -91,7 +91,7 @@ class ConfigLoader
      *
      * @return static
      */
-    public function nest()
+    public function nest(): SilverStripe\Core\Config\ConfigLoader
     {
         // Nest config
         $manifest = clone $this->getManifest();
@@ -109,7 +109,7 @@ class ConfigLoader
      *
      * @return $this
      */
-    public function activate()
+    public function activate(): SilverStripe\Core\Config\ConfigLoader
     {
         static::$instance = $this;
         return $this;

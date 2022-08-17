@@ -20,12 +20,12 @@ class DatalessField extends FormField
      * function that returns whether this field contains data.
      * Always returns false.
      */
-    public function hasData()
+    public function hasData(): bool
     {
         return false;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return array_merge(
             parent::getAttributes(),
@@ -42,7 +42,7 @@ class DatalessField extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder(array $properties = []): SilverStripe\ORM\FieldType\DBHTMLText|string
     {
         return $this->Field($properties);
     }
@@ -54,7 +54,7 @@ class DatalessField extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function SmallFieldHolder($properties = [])
+    public function SmallFieldHolder(array $properties = []): string
     {
         return $this->Field($properties);
     }
@@ -62,7 +62,7 @@ class DatalessField extends FormField
     /**
      * Returns a readonly version of this field
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\HeaderField
     {
         $clone = clone $this;
         $clone->setReadonly(true);
@@ -73,7 +73,7 @@ class DatalessField extends FormField
      * @param bool $bool
      * @return $this
      */
-    public function setAllowHTML($bool)
+    public function setAllowHTML(bool $bool): SilverStripe\Forms\LiteralField
     {
         $this->allowHTML = $bool;
         return $this;
@@ -87,7 +87,7 @@ class DatalessField extends FormField
         return $this->allowHTML;
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'readonly';
     }

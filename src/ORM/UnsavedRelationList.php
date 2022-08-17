@@ -55,7 +55,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @param string $relationName
      * @param string $dataClass The DataObject class used in the relation
      */
-    public function __construct($baseClass, $relationName, $dataClass)
+    public function __construct(string $baseClass, string $relationName, string $dataClass): void
     {
         $this->baseClass = $baseClass;
         $this->relationName = $relationName;
@@ -69,7 +69,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @param mixed $item
      * @param array $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
      */
-    public function add($item, $extraFields = null)
+    public function add(int|DNADesign\Elemental\Models\BaseElement $item, array $extraFields = null): void
     {
         $this->push($item, $extraFields);
     }
@@ -79,7 +79,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @param RelationList $list
      */
-    public function changeToList(RelationList $list)
+    public function changeToList(RelationList $list): void
     {
         foreach ($this->items as $key => $item) {
             $list->add($item, $this->extraFields[$key]);
@@ -92,7 +92,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @param array|object $item
      * @param array $extraFields
      */
-    public function push($item, $extraFields = null)
+    public function push(int|DNADesign\Elemental\Models\BaseElement $item, array $extraFields = null): void
     {
         if ((is_object($item) && !$item instanceof $this->dataClass)
             || (!is_object($item) && !is_numeric($item))
@@ -113,7 +113,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @return string
      */
-    public function dataClass()
+    public function dataClass(): string
     {
         return $this->dataClass;
     }
@@ -124,7 +124,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @return ArrayIterator
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->toArray());
     }
@@ -135,7 +135,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $items = [];
         foreach ($this->items as $key => $item) {
@@ -156,7 +156,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @param array $items Items to add, as either DataObjects or IDs.
      * @return $this
      */
-    public function addMany($items)
+    public function addMany(array $items): SilverStripe\ORM\UnsavedRelationList
     {
         foreach ($items as $item) {
             $this->add($item);
@@ -167,7 +167,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Remove all items from this relation.
      */
-    public function removeAll()
+    public function removeAll(): void
     {
         $this->items = [];
         $this->extraFields = [];
@@ -201,7 +201,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @param array $idList List of IDs.
      */
-    public function setByIDList($idList)
+    public function setByIDList(array $idList): void
     {
         $this->removeAll();
         $this->addMany($idList);
@@ -214,7 +214,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @return array
      */
-    public function getIDList()
+    public function getIDList(): array
     {
         // Get a list of IDs of our current items - if it's not a number then object then assume it's a DO.
         $ids = array_map(function ($obj) {
@@ -237,7 +237,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @return mixed
      */
-    public function first()
+    public function first(): SilverStripe\CKANRegistry\Model\ResourceField|bool
     {
         $item = reset($this->items);
         if (is_numeric($item)) {
@@ -269,7 +269,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * @param string $colName
      * @return array
      */
-    public function column($colName = 'ID')
+    public function column(string $colName = 'ID'): array
     {
         $list = new ArrayList($this->toArray());
         return $list->column($colName);

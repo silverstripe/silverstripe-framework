@@ -53,7 +53,7 @@ class NumericField extends TextField
      *
      * @return NumberFormatter
      */
-    protected function getFormatter()
+    protected function getFormatter(): NumberFormatter
     {
         if ($this->getHTML5()) {
             // Locale-independent html5 number formatter
@@ -90,7 +90,7 @@ class NumericField extends TextField
      *
      * @return int
      */
-    protected function getNumberType()
+    protected function getNumberType(): int
     {
         $scale = $this->getScale();
         if ($scale === 0) {
@@ -101,7 +101,7 @@ class NumericField extends TextField
         return NumberFormatter::TYPE_DOUBLE;
     }
 
-    public function setSubmittedValue($value, $data = null)
+    public function setSubmittedValue(string|int|float $value, array $data = null): SilverStripe\Forms\NumericField
     {
         // Save original value in case parse fails
         $value = trim($value ?? '');
@@ -129,7 +129,7 @@ class NumericField extends TextField
      *
      * @return string
      */
-    public function Value()
+    public function Value(): string|null
     {
         // Show invalid value back to user in case of error
         if ($this->value === null || $this->value === false) {
@@ -139,7 +139,7 @@ class NumericField extends TextField
         return $formatter->format($this->value, $this->getNumberType());
     }
 
-    public function setValue($value, $data = null)
+    public function setValue(string|int|float $value, array|SilverStripe\Security\Member $data = null): SilverStripe\Forms\NumericField
     {
         $this->originalValue = $value;
         $this->value = $this->cast($value);
@@ -152,7 +152,7 @@ class NumericField extends TextField
      * @param string $value
      * @return float|int
      */
-    protected function cast($value)
+    protected function cast(string|int|float|bool $value): null|int|float
     {
         if (strlen($value ?? '') === 0) {
             return null;
@@ -166,12 +166,12 @@ class NumericField extends TextField
     /**
      * {@inheritdoc}
      */
-    public function Type()
+    public function Type(): string
     {
         return 'numeric text';
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
         if ($this->getHTML5()) {
@@ -189,7 +189,7 @@ class NumericField extends TextField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Security\Member_Validator $validator): bool
     {
         // false signifies invalid value due to failed parse()
         if ($this->value !== false) {
@@ -207,7 +207,7 @@ class NumericField extends TextField
         return false;
     }
 
-    public function getSchemaValidation()
+    public function getSchemaValidation(): array
     {
         $rules = parent::getSchemaValidation();
         $rules['numeric'] = true;
@@ -219,7 +219,7 @@ class NumericField extends TextField
      *
      * @return int|float
      */
-    public function dataValue()
+    public function dataValue(): null|int|float
     {
         return $this->cast($this->value);
     }
@@ -229,7 +229,7 @@ class NumericField extends TextField
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         if ($this->locale) {
             return $this->locale;
@@ -245,7 +245,7 @@ class NumericField extends TextField
      *
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): SilverStripe\Forms\NumericField
     {
         $this->locale = $locale;
 
@@ -257,7 +257,7 @@ class NumericField extends TextField
      *
      * @return bool
      */
-    public function getHTML5()
+    public function getHTML5(): bool
     {
         return $this->html5;
     }
@@ -269,7 +269,7 @@ class NumericField extends TextField
      * @param bool $html5
      * @return $this
      */
-    public function setHTML5($html5)
+    public function setHTML5(bool $html5): SilverStripe\Forms\NumericField
     {
         $this->html5 = $html5;
         return $this;
@@ -299,7 +299,7 @@ class NumericField extends TextField
      *
      * @return int|null
      */
-    public function getScale()
+    public function getScale(): int|null
     {
         return $this->scale;
     }
@@ -311,13 +311,13 @@ class NumericField extends TextField
      * @param int|null $scale
      * @return $this
      */
-    public function setScale($scale)
+    public function setScale(int $scale): SilverStripe\Forms\NumericField
     {
         $this->scale = $scale;
         return $this;
     }
 
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\NumericField
     {
         $field = clone $this;
         $field->setReadonly(true);

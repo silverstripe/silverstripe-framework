@@ -8,7 +8,7 @@ use SilverStripe\ORM\DataList;
 class GenericTemplateGlobalProvider implements TemplateGlobalProvider
 {
 
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'ModulePath',
@@ -21,7 +21,7 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
      * @param string $name Name of module to find path of
      * @return string
      */
-    public static function ModulePath($name)
+    public static function ModulePath(string $name): string
     {
         // BC for a couple of the key modules in the old syntax. Reduces merge brittleness but can
         // be removed before 4.0 stable

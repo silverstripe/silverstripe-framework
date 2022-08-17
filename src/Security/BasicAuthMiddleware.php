@@ -37,7 +37,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
      * @param callable $delegate
      * @return HTTPResponse
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         // Check if url matches any patterns
         $match = $this->checkMatchingURL($request);
@@ -73,7 +73,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
      *
      * @return array
      */
-    public function getURLPatterns()
+    public function getURLPatterns(): array
     {
         return $this->urlPatterns ?: [];
     }
@@ -82,7 +82,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
      * @param array $urlPatterns
      * @return $this
      */
-    public function setURLPatterns(array $urlPatterns)
+    public function setURLPatterns(array $urlPatterns): CWP\Core\Control\CwpBasicAuthMiddleware
     {
         $this->urlPatterns = $urlPatterns;
         return $this;
@@ -96,7 +96,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
      * or null if should fall back to config value. Can also provide an explicit string / array of permission
      * codes to require for this requset.
      */
-    protected function checkMatchingURL(HTTPRequest $request)
+    protected function checkMatchingURL(HTTPRequest $request): null|string|bool
     {
         // Null if no permissions enabled
         $patterns = $this->getURLPatterns();

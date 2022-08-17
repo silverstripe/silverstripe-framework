@@ -14,7 +14,7 @@ namespace SilverStripe\ORM\Filters;
 class StartsWithFilter extends PartialMatchFilter
 {
 
-    protected function getMatchPattern($value)
+    protected function getMatchPattern(string $value): string
     {
         return "$value%";
     }

@@ -24,7 +24,7 @@ class GridFieldPageCount extends AbstractGridFieldComponent implements GridField
     /**
      * @param string $targetFragment The fragment indicating the placement of this page count
      */
-    public function __construct($targetFragment = 'before')
+    public function __construct(string $targetFragment = 'before'): void
     {
         $this->targetFragment = $targetFragment;
     }
@@ -44,7 +44,7 @@ class GridFieldPageCount extends AbstractGridFieldComponent implements GridField
      * @return GridFieldPaginator The attached GridFieldPaginator, if found.
      * @throws LogicException
      */
-    protected function getPaginator($gridField)
+    protected function getPaginator(SilverStripe\Forms\GridField\GridField $gridField): SilverStripe\Forms\GridField\GridFieldPaginator
     {
         /** @var GridFieldPaginator $paginator */
         $paginator = $gridField->getConfig()->getComponentByType(GridFieldPaginator::class);
@@ -62,7 +62,7 @@ class GridFieldPageCount extends AbstractGridFieldComponent implements GridField
      * @param GridField $gridField
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): null|array
     {
         // Retrieve paging parameters from the directing paginator component
         $paginator = $this->getPaginator($gridField);

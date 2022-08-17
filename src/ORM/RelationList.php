@@ -91,12 +91,12 @@ abstract class RelationList extends DataList implements Relation
      *
      * @return string|array|null
      */
-    public function getForeignID()
+    public function getForeignID(): int|array
     {
         return $this->dataQuery->getQueryParam('Foreign.ID');
     }
 
-    public function getQueryParams()
+    public function getQueryParams(): array
     {
         $params = parent::getQueryParams();
 
@@ -119,7 +119,7 @@ abstract class RelationList extends DataList implements Relation
      *
      * @return static
      */
-    public function forForeignID($id)
+    public function forForeignID(int|array $id): SilverStripe\Auditor\AuditHookMemberGroupSet
     {
         // Turn a 1-element array into a simple value
         if (is_array($id) && sizeof($id ?? []) == 1) {

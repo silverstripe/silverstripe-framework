@@ -18,7 +18,7 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor
      * @param string $algorithm A PHP built-in hashing algorithm as defined by hash_algos()
      * @throws Exception
      */
-    public function __construct($algorithm)
+    public function __construct(string $algorithm): void
     {
         if (!in_array($algorithm, hash_algos())) {
             throw new Exception(
@@ -32,12 +32,12 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor
     /**
      * @return string
      */
-    public function getAlgorithm()
+    public function getAlgorithm(): string
     {
         return $this->algorithm;
     }
 
-    public function encrypt($password, $salt = null, $member = null)
+    public function encrypt(string $password, string $salt = null, SilverStripe\Security\Member $member = null): string
     {
         return hash($this->algorithm ?? '', $password . $salt);
     }

@@ -21,7 +21,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      * @param string $resource
      * @return string
      */
-    public function resolvePath($resource)
+    public function resolvePath(string $resource): string
     {
         // Skip blank resources
         if (empty($resource)) {
@@ -40,7 +40,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      * @param string $resource
      * @return string
      */
-    public function resolveURL($resource)
+    public function resolveURL(string $resource): string
     {
         // Skip blank resources
         if (empty($resource)) {
@@ -62,7 +62,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      * @param string $resource
      * @return string
      */
-    public static function resourcePath($resource)
+    public static function resourcePath(string $resource): string
     {
         return static::singleton()->resolvePath($resource);
     }
@@ -73,12 +73,12 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      * @param string $resource
      * @return string
      */
-    public static function resourceURL($resource)
+    public static function resourceURL(string $resource): string
     {
         return static::singleton()->resolveURL($resource);
     }
 
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'resourcePath',
@@ -93,7 +93,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      * @param string $resource
      * @return ModuleResource|string The resource, or input string if not a module resource
      */
-    public function resolveResource($resource)
+    public function resolveResource(string $resource): string|SilverStripe\Core\Manifest\ModuleResource
     {
         // String of the form vendor/package:resource. Excludes "http://bla" as that's an absolute URL
         if (!preg_match('#^ *(?<module>[^/: ]+/[^/: ]+) *: *(?<resource>[^ ]*)$#', $resource ?? '', $matches)) {

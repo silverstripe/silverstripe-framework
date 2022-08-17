@@ -17,7 +17,7 @@ class ApcuCacheFactory implements CacheFactory
     /**
      * @param string $version
      */
-    public function __construct($version = null)
+    public function __construct(string $version = null): void
     {
         $this->version = $version;
     }
@@ -25,7 +25,7 @@ class ApcuCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = [])
+    public function create(string $service, array $params = []): SilverStripe\Core\Tests\Cache\CacheTest\MockCache
     {
         $namespace = isset($params['namespace'])
             ? $params['namespace'] . '_' . md5(BASE_PATH)

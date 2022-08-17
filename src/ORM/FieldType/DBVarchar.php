@@ -38,7 +38,7 @@ class DBVarchar extends DBString
      * @param array $options Optional parameters, e.g. array("nullifyEmpty"=>false).
      *                       See {@link StringField::setOptions()} for information on the available options
      */
-    public function __construct($name = null, $size = 255, $options = [])
+    public function __construct(string|int $name = null, int $size = 255, array $options = []): void
     {
         $this->size = $size ? $size : 255;
         parent::__construct($name, $options);
@@ -53,7 +53,7 @@ class DBVarchar extends DBString
      *
      * @return int The size of the field
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -62,7 +62,7 @@ class DBVarchar extends DBString
      * (non-PHPdoc)
      * @see DBField::requireField()
      */
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -88,7 +88,7 @@ class DBVarchar extends DBString
      *
      * @return string
      */
-    public function Initial()
+    public function Initial(): string
     {
         if ($this->exists()) {
             $value = $this->RAW();
@@ -120,7 +120,7 @@ class DBVarchar extends DBString
         return str_replace("\n", '\par ', $this->RAW() ?? '');
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(string $title = null, array $params = null): SilverStripe\Forms\TextField
     {
         // Set field with appropriate size
         $field = TextField::create($this->name, $title);

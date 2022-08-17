@@ -19,7 +19,7 @@ class CurrencyField_Disabled extends CurrencyField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): string
     {
         if ($this->value) {
             $val = Convert::raw2xml($this->value);

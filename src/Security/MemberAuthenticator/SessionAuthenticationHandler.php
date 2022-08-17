@@ -24,7 +24,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      *
      * @return string
      */
-    public function getSessionVariable()
+    public function getSessionVariable(): string|null
     {
         return $this->sessionVariable;
     }
@@ -34,7 +34,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      *
      * @param string $sessionVariable
      */
-    public function setSessionVariable($sessionVariable)
+    public function setSessionVariable(string $sessionVariable): void
     {
         $this->sessionVariable = $sessionVariable;
     }
@@ -43,7 +43,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      * @param HTTPRequest $request
      * @return Member
      */
-    public function authenticateRequest(HTTPRequest $request)
+    public function authenticateRequest(HTTPRequest $request): null|SilverStripe\Security\Member
     {
         $session = $request->getSession();
 
@@ -68,7 +68,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      * @param bool $persistent
      * @param HTTPRequest $request
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
+    public function logIn(Member $member, bool $persistent = false, HTTPRequest $request = null): void
     {
         static::regenerateSessionId();
         $request = $request ?: Controller::curr()->getRequest();
@@ -84,7 +84,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     /**
      * Regenerate the session_id.
      */
-    protected static function regenerateSessionId()
+    protected static function regenerateSessionId(): void
     {
         if (!Member::config()->get('session_regenerate_id')) {
             return;
@@ -109,7 +109,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     /**
      * @param HTTPRequest $request
      */
-    public function logOut(HTTPRequest $request = null)
+    public function logOut(HTTPRequest $request = null): void
     {
         $request = $request ?: Controller::curr()->getRequest();
         $request->getSession()->destroy(true, $request);

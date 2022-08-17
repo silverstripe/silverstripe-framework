@@ -32,14 +32,14 @@ class ManyManyThroughList extends RelationList
      * @example new ManyManyThroughList('Banner', 'PageBanner', 'BannerID', 'PageID');
      */
     public function __construct(
-        $dataClass,
+        string $dataClass,
         $joinClass,
         $localKey,
         $foreignKey,
         $extraFields = [],
         $foreignClass = null,
         $parentClass = null
-    ) {
+    ): void {
         parent::__construct($dataClass);
 
         // Inject manipulator
@@ -60,13 +60,13 @@ class ManyManyThroughList extends RelationList
      * per getForeignID
      * @return array Condition In array(SQL => parameters format)
      */
-    protected function foreignIDFilter($id = null)
+    protected function foreignIDFilter(int $id = null): array
     {
         // foreignIDFilter is applied to the HasManyList via ManyManyThroughQueryManipulator, not here
         return [];
     }
 
-    public function createDataObject($row)
+    public function createDataObject(array $row): SilverStripe\Assets\File
     {
         // Add joined record
         $joinRow = [];
@@ -102,7 +102,7 @@ class ManyManyThroughList extends RelationList
      *
      * @param DataObject $item
      */
-    public function remove($item)
+    public function remove(SilverStripe\ORM\Tests\ManyManyThroughListTest\Item $item): void
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException(
@@ -121,7 +121,7 @@ class ManyManyThroughList extends RelationList
      *
      * @param int $itemID The item ID
      */
-    public function removeByID($itemID)
+    public function removeByID(int $itemID): void
     {
         if (!is_numeric($itemID)) {
             throw new InvalidArgumentException("ManyManyThroughList::removeById() expecting an ID");
@@ -143,7 +143,7 @@ class ManyManyThroughList extends RelationList
         }
     }
 
-    public function removeAll()
+    public function removeAll(): void
     {
         // Get the IDs of records in the current list
         $affectedIds = $this->limit(null)->column('ID');
@@ -171,7 +171,7 @@ class ManyManyThroughList extends RelationList
      * @param mixed $item
      * @param array $extraFields
      */
-    public function add($item, $extraFields = [])
+    public function add(int|SilverStripe\ORM\Tests\ManyManyThroughListTest\Item $item, array $extraFields = []): void
     {
         // Ensure nulls or empty strings are correctly treated as empty arrays
         if (empty($extraFields)) {
@@ -264,7 +264,7 @@ class ManyManyThroughList extends RelationList
     /**
      * @return string
      */
-    public function getJoinTable()
+    public function getJoinTable(): string
     {
         $joinClass = $this->manipulator->getJoinClass();
         return DataObject::getSchema()->tableName($joinClass);

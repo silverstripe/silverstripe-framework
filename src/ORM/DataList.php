@@ -55,7 +55,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string $dataClass - The DataObject class to query.
      */
-    public function __construct($dataClass)
+    public function __construct(string $dataClass): void
     {
         $this->dataClass = $dataClass;
         $this->dataQuery = new DataQuery($this->dataClass);
@@ -68,7 +68,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return string
      */
-    public function dataClass()
+    public function dataClass(): string
     {
         return $this->dataClass;
     }
@@ -76,7 +76,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * When cloning this object, clone the dataQuery object as well
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->dataQuery = clone $this->dataQuery;
     }
@@ -89,7 +89,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return DataQuery
      */
-    public function dataQuery()
+    public function dataQuery(): SilverStripe\ORM\DataQuery
     {
         return clone $this->dataQuery;
     }
@@ -115,7 +115,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @return static
      * @throws Exception
      */
-    public function alterDataQuery($callback)
+    public function alterDataQuery(callable|array $callback): SilverStripe\ORM\DataList
     {
         if ($this->inAlterDataQueryCall) {
             $list = $this;
@@ -151,7 +151,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param DataQuery $dataQuery
      * @return static
      */
-    public function setDataQuery(DataQuery $dataQuery)
+    public function setDataQuery(DataQuery $dataQuery): SilverStripe\ORM\DataList
     {
         $clone = clone $this;
         $clone->dataQuery = $dataQuery;
@@ -165,7 +165,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $val If $keyOrArray is not an array, this is the value to set
      * @return static
      */
-    public function setDataQueryParam($keyOrArray, $val = null)
+    public function setDataQueryParam(array|string $keyOrArray, bool|string $val = null): SilverStripe\ORM\ManyManyThroughList
     {
         $clone = clone $this;
 
@@ -186,7 +186,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Out variable for parameters required for this query
      * @return string The resulting SQL query (may be parameterised)
      */
-    public function sql(&$parameters = [])
+    public function sql(&$parameters = []): string
     {
         return $this->dataQuery->query()->sql($parameters);
     }
@@ -202,7 +202,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * paramaterised queries
      * @return static
      */
-    public function where($filter)
+    public function where(string|array $filter): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($filter) {
             $query->where($filter);
@@ -221,7 +221,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * paramaterised queries
      * @return static
      */
-    public function whereAny($filter)
+    public function whereAny(array $filter): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($filter) {
             $query->whereAny($filter);
@@ -236,7 +236,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $fieldName
      * @return boolean
      */
-    public function canSortBy($fieldName)
+    public function canSortBy(string $fieldName): bool
     {
         return $this->dataQuery()->query()->canSortBy($fieldName);
     }
@@ -247,7 +247,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $fieldName (May be a related field in dot notation like Member.FirstName)
      * @return boolean
      */
-    public function canFilterBy($fieldName)
+    public function canFilterBy(string $fieldName): bool
     {
         $model = singleton($this->dataClass);
         $relations = explode(".", $fieldName ?? '');
@@ -278,7 +278,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param int $offset
      * @return static
      */
-    public function limit($limit, $offset = 0)
+    public function limit(int|bool|string $limit, int|string $offset = 0): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($limit, $offset) {
             $query->limit($limit, $offset);
@@ -291,7 +291,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param bool $value
      * @return static
      */
-    public function distinct($value)
+    public function distinct(bool $value): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($value) {
             $query->distinct($value);
@@ -312,7 +312,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
      * @return static
      */
-    public function sort()
+    public function sort(): SilverStripe\ORM\DataList
     {
         $count = func_num_args();
 
@@ -383,7 +383,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
      * @return $this
      */
-    public function filter()
+    public function filter(): SilverStripe\ORM\DataList
     {
         // Validate and process arguments
         $arguments = func_get_args();
@@ -409,7 +409,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $filterArray
      * @return $this
      */
-    public function addFilter($filterArray)
+    public function addFilter(array $filterArray): SilverStripe\ORM\DataList
     {
         $list = $this;
 
@@ -445,7 +445,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string|array See {@link filter()}
      * @return static
      */
-    public function filterAny()
+    public function filterAny(): SilverStripe\ORM\DataList
     {
         $numberFuncArgs = count(func_get_args());
         $whereArguments = [];
@@ -477,7 +477,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param callable $callback
      * @return ArrayList (this may change in future implementations)
      */
-    public function filterByCallback($callback)
+    public function filterByCallback(callable $callback): SilverStripe\ORM\ArrayList
     {
         if (!is_callable($callback)) {
             throw new LogicException(sprintf(
@@ -517,7 +517,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * if this relation will be used for sorting, and should not include duplicate rows.
      * @return $this DataList with this relation applied
      */
-    public function applyRelation($field, &$columnName = null, $linearOnly = false)
+    public function applyRelation(string $field, &$columnName = null, bool $linearOnly = false): SilverStripe\ORM\DataList
     {
         // If field is invalid, return it without modification
         if (!$this->isValidRelationName($field)) {
@@ -553,7 +553,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $field
      * @return bool
      */
-    protected function isValidRelationName($field)
+    protected function isValidRelationName(string $field): int
     {
         return preg_match('/^[A-Z0-9._]+$/i', $field ?? '');
     }
@@ -565,7 +565,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param mixed $value Value of the filter
      * @return SearchFilter
      */
-    protected function createSearchFilter($filter, $value)
+    protected function createSearchFilter(string $filter, int|string|array|bool $value): SilverStripe\ORM\Filters\ExactMatchFilter
     {
         // Field name is always the first component
         $fieldArgs = explode(':', $filter ?? '');
@@ -613,7 +613,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return $this
      */
-    public function exclude()
+    public function exclude(): SilverStripe\ORM\DataList
     {
         $numberFuncArgs = count(func_get_args());
         $whereArguments = [];
@@ -651,7 +651,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return $this
      */
-    public function excludeAny()
+    public function excludeAny(): SilverStripe\ORM\DataList
     {
         $numberFuncArgs = count(func_get_args());
         $whereArguments = [];
@@ -682,7 +682,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @return static
      * @throws InvalidArgumentException
      */
-    public function subtract(DataList $list)
+    public function subtract(DataList $list): SilverStripe\ORM\DataList
     {
         if ($this->dataClass() != $list->dataClass()) {
             throw new InvalidArgumentException('The list passed must have the same dataclass as this class');
@@ -705,7 +705,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return static
      */
-    public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    public function innerJoin(string $table, string $onClause, string $alias = null, int $order = 20, array $parameters = []): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
             $query->innerJoin($table, $onClause, $alias, $order, $parameters);
@@ -724,7 +724,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return static
      */
-    public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    public function leftJoin(string $table, string $onClause, string $alias = null, int $order = 20, array $parameters = []): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
             $query->leftJoin($table, $onClause, $alias, $order, $parameters);
@@ -737,7 +737,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $query = $this->dataQuery->query();
         $rows = $query->execute();
@@ -755,7 +755,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return array
      */
-    public function toNestedArray()
+    public function toNestedArray(): array
     {
         $result = [];
 
@@ -772,7 +772,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param callable $callback
      * @return $this
      */
-    public function each($callback)
+    public function each(callable $callback): SilverStripe\ORM\HasManyList
     {
         foreach ($this as $row) {
             $callback($row);
@@ -786,7 +786,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return \Generator&DataObject[]
      */
-    public function getGenerator()
+    public function getGenerator(): void
     {
         $query = $this->dataQuery->query()->execute();
 
@@ -812,7 +812,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $titleField - the value field of the result array
      * @return Map
      */
-    public function map($keyField = 'ID', $titleField = 'Title')
+    public function map(string $keyField = 'ID', string $titleField = 'Title'): SilverStripe\ORM\Map
     {
         return new Map($this, $keyField, $titleField);
     }
@@ -824,7 +824,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $row
      * @return DataObject
      */
-    public function createDataObject($row)
+    public function createDataObject(array $row): SilverStripe\SiteConfig\SiteConfig
     {
         $class = $this->dataClass;
 
@@ -855,7 +855,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return array
      */
-    public function getQueryParams()
+    public function getQueryParams(): null|array
     {
         return $this->dataQuery()->getQueryParams();
     }
@@ -867,7 +867,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @return ArrayIterator
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->toArray());
     }
@@ -878,7 +878,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @return int
      */
     #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return $this->dataQuery->count();
     }
@@ -889,7 +889,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $fieldName
      * @return mixed
      */
-    public function max($fieldName)
+    public function max(string $fieldName): null|int|string
     {
         return $this->dataQuery->max($fieldName);
     }
@@ -900,7 +900,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $fieldName
      * @return mixed
      */
-    public function min($fieldName)
+    public function min(string $fieldName): int|string|null
     {
         return $this->dataQuery->min($fieldName);
     }
@@ -911,7 +911,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $fieldName
      * @return mixed
      */
-    public function avg($fieldName)
+    public function avg(string $fieldName): float
     {
         return $this->dataQuery->avg($fieldName);
     }
@@ -922,7 +922,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $fieldName
      * @return mixed
      */
-    public function sum($fieldName)
+    public function sum(string $fieldName): float
     {
         return $this->dataQuery->sum($fieldName);
     }
@@ -935,7 +935,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return DataObject|null
      */
-    public function first()
+    public function first(): null|SilverStripe\SiteConfig\SiteConfig
     {
         foreach ($this->dataQuery->firstRow()->execute() as $row) {
             return $this->createDataObject($row);
@@ -950,7 +950,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return DataObject|null
      */
-    public function last()
+    public function last(): null|DNADesign\Elemental\Models\ElementContent
     {
         foreach ($this->dataQuery->lastRow()->execute() as $row) {
             return $this->createDataObject($row);
@@ -963,7 +963,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return $this->dataQuery->exists();
     }
@@ -977,7 +977,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $value
      * @return DataObject|null
      */
-    public function find($key, $value)
+    public function find(string $key, string|int $value): null|SilverStripe\Security\Member
     {
         return $this->filter($key, $value)->first();
     }
@@ -988,7 +988,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $queriedColumns
      * @return static
      */
-    public function setQueriedColumns($queriedColumns)
+    public function setQueriedColumns(array $queriedColumns): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) use ($queriedColumns) {
             $query->setQueriedColumns($queriedColumns);
@@ -1001,7 +1001,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $ids Array of integers
      * @return $this
      */
-    public function byIDs($ids)
+    public function byIDs(array $ids): SilverStripe\ORM\DataList
     {
         return $this->filter('ID', $ids);
     }
@@ -1014,7 +1014,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param int $id
      * @return DataObject|null
      */
-    public function byID($id)
+    public function byID(int|string $id): null|DNADesign\Elemental\Models\ElementalArea
     {
         return $this->filter('ID', $id)->first();
     }
@@ -1025,7 +1025,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $colName
      * @return array
      */
-    public function column($colName = "ID")
+    public function column(string $colName = "ID"): array
     {
         $dataQuery = clone $this->dataQuery;
         return $dataQuery->distinct(false)->column($colName);
@@ -1037,7 +1037,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $colName
      * @return array
      */
-    public function columnUnique($colName = "ID")
+    public function columnUnique(string $colName = "ID"): array
     {
         return $this->dataQuery->distinct(true)->column($colName);
     }
@@ -1050,7 +1050,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param array $idList List of IDs.
      */
-    public function setByIDList($idList)
+    public function setByIDList(array $idList): void
     {
         $has = [];
 
@@ -1083,7 +1083,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return array
      */
-    public function getIDList()
+    public function getIDList(): array
     {
         $ids = $this->column("ID");
         return $ids ? array_combine($ids, $ids) : [];
@@ -1101,7 +1101,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $relationName
      * @return HasManyList|ManyManyList
      */
-    public function relation($relationName)
+    public function relation(string $relationName): SilverStripe\Auditor\AuditHookManyManyList
     {
         $ids = $this->column('ID');
         $singleton = DataObject::singleton($this->dataClass);
@@ -1121,7 +1121,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $items Items to add, as either DataObjects or IDs.
      * @return $this
      */
-    public function addMany($items)
+    public function addMany(SilverStripe\Auditor\AuditHookManyManyList $items): SilverStripe\Auditor\AuditHookManyManyList
     {
         foreach ($items as $item) {
             $this->add($item);
@@ -1135,7 +1135,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param array $idList
      * @return $this
      */
-    public function removeMany($idList)
+    public function removeMany(array $idList): SilverStripe\ORM\ManyManyThroughList
     {
         foreach ($idList as $id) {
             $this->removeByID($id);
@@ -1162,7 +1162,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return $this
      */
-    public function shuffle()
+    public function shuffle(): SilverStripe\ORM\DataList
     {
         return $this->sort(DB::get_conn()->random());
     }
@@ -1172,7 +1172,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return $this
      */
-    public function removeAll()
+    public function removeAll(): SilverStripe\ORM\DataList
     {
         foreach ($this as $item) {
             $this->remove($item);
@@ -1186,7 +1186,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param mixed $item
      */
-    public function add($item)
+    public function add(SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject $item): void
     {
         // Nothing needs to happen by default
         // TO DO: If a filter is given to this data list then
@@ -1212,7 +1212,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @todo Allow for amendment of this behaviour - for example, we can remove an item from
      * an "ActiveItems" DataList by changing the status to inactive.
      */
-    public function remove($item)
+    public function remove(SilverStripe\Dev\Tests\CsvBulkLoaderTest\Player $item): void
     {
         // By default, we remove an item from a DataList by deleting it.
         $this->removeByID($item->ID);
@@ -1223,7 +1223,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param int $itemID The primary ID
      */
-    public function removeByID($itemID)
+    public function removeByID(int $itemID): void
     {
         $item = $this->byID($itemID);
 
@@ -1237,7 +1237,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @return static
      */
-    public function reverse()
+    public function reverse(): SilverStripe\ORM\DataList
     {
         return $this->alterDataQuery(function (DataQuery $query) {
             $query->reverseSort();
@@ -1265,7 +1265,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @return DataObject
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet(int $key): SilverStripe\CMS\Model\SiteTree
     {
         return $this->limit(1, $key)->first();
     }

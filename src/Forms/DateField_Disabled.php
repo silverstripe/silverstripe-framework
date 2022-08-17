@@ -14,7 +14,7 @@ class DateField_Disabled extends DateField
 
     protected $disabled = true;
 
-    public function Field($properties = [])
+    public function Field($properties = []): string
     {
         // Default display value
         $displayValue = '<i>(' . _t('SilverStripe\\Forms\\DateField.NOTSET', 'not set') . ')</i>';
@@ -51,12 +51,12 @@ class DateField_Disabled extends DateField
         );
     }
 
-    public function Type()
+    public function Type(): string
     {
         return "date_disabled readonly " . parent::Type();
     }
 
-    public function getHTML5()
+    public function getHTML5(): bool
     {
         // Always disable HTML5 feature when using the readonly field.
         return false;

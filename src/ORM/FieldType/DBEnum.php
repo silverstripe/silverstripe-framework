@@ -43,7 +43,7 @@ class DBEnum extends DBString
     /**
      * Clear all cached enum values.
      */
-    public static function flushCache()
+    public static function flushCache(): void
     {
         self::$enum_cache = [];
     }
@@ -67,7 +67,7 @@ class DBEnum extends DBString
      * Set to null or empty string to allow empty values
      * @param array  $options Optional parameters for this DB field
      */
-    public function __construct($name = null, $enum = null, $default = 0, $options = [])
+    public function __construct(string $name = null, string|array $enum = null, string|int $default = 0, array $options = []): void
     {
         if ($enum) {
             $this->setEnum($enum);
@@ -97,7 +97,7 @@ class DBEnum extends DBString
     /**
      * @return void
      */
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -130,7 +130,7 @@ class DBEnum extends DBString
      * @param string $emptyString
      * @return DropdownField
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = '', $emptyString = null)
+    public function formField($title = null, $name = null, bool $hasEmpty = false, string $value = '', string $emptyString = null): SilverStripe\Forms\DropdownField
     {
 
         if (!$title) {
@@ -148,7 +148,7 @@ class DBEnum extends DBString
         return $field;
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\DropdownField
     {
         return $this->formField($title);
     }
@@ -157,7 +157,7 @@ class DBEnum extends DBString
      * @param string $title
      * @return DropdownField
      */
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): SilverStripe\Forms\DropdownField
     {
         $anyText = _t(__CLASS__ . '.ANY', 'Any');
         return $this->formField($title, null, true, '', "($anyText)");
@@ -171,7 +171,7 @@ class DBEnum extends DBString
      *
      * @return array
      */
-    public function enumValues($hasEmpty = false)
+    public function enumValues(bool $hasEmpty = false): array
     {
         return ($hasEmpty)
             ? array_merge(['' => ''], ArrayLib::valuekey($this->getEnum()))
@@ -183,7 +183,7 @@ class DBEnum extends DBString
      *
      * @return array
      */
-    public function getEnum()
+    public function getEnum(): array
     {
         return $this->enum;
     }
@@ -199,7 +199,7 @@ class DBEnum extends DBString
      *
      * @return array
      */
-    public function getEnumObsolete()
+    public function getEnumObsolete(): array
     {
         // Without a table or field specified, we can only retrieve known enum values
         $table = $this->getTable();
@@ -236,7 +236,7 @@ class DBEnum extends DBString
      * @param string|array $enum
      * @return $this
      */
-    public function setEnum($enum)
+    public function setEnum(string|array $enum): SilverStripe\ORM\FieldType\DBEnum
     {
         if (!is_array($enum)) {
             $enum = preg_split(
@@ -254,7 +254,7 @@ class DBEnum extends DBString
      *
      * @return string|null
      */
-    public function getDefault()
+    public function getDefault(): null|string
     {
         return $this->default;
     }
@@ -265,7 +265,7 @@ class DBEnum extends DBString
      * @param string $default
      * @return $this
      */
-    public function setDefault($default)
+    public function setDefault(string $default): SilverStripe\ORM\FieldType\DBEnum
     {
         $this->default = $default;
         $this->setDefaultValue($default);

@@ -11,7 +11,7 @@ class CLI
     /**
      * Returns true if the current STDOUT supports the use of colour control codes.
      */
-    public static function supports_colour()
+    public static function supports_colour(): bool
     {
         // Special case for buildbot
         if (isset($_ENV['_']) && strpos($_ENV['_'] ?? '', 'buildbot') !== false) {
@@ -35,7 +35,7 @@ class CLI
      * @param bool $bold A boolean variable - bold or not.
      * @return string
      */
-    public static function text($text, $fgColour = null, $bgColour = null, $bold = false)
+    public static function text(string $text, string $fgColour = null, $bgColour = null, bool $bold = false): string
     {
         if (!self::supports_colour()) {
             return $text;
@@ -60,7 +60,7 @@ class CLI
      * @param bool $bold A boolean variable - bold or not.
      * @return string
      */
-    public static function start_colour($fgColour = null, $bgColour = null, $bold = false)
+    public static function start_colour(string $fgColour = null, $bgColour = null, bool $bold = false): string
     {
         if (!self::supports_colour()) {
             return "";
@@ -96,7 +96,7 @@ class CLI
     /**
      * Send control codes for returning to normal colour
      */
-    public static function end_colour()
+    public static function end_colour(): string
     {
         return self::supports_colour() ? "\033[0m" : "";
     }

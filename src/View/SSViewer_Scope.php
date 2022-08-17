@@ -104,7 +104,7 @@ class SSViewer_Scope
      * @var object $item
      * @var SSViewer_Scope $inheritedScope
      */
-    public function __construct($item, SSViewer_Scope $inheritedScope = null)
+    public function __construct(SilverStripe\View\ArrayData $item, SSViewer_Scope $inheritedScope = null): void
     {
         $this->item = $item;
 
@@ -118,7 +118,7 @@ class SSViewer_Scope
      *
      * @return object
      */
-    public function getItem()
+    public function getItem(): SilverStripe\ErrorPage\ErrorPageController
     {
         return $this->itemIterator ? $this->itemIterator->current() : $this->item;
     }
@@ -128,7 +128,7 @@ class SSViewer_Scope
      *
      * @return self
      */
-    public function locally()
+    public function locally(): SilverStripe\View\SSViewer_DataPresenter
     {
         list(
             $this->item,
@@ -150,7 +150,7 @@ class SSViewer_Scope
      * Reset the local scope - restores saved state to the "global" item stack. Typically called after
      * a lookup chain has been completed
      */
-    public function resetLocalScope()
+    public function resetLocalScope(): void
     {
         // Restore previous un-completed lookup chain if set
         $previousLocalState = $this->localStack ? array_pop($this->localStack) : null;
@@ -173,7 +173,7 @@ class SSViewer_Scope
      * @param string $cacheName
      * @return mixed
      */
-    public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
+    public function getObj(string $name, array $arguments = [], bool $cache = false, $cacheName = null): SilverStripe\ORM\ArrayList
     {
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
         return $on->obj($name, $arguments, $cache, $cacheName);
@@ -186,7 +186,7 @@ class SSViewer_Scope
      * @param string $cacheName
      * @return $this
      */
-    public function obj($name, $arguments = [], $cache = false, $cacheName = null)
+    public function obj(string $name, array $arguments = [], bool $cache = false, $cacheName = null): SilverStripe\View\SSViewer_DataPresenter
     {
         switch ($name) {
             case 'Up':
@@ -237,7 +237,7 @@ class SSViewer_Scope
      *
      * @return object
      */
-    public function self()
+    public function self(): SilverStripe\CKANRegistry\Page\CKANRegistryPageController
     {
         $result = $this->itemIterator ? $this->itemIterator->current() : $this->item;
         $this->resetLocalScope();
@@ -250,7 +250,7 @@ class SSViewer_Scope
      *
      * @return self
      */
-    public function pushScope()
+    public function pushScope(): SilverStripe\View\SSViewer_DataPresenter
     {
         $newLocalIndex = count($this->itemStack ?? []) - 1;
 
@@ -269,7 +269,7 @@ class SSViewer_Scope
      *
      * @return self
      */
-    public function popScope()
+    public function popScope(): SilverStripe\View\SSViewer_DataPresenter
     {
         $this->localIndex = $this->popIndex;
         $this->resetLocalScope();
@@ -282,7 +282,7 @@ class SSViewer_Scope
      *
      * @return mixed
      */
-    public function next()
+    public function next(): int|bool
     {
         if (!$this->item) {
             return false;
@@ -317,7 +317,7 @@ class SSViewer_Scope
      * @param array $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): string|bool|SilverStripe\ORM\FieldType\DBHTMLText|null
     {
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
         $retval = $on ? $on->$name(...$arguments) : null;
@@ -329,7 +329,7 @@ class SSViewer_Scope
     /**
      * @return array
      */
-    protected function getItemStack()
+    protected function getItemStack(): array
     {
         return $this->itemStack;
     }
@@ -337,7 +337,7 @@ class SSViewer_Scope
     /**
      * @param array $stack
      */
-    protected function setItemStack(array $stack)
+    protected function setItemStack(array $stack): void
     {
         $this->itemStack = $stack;
     }
@@ -345,7 +345,7 @@ class SSViewer_Scope
     /**
      * @return int|null
      */
-    protected function getUpIndex()
+    protected function getUpIndex(): int|null
     {
         return $this->upIndex;
     }

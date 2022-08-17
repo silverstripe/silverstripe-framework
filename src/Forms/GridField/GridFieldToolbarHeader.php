@@ -17,7 +17,7 @@ class GridFieldToolbarHeader extends AbstractGridFieldComponent implements GridF
      * @param GridField $gridField
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
         return [

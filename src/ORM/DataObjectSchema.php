@@ -71,7 +71,7 @@ class DataObjectSchema
     /**
      * Clear cached table names
      */
-    public function reset()
+    public function reset(): void
     {
         $this->tableNames = [];
         $this->databaseFields = [];
@@ -85,7 +85,7 @@ class DataObjectSchema
      *
      * @return array
      */
-    public function getTableNames()
+    public function getTableNames(): array
     {
         $this->cacheTableNames();
         return $this->tableNames;
@@ -104,7 +104,7 @@ class DataObjectSchema
      *
      * @return string The SQL identifier string for the corresponding column for this field
      */
-    public function sqlColumnForField($class, $field, $tablePrefix = null)
+    public function sqlColumnForField(string|SilverStripe\ErrorPage\ErrorPage $class, string $field, string $tablePrefix = null): string
     {
         $table = $this->tableForField($class, $field);
         if (!$table) {
@@ -123,7 +123,7 @@ class DataObjectSchema
      *
      * @return string Returns the table name, or null if there is no table
      */
-    public function tableName($class)
+    public function tableName(string|SilverStripe\Assets\File $class): string
     {
         $tables = $this->getTableNames();
         $class = ClassInfo::class_name($class);
@@ -142,7 +142,7 @@ class DataObjectSchema
      * @return string
      * @throws InvalidArgumentException
      */
-    public function baseDataClass($class)
+    public function baseDataClass(string|TractorCow\Fluent\Model\Locale $class): string
     {
         $current = $class;
         while ($next = get_parent_class($current ?? '')) {
@@ -162,7 +162,7 @@ class DataObjectSchema
      *
      * @return string
      */
-    public function baseDataTable($class)
+    public function baseDataTable(string|TractorCow\Fluent\Model\Locale $class): string
     {
         return $this->tableName($this->baseDataClass($class));
     }
@@ -193,7 +193,7 @@ class DataObjectSchema
      *
      * @return array List of fields, where the key is the field name and the value is the field specification.
      */
-    public function fieldSpecs($classOrInstance, $options = 0)
+    public function fieldSpecs(string|SilverStripe\ErrorPage\ErrorPage $classOrInstance, int $options = 0): array
     {
         $class = ClassInfo::class_name($classOrInstance);
 
@@ -245,7 +245,7 @@ class DataObjectSchema
      * @return string|null Field will be a string in FieldClass(args) format, or
      * RecordClass.FieldClass(args) format if using INCLUDE_CLASS. Will be null if no field is found.
      */
-    public function fieldSpec($classOrInstance, $fieldName, $options = 0)
+    public function fieldSpec(string|SilverStripe\ErrorPage\ErrorPage $classOrInstance, string $fieldName, int $options = 0): null|string
     {
         $specs = $this->fieldSpecs($classOrInstance, $options);
         return isset($specs[$fieldName]) ? $specs[$fieldName] : null;
@@ -258,7 +258,7 @@ class DataObjectSchema
      *
      * @return string|null The FQN of the class, or null if not found
      */
-    public function tableClass($table)
+    public function tableClass(string $table): string|null
     {
         $tables = $this->getTableNames();
         $class = array_search($table, $tables ?? [], true);
@@ -281,7 +281,7 @@ class DataObjectSchema
     /**
      * Cache all table names if necessary
      */
-    protected function cacheTableNames()
+    protected function cacheTableNames(): void
     {
         if ($this->tableNames) {
             return;
@@ -314,7 +314,7 @@ class DataObjectSchema
      *
      * @return string
      */
-    protected function buildTableName($class)
+    protected function buildTableName(string $class): string
     {
         $table = Config::inst()->get($class, 'table_name', Config::UNINHERITED);
 
@@ -346,7 +346,7 @@ class DataObjectSchema
      *
      * @return array Map of fieldname to specification, similar to {@link DataObject::$db}.
      */
-    public function databaseFields($class, $aggregated = true)
+    public function databaseFields(string|TractorCow\Fluent\Model\Locale $class, bool $aggregated = true): array
     {
         $class = ClassInfo::class_name($class);
         if ($class === DataObject::class) {
@@ -373,7 +373,7 @@ class DataObjectSchema
      *
      * @return string|null Field specification, or null if not a field
      */
-    public function databaseField($class, $field, $aggregated = true)
+    public function databaseField(string $class, string $field, bool $aggregated = true): string|null
     {
         $fields = $this->databaseFields($class, $aggregated);
         return isset($fields[$field]) ? $fields[$field] : null;
@@ -385,7 +385,7 @@ class DataObjectSchema
      *
      * @return array
      */
-    public function databaseIndexes($class, $aggregated = true)
+    public function databaseIndexes(string $class, bool $aggregated = true): array
     {
         $class = ClassInfo::class_name($class);
         if ($class === DataObject::class) {
@@ -406,7 +406,7 @@ class DataObjectSchema
      *
      * @return bool
      */
-    public function classHasTable($class)
+    public function classHasTable(string $class): bool
     {
         if (!is_subclass_of($class, DataObject::class)) {
             return false;
@@ -430,7 +430,7 @@ class DataObjectSchema
      *
      * @return array List of composite fields and their class spec
      */
-    public function compositeFields($class, $aggregated = true)
+    public function compositeFields(string $class, bool $aggregated = true): array
     {
         $class = ClassInfo::class_name($class);
         if ($class === DataObject::class) {
@@ -458,7 +458,7 @@ class DataObjectSchema
      *
      * @return string|null Field specification, or null if not a field
      */
-    public function compositeField($class, $field, $aggregated = true)
+    public function compositeField(string $class, string $field, $aggregated = true): null|string
     {
         $fields = $this->compositeFields($class, $aggregated);
         return isset($fields[$field]) ? $fields[$field] : null;
@@ -470,7 +470,7 @@ class DataObjectSchema
      *
      * @param string $class Class name to cache
      */
-    protected function cacheDatabaseFields($class)
+    protected function cacheDatabaseFields(string $class): void
     {
         // Skip if already cached
         if (isset($this->databaseFields[$class]) && isset($this->compositeFields[$class])) {
@@ -534,7 +534,7 @@ class DataObjectSchema
      *
      * @param $class
      */
-    protected function cacheDatabaseIndexes($class)
+    protected function cacheDatabaseIndexes(string $class): void
     {
         if (!array_key_exists($class, $this->databaseIndexes ?? [])) {
             $this->databaseIndexes[$class] = array_merge(
@@ -552,7 +552,7 @@ class DataObjectSchema
      *
      * @return array
      */
-    protected function cacheDefaultDatabaseIndexes($class)
+    protected function cacheDefaultDatabaseIndexes(string $class): array
     {
         if (array_key_exists($class, $this->defaultDatabaseIndexes ?? [])) {
             return $this->defaultDatabaseIndexes[$class];
@@ -579,7 +579,7 @@ class DataObjectSchema
      * @throws InvalidArgumentException If an index already exists on the class
      * @throws InvalidArgumentException If a custom index format is not valid
      */
-    protected function buildCustomDatabaseIndexes($class)
+    protected function buildCustomDatabaseIndexes(string $class): array
     {
         $indexes = [];
         $classIndexes = Config::inst()->get($class, 'indexes', Config::UNINHERITED) ?: [];
@@ -621,7 +621,7 @@ class DataObjectSchema
         return $indexes;
     }
 
-    protected function buildSortDatabaseIndexes($class)
+    protected function buildSortDatabaseIndexes(string $class): array
     {
         $sort = Config::inst()->get($class, 'default_sort', Config::UNINHERITED);
         $indexes = [];
@@ -656,7 +656,7 @@ class DataObjectSchema
      *
      * @return array Resolved table and column.
      */
-    protected function parseSortColumn($column)
+    protected function parseSortColumn(string $column): array
     {
         // Parse column specification, considering possible ansi sql quoting
         // Note that table prefix is allowed, but discarded
@@ -679,7 +679,7 @@ class DataObjectSchema
      *
      * @return string
      */
-    public function tableForField($candidateClass, $fieldName)
+    public function tableForField(string|SilverStripe\ErrorPage\ErrorPage $candidateClass, string $fieldName): string|null
     {
         $class = $this->classForField($candidateClass, $fieldName);
         if ($class) {
@@ -698,7 +698,7 @@ class DataObjectSchema
      *
      * @return string
      */
-    public function classForField($candidateClass, $fieldName)
+    public function classForField(string|SilverStripe\ErrorPage\ErrorPage $candidateClass, string $fieldName): string|null
     {
         // normalise class name
         $candidateClass = ClassInfo::class_name($candidateClass);
@@ -745,7 +745,7 @@ class DataObjectSchema
      *
      * @return array|null
      */
-    public function manyManyComponent($class, $component)
+    public function manyManyComponent(string $class, string $component): array|null
     {
         $classes = ClassInfo::ancestry($class);
         foreach ($classes as $parentClass) {
@@ -792,7 +792,7 @@ class DataObjectSchema
      *
      * @return array Array with child class and relation name
      */
-    protected function parseBelongsManyManyComponent($parentClass, $component, $specification)
+    protected function parseBelongsManyManyComponent(string $parentClass, string $component, string $specification): array
     {
         $childClass = $specification;
         $relationName = null;
@@ -836,7 +836,7 @@ class DataObjectSchema
      *
      * @return array|null
      */
-    public function manyManyExtraFieldsForComponent($class, $component)
+    public function manyManyExtraFieldsForComponent(string $class, string $component): null|array
     {
         // Get directly declared many_many_extraFields
         $extraFields = Config::inst()->get($class, 'many_many_extraFields');
@@ -871,7 +871,7 @@ class DataObjectSchema
      *
      * @return string|null
      */
-    public function hasManyComponent($class, $component, $classOnly = true)
+    public function hasManyComponent(string $class, string|int $component, bool $classOnly = true): string|null
     {
         $hasMany = (array)Config::inst()->get($class, 'has_many');
         if (!isset($hasMany[$component])) {
@@ -895,7 +895,7 @@ class DataObjectSchema
      *
      * @return string|null
      */
-    public function hasOneComponent($class, $component)
+    public function hasOneComponent(string|DNADesign\Elemental\Models\BaseElement $class, string $component): null|string
     {
         $hasOnes = Config::forClass($class)->get('has_one');
         if (!isset($hasOnes[$component])) {
@@ -918,7 +918,7 @@ class DataObjectSchema
      *
      * @return string|null
      */
-    public function belongsToComponent($class, $component, $classOnly = true)
+    public function belongsToComponent(string $class, string $component, bool $classOnly = true): null|string
     {
         $belongsTo = (array)Config::forClass($class)->get('belongs_to');
         if (!isset($belongsTo[$component])) {
@@ -944,7 +944,7 @@ class DataObjectSchema
      *
      * @return string|null
      */
-    public function unaryComponent($class, $component)
+    public function unaryComponent(string $class, string $component): null|string
     {
         return $this->hasOneComponent($class, $component) ?: $this->belongsToComponent($class, $component);
     }
@@ -957,7 +957,7 @@ class DataObjectSchema
      *
      * @return array
      */
-    protected function parseManyManyComponent($parentClass, $component, $specification)
+    protected function parseManyManyComponent(string $parentClass, string $component, string|array|int $specification): array
     {
         // Check if this is many_many_through
         if (is_array($specification)) {
@@ -1007,7 +1007,7 @@ class DataObjectSchema
      *
      * @return string|null
      */
-    protected function getManyManyInverseRelationship($childClass, $parentClass)
+    protected function getManyManyInverseRelationship(string $childClass, string $parentClass): string
     {
         $otherManyMany = Config::inst()->get($childClass, 'many_many', Config::UNINHERITED);
         if (!$otherManyMany) {
@@ -1045,7 +1045,7 @@ class DataObjectSchema
      * @return string
      * @throws Exception
      */
-    public function getRemoteJoinField($class, $component, $type = 'has_many', &$polymorphic = false)
+    public function getRemoteJoinField(string $class, string $component, $type = 'has_many', &$polymorphic = false): string
     {
         // Extract relation from current object
         if ($type === 'has_many') {
@@ -1126,7 +1126,7 @@ class DataObjectSchema
      * @return string Class that matches the given relation
      * @throws InvalidArgumentException
      */
-    protected function checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, $key)
+    protected function checkManyManyFieldClass(string $parentClass, string $component, string $joinClass, array $specification, string $key): string
     {
         // Ensure value for this key exists
         if (empty($specification[$key])) {
@@ -1187,7 +1187,7 @@ class DataObjectSchema
      *
      * @return string Name of join class
      */
-    protected function checkManyManyJoinClass($parentClass, $component, $specification)
+    protected function checkManyManyJoinClass(string $parentClass, string $component, array $specification): string
     {
         if (empty($specification['through'])) {
             throw new InvalidArgumentException(
@@ -1212,7 +1212,7 @@ class DataObjectSchema
      * @param string $relationClass Candidate class to check
      * @param string $type Relation type (e.g. has_one)
      */
-    protected function checkRelationClass($class, $component, $relationClass, $type)
+    protected function checkRelationClass(string|DNADesign\Elemental\Models\BaseElement $class, string|int $component, string|array|int $relationClass, string $type): void
     {
         if (!is_string($component) || is_numeric($component)) {
             throw new InvalidArgumentException(

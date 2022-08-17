@@ -48,7 +48,7 @@ class PermissionCheckboxSetField extends FormField
      *  Caution: saveInto() can only be used with a single record, all inherited permissions will be marked readonly.
      *  Setting multiple groups only makes sense in a readonly context. (Optional)
      */
-    public function __construct($name, $title, $managedClass, $filterField, $records = null)
+    public function __construct(string $name, bool|string $title, string $managedClass, string $filterField, SilverStripe\Security\Group $records = null): void
     {
         $this->filterField = $filterField;
         $this->managedClass = $managedClass;
@@ -72,7 +72,7 @@ class PermissionCheckboxSetField extends FormField
     /**
      * @param array $codes
      */
-    public function setHiddenPermissions($codes)
+    public function setHiddenPermissions(array $codes): void
     {
         $this->hiddenPermissions = $codes;
     }
@@ -80,7 +80,7 @@ class PermissionCheckboxSetField extends FormField
     /**
      * @return array
      */
-    public function getHiddenPermissions()
+    public function getHiddenPermissions(): array
     {
         return $this->hiddenPermissions;
     }
@@ -89,7 +89,7 @@ class PermissionCheckboxSetField extends FormField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): string
     {
         $uninheritedCodes = [];
         $inheritedCodes = [];
@@ -292,7 +292,7 @@ class PermissionCheckboxSetField extends FormField
      *
      * @param DataObjectInterface $record
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         $fieldname = $this->name;
         $managedClass = $this->managedClass;

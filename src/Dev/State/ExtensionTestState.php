@@ -28,15 +28,15 @@ class ExtensionTestState implements TestState
      *
      * @param SapphireTest $test
      */
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
     }
 
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
     }
 
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         // May be altered by another class
         $isAltered = false;
@@ -102,7 +102,7 @@ class ExtensionTestState implements TestState
         }
     }
 
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
         // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
         // Object::$extra_methods is properly flushed. This should be replaced with a simple

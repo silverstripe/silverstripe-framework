@@ -72,7 +72,7 @@ if (class_exists(Constraint::class)) {
          *
          * @throws ExpectationFailedException
          */
-        public function evaluate($other, $description = '', $returnResult = false): ?bool
+        public function evaluate(DNADesign\Elemental\Tests\Src\TestPage $other, string $description = '', bool $returnResult = false): ?bool
         {
             $success = true;
 
@@ -170,7 +170,7 @@ class ViewableDataContains extends PHPUnit_Framework_Constraint implements TestO
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate(DNADesign\Elemental\Tests\Src\TestPage $other, string $description = '', bool $returnResult = false)
     {
         $success = true;
 

@@ -32,7 +32,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      * @param array $assignments List of column assignments
      * @return static
      */
-    public static function create($into = null, $assignments = [])
+    public static function create(string $into = null, array $assignments = []): SilverStripe\ORM\Queries\SQLInsert
     {
         return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
     }
@@ -43,7 +43,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      * @param string $into Table name to insert into (ANSI quoted)
      * @param array $assignments List of column assignments
      */
-    function __construct($into = null, $assignments = [])
+    function __construct(string $into = null, array $assignments = []): void
     {
         $this->setInto($into);
         if (!empty($assignments)) {
@@ -57,7 +57,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      * @param string $into Single table name (ANSI quoted)
      * @return $this The self reference to this query
      */
-    public function setInto($into)
+    public function setInto(string $into): SilverStripe\ORM\Queries\SQLInsert
     {
         $this->into = $into;
         return $this;
@@ -68,12 +68,12 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      *
      * @return string Single table name
      */
-    public function getInto()
+    public function getInto(): string
     {
         return $this->into;
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->into) || empty($this->rows);
     }
@@ -84,7 +84,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      * @param array|SQLAssignmentRow $data A list of data to include for this row
      * @return $this The self reference to this query
      */
-    public function addRow($data = null)
+    public function addRow(array $data = null): SilverStripe\ORM\Queries\SQLInsert
     {
         // Clear existing empty row
         if (($current = $this->currentRow()) && $current->isEmpty()) {
@@ -105,7 +105,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      *
      * @return SQLAssignmentRow[]
      */
-    public function getRows()
+    public function getRows(): array
     {
         return $this->rows;
     }
@@ -115,7 +115,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      *
      * @return array
      */
-    public function getColumns()
+    public function getColumns(): array
     {
         $columns = [];
         foreach ($this->getRows() as $row) {
@@ -155,7 +155,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
      * @param boolean $create Flag to indicate if a row should be created if none exists
      * @return SQLAssignmentRow|false The row, or false if none exists
      */
-    public function currentRow($create = false)
+    public function currentRow(bool $create = false): SilverStripe\ORM\Queries\SQLAssignmentRow|bool
     {
         $current = end($this->rows);
         if ($create && !$current) {
@@ -170,7 +170,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
         return $this;
     }
 
-    public function setAssignments(array $assignments)
+    public function setAssignments(array $assignments): SilverStripe\ORM\Queries\SQLInsert
     {
         $this->currentRow(true)->setAssignments($assignments);
         return $this;
@@ -181,7 +181,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression
         return $this->currentRow(true)->getAssignments();
     }
 
-    public function assign($field, $value)
+    public function assign(string $field, string|int $value): SilverStripe\ORM\Queries\SQLInsert
     {
         $this->currentRow(true)->assign($field, $value);
         return $this;

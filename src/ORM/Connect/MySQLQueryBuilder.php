@@ -24,7 +24,7 @@ class MySQLQueryBuilder extends DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string The finalised limit SQL fragment
      */
-    public function buildLimitFragment(SQLSelect $query, array &$parameters)
+    public function buildLimitFragment(SQLSelect $query, array &$parameters): string
     {
         $nl = $this->getSeparator();
 

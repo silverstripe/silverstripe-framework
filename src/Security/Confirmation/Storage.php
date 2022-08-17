@@ -39,7 +39,7 @@ class Storage
      * @param string $id Unique storage identifier within the session
      * @param bool $new Cleanup the storage
      */
-    public function __construct(Session $session, $id, $new = true)
+    public function __construct(Session $session, string $id, bool $new = true): void
     {
         $id = trim((string) $id);
         if (!strlen($id ?? '')) {
@@ -58,7 +58,7 @@ class Storage
      * Remove all the data from the storage
      * Cleans up Session and Cookie related to this storage
      */
-    public function cleanup()
+    public function cleanup(): void
     {
         Cookie::force_expiry($this->getCookieKey());
         $this->session->clear($this->getNamespace());
@@ -72,7 +72,7 @@ class Storage
      *
      * @return bool whether all items have been confirmed
      */
-    public function confirm($data)
+    public function confirm(array $data): bool
     {
         foreach ($this->getItems() as $item) {
             $key = base64_encode($this->getTokenHash($item) ?? '');
@@ -100,7 +100,7 @@ class Storage
      *
      * @return array
      */
-    public function getHashedItems()
+    public function getHashedItems(): array
     {
         $items = [];
 
@@ -120,7 +120,7 @@ class Storage
      *
      * @return string
      */
-    public function getTokenHash(Item $item)
+    public function getTokenHash(Item $item): string
     {
         $token = $item->getToken();
         $salt = $this->getSessionSalt();
@@ -135,7 +135,7 @@ class Storage
      *
      * @return string
      */
-    public function getCookieKey()
+    public function getCookieKey(): string
     {
         $salt = $this->getSessionSalt();
 
@@ -159,7 +159,7 @@ class Storage
      *
      * @return string
      */
-    public function getSessionSalt()
+    public function getSessionSalt(): string
     {
         $key = $this->getNamespace('salt');
 
@@ -176,7 +176,7 @@ class Storage
      *
      * @return string
      */
-    protected function generateSalt()
+    protected function generateSalt(): string
     {
         return random_bytes(64);
     }
@@ -189,7 +189,7 @@ class Storage
      *
      * @return $this
      */
-    public function putItem(Item $item)
+    public function putItem(Item $item): SilverStripe\Security\Confirmation\Storage
     {
         $key = $this->getNamespace('items');
 
@@ -207,7 +207,7 @@ class Storage
      *
      * @return Item[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->session->get($this->getNamespace('items')) ?: [];
     }
@@ -236,7 +236,7 @@ class Storage
      *
      * @return $this
      */
-    public function setSuccessRequest(HTTPRequest $request)
+    public function setSuccessRequest(HTTPRequest $request): void
     {
         $url = Controller::join_links(Director::baseURL(), $request->getURL(true));
         $this->setSuccessUrl($url);
@@ -290,7 +290,7 @@ class Storage
      *
      * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod(): string
     {
         return $this->session->get($this->getNamespace('httpMethod'));
     }
@@ -361,7 +361,7 @@ class Storage
      *
      * @return $this
      */
-    public function setSuccessUrl($url)
+    public function setSuccessUrl(string $url): SilverStripe\Security\Confirmation\Storage
     {
         $this->session->set($this->getNamespace('successUrl'), $url);
         return $this;
@@ -372,7 +372,7 @@ class Storage
      *
      * @return string
      */
-    public function getSuccessUrl()
+    public function getSuccessUrl(): string
     {
         return $this->session->get($this->getNamespace('successUrl'));
     }
@@ -384,7 +384,7 @@ class Storage
      *
      * @return $this
      */
-    public function setFailureUrl($url)
+    public function setFailureUrl(string $url): SilverStripe\Security\Confirmation\Storage
     {
         $this->session->set($this->getNamespace('failureUrl'), $url);
         return $this;
@@ -407,7 +407,7 @@ class Storage
      *
      * @return bool
      */
-    public function check(array $items)
+    public function check(array $items): bool
     {
         foreach ($items as $itemToConfirm) {
             foreach ($this->getItems() as $item) {
@@ -435,7 +435,7 @@ class Storage
      *
      * @return string
      */
-    protected function getNamespace($key = null)
+    protected function getNamespace(string $key = null): string
     {
         return sprintf(
             '%s.%s%s',

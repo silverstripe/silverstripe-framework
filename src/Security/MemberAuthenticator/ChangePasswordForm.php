@@ -26,7 +26,7 @@ class ChangePasswordForm extends Form
      * {@link FormField} objects.
      * @param FieldList|FormAction $actions All of the action buttons in the form - a {@link FieldList} of
      */
-    public function __construct($controller, $name, $fields = null, $actions = null)
+    public function __construct(SilverStripe\MFA\Authenticator\ChangePasswordHandler $controller, string $name, $fields = null, $actions = null): void
     {
         $backURL = $controller->getBackURL()
             ?: $controller->getRequest()->getSession()->get('BackURL');
@@ -48,7 +48,7 @@ class ChangePasswordForm extends Form
     /**
      * @return FieldList
      */
-    protected function getFormFields()
+    protected function getFormFields(): SilverStripe\Forms\FieldList
     {
         $fields = FieldList::create();
 
@@ -68,7 +68,7 @@ class ChangePasswordForm extends Form
     /**
      * @return FieldList
      */
-    protected function getFormActions()
+    protected function getFormActions(): SilverStripe\Forms\FieldList
     {
         $actions = FieldList::create(
             FormAction::create(

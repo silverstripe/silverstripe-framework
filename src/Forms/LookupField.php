@@ -30,7 +30,7 @@ class LookupField extends MultiSelectField
      *
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $source = ArrayLib::flatten($this->getSource());
         $values = $this->getValueArray();
@@ -72,7 +72,7 @@ class LookupField extends MultiSelectField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         return true;
     }

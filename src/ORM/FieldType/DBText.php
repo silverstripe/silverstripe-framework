@@ -41,7 +41,7 @@ class DBText extends DBString
      * (non-PHPdoc)
      * @see DBField::requireField()
      */
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -68,7 +68,7 @@ class DBText extends DBString
      * @param int $maxSentences The amount of sentences you want.
      * @return string
      */
-    public function LimitSentences($maxSentences = 2)
+    public function LimitSentences(int $maxSentences = 2): string
     {
         if (!is_numeric($maxSentences)) {
             throw new InvalidArgumentException("Text::LimitSentence() expects one numeric argument");
@@ -105,7 +105,7 @@ class DBText extends DBString
      *
      * @return string
      */
-    public function FirstSentence()
+    public function FirstSentence(): string
     {
         return $this->LimitSentences(1);
     }
@@ -117,7 +117,7 @@ class DBText extends DBString
      * @param string|false $add
      * @return string
      */
-    public function Summary($maxWords = 50, $add = false)
+    public function Summary(int $maxWords = 50, string|bool $add = false): string
     {
         // Get plain-text version
         $value = $this->Plain();
@@ -161,7 +161,7 @@ class DBText extends DBString
      *
      * @return string
      */
-    public function FirstParagraph()
+    public function FirstParagraph(): string
     {
         $value = $this->Plain();
         if (empty($value)) {
@@ -185,12 +185,12 @@ class DBText extends DBString
      * @return string HTML string with context
      */
     public function ContextSummary(
-        $characters = 500,
+        int $characters = 500,
         $keywords = null,
         $highlight = true,
         $prefix = false,
         $suffix = false
-    ) {
+    ): string {
 
         if (!$keywords) {
             // Use the default "Search" request variable (from SearchForm)
@@ -254,7 +254,7 @@ class DBText extends DBString
         return nl2br($summary ?? '');
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(string $title = null, array $params = null): SilverStripe\Forms\TextareaField
     {
         if (!$this->nullifyEmpty) {
             // Allow the user to select if it's null instead of automatically assuming empty string is
@@ -264,7 +264,7 @@ class DBText extends DBString
         return TextareaField::create($this->name, $title);
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): SilverStripe\Forms\TextField
     {
         return new TextField($this->name, $title);
     }

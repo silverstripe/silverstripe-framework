@@ -6,7 +6,7 @@ use SilverStripe\Assets\File;
 
 class BehatFixtureFactory extends FixtureFactory
 {
-    public function createObject($name, $identifier, $data = null)
+    public function createObject(string $name, string $identifier, array $data = null): Page
     {
         if (!$data) {
             $data = [];

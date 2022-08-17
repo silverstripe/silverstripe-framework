@@ -23,7 +23,7 @@ class SingleLookupField extends SingleSelectField
     /**
      * @return mixed|null
      */
-    protected function valueToLabel()
+    protected function valueToLabel(): string|null
     {
         $value = $this->value;
         $source = $this->getSource();
@@ -42,7 +42,7 @@ class SingleLookupField extends SingleSelectField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Security\Member_Validator $validator): bool
     {
         return true;
     }
@@ -77,7 +77,7 @@ class SingleLookupField extends SingleSelectField
     /**
      * @return string
      */
-    public function Type()
+    public function Type(): string
     {
         return 'single-lookup readonly';
     }
@@ -100,7 +100,7 @@ class SingleLookupField extends SingleSelectField
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         // this field uses the same default template as LookupField
         return parent::getTemplate() ?: LookupField::class;
@@ -113,7 +113,7 @@ class SingleLookupField extends SingleSelectField
      *
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $label = $this->valueToLabel();
         if (!is_null($label)) {

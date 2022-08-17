@@ -23,7 +23,7 @@ class CMSLoginHandler extends LoginHandler
      * @skipUpgrade
      * @return CMSMemberLoginForm
      */
-    public function loginForm()
+    public function loginForm(): SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm
     {
         return CMSMemberLoginForm::create(
             $this,
@@ -106,7 +106,7 @@ PHP
      *
      * @return HTTPResponse
      */
-    protected function redirectAfterSuccessfulLogin()
+    protected function redirectAfterSuccessfulLogin(): SilverStripe\Control\HTTPResponse
     {
         // Check password expiry
         if (Security::getCurrentUser()->isPasswordExpired()) {

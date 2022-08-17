@@ -67,7 +67,7 @@ class OptionsetField extends SingleSelectField
      * @param boolean $odd True if this should be striped odd. Otherwise it should be striped even
      * @return ArrayData Field option
      */
-    protected function getFieldOption($value, $title, $odd)
+    protected function getFieldOption(int|string $value, string|SilverStripe\ORM\FieldType\DBHTMLText $title, bool $odd): SilverStripe\View\ArrayData
     {
         return new ArrayData([
             'ID' => $this->getOptionID($value),
@@ -87,7 +87,7 @@ class OptionsetField extends SingleSelectField
      * @param string $value
      * @return string
      */
-    protected function getOptionID($value)
+    protected function getOptionID(int|string $value): string
     {
         return $this->ID() . '_' . Convert::raw2htmlid($value);
     }
@@ -97,7 +97,7 @@ class OptionsetField extends SingleSelectField
      *
      * @return string
      */
-    protected function getOptionName()
+    protected function getOptionName(): string
     {
         return $this->getName();
     }
@@ -109,7 +109,7 @@ class OptionsetField extends SingleSelectField
      * @param bool $odd If this item is odd numbered in the list
      * @return string
      */
-    protected function getOptionClass($value, $odd)
+    protected function getOptionClass(int|string $value, bool $odd): string
     {
         $oddClass = $odd ? 'odd' : 'even';
         $valueClass = ' val' . Convert::raw2htmlid($value);
@@ -117,7 +117,7 @@ class OptionsetField extends SingleSelectField
     }
 
 
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $options = [];
         $odd = false;
@@ -138,7 +138,7 @@ class OptionsetField extends SingleSelectField
     /**
      * {@inheritdoc}
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         if (!$this->Value()) {
             return true;
@@ -147,7 +147,7 @@ class OptionsetField extends SingleSelectField
         return parent::validate($validator);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = array_merge(
             parent::getAttributes(),

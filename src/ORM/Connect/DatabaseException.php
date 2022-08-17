@@ -53,7 +53,7 @@ class DatabaseException extends Exception
      * @param string $sql The SQL executed for this query
      * @param array $parameters The parameters given for this query, if any
      */
-    public function __construct($message = '', $code = 0, $previous = null, $sql = null, $parameters = [])
+    public function __construct(string $message = '', int $code = 0, $previous = null, string $sql = null, array $parameters = []): void
     {
         parent::__construct($message, $code, $previous);
         $this->sql = $sql;

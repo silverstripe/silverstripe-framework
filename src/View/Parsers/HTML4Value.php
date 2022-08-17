@@ -9,7 +9,7 @@ class HTML4Value extends HTMLValue
      * @param string $content
      * @return bool
      */
-    public function setContent($content)
+    public function setContent(string $content): bool
     {
         // Ensure that \r (carriage return) characters don't get replaced with "&#13;" entity by DOMDocument
         // This behaviour is apparently XML spec, but we don't want this because it messes up the HTML

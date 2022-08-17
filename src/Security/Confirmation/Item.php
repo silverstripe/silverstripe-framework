@@ -45,7 +45,7 @@ class Item
      * @param string $name Human readable name of the item
      * @param string $description Human readable description of the item
      */
-    public function __construct($token, $name, $description)
+    public function __construct(string $token, string $name, string $description): void
     {
         $this->token = $token;
         $this->name = $name;
@@ -58,7 +58,7 @@ class Item
      *
      * @return string
      */
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
@@ -68,7 +68,7 @@ class Item
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -78,7 +78,7 @@ class Item
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -88,7 +88,7 @@ class Item
      *
      * @return bool
      */
-    public function isConfirmed()
+    public function isConfirmed(): bool
     {
         return $this->confirmed;
     }
@@ -96,7 +96,7 @@ class Item
     /**
      * Mark the item as confirmed
      */
-    public function confirm()
+    public function confirm(): void
     {
         $this->confirmed = true;
     }

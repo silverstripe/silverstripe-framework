@@ -73,7 +73,7 @@ class DataQuery
      *
      * @param string $dataClass The name of the DataObject class that you wish to query
      */
-    public function __construct($dataClass)
+    public function __construct(string $dataClass): void
     {
         $this->dataClass = $dataClass;
         $this->initialiseQuery();
@@ -82,7 +82,7 @@ class DataQuery
     /**
      * Clone this object
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->query = clone $this->query;
     }
@@ -92,7 +92,7 @@ class DataQuery
      *
      * @return string
      */
-    public function dataClass()
+    public function dataClass(): string
     {
         return $this->dataClass;
     }
@@ -103,7 +103,7 @@ class DataQuery
      *
      * @return SQLSelect
      */
-    public function query()
+    public function query(): SilverStripe\ORM\Queries\SQLSelect
     {
         return $this->getFinalisedQuery();
     }
@@ -117,7 +117,7 @@ class DataQuery
      * contained within any other predicate.
      * @return $this
      */
-    public function removeFilterOn($fieldExpression)
+    public function removeFilterOn(array|string $fieldExpression): SilverStripe\ORM\DataQuery
     {
         $matched = false;
 
@@ -162,7 +162,7 @@ class DataQuery
     /**
      * Set up the simplest initial query
      */
-    protected function initialiseQuery()
+    protected function initialiseQuery(): void
     {
         // Join on base table and let lazy loading join subtables
         $baseClass = DataObject::getSchema()->baseDataClass($this->dataClass());
@@ -189,7 +189,7 @@ class DataQuery
      * @param array $queriedColumns
      * @return $this
      */
-    public function setQueriedColumns($queriedColumns)
+    public function setQueriedColumns(array $queriedColumns): SilverStripe\ORM\DataQuery
     {
         $this->queriedColumns = $queriedColumns;
         return $this;
@@ -201,7 +201,7 @@ class DataQuery
      * @param array|null $queriedColumns Any columns to filter the query by
      * @return SQLSelect The finalised sql query
      */
-    public function getFinalisedQuery($queriedColumns = null)
+    public function getFinalisedQuery(array $queriedColumns = null): SilverStripe\ORM\Queries\SQLSelect
     {
         if (!$queriedColumns) {
             $queriedColumns = $this->queriedColumns;
@@ -353,7 +353,7 @@ class DataQuery
      * @param SQLSelect $query
      * @param array $originalSelect
      */
-    protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = [])
+    protected function ensureSelectContainsOrderbyColumns(SilverStripe\ORM\Queries\SQLSelect $query, array $originalSelect = []): void
     {
         if ($orderby = $query->getOrderBy()) {
             $newOrderby = [];
@@ -430,7 +430,7 @@ class DataQuery
      *
      * @return Query
      */
-    public function execute()
+    public function execute(): SilverStripe\ORM\Connect\MySQLStatement
     {
         return $this->getFinalisedQuery()->execute();
     }
@@ -441,7 +441,7 @@ class DataQuery
      * @param array $parameters Out variable for parameters required for this query
      * @return string The resulting SQL query (may be paramaterised)
      */
-    public function sql(&$parameters = [])
+    public function sql(array &$parameters = []): string
     {
         return $this->getFinalisedQuery()->sql($parameters);
     }
@@ -452,7 +452,7 @@ class DataQuery
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         $quotedColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
         return $this->getFinalisedQuery()->count("DISTINCT {$quotedColumn}");
@@ -499,7 +499,7 @@ class DataQuery
      * automatically so must not contain double quotes.
      * @return string
      */
-    public function max($field)
+    public function max(string $field): null|int|string
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
@@ -515,7 +515,7 @@ class DataQuery
      * automatically so must not contain double quotes.
      * @return string
      */
-    public function min($field)
+    public function min(string $field): int|string|null
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
@@ -531,7 +531,7 @@ class DataQuery
      * automatically so must not contain double quotes.
      * @return string
      */
-    public function avg($field)
+    public function avg(string $field): float
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
@@ -547,7 +547,7 @@ class DataQuery
      * automatically so must not contain double quotes.
      * @return string
      */
-    public function sum($field)
+    public function sum(string $field): float
     {
         $table = DataObject::getSchema()->tableForField($this->dataClass, $field);
         if (!$table) {
@@ -563,7 +563,7 @@ class DataQuery
      * (as an escaped SQL statement)
      * @return string
      */
-    public function aggregate($expression)
+    public function aggregate(string $expression): null|int|string|float
     {
         return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
     }
@@ -574,7 +574,7 @@ class DataQuery
      *
      * @return SQLSelect
      */
-    public function firstRow()
+    public function firstRow(): SilverStripe\ORM\Queries\SQLSelect
     {
         return $this->getFinalisedQuery()->firstRow();
     }
@@ -585,7 +585,7 @@ class DataQuery
      *
      * @return SQLSelect
      */
-    public function lastRow()
+    public function lastRow(): SilverStripe\ORM\Queries\SQLSelect
     {
         return $this->getFinalisedQuery()->lastRow();
     }
@@ -597,7 +597,7 @@ class DataQuery
      * @param string $tableClass Class to select from
      * @param array $columns
      */
-    protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null)
+    protected function selectColumnsFromTable(SQLSelect &$query, string $tableClass, array $columns = null): void
     {
         // Add SQL for multi-value fields
         $schema = DataObject::getSchema();
@@ -635,7 +635,7 @@ class DataQuery
      * @param string $groupby Escaped SQL statement
      * @return $this
      */
-    public function groupby($groupby)
+    public function groupby(string $groupby): SilverStripe\ORM\DataQuery
     {
         $this->query->addGroupBy($groupby);
         return $this;
@@ -647,7 +647,7 @@ class DataQuery
      * @param mixed $having Predicate(s) to set, as escaped SQL statements or parameterised queries
      * @return $this
      */
-    public function having($having)
+    public function having(array $having): SilverStripe\ORM\DataQuery
     {
         $this->query->addHaving($having);
         return $this;
@@ -660,7 +660,7 @@ class DataQuery
      *
      * @return DataQuery_SubGroup
      */
-    public function disjunctiveGroup()
+    public function disjunctiveGroup(): SilverStripe\ORM\DataQuery_SubGroup
     {
         return new DataQuery_SubGroup($this, 'OR');
     }
@@ -672,7 +672,7 @@ class DataQuery
      *
      * @return DataQuery_SubGroup
      */
-    public function conjunctiveGroup()
+    public function conjunctiveGroup(): SilverStripe\ORM\DataQuery_SubGroup
     {
         return new DataQuery_SubGroup($this, 'AND');
     }
@@ -687,7 +687,7 @@ class DataQuery
      * paramaterised queries
      * @return $this
      */
-    public function where($filter)
+    public function where(string|array|SilverStripe\ORM\DataQuery_SubGroup $filter): SilverStripe\ORM\DataQuery
     {
         if ($filter) {
             $this->query->addWhere($filter);
@@ -705,7 +705,7 @@ class DataQuery
      * paramaterised queries
      * @return $this
      */
-    public function whereAny($filter)
+    public function whereAny(array $filter): SilverStripe\ORM\DataQuery
     {
         if ($filter) {
             $this->query->addWhereAny($filter);
@@ -723,7 +723,7 @@ class DataQuery
      * @param bool $clear Clear existing values
      * @return $this
      */
-    public function sort($sort = null, $direction = null, $clear = true)
+    public function sort(string|array $sort = null, string $direction = null, bool $clear = true): SilverStripe\ORM\DataQuery
     {
         if ($clear) {
             $this->query->setOrderBy($sort, $direction);
@@ -739,7 +739,7 @@ class DataQuery
      *
      * @return $this
      */
-    public function reverseSort()
+    public function reverseSort(): SilverStripe\ORM\DataQuery
     {
         $this->query->reverseOrderBy();
         return $this;
@@ -752,7 +752,7 @@ class DataQuery
      * @param int $offset
      * @return $this
      */
-    public function limit($limit, $offset = 0)
+    public function limit(int|bool|string $limit, int|string $offset = 0): SilverStripe\ORM\DataQuery
     {
         $this->query->setLimit($limit, $offset);
         return $this;
@@ -764,7 +764,7 @@ class DataQuery
      * @param bool $value
      * @return $this
      */
-    public function distinct($value)
+    public function distinct(bool $value): SilverStripe\ORM\DataQuery
     {
         $this->query->setDistinct($value);
         return $this;
@@ -782,7 +782,7 @@ class DataQuery
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return $this
      */
-    public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    public function innerJoin(string $table, string $onClause, string $alias = null, int $order = 20, array $parameters = []): SilverStripe\ORM\DataQuery
     {
         if ($table) {
             $this->query->addInnerJoin($table, $onClause, $alias, $order, $parameters);
@@ -802,7 +802,7 @@ class DataQuery
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
      * @return $this
      */
-    public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    public function leftJoin(string $table, string $onClause, string $alias = null, int $order = 20, array $parameters = []): SilverStripe\ORM\DataQuery
     {
         if ($table) {
             $this->query->addLeftJoin($table, $onClause, $alias, $order, $parameters);
@@ -823,7 +823,7 @@ class DataQuery
      * @param string|array $relation Relation in '.' delimited string, or array of parts
      * @return string Table prefix
      */
-    public static function applyRelationPrefix($relation)
+    public static function applyRelationPrefix(array $relation): null|string
     {
         if (!$relation) {
             return null;
@@ -847,7 +847,7 @@ class DataQuery
      * if this relation will be used for sorting, and should not include duplicate rows.
      * @return string The model class of the related item
      */
-    public function applyRelation($relation, $linearOnly = false)
+    public function applyRelation(array|string $relation, bool $linearOnly = false): string
     {
         // NO-OP
         if (!$relation) {
@@ -937,13 +937,13 @@ class DataQuery
      * @param string $type 'has_many' or 'belongs_to'
      */
     protected function joinHasManyRelation(
-        $localClass,
+        string $localClass,
         $localField,
         $foreignClass,
         $localPrefix = null,
         $foreignPrefix = null,
         $type = 'has_many'
-    ) {
+    ): void {
         if (!$foreignClass || $foreignClass === DataObject::class) {
             throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
         }
@@ -1004,12 +1004,12 @@ class DataQuery
      * @param string $foreignPrefix Table prefix to use for joined table
      */
     protected function joinHasOneRelation(
-        $localClass,
+        string $localClass,
         $localField,
         $foreignClass,
         $localPrefix = null,
         $foreignPrefix = null
-    ) {
+    ): void {
         if (!$foreignClass) {
             throw new InvalidArgumentException("Could not find a has_one relationship {$localField} on {$localClass}");
         }
@@ -1069,7 +1069,7 @@ class DataQuery
      * @param string $componentPrefix Table prefix to use for both joined and mapping table
      */
     protected function joinManyManyRelationship(
-        $relationClass,
+        string $relationClass,
         $parentClass,
         $componentClass,
         $parentField,
@@ -1077,7 +1077,7 @@ class DataQuery
         $relationClassOrTable,
         $parentPrefix = null,
         $componentPrefix = null
-    ) {
+    ): void {
         $schema = DataObject::getSchema();
 
         if (class_exists($relationClassOrTable ?? '')) {
@@ -1139,7 +1139,7 @@ class DataQuery
      * @param string $field
      * @return $this
      */
-    public function subtract(DataQuery $subtractQuery, $field = 'ID')
+    public function subtract(DataQuery $subtractQuery, $field = 'ID'): SilverStripe\ORM\DataQuery
     {
         $fieldExpression = $subtractQuery->expressionForField($field);
         $subSelect = $subtractQuery->getFinalisedQuery();
@@ -1177,7 +1177,7 @@ class DataQuery
      * @param array $fields Database column names (will be escaped automatically)
      * @return $this
      */
-    public function addSelectFromTable($table, $fields)
+    public function addSelectFromTable(string $table, array $fields): SilverStripe\ORM\DataQuery
     {
         $fieldExpressions = array_map(function ($item) use ($table) {
             return Convert::symbol2sql("{$table}.{$item}");
@@ -1212,7 +1212,7 @@ class DataQuery
      * @return array List of column values for the specified column
      * @throws InvalidArgumentException
      */
-    public function column($field = 'ID')
+    public function column(string $field = 'ID'): array
     {
         $fieldExpression = $this->expressionForField($field);
         $query = $this->getFinalisedQuery([$field]);
@@ -1242,7 +1242,7 @@ class DataQuery
      * the full composite SQL statement, or the alias set through {@link SQLSelect->selectField()}.
      * @return string The expression used to query this field via this DataQuery
      */
-    protected function expressionForField($field)
+    protected function expressionForField(string $field): string|null
     {
         // Prepare query object for selecting this field
         $query = $this->getFinalisedQuery([$field]);
@@ -1266,7 +1266,7 @@ class DataQuery
      * @param string $fieldExpression String The field to select (escaped SQL statement)
      * @param string $alias String The alias of that field (escaped SQL statement)
      */
-    public function selectField($fieldExpression, $alias = null)
+    public function selectField(string $fieldExpression, string $alias = null): void
     {
         $this->query->selectField($fieldExpression, $alias);
     }
@@ -1286,7 +1286,7 @@ class DataQuery
      * @param string|array $value
      * @return $this
      */
-    public function setQueryParam($key, $value)
+    public function setQueryParam(string $key, string|bool|int|array $value): SilverStripe\ORM\DataQuery
     {
         $this->queryParams[$key] = $value;
         return $this;
@@ -1298,7 +1298,7 @@ class DataQuery
      * @param string $key
      * @return string
      */
-    public function getQueryParam($key)
+    public function getQueryParam(string $key): string|null|int|array|bool
     {
         if (isset($this->queryParams[$key])) {
             return $this->queryParams[$key];
@@ -1310,7 +1310,7 @@ class DataQuery
      * Returns all query parameters
      * @return array query parameters array
      */
-    public function getQueryParams()
+    public function getQueryParams(): null|array
     {
         return $this->queryParams;
     }
@@ -1320,7 +1320,7 @@ class DataQuery
      *
      * @return DataQueryManipulator[]
      */
-    public function getDataQueryManipulators()
+    public function getDataQueryManipulators(): array
     {
         return $this->dataQueryManipulators;
     }
@@ -1331,13 +1331,13 @@ class DataQuery
      * @param DataQueryManipulator $manipulator
      * @return $this
      */
-    public function pushQueryManipulator(DataQueryManipulator $manipulator)
+    public function pushQueryManipulator(DataQueryManipulator $manipulator): SilverStripe\ORM\DataQuery
     {
         $this->dataQueryManipulators[] = $manipulator;
         return $this;
     }
 
-    private function validateColumnField($field, SQLSelect $query)
+    private function validateColumnField(string $field, SQLSelect $query): bool
     {
         // standard column - nothing to process here
         if (strpos($field ?? '', '.') === false) {
@@ -1359,7 +1359,7 @@ class DataQuery
      * @param $table
      * @return mixed
      */
-    private function getJoinTableName($class, $table)
+    private function getJoinTableName(string $class, string $table): string
     {
         $updated = $table;
         $this->invokeWithExtensions('updateJoinTableName', $class, $table, $updated);

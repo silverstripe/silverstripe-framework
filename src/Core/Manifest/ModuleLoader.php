@@ -20,7 +20,7 @@ class ModuleLoader
     /**
      * @return self
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Core\Manifest\ModuleLoader
     {
         return self::$instance ? self::$instance : self::$instance = new static();
     }
@@ -32,7 +32,7 @@ class ModuleLoader
      * @param string $module
      * @return Module
      */
-    public static function getModule($module)
+    public static function getModule(string $module): SilverStripe\Core\Manifest\Module
     {
         return static::inst()->getManifest()->getModule($module);
     }
@@ -43,7 +43,7 @@ class ModuleLoader
      *
      * @return ModuleManifest
      */
-    public function getManifest()
+    public function getManifest(): SilverStripe\Core\Manifest\ModuleManifest
     {
         return $this->manifests[count($this->manifests) - 1];
     }
@@ -63,7 +63,7 @@ class ModuleLoader
      *
      * @param ModuleManifest $manifest
      */
-    public function pushManifest(ModuleManifest $manifest)
+    public function pushManifest(ModuleManifest $manifest): void
     {
         $this->manifests[] = $manifest;
     }
@@ -71,7 +71,7 @@ class ModuleLoader
     /**
      * @return ModuleManifest
      */
-    public function popManifest()
+    public function popManifest(): SilverStripe\Core\Manifest\ModuleManifest
     {
         return array_pop($this->manifests);
     }
@@ -93,7 +93,7 @@ class ModuleLoader
      * @param bool $forceRegen
      * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init(bool $includeTests = false, bool $forceRegen = false, array $ignoredCIConfigs = []): void
     {
         foreach ($this->manifests as $manifest) {
             $manifest->init($includeTests, $forceRegen, $ignoredCIConfigs);

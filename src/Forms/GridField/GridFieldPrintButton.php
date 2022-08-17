@@ -44,7 +44,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $printColumns The columns to include in the print view
      */
-    public function __construct($targetFragment = "after", $printColumns = null)
+    public function __construct(string $targetFragment = "after", $printColumns = null): void
     {
         $this->targetFragment = $targetFragment;
         $this->printColumns = $printColumns;
@@ -57,7 +57,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      *
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $button = new GridField_FormAction(
             $gridField,
@@ -82,7 +82,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      *
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['print'];
     }
@@ -96,7 +96,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param array $data
      * @return DBHTMLText
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, array $arguments, array $data): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if ($actionName == 'print') {
             return $this->handlePrint($gridField);
@@ -109,7 +109,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param GridField $gridField
      * @return array
      */
-    public function getURLHandlers($gridField)
+    public function getURLHandlers(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [
             'print' => 'handlePrint',
@@ -123,7 +123,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param HTTPRequest $request
      * @return DBHTMLText
      */
-    public function handlePrint($gridField, $request = null)
+    public function handlePrint(SilverStripe\Forms\GridField\GridField $gridField, $request = null): SilverStripe\ORM\FieldType\DBHTMLText
     {
         set_time_limit(60);
         Requirements::clear();
@@ -149,7 +149,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      *
      * @return array
      */
-    protected function getPrintColumnsForGridField(GridField $gridField)
+    protected function getPrintColumnsForGridField(GridField $gridField): array
     {
         if ($this->printColumns) {
             return $this->printColumns;
@@ -171,7 +171,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      *
      * @return array
      */
-    public function getTitle(GridField $gridField)
+    public function getTitle(GridField $gridField): string
     {
         $form = $gridField->getForm();
         $currentController = $gridField->getForm()->getController();
@@ -204,7 +204,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param GridField $gridField
      * @return ArrayData
      */
-    public function generatePrintData(GridField $gridField)
+    public function generatePrintData(GridField $gridField): SilverStripe\View\ArrayData
     {
         $printColumns = $this->getPrintColumnsForGridField($gridField);
 
@@ -271,7 +271,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param array $cols
      * @return $this
      */
-    public function setPrintColumns($cols)
+    public function setPrintColumns(array $cols): SilverStripe\Forms\GridField\GridFieldPrintButton
     {
         $this->printColumns = $cols;
 
@@ -290,7 +290,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      * @param bool $bool
      * @return $this
      */
-    public function setPrintHasHeader($bool)
+    public function setPrintHasHeader(bool $bool): SilverStripe\Forms\GridField\GridFieldPrintButton
     {
         $this->printHasHeader = $bool;
 

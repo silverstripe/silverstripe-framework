@@ -19,7 +19,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader
      */
     protected $groups = [];
 
-    public function __construct($objectClass = null)
+    public function __construct($objectClass = null): void
     {
         if (!$objectClass) {
             $objectClass = 'SilverStripe\\Security\\Member';
@@ -36,7 +36,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader
         'Email' => 'Email',
     ];
 
-    public function processRecord($record, $columnMap, &$results, $preview = false)
+    public function processRecord(array $record, array $columnMap, &$results, bool $preview = false): int
     {
         $objID = parent::processRecord($record, $columnMap, $results, $preview);
 
@@ -78,7 +78,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader
     /**
      * @param array $groups
      */
-    public function setGroups($groups)
+    public function setGroups(array $groups): void
     {
         $this->groups = $groups;
     }

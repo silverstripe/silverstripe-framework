@@ -37,7 +37,7 @@ class ModuleResource
      * @param Module $module
      * @param string $relativePath
      */
-    public function __construct(Module $module, $relativePath)
+    public function __construct(Module $module, string $relativePath): void
     {
         $this->module = $module;
         $this->relativePath = Path::normalise($relativePath, true);
@@ -54,7 +54,7 @@ class ModuleResource
      *
      * @return string Path with no trailing slash E.g. /var/www/module
      */
-    public function getPath()
+    public function getPath(): string
     {
         return Path::join($this->module->getPath(), $this->relativePath);
     }
@@ -67,7 +67,7 @@ class ModuleResource
      *
      * @return string Relative path (no leading /)
      */
-    public function getRelativePath()
+    public function getRelativePath(): string
     {
         // Root module
         $parent = $this->module->getRelativePath();
@@ -86,7 +86,7 @@ class ModuleResource
      *
      * @return string
      */
-    public function getURL()
+    public function getURL(): string
     {
         /** @var ResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
@@ -108,7 +108,7 @@ class ModuleResource
      *
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return file_exists($this->getPath() ?? '');
     }
@@ -126,7 +126,7 @@ class ModuleResource
     /**
      * @return Module
      */
-    public function getModule()
+    public function getModule(): SilverStripe\Core\Manifest\Module
     {
         return $this->module;
     }
@@ -138,7 +138,7 @@ class ModuleResource
      * @param string $path
      * @return ModuleResource
      */
-    public function getRelativeResource($path)
+    public function getRelativeResource(string $path): SilverStripe\Core\Manifest\ModuleResource
     {
         // Defer to parent module
         $relativeToModule = Path::join($this->relativePath, $path);

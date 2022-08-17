@@ -33,7 +33,7 @@ class SQLAssignmentRow
      *
      * @param array $values
      */
-    function __construct(array $values = [])
+    function __construct(array $values = []): void
     {
         $this->setAssignments($values);
     }
@@ -47,7 +47,7 @@ class SQLAssignmentRow
      * placeholder => parameter(s) as a pair
      * @return array A single item array in the format [$sql => [$parameters]]
      */
-    protected function parseAssignment($value)
+    protected function parseAssignment(string|int|array|float $value): array
     {
         // Assume string values (or values saved as customised array objects)
         // represent simple assignment
@@ -89,7 +89,7 @@ class SQLAssignmentRow
      * literal value, or an array with parameterised information.
      * @return array List of normalised assignments
      */
-    protected function normaliseAssignments(array $assignments)
+    protected function normaliseAssignments(array $assignments): array
     {
         $normalised = [];
         foreach ($assignments as $field => $value) {
@@ -134,7 +134,7 @@ class SQLAssignmentRow
      * @param array $assignments The list of fields to assign
      * @return $this The self reference to this row
      */
-    public function addAssignments(array $assignments)
+    public function addAssignments(array $assignments): SilverStripe\ORM\Queries\SQLAssignmentRow
     {
         $assignments = $this->normaliseAssignments($assignments);
         $this->assignments = array_merge($this->assignments, $assignments);
@@ -149,7 +149,7 @@ class SQLAssignmentRow
      * @param array $assignments
      * @return $this The self reference to this row
      */
-    public function setAssignments(array $assignments)
+    public function setAssignments(array $assignments): SilverStripe\ORM\Queries\SQLAssignmentRow
     {
         return $this->clear()->addAssignments($assignments);
     }
@@ -161,7 +161,7 @@ class SQLAssignmentRow
      * column to assign, and the value a parameterised array in the format
      * ['SQL' => [parameters]];
      */
-    public function getAssignments()
+    public function getAssignments(): array
     {
         return $this->assignments;
     }
@@ -188,7 +188,7 @@ class SQLAssignmentRow
      * or a single literal value.
      * @return $this The self reference to this row
      */
-    public function assign($field, $value)
+    public function assign(string $field, array|int|float|string $value): SilverStripe\ORM\Queries\SQLAssignmentRow
     {
         return $this->addAssignments([$field => $value]);
     }
@@ -201,7 +201,7 @@ class SQLAssignmentRow
      * @param string $sql The SQL to use for this update. E.g. "NOW()"
      * @return $this The self reference to this row
      */
-    public function assignSQL($field, $sql)
+    public function assignSQL(string $field, string $sql): SilverStripe\ORM\Queries\SQLAssignmentRow
     {
         return $this->assign($field, [$sql => []]);
     }
@@ -211,7 +211,7 @@ class SQLAssignmentRow
      *
      * @return boolean Flag indicating that this assignment is empty
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->assignments);
     }
@@ -221,7 +221,7 @@ class SQLAssignmentRow
      *
      * @return array
      */
-    public function getColumns()
+    public function getColumns(): array
     {
         return array_keys($this->assignments ?? []);
     }
@@ -231,7 +231,7 @@ class SQLAssignmentRow
      *
      * @return $this The self reference to this row
      */
-    public function clear()
+    public function clear(): SilverStripe\ORM\Queries\SQLAssignmentRow
     {
         $this->assignments = [];
         return $this;

@@ -59,7 +59,7 @@ class ManyManyList extends RelationList
      *
      * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
      */
-    public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = [])
+    public function __construct(string $dataClass, string $joinTable, string $localKey, string $foreignKey, array $extraFields = []): void
     {
         parent::__construct($dataClass);
 
@@ -74,7 +74,7 @@ class ManyManyList extends RelationList
     /**
      * Setup the join between this dataobject and the necessary mapping table
      */
-    protected function linkJoinTable()
+    protected function linkJoinTable(): void
     {
         // Join to the many-many join table
         $dataClassIDColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
@@ -95,7 +95,7 @@ class ManyManyList extends RelationList
      *
      * @return void
      */
-    protected function appendExtraFieldsToQuery()
+    protected function appendExtraFieldsToQuery(): void
     {
         $finalized = [];
 
@@ -127,7 +127,7 @@ class ManyManyList extends RelationList
      * @param array $row
      * @return DataObject
      */
-    public function createDataObject($row)
+    public function createDataObject(array $row): SilverStripe\Security\Group
     {
         // remove any composed fields
         $add = [];
@@ -169,7 +169,7 @@ class ManyManyList extends RelationList
      *
      * @return array
      */
-    protected function foreignIDFilter($id = null)
+    protected function foreignIDFilter(int|array $id = null): array
     {
         if ($id === null) {
             $id = $this->getForeignID();
@@ -197,7 +197,7 @@ class ManyManyList extends RelationList
      * as per getForeignID
      * @return array Condition In array(SQL => parameters format)
      */
-    protected function foreignIDWriteFilter($id = null)
+    protected function foreignIDWriteFilter(int $id = null): array
     {
         return $this->foreignIDFilter($id);
     }
@@ -218,7 +218,7 @@ class ManyManyList extends RelationList
      * Column names should be ANSI quoted.
      * @throws Exception
      */
-    public function add($item, $extraFields = [])
+    public function add(int|string|SilverStripe\Security\Member $item, array $extraFields = []): void
     {
         // Ensure nulls or empty strings are correctly treated as empty arrays
         if (empty($extraFields)) {
@@ -336,7 +336,7 @@ class ManyManyList extends RelationList
      *
      * @param DataObject $item
      */
-    public function remove($item)
+    public function remove(SilverStripe\Security\Member $item): null
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException("ManyManyList::remove() expecting a $this->dataClass object");
@@ -355,7 +355,7 @@ class ManyManyList extends RelationList
      *
      * @param int $itemID The item ID
      */
-    public function removeByID($itemID)
+    public function removeByID(int $itemID): void
     {
         if (!is_numeric($itemID)) {
             throw new InvalidArgumentException("ManyManyList::removeById() expecting an ID");
@@ -387,7 +387,7 @@ class ManyManyList extends RelationList
      *
      * @return void
      */
-    public function removeAll()
+    public function removeAll(): void
     {
         // Remove the join to the join table to avoid MySQL row locking issues.
         $query = $this->dataQuery();
@@ -442,7 +442,7 @@ class ManyManyList extends RelationList
      *
      * @return array Map of fieldName => fieldValue
      */
-    public function getExtraData($componentName, $itemID)
+    public function getExtraData(string $componentName, int $itemID): array
     {
         $result = [];
 
@@ -484,7 +484,7 @@ class ManyManyList extends RelationList
      *
      * @return string the name of the table
      */
-    public function getJoinTable()
+    public function getJoinTable(): string
     {
         return $this->joinTable;
     }
@@ -494,7 +494,7 @@ class ManyManyList extends RelationList
      *
      * @return string the field name
      */
-    public function getLocalKey()
+    public function getLocalKey(): string
     {
         return $this->localKey;
     }
@@ -504,7 +504,7 @@ class ManyManyList extends RelationList
      *
      * @return string the field name
      */
-    public function getForeignKey()
+    public function getForeignKey(): string
     {
         return $this->foreignKey;
     }
@@ -514,7 +514,7 @@ class ManyManyList extends RelationList
      *
      * @return array a map of field names to types
      */
-    public function getExtraFields()
+    public function getExtraFields(): array
     {
         return $this->extraFields;
     }

@@ -15,19 +15,19 @@ class ClassManifestVisitor extends NodeVisitorAbstract
 
     private $interfaces = [];
 
-    public function resetState()
+    public function resetState(): void
     {
         $this->classes = [];
         $this->traits = [];
         $this->interfaces = [];
     }
 
-    public function beforeTraverse(array $nodes)
+    public function beforeTraverse(array $nodes): void
     {
         $this->resetState();
     }
 
-    public function enterNode(Node $node)
+    public function enterNode(Node $node): int|nothing
     {
         if ($node instanceof Node\Stmt\Class_) {
             $extends = [];
@@ -64,17 +64,17 @@ class ClassManifestVisitor extends NodeVisitorAbstract
         }
     }
 
-    public function getClasses()
+    public function getClasses(): array
     {
         return $this->classes;
     }
 
-    public function getTraits()
+    public function getTraits(): array
     {
         return $this->traits;
     }
 
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return $this->interfaces;
     }

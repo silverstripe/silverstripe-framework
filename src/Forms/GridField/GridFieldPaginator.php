@@ -40,7 +40,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      *
      * @param int $itemsPerPage - How many items should be displayed per page
      */
-    public function __construct($itemsPerPage = null)
+    public function __construct(int $itemsPerPage = null): void
     {
         $this->itemsPerPage = $itemsPerPage
             ?: GridFieldPaginator::config()->uninherited('default_items_per_page');
@@ -58,7 +58,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param bool $throwExceptionOnBadDataType
      * @return $this
      */
-    public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
+    public function setThrowExceptionOnBadDataType(bool $throwExceptionOnBadDataType): SilverStripe\Forms\GridField\GridFieldPaginator
     {
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
         return $this;
@@ -81,7 +81,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param SS_List $dataList
      * @return bool
      */
-    protected function checkDataType($dataList)
+    protected function checkDataType(SilverStripe\ORM\DataList $dataList): bool
     {
         if ($dataList instanceof Limitable) {
             return true;
@@ -100,7 +100,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         if (!$this->checkDataType($gridField->getList())) {
             return [];
@@ -138,7 +138,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param GridField $gridField
      * @return GridState_Data
      */
-    protected function getGridPagerState(GridField $gridField)
+    protected function getGridPagerState(GridField $gridField): SilverStripe\Forms\GridField\GridState_Data
     {
         return $gridField->State->GridFieldPaginator;
     }
@@ -157,7 +157,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param SS_List $dataList
      * @return SS_List
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, SS_List $dataList): SilverStripe\ORM\DataList
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;
@@ -202,7 +202,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      *  <li>LastPage (optional):        GridField_FormAction - Button to go to last page</li>
      * </ul>
      */
-    public function getTemplateParameters(GridField $gridField)
+    public function getTemplateParameters(GridField $gridField): SilverStripe\View\ArrayData|null
     {
         if (!$this->checkDataType($gridField->getList())) {
             return null;
@@ -309,7 +309,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param GridField $gridField
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array|null
     {
         $forTemplate = $this->getTemplateParameters($gridField);
         if (!$forTemplate) {
@@ -328,7 +328,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @param int $num
      * @return $this
      */
-    public function setItemsPerPage($num)
+    public function setItemsPerPage(int $num): SilverStripe\Forms\GridField\GridFieldPaginator
     {
         $this->itemsPerPage = $num;
         return $this;
@@ -337,7 +337,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
     /**
      * @return Int
      */
-    public function getItemsPerPage()
+    public function getItemsPerPage(): int
     {
         return $this->itemsPerPage;
     }

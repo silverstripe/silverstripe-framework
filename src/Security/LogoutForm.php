@@ -27,7 +27,7 @@ class LogoutForm extends Form
         FieldList $fields = null,
         FieldList $actions = null,
         Validator $validator = null
-    ) {
+    ): void {
         $this->setController($controller);
 
         if (!$fields) {
@@ -47,7 +47,7 @@ class LogoutForm extends Form
      *
      * @return FieldList
      */
-    protected function getFormFields()
+    protected function getFormFields(): SilverStripe\Forms\FieldList
     {
         $fields = FieldList::create();
 
@@ -70,7 +70,7 @@ class LogoutForm extends Form
      *
      * @return FieldList
      */
-    protected function getFormActions()
+    protected function getFormActions(): SilverStripe\Forms\FieldList
     {
         $actions = FieldList::create(
             FormAction::create('doLogout', _t('SilverStripe\\Security\\Member.BUTTONLOGOUT', "Log out"))

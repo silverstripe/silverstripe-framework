@@ -28,7 +28,7 @@ abstract class HTMLCleaner
     /**
      * @param array $config The configuration for the cleaner, if necessary
      */
-    public function __construct($config = null)
+    public function __construct($config = null): void
     {
         if ($config) {
             $config = array_merge($this->defaultConfig, $config);
@@ -41,7 +41,7 @@ abstract class HTMLCleaner
     /**
      * @param array $config
      */
-    public function setConfig($config)
+    public function setConfig(array $config): void
     {
         $this->config = $config;
     }
@@ -67,7 +67,7 @@ abstract class HTMLCleaner
      *
      * @return static
      */
-    public static function inst()
+    public static function inst(): SilverStripe\View\Parsers\TidyHTMLCleaner
     {
         if (class_exists('HTMLPurifier')) {
             return new PurifierHTMLCleaner();

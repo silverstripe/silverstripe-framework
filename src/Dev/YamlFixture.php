@@ -89,7 +89,7 @@ class YamlFixture
     /**
      * @param string $fixture Absolute file path, or relative path to {@link Director::baseFolder()}
      */
-    public function __construct($fixture)
+    public function __construct(string $fixture): void
     {
         if (false !== strpos($fixture ?? '', "\n")) {
             $this->fixtureString = $fixture;
@@ -110,7 +110,7 @@ class YamlFixture
     /**
      * @return String Absolute file path
      */
-    public function getFixtureFile()
+    public function getFixtureFile(): string|null
     {
         return $this->fixtureFile;
     }
@@ -118,7 +118,7 @@ class YamlFixture
     /**
      * @return String Fixture string
      */
-    public function getFixtureString()
+    public function getFixtureString(): null|string
     {
         return $this->fixtureString;
     }
@@ -130,7 +130,7 @@ class YamlFixture
      *
      * @param  FixtureFactory $factory
      */
-    public function writeInto(FixtureFactory $factory)
+    public function writeInto(FixtureFactory $factory): void
     {
         $parser = new Parser();
         if (isset($this->fixtureString)) {

@@ -16,7 +16,7 @@ class ExtensionMiddleware implements Middleware
 {
     use MiddlewareCommon;
 
-    public function __construct($disableFlag = 0)
+    public function __construct(int $disableFlag = 0): void
     {
         $this->setDisableFlag($disableFlag);
     }
@@ -29,7 +29,7 @@ class ExtensionMiddleware implements Middleware
      * @param callable $next Callback to next middleware
      * @return array Complete class config
      */
-    public function getClassConfig($class, $excludeMiddleware, $next)
+    public function getClassConfig(string $class, int $excludeMiddleware, callable $next): array
     {
         // Get base config
         $config = $next($class, $excludeMiddleware);
@@ -52,7 +52,7 @@ class ExtensionMiddleware implements Middleware
      * @param int $excludeMiddleware
      * @return Generator
      */
-    protected function getExtraConfig($class, $classConfig, $excludeMiddleware)
+    protected function getExtraConfig(string $class, array $classConfig, int $excludeMiddleware): void
     {
         // Note: 'extensions' config needs to come from it's own middleware call in case
         // applied by delta middleware (e.g. Object::add_extension)

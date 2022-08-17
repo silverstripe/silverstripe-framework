@@ -49,7 +49,7 @@ class FormSchema
      * @param ValidationResult $result Required for 'error' response
      * @return array
      */
-    public function getMultipartSchema($schemaParts, $schemaID, Form $form = null, ValidationResult $result = null)
+    public function getMultipartSchema(string $schemaParts, string $schemaID, Form $form = null, ValidationResult $result = null): array
     {
         if (!is_array($schemaParts)) {
             $schemaParts = preg_split('#\s*,\s*#', $schemaParts ?? '') ?: [];
@@ -89,7 +89,7 @@ class FormSchema
      * @param Form $form
      * @return array
      */
-    public function getSchema(Form $form)
+    public function getSchema(Form $form): array
     {
         $schema = [
             'name' => $form->getName(),
@@ -121,7 +121,7 @@ class FormSchema
      * @param Form $form
      * @return array
      */
-    public function getState(Form $form)
+    public function getState(Form $form): array
     {
         $state = [
             'id' => $form->FormName(),
@@ -176,7 +176,7 @@ class FormSchema
         ];
     }
 
-    protected function getFieldStates($fields)
+    protected function getFieldStates(SilverStripe\Forms\FieldList $fields): array
     {
         $states = [];
         /** @var FormField $field */

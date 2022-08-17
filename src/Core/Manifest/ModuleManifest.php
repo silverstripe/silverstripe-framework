@@ -73,7 +73,7 @@ class ModuleManifest
      * @param string $base The project base path.
      * @param CacheFactory $cacheFactory Cache factory to use
      */
-    public function __construct($base, CacheFactory $cacheFactory = null)
+    public function __construct(string $base, CacheFactory $cacheFactory = null): void
     {
         $this->base = $base;
         $this->cacheKey = sha1($base ?? '') . '_modules';
@@ -85,7 +85,7 @@ class ModuleManifest
      *
      * @param string $path
      */
-    public function addModule($path)
+    public function addModule(string $path): void
     {
         $module = new Module($path, $this->base);
         $name = $module->getName();
@@ -112,7 +112,7 @@ class ModuleManifest
      * @param string $name Either full composer name or short name
      * @return bool
      */
-    public function moduleExists($name)
+    public function moduleExists(string $name): bool
     {
         $module = $this->getModule($name);
         return !empty($module);
@@ -123,7 +123,7 @@ class ModuleManifest
      * @param bool $forceRegen Force the manifest to be regenerated.
      * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init(bool $includeTests = false, bool $forceRegen = false, array $ignoredCIConfigs = []): void
     {
         // build cache from factory
         if ($this->cacheFactory) {
@@ -145,7 +145,7 @@ class ModuleManifest
     /**
      * Includes all of the php _config.php files found by this manifest.
      */
-    public function activateConfig()
+    public function activateConfig(): void
     {
         $modules = $this->getModules();
         // Work in reverse priority, so the higher priority modules get later execution
@@ -165,7 +165,7 @@ class ModuleManifest
      * @param bool $includeTests
      * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests = false, array $ignoredCIConfigs = [])
+    public function regenerate(bool $includeTests = false, array $ignoredCIConfigs = []): void
     {
         $this->modules = [];
 
@@ -198,7 +198,7 @@ class ModuleManifest
      * @param string $name
      * @return Module
      */
-    public function getModule($name)
+    public function getModule(string $name): SilverStripe\Core\Manifest\Module|null
     {
         // Optimised find
         if (isset($this->modules[$name])) {
@@ -222,7 +222,7 @@ class ModuleManifest
      *
      * @return Module[]
      */
-    public function getModules()
+    public function getModules(): array
     {
         return $this->modules;
     }
@@ -230,7 +230,7 @@ class ModuleManifest
     /**
      * Sort modules sorted by priority
      */
-    public function sort()
+    public function sort(): void
     {
         $order = static::config()->uninherited('module_priority');
         $project = static::config()->get('project');
@@ -257,7 +257,7 @@ class ModuleManifest
      * @param string $path Full filesystem path to the given file
      * @return Module The module, or null if not a path in any module
      */
-    public function getModuleByPath($path)
+    public function getModuleByPath(string $path): SilverStripe\Core\Manifest\Module|null
     {
         // Ensure path exists
         $path = realpath($path ?? '');

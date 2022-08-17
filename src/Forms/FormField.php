@@ -299,7 +299,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public static function name_to_label($fieldName)
+    public static function name_to_label(string $fieldName): string
     {
         // Handle dot delimiters
         if (strpos($fieldName ?? '', '.') !== false) {
@@ -331,7 +331,7 @@ class FormField extends RequestHandler
      * @param null|string|\SilverStripe\View\ViewableData $title The human-readable field label.
      * @param mixed $value The value of the field.
      */
-    public function __construct($name, $title = null, $value = null)
+    public function __construct(string $name, bool|string|int|SilverStripe\ORM\FieldType\DBHTMLText $title = null, string|bool|int|array|SilverStripe\Forms\GridField\GridState_Data $value = null): void
     {
         $this->setName($name);
 
@@ -354,7 +354,7 @@ class FormField extends RequestHandler
      * Set up the default classes for the form. This is done on construct so that the default classes can be removed
      * after instantiation
      */
-    protected function setupDefaultClasses()
+    protected function setupDefaultClasses(): void
     {
         $defaultClasses = $this->config()->get('default_classes');
         if ($defaultClasses) {
@@ -371,7 +371,7 @@ class FormField extends RequestHandler
      * @return string
      * @throws LogicException If no form is set yet
      */
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         if (!$this->form) {
             throw new LogicException(
@@ -392,7 +392,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function ID()
+    public function ID(): string
     {
         return $this->getTemplateHelper()->generateFieldID($this);
     }
@@ -402,7 +402,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function HolderID()
+    public function HolderID(): string
     {
         return $this->getTemplateHelper()->generateFieldHolderID($this);
     }
@@ -416,7 +416,7 @@ class FormField extends RequestHandler
      *
      * @return FormTemplateHelper
      */
-    public function getTemplateHelper()
+    public function getTemplateHelper(): SilverStripe\Forms\FormTemplateHelper
     {
         if ($this->form) {
             return $this->form->getTemplateHelper();
@@ -430,7 +430,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -440,7 +440,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function getInputType()
+    public function getInputType(): string|null
     {
         return $this->inputType;
     }
@@ -451,7 +451,7 @@ class FormField extends RequestHandler
      * @see FormField::setSubmittedValue()
      * @return mixed
      */
-    public function Value()
+    public function Value(): string|null|int|array|bool|DNADesign\Elemental\Models\ElementalArea
     {
         return $this->value;
     }
@@ -463,7 +463,7 @@ class FormField extends RequestHandler
      *
      * @param DataObject|DataObjectInterface $record DataObject to save data into
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         $component = $record;
         $fieldName = $this->name;
@@ -485,7 +485,7 @@ class FormField extends RequestHandler
      * @see Formfield::setValue()
      * @return mixed
      */
-    public function dataValue()
+    public function dataValue(): string|null|array|int|SilverStripe\Assets\File
     {
         return $this->value;
     }
@@ -495,7 +495,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function Title()
+    public function Title(): bool|string|SilverStripe\ORM\FieldType\DBHTMLText|int|null
     {
         return $this->title;
     }
@@ -507,7 +507,7 @@ class FormField extends RequestHandler
      * @param string $title Escaped HTML for title
      * @return $this
      */
-    public function setTitle($title)
+    public function setTitle(string|SilverStripe\ORM\FieldType\DBHTMLText|bool $title): SilverStripe\Forms\EmailField
     {
         $this->title = $title;
         return $this;
@@ -519,7 +519,7 @@ class FormField extends RequestHandler
      *
      * @return string Contextual label text
      */
-    public function RightTitle()
+    public function RightTitle(): null|string|SilverStripe\Forms\LiteralField
     {
         return $this->rightTitle;
     }
@@ -530,7 +530,7 @@ class FormField extends RequestHandler
      * @param string|DBField $rightTitle Plain text string, or a DBField with appropriately escaped HTML
      * @return $this
      */
-    public function setRightTitle($rightTitle)
+    public function setRightTitle(string|SilverStripe\Forms\LiteralField $rightTitle): SilverStripe\Forms\TextareaField
     {
         $this->rightTitle = $rightTitle;
         return $this;
@@ -539,7 +539,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function LeftTitle()
+    public function LeftTitle(): null
     {
         return $this->leftTitle;
     }
@@ -549,7 +549,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setLeftTitle($leftTitle)
+    public function setLeftTitle($leftTitle): SilverStripe\Forms\CompositeField
     {
         $this->leftTitle = $leftTitle;
 
@@ -565,7 +565,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function extraClass()
+    public function extraClass(): string
     {
         $classes = [];
 
@@ -600,7 +600,7 @@ class FormField extends RequestHandler
      * names delimited by a single space.
      * @return boolean True if all of the classnames passed in have been added.
      */
-    public function hasExtraClass($class)
+    public function hasExtraClass(string $class): bool
     {
         //split at white space
         $classes = preg_split('/\s+/', $class ?? '');
@@ -621,7 +621,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function addExtraClass($class)
+    public function addExtraClass(string $class): SilverStripe\Forms\CompositeField
     {
         $classes = preg_split('/\s+/', $class ?? '');
 
@@ -639,7 +639,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function removeExtraClass($class)
+    public function removeExtraClass(string $class): SilverStripe\Forms\FormAction
     {
         $classes = preg_split('/\s+/', $class ?? '');
 
@@ -701,7 +701,7 @@ class FormField extends RequestHandler
      * @param array|DataObject $data {@see Form::loadDataFrom}
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string|int|array|bool|float|DNADesign\Elemental\Models\ElementalArea $value, array|DNADesign\Elemental\Models\ElementContent $data = null): SilverStripe\Forms\TextField
     {
         $this->value = $value;
         return $this;
@@ -716,7 +716,7 @@ class FormField extends RequestHandler
      * @param array|DataObject $data
      * @return $this
      */
-    public function setSubmittedValue($value, $data = null)
+    public function setSubmittedValue(int|string|array|bool $value, array $data = null): SilverStripe\Forms\HiddenField
     {
         return $this->setValue($value, $data);
     }
@@ -728,7 +728,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): SilverStripe\Forms\TextField
     {
         $this->name = $name;
 
@@ -742,7 +742,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setInputType($type)
+    public function setInputType(string $type): SilverStripe\Forms\TextField
     {
         $this->inputType = $type;
 
@@ -758,7 +758,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setForm($form)
+    public function setForm(SilverStripe\CMS\Search\SearchForm $form): SilverStripe\Forms\FormAction
     {
         $this->form = $form;
 
@@ -770,7 +770,7 @@ class FormField extends RequestHandler
      *
      * @return Form
      */
-    public function getForm()
+    public function getForm(): null|SilverStripe\Comments\Forms\CommentForm
     {
         return $this->form;
     }
@@ -780,7 +780,7 @@ class FormField extends RequestHandler
      *
      * @return bool
      */
-    public function securityTokenEnabled()
+    public function securityTokenEnabled(): bool
     {
         $form = $this->getForm();
 
@@ -791,7 +791,7 @@ class FormField extends RequestHandler
         return $form->getSecurityToken()->isEnabled();
     }
 
-    public function castingHelper($field)
+    public function castingHelper(string $field): string
     {
         // Override casting for field message
         if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
@@ -809,7 +809,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setCustomValidationMessage($customValidationMessage)
+    public function setCustomValidationMessage(string $customValidationMessage): SilverStripe\Forms\TextField
     {
         $this->customValidationMessage = $customValidationMessage;
 
@@ -822,7 +822,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function getCustomValidationMessage()
+    public function getCustomValidationMessage(): string
     {
         return $this->customValidationMessage;
     }
@@ -837,7 +837,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setTemplate($template)
+    public function setTemplate(string $template): DNADesign\Elemental\Forms\TextCheckboxGroupField
     {
         $this->template = $template;
 
@@ -847,7 +847,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): null|string
     {
         return $this->template;
     }
@@ -855,7 +855,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function getFieldHolderTemplate()
+    public function getFieldHolderTemplate(): null|string
     {
         return $this->fieldHolderTemplate;
     }
@@ -871,7 +871,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setFieldHolderTemplate($fieldHolderTemplate)
+    public function setFieldHolderTemplate(string $fieldHolderTemplate): SilverStripe\Forms\CompositeField
     {
         $this->fieldHolderTemplate = $fieldHolderTemplate;
 
@@ -881,7 +881,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function getSmallFieldHolderTemplate()
+    public function getSmallFieldHolderTemplate(): null
     {
         return $this->smallFieldHolderTemplate;
     }
@@ -915,7 +915,7 @@ class FormField extends RequestHandler
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = [])
+    public function Field(array $properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $context = $this;
 
@@ -950,7 +950,7 @@ class FormField extends RequestHandler
      *
      * @return DBHTMLText
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder(array $properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $context = $this;
 
@@ -970,7 +970,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function SmallFieldHolder($properties = [])
+    public function SmallFieldHolder($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $context = $this;
 
@@ -986,7 +986,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         return $this->_templates($this->getTemplate());
     }
@@ -996,7 +996,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getFieldHolderTemplates()
+    public function getFieldHolderTemplates(): array
     {
         return $this->_templates(
             $this->getFieldHolderTemplate(),
@@ -1009,7 +1009,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getSmallFieldHolderTemplates()
+    public function getSmallFieldHolderTemplates(): array
     {
         return $this->_templates(
             $this->getSmallFieldHolderTemplate(),
@@ -1026,7 +1026,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    protected function _templates($customTemplate = null, $customTemplateSuffix = null)
+    protected function _templates(string $customTemplate = null, string $customTemplateSuffix = null): array
     {
         $templates = SSViewer::get_templates_by_class(static::class, $customTemplateSuffix, __CLASS__);
         // Prefer any custom template
@@ -1044,7 +1044,7 @@ class FormField extends RequestHandler
      *
      * @return bool
      */
-    public function isComposite()
+    public function isComposite(): bool
     {
         return false;
     }
@@ -1060,7 +1060,7 @@ class FormField extends RequestHandler
      *
      * @return bool
      */
-    public function hasData()
+    public function hasData(): bool
     {
         return true;
     }
@@ -1068,7 +1068,7 @@ class FormField extends RequestHandler
     /**
      * @return bool
      */
-    public function isReadonly()
+    public function isReadonly(): bool
     {
         return $this->readonly;
     }
@@ -1084,7 +1084,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setReadonly($readonly)
+    public function setReadonly(bool $readonly): SilverStripe\Forms\CompositeField
     {
         $this->readonly = $readonly;
         return $this;
@@ -1093,7 +1093,7 @@ class FormField extends RequestHandler
     /**
      * @return bool
      */
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return $this->disabled;
     }
@@ -1109,7 +1109,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setDisabled($disabled)
+    public function setDisabled(bool $disabled): SilverStripe\Forms\PasswordField
     {
         $this->disabled = $disabled;
 
@@ -1119,7 +1119,7 @@ class FormField extends RequestHandler
     /**
      * @return bool
      */
-    public function isAutofocus()
+    public function isAutofocus(): bool
     {
         return $this->autofocus;
     }
@@ -1141,7 +1141,7 @@ class FormField extends RequestHandler
      *
      * @return FormField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\ReadonlyField
     {
         $readonlyClassName = static::class . '_Readonly';
 
@@ -1164,7 +1164,7 @@ class FormField extends RequestHandler
      *
      * @return FormField
      */
-    public function performDisabledTransformation()
+    public function performDisabledTransformation(): SilverStripe\Forms\ReadonlyField
     {
         $disabledClassName = static::class . '_Disabled';
 
@@ -1184,7 +1184,7 @@ class FormField extends RequestHandler
      *
      * @return mixed
      */
-    public function transform(FormTransformation $transformation)
+    public function transform(FormTransformation $transformation): SilverStripe\Forms\ReadonlyField
     {
         return $transformation->transform($this);
     }
@@ -1196,7 +1196,7 @@ class FormField extends RequestHandler
      *
      * @return bool
      */
-    public function hasClass($class)
+    public function hasClass(string $class): bool
     {
         $classes = explode(' ', strtolower($this->extraClass() ?? ''));
         return in_array(strtolower(trim($class ?? '')), $classes ?? []);
@@ -1213,7 +1213,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function Type()
+    public function Type(): string
     {
         $type = new ReflectionClass($this);
         return strtolower(preg_replace('/Field$/', '', $type->getShortName() ?? '') ?? '');
@@ -1228,7 +1228,7 @@ class FormField extends RequestHandler
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         return true;
     }
@@ -1242,7 +1242,7 @@ class FormField extends RequestHandler
      *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(string|SilverStripe\ORM\FieldType\DBHTMLText $description): SilverStripe\Forms\EmailField
     {
         $this->description = $description;
 
@@ -1252,7 +1252,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): null|string|SilverStripe\ORM\FieldType\DBHTMLText
     {
         return $this->description;
     }
@@ -1260,7 +1260,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function debug()
+    public function debug(): string
     {
         $strValue = is_string($this->value) ? $this->value : print_r($this->value, true);
 
@@ -1280,7 +1280,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function forTemplate()
+    public function forTemplate(): SilverStripe\ORM\FieldType\DBHTMLText|string
     {
         return $this->Field();
     }
@@ -1288,7 +1288,7 @@ class FormField extends RequestHandler
     /**
      * @return bool
      */
-    public function Required()
+    public function Required(): bool
     {
         if ($this->form && ($validator = $this->form->getValidator())) {
             return $validator->fieldIsRequired($this->name);
@@ -1303,7 +1303,7 @@ class FormField extends RequestHandler
      * @param FieldList $containerFieldList
      * @return $this
      */
-    public function setContainerFieldList($containerFieldList)
+    public function setContainerFieldList(SilverStripe\Forms\FieldList $containerFieldList): SilverStripe\Forms\TextField
     {
         $this->containerFieldList = $containerFieldList;
         return $this;
@@ -1314,7 +1314,7 @@ class FormField extends RequestHandler
      *
      * @return FieldList
      */
-    public function getContainerFieldList()
+    public function getContainerFieldList(): SilverStripe\Forms\FieldList
     {
         return $this->containerFieldList;
     }
@@ -1322,7 +1322,7 @@ class FormField extends RequestHandler
     /**
      * @return null|FieldList
      */
-    public function rootFieldList()
+    public function rootFieldList(): SilverStripe\Forms\FieldList
     {
         if ($this->containerFieldList) {
             return $this->containerFieldList->rootFieldList();
@@ -1347,7 +1347,7 @@ class FormField extends RequestHandler
      *
      * @return FormField
      */
-    public function castedCopy($classOrCopy)
+    public function castedCopy(string|SilverStripe\Forms\TreeDropdownField_Readonly $classOrCopy): SilverStripe\Forms\CompositeField
     {
         $field = $classOrCopy;
 
@@ -1379,7 +1379,7 @@ class FormField extends RequestHandler
      *
      * @return bool
      */
-    public function canSubmitValue()
+    public function canSubmitValue(): bool
     {
         return $this->hasData() && !$this->isReadonly() && !$this->isDisabled();
     }
@@ -1390,7 +1390,7 @@ class FormField extends RequestHandler
      * @param string $componentType
      * @return FormField
      */
-    public function setSchemaComponent($componentType)
+    public function setSchemaComponent(string $componentType): SilverStripe\Forms\FieldGroup
     {
         $this->schemaComponent = $componentType;
         return $this;
@@ -1401,7 +1401,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function getSchemaComponent()
+    public function getSchemaComponent(): null|string
     {
         return $this->schemaComponent;
     }
@@ -1417,7 +1417,7 @@ class FormField extends RequestHandler
      *
      * @todo Add deep merging of arrays like `data` and `attributes`.
      */
-    public function setSchemaData($schemaData = [])
+    public function setSchemaData(array $schemaData = []): SilverStripe\Forms\FormAction
     {
         $defaults = $this->getSchemaData();
         $this->schemaData = array_merge($this->schemaData, array_intersect_key($schemaData ?? [], $defaults));
@@ -1429,7 +1429,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getSchemaData()
+    public function getSchemaData(): array
     {
         $defaults = $this->getSchemaDataDefaults();
         return array_replace_recursive($defaults ?? [], array_intersect_key($this->schemaData ?? [], $defaults));
@@ -1440,7 +1440,7 @@ class FormField extends RequestHandler
      *
      * @return string
      */
-    public function getSchemaDataType()
+    public function getSchemaDataType(): null|string
     {
         return $this->schemaDataType;
     }
@@ -1452,7 +1452,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = [
             'name' => $this->getName(),
@@ -1493,7 +1493,7 @@ class FormField extends RequestHandler
      *
      * @todo Add deep merging of arrays like `data` and `attributes`.
      */
-    public function setSchemaState($schemaState = [])
+    public function setSchemaState(array $schemaState = []): SilverStripe\Forms\TabSet
     {
         $defaults = $this->getSchemaState();
         $this->schemaState = array_merge($this->schemaState, array_intersect_key($schemaState ?? [], $defaults));
@@ -1505,7 +1505,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getSchemaState()
+    public function getSchemaState(): array
     {
         $defaults = $this->getSchemaStateDefaults();
         return array_merge($defaults, array_intersect_key($this->schemaState ?? [], $defaults));
@@ -1521,7 +1521,7 @@ class FormField extends RequestHandler
      * @todo Make form / field messages not always stored as html; Store value / casting as separate values.
      * @return array
      */
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $state = [
             'name' => $this->getName(),
@@ -1541,7 +1541,7 @@ class FormField extends RequestHandler
      *
      * @return array
      */
-    public function getSchemaValidation()
+    public function getSchemaValidation(): array
     {
         $validationList = [];
         if ($this->Required()) {

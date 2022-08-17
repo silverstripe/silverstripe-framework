@@ -40,7 +40,7 @@ class DBDate extends DBField
      */
     const ISO_LOCALE = 'en_US';
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(string|int|bool|array $value, SilverStripe\ErrorPage\ErrorPageController $record = null, bool $markChanged = true): SilverStripe\ORM\FieldType\DBDatetime
     {
         $value = $this->parseDate($value);
         if ($value === false) {
@@ -58,7 +58,7 @@ class DBDate extends DBField
      * @param mixed $value
      * @return string|null|false Formatted date, null if empty but valid, or false if invalid
      */
-    protected function parseDate($value)
+    protected function parseDate(string|int|bool|array $value): string|null
     {
         // Skip empty values
         if (empty($value) && !is_numeric($value)) {
@@ -92,7 +92,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Nice()
+    public function Nice(): string
     {
         if (!$this->value) {
             return null;
@@ -106,7 +106,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Year()
+    public function Year(): string
     {
         return $this->Format('y');
     }
@@ -116,7 +116,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function DayOfWeek()
+    public function DayOfWeek(): string
     {
         return $this->Format('cccc');
     }
@@ -126,7 +126,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Month()
+    public function Month(): string
     {
         return $this->Format('LLLL');
     }
@@ -136,7 +136,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function ShortMonth()
+    public function ShortMonth(): string
     {
         return $this->Format('LLL');
     }
@@ -147,7 +147,7 @@ class DBDate extends DBField
      * @param bool $includeOrdinal Include ordinal suffix to day, e.g. "th" or "rd"
      * @return string
      */
-    public function DayOfMonth($includeOrdinal = false)
+    public function DayOfMonth(bool $includeOrdinal = false): string
     {
         $number = $this->Format('d');
         if ($includeOrdinal && $number) {
@@ -162,7 +162,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Short()
+    public function Short(): string
     {
         if (!$this->value) {
             return null;
@@ -176,7 +176,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Long()
+    public function Long(): string
     {
         if (!$this->value) {
             return null;
@@ -190,7 +190,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Full()
+    public function Full(): string
     {
         if (!$this->value) {
             return null;
@@ -206,7 +206,7 @@ class DBDate extends DBField
      * @param int $timeLength
      * @return IntlDateFormatter
      */
-    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE)
+    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE): IntlDateFormatter
     {
         return $this->getCustomFormatter(null, null, $dateLength, $timeLength);
     }
@@ -221,11 +221,11 @@ class DBDate extends DBField
      * @return IntlDateFormatter
      */
     public function getCustomFormatter(
-        $locale = null,
+        string $locale = null,
         $pattern = null,
         $dateLength = IntlDateFormatter::MEDIUM,
         $timeLength = IntlDateFormatter::NONE
-    ) {
+    ): IntlDateFormatter {
         $locale = $locale ?: i18n::get_locale();
         $formatter = IntlDateFormatter::create($locale, $dateLength, $timeLength);
         if ($pattern) {
@@ -240,7 +240,7 @@ class DBDate extends DBField
      * @internal
      * @return IntlDateFormatter
      */
-    protected function getInternalFormatter()
+    protected function getInternalFormatter(): IntlDateFormatter
     {
         $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDate::ISO_DATE);
         $formatter->setLenient(false);
@@ -265,7 +265,7 @@ class DBDate extends DBField
      * @param string $locale Custom locale to use (add to signature in 5.0)
      * @return string The date in the requested format
      */
-    public function Format($format)
+    public function Format(string $format): string|null
     {
         // Note: soft-arg uses func_get_args() to respect semver. Add to signature in 5.0
         $locale = func_num_args() > 1 ? func_get_arg(1) : null;
@@ -288,7 +288,7 @@ class DBDate extends DBField
      *
      * @return int
      */
-    public function getTimestamp()
+    public function getTimestamp(): int
     {
         if ($this->value) {
             return strtotime($this->value ?? '');
@@ -324,7 +324,7 @@ class DBDate extends DBField
      * @param bool $includeOrdinals Include ordinal suffix to day, e.g. "th" or "rd"
      * @return string
      */
-    public function RangeString($otherDateObj, $includeOrdinals = false)
+    public function RangeString(SilverStripe\ORM\FieldType\DBDate $otherDateObj, bool $includeOrdinals = false): string
     {
         $d1 = $this->DayOfMonth($includeOrdinals);
         $d2 = $otherDateObj->DayOfMonth($includeOrdinals);
@@ -347,7 +347,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Rfc822()
+    public function Rfc822(): string
     {
         if ($this->value) {
             return date('r', $this->getTimestamp());
@@ -360,7 +360,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Rfc2822()
+    public function Rfc2822(): string
     {
         $formatter = $this->getInternalFormatter();
         $formatter->setPattern('y-MM-dd HH:mm:ss');
@@ -372,7 +372,7 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function Rfc3339()
+    public function Rfc3339(): string
     {
         return date('c', $this->getTimestamp());
     }
@@ -384,7 +384,7 @@ class DBDate extends DBField
      * @param int $significance Minimum significant value of X for "X units ago" to display
      * @return string
      */
-    public function Ago($includeSeconds = true, $significance = 2)
+    public function Ago(string|bool $includeSeconds = true, int $significance = 2): string|null
     {
         if (!$this->value) {
             return null;
@@ -412,7 +412,7 @@ class DBDate extends DBField
      * @param int $significance Minimum significant value of X for "X units ago" to display
      * @return string
      */
-    public function TimeDiff($includeSeconds = true, $significance = 2)
+    public function TimeDiff(string|bool $includeSeconds = true, int $significance = 2): string
     {
         if (!$this->value) {
             return false;
@@ -449,7 +449,7 @@ class DBDate extends DBField
      * 'seconds', 'minutes', 'hours', 'days', 'months', 'years'.
      * @return string The resulting formatted period
      */
-    public function TimeDiffIn($format)
+    public function TimeDiffIn(string $format): string
     {
         if (!$this->value) {
             return null;
@@ -512,7 +512,7 @@ class DBDate extends DBField
         }
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = ['datatype' => 'date', 'arrayValue' => $this->arrayValue];
         $values = ['type' => 'date', 'parts' => $parts];
@@ -523,7 +523,7 @@ class DBDate extends DBField
      * Returns true if date is in the past.
      * @return boolean
      */
-    public function InPast()
+    public function InPast(): bool
     {
         return strtotime($this->value ?? '') < DBDatetime::now()->getTimestamp();
     }
@@ -532,7 +532,7 @@ class DBDate extends DBField
      * Returns true if date is in the future.
      * @return boolean
      */
-    public function InFuture()
+    public function InFuture(): bool
     {
         return strtotime($this->value ?? '') > DBDatetime::now()->getTimestamp();
     }
@@ -541,7 +541,7 @@ class DBDate extends DBField
      * Returns true if date is today.
      * @return boolean
      */
-    public function IsToday()
+    public function IsToday(): bool
     {
         return $this->Format(self::ISO_DATE) === DBDatetime::now()->Format(self::ISO_DATE);
     }
@@ -570,12 +570,12 @@ class DBDate extends DBField
      *
      * @return string
      */
-    public function URLDate()
+    public function URLDate(): string
     {
         return rawurlencode($this->Format(self::ISO_DATE, self::ISO_LOCALE) ?? '');
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\DateField
     {
         $field = DateField::create($this->name, $title);
         $field->setHTML5(true);
@@ -589,7 +589,7 @@ class DBDate extends DBField
      * @param string $value
      * @return string
      */
-    protected function fixInputDate($value)
+    protected function fixInputDate(string $value): string|null
     {
         // split
         [$year, $month, $day, $time] = $this->explodeDateString($value);
@@ -614,7 +614,7 @@ class DBDate extends DBField
      * @param string $value
      * @return array
      */
-    protected function explodeDateString($value)
+    protected function explodeDateString(string $value): array
     {
         // split on known delimiters (. / -)
         if (!preg_match(

@@ -101,7 +101,7 @@ class Email extends ViewableData
      *    This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License
      *    http://creativecommons.org/licenses/by-sa/2.5/
      */
-    public static function is_valid_address($address)
+    public static function is_valid_address(string|array $address): bool
     {
         $validator = new EmailValidator();
         return $validator->isValid($address, new RFCValidation());
@@ -112,7 +112,7 @@ class Email extends ViewableData
      *
      * @return array Keys are addresses, values are names
      */
-    public static function getSendAllEmailsTo()
+    public static function getSendAllEmailsTo(): array
     {
         return static::mergeConfiguredEmails('send_all_emails_to', 'SS_SEND_ALL_EMAILS_TO');
     }
@@ -122,7 +122,7 @@ class Email extends ViewableData
      *
      * @return array
      */
-    public static function getCCAllEmailsTo()
+    public static function getCCAllEmailsTo(): array
     {
         return static::mergeConfiguredEmails('cc_all_emails_to', 'SS_CC_ALL_EMAILS_TO');
     }
@@ -132,7 +132,7 @@ class Email extends ViewableData
      *
      * @return array
      */
-    public static function getBCCAllEmailsTo()
+    public static function getBCCAllEmailsTo(): array
     {
         return static::mergeConfiguredEmails('bcc_all_emails_to', 'SS_BCC_ALL_EMAILS_TO');
     }
@@ -142,7 +142,7 @@ class Email extends ViewableData
      *
      * @return array
      */
-    public static function getSendAllEmailsFrom()
+    public static function getSendAllEmailsFrom(): array
     {
         return static::mergeConfiguredEmails('send_all_emails_from', 'SS_SEND_ALL_EMAILS_FROM');
     }
@@ -154,7 +154,7 @@ class Email extends ViewableData
      * @param string $env Env variable key
      * @return array Array of email addresses
      */
-    protected static function mergeConfiguredEmails($config, $env)
+    protected static function mergeConfiguredEmails(string $config, string $env): array
     {
         // Normalise config list
         $normalised = [];
@@ -185,7 +185,7 @@ class Email extends ViewableData
      *    - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
      * @return string
      */
-    public static function obfuscate($email, $method = 'visible')
+    public static function obfuscate(string $email, string $method = 'visible'): string
     {
         switch ($method) {
             case 'direction':
@@ -222,14 +222,14 @@ class Email extends ViewableData
      * @param string|null $returnPath
      */
     public function __construct(
-        $from = null,
+        string|array $from = null,
         $to = null,
         $subject = null,
         $body = null,
         $cc = null,
         $bcc = null,
         $returnPath = null
-    ) {
+    ): void {
         if ($from) {
             $this->setFrom($from);
         }
@@ -258,7 +258,7 @@ class Email extends ViewableData
     /**
      * @return Swift_Message
      */
-    public function getSwiftMessage()
+    public function getSwiftMessage(): Swift_Message
     {
         if (!$this->swiftMessage) {
             $message = new Swift_Message(null, null, 'text/html', 'utf-8');
@@ -275,7 +275,7 @@ class Email extends ViewableData
      *
      * @return $this
      */
-    public function setSwiftMessage($swiftMessage)
+    public function setSwiftMessage(Swift_Message $swiftMessage): SilverStripe\Control\Email\Email
     {
         $dateTime = new DateTime();
         $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
@@ -319,7 +319,7 @@ class Email extends ViewableData
     /**
      * @return string[]
      */
-    public function getFrom()
+    public function getFrom(): array
     {
         return $this->getSwiftMessage()->getFrom();
     }
@@ -328,7 +328,7 @@ class Email extends ViewableData
      * @param string|array $address
      * @return string|array
      */
-    private function sanitiseAddress($address)
+    private function sanitiseAddress(string|array $address): string|array
     {
         if (is_array($address)) {
             return array_map('trim', $address ?? []);
@@ -341,7 +341,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function setFrom($address, $name = null)
+    public function setFrom(string|array $address, $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setFrom($address, $name);
@@ -354,7 +354,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function addFrom($address, $name = null)
+    public function addFrom(string $address, $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addFrom($address, $name);
@@ -365,7 +365,7 @@ class Email extends ViewableData
     /**
      * @return string
      */
-    public function getSender()
+    public function getSender(): null|array
     {
         return $this->getSwiftMessage()->getSender();
     }
@@ -375,7 +375,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function setSender($address, $name = null)
+    public function setSender(string $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setSender($address, $name);
@@ -386,7 +386,7 @@ class Email extends ViewableData
     /**
      * @return string
      */
-    public function getReturnPath()
+    public function getReturnPath(): string|null
     {
         return $this->getSwiftMessage()->getReturnPath();
     }
@@ -397,7 +397,7 @@ class Email extends ViewableData
      * @param string $address Email address where bounce notifications should be sent
      * @return $this
      */
-    public function setReturnPath($address)
+    public function setReturnPath(string $address): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setReturnPath($address);
@@ -407,7 +407,7 @@ class Email extends ViewableData
     /**
      * @return array
      */
-    public function getTo()
+    public function getTo(): array|null
     {
         return $this->getSwiftMessage()->getTo();
     }
@@ -422,7 +422,7 @@ class Email extends ViewableData
      * @param string|null $name The name of the recipient (if one)
      * @return $this
      */
-    public function setTo($address, $name = null)
+    public function setTo(string|array $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setTo($address, $name);
@@ -435,7 +435,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function addTo($address, $name = null)
+    public function addTo(string $address, $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addTo($address, $name);
@@ -446,7 +446,7 @@ class Email extends ViewableData
     /**
      * @return array
      */
-    public function getCC()
+    public function getCC(): array
     {
         return $this->getSwiftMessage()->getCc();
     }
@@ -456,7 +456,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function setCC($address, $name = null)
+    public function setCC(string $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setCc($address, $name);
@@ -469,7 +469,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function addCC($address, $name = null)
+    public function addCC(string $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addCc($address, $name);
@@ -480,7 +480,7 @@ class Email extends ViewableData
     /**
      * @return array
      */
-    public function getBCC()
+    public function getBCC(): array
     {
         return $this->getSwiftMessage()->getBcc();
     }
@@ -490,7 +490,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function setBCC($address, $name = null)
+    public function setBCC(string $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setBcc($address, $name);
@@ -503,7 +503,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function addBCC($address, $name = null)
+    public function addBCC(string $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addBcc($address, $name);
@@ -514,7 +514,7 @@ class Email extends ViewableData
     /**
      * @return mixed
      */
-    public function getReplyTo()
+    public function getReplyTo(): null|array
     {
         return $this->getSwiftMessage()->getReplyTo();
     }
@@ -524,7 +524,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function setReplyTo($address, $name = null)
+    public function setReplyTo(string $address, string $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->setReplyTo($address, $name);
@@ -537,7 +537,7 @@ class Email extends ViewableData
      * @param string|null $name
      * @return $this
      */
-    public function addReplyTo($address, $name = null)
+    public function addReplyTo(string $address, $name = null): SilverStripe\Control\Email\Email
     {
         $address = $this->sanitiseAddress($address);
         $this->getSwiftMessage()->addReplyTo($address, $name);
@@ -548,7 +548,7 @@ class Email extends ViewableData
     /**
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string|null
     {
         return $this->getSwiftMessage()->getSubject();
     }
@@ -557,7 +557,7 @@ class Email extends ViewableData
      * @param string $subject The Subject line for the email
      * @return $this
      */
-    public function setSubject($subject)
+    public function setSubject(string $subject): SilverStripe\Control\Email\Email
     {
         $this->getSwiftMessage()->setSubject($subject);
 
@@ -567,7 +567,7 @@ class Email extends ViewableData
     /**
      * @return int
      */
-    public function getPriority()
+    public function getPriority(): string
     {
         return $this->getSwiftMessage()->getPriority();
     }
@@ -576,7 +576,7 @@ class Email extends ViewableData
      * @param int $priority
      * @return $this
      */
-    public function setPriority($priority)
+    public function setPriority(int $priority): SilverStripe\Control\Email\Email
     {
         $this->getSwiftMessage()->setPriority($priority);
 
@@ -589,7 +589,7 @@ class Email extends ViewableData
      * @param string $mime The mime type for the attachment
      * @return $this
      */
-    public function addAttachment($path, $alias = null, $mime = null)
+    public function addAttachment(string $path, $alias = null, string $mime = null): SilverStripe\Control\Email\Email
     {
         $attachment = \Swift_Attachment::fromPath($path);
         if ($alias) {
@@ -609,7 +609,7 @@ class Email extends ViewableData
      * @param string $mime
      * @return $this
      */
-    public function addAttachmentFromData($data, $name, $mime = null)
+    public function addAttachmentFromData(string $data, string $name, string $mime = null): SilverStripe\Control\Email\Email
     {
         $attachment = new \Swift_Attachment($data, $name);
         if ($mime) {
@@ -623,7 +623,7 @@ class Email extends ViewableData
     /**
      * @return array|ViewableData The template data
      */
-    public function getData()
+    public function getData(): SilverStripe\Security\Member|array
     {
         return $this->data;
     }
@@ -632,7 +632,7 @@ class Email extends ViewableData
      * @param array|ViewableData $data The template data to set
      * @return $this
      */
-    public function setData($data)
+    public function setData(SilverStripe\Security\Member|array $data): SilverStripe\Control\Email\Email
     {
         $this->data = $data;
         $this->invalidateBody();
@@ -645,7 +645,7 @@ class Email extends ViewableData
      * @param string|null $value The value of the data to add
      * @return $this
      */
-    public function addData($name, $value = null)
+    public function addData(string|array $name, string|bool|SilverStripe\Security\Member $value = null): SilverStripe\Control\Email\Email
     {
         if (is_array($name)) {
             $this->data = array_merge($this->data, $name);
@@ -666,7 +666,7 @@ class Email extends ViewableData
      * @param string $name
      * @return $this
      */
-    public function removeData($name)
+    public function removeData(string $name): SilverStripe\Control\Email\Email
     {
         if (is_array($this->data)) {
             unset($this->data[$name]);
@@ -682,7 +682,7 @@ class Email extends ViewableData
     /**
      * @return string
      */
-    public function getBody()
+    public function getBody(): string|null
     {
         return $this->getSwiftMessage()->getBody();
     }
@@ -691,7 +691,7 @@ class Email extends ViewableData
      * @param string $body The email body
      * @return $this
      */
-    public function setBody($body)
+    public function setBody(SilverStripe\ORM\FieldType\DBHTMLText|string $body): SilverStripe\Control\Email\Email
     {
         $plainPart = $this->findPlainPart();
         if ($plainPart) {
@@ -708,7 +708,7 @@ class Email extends ViewableData
     /**
      * @return $this
      */
-    public function invalidateBody()
+    public function invalidateBody(): SilverStripe\Control\Email\Email
     {
         $this->setBody(null);
 
@@ -739,7 +739,7 @@ class Email extends ViewableData
     /**
      * @return string
      */
-    public function getHTMLTemplate()
+    public function getHTMLTemplate(): string
     {
         if ($this->HTMLTemplate) {
             return $this->HTMLTemplate;
@@ -757,7 +757,7 @@ class Email extends ViewableData
      * @param string $template
      * @return $this
      */
-    public function setHTMLTemplate($template)
+    public function setHTMLTemplate(string $template): SilverStripe\Control\Email\Email
     {
         if (substr($template ?? '', -3) == '.ss') {
             $template = substr($template ?? '', 0, -3);
@@ -772,7 +772,7 @@ class Email extends ViewableData
      *
      * @return string
      */
-    public function getPlainTemplate()
+    public function getPlainTemplate(): null|string
     {
         return $this->plainTemplate;
     }
@@ -783,7 +783,7 @@ class Email extends ViewableData
      * @param string $template
      * @return $this
      */
-    public function setPlainTemplate($template)
+    public function setPlainTemplate(string $template): SilverStripe\Control\Email\Email
     {
         if (substr($template ?? '', -3) == '.ss') {
             $template = substr($template ?? '', 0, -3);
@@ -797,7 +797,7 @@ class Email extends ViewableData
      * @param array $recipients
      * @return $this
      */
-    public function setFailedRecipients($recipients)
+    public function setFailedRecipients(array $recipients): SilverStripe\Control\Email\Email
     {
         $this->failedRecipients = $recipients;
 
@@ -807,7 +807,7 @@ class Email extends ViewableData
     /**
      * @return array
      */
-    public function getFailedRecipients()
+    public function getFailedRecipients(): array
     {
         return $this->failedRecipients;
     }
@@ -817,7 +817,7 @@ class Email extends ViewableData
      *
      * @return bool
      */
-    public function IsEmail()
+    public function IsEmail(): bool
     {
         return true;
     }
@@ -827,7 +827,7 @@ class Email extends ViewableData
      *
      * @return bool true if successful or array of failed recipients
      */
-    public function send()
+    public function send(): bool
     {
         if (!$this->getBody()) {
             $this->render();
@@ -841,7 +841,7 @@ class Email extends ViewableData
     /**
      * @return array|bool
      */
-    public function sendPlain()
+    public function sendPlain(): bool
     {
         if (!$this->hasPlainPart()) {
             $this->render(true);
@@ -854,7 +854,7 @@ class Email extends ViewableData
      * @param bool $plainOnly Only render the message as plain text
      * @return $this
      */
-    public function render($plainOnly = false)
+    public function render(bool $plainOnly = false): SilverStripe\Control\Email\Email
     {
         if ($existingPlainPart = $this->findPlainPart()) {
             $this->getSwiftMessage()->detach($existingPlainPart);
@@ -922,7 +922,7 @@ class Email extends ViewableData
     /**
      * @return Swift_MimePart|false
      */
-    public function findPlainPart()
+    public function findPlainPart(): bool|Swift_MimePart
     {
         foreach ($this->getSwiftMessage()->getChildren() as $child) {
             if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
@@ -935,7 +935,7 @@ class Email extends ViewableData
     /**
      * @return bool
      */
-    public function hasPlainPart()
+    public function hasPlainPart(): bool
     {
         if ($this->getSwiftMessage()->getContentType() === 'text/plain') {
             return true;
@@ -948,7 +948,7 @@ class Email extends ViewableData
      *
      * @return $this
      */
-    public function generatePlainPartFromBody()
+    public function generatePlainPartFromBody(): SilverStripe\Control\Email\Email
     {
         $plainPart = $this->findPlainPart();
         if ($plainPart) {

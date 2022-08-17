@@ -20,7 +20,7 @@ class MySQLSchemaManager extends DBSchemaManager
      */
     const ID = 'MySQLDatabase';
 
-    public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null)
+    public function createTable(string $table, array $fields = null, array $indexes = null, array $options = null, bool $advancedOptions = null): string
     {
         $fieldSchemas = $indexSchemas = "";
 
@@ -59,14 +59,14 @@ class MySQLSchemaManager extends DBSchemaManager
     }
 
     public function alterTable(
-        $tableName,
+        string $tableName,
         $newFields = null,
         $newIndexes = null,
         $alteredFields = null,
         $alteredIndexes = null,
         $alteredOptions = null,
         $advancedOptions = null
-    ) {
+    ): void {
         if ($this->isView($tableName)) {
             $this->alterationMessage(
                 sprintf("Table %s not changed as it is a view", $tableName),
@@ -111,7 +111,7 @@ class MySQLSchemaManager extends DBSchemaManager
         $this->query("ALTER TABLE \"$tableName\" $alterations");
     }
 
-    public function isView($tableName)
+    public function isView(string $tableName): bool
     {
         $info = $this->query("SHOW /*!50002 FULL*/ TABLES LIKE '$tableName'")->record();
         return $info && strtoupper($info['Table_type'] ?? '') == 'VIEW';
@@ -125,7 +125,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @throws LogicException
      * @return Query
      */
-    public function renameTable($oldTableName, $newTableName)
+    public function renameTable(string $oldTableName, string $newTableName): SilverStripe\ORM\Connect\MySQLQuery
     {
         if (!$this->hasTable($oldTableName)) {
             throw new LogicException('Table ' . $oldTableName . ' does not exist.');
@@ -134,7 +134,7 @@ class MySQLSchemaManager extends DBSchemaManager
         return $this->query("ALTER TABLE \"$oldTableName\" RENAME \"$newTableName\"");
     }
 
-    public function checkAndRepairTable($tableName)
+    public function checkAndRepairTable(string $tableName): bool
     {
         // Flag to ensure we only send the warning about PDO + native mode once
         static $pdo_warning_sent = false;
@@ -165,7 +165,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param string $sql Query to run.
      * @return boolean Returns if the query returns a successful result.
      */
-    protected function runTableCheckCommand($sql)
+    protected function runTableCheckCommand(string $sql): bool
     {
         $testResults = $this->query($sql);
         foreach ($testResults as $testRecord) {
@@ -176,7 +176,7 @@ class MySQLSchemaManager extends DBSchemaManager
         return true;
     }
 
-    public function hasTable($table)
+    public function hasTable(string $table): bool
     {
         // MySQLi doesn't like parameterised queries for some queries
         // underscores need to be escaped in a SHOW TABLES LIKE query
@@ -194,21 +194,21 @@ class MySQLSchemaManager extends DBSchemaManager
         return $this->query("SHOW DATABASES")->column();
     }
 
-    public function databaseExists($name)
+    public function databaseExists(string $name): bool
     {
         // MySQLi doesn't like parameterised queries for some queries
         $sqlName = addcslashes($this->database->quoteString($name) ?? '', '%_');
         return !!($this->query("SHOW DATABASES LIKE $sqlName")->value());
     }
 
-    public function createDatabase($name)
+    public function createDatabase(string $name): void
     {
         $charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
         $collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'collation');
         $this->query("CREATE DATABASE \"$name\" DEFAULT CHARACTER SET {$charset} DEFAULT COLLATE {$collation}");
     }
 
-    public function dropDatabase($name)
+    public function dropDatabase(string $name): void
     {
         $this->query("DROP DATABASE \"$name\"");
     }
@@ -231,7 +231,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param string $oldName The name of the field to change.
      * @param string $newName The new name of the field
      */
-    public function renameField($tableName, $oldName, $newName)
+    public function renameField(string $tableName, string $oldName, string $newName): void
     {
         $fieldList = $this->fieldList($tableName);
         if (array_key_exists($oldName, $fieldList ?? [])) {
@@ -241,7 +241,7 @@ class MySQLSchemaManager extends DBSchemaManager
 
     protected static $_cache_collation_info = [];
 
-    private function shouldUseIntegerWidth()
+    private function shouldUseIntegerWidth(): bool
     {
         // MySQL 8.0.17 stopped reporting the width attribute for integers
         // https://github.com/silverstripe/silverstripe-framework/issues/9453
@@ -258,7 +258,7 @@ class MySQLSchemaManager extends DBSchemaManager
         return version_compare($v ?? '', '8.0.17', '<');
     }
 
-    public function fieldList($table)
+    public function fieldList(string $table): array
     {
         $fields = $this->query("SHOW FULL FIELDS IN \"$table\"");
         $fieldList = [];
@@ -310,7 +310,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param string|array $indexSpec See {@link requireTable()} for details
      * @return string MySQL compatible ALTER TABLE syntax
      */
-    protected function getIndexSqlDefinition($indexName, $indexSpec)
+    protected function getIndexSqlDefinition(string $indexName, array $indexSpec): string
     {
         if ($indexSpec['type'] == 'using') {
             return sprintf('index "%s" using (%s)', $indexName, $this->implodeColumnList($indexSpec['columns']));
@@ -331,13 +331,13 @@ class MySQLSchemaManager extends DBSchemaManager
         ));
     }
 
-    protected function indexKey($table, $index, $spec)
+    protected function indexKey(string $table, string $index, array $spec): string
     {
         // MySQL simply uses the same index name as SilverStripe does internally
         return $index;
     }
 
-    public function indexList($table)
+    public function indexList(string $table): array
     {
         $indexes = $this->query("SHOW INDEXES IN \"$table\"");
         $groupedIndexes = [];
@@ -373,7 +373,7 @@ class MySQLSchemaManager extends DBSchemaManager
         return $indexList;
     }
 
-    public function tableList()
+    public function tableList(): array
     {
         $tables = [];
         foreach ($this->query("SHOW FULL TABLES WHERE Table_Type != 'VIEW'") as $record) {
@@ -415,7 +415,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function boolean($values)
+    public function boolean(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'tinyint', 'precision'=>1, 'sign'=>'unsigned', 'null'=>'not null',
@@ -433,7 +433,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function date($values)
+    public function date(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'date');
@@ -447,7 +447,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function decimal($values)
+    public function decimal(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'decimal', 'precision'=>"$this->wholeSize,$this->decimalSize");
@@ -478,7 +478,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function enum($values)
+    public function enum(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=>
@@ -497,7 +497,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function set($values)
+    public function set(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'enum', 'enums'=>$this->enum, 'character set'=>'utf8', 'collate'=>
@@ -517,7 +517,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function float($values)
+    public function float(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'float');
@@ -531,7 +531,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function int($values)
+    public function int(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'int', 'precision'=>11, 'null'=>'not null', 'default'=>(int)$this->default);
@@ -546,7 +546,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function bigint($values)
+    public function bigint(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'bigint', 'precision'=>20, 'null'=>'not null', 'default'=>$this->defaultVal,
@@ -564,7 +564,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function datetime($values)
+    public function datetime(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'datetime');
@@ -578,7 +578,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function text($values)
+    public function text(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
@@ -595,7 +595,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function time($values)
+    public function time(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'time');
@@ -609,7 +609,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function varchar($values)
+    public function varchar(array $values): string
     {
         //For reference, this is what typically gets passed to this function:
         //$parts=Array('datatype'=>'varchar', 'precision'=>$this->size, 'character set'=>'utf8', 'collate'=>
@@ -628,12 +628,12 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string
      */
-    public function year($values)
+    public function year(array $values): string
     {
         return 'year(4)';
     }
 
-    public function IdColumn($asDbValue = false, $hasAutoIncPK = true)
+    public function IdColumn(bool|array $asDbValue = false, bool $hasAutoIncPK = true): string
     {
         $width = $this->shouldUseIntegerWidth() ? '(11)' : '';
         return 'int' . $width . ' not null auto_increment';
@@ -645,7 +645,7 @@ class MySQLSchemaManager extends DBSchemaManager
      * @param array $values Contains a tokenised list of info about this data type
      * @return string Default clause
      */
-    protected function defaultClause($values)
+    protected function defaultClause(array $values): string
     {
         if (isset($values['default'])) {
             return ' default ' . $this->database->quoteString($values['default']);

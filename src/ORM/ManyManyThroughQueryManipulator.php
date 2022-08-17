@@ -61,7 +61,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param string $foreignClass the 'from' class name
      * @param string $parentClass Name of parent class. Subclass of $foreignClass
      */
-    public function __construct($joinClass, $localKey, $foreignKey, $foreignClass = null, $parentClass = null)
+    public function __construct(string $joinClass, string $localKey, string $foreignKey, string $foreignClass = null, string $parentClass = null): void
     {
         $this->setJoinClass($joinClass);
         $this->setLocalKey($localKey);
@@ -81,7 +81,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * @return string
      */
-    public function getJoinClass()
+    public function getJoinClass(): string
     {
         return $this->joinClass;
     }
@@ -90,7 +90,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param mixed $joinClass
      * @return $this
      */
-    public function setJoinClass($joinClass)
+    public function setJoinClass(string $joinClass): SilverStripe\ORM\ManyManyThroughQueryManipulator
     {
         $this->joinClass = $joinClass;
         return $this;
@@ -99,7 +99,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * @return string
      */
-    public function getLocalKey()
+    public function getLocalKey(): string
     {
         return $this->localKey;
     }
@@ -108,7 +108,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param string $localKey
      * @return $this
      */
-    public function setLocalKey($localKey)
+    public function setLocalKey(string $localKey): SilverStripe\ORM\ManyManyThroughQueryManipulator
     {
         $this->localKey = $localKey;
         return $this;
@@ -117,7 +117,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * @return string
      */
-    public function getForeignKey()
+    public function getForeignKey(): string
     {
         return $this->foreignKey;
     }
@@ -127,7 +127,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      *
      * @return string
      */
-    public function getForeignIDKey()
+    public function getForeignIDKey(): string
     {
         $key = $this->getForeignKey();
         if ($this->getForeignClass() === DataObject::class) {
@@ -153,7 +153,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param string $foreignKey
      * @return $this
      */
-    public function setForeignKey($foreignKey)
+    public function setForeignKey(string $foreignKey): SilverStripe\ORM\ManyManyThroughQueryManipulator
     {
         $this->foreignKey = $foreignKey;
         return $this;
@@ -165,7 +165,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param DataQuery $query
      * @return HasManyList
      */
-    public function getParentRelationship(DataQuery $query)
+    public function getParentRelationship(DataQuery $query): SilverStripe\ORM\PolymorphicHasManyList
     {
         // Create has_many
         if ($this->getForeignClass() === DataObject::class) {
@@ -195,7 +195,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param DataQuery $query
      * @return mixed
      */
-    public function extractInheritableQueryParameters(DataQuery $query)
+    public function extractInheritableQueryParameters(DataQuery $query): array
     {
         $params = $query->getQueryParams();
 
@@ -218,7 +218,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      *
      * @return string
      */
-    public function getJoinAlias()
+    public function getJoinAlias(): string
     {
         return DataObject::getSchema()->tableName($this->getJoinClass());
     }
@@ -230,7 +230,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param array $queriedColumns
      * @param SQLSelect $sqlSelect
      */
-    public function beforeGetFinalisedQuery(DataQuery $dataQuery, $queriedColumns, SQLSelect $sqlSelect)
+    public function beforeGetFinalisedQuery(DataQuery $dataQuery, array $queriedColumns, SQLSelect $sqlSelect): void
     {
         // Get metadata and SQL from join table
         $hasManyRelation = $this->getParentRelationship($dataQuery);
@@ -280,7 +280,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param array $queriedColumns
      * @param SQLSelect $sqlQuery
      */
-    public function afterGetFinalisedQuery(DataQuery $dataQuery, $queriedColumns, SQLSelect $sqlQuery)
+    public function afterGetFinalisedQuery(DataQuery $dataQuery, array $queriedColumns, SQLSelect $sqlQuery): void
     {
         // Inject final replacement after manipulation has been performed on the base dataquery
         $joinTableSQL = $dataQuery->getQueryParam('Foreign.JoinTableSQL');
@@ -293,7 +293,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * @return string
      */
-    public function getForeignClass()
+    public function getForeignClass(): string
     {
         return $this->foreignClass;
     }
@@ -302,7 +302,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param string $foreignClass
      * @return $this
      */
-    public function setForeignClass($foreignClass)
+    public function setForeignClass(string $foreignClass): SilverStripe\ORM\ManyManyThroughQueryManipulator
     {
         $this->foreignClass = $foreignClass;
         return $this;
@@ -311,7 +311,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * @return string
      */
-    public function getParentClass()
+    public function getParentClass(): string
     {
         return $this->parentClass;
     }
@@ -320,7 +320,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * @param string $parentClass
      * @return ManyManyThroughQueryManipulator
      */
-    public function setParentClass($parentClass)
+    public function setParentClass(string $parentClass): SilverStripe\ORM\ManyManyThroughQueryManipulator
     {
         $this->parentClass = $parentClass;
         return $this;

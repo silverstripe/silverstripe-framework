@@ -66,7 +66,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @param ConfirmationMiddleware\Rule[] $rules Rules to check requests against
      */
-    public function __construct(...$rules)
+    public function __construct(...$rules): void
     {
         $this->rules = $rules;
         $this->declineUrl = Director::baseURL();
@@ -80,7 +80,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return string URL of the confirmation form
      */
-    protected function getConfirmationUrl(HTTPRequest $request, $confirmationStorageId)
+    protected function getConfirmationUrl(HTTPRequest $request, string $confirmationStorageId): string
     {
         $url = $this->confirmationFormUrl;
 
@@ -103,7 +103,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return string URL
      */
-    protected function generateDeclineUrlForRequest(HTTPRequest $request)
+    protected function generateDeclineUrlForRequest(HTTPRequest $request): string
     {
         return $this->declineUrl;
     }
@@ -129,7 +129,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return bool
      */
-    public function canBypass(HTTPRequest $request)
+    public function canBypass(HTTPRequest $request): bool
     {
         foreach ($this->bypasses as $bypass) {
             if ($bypass->checkRequestForBypass($request)) {
@@ -147,7 +147,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return Confirmation\Item[] list of confirmation items
      */
-    public function getConfirmationItems(HTTPRequest $request)
+    public function getConfirmationItems(HTTPRequest $request): array
     {
         $confirmationItems = [];
 
@@ -171,7 +171,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return HTTPResponse
      */
-    protected function buildConfirmationRedirect(HTTPRequest $request, Confirmation\Storage $storage, array $confirmationItems)
+    protected function buildConfirmationRedirect(HTTPRequest $request, Confirmation\Storage $storage, array $confirmationItems): SilverStripe\Control\HTTPResponse
     {
         $storage->cleanup();
 
@@ -199,7 +199,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return HTTPResponse
      */
-    protected function processItems(HTTPRequest $request, callable $delegate, $items)
+    protected function processItems(HTTPRequest $request, callable $delegate, array $items): SilverStripe\Control\HTTPResponse
     {
         $storage = Injector::inst()->createWithArgs(Confirmation\Storage::class, [$request->getSession(), $this->confirmationId, false]);
 
@@ -240,12 +240,12 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return null|HTTPResponse
      */
-    protected function confirmedEffect(HTTPRequest $request)
+    protected function confirmedEffect(HTTPRequest $request): null
     {
         return null;
     }
 
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): null|SilverStripe\Control\HTTPResponse
     {
         if ($this->canBypass($request)) {
             if ($response = $this->confirmedEffect($request)) {
@@ -269,7 +269,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return $this
      */
-    public function setConfirmationStorageId($id)
+    public function setConfirmationStorageId(string $id): SilverStripe\Control\Middleware\URLSpecialsMiddleware
     {
         $this->confirmationId = $id;
         return $this;
@@ -282,7 +282,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return $this
      */
-    public function setConfirmationFormUrl($url)
+    public function setConfirmationFormUrl(string $url): SilverStripe\Control\Middleware\URLSpecialsMiddleware
     {
         $this->confirmationFormUrl = $url;
         return $this;
@@ -295,7 +295,7 @@ class ConfirmationMiddleware implements HTTPMiddleware
      *
      * @return $this
      */
-    public function setBypasses($bypasses)
+    public function setBypasses(array $bypasses): SilverStripe\Control\Middleware\URLSpecialsMiddleware
     {
         $this->bypasses = $bypasses;
         return $this;

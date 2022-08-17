@@ -64,7 +64,7 @@ abstract class Database
      *
      * @return DBConnector
      */
-    public function getConnector()
+    public function getConnector(): SilverStripe\ORM\Connect\MySQLiConnector
     {
         return $this->connector;
     }
@@ -74,7 +74,7 @@ abstract class Database
      *
      * @param DBConnector $connector
      */
-    public function setConnector(DBConnector $connector)
+    public function setConnector(DBConnector $connector): void
     {
         $this->connector = $connector;
     }
@@ -91,7 +91,7 @@ abstract class Database
      *
      * @return DBSchemaManager
      */
-    public function getSchemaManager()
+    public function getSchemaManager(): SilverStripe\ORM\Connect\MySQLSchemaManager
     {
         return $this->schemaManager;
     }
@@ -101,7 +101,7 @@ abstract class Database
      *
      * @param DBSchemaManager $schemaManager
      */
-    public function setSchemaManager(DBSchemaManager $schemaManager)
+    public function setSchemaManager(DBSchemaManager $schemaManager): void
     {
         $this->schemaManager = $schemaManager;
 
@@ -122,7 +122,7 @@ abstract class Database
      *
      * @return DBQueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): SilverStripe\ORM\Connect\MySQLQueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -132,7 +132,7 @@ abstract class Database
      *
      * @param DBQueryBuilder $queryBuilder
      */
-    public function setQueryBuilder(DBQueryBuilder $queryBuilder)
+    public function setQueryBuilder(DBQueryBuilder $queryBuilder): void
     {
         $this->queryBuilder = $queryBuilder;
     }
@@ -144,7 +144,7 @@ abstract class Database
      * @param int $errorLevel The level of error reporting to enable for the query
      * @return Query
      */
-    public function query($sql, $errorLevel = E_USER_ERROR)
+    public function query(string $sql, int $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         // Check if we should only preview this query
         if ($this->previewWrite($sql)) {
@@ -170,7 +170,7 @@ abstract class Database
      * @param int $errorLevel The level of error reporting to enable for the query
      * @return Query
      */
-    public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
+    public function preparedQuery(string $sql, array $parameters, int $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         // Check if we should only preview this query
         if ($this->previewWrite($sql)) {
@@ -197,7 +197,7 @@ abstract class Database
      * @param string $sql The query to be executed
      * @return boolean Flag indicating that the query was previewed
      */
-    protected function previewWrite($sql)
+    protected function previewWrite(string $sql): bool
     {
         // Only preview if previewWrite is set, we are in dev mode, and
         // the query is mutable
@@ -221,7 +221,7 @@ abstract class Database
      * @param array $parameters Parameters for any parameterised query
      * @return mixed Result of query
      */
-    protected function benchmarkQuery($sql, $callback, $parameters = [])
+    protected function benchmarkQuery(string $sql, callable $callback, array $parameters = []): SilverStripe\ORM\Connect\MySQLQuery
     {
         if (isset($_REQUEST['showqueries']) && Director::isDev()) {
             $displaySql = true;
@@ -296,7 +296,7 @@ abstract class Database
      * @param string $table The name of the table to get the generated ID for
      * @return integer the most recently generated ID for the specified table
      */
-    public function getGeneratedID($table)
+    public function getGeneratedID(string $table): int
     {
         return $this->connector->getGeneratedID($table);
     }
@@ -307,7 +307,7 @@ abstract class Database
      *
      * @return boolean Flag indicating that a valid database is connected
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->connector->isActive();
     }
@@ -319,7 +319,7 @@ abstract class Database
      * @param mixed $value Value to be prepared for database query
      * @return string Prepared string
      */
-    public function escapeString($value)
+    public function escapeString(string|SilverStripe\ORM\FieldType\DBDatetime|int $value): string
     {
         return $this->connector->escapeString($value);
     }
@@ -330,7 +330,7 @@ abstract class Database
      * @param mixed $value Value to be prepared for database query
      * @return string Prepared string
      */
-    public function quoteString($value)
+    public function quoteString(string|int|float $value): string
     {
         return $this->connector->quoteString($value);
     }
@@ -344,7 +344,7 @@ abstract class Database
      * @param string $separator Splitter for each component
      * @return string
      */
-    public function escapeIdentifier($value, $separator = '.')
+    public function escapeIdentifier(string $value, string $separator = '.'): string
     {
         // Split string into components
         if (!is_array($value)) {
@@ -361,7 +361,7 @@ abstract class Database
      * @param array $fieldValues
      * @return array List of field values with the keys as escaped column names
      */
-    protected function escapeColumnKeys($fieldValues)
+    protected function escapeColumnKeys(array $fieldValues): array
     {
         $out = [];
         foreach ($fieldValues as $field => $value) {
@@ -384,7 +384,7 @@ abstract class Database
      *
      * @param array $manipulation
      */
-    public function manipulate($manipulation)
+    public function manipulate(array $manipulation): void
     {
         if (empty($manipulation)) {
             return;
@@ -448,7 +448,7 @@ abstract class Database
     /**
      * Clear all data out of the database
      */
-    public function clearAllData()
+    public function clearAllData(): void
     {
         $tables = $this->getSchemaManager()->tableList();
         foreach ($tables as $table) {
@@ -473,7 +473,7 @@ abstract class Database
      * @param bool $isNull Whether to check for NULL or NOT NULL
      * @return string Non-parameterised null comparison clause
      */
-    public function nullCheckClause($field, $isNull)
+    public function nullCheckClause(string $field, bool $isNull): string
     {
         $clause = $isNull
             ? "%s IS NULL"
@@ -586,7 +586,7 @@ abstract class Database
      * Query for the version of the currently connected database
      * @return string Version of this database
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->connector->getVersion();
     }
@@ -604,7 +604,7 @@ abstract class Database
      * Return the number of rows affected by the previous operation.
      * @return int
      */
-    public function affectedRows()
+    public function affectedRows(): int
     {
         return $this->connector->affectedRows();
     }
@@ -679,11 +679,11 @@ abstract class Database
      * @throws Exception
      */
     public function withTransaction(
-        $callback,
+        callable $callback,
         $errorCallback = null,
         $transactionMode = false,
         $errorIfTransactionsUnsupported = false
-    ) {
+    ): void {
         $supported = $this->supportsTransactions();
         if (!$supported && $errorIfTransactionsUnsupported) {
             throw new BadMethodCallException("Transactions not supported by this database.");
@@ -867,7 +867,7 @@ abstract class Database
      * @param string $name Name of the database to check for
      * @return bool Flag indicating whether this database exists
      */
-    public function databaseExists($name)
+    public function databaseExists(string $name): bool
     {
         return $this->schemaManager->databaseExists($name);
     }
@@ -894,7 +894,7 @@ abstract class Database
      * should be raised
      * @return bool Flag indicating success
      */
-    public function selectDatabase($name, $create = false, $errorLevel = E_USER_ERROR)
+    public function selectDatabase(string $name, bool $create = false, bool $errorLevel = E_USER_ERROR): bool
     {
         // In case our live environment is locked down, we can bypass a SHOW DATABASE check
         $canConnect = Config::inst()->get(static::class, 'optimistic_connect')
@@ -920,7 +920,7 @@ abstract class Database
      * Drop the database that this object is currently connected to.
      * Use with caution.
      */
-    public function dropSelectedDatabase()
+    public function dropSelectedDatabase(): void
     {
         $databaseName = $this->connector->getSelectedDatabase();
         if ($databaseName) {
@@ -934,7 +934,7 @@ abstract class Database
      *
      * @return string|null Name of the selected database, or null if none selected
      */
-    public function getSelectedDatabase()
+    public function getSelectedDatabase(): string|null
     {
         return $this->connector->getSelectedDatabase();
     }

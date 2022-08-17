@@ -70,7 +70,7 @@ class TimeField extends TextField
     /**
      * @return bool
      */
-    public function getHTML5()
+    public function getHTML5(): bool
     {
         return $this->html5;
     }
@@ -79,7 +79,7 @@ class TimeField extends TextField
      * @param boolean $bool
      * @return $this
      */
-    public function setHTML5($bool)
+    public function setHTML5(bool $bool): SilverStripe\Forms\TimeField
     {
         $this->html5 = $bool;
         return $this;
@@ -93,7 +93,7 @@ class TimeField extends TextField
      *
      * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
-    public function getTimeFormat()
+    public function getTimeFormat(): string
     {
         if ($this->getHTML5()) {
             // Browsers expect ISO 8601 times, localisation is handled on the client
@@ -116,7 +116,7 @@ class TimeField extends TextField
      * @param string $format
      * @return $this
      */
-    public function setTimeFormat($format)
+    public function setTimeFormat(string $format): SilverStripe\Forms\TimeField_Readonly
     {
         $this->timeFormat = $format;
         return $this;
@@ -133,7 +133,7 @@ class TimeField extends TextField
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      * @return int
      */
-    public function getTimeLength()
+    public function getTimeLength(): int
     {
         if ($this->timeLength) {
             return $this->timeLength;
@@ -150,7 +150,7 @@ class TimeField extends TextField
      * @param int $length
      * @return $this
      */
-    public function setTimeLength($length)
+    public function setTimeLength(int $length): SilverStripe\Forms\TimeField_Readonly
     {
         $this->timeLength = $length;
         return $this;
@@ -161,7 +161,7 @@ class TimeField extends TextField
      *
      * @return IntlDateFormatter
      */
-    protected function getFrontendFormatter()
+    protected function getFrontendFormatter(): IntlDateFormatter
     {
         if ($this->getHTML5() && $this->timeFormat && $this->timeFormat !== DBTime::ISO_TIME) {
             throw new \LogicException(
@@ -206,7 +206,7 @@ class TimeField extends TextField
      *
      * @return IntlDateFormatter
      */
-    protected function getInternalFormatter()
+    protected function getInternalFormatter(): IntlDateFormatter
     {
         $formatter = IntlDateFormatter::create(
             i18n::config()->uninherited('default_locale'),
@@ -256,7 +256,7 @@ class TimeField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setSubmittedValue($value, $data = null)
+    public function setSubmittedValue(string $value, SilverStripe\View\ArrayData|array $data = null): SilverStripe\Forms\TimeField
     {
         // Save raw value for later validation
         $this->rawValue = $value;
@@ -273,7 +273,7 @@ class TimeField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string|bool $value, array $data = null): SilverStripe\Forms\TimeField
     {
         // Save raw value for later validation
         $this->rawValue = $value;
@@ -289,7 +289,7 @@ class TimeField extends TextField
         return $this;
     }
 
-    public function Value()
+    public function Value(): string
     {
         $localised = $this->internalToFrontend($this->value);
         if ($localised) {
@@ -320,7 +320,7 @@ class TimeField extends TextField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         // Don't validate empty fields
         if (empty($this->rawValue)) {
@@ -345,7 +345,7 @@ class TimeField extends TextField
     /**
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale ?: i18n::get_locale();
     }
@@ -358,7 +358,7 @@ class TimeField extends TextField
      * @param string $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): SilverStripe\Forms\TimeField_Readonly
     {
         $this->locale = $locale;
         return $this;
@@ -369,7 +369,7 @@ class TimeField extends TextField
      *
      * @return TimeField_Readonly
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\TimeField_Readonly
     {
         /** @var TimeField_Readonly $result */
         $result = $this->castedCopy(TimeField_Readonly::class);
@@ -391,7 +391,7 @@ class TimeField extends TextField
      * @param string $time
      * @return string The formatted time, or null if not a valid time
      */
-    protected function frontendToInternal($time)
+    protected function frontendToInternal(string $time): string
     {
         if (!$time) {
             return null;
@@ -423,7 +423,7 @@ class TimeField extends TextField
      * @param string $time
      * @return string
      */
-    protected function internalToFrontend($time)
+    protected function internalToFrontend(string $time): string
     {
         $time = $this->tidyInternal($time);
         if (!$time) {
@@ -447,7 +447,7 @@ class TimeField extends TextField
      * @param string $time Time in ISO 8601 or approximate form
      * @return string ISO 8601 time, or null if not valid
      */
-    protected function tidyInternal($time)
+    protected function tidyInternal(string $time): string|null
     {
         if (!$time) {
             return null;
@@ -468,7 +468,7 @@ class TimeField extends TextField
     /**
      * @return string
      */
-    public function getTimezone()
+    public function getTimezone(): null|string
     {
         return $this->timezone;
     }
@@ -477,7 +477,7 @@ class TimeField extends TextField
      * @param string $timezone
      * @return $this
      */
-    public function setTimezone($timezone)
+    public function setTimezone(string $timezone): SilverStripe\Forms\TimeField_Readonly
     {
         if ($this->value && $timezone !== $this->timezone) {
             throw new \BadMethodCallException("Can't change timezone after setting a value");

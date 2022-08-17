@@ -21,7 +21,7 @@ class HttpMethodBypass implements Bypass
      *
      * @param string[] ...$methods
      */
-    public function __construct(...$methods)
+    public function __construct(...$methods): void
     {
         $this->addMethods(...$methods);
     }
@@ -31,7 +31,7 @@ class HttpMethodBypass implements Bypass
      *
      * @return string[]
      */
-    public function getMethods()
+    public function getMethods(): array
     {
         return $this->methods;
     }
@@ -43,7 +43,7 @@ class HttpMethodBypass implements Bypass
      *
      * return $this
      */
-    public function addMethods(...$methods)
+    public function addMethods(...$methods): SilverStripe\Control\Middleware\ConfirmationMiddleware\HttpMethodBypass
     {
         // uppercase and exclude empties
         $methods = array_reduce(
@@ -74,7 +74,7 @@ class HttpMethodBypass implements Bypass
      *
      * @return bool
      */
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return in_array($request->httpMethod(), $this->methods ?? [], true);
     }

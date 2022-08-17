@@ -412,7 +412,7 @@ class StandardRelatedDataService implements RelatedDataService
      * @param string[] $throughClasses
      * @return string
      */
-    private function updateComponentClass($componentClass, array &$throughClasses): string
+    private function updateComponentClass(array|string $componentClass, array &$throughClasses): string
     {
         if (!is_array($componentClass)) {
             return $componentClass;

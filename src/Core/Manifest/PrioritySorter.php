@@ -78,7 +78,7 @@ class PrioritySorter
      * @param array $items
      * @param array $priorities
      */
-    public function __construct(array $items = [], array $priorities = [])
+    public function __construct(array $items = [], array $priorities = []): void
     {
         $this->setItems($items);
         $this->priorities = $priorities;
@@ -89,7 +89,7 @@ class PrioritySorter
      *
      * @return array
      */
-    public function getSortedList()
+    public function getSortedList(): array
     {
         $this->addVariables();
 
@@ -116,7 +116,7 @@ class PrioritySorter
      * @param array $priorities An array of keys used in $this->items
      * @return $this
      */
-    public function setPriorities(array $priorities)
+    public function setPriorities(array $priorities): SilverStripe\Core\Manifest\PrioritySorter
     {
         $this->priorities = $priorities;
 
@@ -129,7 +129,7 @@ class PrioritySorter
      * @param array $items
      * @return $this
      */
-    public function setItems(array $items)
+    public function setItems(array $items): SilverStripe\Core\Manifest\PrioritySorter
     {
         $this->items = $items;
         $this->names = array_keys($items ?? []);
@@ -144,7 +144,7 @@ class PrioritySorter
      * @param $value
      * @return $this
      */
-    public function setVariable($name, $value)
+    public function setVariable(string $name, string $value): SilverStripe\Core\Manifest\PrioritySorter
     {
         $this->variables[$name] = $value;
 
@@ -157,7 +157,7 @@ class PrioritySorter
      * @param $key
      * @return $this
      */
-    public function setRestKey($key)
+    public function setRestKey(string $key): SilverStripe\Core\Manifest\PrioritySorter
     {
         $this->restKey = $key;
 
@@ -167,7 +167,7 @@ class PrioritySorter
     /**
      * If variables are defined, interpolate their values
      */
-    protected function addVariables()
+    protected function addVariables(): void
     {
         // Remove variables from the list
         $varValues = array_values($this->variables ?? []);
@@ -185,7 +185,7 @@ class PrioritySorter
      * If the "rest" key exists in the order array,
      * replace it by the unspecified items
      */
-    protected function includeRest(array $list)
+    protected function includeRest(array $list): void
     {
         $otherItemsIndex = false;
         if ($this->restKey) {
@@ -205,7 +205,7 @@ class PrioritySorter
      * @param $name
      * @return mixed
      */
-    protected function resolveValue($name)
+    protected function resolveValue(string $name): string
     {
         return isset($this->variables[$name]) ? $this->variables[$name] : $name;
     }

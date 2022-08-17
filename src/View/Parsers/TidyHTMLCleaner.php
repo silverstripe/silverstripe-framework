@@ -21,7 +21,7 @@ class TidyHTMLCleaner extends HTMLCleaner
         'output-encoding' => 'utf8'
     ];
 
-    public function cleanHTML($content)
+    public function cleanHTML(string $content): string
     {
         $tidy = new tidy();
         $output = $tidy->repairString($content, $this->config);

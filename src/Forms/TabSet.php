@@ -60,7 +60,7 @@ class TabSet extends CompositeField
      * from the {@link $name} parameter.
      * @param Tab|TabSet ...$tabs All further parameters are inserted as children into the TabSet
      */
-    public function __construct($name, $titleOrTab = null, $tabs = null)
+    public function __construct(string $name, array|string|SilverStripe\Forms\Tab $titleOrTab = null, SilverStripe\Forms\Tab $tabs = null): void
     {
         if (!is_string($name)) {
             throw new InvalidArgumentException('Invalid string parameter for $name');
@@ -102,7 +102,7 @@ class TabSet extends CompositeField
         $this->setID(Convert::raw2htmlid($name));
     }
 
-    public function ID()
+    public function ID(): string
     {
         if ($this->tabSet) {
             return $this->tabSet->ID() . '_' . $this->id . '_set';
@@ -116,7 +116,7 @@ class TabSet extends CompositeField
      * @param string $id
      * @return $this
      */
-    public function setID($id)
+    public function setID(string $id): SilverStripe\Forms\TabSet
     {
         $this->id = $id;
         return $this;
@@ -129,7 +129,7 @@ class TabSet extends CompositeField
      * @param array $properties
      * @return DBHTMLText|string
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $obj = $properties ? $this->customise($properties) : $this;
 
@@ -141,7 +141,7 @@ class TabSet extends CompositeField
      *
      * @return FieldList
      */
-    public function Tabs()
+    public function Tabs(): SilverStripe\Forms\FieldList
     {
         return $this->children;
     }
@@ -160,7 +160,7 @@ class TabSet extends CompositeField
      * @param TabSet $val
      * @return $this
      */
-    public function setTabSet($val)
+    public function setTabSet(SilverStripe\Forms\TabSet $val): SilverStripe\Forms\TabSet
     {
         $this->tabSet = $val;
         return $this;
@@ -171,12 +171,12 @@ class TabSet extends CompositeField
      *
      * @return TabSet
      */
-    public function getTabSet()
+    public function getTabSet(): null|SilverStripe\Forms\TabSet
     {
         return $this->tabSet;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = array_merge(
             $this->attributes,
@@ -196,7 +196,7 @@ class TabSet extends CompositeField
      *
      * @param FormField $field
      */
-    public function push(FormField $field)
+    public function push(FormField $field): void
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
@@ -209,7 +209,7 @@ class TabSet extends CompositeField
      *
      * @param FormField $field
      */
-    public function unshift(FormField $field)
+    public function unshift(FormField $field): void
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
@@ -225,7 +225,7 @@ class TabSet extends CompositeField
      * @param bool $appendIfMissing
      * @return FormField|null
      */
-    public function insertBefore($insertBefore, $field, $appendIfMissing = true)
+    public function insertBefore(string $insertBefore, SilverStripe\Forms\DropdownField $field, bool $appendIfMissing = true): SilverStripe\Forms\DropdownField
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
@@ -241,7 +241,7 @@ class TabSet extends CompositeField
      * @param bool $appendIfMissing
      * @return FormField|null
      */
-    public function insertAfter($insertAfter, $field, $appendIfMissing = true)
+    public function insertAfter(string $insertAfter, SilverStripe\AssetAdmin\Forms\UploadField $field, bool $appendIfMissing = true): bool|SilverStripe\AssetAdmin\Forms\UploadField
     {
         if ($field instanceof Tab || $field instanceof TabSet) {
             $field->setTabSet($this);
@@ -257,7 +257,7 @@ class TabSet extends CompositeField
      *
      * @return array
      */
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $defaults = parent::getSchemaStateDefaults();
         $defaults['hideNav'] = false;

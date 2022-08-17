@@ -139,7 +139,7 @@ class DatabaseAdapterRegistry implements Flushable
      * @param array $config Config to update. If not provided fall back to global $databaseConfig.
      * In 5.0.0 this will be mandatory and the global will be removed.
      */
-    public static function autoconfigure(&$config = null)
+    public static function autoconfigure(array &$config = null): void
     {
         if (!isset($config)) {
             Deprecation::notice('5.0', 'Configuration via global is deprecated');
@@ -197,7 +197,7 @@ class DatabaseAdapterRegistry implements Flushable
         return Injector::inst()->get(CacheInterface::class . '.DatabaseAdapterRegistry');
     }
 
-    public static function flush()
+    public static function flush(): void
     {
         static::getCache()->clear();
     }

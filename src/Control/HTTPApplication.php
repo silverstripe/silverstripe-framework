@@ -37,7 +37,7 @@ class HTTPApplication implements Application
      *
      * @param Kernel $kernel
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -62,7 +62,7 @@ class HTTPApplication implements Application
      *
      * @return FlushDiscoverer
      */
-    public function getFlushDiscoverer(HTTPRequest $request)
+    public function getFlushDiscoverer(HTTPRequest $request): SilverStripe\Core\Startup\CompositeFlushDiscoverer
     {
         if ($this->flushDiscoverer) {
             return $this->flushDiscoverer;
@@ -82,7 +82,7 @@ class HTTPApplication implements Application
      *
      * @return string
      */
-    protected function getEnvironmentType()
+    protected function getEnvironmentType(): string
     {
         $kernel_env = $this->kernel->getEnvironment();
         $server_env = Environment::getEnv('SS_ENVIRONMENT_TYPE');
@@ -97,7 +97,7 @@ class HTTPApplication implements Application
      *
      * @return Kernel
      */
-    public function getKernel()
+    public function getKernel(): SilverStripe\Core\CoreKernel
     {
         return $this->kernel;
     }
@@ -108,7 +108,7 @@ class HTTPApplication implements Application
      * @param HTTPRequest $request
      * @return HTTPResponse
      */
-    public function handle(HTTPRequest $request)
+    public function handle(HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         $flush = (bool) $this->getFlushDiscoverer($request)->shouldFlush();
 
@@ -127,7 +127,7 @@ class HTTPApplication implements Application
      *
      * @return HTTPResponse
      */
-    public function execute(HTTPRequest $request, callable $callback, $flush = false)
+    public function execute(HTTPRequest $request, callable $callback, bool $flush = false): null|SilverStripe\Control\HTTPResponse
     {
         try {
             return $this->callMiddleware($request, function ($request) use ($callback, $flush) {

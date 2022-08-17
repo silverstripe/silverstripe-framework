@@ -120,12 +120,12 @@ class RememberLoginHash extends DataObject
         static::$logoutAcrossDevices = $value;
     }
 
-    public function getToken()
+    public function getToken(): string
     {
         return $this->token;
     }
 
-    public function setToken($token)
+    public function setToken(string $token): void
     {
         $this->token = $token;
     }
@@ -134,7 +134,7 @@ class RememberLoginHash extends DataObject
      * Randomly generates a new ID used for the device
      * @return string A device ID
      */
-    protected function getNewDeviceID()
+    protected function getNewDeviceID(): string
     {
         $generator = new RandomGenerator();
         return $generator->randomToken('sha1');
@@ -146,7 +146,7 @@ class RememberLoginHash extends DataObject
      * @param Member $member The logged in user
      * @return string The hash to be stored in the database
      */
-    public function getNewHash(Member $member)
+    public function getNewHash(Member $member): string
     {
         $generator = new RandomGenerator();
         $this->setToken($generator->randomToken('sha1'));
@@ -161,7 +161,7 @@ class RememberLoginHash extends DataObject
      * @param Member $member The logged in user
      * @return RememberLoginHash The generated login hash
      */
-    public static function generate(Member $member)
+    public static function generate(Member $member): SilverStripe\Security\RememberLoginHash
     {
         if (!$member->exists()) {
             return null;
@@ -193,7 +193,7 @@ class RememberLoginHash extends DataObject
      *
      * @return RememberLoginHash
      */
-    public function renew()
+    public function renew(): SilverStripe\Security\RememberLoginHash
     {
         $hash = $this->getNewHash($this->Member());
         $this->Hash = $hash;
@@ -210,7 +210,7 @@ class RememberLoginHash extends DataObject
      * @param Member $member
      * @param string|null $alcDevice Null when logging out of non-persi-tien session
      */
-    public static function clear(Member $member, $alcDevice = null)
+    public static function clear(Member $member, string $alcDevice = null): void
     {
         if (!$member->exists()) {
             // If we don't have a valid user, we can't clear any "Remember me" tokens

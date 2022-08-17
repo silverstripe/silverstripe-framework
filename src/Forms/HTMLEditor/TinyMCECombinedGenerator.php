@@ -37,7 +37,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
      * @param GeneratedAssetHandler $assetHandler
      * @return $this
      */
-    public function setAssetHandler(GeneratedAssetHandler $assetHandler)
+    public function setAssetHandler(GeneratedAssetHandler $assetHandler): SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator
     {
         $this->assetHandler = $assetHandler;
         return $this;
@@ -47,7 +47,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
      * Get backend for assets
      * @return GeneratedAssetHandler
      */
-    public function getAssetHandler()
+    public function getAssetHandler(): SilverStripe\Assets\Flysystem\GeneratedAssets
     {
         return $this->assetHandler;
     }
@@ -58,7 +58,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
      * @param TinyMCEConfig $config
      * @return string
      */
-    public function getScriptURL(TinyMCEConfig $config)
+    public function getScriptURL(TinyMCEConfig $config): string
     {
         // Build URL for this config based on named config and hash of settings
         $url = $this->generateFilename($config);
@@ -75,7 +75,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
      * @param TinyMCEConfig $config
      * @return string
      */
-    public function generateContent(TinyMCEConfig $config)
+    public function generateContent(TinyMCEConfig $config): string
     {
         $tinymceDir = $config->getTinyMCEResource();
 
@@ -182,7 +182,7 @@ SCRIPT;
      * @param string|ModuleResource $file File to load.
      * @return string File contents or empty string if it doesn't exist.
      */
-    protected function getFileContents($file)
+    protected function getFileContents(SilverStripe\Core\Manifest\ModuleResource|string $file): string
     {
         if ($file instanceof ModuleResource) {
             $path = $file->getPath();
@@ -208,7 +208,7 @@ SCRIPT;
      * @param TinyMCEConfig $config
      * @return string
      */
-    protected function checkName(TinyMCEConfig $config)
+    protected function checkName(TinyMCEConfig $config): string
     {
         $configs = HTMLEditorConfig::get_available_configs_map();
         foreach ($configs as $id => $name) {
@@ -225,7 +225,7 @@ SCRIPT;
      * @param TinyMCEConfig $config
      * @return mixed
      */
-    public function generateFilename(TinyMCEConfig $config)
+    public function generateFilename(TinyMCEConfig $config): string
     {
         $hash = substr(sha1(json_encode($config->getAttributes()) ?? ''), 0, 10);
         $name = $this->checkName($config);
@@ -244,7 +244,7 @@ SCRIPT;
      *
      * @see FlushMiddleware
      */
-    public static function flush()
+    public static function flush(): void
     {
         $dir = dirname(static::config()->get('filename_base') ?? '');
         static::singleton()->getAssetHandler()->removeContent($dir);
@@ -257,7 +257,7 @@ SCRIPT;
      * @param string $resource
      * @return ModuleResource|string
      */
-    protected function resolveRelativeResource($base, $resource)
+    protected function resolveRelativeResource(SilverStripe\Core\Manifest\ModuleResource|string $base, string $resource): null|SilverStripe\Core\Manifest\ModuleResource|string
     {
         // Return resource path based on relative resource path
         foreach (['', '.min.js', '.js'] as $ext) {
@@ -281,7 +281,7 @@ SCRIPT;
      * @param string|ModuleResource $resource
      * @return bool
      */
-    protected function resourceExists($resource)
+    protected function resourceExists(SilverStripe\Core\Manifest\ModuleResource|string $resource): bool
     {
         if (!$resource) {
             return false;

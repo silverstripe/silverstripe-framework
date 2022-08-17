@@ -90,7 +90,7 @@ class DatetimeField extends TextField
      */
     protected $timezone = null;
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
 
@@ -109,7 +109,7 @@ class DatetimeField extends TextField
     /**
      * @inheritDoc
      */
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
@@ -125,7 +125,7 @@ class DatetimeField extends TextField
     /**
      * @inheritDoc
      */
-    public function Type()
+    public function Type(): string
     {
         return 'text datetime';
     }
@@ -133,7 +133,7 @@ class DatetimeField extends TextField
     /**
      * @return bool
      */
-    public function getHTML5()
+    public function getHTML5(): bool
     {
         return $this->html5;
     }
@@ -142,7 +142,7 @@ class DatetimeField extends TextField
      * @param $bool
      * @return $this
      */
-    public function setHTML5($bool)
+    public function setHTML5(bool $bool): SilverStripe\Forms\DatetimeField
     {
         $this->html5 = $bool;
         return $this;
@@ -156,7 +156,7 @@ class DatetimeField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setSubmittedValue($value, $data = null)
+    public function setSubmittedValue(string|bool $value, array|SilverStripe\View\ArrayData $data = null): SilverStripe\Forms\DatetimeField
     {
         // Save raw value for later validation
         $this->rawValue = $value;
@@ -182,7 +182,7 @@ class DatetimeField extends TextField
      * @param string $datetime
      * @return string The formatted date, or null if not a valid date
      */
-    public function frontendToInternal($datetime)
+    public function frontendToInternal(string|bool $datetime): string|null
     {
         if (!$datetime) {
             return null;
@@ -212,7 +212,7 @@ class DatetimeField extends TextField
      * @throws \LogicException
      * @return IntlDateFormatter
      */
-    protected function getFrontendFormatter()
+    protected function getFrontendFormatter(): IntlDateFormatter
     {
         if ($this->getHTML5() && $this->datetimeFormat && $this->datetimeFormat !== DBDatetime::ISO_DATETIME_NORMALISED) {
             throw new \LogicException(
@@ -261,7 +261,7 @@ class DatetimeField extends TextField
      *
      * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
-    public function getDatetimeFormat()
+    public function getDatetimeFormat(): string
     {
         if ($this->datetimeFormat) {
             return $this->datetimeFormat;
@@ -279,7 +279,7 @@ class DatetimeField extends TextField
      * @param string $format
      * @return $this
      */
-    public function setDatetimeFormat($format)
+    public function setDatetimeFormat(string $format): SilverStripe\Forms\DatetimeField
     {
         $this->datetimeFormat = $format;
         return $this;
@@ -291,7 +291,7 @@ class DatetimeField extends TextField
      * @param string $timezone Optional timezone identifier (defaults to server timezone)
      * @return IntlDateFormatter
      */
-    protected function getInternalFormatter($timezone = null)
+    protected function getInternalFormatter($timezone = null): IntlDateFormatter
     {
         if (!$timezone) {
             $timezone = date_default_timezone_get(); // Default to server timezone
@@ -322,7 +322,7 @@ class DatetimeField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string|bool|SilverStripe\ORM\FieldType\DBDatetime $value, array|SilverStripe\Assets\File $data = null): SilverStripe\Forms\DatetimeField
     {
         // Save raw value for later validation
         $this->rawValue = $value;
@@ -365,7 +365,7 @@ class DatetimeField extends TextField
      *
      * @return string
      */
-    public function Value()
+    public function Value(): null|string
     {
         return $this->internalToFrontend($this->value);
     }
@@ -378,7 +378,7 @@ class DatetimeField extends TextField
      * @param string $datetime
      * @return string The formatted date and time, or null if not a valid date and time
      */
-    public function internalToFrontend($datetime)
+    public function internalToFrontend(string|bool $datetime): null|string
     {
         $datetime = $this->tidyInternal($datetime);
         if (!$datetime) {
@@ -401,7 +401,7 @@ class DatetimeField extends TextField
      * @param string $datetime Date in ISO 8601 or approximate form
      * @return string ISO 8601 date, or null if not valid
      */
-    public function tidyInternal($datetime)
+    public function tidyInternal(string|bool $datetime): null|string
     {
         if (!$datetime) {
             return null;
@@ -430,7 +430,7 @@ class DatetimeField extends TextField
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      * @return int
      */
-    public function getDateLength()
+    public function getDateLength(): int
     {
         if ($this->dateLength) {
             return $this->dateLength;
@@ -464,7 +464,7 @@ class DatetimeField extends TextField
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      * @return int
      */
-    public function getTimeLength()
+    public function getTimeLength(): int
     {
         if ($this->timeLength) {
             return $this->timeLength;
@@ -487,13 +487,13 @@ class DatetimeField extends TextField
         return $this;
     }
 
-    public function setDisabled($bool)
+    public function setDisabled(bool $bool): SilverStripe\Forms\DatetimeField
     {
         parent::setDisabled($bool);
         return $this;
     }
 
-    public function setReadonly($bool)
+    public function setReadonly(bool $bool): SilverStripe\Forms\DatetimeField
     {
         parent::setReadonly($bool);
         return $this;
@@ -505,7 +505,7 @@ class DatetimeField extends TextField
      * @param string $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): SilverStripe\Forms\DatetimeField
     {
         $this->locale = $locale;
         return $this;
@@ -516,7 +516,7 @@ class DatetimeField extends TextField
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale ?: i18n::get_locale();
     }
@@ -524,7 +524,7 @@ class DatetimeField extends TextField
     /**
      * @return string Date in ISO 8601 format, in server timezone.
      */
-    public function getMinDatetime()
+    public function getMinDatetime(): null|string
     {
         return $this->minDatetime;
     }
@@ -533,7 +533,7 @@ class DatetimeField extends TextField
      * @param string $minDatetime A string in ISO 8601 format, in server timezone.
      * @return $this
      */
-    public function setMinDatetime($minDatetime)
+    public function setMinDatetime(string $minDatetime): SilverStripe\Forms\DatetimeField
     {
         $this->minDatetime = $this->tidyInternal($minDatetime);
         return $this;
@@ -542,7 +542,7 @@ class DatetimeField extends TextField
     /**
      * @return string Date in ISO 8601 format, in server timezone.
      */
-    public function getMaxDatetime()
+    public function getMaxDatetime(): null|string
     {
         return $this->maxDatetime;
     }
@@ -551,7 +551,7 @@ class DatetimeField extends TextField
      * @param string $maxDatetime A string in ISO 8601 format, in server timezone.
      * @return $this
      */
-    public function setMaxDatetime($maxDatetime)
+    public function setMaxDatetime(string $maxDatetime): SilverStripe\Forms\DatetimeField
     {
         $this->maxDatetime = $this->tidyInternal($maxDatetime);
         return $this;
@@ -561,7 +561,7 @@ class DatetimeField extends TextField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         // Don't validate empty fields
         if (empty($this->rawValue)) {
@@ -634,7 +634,7 @@ class DatetimeField extends TextField
         return true;
     }
 
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\DatetimeField
     {
         $field = clone $this;
         $field->setReadonly(true);
@@ -644,7 +644,7 @@ class DatetimeField extends TextField
     /**
      * @return string
      */
-    public function getTimezone()
+    public function getTimezone(): null|string
     {
         return $this->timezone;
     }
@@ -653,7 +653,7 @@ class DatetimeField extends TextField
      * @param string $timezone
      * @return $this
      */
-    public function setTimezone($timezone)
+    public function setTimezone(string $timezone): SilverStripe\Forms\DatetimeField
     {
         if ($this->value && $timezone !== $this->timezone) {
             throw new \BadMethodCallException("Can't change timezone after setting a value");

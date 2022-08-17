@@ -11,7 +11,7 @@ use Exception;
  */
 class DetailedErrorFormatter implements FormatterInterface
 {
-    public function format(array $record)
+    public function format(array $record): string
     {
         if (isset($record['context']['exception'])) {
             /** @var Exception $exception */
@@ -55,7 +55,7 @@ class DetailedErrorFormatter implements FormatterInterface
         );
     }
 
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         return implode("\n", array_map([$this, 'format'], $records ?? []));
     }
@@ -67,7 +67,7 @@ class DetailedErrorFormatter implements FormatterInterface
      * @param string $line The line number to look for
      * @return int|null The matching row number, if found, or null if not found
      */
-    protected function findInTrace(array $trace, $file, $line)
+    protected function findInTrace(array $trace, string $file, int $line): int|null
     {
         foreach ($trace as $i => $call) {
             if (isset($call['file']) && isset($call['line']) && $call['file'] == $file && $call['line'] == $line) {
@@ -88,7 +88,7 @@ class DetailedErrorFormatter implements FormatterInterface
      * @param array $errcontext
      * @return string
      */
-    protected function output($errno, $errstr, $errfile, $errline, $errcontext)
+    protected function output(int $errno, string $errstr, string $errfile, int $errline, array $errcontext): string
     {
         $reporter = Debug::create_debug_view();
 

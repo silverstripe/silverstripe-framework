@@ -26,11 +26,11 @@ class FormTransformation
     use Injectable;
     use Extensible;
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
-    public function transform(FormField $field)
+    public function transform(FormField $field): SilverStripe\Forms\ReadonlyField
     {
         // Look for a performXXTransformation() method on the field itself.
         // performReadonlyTransformation() is a pretty commonly applied method.

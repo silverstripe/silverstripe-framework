@@ -20,7 +20,7 @@ abstract class BuildTask
     use Configurable;
     use Extensible;
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -62,7 +62,7 @@ abstract class BuildTask
     /**
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -70,7 +70,7 @@ abstract class BuildTask
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title ?: static::class;
     }
@@ -78,7 +78,7 @@ abstract class BuildTask
     /**
      * @return string HTML formatted description
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }

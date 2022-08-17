@@ -30,7 +30,7 @@ class HeaderField extends DatalessField
      * @param string $title
      * @param int $headingLevel
      */
-    public function __construct($name, $title = null, $headingLevel = 2)
+    public function __construct(string $name, string|bool $title = null, int $headingLevel = 2): void
     {
         $this->setHeadingLevel($headingLevel);
         parent::__construct($name, $title);
@@ -39,7 +39,7 @@ class HeaderField extends DatalessField
     /**
      * @return int
      */
-    public function getHeadingLevel()
+    public function getHeadingLevel(): int
     {
         return $this->headingLevel;
     }
@@ -49,7 +49,7 @@ class HeaderField extends DatalessField
      *
      * @return $this
      */
-    public function setHeadingLevel($headingLevel)
+    public function setHeadingLevel(int $headingLevel): SilverStripe\Forms\HeaderField
     {
         $this->headingLevel = $headingLevel;
 
@@ -59,7 +59,7 @@ class HeaderField extends DatalessField
     /**
      * {@inheritdoc}
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return array_merge(
             parent::getAttributes(),
@@ -75,7 +75,7 @@ class HeaderField extends DatalessField
     /**
      * @return null
      */
-    public function Type()
+    public function Type(): null
     {
         return null;
     }
@@ -85,7 +85,7 @@ class HeaderField extends DatalessField
      *
      * @return array
      */
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $state = parent::getSchemaStateDefaults();
 
@@ -99,7 +99,7 @@ class HeaderField extends DatalessField
      *
      * @return array
      */
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = parent::getSchemaDataDefaults();
 

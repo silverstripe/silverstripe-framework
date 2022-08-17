@@ -122,7 +122,7 @@ class DebugView
      *
      * @return string
      */
-    public function Breadcrumbs()
+    public function Breadcrumbs(): string
     {
         $basePath = str_replace(Director::protocolAndHost() ?? '', '', Director::absoluteBaseURL() ?? '');
         $relPath = parse_url(
@@ -211,7 +211,7 @@ class DebugView
      * @param HTTPRequest $httpRequest
      * @return string
      */
-    public function renderHeader($httpRequest = null)
+    public function renderHeader($httpRequest = null): string
     {
         $url = htmlentities(
             $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI'],
@@ -238,7 +238,7 @@ class DebugView
      * @param string|bool $description The description to show
      * @return string
      */
-    public function renderInfo($title, $subtitle, $description = false)
+    public function renderInfo(string $title, string $subtitle, $description = false): string
     {
         $output = '<div class="info header">';
         $output .= "<h1>" . Convert::raw2xml($title) . "</h1>";
@@ -259,7 +259,7 @@ class DebugView
      * Render HTML footer for development views
      * @return string
      */
-    public function renderFooter()
+    public function renderFooter(): string
     {
         return "</body></html>";
     }
@@ -274,7 +274,7 @@ class DebugView
      * @param int $errline The line number on which the error occurred
      * @return string
      */
-    public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
+    public function renderError(string $httpRequest, int $errno, string $errstr, string $errfile, int $errline): string
     {
         $errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
         $httpRequestEnt = htmlentities($httpRequest ?? '', ENT_COMPAT, 'UTF-8');
@@ -299,7 +299,7 @@ class DebugView
      * @param int $errline The line of the error
      * @return string
      */
-    public function renderSourceFragment($lines, $errline)
+    public function renderSourceFragment(array $lines, int $errline): string
     {
         $output = '<div class="info"><h3>Source</h3>';
         $output .= '<pre>';
@@ -322,7 +322,7 @@ class DebugView
      * @param  array $trace The debug_backtrace() array
      * @return string
      */
-    public function renderTrace($trace)
+    public function renderTrace(array $trace): string
     {
         $output = '<div class="info">';
         $output .= '<h3>Trace</h3>';
@@ -349,7 +349,7 @@ class DebugView
      * @param  array $caller
      * @return string
      */
-    protected function formatCaller($caller)
+    protected function formatCaller(array $caller): string
     {
         $return = basename($caller['file'] ?? '') . ":" . $caller['line'];
         if (!empty($caller['class']) && !empty($caller['function'])) {
@@ -379,7 +379,7 @@ class DebugView
         return $output;
     }
 
-    public function renderMessage($message, $caller, $showHeader = true)
+    public function renderMessage(string $message, array $caller, bool $showHeader = true): string
     {
         $header = '';
         if ($showHeader) {
@@ -398,7 +398,7 @@ class DebugView
      * @param bool $showHeader
      * @return string
      */
-    public function debugVariable($val, $caller, $showHeader = true)
+    public function debugVariable(string|array|SilverStripe\Dev\Tests\DebugViewTest\ObjectWithDebug $val, array $caller, $showHeader = true): string
     {
         $text = $this->debugVariableText($val);
 
@@ -419,7 +419,7 @@ class DebugView
      * @param mixed $val
      * @return string
      */
-    public function debugVariableText($val)
+    public function debugVariableText(string|array|SilverStripe\Dev\Tests\DebugViewTest\ObjectWithDebug $val): string
     {
         // Check debug
         if (is_object($val) && ClassInfo::hasMethod($val, 'debug')) {

@@ -114,7 +114,7 @@ class DateField extends TextField
     /**
      * @return bool
      */
-    public function getHTML5()
+    public function getHTML5(): bool
     {
         return $this->html5;
     }
@@ -123,7 +123,7 @@ class DateField extends TextField
      * @param boolean $bool
      * @return $this
      */
-    public function setHTML5($bool)
+    public function setHTML5(bool $bool): SilverStripe\Forms\DateField
     {
         $this->html5 = $bool;
         return $this;
@@ -140,7 +140,7 @@ class DateField extends TextField
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      * @return int
      */
-    public function getDateLength()
+    public function getDateLength(): int
     {
         if ($this->dateLength) {
             return $this->dateLength;
@@ -157,7 +157,7 @@ class DateField extends TextField
      * @param int $length
      * @return $this
      */
-    public function setDateLength($length)
+    public function setDateLength(int $length): SilverStripe\Forms\DateField
     {
         $this->dateLength = $length;
         return $this;
@@ -171,7 +171,7 @@ class DateField extends TextField
      *
      * @see https://unicode-org.github.io/icu/userguide/format_parse/datetime/#date-field-symbol-table
      */
-    public function getDateFormat()
+    public function getDateFormat(): string
     {
         // Browsers expect ISO 8601 dates, localisation is handled on the client
         if ($this->getHTML5()) {
@@ -194,7 +194,7 @@ class DateField extends TextField
      * @param string $format
      * @return $this
      */
-    public function setDateFormat($format)
+    public function setDateFormat(string $format): SilverStripe\Forms\DateField
     {
         $this->dateFormat = $format;
         return $this;
@@ -206,7 +206,7 @@ class DateField extends TextField
      * @throws \LogicException
      * @return IntlDateFormatter
      */
-    protected function getFrontendFormatter()
+    protected function getFrontendFormatter(): IntlDateFormatter
     {
         if ($this->getHTML5() && $this->dateFormat && $this->dateFormat !== DBDate::ISO_DATE) {
             throw new \LogicException(
@@ -250,7 +250,7 @@ class DateField extends TextField
      *
      * @return IntlDateFormatter
      */
-    protected function getInternalFormatter()
+    protected function getInternalFormatter(): IntlDateFormatter
     {
         $formatter = IntlDateFormatter::create(
             DBDate::ISO_LOCALE,
@@ -263,7 +263,7 @@ class DateField extends TextField
         return $formatter;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
 
@@ -279,7 +279,7 @@ class DateField extends TextField
         return $attributes;
     }
 
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $defaults = parent::getSchemaDataDefaults();
         return array_merge($defaults, [
@@ -292,7 +292,7 @@ class DateField extends TextField
         ]);
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'date text';
     }
@@ -304,7 +304,7 @@ class DateField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setSubmittedValue($value, $data = null)
+    public function setSubmittedValue(string|bool $value, array $data = null): SilverStripe\Forms\DateField
     {
         // Save raw value for later validation
         $this->rawValue = $value;
@@ -329,7 +329,7 @@ class DateField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string|SilverStripe\Forms\GridField\GridState_Data $value, array|SilverStripe\SiteConfig\SiteConfig $data = null): SilverStripe\Forms\DateField
     {
         // Save raw value for later validation
         $this->rawValue = $value;
@@ -345,12 +345,12 @@ class DateField extends TextField
         return $this;
     }
 
-    public function Value()
+    public function Value(): null|string
     {
         return $this->internalToFrontend($this->value);
     }
 
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\DateField_Disabled
     {
         $field = $this
             ->castedCopy(DateField_Disabled::class)
@@ -365,7 +365,7 @@ class DateField extends TextField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         // Don't validate empty fields
         if (empty($this->rawValue)) {
@@ -443,7 +443,7 @@ class DateField extends TextField
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         // Use iso locale for html5
         if ($this->getHTML5()) {
@@ -460,13 +460,13 @@ class DateField extends TextField
      * @param string $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): SilverStripe\Forms\DateField
     {
         $this->locale = $locale;
         return $this;
     }
 
-    public function getSchemaValidation()
+    public function getSchemaValidation(): array
     {
         $rules = parent::getSchemaValidation();
         $rules['date'] = true;
@@ -476,7 +476,7 @@ class DateField extends TextField
     /**
      * @return string
      */
-    public function getMinDate()
+    public function getMinDate(): null|string
     {
         return $this->minDate;
     }
@@ -485,7 +485,7 @@ class DateField extends TextField
      * @param string $minDate
      * @return $this
      */
-    public function setMinDate($minDate)
+    public function setMinDate(string $minDate): SilverStripe\Forms\DateField
     {
         $this->minDate = $this->tidyInternal($minDate);
         return $this;
@@ -494,7 +494,7 @@ class DateField extends TextField
     /**
      * @return string
      */
-    public function getMaxDate()
+    public function getMaxDate(): null|string
     {
         return $this->maxDate;
     }
@@ -503,7 +503,7 @@ class DateField extends TextField
      * @param string $maxDate
      * @return $this
      */
-    public function setMaxDate($maxDate)
+    public function setMaxDate(string $maxDate): SilverStripe\Forms\DateField
     {
         $this->maxDate = $this->tidyInternal($maxDate);
         return $this;
@@ -516,7 +516,7 @@ class DateField extends TextField
      * @param string $date
      * @return string The formatted date, or null if not a valid date
      */
-    protected function frontendToInternal($date)
+    protected function frontendToInternal(string $date): string
     {
         if (!$date) {
             return null;
@@ -538,7 +538,7 @@ class DateField extends TextField
      * @param string $date
      * @return string The formatted date, or null if not a valid date
      */
-    protected function internalToFrontend($date)
+    protected function internalToFrontend(string $date): null|string
     {
         $date = $this->tidyInternal($date);
         if (!$date) {
@@ -560,7 +560,7 @@ class DateField extends TextField
      * @param string $date Date in ISO 8601 or approximate form
      * @return string ISO 8601 date, or null if not valid
      */
-    protected function tidyInternal($date)
+    protected function tidyInternal(SilverStripe\Forms\GridField\GridState_Data|string $date): null|string
     {
         if (!$date) {
             return null;

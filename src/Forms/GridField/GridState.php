@@ -31,7 +31,7 @@ class GridState extends HiddenField
      * @param GridField $grid
      * @param string $value JSON encoded string
      */
-    public function __construct($grid, $value = null)
+    public function __construct(SilverStripe\Forms\GridField\GridField $grid, $value = null): void
     {
         $this->grid = $grid;
 
@@ -57,7 +57,7 @@ class GridState extends HiddenField
         return $d;
     }
 
-    public function setValue($value, $data = null)
+    public function setValue(string $value, $data = null): SilverStripe\Forms\GridField\GridState
     {
         // Apply the value on top of the existing defaults
         $data = json_decode($value ?? '', true);
@@ -82,7 +82,7 @@ class GridState extends HiddenField
     /**
      * @return GridState_Data
      */
-    public function getData()
+    public function getData(): SilverStripe\Forms\GridField\GridState_Data
     {
         if (!$this->data) {
             $this->data = new GridState_Data();
@@ -104,7 +104,7 @@ class GridState extends HiddenField
      *
      * @return string
      */
-    public function Value()
+    public function Value(): string
     {
         $data = $this->data ? $this->data->getChangesArray() : [];
         return json_encode($data, JSON_FORCE_OBJECT);

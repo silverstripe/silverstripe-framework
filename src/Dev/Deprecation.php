@@ -85,7 +85,7 @@ class Deprecation
      *    calls directly from this module rather than the global value
      * @return void
      */
-    public static function notification_version($ver, $forModule = null)
+    public static function notification_version(string $ver, string $forModule = null): void
     {
         if ($forModule) {
             self::$module_version_overrides[$forModule] = $ver;
@@ -101,7 +101,7 @@ class Deprecation
      * @param array $backtrace A backtrace as returned from debug_backtrace
      * @return Module The module being called
      */
-    protected static function get_calling_module_from_trace($backtrace)
+    protected static function get_calling_module_from_trace(array $backtrace): SilverStripe\Core\Manifest\Module|null
     {
         if (!isset($backtrace[1]['file'])) {
             return null;
@@ -120,7 +120,7 @@ class Deprecation
      * @param $level - 1 (default) will return immediate caller, 2 will return caller's caller, etc.
      * @return string - the name of the method
      */
-    protected static function get_called_method_from_trace($backtrace, $level = 1)
+    protected static function get_called_method_from_trace(array $backtrace, int $level = 1): string
     {
         $level = (int)$level;
         if (!$level) {
@@ -139,7 +139,7 @@ class Deprecation
      *
      * @return bool
      */
-    public static function get_enabled()
+    public static function get_enabled(): bool
     {
         // Deprecation is only available on dev
         if (!Director::isDev()) {
@@ -156,7 +156,7 @@ class Deprecation
      *
      * @param bool $enabled
      */
-    public static function set_enabled($enabled)
+    public static function set_enabled(bool $enabled): void
     {
         self::$enabled = $enabled;
     }
@@ -169,7 +169,7 @@ class Deprecation
      * @param string $string The notice to raise
      * @param int $scope Notice relates to the method or class context its called in.
      */
-    public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD)
+    public static function notice(string $atVersion, string $string = '', $scope = Deprecation::SCOPE_METHOD): void
     {
         if (!static::get_enabled()) {
             return;
@@ -245,7 +245,7 @@ class Deprecation
      *
      * @return array Opaque array that should only be used to pass to {@see Deprecation::restore_settings()}
      */
-    public static function dump_settings()
+    public static function dump_settings(): array
     {
         return [
             'level' => self::$notice_level,
@@ -260,7 +260,7 @@ class Deprecation
      *
      * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
      */
-    public static function restore_settings($settings)
+    public static function restore_settings(array $settings): void
     {
         self::$notice_level = $settings['level'];
         self::$version = $settings['version'];

@@ -13,12 +13,12 @@ class MySQLTransactionManager implements TransactionManager
 
     protected $inTransaction = false;
 
-    public function __construct(Database $dbConn)
+    public function __construct(Database $dbConn): void
     {
         $this->dbConn = $dbConn;
     }
 
-    public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
+    public function transactionStart(bool|string $transactionMode = false, bool $sessionCharacteristics = false): bool
     {
         if ($transactionMode || $sessionCharacteristics) {
             Deprecation::notice(
@@ -48,7 +48,7 @@ class MySQLTransactionManager implements TransactionManager
         return true;
     }
 
-    public function transactionEnd($chain = false)
+    public function transactionEnd($chain = false): bool
     {
         if (!$this->inTransaction) {
             throw new DatabaseException("Not in transaction, can't end.");
@@ -67,7 +67,7 @@ class MySQLTransactionManager implements TransactionManager
         return true;
     }
 
-    public function transactionRollback($savepoint = null)
+    public function transactionRollback(string $savepoint = null): bool
     {
         if (!$this->inTransaction) {
             throw new DatabaseException("Not in transaction, can't roll back.");
@@ -83,7 +83,7 @@ class MySQLTransactionManager implements TransactionManager
         return true;
     }
 
-    public function transactionSavepoint($savepoint)
+    public function transactionSavepoint(string $savepoint): void
     {
         $this->dbConn->query("SAVEPOINT $savepoint");
     }
@@ -93,7 +93,7 @@ class MySQLTransactionManager implements TransactionManager
         return (int)$this->inTransaction;
     }
 
-    public function supportsSavepoints()
+    public function supportsSavepoints(): bool
     {
         return true;
     }

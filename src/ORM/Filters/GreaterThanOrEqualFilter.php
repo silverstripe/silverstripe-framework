@@ -11,7 +11,7 @@ namespace SilverStripe\ORM\Filters;
 class GreaterThanOrEqualFilter extends ComparisonFilter
 {
 
-    protected function getOperator()
+    protected function getOperator(): string
     {
         return ">=";
     }

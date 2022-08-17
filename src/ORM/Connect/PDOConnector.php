@@ -90,7 +90,7 @@ class PDOConnector extends DBConnector implements TransactionManager
     /**
      * Flush all prepared statements
      */
-    public function flushStatements()
+    public function flushStatements(): void
     {
         $this->cachedStatements = [];
     }
@@ -135,12 +135,12 @@ class PDOConnector extends DBConnector implements TransactionManager
      *
      * @return boolean
      */
-    public static function is_emulate_prepare()
+    public static function is_emulate_prepare(): bool
     {
         return self::config()->get('emulate_prepare');
     }
 
-    public function connect($parameters, $selectDB = false)
+    public function connect(array $parameters, $selectDB = false): void
     {
         Deprecation::notice('4.5', 'Use native database drivers in favour of PDO. '
             . 'https://github.com/silverstripe/silverstripe-framework/issues/8598');

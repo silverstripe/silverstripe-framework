@@ -35,7 +35,7 @@ class SSViewer_FromString extends SSViewer
      * @param string $content
      * @param TemplateParser $parser
      */
-    public function __construct($content, TemplateParser $parser = null)
+    public function __construct(string|SilverStripe\ORM\FieldType\DBHTMLText $content, TemplateParser $parser = null): void
     {
         if ($parser) {
             $this->setParser($parser);
@@ -47,7 +47,7 @@ class SSViewer_FromString extends SSViewer
     /**
      * {@inheritdoc}
      */
-    public function process($item, $arguments = null, $scope = null)
+    public function process(SilverStripe\Security\Member $item, $arguments = null, $scope = null): string
     {
         $hash = sha1($this->content ?? '');
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . ".cache.$hash";
@@ -77,7 +77,7 @@ class SSViewer_FromString extends SSViewer
     /**
      * @param boolean $cacheTemplate
      */
-    public function setCacheTemplate($cacheTemplate)
+    public function setCacheTemplate(bool $cacheTemplate): void
     {
         $this->cacheTemplate = (bool)$cacheTemplate;
     }

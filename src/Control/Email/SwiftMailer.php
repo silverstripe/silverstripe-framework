@@ -35,7 +35,7 @@ class SwiftMailer implements Mailer
      * @param Email $message
      * @return bool Whether the sending was "successful" or not
      */
-    public function send($message)
+    public function send(SilverStripe\Control\Email\Email $message): bool
     {
         $swiftMessage = $message->getSwiftMessage();
         $failedRecipients = [];
@@ -50,7 +50,7 @@ class SwiftMailer implements Mailer
      * @param array $failedRecipients
      * @return int
      */
-    protected function sendSwift($message, &$failedRecipients = null)
+    protected function sendSwift(Swift_Message $message, &$failedRecipients = null): int|null
     {
         return $this->getSwiftMailer()->send($message, $failedRecipients);
     }
@@ -58,7 +58,7 @@ class SwiftMailer implements Mailer
     /**
      * @return Swift_Mailer
      */
-    public function getSwiftMailer()
+    public function getSwiftMailer(): Swift_Mailer
     {
         return $this->swift;
     }
@@ -67,7 +67,7 @@ class SwiftMailer implements Mailer
      * @param Swift_Mailer $swift
      * @return $this
      */
-    public function setSwiftMailer($swift)
+    public function setSwiftMailer(Swift_Mailer $swift): SilverStripe\Control\Email\SwiftMailer
     {
         // register any required plugins
         foreach ($this->config()->get('swift_plugins') as $plugin) {

@@ -35,7 +35,7 @@ class FieldList extends ArrayList
      */
     protected $containerField;
 
-    public function __construct($items = [])
+    public function __construct(array|SilverStripe\Forms\TextField $items = []): void
     {
         if (!is_array($items) || func_num_args() > 1) {
             $items = func_get_args();
@@ -50,7 +50,7 @@ class FieldList extends ArrayList
         }
     }
 
-    public function __clone()
+    public function __clone(): void
     {
         // Clone all fields in this list
         foreach ($this->items as $key => $field) {
@@ -63,7 +63,7 @@ class FieldList extends ArrayList
      *
      * @param callable $callback
      */
-    public function recursiveWalk(callable $callback)
+    public function recursiveWalk(callable $callback): void
     {
         $stack = $this->toArray();
         while (!empty($stack)) {
@@ -81,7 +81,7 @@ class FieldList extends ArrayList
      *
      * @return static
      */
-    public function flattenFields()
+    public function flattenFields(): SilverStripe\Forms\FieldList
     {
         $fields = [];
         $this->recursiveWalk(function (FormField $field) use (&$fields) {
@@ -96,7 +96,7 @@ class FieldList extends ArrayList
      *
      * @return FormField[]
      */
-    public function dataFields()
+    public function dataFields(): array
     {
         if (empty($this->sequentialSet)) {
             $fields = [];
@@ -118,7 +118,7 @@ class FieldList extends ArrayList
     /**
      * @return FormField[]
      */
-    public function saveableFields()
+    public function saveableFields(): array
     {
         if (empty($this->sequentialSaveableSet)) {
             $fields = [];
@@ -142,7 +142,7 @@ class FieldList extends ArrayList
      *
      * @return array
      */
-    public function dataFieldNames()
+    public function dataFieldNames(): array
     {
         return array_keys($this->dataFields() ?? []);
     }
@@ -173,7 +173,7 @@ class FieldList extends ArrayList
         ));
     }
 
-    protected function flushFieldsCache()
+    protected function flushFieldsCache(): void
     {
         $this->sequentialSet = null;
         $this->sequentialSaveableSet = null;
@@ -230,7 +230,7 @@ class FieldList extends ArrayList
      *
      * @return $this
      */
-    public function addFieldToTab($tabName, $field, $insertBefore = null)
+    public function addFieldToTab(string $tabName, SilverStripe\Forms\NumericField $field, string $insertBefore = null): SilverStripe\Forms\FieldList
     {
         // This is a cache that must be flushed
         $this->flushFieldsCache();
@@ -259,7 +259,7 @@ class FieldList extends ArrayList
      *
      * @return $this
      */
-    public function addFieldsToTab($tabName, $fields, $insertBefore = null)
+    public function addFieldsToTab(string $tabName, array|SilverStripe\Forms\CompositeField $fields, string $insertBefore = null): SilverStripe\Forms\FieldList
     {
         $this->flushFieldsCache();
 
@@ -290,7 +290,7 @@ class FieldList extends ArrayList
      *
      * @return $this
      */
-    public function removeFieldFromTab($tabName, $fieldName)
+    public function removeFieldFromTab(string $tabName, string $fieldName): SilverStripe\Forms\FieldList
     {
         $this->flushFieldsCache();
 
@@ -311,7 +311,7 @@ class FieldList extends ArrayList
      *
      * @return $this
      */
-    public function removeFieldsFromTab($tabName, $fields)
+    public function removeFieldsFromTab(string $tabName, array $fields): SilverStripe\Forms\FieldList
     {
         $this->flushFieldsCache();
 
@@ -337,7 +337,7 @@ class FieldList extends ArrayList
      *
      * @return $this
      */
-    public function removeByName($fieldName, $dataFieldOnly = false)
+    public function removeByName(string|array $fieldName, bool $dataFieldOnly = false): SilverStripe\Forms\FieldList
     {
         if (!$fieldName) {
             user_error('FieldList::removeByName() was called with a blank field name.', E_USER_WARNING);
@@ -379,7 +379,7 @@ class FieldList extends ArrayList
      * @return bool TRUE field was successfully replaced
      *                   FALSE field wasn't found, nothing changed
      */
-    public function replaceField($fieldName, $newField, $dataFieldOnly = true)
+    public function replaceField(string $fieldName, DNADesign\Elemental\Forms\TextCheckboxGroupField $newField, bool $dataFieldOnly = true): bool
     {
         $this->flushFieldsCache();
         foreach ($this as $i => $field) {
@@ -402,7 +402,7 @@ class FieldList extends ArrayList
      * @param string $newFieldTitle New title of field
      * @return bool
      */
-    public function renameField($fieldName, $newFieldTitle)
+    public function renameField(string $fieldName, string $newFieldTitle): bool
     {
         $field = $this->dataFieldByName($fieldName);
         if (!$field) {
@@ -417,7 +417,7 @@ class FieldList extends ArrayList
     /**
      * @return bool
      */
-    public function hasTabSet()
+    public function hasTabSet(): bool
     {
         foreach ($this->items as $i => $field) {
             if (is_object($field) && $field instanceof TabSet) {
@@ -434,7 +434,7 @@ class FieldList extends ArrayList
      * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
      * @return Tab|null The found or null
      */
-    public function findTab($tabName)
+    public function findTab(string $tabName): null|SilverStripe\Forms\TabSet
     {
         $parts = explode('.', $tabName ?? '');
         $last_idx = count($parts ?? []) - 1;
@@ -463,7 +463,7 @@ class FieldList extends ArrayList
      *   The title is only changed if the tab doesn't exist already.
      * @return Tab The found or newly created Tab instance
      */
-    public function findOrMakeTab($tabName, $title = null)
+    public function findOrMakeTab(string $tabName, string $title = null): SilverStripe\Forms\Tab
     {
         $parts = explode('.', $tabName ?? '');
         $last_idx = count($parts ?? []) - 1;
@@ -509,7 +509,7 @@ class FieldList extends ArrayList
      * @param string $name
      * @return FormField|null
      */
-    public function fieldByName($name)
+    public function fieldByName(string $name): null|SilverStripe\Forms\HiddenField
     {
         $fullName = $name;
         if (strpos($name ?? '', '.') !== false) {
@@ -548,7 +548,7 @@ class FieldList extends ArrayList
      * @param string $name The name of the field to return
      * @return FormField|null
      */
-    public function dataFieldByName($name)
+    public function dataFieldByName(string $name): null|SilverStripe\Forms\EmailField
     {
         if ($dataFields = $this->dataFields()) {
             foreach ($dataFields as $child) {
@@ -569,7 +569,7 @@ class FieldList extends ArrayList
      * @param bool $appendIfMissing Append to the end of the list if $name isn't found
      * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertBefore($name, $item, $appendIfMissing = true)
+    public function insertBefore(string|SilverStripe\Forms\DropdownField $name, string|SilverStripe\Forms\DropdownField $item, bool $appendIfMissing = true): bool|SilverStripe\Forms\DropdownField
     {
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
@@ -611,7 +611,7 @@ class FieldList extends ArrayList
      * @param bool $appendIfMissing Append to the end of the list if $name isn't found
      * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertAfter($name, $item, $appendIfMissing = true)
+    public function insertAfter(string|SilverStripe\Forms\Tab $name, string|SilverStripe\AssetAdmin\Forms\UploadField $item, bool $appendIfMissing = true): bool|SilverStripe\AssetAdmin\Forms\UploadField
     {
         // Backwards compatibility for order of arguments
         if ($name instanceof FormField) {
@@ -649,7 +649,7 @@ class FieldList extends ArrayList
      *
      * @param FormField $item The FormField to add
      */
-    public function push($item)
+    public function push(SilverStripe\Forms\HiddenField $item): null
     {
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
@@ -662,7 +662,7 @@ class FieldList extends ArrayList
      *
      * @param FormField $item The FormField to add
      */
-    public function unshift($item)
+    public function unshift(SilverStripe\Forms\PasswordField $item): null
     {
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
@@ -675,7 +675,7 @@ class FieldList extends ArrayList
      *
      * @param FormField $item
      */
-    protected function onBeforeInsert($item)
+    protected function onBeforeInsert(SilverStripe\Forms\HiddenField $item): void
     {
         $this->flushFieldsCache();
 
@@ -691,7 +691,7 @@ class FieldList extends ArrayList
      * @param Form $form The form to set this FieldList to
      * @return $this
      */
-    public function setForm($form)
+    public function setForm(SilverStripe\CMS\Search\SearchForm $form): SilverStripe\Forms\FieldList
     {
         foreach ($this as $field) {
             $field->setForm($form);
@@ -724,7 +724,7 @@ class FieldList extends ArrayList
      *
      * @return FieldList
      */
-    public function HiddenFields()
+    public function HiddenFields(): SilverStripe\Forms\FieldList
     {
         $hiddenFields = new FieldList();
         $dataFields = $this->dataFields();
@@ -744,7 +744,7 @@ class FieldList extends ArrayList
      * Return all fields except for the hidden fields.
      * Useful when making your own simplified form layouts.
      */
-    public function VisibleFields()
+    public function VisibleFields(): SilverStripe\Forms\FieldList
     {
         $visibleFields = new FieldList();
 
@@ -764,7 +764,7 @@ class FieldList extends ArrayList
      * @param FormTransformation $trans
      * @return FieldList
      */
-    public function transform($trans)
+    public function transform(SilverStripe\Forms\ReadonlyTransformation $trans): SilverStripe\Forms\FieldList
     {
         $this->flushFieldsCache();
         $newFields = new FieldList();
@@ -779,7 +779,7 @@ class FieldList extends ArrayList
      *
      * @return FieldList|FormField
      */
-    public function rootFieldList()
+    public function rootFieldList(): SilverStripe\Forms\FieldList
     {
         if ($this->containerField) {
             return $this->containerField->rootFieldList();
@@ -791,7 +791,7 @@ class FieldList extends ArrayList
     /**
      * @return CompositeField|null
      */
-    public function getContainerField()
+    public function getContainerField(): null|SilverStripe\Forms\Tab
     {
         return $this->containerField;
     }
@@ -800,7 +800,7 @@ class FieldList extends ArrayList
      * @param CompositeField|null $field
      * @return $this
      */
-    public function setContainerField($field)
+    public function setContainerField(SilverStripe\Forms\CompositeField $field): SilverStripe\Forms\FieldList
     {
         $this->containerField = $field;
         return $this;
@@ -811,7 +811,7 @@ class FieldList extends ArrayList
      *
      * @return FieldList
      */
-    public function makeReadonly()
+    public function makeReadonly(): SilverStripe\Forms\FieldList
     {
         return $this->transform(new ReadonlyTransformation());
     }
@@ -821,7 +821,7 @@ class FieldList extends ArrayList
      *
      * @param string|array|FormField $field
      */
-    public function makeFieldReadonly($field)
+    public function makeFieldReadonly(string|SilverStripe\Forms\OptionsetField $field): void
     {
         if (!is_array($field)) {
             $field = [$field];
@@ -847,7 +847,7 @@ class FieldList extends ArrayList
      *
      * @param array $fieldNames Field names can be given as an array, or just as a list of arguments.
      */
-    public function changeFieldOrder($fieldNames)
+    public function changeFieldOrder(array|string $fieldNames): void
     {
         // Field names can be given as an array, or just as a list of arguments.
         if (!is_array($fieldNames)) {
@@ -888,7 +888,7 @@ class FieldList extends ArrayList
      * @return int Position in children collection (first position starts with 0).
      * Returns FALSE if the field can't be found.
      */
-    public function fieldPosition($field)
+    public function fieldPosition(string $field): int
     {
         if ($field instanceof FormField) {
             $field = $field->getName();
@@ -908,7 +908,7 @@ class FieldList extends ArrayList
     /**
      * Default template rendering of a FieldList will concatenate all FieldHolder values.
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         $output = "";
         foreach ($this as $field) {

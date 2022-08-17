@@ -21,7 +21,7 @@ class DBQueryBuilder
      *
      * @return string Non-empty whitespace character
      */
-    public function getSeparator()
+    public function getSeparator(): string
     {
         return "\n ";
     }
@@ -33,7 +33,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string The resulting SQL as a string
      */
-    public function buildSQL(SQLExpression $query, &$parameters)
+    public function buildSQL(SQLExpression $query, &$parameters): string|null
     {
         $sql = null;
         $parameters = [];
@@ -66,7 +66,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed SQL string
      */
-    protected function buildSelectQuery(SQLSelect $query, array &$parameters)
+    protected function buildSelectQuery(SQLSelect $query, array &$parameters): string
     {
         $sql  = $this->buildSelectFragment($query, $parameters);
         $sql .= $this->buildFromFragment($query, $parameters);
@@ -85,7 +85,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed SQL string
      */
-    protected function buildDeleteQuery(SQLDelete $query, array &$parameters)
+    protected function buildDeleteQuery(SQLDelete $query, array &$parameters): string
     {
         $sql  = $this->buildDeleteFragment($query, $parameters);
         $sql .= $this->buildFromFragment($query, $parameters);
@@ -100,7 +100,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed SQL string
      */
-    protected function buildInsertQuery(SQLInsert $query, array &$parameters)
+    protected function buildInsertQuery(SQLInsert $query, array &$parameters): string
     {
         $nl = $this->getSeparator();
         $into = $query->getInto();
@@ -148,7 +148,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed SQL string
      */
-    protected function buildUpdateQuery(SQLUpdate $query, array &$parameters)
+    protected function buildUpdateQuery(SQLUpdate $query, array &$parameters): string
     {
         $sql  = $this->buildUpdateFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
@@ -162,7 +162,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed select part of statement
      */
-    protected function buildSelectFragment(SQLSelect $query, array &$parameters)
+    protected function buildSelectFragment(SQLSelect $query, array &$parameters): string
     {
         $distinct = $query->getDistinct();
         $select = $query->getSelect();
@@ -192,7 +192,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed delete part of statement
      */
-    public function buildDeleteFragment(SQLDelete $query, array &$parameters)
+    public function buildDeleteFragment(SQLDelete $query, array &$parameters): string
     {
         $text = 'DELETE';
 
@@ -212,7 +212,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed from part of statement
      */
-    public function buildUpdateFragment(SQLUpdate $query, array &$parameters)
+    public function buildUpdateFragment(SQLUpdate $query, array &$parameters): string
     {
         $table = $query->getTable();
         $text = "UPDATE $table";
@@ -239,7 +239,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed from part of statement
      */
-    public function buildFromFragment(SQLConditionalExpression $query, array &$parameters)
+    public function buildFromFragment(SQLConditionalExpression $query, array &$parameters): string
     {
         $from = $query->getJoins($joinParameters);
         $parameters = array_merge($parameters, $joinParameters);
@@ -254,7 +254,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed where condition
      */
-    public function buildWhereFragment(SQLConditionalExpression $query, array &$parameters)
+    public function buildWhereFragment(SQLConditionalExpression $query, array &$parameters): string
     {
         // Get parameterised elements
         $where = $query->getWhereParameterised($whereParameters);
@@ -276,7 +276,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed order by part of statement
      */
-    public function buildOrderByFragment(SQLSelect $query, array &$parameters)
+    public function buildOrderByFragment(SQLSelect $query, array &$parameters): string
     {
         $orderBy = $query->getOrderBy();
         if (empty($orderBy)) {
@@ -300,7 +300,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string Completed group part of statement
      */
-    public function buildGroupByFragment(SQLSelect $query, array &$parameters)
+    public function buildGroupByFragment(SQLSelect $query, array &$parameters): string
     {
         $groupBy = $query->getGroupBy();
         if (empty($groupBy)) {
@@ -318,7 +318,7 @@ class DBQueryBuilder
      * @param array $parameters Out parameter for the resulting query parameters
      * @return string
      */
-    public function buildHavingFragment(SQLSelect $query, array &$parameters)
+    public function buildHavingFragment(SQLSelect $query, array &$parameters): string
     {
         $having = $query->getHavingParameterised($havingParameters);
         if (empty($having)) {

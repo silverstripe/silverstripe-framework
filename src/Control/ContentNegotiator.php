@@ -73,7 +73,7 @@ class ContentNegotiator
      * @param HTTPResponse $response
      * @return bool
      */
-    public static function enabled_for($response)
+    public static function enabled_for(SilverStripe\Control\HTTPResponse $response): bool
     {
         $contentType = $response->getHeader("Content-Type");
 
@@ -97,7 +97,7 @@ class ContentNegotiator
      *
      * @return bool
      */
-    public static function getEnabled()
+    public static function getEnabled(): bool
     {
         if (isset(static::$current_enabled)) {
             return static::$current_enabled;
@@ -110,7 +110,7 @@ class ContentNegotiator
      *
      * @param bool $enabled
      */
-    public static function setEnabled($enabled)
+    public static function setEnabled(bool $enabled): void
     {
         static::$current_enabled = $enabled;
     }
@@ -118,7 +118,7 @@ class ContentNegotiator
     /**
      * @param HTTPResponse $response
      */
-    public static function process(HTTPResponse $response)
+    public static function process(HTTPResponse $response): void
     {
         if (!self::enabled_for($response)) {
             return;
@@ -172,7 +172,7 @@ class ContentNegotiator
      *
      * @todo Search for more xhtml replacement
      */
-    public function xhtml(HTTPResponse $response)
+    public function xhtml(HTTPResponse $response): void
     {
         $content = $response->getBody();
         $encoding = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'encoding');
@@ -214,7 +214,7 @@ class ContentNegotiator
      *
      * @param HTTPResponse $response
      */
-    public function html(HTTPResponse $response)
+    public function html(HTTPResponse $response): void
     {
         $encoding = $this->config()->get('encoding');
         $contentType = $this->config()->get('content_type');

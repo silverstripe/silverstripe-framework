@@ -22,7 +22,7 @@ class Path
      * @param array $parts
      * @return string Combined path, not including trailing slash (unless it's a single slash)
      */
-    public static function join(...$parts)
+    public static function join(...$parts): string
     {
         // In case $parts passed as an array in first parameter
         if (count($parts ?? []) === 1 && is_array($parts[0])) {
@@ -49,7 +49,7 @@ class Path
      * @param bool $relative
      * @return string Path with no trailing slash. If $relative is true, also trim leading slashes
      */
-    public static function normalise($path, $relative = false)
+    public static function normalise(string $path, bool $relative = false): string
     {
         $path = trim(Convert::slashes($path) ?? '');
         if ($relative) {

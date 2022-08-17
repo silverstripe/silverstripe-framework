@@ -13,7 +13,7 @@ class HTMLEditorField_Readonly extends HTMLReadonlyField
         'Value' => 'HTMLText',
     ];
 
-    public function Type()
+    public function Type(): string
     {
         return 'htmleditorfield readonly';
     }

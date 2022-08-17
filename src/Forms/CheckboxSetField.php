@@ -54,7 +54,7 @@ class CheckboxSetField extends MultiSelectField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $properties = array_merge($properties, [
             'Options' => $this->getOptions()
@@ -68,7 +68,7 @@ class CheckboxSetField extends MultiSelectField
      *
      * @return ArrayList
      */
-    public function getOptions()
+    public function getOptions(): SilverStripe\ORM\ArrayList
     {
         $selectedValues = $this->getValueArray();
         $defaultItems = $this->getDefaultItems();
@@ -102,12 +102,12 @@ class CheckboxSetField extends MultiSelectField
         return $options;
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'optionset checkboxset';
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = array_merge(
             parent::getAttributes(),

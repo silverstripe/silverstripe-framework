@@ -46,7 +46,7 @@ class ArrayLib
      * @param array $arr
      * @return array
      */
-    public static function invert($arr)
+    public static function invert(array $arr): array
     {
         if (!$arr) {
             return [];
@@ -69,7 +69,7 @@ class ArrayLib
      * @param $arr array
      * @return array
      */
-    public static function valuekey($arr)
+    public static function valuekey(array $arr): array
     {
         return array_combine($arr ?? [], $arr ?? []);
     }
@@ -115,7 +115,7 @@ class ArrayLib
      *
      * @return boolean
      */
-    public static function is_associative($array)
+    public static function is_associative(array|string|bool|int|float|SilverStripe\ORM\ArrayList $array): bool
     {
         $isAssociative = !empty($array)
             && is_array($array)
@@ -164,7 +164,7 @@ class ArrayLib
      * @param $array array
      * @return array
      */
-    public static function array_map_recursive($f, $array)
+    public static function array_map_recursive(string $f, array $array): array
     {
         $applyOrRecurse = function ($v) use ($f) {
             return is_array($v) ? ArrayLib::array_map_recursive($f, $v) : call_user_func($f, $v);
@@ -185,7 +185,7 @@ class ArrayLib
      *
      * @return array
      */
-    public static function array_merge_recursive($array)
+    public static function array_merge_recursive(array $array): array
     {
         $arrays = func_get_args();
         $merged = [];
@@ -230,7 +230,7 @@ class ArrayLib
      *
      * @return array
      */
-    public static function flatten($array, $preserveKeys = true, &$out = [])
+    public static function flatten(array $array, $preserveKeys = true, &$out = []): array
     {
         array_walk_recursive(
             $array,
@@ -257,7 +257,7 @@ class ArrayLib
      * @param array $list
      * @return Generator
      */
-    public static function iterateVolatile(array &$list)
+    public static function iterateVolatile(array &$list): void
     {
         // Keyed by already-iterated items
         $iterated = [];

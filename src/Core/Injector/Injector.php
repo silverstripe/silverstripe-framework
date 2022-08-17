@@ -211,7 +211,7 @@ class Injector implements ContainerInterface
      * @param array $config
      *              Service configuration
      */
-    public function __construct($config = null)
+    public function __construct(array $config = null): void
     {
         $this->injectMap = [];
         $this->serviceCache = [
@@ -246,7 +246,7 @@ class Injector implements ContainerInterface
     /**
      * @return Injector
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Core\Injector\Injector
     {
         return InjectorLoader::inst()->getManifest();
     }
@@ -261,7 +261,7 @@ class Injector implements ContainerInterface
      *
      * @return Injector Reference to new active Injector instance
      */
-    public static function nest()
+    public static function nest(): SilverStripe\Core\Injector\Injector
     {
         // Clone current injector and nest
         $new = clone self::inst();
@@ -275,7 +275,7 @@ class Injector implements ContainerInterface
      *
      * @return Injector Reference to restored active Injector instance
      */
-    public static function unnest()
+    public static function unnest(): SilverStripe\Core\Injector\Injector
     {
         // Unnest unless we would be left at 0 manifests
         $loader = InjectorLoader::inst();
@@ -295,7 +295,7 @@ class Injector implements ContainerInterface
      *
      * @param boolean $val
      */
-    public function setAutoScanProperties($val)
+    public function setAutoScanProperties(bool $val): void
     {
         $this->autoScanProperties = $val;
     }
@@ -305,7 +305,7 @@ class Injector implements ContainerInterface
      *
      * @param \SilverStripe\Core\Injector\Factory $obj
      */
-    public function setObjectCreator(Factory $obj)
+    public function setObjectCreator(Factory $obj): void
     {
         $this->objectCreator = $obj;
     }
@@ -313,7 +313,7 @@ class Injector implements ContainerInterface
     /**
      * @return Factory
      */
-    public function getObjectCreator()
+    public function getObjectCreator(): SilverStripe\Core\Injector\InjectionCreator
     {
         return $this->objectCreator;
     }
@@ -322,7 +322,7 @@ class Injector implements ContainerInterface
      * Set the configuration locator
      * @param ServiceConfigurationLocator $configLocator
      */
-    public function setConfigLocator($configLocator)
+    public function setConfigLocator(SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator $configLocator): void
     {
         $this->configLocator = $configLocator;
     }
@@ -331,7 +331,7 @@ class Injector implements ContainerInterface
      * Retrieve the configuration locator
      * @return ServiceConfigurationLocator
      */
-    public function getConfigLocator()
+    public function getConfigLocator(): SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator
     {
         return $this->configLocator;
     }
@@ -347,7 +347,7 @@ class Injector implements ContainerInterface
      * @param string $toInject The registered type that will be injected
      * @param string $injectVia Whether to inject by setting a property or calling a setter
      */
-    public function setInjectMapping($class, $property, $toInject, $injectVia = 'property')
+    public function setInjectMapping(string $class, string $property, string $toInject, string $injectVia = 'property'): void
     {
         $mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : [];
 
@@ -370,7 +370,7 @@ class Injector implements ContainerInterface
      *                the object to be set
      * @return $this
      */
-    public function addAutoProperty($property, $object)
+    public function addAutoProperty(string $property, string $object): SilverStripe\Core\Injector\Injector
     {
         $this->autoProperties[$property] = $object;
         return $this;
@@ -382,7 +382,7 @@ class Injector implements ContainerInterface
      * @param array $config
      * @return $this
      */
-    public function load($config = [])
+    public function load(array $config = []): SilverStripe\Core\Injector\Injector
     {
         foreach ($config as $specId => $spec) {
             if (is_string($spec)) {
@@ -466,7 +466,7 @@ class Injector implements ContainerInterface
      * @param boolean $append
      *              Whether to append (the default) when the property is an array
      */
-    public function updateSpec($id, $property, $value, $append = true)
+    public function updateSpec(string $id, string $property, string $value, $append = true): void
     {
         if (isset($this->specs[$id]['properties'][$property])) {
             // by ref so we're updating the actual value
@@ -493,7 +493,7 @@ class Injector implements ContainerInterface
      * @param array $spec
      *          The class specification to update
      */
-    protected function updateSpecConstructor(&$spec)
+    protected function updateSpecConstructor(array &$spec): void
     {
         if (isset($spec['constructor'])) {
             $spec['constructor'] = $this->convertServiceProperty($spec['constructor']);
@@ -507,7 +507,7 @@ class Injector implements ContainerInterface
      * @param string $value
      * @return array|mixed|string
      */
-    public function convertServiceProperty($value)
+    public function convertServiceProperty(string|array|int|bool|float $value): string|array|null|int|bool|float|Monolog\Handler\SyslogHandler
     {
         if (is_array($value)) {
             $newVal = [];
@@ -584,7 +584,7 @@ class Injector implements ContainerInterface
      *                wants the object to be returned
      * @return object
      */
-    protected function instantiate($spec, $id = null, $type = null)
+    protected function instantiate(array $spec, string $id = null, string $type = null): emteknetnz\TypeTransitioner\DevBuildExtension|null|i18nProviderClass|i18nTestModule|SilverStripe\Core\Manifest\PrioritySorter
     {
         if (is_string($spec)) {
             $spec = ['class' => $spec];
@@ -651,7 +651,7 @@ class Injector implements ContainerInterface
      *              for a type is referenced correctly in case $object is no longer the same
      *              type as the loaded config specification had it as.
      */
-    public function inject($object, $asType = null)
+    public function inject(emteknetnz\TypeTransitioner\DevBuildExtension|i18nProviderClass|i18nTestModule|SilverStripe\Core\Manifest\PrioritySorter $object, string $asType = null): void
     {
         $objtype = $asType ? $asType : get_class($object);
         $mapping = isset($this->injectMap[$objtype]) ? $this->injectMap[$objtype] : null;
@@ -816,7 +816,7 @@ class Injector implements ContainerInterface
      * @param mixed $value
      *                  The value to set
      */
-    protected function setObjectProperty($object, $name, $value)
+    protected function setObjectProperty(SilverStripe\Core\Manifest\PrioritySorter $object, string $name, string|int|array|bool|SilverStripe\Logging\DetailedErrorFormatter $value): void
     {
         if (ClassInfo::hasMethod($object, 'set' . $name)) {
             $object->{'set' . $name}($value);
@@ -849,7 +849,7 @@ class Injector implements ContainerInterface
      * @param string $name
      * @return boolean
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return (bool)$this->getServiceName($name);
     }
@@ -866,7 +866,7 @@ class Injector implements ContainerInterface
      * @param string $name
      * @return string|null The name of the service (as it might be different from the one passed in)
      */
-    public function getServiceName($name)
+    public function getServiceName(string $name): string|null
     {
         // Lazy load in spec (disable inheritance to check exact service name)
         if ($this->getServiceSpec($name, false)) {
@@ -891,7 +891,7 @@ class Injector implements ContainerInterface
      * class name of the object to register)
      * @return $this
      */
-    public function registerService($service, $replace = null)
+    public function registerService(SilverStripe\Core\CoreKernel $service, string $replace = null): SilverStripe\Core\Injector\Injector
     {
         $registerAt = get_class($service);
         if ($replace !== null) {
@@ -910,7 +910,7 @@ class Injector implements ContainerInterface
      * @param string $name The name to unregister
      * @return $this
      */
-    public function unregisterNamedObject($name)
+    public function unregisterNamedObject(string $name): SilverStripe\Core\Injector\Injector
     {
         unset($this->serviceCache[$name]);
         unset($this->specs[$name]);
@@ -923,7 +923,7 @@ class Injector implements ContainerInterface
      * @param array|string $types Base class of object (not service name) to remove
      * @return $this
      */
-    public function unregisterObjects($types)
+    public function unregisterObjects(array|string $types): SilverStripe\Core\Injector\Injector
     {
         if (!is_array($types)) {
             $types = [ $types ];
@@ -965,7 +965,7 @@ class Injector implements ContainerInterface
      * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
      * @return mixed Instance of the specified object
      */
-    public function get($name, $asSingleton = true, $constructorArgs = [])
+    public function get(string|SilverStripe\Comments\Admin\CommentsGridFieldBulkAction\SpamHandler $name, bool $asSingleton = true, array $constructorArgs = []): emteknetnz\TypeTransitioner\DevBuildExtension|i18nProviderClass|i18nTestModule|SilverStripe\Core\CoreKernel
     {
         $object = $this->getNamedService($name, $asSingleton, $constructorArgs);
 
@@ -986,7 +986,7 @@ class Injector implements ContainerInterface
      * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
      * @return mixed Instance of the specified object
      */
-    protected function getNamedService($name, $asSingleton = true, $constructorArgs = [])
+    protected function getNamedService(string|SilverStripe\Comments\Admin\CommentsGridFieldBulkAction\SpamHandler $name, bool $asSingleton = true, array $constructorArgs = []): emteknetnz\TypeTransitioner\DevBuildExtension|null|i18nProviderClass|i18nTestModule|SilverStripe\Core\CoreKernel
     {
         // Normalise service / args
         list($name, $constructorArgs) = $this->normaliseArguments($name, $constructorArgs);
@@ -1026,7 +1026,7 @@ class Injector implements ContainerInterface
      * @param array $args
      * @return array Two items with name and new args
      */
-    protected function normaliseArguments($name, $args = [])
+    protected function normaliseArguments(string|SilverStripe\Comments\Admin\CommentsGridFieldBulkAction\SpamHandler $name, array $args = []): array
     {
         // Allow service names of the form "%$ServiceName"
         if (substr($name ?? '', 0, 2) == '%$') {
@@ -1052,7 +1052,7 @@ class Injector implements ContainerInterface
      * @param array $constructorArgs Optional constructor args
      * @return array
      */
-    protected function getServiceNamedSpec($name, $constructorArgs = [])
+    protected function getServiceNamedSpec(string $name, array $constructorArgs = []): array
     {
         $spec = $this->getServiceSpec($name);
         if ($spec) {
@@ -1077,7 +1077,7 @@ class Injector implements ContainerInterface
      * E.g. 'Psr/Log/LoggerInterface.custom' would fail over to 'Psr/Log/LoggerInterface'
      * @return mixed|object
      */
-    public function getServiceSpec($name, $inherit = true)
+    public function getServiceSpec(string $name, bool $inherit = true): array|null
     {
         if (isset($this->specs[$name])) {
             return $this->specs[$name];
@@ -1121,7 +1121,7 @@ class Injector implements ContainerInterface
      * @param mixed ...$argument arguments to pass to the constructor
      * @return mixed A new instance of the specified object
      */
-    public function create($name, $argument = null)
+    public function create(string $name, string|array|int|SilverStripe\ErrorPage\ErrorPage $argument = null): MySQLDatabase_ac19722
     {
         $constructorArgs = func_get_args();
         array_shift($constructorArgs);
@@ -1135,7 +1135,7 @@ class Injector implements ContainerInterface
      * @param array $constructorArgs Arguments to pass to the constructor
      * @return mixed
      */
-    public function createWithArgs($name, $constructorArgs)
+    public function createWithArgs(string $name, array $constructorArgs): SilverStripe\Core\Manifest\PrioritySorter
     {
         return $this->get($name, false, $constructorArgs);
     }

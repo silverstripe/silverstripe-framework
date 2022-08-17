@@ -6,7 +6,7 @@ class TreeDropdownField_Readonly extends TreeDropdownField
 {
     protected $readonly = true;
 
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $fieldName = $this->getTitleField();
         if ($this->value) {

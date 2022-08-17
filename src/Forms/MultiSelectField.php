@@ -29,7 +29,7 @@ abstract class MultiSelectField extends SelectField
      *
      * @return array List of values as an array
      */
-    public function getValueArray()
+    public function getValueArray(): array
     {
         return $this->getListValues($this->Value());
     }
@@ -42,7 +42,7 @@ abstract class MultiSelectField extends SelectField
      * @param array $items Collection of array keys, as defined in the $source array
      * @return $this Self reference
      */
-    public function setDefaultItems($items)
+    public function setDefaultItems(array $items): SilverStripe\Forms\CheckboxSetField
     {
         $this->defaultItems = $this->getListValues($items);
         return $this;
@@ -53,7 +53,7 @@ abstract class MultiSelectField extends SelectField
      *
      * @return array
      */
-    public function getDefaultItems()
+    public function getDefaultItems(): array
     {
         return $this->defaultItems;
     }
@@ -65,7 +65,7 @@ abstract class MultiSelectField extends SelectField
      * @param null|array|DataObject $obj {@see Form::loadDataFrom}
      * @return $this
      */
-    public function setValue($value, $obj = null)
+    public function setValue(array|string|int|bool|SilverStripe\Auditor\AuditHookManyManyList $value, array|SilverStripe\Security\Group $obj = null): SilverStripe\Forms\CheckboxSetField
     {
         // If we're not passed a value directly,
         // we can look for it in a relation method on the object passed as a second arg
@@ -82,7 +82,7 @@ abstract class MultiSelectField extends SelectField
      *
      * @param DataObject|DataObjectInterface $record
      */
-    public function loadFrom(DataObjectInterface $record)
+    public function loadFrom(DataObjectInterface $record): void
     {
         $fieldName = $this->getName();
         if (empty($fieldName) || empty($record)) {
@@ -121,7 +121,7 @@ abstract class MultiSelectField extends SelectField
      *
      * @param DataObject|DataObjectInterface $record The record to save into
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         $fieldName = $this->getName();
         if (empty($fieldName) || empty($record)) {
@@ -155,7 +155,7 @@ abstract class MultiSelectField extends SelectField
      * @param array $value
      * @return string|null
      */
-    public function stringEncode($value)
+    public function stringEncode(array $value): string|null
     {
         return $value
             ? json_encode(array_values($value))
@@ -168,7 +168,7 @@ abstract class MultiSelectField extends SelectField
      * @param string $value
      * @return array
      */
-    protected function stringDecode($value)
+    protected function stringDecode(string $value): array
     {
         // Handle empty case
         if (empty($value)) {
@@ -191,7 +191,7 @@ abstract class MultiSelectField extends SelectField
      * @param array $value
      * @return string|null
      */
-    protected function csvEncode($value)
+    protected function csvEncode(array $value): string
     {
         if (!$value) {
             return null;
@@ -214,7 +214,7 @@ abstract class MultiSelectField extends SelectField
      * @param string $value
      * @return array
      */
-    protected function csvDecode($value)
+    protected function csvDecode(string $value): array
     {
         if (!$value) {
             return [];
@@ -229,7 +229,7 @@ abstract class MultiSelectField extends SelectField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Security\Member_Validator $validator): bool
     {
         $values = $this->getValueArray();
         $validValues = $this->getValidValues();
@@ -270,7 +270,7 @@ abstract class MultiSelectField extends SelectField
      *
      * @return ReadonlyField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\LookupField
     {
         $field = $this->castedCopy('SilverStripe\\Forms\\LookupField');
         $field->setSource($this->getSource());

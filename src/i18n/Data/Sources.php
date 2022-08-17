@@ -34,7 +34,7 @@ class Sources implements Resettable
      *
      * @return array Array of module names -> path
      */
-    public function getSortedModules()
+    public function getSortedModules(): array
     {
         $i18nOrder = Sources::config()->uninherited('module_priority');
         $sortedModules = [];
@@ -64,7 +64,7 @@ class Sources implements Resettable
      *
      * @return array
      */
-    public function getLangDirs()
+    public function getLangDirs(): array
     {
         if (static::$cache_lang_dirs) {
             return static::$cache_lang_dirs;
@@ -108,7 +108,7 @@ class Sources implements Resettable
      *
      * @return array Map of locale key => key of all distinct localisation file names
      */
-    protected function getLangFiles()
+    protected function getLangFiles(): array
     {
         if (static::$cache_lang_files) {
             return static::$cache_lang_files;
@@ -137,7 +137,7 @@ class Sources implements Resettable
      *
      * @return array Map of locale codes to names (localised)
      */
-    public function getKnownLocales()
+    public function getKnownLocales(): array
     {
         $localesData = i18n::getData();
         $allLocales = $localesData->getLocales();
@@ -157,7 +157,7 @@ class Sources implements Resettable
         return $locales;
     }
 
-    public static function reset()
+    public static function reset(): void
     {
         static::$cache_lang_files = [];
         static::$cache_lang_dirs = [];

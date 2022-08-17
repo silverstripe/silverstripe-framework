@@ -28,7 +28,7 @@ class PermissionRoleCode extends DataObject
         "Code" => true,
     ];
 
-    public function validate()
+    public function validate(): SilverStripe\ORM\ValidationResult
     {
         $result = parent::validate();
 

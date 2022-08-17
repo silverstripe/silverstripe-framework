@@ -43,7 +43,7 @@ class TempDatabase
      *
      * @param string $name DB Connection name to use
      */
-    public function __construct($name = 'default')
+    public function __construct($name = 'default'): void
     {
         $this->name = $name;
     }
@@ -54,7 +54,7 @@ class TempDatabase
      * @param string $name
      * @return bool
      */
-    protected function isDBTemp($name)
+    protected function isDBTemp(string $name): bool
     {
         $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
         $result = preg_match(
@@ -67,7 +67,7 @@ class TempDatabase
     /**
      * @return Database
      */
-    protected function getConn()
+    protected function getConn(): MySQLDatabase_ac19722
     {
         return DB::get_conn($this->name);
     }
@@ -77,7 +77,7 @@ class TempDatabase
      *
      * @return bool
      */
-    public function isUsed()
+    public function isUsed(): bool
     {
         $selected = $this->getConn()->getSelectedDatabase();
         return $this->isDBTemp($selected);
@@ -94,7 +94,7 @@ class TempDatabase
     /**
      * Start a transaction for easy rollback after tests
      */
-    public function startTransaction()
+    public function startTransaction(): void
     {
         if (static::getConn()->supportsTransactions()) {
             static::getConn()->transactionStart();
@@ -109,7 +109,7 @@ class TempDatabase
      * is no transaction is counted as a failure, user code should either kill or flush the DB
      * as necessary
      */
-    public function rollbackTransaction()
+    public function rollbackTransaction(): bool
     {
         // Ensure a rollback can be performed
         $success = static::getConn()->supportsTransactions()
@@ -131,7 +131,7 @@ class TempDatabase
     /**
      * Destroy the current temp database
      */
-    public function kill()
+    public function kill(): void
     {
         // Nothing to kill
         if (!$this->isUsed()) {
@@ -163,7 +163,7 @@ class TempDatabase
     /**
      * Remove all content from the temporary database.
      */
-    public function clearAllData()
+    public function clearAllData(): void
     {
         if (!$this->isUsed()) {
             return;
@@ -190,7 +190,7 @@ class TempDatabase
      *
      * @return string DB name
      */
-    public function build()
+    public function build(): string
     {
         // Disable PHPUnit error handling
         $oldErrorHandler = set_error_handler(null);
@@ -229,7 +229,7 @@ class TempDatabase
      *
      * @param array $extraDataObjects
      */
-    protected function rebuildTables($extraDataObjects = [])
+    protected function rebuildTables(array $extraDataObjects = []): void
     {
         DataObject::reset();
 
@@ -297,7 +297,7 @@ class TempDatabase
      *
      * @param array $extraDataObjects List of extra dataobjects to build
      */
-    public function resetDBSchema(array $extraDataObjects = [])
+    public function resetDBSchema(array $extraDataObjects = []): void
     {
         // Skip if no DB
         if (!$this->isUsed()) {

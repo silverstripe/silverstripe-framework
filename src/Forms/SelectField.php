@@ -35,7 +35,7 @@ abstract class SelectField extends FormField
      * @param array|ArrayAccess $source A map of the dropdown items
      * @param mixed $value The current value
      */
-    public function __construct($name, $title = null, $source = [], $value = null)
+    public function __construct(string $name, string|bool|SilverStripe\ORM\FieldType\DBHTMLText $title = null, array|SilverStripe\ORM\Map $source = [], string|int|array|SilverStripe\Auditor\AuditHookManyManyList $value = null): void
     {
         $this->setSource($source);
         if (!isset($title)) {
@@ -44,7 +44,7 @@ abstract class SelectField extends FormField
         parent::__construct($name, $title, $value);
     }
 
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $data = parent::getSchemaStateDefaults();
         $disabled = $this->getDisabledItems();
@@ -73,7 +73,7 @@ abstract class SelectField extends FormField
      * @param array|SS_List $items Collection of values or items
      * @return $this
      */
-    public function setDisabledItems($items)
+    public function setDisabledItems(array $items): SilverStripe\Forms\DropdownField
     {
         $this->disabledItems = $this->getListValues($items);
         return $this;
@@ -84,7 +84,7 @@ abstract class SelectField extends FormField
      *
      * @return array
      */
-    public function getDisabledItems()
+    public function getDisabledItems(): array
     {
         return $this->disabledItems;
     }
@@ -95,7 +95,7 @@ abstract class SelectField extends FormField
      * @param string $value
      * @return bool
      */
-    protected function isDisabledValue($value)
+    protected function isDisabledValue(int|string $value): bool
     {
         if ($this->isDisabled()) {
             return true;
@@ -103,7 +103,7 @@ abstract class SelectField extends FormField
         return in_array($value, $this->getDisabledItems() ?? []);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return array_merge(
             parent::getAttributes(),
@@ -116,7 +116,7 @@ abstract class SelectField extends FormField
      *
      * @return array
      */
-    protected function getSourceValues()
+    protected function getSourceValues(): array
     {
         return array_keys($this->getSource() ?? []);
     }
@@ -128,7 +128,7 @@ abstract class SelectField extends FormField
      *
      * @return array
      */
-    public function getValidValues()
+    public function getValidValues(): array
     {
         $valid = array_diff($this->getSourceValues() ?? [], $this->getDisabledItems());
         // Renumber indexes from 0
@@ -140,7 +140,7 @@ abstract class SelectField extends FormField
      *
      * @return array|ArrayAccess
      */
-    public function getSource()
+    public function getSource(): array
     {
         return $this->source;
     }
@@ -151,7 +151,7 @@ abstract class SelectField extends FormField
      * @param mixed $source
      * @return $this
      */
-    public function setSource($source)
+    public function setSource(array|SilverStripe\ORM\Map $source): SilverStripe\Forms\DropdownField
     {
         $this->source = $this->getListMap($source);
         return $this;
@@ -163,7 +163,7 @@ abstract class SelectField extends FormField
      * @param mixed $source
      * @return array Associative array of ids and titles
      */
-    protected function getListMap($source)
+    protected function getListMap(array|SilverStripe\ORM\Map $source): array
     {
         // Extract source as an array
         if ($source instanceof SS_List) {
@@ -186,7 +186,7 @@ abstract class SelectField extends FormField
      * @param mixed $values
      * @return array Non-associative list of values
      */
-    protected function getListValues($values)
+    protected function getListValues(array|int|string|bool $values): array
     {
         // Empty values
         if (empty($values)) {
@@ -213,7 +213,7 @@ abstract class SelectField extends FormField
      * @param mixed $userValue The value as submitted by the user
      * @return boolean True if the selected value matches the given option value
      */
-    public function isSelectedValue($dataValue, $userValue)
+    public function isSelectedValue(int|string $dataValue, SilverStripe\Forms\GridField\GridState_Data|string|int|bool|array $userValue): bool
     {
         if ($dataValue === $userValue) {
             return true;
@@ -248,7 +248,7 @@ abstract class SelectField extends FormField
         return $field;
     }
 
-    public function performDisabledTransformation()
+    public function performDisabledTransformation(): SilverStripe\Forms\CheckboxSetField
     {
         $clone = clone $this;
         $clone->setDisabled(true);
@@ -263,7 +263,7 @@ abstract class SelectField extends FormField
      * @param string $classOrCopy
      * @return FormField
      */
-    public function castedCopy($classOrCopy)
+    public function castedCopy(string $classOrCopy): SilverStripe\Forms\SingleLookupField
     {
         $field = parent::castedCopy($classOrCopy);
         if ($field instanceof SelectField) {

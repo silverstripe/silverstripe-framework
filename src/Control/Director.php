@@ -94,7 +94,7 @@ class Director implements TemplateGlobalProvider
      */
     private static $default_base_url = '`SS_BASE_URL`';
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -120,7 +120,7 @@ class Director implements TemplateGlobalProvider
      * @throws HTTPResponse_Exception
      */
     public static function test(
-        $url,
+        string $url,
         $postVars = [],
         $session = [],
         $httpMethod = null,
@@ -128,7 +128,7 @@ class Director implements TemplateGlobalProvider
         $headers = [],
         $cookies = [],
         &$request = null
-    ) {
+    ): SilverStripe\Control\HTTPResponse {
         return static::mockRequest(
             function (HTTPRequest $request) {
                 return Director::singleton()->handleRequest($request);
@@ -162,7 +162,7 @@ class Director implements TemplateGlobalProvider
      * @return mixed Result of callback
      */
     public static function mockRequest(
-        $callback,
+        callable $callback,
         $url,
         $postVars = [],
         $session = [],
@@ -171,7 +171,7 @@ class Director implements TemplateGlobalProvider
         $headers = [],
         $cookies = [],
         &$request = null
-    ) {
+    ): null|SilverStripe\Control\HTTPResponse {
         // Build list of cleanup promises
         $finally = [];
 
@@ -303,7 +303,7 @@ class Director implements TemplateGlobalProvider
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         Injector::inst()->registerService($request, HTTPRequest::class);
 
@@ -388,7 +388,7 @@ class Director implements TemplateGlobalProvider
      *
      * @deprecated 5.0 Kernel::isFlushed to be used instead
      */
-    public static function isManifestFlushed()
+    public static function isManifestFlushed(): bool
     {
         $kernel = Injector::inst()->get(Kernel::class);
 
@@ -408,7 +408,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return SiteTree|Controller
      */
-    public static function get_current_page()
+    public static function get_current_page(): SilverStripe\ErrorPage\ErrorPage
     {
         return self::$current_page ? self::$current_page : Controller::curr();
     }
@@ -418,7 +418,7 @@ class Director implements TemplateGlobalProvider
      *
      * @param SiteTree $page
      */
-    public static function set_current_page($page)
+    public static function set_current_page(SilverStripe\ErrorPage\ErrorPage $page): void
     {
         self::$current_page = $page;
     }
@@ -437,7 +437,7 @@ class Director implements TemplateGlobalProvider
      * @param string $relativeParent Disambiguation method to use for evaluating relative paths
      * @return string The absolute url
      */
-    public static function absoluteURL($url, $relativeParent = self::BASE)
+    public static function absoluteURL(string $url, $relativeParent = self::BASE): string
     {
         if (is_bool($relativeParent)) {
             // Deprecate old boolean second parameter
@@ -484,7 +484,7 @@ class Director implements TemplateGlobalProvider
      * @param string $url
      * @return string|null Hostname, and optional port, or null if not a valid host
      */
-    protected static function parseHost($url)
+    protected static function parseHost(string $url): string|null
     {
         // Get base hostname
         $host = parse_url($url ?? '', PHP_URL_HOST);
@@ -507,7 +507,7 @@ class Director implements TemplateGlobalProvider
      * @param string $url
      * @return bool
      */
-    protected static function validateUserAndPass($url)
+    protected static function validateUserAndPass(string $url): bool
     {
         $parsedURL = parse_url($url ?? '');
 
@@ -535,7 +535,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return string Host name, including port (if present)
      */
-    public static function host(HTTPRequest $request = null)
+    public static function host(HTTPRequest $request = null): string
     {
         // Check if overridden by alternate_base_url
         if ($baseURL = self::config()->get('alternate_base_url')) {
@@ -577,7 +577,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return int|null
      */
-    public static function port(HTTPRequest $request = null)
+    public static function port(HTTPRequest $request = null): int
     {
         $host = static::host($request);
         return (int)parse_url($host ?? '', PHP_URL_PORT) ?: null;
@@ -589,7 +589,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest|null $request
      * @return string|null
      */
-    public static function hostName(HTTPRequest $request = null)
+    public static function hostName(HTTPRequest $request = null): string
     {
         $host = static::host($request);
         return parse_url($host ?? '', PHP_URL_HOST) ?: null;
@@ -602,7 +602,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool|string
      */
-    public static function protocolAndHost(HTTPRequest $request = null)
+    public static function protocolAndHost(HTTPRequest $request = null): string
     {
         return static::protocol($request) . static::host($request);
     }
@@ -613,7 +613,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return string
      */
-    public static function protocol(HTTPRequest $request = null)
+    public static function protocol(HTTPRequest $request = null): string
     {
         return (self::is_https($request)) ? 'https://' : 'http://';
     }
@@ -624,7 +624,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool
      */
-    public static function is_https(HTTPRequest $request = null)
+    public static function is_https(HTTPRequest $request = null): bool
     {
         // Check override from alternate_base_url
         if ($baseURL = self::config()->uninherited('alternate_base_url')) {
@@ -658,7 +658,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string Root-relative url with trailing slash.
      */
-    public static function baseURL()
+    public static function baseURL(): string
     {
         // Check override base_url
         $alternate = self::config()->get('alternate_base_url');
@@ -685,7 +685,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function baseFolder()
+    public static function baseFolder(): string
     {
         $alternate = Director::config()->uninherited('alternate_base_folder');
         return $alternate ?: BASE_PATH;
@@ -699,7 +699,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function publicDir()
+    public static function publicDir(): string
     {
         $alternate = self::config()->uninherited('alternate_public_dir');
         if (isset($alternate)) {
@@ -713,7 +713,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function publicFolder()
+    public static function publicFolder(): string
     {
         $folder = self::baseFolder();
         $publicDir = self::publicDir();
@@ -734,7 +734,7 @@ class Director implements TemplateGlobalProvider
      * @param string $url Accepts both a URL or a filesystem path.
      * @return string
      */
-    public static function makeRelative($url)
+    public static function makeRelative(string|bool $url): string
     {
         // Allow for the accidental inclusion whitespace and // in the URL
         $url = preg_replace('#([^:])//#', '\\1/', trim($url ?? ''));
@@ -769,7 +769,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_absolute($path)
+    public static function is_absolute(string $path): bool
     {
         if (empty($path)) {
             return false;
@@ -788,7 +788,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_root_relative_url($url)
+    public static function is_root_relative_url(string $url): bool
     {
         return strpos($url ?? '', '/') === 0 && strpos($url ?? '', '//') !== 0;
     }
@@ -807,7 +807,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_absolute_url($url)
+    public static function is_absolute_url(string $url): bool
     {
         // Strip off the query and fragment parts of the URL before checking
         if (($queryPosition = strpos($url ?? '', '?')) !== false) {
@@ -841,7 +841,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_relative_url($url)
+    public static function is_relative_url(string $url): bool
     {
         return !static::is_absolute_url($url);
     }
@@ -861,7 +861,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_site_url($url)
+    public static function is_site_url(string $url): bool
     {
         // Validate user and password
         if (!static::validateUserAndPass($url)) {
@@ -892,7 +892,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function getAbsFile($file)
+    public static function getAbsFile(string $file): string
     {
         // If already absolute
         if (self::is_absolute($file)) {
@@ -918,7 +918,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function fileExists($file)
+    public static function fileExists(string $file): bool
     {
         // replace any appended query-strings, e.g. /path/to/foo.php?bar=1 to /path/to/foo.php
         $file = preg_replace('/([^\?]*)?.*/', '$1', $file ?? '');
@@ -930,7 +930,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function absoluteBaseURL()
+    public static function absoluteBaseURL(): string
     {
         return self::absoluteURL(
             self::baseURL(),
@@ -1005,7 +1005,7 @@ class Director implements TemplateGlobalProvider
      * Can include port number.
      * @param HTTPRequest|null $request Request object to check
      */
-    public static function forceSSL($patterns = null, $secureDomain = null, HTTPRequest $request = null)
+    public static function forceSSL(array $patterns = null, string $secureDomain = null, HTTPRequest $request = null): void
     {
         $handler = CanonicalURLMiddleware::singleton()->setForceSSL(true);
         if ($patterns) {
@@ -1022,7 +1022,7 @@ class Director implements TemplateGlobalProvider
      *
      * @param HTTPRequest $request
      */
-    public static function forceWWW(HTTPRequest $request = null)
+    public static function forceWWW(HTTPRequest $request = null): void
     {
         $handler = CanonicalURLMiddleware::singleton()->setForceWWW(true);
         $handler->throwRedirectIfNeeded($request);
@@ -1038,7 +1038,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool
      */
-    public static function is_ajax(HTTPRequest $request = null)
+    public static function is_ajax(HTTPRequest $request = null): bool
     {
         $request = self::currentRequest($request);
         if ($request) {
@@ -1056,7 +1056,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function is_cli()
+    public static function is_cli(): bool
     {
         return Environment::isCli();
     }
@@ -1067,7 +1067,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function get_environment_type()
+    public static function get_environment_type(): string
     {
         /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
@@ -1084,7 +1084,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string|null null if not overridden, otherwise the actual value
      */
-    public static function get_session_environment_type(HTTPRequest $request = null)
+    public static function get_session_environment_type(HTTPRequest $request = null): void|null
     {
         $request = static::currentRequest($request);
 
@@ -1107,7 +1107,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function isLive()
+    public static function isLive(): bool
     {
         return self::get_environment_type() === 'live';
     }
@@ -1118,7 +1118,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function isDev()
+    public static function isDev(): bool
     {
         return self::get_environment_type() === 'dev';
     }
@@ -1129,7 +1129,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function isTest()
+    public static function isTest(): bool
     {
         return self::get_environment_type() === 'test';
     }
@@ -1140,7 +1140,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return array
      */
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'absoluteBaseURL',
@@ -1160,7 +1160,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return HTTPRequest Request object if one is both current and valid
      */
-    protected static function currentRequest(HTTPRequest $request = null)
+    protected static function currentRequest(HTTPRequest $request = null): null|SilverStripe\Control\HTTPRequest
     {
         // Ensure we only use a registered HTTPRequest and don't
         // incidentally construct a singleton

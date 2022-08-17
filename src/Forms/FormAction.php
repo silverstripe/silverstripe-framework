@@ -77,7 +77,7 @@ class FormAction extends FormField
      * @param string $title The label on the button. This should be plain text, not escaped as HTML.
      * @param Form $form The parent form, auto-set when the field is placed inside a form
      */
-    public function __construct($action, $title = "", $form = null)
+    public function __construct(string $action, string|bool $title = "", $form = null): void
     {
         $this->action = "action_$action";
         $this->setForm($form);
@@ -88,7 +88,7 @@ class FormAction extends FormField
     /**
      * Add extra options to data
      */
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $defaults = parent::getSchemaDataDefaults();
         $defaults['attributes']['type'] = $this->getUseButtonTag() ? 'button' : 'submit';
@@ -101,7 +101,7 @@ class FormAction extends FormField
      *
      * @return string
      */
-    public function getIcon()
+    public function getIcon(): string|null
     {
         return $this->icon;
     }
@@ -112,7 +112,7 @@ class FormAction extends FormField
      * @param string $icon Icon identifier (not path)
      * @return $this
      */
-    public function setIcon($icon)
+    public function setIcon(string $icon): SilverStripe\Forms\FormAction
     {
         $this->icon = $icon;
         return $this;
@@ -123,7 +123,7 @@ class FormAction extends FormField
      *
      * @return string
      */
-    public function actionName()
+    public function actionName(): string
     {
         return substr($this->name ?? '', 7);
     }
@@ -145,7 +145,7 @@ class FormAction extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = [])
+    public function Field(array $properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $properties = array_merge(
             $properties,
@@ -163,17 +163,17 @@ class FormAction extends FormField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         return $this->Field($properties);
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'action';
     }
 
-    public function getInputType()
+    public function getInputType(): string
     {
         if (isset($this->attributes['type'])) {
             return $this->attributes['type'];
@@ -182,7 +182,7 @@ class FormAction extends FormField
         }
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = array_merge(
             parent::getAttributes(),
@@ -217,7 +217,7 @@ class FormAction extends FormField
      *
      * @return string
      */
-    public function getButtonContent()
+    public function getButtonContent(): null
     {
         return $this->buttonContent;
     }
@@ -228,7 +228,7 @@ class FormAction extends FormField
      * @param boolean $bool
      * @return $this
      */
-    public function setUseButtonTag($bool)
+    public function setUseButtonTag(bool $bool): SilverStripe\Forms\FormAction
     {
         $this->useButtonTag = $bool;
         return $this;
@@ -239,7 +239,7 @@ class FormAction extends FormField
      *
      * @return boolean
      */
-    public function getUseButtonTag()
+    public function getUseButtonTag(): bool
     {
         return $this->useButtonTag;
     }
@@ -250,7 +250,7 @@ class FormAction extends FormField
      * @param bool $exempt
      * @return $this
      */
-    public function setValidationExempt($exempt = true)
+    public function setValidationExempt(bool $exempt = true): SilverStripe\Forms\FormAction
     {
         $this->validationExempt = $exempt;
         return $this;
@@ -261,7 +261,7 @@ class FormAction extends FormField
      *
      * @return bool
      */
-    public function getValidationExempt()
+    public function getValidationExempt(): bool
     {
         return $this->validationExempt;
     }
@@ -270,7 +270,7 @@ class FormAction extends FormField
      * Does not transform to readonly by purpose.
      * Globally disabled buttons would break the CMS.
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\FormAction
     {
         $clone = clone $this;
         $clone->setReadonly(true);

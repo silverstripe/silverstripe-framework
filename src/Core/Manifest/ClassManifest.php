@@ -182,14 +182,14 @@ class ClassManifest
      * @param string $base The manifest base path.
      * @param CacheFactory $cacheFactory Optional cache to use. Set to null to not cache.
      */
-    public function __construct($base, CacheFactory $cacheFactory = null)
+    public function __construct(string $base, CacheFactory $cacheFactory = null): void
     {
         $this->base = $base;
         $this->cacheFactory = $cacheFactory;
         $this->cacheKey = 'manifest';
     }
 
-    private function buildCache($includeTests = false)
+    private function buildCache(bool $includeTests = false): null|Symfony\Component\Cache\Simple\FilesystemCache
     {
         if ($this->cache) {
             return $this->cache;
@@ -236,7 +236,7 @@ class ClassManifest
     /**
      * @internal This method is not a part of public API and will be deleted without a deprecation warning
      */
-    public function isFlushScheduled($includeTests = false)
+    public function isFlushScheduled($includeTests = false): null
     {
         $cache = $this->buildCache($includeTests);
 
@@ -262,7 +262,7 @@ class ClassManifest
      * @param bool $forceRegen
      * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init(bool $includeTests = false, bool $forceRegen = false, array $ignoredCIConfigs = []): void
     {
         $this->cache = $this->buildCache($includeTests);
 
@@ -284,7 +284,7 @@ class ClassManifest
      *
      * @return Parser
      */
-    public function getParser()
+    public function getParser(): PhpParser\Parser\Multiple
     {
         if (!$this->parser) {
             $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
@@ -298,7 +298,7 @@ class ClassManifest
      *
      * @return NodeTraverser
      */
-    public function getTraverser()
+    public function getTraverser(): PhpParser\NodeTraverser
     {
         if (!$this->traverser) {
             $this->traverser = new NodeTraverser;
@@ -314,7 +314,7 @@ class ClassManifest
      *
      * @return ClassManifestVisitor
      */
-    public function getVisitor()
+    public function getVisitor(): SilverStripe\Core\Manifest\ClassManifestVisitor
     {
         if (!$this->visitor) {
             $this->visitor = new ClassManifestVisitor;
@@ -330,7 +330,7 @@ class ClassManifest
      * @param  string $name
      * @return string|null
      */
-    public function getItemPath($name)
+    public function getItemPath(string $name): string|null
     {
         $lowerName = strtolower($name ?? '');
         foreach ([
@@ -351,7 +351,7 @@ class ClassManifest
      * @param string $name
      * @return string Correct case name
      */
-    public function getItemName($name)
+    public function getItemName(string $name): string|null
     {
         $lowerName = strtolower($name ?? '');
         foreach ([
@@ -371,7 +371,7 @@ class ClassManifest
      *
      * @return array
      */
-    public function getClasses()
+    public function getClasses(): array
     {
         return $this->classes;
     }
@@ -381,7 +381,7 @@ class ClassManifest
      *
      * @return array
      */
-    public function getClassNames()
+    public function getClassNames(): array
     {
         return $this->classNames;
     }
@@ -401,7 +401,7 @@ class ClassManifest
      *
      * @return array
      */
-    public function getTraitNames()
+    public function getTraitNames(): array
     {
         return $this->traitNames;
     }
@@ -411,7 +411,7 @@ class ClassManifest
      *
      * @return array
      */
-    public function getDescendants()
+    public function getDescendants(): array
     {
         return $this->descendants;
     }
@@ -423,7 +423,7 @@ class ClassManifest
      * @param  string|object $class
      * @return array
      */
-    public function getDescendantsOf($class)
+    public function getDescendantsOf(string $class): array
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -442,7 +442,7 @@ class ClassManifest
      *
      * @return array
      */
-    public function getInterfaces()
+    public function getInterfaces(): array
     {
         return $this->interfaces;
     }
@@ -463,7 +463,7 @@ class ClassManifest
      *
      * @return array
      */
-    public function getImplementors()
+    public function getImplementors(): array
     {
         return $this->implementors;
     }
@@ -475,7 +475,7 @@ class ClassManifest
      * @param string $interface
      * @return array
      */
-    public function getImplementorsOf($interface)
+    public function getImplementorsOf(string $interface): array
     {
         $lowerInterface = strtolower($interface ?? '');
         if (array_key_exists($lowerInterface, $this->implementors ?? [])) {
@@ -491,7 +491,7 @@ class ClassManifest
      * @param string $class Class name
      * @return Module
      */
-    public function getOwnerModule($class)
+    public function getOwnerModule(string $class): SilverStripe\Core\Manifest\Module
     {
         $path = $this->getItemPath($class);
         return ModuleLoader::inst()->getManifest()->getModuleByPath($path);
@@ -503,7 +503,7 @@ class ClassManifest
      * @param bool $includeTests
      * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests, array $ignoredCIConfigs = [])
+    public function regenerate(bool $includeTests, array $ignoredCIConfigs = []): void
     {
         // Reset the manifest so stale info doesn't cause errors.
         $this->loadState([]);
@@ -544,7 +544,7 @@ class ClassManifest
      * @param bool $includeTests
      * @throws Exception
      */
-    public function handleFile($basename, $pathname, $includeTests)
+    public function handleFile(string $basename, string $pathname, bool $includeTests): void
     {
         // The results of individual file parses are cached, since only a few
         // files will have changed and TokenisedRegularExpression is quite
@@ -659,7 +659,7 @@ class ClassManifest
      * @param  string $class
      * @return array
      */
-    protected function coalesceDescendants($class)
+    protected function coalesceDescendants(string $class): array
     {
         // Reset descendents to immediate children initially
         $lowerClass = strtolower($class ?? '');
@@ -685,7 +685,7 @@ class ClassManifest
      * @param array $data
      * @return bool True if cache was valid and successfully loaded
      */
-    protected function loadState($data)
+    protected function loadState(array $data): bool
     {
         $success = true;
         foreach ($this->serialisedProperties as $property) {
@@ -705,7 +705,7 @@ class ClassManifest
      *
      * @return array
      */
-    protected function getState()
+    protected function getState(): array
     {
         $data = [];
         foreach ($this->serialisedProperties as $property) {
@@ -720,7 +720,7 @@ class ClassManifest
      * @param array $data
      * @return bool
      */
-    protected function validateItemCache($data)
+    protected function validateItemCache(array $data): bool
     {
         if (!$data || !is_array($data)) {
             return false;

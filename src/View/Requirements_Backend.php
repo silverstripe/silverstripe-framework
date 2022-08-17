@@ -205,7 +205,7 @@ class Requirements_Backend
      *
      * @return GeneratedAssetHandler
      */
-    public function getAssetHandler()
+    public function getAssetHandler(): SilverStripe\Assets\Flysystem\GeneratedAssets
     {
         return $this->assetHandler;
     }
@@ -215,7 +215,7 @@ class Requirements_Backend
      *
      * @param GeneratedAssetHandler $handler
      */
-    public function setAssetHandler(GeneratedAssetHandler $handler)
+    public function setAssetHandler(GeneratedAssetHandler $handler): void
     {
         $this->assetHandler = $handler;
     }
@@ -236,7 +236,7 @@ class Requirements_Backend
      *
      * @param Requirements_Minifier $minifier
      */
-    public function setMinifier(Requirements_Minifier $minifier = null)
+    public function setMinifier(Requirements_Minifier $minifier = null): void
     {
         $this->minifier = $minifier;
     }
@@ -246,7 +246,7 @@ class Requirements_Backend
      *
      * @param bool $enable
      */
-    public function setCombinedFilesEnabled($enable)
+    public function setCombinedFilesEnabled(bool $enable): void
     {
         $this->combinedFilesEnabled = (bool)$enable;
     }
@@ -282,7 +282,7 @@ class Requirements_Backend
      *
      * @param string $folder
      */
-    public function setCombinedFilesFolder($folder)
+    public function setCombinedFilesFolder(string $folder): void
     {
         $this->combinedFilesFolder = $folder;
     }
@@ -292,7 +292,7 @@ class Requirements_Backend
      *
      * @return string
      */
-    public function getCombinedFilesFolder()
+    public function getCombinedFilesFolder(): string
     {
         if ($this->combinedFilesFolder) {
             return $this->combinedFilesFolder;
@@ -308,7 +308,7 @@ class Requirements_Backend
      *
      * @param bool $var
      */
-    public function setSuffixRequirements($var)
+    public function setSuffixRequirements(bool $var): void
     {
         $this->suffixRequirements = $var;
     }
@@ -330,7 +330,7 @@ class Requirements_Backend
      * @param bool $var
      * @return $this
      */
-    public function setWriteJavascriptToBody($var)
+    public function setWriteJavascriptToBody(bool $var): SilverStripe\View\Requirements_Backend
     {
         $this->writeJavascriptToBody = $var;
         return $this;
@@ -342,7 +342,7 @@ class Requirements_Backend
      *
      * @return bool
      */
-    public function getWriteJavascriptToBody()
+    public function getWriteJavascriptToBody(): bool
     {
         return $this->writeJavascriptToBody;
     }
@@ -353,7 +353,7 @@ class Requirements_Backend
      * @param bool $var
      * @return $this
      */
-    public function setForceJSToBottom($var)
+    public function setForceJSToBottom(bool $var): SilverStripe\View\Requirements_Backend
     {
         $this->forceJSToBottom = $var;
         return $this;
@@ -364,7 +364,7 @@ class Requirements_Backend
      *
      * @return bool
      */
-    public function getForceJSToBottom()
+    public function getForceJSToBottom(): bool
     {
         return $this->forceJSToBottom;
     }
@@ -374,7 +374,7 @@ class Requirements_Backend
      *
      * @return bool
      */
-    public function getMinifyCombinedFiles()
+    public function getMinifyCombinedFiles(): bool
     {
         return $this->minifyCombinedFiles;
     }
@@ -385,7 +385,7 @@ class Requirements_Backend
      * @param bool $minify
      * @return $this
      */
-    public function setMinifyCombinedFiles($minify)
+    public function setMinifyCombinedFiles(bool $minify): SilverStripe\View\Requirements_Backend
     {
         $this->minifyCombinedFiles = $minify;
         return $this;
@@ -403,7 +403,7 @@ class Requirements_Backend
      * - 'integrity' : SubResource Integrity hash
      * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public function javascript($file, $options = [])
+    public function javascript(string $file, array $options = []): void
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
@@ -476,7 +476,7 @@ class Requirements_Backend
      *
      * @return array Array of provided files (map of $path => $path)
      */
-    public function getProvidedScripts()
+    public function getProvidedScripts(): array
     {
         $providedScripts = [];
         $includedScripts = [];
@@ -507,7 +507,7 @@ class Requirements_Backend
      *
      * @return array
      */
-    public function getJavascript()
+    public function getJavascript(): array
     {
         return array_diff_key(
             $this->javascript ?? [],
@@ -521,7 +521,7 @@ class Requirements_Backend
      *
      * @return array Indexed array of javascript files
      */
-    protected function getAllJavascript()
+    protected function getAllJavascript(): array
     {
         return $this->javascript;
     }
@@ -532,7 +532,7 @@ class Requirements_Backend
      * @param string $script The script content as a string (without enclosing `<script>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public function customScript($script, $uniquenessID = null)
+    public function customScript(string $script, string $uniquenessID = null): void
     {
         if ($uniquenessID) {
             $this->customScript[$uniquenessID] = $script;
@@ -546,7 +546,7 @@ class Requirements_Backend
      *
      * @return array
      */
-    public function getCustomScripts()
+    public function getCustomScripts(): array
     {
         return array_diff_key($this->customScript ?? [], $this->blocked);
     }
@@ -557,7 +557,7 @@ class Requirements_Backend
      * @param string $script CSS selectors as a string (without enclosing `<style>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public function customCSS($script, $uniquenessID = null)
+    public function customCSS(string $script, string $uniquenessID = null): void
     {
         if ($uniquenessID) {
             $this->customCSS[$uniquenessID] = $script;
@@ -571,7 +571,7 @@ class Requirements_Backend
      *
      * @return array
      */
-    public function getCustomCSS()
+    public function getCustomCSS(): array
     {
         return array_diff_key($this->customCSS ?? [], $this->blocked);
     }
@@ -582,7 +582,7 @@ class Requirements_Backend
      * @param string $html Custom HTML code
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public function insertHeadTags($html, $uniquenessID = null)
+    public function insertHeadTags(string $html, $uniquenessID = null): void
     {
         if ($uniquenessID) {
             $this->customHeadTags[$uniquenessID] = $html;
@@ -596,7 +596,7 @@ class Requirements_Backend
      *
      * @return array
      */
-    public function getCustomHeadTags()
+    public function getCustomHeadTags(): array
     {
         return array_diff_key($this->customHeadTags ?? [], $this->blocked);
     }
@@ -642,7 +642,7 @@ class Requirements_Backend
      * - 'integrity' : SubResource Integrity hash
      * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public function css($file, $media = null, $options = [])
+    public function css(string $file, string $media = null, array $options = []): void
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
 
@@ -671,7 +671,7 @@ class Requirements_Backend
      *
      * @return array Associative array of file to spec
      */
-    public function getCSS()
+    public function getCSS(): array
     {
         return array_diff_key($this->css ?? [], $this->blocked);
     }
@@ -681,7 +681,7 @@ class Requirements_Backend
      *
      * @return array Associative array of file to spec
      */
-    protected function getAllCSS()
+    protected function getAllCSS(): array
     {
         return $this->css;
     }
@@ -691,7 +691,7 @@ class Requirements_Backend
      *
      * @return array
      */
-    public function getBlocked()
+    public function getBlocked(): array
     {
         return $this->blocked;
     }
@@ -704,7 +704,7 @@ class Requirements_Backend
      *
      * @param string|int $fileOrID
      */
-    public function clear($fileOrID = null)
+    public function clear($fileOrID = null): void
     {
         $types = [
             'javascript',
@@ -730,7 +730,7 @@ class Requirements_Backend
     /**
      * Restore requirements cleared by call to Requirements::clear
      */
-    public function restore()
+    public function restore(): void
     {
         $types = [
             'javascript',
@@ -759,7 +759,7 @@ class Requirements_Backend
      * @param string|int $fileOrID Relative path from webroot, module resource reference or
      *                             requirement API ID
      */
-    public function block($fileOrID)
+    public function block(string $fileOrID): void
     {
         if (is_string($fileOrID)) {
             $fileOrID = ModuleResourceLoader::singleton()->resolvePath($fileOrID);
@@ -772,7 +772,7 @@ class Requirements_Backend
      *
      * @param string|int $fileOrID
      */
-    public function unblock($fileOrID)
+    public function unblock(string $fileOrID): void
     {
         unset($this->blocked[$fileOrID]);
     }
@@ -794,7 +794,7 @@ class Requirements_Backend
      *                             through {@link SSViewer}
      * @return string HTML content augmented with the requirements tags
      */
-    public function includeInHTML($content)
+    public function includeInHTML(string|bool $content): string
     {
         if (func_num_args() > 1) {
             Deprecation::notice(
@@ -901,7 +901,7 @@ class Requirements_Backend
      * @param string $content HTML body
      * @return string Merged HTML
      */
-    protected function insertScriptsAtBottom($jsRequirements, $content)
+    protected function insertScriptsAtBottom(string $jsRequirements, string $content): string
     {
         // Forcefully put the scripts at the bottom of the body instead of before the first
         // script tag.
@@ -920,7 +920,7 @@ class Requirements_Backend
      * @param string $content HTML body
      * @return string Merged HTML
      */
-    protected function insertScriptsIntoBody($jsRequirements, $content)
+    protected function insertScriptsIntoBody(string $jsRequirements, string $content): string
     {
         // If your template already has script tags in the body, then we try to put our script
         // tags just before those. Otherwise, we put it at the bottom.
@@ -957,7 +957,7 @@ class Requirements_Backend
      * @param string $content HTML body
      * @return string Merged HTML
      */
-    protected function insertTagsIntoHead($jsRequirements, $content)
+    protected function insertTagsIntoHead(string $jsRequirements, string $content): string
     {
         $content = preg_replace(
             '/(<\/head>)/i',
@@ -973,7 +973,7 @@ class Requirements_Backend
      * @param string $replacement
      * @return string
      */
-    protected function escapeReplacement($replacement)
+    protected function escapeReplacement(string $replacement): string
     {
         return addcslashes($replacement ?? '', '\\$');
     }
@@ -984,7 +984,7 @@ class Requirements_Backend
      *
      * @param HTTPResponse $response
      */
-    public function includeInResponse(HTTPResponse $response)
+    public function includeInResponse(HTTPResponse $response): void
     {
         $this->processCombinedFiles();
         $jsRequirements = [];
@@ -1026,7 +1026,7 @@ class Requirements_Backend
      *
      * @return array|null All relative files if $return is true, or null otherwise
      */
-    public function add_i18n_javascript($langDir, $return = false)
+    public function add_i18n_javascript(string $langDir, bool $return = false): null
     {
         $langDir = ModuleResourceLoader::singleton()->resolvePath($langDir);
 
@@ -1073,7 +1073,7 @@ class Requirements_Backend
      * @param string $fileOrUrl
      * @return string|bool
      */
-    protected function pathForFile($fileOrUrl)
+    protected function pathForFile(string $fileOrUrl): string
     {
         // Since combined urls could be root relative, treat them as urls here.
         if (preg_match('{^(//)|(http[s]?:)}', $fileOrUrl ?? '') || Director::is_root_relative_url($fileOrUrl)) {
@@ -1136,7 +1136,7 @@ class Requirements_Backend
      * - 'async' : If including JavaScript Files, boolean value to set async attribute to script tag
      * - 'defer' : If including JavaScript Files, boolean value to set defer attribute to script tag
      */
-    public function combineFiles($combinedFileName, $files, $options = [])
+    public function combineFiles(string $combinedFileName, array $files, array $options = []): void
     {
         if (is_string($options)) {
             Deprecation::notice('4.0', 'Parameter media is deprecated. Use options array instead.');
@@ -1201,7 +1201,7 @@ class Requirements_Backend
      * @param string|array $file Either a file path, or an array spec
      * @return array array with two elements, path and type of file
      */
-    protected function parseCombinedFile($file)
+    protected function parseCombinedFile(string $file): array
     {
         // Array with path and type keys
         if (is_array($file) && isset($file['path']) && isset($file['type'])) {
@@ -1243,7 +1243,7 @@ class Requirements_Backend
      *
      * @return array
      */
-    protected function getAllCombinedFiles()
+    protected function getAllCombinedFiles(): array
     {
         return $this->combinedFiles;
     }
@@ -1251,7 +1251,7 @@ class Requirements_Backend
     /**
      * Clears all combined files
      */
-    public function deleteAllCombinedFiles()
+    public function deleteAllCombinedFiles(): void
     {
         $combinedFolder = $this->getCombinedFilesFolder();
         if ($combinedFolder) {
@@ -1262,7 +1262,7 @@ class Requirements_Backend
     /**
      * Clear all registered CSS and JavaScript file combinations
      */
-    public function clearCombinedFiles()
+    public function clearCombinedFiles(): void
     {
         $this->combinedFiles = [];
     }
@@ -1270,7 +1270,7 @@ class Requirements_Backend
     /**
      * Do the heavy lifting involved in combining the combined files.
      */
-    public function processCombinedFiles()
+    public function processCombinedFiles(): void
     {
         // Check if combining is enabled
         if (!$this->getCombinedFilesEnabled()) {
@@ -1350,7 +1350,7 @@ class Requirements_Backend
      * @return string|null URL to this resource, if there are files to combine
      * @throws Exception
      */
-    protected function getCombinedFileURL($combinedFile, $fileList, $type)
+    protected function getCombinedFileURL(string $combinedFile, array $fileList, string $type): string|null
     {
         // Skip empty lists
         if (empty($fileList)) {
@@ -1428,7 +1428,7 @@ MESSAGE
      * @param array $fileList
      * @return string
      */
-    protected function hashedCombinedFilename($combinedFile, $fileList)
+    protected function hashedCombinedFilename(string $combinedFile, array $fileList): string
     {
         $name = pathinfo($combinedFile ?? '', PATHINFO_FILENAME);
         $hash = $this->hashOfFiles($fileList);
@@ -1441,7 +1441,7 @@ MESSAGE
      *
      * @return bool
      */
-    public function getCombinedFilesEnabled()
+    public function getCombinedFilesEnabled(): bool
     {
         if (isset($this->combinedFilesEnabled)) {
             return $this->combinedFilesEnabled;
@@ -1463,7 +1463,7 @@ MESSAGE
      * @param array $fileList List of files
      * @return string SHA1 bashed file hash
      */
-    protected function hashOfFiles($fileList)
+    protected function hashOfFiles(array $fileList): string
     {
         // Get hash based on hash of each file
         $hash = '';
@@ -1489,7 +1489,7 @@ MESSAGE
      * @param string $media Comma-separated list of media types to use in the link tag
      *                       (e.g. 'screen,projector')
      */
-    public function themedCSS($name, $media = null)
+    public function themedCSS(string $name, string $media = null): void
     {
         $path = ThemeResourceLoader::inst()->findThemedCSS($name, SSViewer::get_themes());
         if ($path) {
@@ -1513,7 +1513,7 @@ MESSAGE
      * @param string $type Comma-separated list of types to use in the script tag
      *                       (e.g. 'text/javascript,text/ecmascript')
      */
-    public function themedJavascript($name, $type = null)
+    public function themedJavascript(string $name, $type = null): void
     {
         $path = ThemeResourceLoader::inst()->findThemedJavascript($name, SSViewer::get_themes());
         if ($path) {

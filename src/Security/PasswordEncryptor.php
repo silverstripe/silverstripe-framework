@@ -26,7 +26,7 @@ abstract class PasswordEncryptor
     /**
      * @return array Map of encryptor code to the used class.
      */
-    public static function get_encryptors()
+    public static function get_encryptors(): array
     {
         return Config::inst()->get(self::class, 'encryptors');
     }
@@ -36,7 +36,7 @@ abstract class PasswordEncryptor
      * @return PasswordEncryptor
      * @throws PasswordEncryptor_NotFoundException
      */
-    public static function create_for_algorithm($algorithm)
+    public static function create_for_algorithm(string $algorithm): CWP\Core\PasswordEncryptor\PBKDF2
     {
         $encryptors = self::get_encryptors();
         if (!isset($encryptors[$algorithm])) {
@@ -81,7 +81,7 @@ abstract class PasswordEncryptor
      * @param Member $member (Optional)
      * @return string Maximum of 50 characters
      */
-    public function salt($password, $member = null)
+    public function salt(string $password, $member = null): string
     {
         $generator = new RandomGenerator();
         return substr($generator->randomToken('sha1') ?? '', 0, 50);
@@ -99,7 +99,7 @@ abstract class PasswordEncryptor
      * @param Member $member
      * @return bool
      */
-    public function check($hash, $password, $salt = null, $member = null)
+    public function check(string $hash, string $password, string $salt = null, SilverStripe\Security\Member $member = null): bool
     {
         return hash_equals($hash ?? '', $this->encrypt($password, $salt, $member) ?? '');
     }

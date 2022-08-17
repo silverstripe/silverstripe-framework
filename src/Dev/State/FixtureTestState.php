@@ -31,7 +31,7 @@ class FixtureTestState implements TestState
      *
      * @param SapphireTest $test
      */
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         if (!$this->testNeedsDB($test)) {
             return;
@@ -77,7 +77,7 @@ class FixtureTestState implements TestState
      *
      * @param SapphireTest $test
      */
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
         if (!$this->testNeedsDB($test)) {
             return;
@@ -101,7 +101,7 @@ class FixtureTestState implements TestState
      *
      * @param string $class Class being setup
      */
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         $this->resetFixtureFactory($class);
     }
@@ -111,7 +111,7 @@ class FixtureTestState implements TestState
      *
      * @param string $class Class being torn down
      */
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
         unset($this->fixtureFactories[strtolower($class)]);
         $class::tempDB()->clearAllData();
@@ -122,7 +122,7 @@ class FixtureTestState implements TestState
      *
      * @return bool|FixtureFactory
      */
-    public function getFixtureFactory($class)
+    public function getFixtureFactory(string $class): SilverStripe\Dev\FixtureFactory
     {
         $testClass = strtolower($class ?? '');
         if (array_key_exists($testClass, $this->fixtureFactories ?? [])) {
@@ -147,7 +147,7 @@ class FixtureTestState implements TestState
      *
      * @return array
      */
-    protected function getFixturePaths($fixtures, SapphireTest $test)
+    protected function getFixturePaths(array $fixtures, SapphireTest $test): array
     {
         return array_map(function ($fixtureFilePath) use ($test) {
             return $this->resolveFixturePath($fixtureFilePath, $test);
@@ -157,7 +157,7 @@ class FixtureTestState implements TestState
     /**
      * @param SapphireTest $test
      */
-    protected function loadFixtures(SapphireTest $test)
+    protected function loadFixtures(SapphireTest $test): void
     {
         $fixtures = $test::get_fixture_file();
         $fixtures = is_array($fixtures) ? $fixtures : [$fixtures];
@@ -173,7 +173,7 @@ class FixtureTestState implements TestState
      * @param string $fixtureFile
      * @param SapphireTest $test
      */
-    protected function loadFixture($fixtureFile, SapphireTest $test)
+    protected function loadFixture(string $fixtureFile, SapphireTest $test): void
     {
         /** @var YamlFixture $fixture */
         $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
@@ -188,7 +188,7 @@ class FixtureTestState implements TestState
      *
      * @return string
      */
-    protected function resolveFixturePath($fixtureFilePath, SapphireTest $test)
+    protected function resolveFixturePath(string $fixtureFilePath, SapphireTest $test): string
     {
         // Support fixture paths relative to the test class, rather than relative to webroot
         // String checking is faster than file_exists() calls.
@@ -213,7 +213,7 @@ class FixtureTestState implements TestState
      *
      * @return string Absolute path to current class.
      */
-    protected function getTestAbsolutePath(SapphireTest $test)
+    protected function getTestAbsolutePath(SapphireTest $test): string
     {
         $filename = ClassLoader::inst()->getItemPath(get_class($test));
         if (!$filename) {
@@ -228,7 +228,7 @@ class FixtureTestState implements TestState
      *
      * @return bool
      */
-    protected function testNeedsDB(SapphireTest $test)
+    protected function testNeedsDB(SapphireTest $test): bool
     {
         // test class explicitly enables DB
         if ($test->getUsesDatabase()) {
@@ -263,7 +263,7 @@ class FixtureTestState implements TestState
      *
      * @param string $class
      */
-    protected function resetFixtureFactory($class)
+    protected function resetFixtureFactory(string $class): void
     {
         $class = strtolower($class ?? '');
         $this->fixtureFactories[$class] = Injector::inst()->create(FixtureFactory::class);
@@ -276,7 +276,7 @@ class FixtureTestState implements TestState
      * @param string $class Name of test to check
      * @return bool
      */
-    protected function getIsLoaded($class)
+    protected function getIsLoaded(string $class): bool
     {
         return !empty($this->loaded[strtolower($class)]);
     }

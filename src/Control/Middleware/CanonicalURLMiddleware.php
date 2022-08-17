@@ -79,7 +79,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * @return array
      */
-    public function getForceSSLPatterns()
+    public function getForceSSLPatterns(): array
     {
         return $this->forceSSLPatterns ?: [];
     }
@@ -88,7 +88,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param array $forceSSLPatterns
      * @return $this
      */
-    public function setForceSSLPatterns($forceSSLPatterns)
+    public function setForceSSLPatterns(array $forceSSLPatterns): SilverStripe\Control\Middleware\CanonicalURLMiddleware
     {
         $this->forceSSLPatterns = $forceSSLPatterns;
         return $this;
@@ -97,7 +97,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * @return string
      */
-    public function getForceSSLDomain()
+    public function getForceSSLDomain(): null|string
     {
         return $this->forceSSLDomain;
     }
@@ -106,7 +106,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param string $forceSSLDomain
      * @return $this
      */
-    public function setForceSSLDomain($forceSSLDomain)
+    public function setForceSSLDomain(string $forceSSLDomain): SilverStripe\Control\Middleware\CanonicalURLMiddleware
     {
         $this->forceSSLDomain = $forceSSLDomain;
         return $this;
@@ -115,7 +115,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * @return bool
      */
-    public function getForceWWW()
+    public function getForceWWW(): bool|null
     {
         return $this->forceWWW;
     }
@@ -124,7 +124,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param bool $forceWWW
      * @return $this
      */
-    public function setForceWWW($forceWWW)
+    public function setForceWWW(bool $forceWWW): SilverStripe\Control\Middleware\CanonicalURLMiddleware
     {
         $this->forceWWW = $forceWWW;
         return $this;
@@ -133,7 +133,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * @return bool
      */
-    public function getForceSSL()
+    public function getForceSSL(): bool|null
     {
         return $this->forceSSL;
     }
@@ -142,7 +142,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param bool $forceSSL
      * @return $this
      */
-    public function setForceSSL($forceSSL)
+    public function setForceSSL(bool $forceSSL): SilverStripe\Control\Middleware\CanonicalURLMiddleware
     {
         $this->forceSSL = $forceSSL;
         return $this;
@@ -152,7 +152,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param bool|null $forceBasicAuth
      * @return $this
      */
-    public function setForceBasicAuthToSSL($forceBasicAuth)
+    public function setForceBasicAuthToSSL(bool $forceBasicAuth): Mock_CanonicalURLMiddleware_0731bbb7
     {
         $this->forceBasicAuthToSSL = $forceBasicAuth;
         return $this;
@@ -161,7 +161,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * @return bool
      */
-    public function getForceBasicAuthToSSL()
+    public function getForceBasicAuthToSSL(): bool
     {
         // Check if explicitly set
         if (isset($this->forceBasicAuthToSSL)) {
@@ -178,7 +178,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param callable $delegate
      * @return HTTPResponse
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         // Handle any redirects
         $redirect = $this->getRedirect($request);
@@ -204,7 +204,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request Pre-validated request object
      * @return HTTPResponse|null If a redirect is needed return the response
      */
-    protected function getRedirect(HTTPRequest $request)
+    protected function getRedirect(HTTPRequest $request): null|SilverStripe\Control\HTTPResponse
     {
         // Check global disable
         if (!$this->isEnabled()) {
@@ -244,7 +244,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param HTTPRequest|null $request Allow HTTPRequest to be used for the base comparison
      * @throws HTTPResponse_Exception
      */
-    public function throwRedirectIfNeeded(HTTPRequest $request = null)
+    public function throwRedirectIfNeeded(HTTPRequest $request = null): void
     {
         $request = $this->getOrValidateRequest($request);
         if (!$request) {
@@ -262,7 +262,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request
      * @return HTTPRequest|null
      */
-    protected function getOrValidateRequest(HTTPRequest $request = null)
+    protected function getOrValidateRequest(HTTPRequest $request = null): SilverStripe\Control\HTTPRequest|null
     {
         if ($request instanceof HTTPRequest) {
             return $request;
@@ -279,7 +279,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request
      * @return bool
      */
-    protected function requiresSSL(HTTPRequest $request)
+    protected function requiresSSL(HTTPRequest $request): bool
     {
         // Check if force SSL is enabled
         if (!$this->getForceSSL()) {
@@ -312,7 +312,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * @return int
      */
-    public function getRedirectType()
+    public function getRedirectType(): int
     {
         return $this->redirectType;
     }
@@ -332,7 +332,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      *
      * @return array|bool
      */
-    public function getEnabledEnvs()
+    public function getEnabledEnvs(): bool
     {
         return $this->enabledEnvs;
     }
@@ -345,7 +345,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param array|bool $enabledEnvs
      * @return $this
      */
-    public function setEnabledEnvs($enabledEnvs)
+    public function setEnabledEnvs(array|bool $enabledEnvs): SilverStripe\Control\Middleware\CanonicalURLMiddleware
     {
         $this->enabledEnvs = $enabledEnvs;
         return $this;
@@ -354,7 +354,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     /**
      * Ensure this middleware is enabled
      */
-    protected function isEnabled()
+    protected function isEnabled(): bool
     {
         // At least one redirect must be enabled
         if (!$this->getForceWWW() && !$this->getForceSSL()) {
@@ -382,7 +382,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param HTTPResponse $response
      * @return bool
      */
-    protected function hasBasicAuthPrompt(HTTPResponse $response = null)
+    protected function hasBasicAuthPrompt(HTTPResponse $response = null): bool
     {
         if (!$response) {
             return false;
@@ -398,7 +398,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @param string $host
      * @return HTTPResponse
      */
-    protected function redirectToScheme(HTTPRequest $request, $scheme, $host = null)
+    protected function redirectToScheme(HTTPRequest $request, string $scheme, string $host = null): SilverStripe\Control\HTTPResponse
     {
         if (!$host) {
             $host = $request->getHost();

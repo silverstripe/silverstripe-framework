@@ -32,7 +32,7 @@ class DeployFlushDiscoverer implements FlushDiscoverer
      */
     protected $kernel;
 
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -61,7 +61,7 @@ class DeployFlushDiscoverer implements FlushDiscoverer
      *
      * @return string|null returns the resource path or null if not set
      */
-    protected function getDeployResource()
+    protected function getDeployResource(): null
     {
         $resource = Environment::getEnv('SS_FLUSH_ON_DEPLOY');
 
@@ -100,7 +100,7 @@ class DeployFlushDiscoverer implements FlushDiscoverer
      *
      * {@inheritdoc}
      */
-    public function shouldFlush()
+    public function shouldFlush(): null
     {
         $resource = $this->getDeployResource();
 

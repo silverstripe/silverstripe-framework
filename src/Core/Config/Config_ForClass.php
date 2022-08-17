@@ -14,7 +14,7 @@ class Config_ForClass
     /**
      * @param string|object $class
      */
-    public function __construct($class)
+    public function __construct(string|Page $class): void
     {
         $this->class = is_object($class) ? get_class($class) : $class;
     }
@@ -23,7 +23,7 @@ class Config_ForClass
      * @param string $name
      * @return mixed
      */
-    public function __get($name)
+    public function __get(string $name): bool|array|int|null|string
     {
         return $this->get($name);
     }
@@ -32,7 +32,7 @@ class Config_ForClass
      * @param string $name
      * @param mixed $val
      */
-    public function __set($name, $val)
+    public function __set(string $name, bool $val): void
     {
         $this->set($name, $val);
     }
@@ -44,7 +44,7 @@ class Config_ForClass
      * @param mixed $value
      * @return $this
      */
-    public function update($name, $value)
+    public function update(string $name, bool|string|array|int $value): SilverStripe\Core\Config\Config_ForClass
     {
         Deprecation::notice('5.0', 'Use merge() instead');
         return $this->merge($name, $value);
@@ -57,7 +57,7 @@ class Config_ForClass
      * @param mixed $value
      * @return $this
      */
-    public function merge($name, $value)
+    public function merge(string $name, bool|string|array|int $value): SilverStripe\Core\Config\Config_ForClass
     {
         Config::modify()->merge($this->class, $name, $value);
         return $this;
@@ -70,7 +70,7 @@ class Config_ForClass
      * @param mixed $value
      * @return $this
      */
-    public function set($name, $value)
+    public function set(string $name, array|bool|string|int $value): SilverStripe\Core\Config\Config_ForClass
     {
         Config::modify()->set($this->class, $name, $value);
         return $this;
@@ -80,7 +80,7 @@ class Config_ForClass
      * @param string $name
      * @return bool
      */
-    public function __isset($name)
+    public function __isset(string $name): bool
     {
         $val = $this->__get($name);
         return isset($val);
@@ -91,7 +91,7 @@ class Config_ForClass
      * @param mixed $options
      * @return mixed
      */
-    public function get($name, $options = 0)
+    public function get(string $name, int|bool $options = 0): array|string|null|bool|int|float
     {
         return Config::inst()->get($this->class, $name, $options);
     }
@@ -102,7 +102,7 @@ class Config_ForClass
      * @param string $name
      * @return $this
      */
-    public function remove($name)
+    public function remove(string $name): SilverStripe\Core\Config\Config_ForClass
     {
         Config::modify()->remove($this->class, $name);
         return $this;
@@ -124,7 +124,7 @@ class Config_ForClass
      * @param string $name Name of config
      * @return mixed
      */
-    public function uninherited($name)
+    public function uninherited(string $name): array|null|string|bool|int
     {
         return $this->get($name, Config::UNINHERITED);
     }

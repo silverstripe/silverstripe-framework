@@ -15,12 +15,12 @@ class GroupCsvBulkLoader extends CsvBulkLoader
         'Code' => 'Code',
     ];
 
-    public function __construct($objectClass = Group::class)
+    public function __construct($objectClass = Group::class): void
     {
         parent::__construct($objectClass);
     }
 
-    public function processRecord($record, $columnMap, &$results, $preview = false)
+    public function processRecord(array $record, array $columnMap, &$results, bool $preview = false): int
     {
         // We match by 'Code', the ID property is confusing the importer
         if (isset($record['ID'])) {

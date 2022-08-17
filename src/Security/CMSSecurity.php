@@ -32,7 +32,7 @@ class CMSSecurity extends Security
      */
     private static $reauth_enabled = true;
 
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -46,23 +46,23 @@ class CMSSecurity extends Security
         }
     }
 
-    public function login($request = null, $service = Authenticator::CMS_LOGIN)
+    public function login(SilverStripe\Control\HTTPRequest $request = null, $service = Authenticator::CMS_LOGIN): SilverStripe\ORM\FieldType\DBHTMLText
     {
         return parent::login($request, Authenticator::CMS_LOGIN);
     }
 
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         /** @skipUpgrade */
         return Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
     }
 
-    protected function getAuthenticator($name = 'cms')
+    protected function getAuthenticator(string $name = 'cms'): SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator
     {
         return parent::getAuthenticator($name);
     }
 
-    public function getApplicableAuthenticators($service = Authenticator::CMS_LOGIN)
+    public function getApplicableAuthenticators($service = Authenticator::CMS_LOGIN): array
     {
         return parent::getApplicableAuthenticators($service);
     }
@@ -72,7 +72,7 @@ class CMSSecurity extends Security
      *
      * @return Member
      */
-    public function getTargetMember()
+    public function getTargetMember(): SilverStripe\Security\Member|null
     {
         $tempid = $this->getRequest()->requestVar('tempid');
         if ($tempid) {
@@ -82,13 +82,13 @@ class CMSSecurity extends Security
         return null;
     }
 
-    public function getResponseController($title)
+    public function getResponseController(string $title): SilverStripe\Security\CMSSecurity
     {
         // Use $this to prevent use of Page to render underlying templates
         return $this;
     }
 
-    protected function getSessionMessage(&$messageType = null)
+    protected function getSessionMessage(string &$messageType = null): string
     {
         $message =  parent::getSessionMessage($messageType);
         if ($message) {
@@ -117,7 +117,7 @@ class CMSSecurity extends Security
      *
      * @return HTTPResponse
      */
-    protected function redirectToExternalLogin()
+    protected function redirectToExternalLogin(): SilverStripe\Control\HTTPResponse
     {
         $loginURL = Security::create()->Link('login');
         $loginURLATT = Convert::raw2att($loginURL);
@@ -145,7 +145,7 @@ PHP
         return $response;
     }
 
-    protected function preLogin()
+    protected function preLogin(): null|SilverStripe\Control\HTTPResponse
     {
         // If no member has been previously logged in for this session, force a redirect to the main login page
         if (!$this->getTargetMember()) {
@@ -160,7 +160,7 @@ PHP
      *
      * @return bool
      */
-    public function enabled()
+    public function enabled(): bool
     {
         // Disable shortcut
         if (!static::config()->get('reauth_enabled')) {
@@ -175,7 +175,7 @@ PHP
      *
      * @return HTTPResponse|DBField
      */
-    public function success()
+    public function success(): SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Ensure member is properly logged in
         if (!Security::getCurrentUser() || !class_exists(AdminRootController::class)) {

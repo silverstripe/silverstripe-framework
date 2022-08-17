@@ -9,7 +9,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
      *
      * @param \Swift_Events_SendEvent $evt
      */
-    public function beforeSendPerformed(\Swift_Events_SendEvent $evt)
+    public function beforeSendPerformed(\Swift_Events_SendEvent $evt): void
     {
         /** @var \Swift_Message $message */
         $message = $evt->getMessage();
@@ -43,7 +43,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
      * @param \Swift_Message $message
      * @param array|string $to
      */
-    protected function setTo($message, $to)
+    protected function setTo(Swift_Message $message, array $to): void
     {
         $headers = $message->getHeaders();
         $origTo = $message->getTo();
@@ -65,7 +65,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
      * @param \Swift_Message $message
      * @param array|string $from
      */
-    protected function setFrom($message, $from)
+    protected function setFrom(Swift_Message $message, array $from): void
     {
         $headers = $message->getHeaders();
         $origFrom = $message->getFrom();
@@ -73,7 +73,7 @@ class SwiftPlugin implements \Swift_Events_SendListener
         $message->setFrom($from);
     }
 
-    public function sendPerformed(\Swift_Events_SendEvent $evt)
+    public function sendPerformed(\Swift_Events_SendEvent $evt): void
     {
         // noop
     }

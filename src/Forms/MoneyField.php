@@ -43,7 +43,7 @@ class MoneyField extends FormField
      *
      * @return FormField
      */
-    public function getCurrencyField()
+    public function getCurrencyField(): SilverStripe\Forms\TextField
     {
         return $this->fieldCurrency;
     }
@@ -53,12 +53,12 @@ class MoneyField extends FormField
      *
      * @return NumericField
      */
-    public function getAmountField()
+    public function getAmountField(): SilverStripe\Forms\NumericField
     {
         return $this->fieldAmount;
     }
 
-    public function __construct($name, $title = null, $value = "")
+    public function __construct(string $name, string $title = null, array|SilverStripe\ORM\FieldType\DBMoney $value = ""): void
     {
         $this->setName($name);
         $this->fieldAmount = NumericField::create(
@@ -71,7 +71,7 @@ class MoneyField extends FormField
         parent::__construct($name, $title, $value);
     }
 
-    public function __clone()
+    public function __clone(): void
     {
         $this->fieldAmount = clone $this->fieldAmount;
         $this->fieldCurrency = clone $this->fieldCurrency;
@@ -82,7 +82,7 @@ class MoneyField extends FormField
      *
      * @return FormField
      */
-    protected function buildCurrencyField()
+    protected function buildCurrencyField(): SilverStripe\Forms\TextField
     {
         $name = $this->getName();
 
@@ -118,7 +118,7 @@ class MoneyField extends FormField
         return $field;
     }
 
-    public function setSubmittedValue($value, $data = null)
+    public function setSubmittedValue(array $value, array $data = null): SilverStripe\Forms\MoneyField
     {
         if (empty($value)) {
             $this->value = null;
@@ -141,7 +141,7 @@ class MoneyField extends FormField
         return $this;
     }
 
-    public function setValue($value, $data = null)
+    public function setValue(array|SilverStripe\ORM\FieldType\DBMoney|string $value, array $data = null): SilverStripe\Forms\MoneyField
     {
         if (empty($value)) {
             $this->value = null;
@@ -181,7 +181,7 @@ class MoneyField extends FormField
      *
      * @return DBMoney
      */
-    protected function getDBMoney()
+    protected function getDBMoney(): SilverStripe\ORM\FieldType\DBMoney
     {
         return DBMoney::create_field('Money', [
             'Currency' => $this->fieldCurrency->dataValue(),
@@ -190,13 +190,13 @@ class MoneyField extends FormField
             ->setLocale($this->getLocale());
     }
 
-    public function dataValue()
+    public function dataValue(): string|float
     {
         // Non-localised money
         return $this->getDBMoney()->getValue();
     }
 
-    public function Value()
+    public function Value(): string
     {
         // Localised money
         return $this->getDBMoney()->Nice();
@@ -213,7 +213,7 @@ class MoneyField extends FormField
      *
      * @param DataObjectInterface|Object $dataObject
      */
-    public function saveInto(DataObjectInterface $dataObject)
+    public function saveInto(DataObjectInterface $dataObject): void
     {
         $fieldName = $this->getName();
         if ($dataObject->hasMethod("set$fieldName")) {
@@ -230,14 +230,14 @@ class MoneyField extends FormField
     /**
      * Returns a readonly version of this field.
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\MoneyField
     {
         $clone = clone $this;
         $clone->setReadonly(true);
         return $clone;
     }
 
-    public function setReadonly($bool)
+    public function setReadonly(bool $bool): SilverStripe\Forms\MoneyField
     {
         parent::setReadonly($bool);
 
@@ -247,7 +247,7 @@ class MoneyField extends FormField
         return $this;
     }
 
-    public function setDisabled($bool)
+    public function setDisabled(bool $bool): SilverStripe\Forms\MoneyField
     {
         parent::setDisabled($bool);
 
@@ -263,7 +263,7 @@ class MoneyField extends FormField
      * @param array $currencies
      * @return $this
      */
-    public function setAllowedCurrencies($currencies)
+    public function setAllowedCurrencies(array $currencies): SilverStripe\Forms\MoneyField
     {
         if (empty($currencies)) {
             $currencies = [];
@@ -287,7 +287,7 @@ class MoneyField extends FormField
     /**
      * @return array
      */
-    public function getAllowedCurrencies()
+    public function getAllowedCurrencies(): array
     {
         return $this->allowedCurrencies;
     }
@@ -298,7 +298,7 @@ class MoneyField extends FormField
      * @param string $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): SilverStripe\Forms\MoneyField
     {
         $this->fieldAmount->setLocale($locale);
         return $this;
@@ -310,7 +310,7 @@ class MoneyField extends FormField
      *
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->fieldAmount->getLocale();
     }
@@ -321,7 +321,7 @@ class MoneyField extends FormField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         // Validate currency
         $currencies = $this->getAllowedCurrencies();
@@ -342,7 +342,7 @@ class MoneyField extends FormField
         return $this->fieldAmount->validate($validator) && $this->fieldCurrency->validate($validator);
     }
 
-    public function setForm($form)
+    public function setForm(SilverStripe\Forms\Form $form): SilverStripe\Forms\MoneyField
     {
         $this->fieldCurrency->setForm($form);
         $this->fieldAmount->setForm($form);

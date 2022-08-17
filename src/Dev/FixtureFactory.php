@@ -50,7 +50,7 @@ class FixtureFactory
      * @param array|FixtureBlueprint $defaults Array of default values, or a blueprint instance
      * @return $this
      */
-    public function define($name, $defaults = [])
+    public function define(string $name, SilverStripe\Dev\FixtureBlueprint|array $defaults = []): SilverStripe\Dev\BehatFixtureFactory
     {
         if ($defaults instanceof FixtureBlueprint) {
             $this->blueprints[$name] = $defaults;
@@ -76,7 +76,7 @@ class FixtureFactory
      * @param array $data Map of properties. Overrides default data.
      * @return DataObject
      */
-    public function createObject($name, $identifier, $data = null)
+    public function createObject(string $name, string|int $identifier, array $data = null): DNADesign\Elemental\Models\ElementalArea
     {
         if (!isset($this->blueprints[$name])) {
             $this->blueprints[$name] = new FixtureBlueprint($name);
@@ -102,7 +102,7 @@ class FixtureFactory
      * @param array $data Map of properties
      * @return int Database identifier
      */
-    public function createRaw($table, $identifier, $data)
+    public function createRaw(string $table, string $identifier, array $data): int
     {
         $fields = [];
         foreach ($data as $fieldName => $fieldVal) {
@@ -123,7 +123,7 @@ class FixtureFactory
      * @param string $identifier The identifier string, as provided in your fixture file
      * @return int
      */
-    public function getId($class, $identifier)
+    public function getId(string $class, string $identifier): int|bool
     {
         if (isset($this->fixtures[$class][$identifier])) {
             return $this->fixtures[$class][$identifier];
@@ -138,7 +138,7 @@ class FixtureFactory
      * @param string $class The data class or table name
      * @return array|false A map of fixture-identifier => object-id
      */
-    public function getIds($class)
+    public function getIds(string $class): array
     {
         if (isset($this->fixtures[$class])) {
             return $this->fixtures[$class];
@@ -153,7 +153,7 @@ class FixtureFactory
      * @param int $databaseId
      * @return $this
      */
-    public function setId($class, $identifier, $databaseId)
+    public function setId(string $class, string $identifier, int $databaseId): SilverStripe\Dev\FixtureFactory
     {
         $this->fixtures[$class][$identifier] = $databaseId;
         return $this;
@@ -166,7 +166,7 @@ class FixtureFactory
      * @param string $identifier The identifier string, as provided in your fixture file
      * @return DataObject
      */
-    public function get($class, $identifier)
+    public function get(string $class, string $identifier): null|DNADesign\Elemental\Models\ElementContent
     {
         $id = $this->getId($class, $identifier);
         if (!$id) {
@@ -190,7 +190,7 @@ class FixtureFactory
      * @return array Map of class names, containing a map of in-memory identifiers
      * mapped to database identifiers.
      */
-    public function getFixtures()
+    public function getFixtures(): array
     {
         return $this->fixtures;
     }
@@ -204,7 +204,7 @@ class FixtureFactory
      * @param bool $metadata Clear internal mapping as well as data.
      * Set to false by default since sometimes data is rolled back by translations.
      */
-    public function clear($limitToClass = null, $metadata = false)
+    public function clear(string $limitToClass = null, bool $metadata = false): void
     {
         $classes = ($limitToClass) ? [$limitToClass] : array_keys($this->fixtures ?? []);
         foreach ($classes as $class) {
@@ -242,7 +242,7 @@ class FixtureFactory
      * @param string $name
      * @return FixtureBlueprint|false
      */
-    public function getBlueprint($name)
+    public function getBlueprint(string $name): bool|SilverStripe\Dev\FixtureBlueprint
     {
         return (isset($this->blueprints[$name])) ? $this->blueprints[$name] : false;
     }
@@ -254,7 +254,7 @@ class FixtureFactory
      * @param string $value
      * @return string Fixture database ID, or the original value
      */
-    protected function parseValue($value)
+    protected function parseValue(string|int $value): int|string
     {
         if (substr($value ?? '', 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys

@@ -47,7 +47,7 @@ class DBHTMLText extends DBText
      *
      * @return bool
      */
-    public function getProcessShortcodes()
+    public function getProcessShortcodes(): bool
     {
         return $this->processShortcodes;
     }
@@ -58,7 +58,7 @@ class DBHTMLText extends DBText
      * @param bool $process
      * @return $this
      */
-    public function setProcessShortcodes($process)
+    public function setProcessShortcodes(bool $process): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $this->processShortcodes = (bool)$process;
         return $this;
@@ -76,7 +76,7 @@ class DBHTMLText extends DBText
      *
      * @return array
      */
-    public function getWhitelist()
+    public function getWhitelist(): array
     {
         return $this->whitelist;
     }
@@ -87,7 +87,7 @@ class DBHTMLText extends DBText
      * @param array $whitelist
      * @return $this
      */
-    public function setWhitelist($whitelist)
+    public function setWhitelist(array|string $whitelist): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (!is_array($whitelist)) {
             $whitelist = preg_split('/\s*,\s*/', $whitelist ?? '');
@@ -113,7 +113,7 @@ class DBHTMLText extends DBText
      *
      * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (array_key_exists("shortcodes", $options ?? [])) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
@@ -126,7 +126,7 @@ class DBHTMLText extends DBText
         return parent::setOptions($options);
     }
 
-    public function RAW()
+    public function RAW(): string|null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
@@ -138,12 +138,12 @@ class DBHTMLText extends DBText
      * Return the value of the field with relative links converted to absolute urls (with placeholders parsed).
      * @return string
      */
-    public function AbsoluteLinks()
+    public function AbsoluteLinks(): string
     {
         return HTTP::absoluteURLs($this->forTemplate());
     }
 
-    public function forTemplate()
+    public function forTemplate(): string|null
     {
         // Suppress XML encoding for DBHtmlText
         return $this->RAW();
@@ -154,7 +154,7 @@ class DBHTMLText extends DBText
      *
      * @return string
      */
-    public function CDATA()
+    public function CDATA(): string
     {
         return sprintf(
             '<![CDATA[%s]]>',
@@ -162,7 +162,7 @@ class DBHTMLText extends DBText
         );
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(string|array $value): string|null
     {
         return parent::prepValueForDB($this->whitelistContent($value));
     }
@@ -173,7 +173,7 @@ class DBHTMLText extends DBText
      * @param string $value Input html content
      * @return string Value with all non-whitelisted content stripped (if applicable)
      */
-    public function whitelistContent($value)
+    public function whitelistContent(string|array $value): string|array
     {
         if ($this->whitelist) {
             $dom = HTMLValue::create($value);
@@ -199,12 +199,12 @@ class DBHTMLText extends DBText
         return $value;
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\HTMLEditor\HTMLEditorField
     {
         return HTMLEditorField::create($this->name, $title);
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): SilverStripe\Forms\TextField
     {
         return new TextField($this->name, $title);
     }
@@ -214,7 +214,7 @@ class DBHTMLText extends DBText
      *
      * @return string
      */
-    public function Plain()
+    public function Plain(): string
     {
         // Preserve line breaks
         $text = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $this->RAW() ?? '');
@@ -232,7 +232,7 @@ class DBHTMLText extends DBText
         return trim(Convert::xml2raw($text) ?? '');
     }
 
-    public function getSchemaValue()
+    public function getSchemaValue(): null|array
     {
         // Form schema format as HTML
         $value = $this->RAW();
@@ -242,7 +242,7 @@ class DBHTMLText extends DBText
         return null;
     }
 
-    public function exists()
+    public function exists(): bool
     {
         // Optimisation: don't process shortcode just for ->exists()
         $value = $this->getValue();

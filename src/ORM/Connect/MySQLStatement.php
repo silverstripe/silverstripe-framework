@@ -59,7 +59,7 @@ class MySQLStatement extends Query
     /**
      * Binds this statement to the variables
      */
-    protected function bind()
+    protected function bind(): void
     {
         $variables = [];
 
@@ -87,7 +87,7 @@ class MySQLStatement extends Query
      * @param mysqli_stmt $statement The related statement, if present
      * @param mysqli_result $metadata The metadata for this statement
      */
-    public function __construct($statement, $metadata)
+    public function __construct(mysqli_stmt $statement, mysqli_result $metadata): void
     {
         $this->statement = $statement;
         $this->metadata = $metadata;
@@ -96,13 +96,13 @@ class MySQLStatement extends Query
         $this->bind();
     }
 
-    public function __destruct()
+    public function __destruct(): void
     {
         $this->statement->close();
         $this->currentRecord = false;
     }
 
-    public function seek($row)
+    public function seek(int $row): array
     {
         $this->rowNum = $row - 1;
 
@@ -113,12 +113,12 @@ class MySQLStatement extends Query
         return $result;
     }
 
-    public function numRecords()
+    public function numRecords(): int
     {
         return $this->statement->num_rows();
     }
 
-    public function nextRecord()
+    public function nextRecord(): bool|array
     {
         // Skip data if out of data
         if (!$this->statement->fetch()) {

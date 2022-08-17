@@ -17,7 +17,7 @@ class UrlPathStartswith implements Rule, Bypass
      *
      * @param string $path
      */
-    public function __construct($path)
+    public function __construct(string $path): void
     {
         $this->setPath($path);
     }
@@ -30,7 +30,7 @@ class UrlPathStartswith implements Rule, Bypass
      *
      * @return Confirmation\Item
      */
-    protected function buildConfirmationItem($token, $url)
+    protected function buildConfirmationItem(string $token, string $url): SilverStripe\Security\Confirmation\Item
     {
         return new Confirmation\Item(
             $token,
@@ -46,7 +46,7 @@ class UrlPathStartswith implements Rule, Bypass
      *
      * @return string
      */
-    protected function generateToken($path)
+    protected function generateToken(string $path): string
     {
         return sprintf('%s::%s', static::class, $path);
     }
@@ -59,18 +59,18 @@ class UrlPathStartswith implements Rule, Bypass
      *
      * @return bool
      */
-    protected function checkPath($path)
+    protected function checkPath(string $path): bool
     {
         $targetPath = $this->getPath();
         return strncmp($this->normalisePath($path) ?? '', $targetPath ?? '', strlen($targetPath ?? '')) === 0;
     }
 
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return $this->checkPath($request->getURL());
     }
 
-    public function getRequestConfirmationItem(HTTPRequest $request)
+    public function getRequestConfirmationItem(HTTPRequest $request): SilverStripe\Security\Confirmation\Item|null
     {
         if (!$this->checkPath($request->getURL())) {
             return null;

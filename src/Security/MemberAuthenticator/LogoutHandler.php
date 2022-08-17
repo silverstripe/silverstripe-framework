@@ -48,7 +48,7 @@ class LogoutHandler extends RequestHandler
      *
      * @return array|HTTPResponse
      */
-    public function logout()
+    public function logout(): array|SilverStripe\Control\HTTPResponse
     {
         $member = Security::getCurrentUser();
 
@@ -74,7 +74,7 @@ class LogoutHandler extends RequestHandler
     /**
      * @return LogoutForm
      */
-    public function logoutForm()
+    public function logoutForm(): SilverStripe\Security\LogoutForm
     {
         return LogoutForm::create($this);
     }
@@ -83,7 +83,7 @@ class LogoutHandler extends RequestHandler
      * @param Member $member
      * @return HTTPResponse
      */
-    public function doLogOut($member)
+    public function doLogOut(SilverStripe\Security\Member $member): SilverStripe\Control\HTTPResponse
     {
         $this->extend('beforeLogout');
 
@@ -103,7 +103,7 @@ class LogoutHandler extends RequestHandler
     /**
      * @return HTTPResponse
      */
-    protected function redirectAfterLogout()
+    protected function redirectAfterLogout(): SilverStripe\Control\HTTPResponse
     {
         $backURL = $this->getBackURL();
         if ($backURL) {

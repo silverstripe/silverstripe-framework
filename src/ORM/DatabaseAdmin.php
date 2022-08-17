@@ -58,7 +58,7 @@ class DatabaseAdmin extends Controller
      */
     private static $show_record_counts = true;
 
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -119,7 +119,7 @@ class DatabaseAdmin extends Controller
      * When we're called as /dev/build, that's actually the index. Do the same
      * as /dev/build/build.
      */
-    public function index()
+    public function index(): null
     {
         return $this->build();
     }
@@ -127,7 +127,7 @@ class DatabaseAdmin extends Controller
     /**
      * Updates the database schema, creating tables & fields as necessary.
      */
-    public function build()
+    public function build(): void
     {
         // The default time limit of 30 seconds is normally not enough
         Environment::increaseTimeLimitTo(600);
@@ -158,7 +158,7 @@ class DatabaseAdmin extends Controller
      *
      * @return string|null
      */
-    protected function getReturnURL()
+    protected function getReturnURL(): null
     {
         $url = $this->request->getVar('returnURL');
 
@@ -225,7 +225,7 @@ class DatabaseAdmin extends Controller
      * @param boolean $populate Populate the database, as well as setting up its schema
      * @param bool    $testMode
      */
-    public function doBuild($quiet = false, $populate = true, $testMode = false)
+    public function doBuild(bool $quiet = false, bool $populate = true, $testMode = false): void
     {
         $this->extend('onBeforeBuild', $quiet, $populate, $testMode);
 
@@ -430,7 +430,7 @@ class DatabaseAdmin extends Controller
      * @param string   $fieldName The field name to look in for obsolete class names
      * @param string[] $mapping   Map of old to new classnames
      */
-    protected function updateLegacyClassNameField($dataClass, $fieldName, $mapping)
+    protected function updateLegacyClassNameField(string $dataClass, string $fieldName, array $mapping): void
     {
         $schema = DataObject::getSchema();
         // Check first to ensure that the class has the specified field to update
@@ -501,7 +501,7 @@ class DatabaseAdmin extends Controller
      *
      * @return array[]
      */
-    protected function getClassNameRemappingFields()
+    protected function getClassNameRemappingFields(): array
     {
         $dataClasses = ClassInfo::getValidSubClasses(DataObject::class);
         $schema = DataObject::getSchema();
@@ -577,7 +577,7 @@ class DatabaseAdmin extends Controller
      *
      * @todo Migrate to separate build task
      */
-    protected function migrateClassNames()
+    protected function migrateClassNames(): void
     {
         $remappingConfig = $this->config()->get('classname_value_remapping');
         $remappingFields = $this->getClassNameRemappingFields();

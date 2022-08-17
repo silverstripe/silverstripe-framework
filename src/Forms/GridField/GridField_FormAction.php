@@ -51,7 +51,7 @@ class GridField_FormAction extends FormAction
      * @param string $actionName
      * @param array $args
      */
-    public function __construct(GridField $gridField, $name, $title, $actionName, $args)
+    public function __construct(GridField $gridField, string $name, string|bool $title, string $actionName, array|string|int $args): void
     {
         $this->gridField = $gridField;
         $this->actionName = $actionName;
@@ -85,7 +85,7 @@ class GridField_FormAction extends FormAction
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         // Determine the state that goes with this action
         $state = [
@@ -124,7 +124,7 @@ class GridField_FormAction extends FormAction
      *
      * @return string
      */
-    protected function getNameFromParent()
+    protected function getNameFromParent(): string
     {
         $base = $this->gridField;
         $name = [];

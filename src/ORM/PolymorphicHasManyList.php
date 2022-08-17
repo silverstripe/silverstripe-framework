@@ -24,7 +24,7 @@ class PolymorphicHasManyList extends HasManyList
      *
      * @return string
      */
-    public function getForeignClass()
+    public function getForeignClass(): string
     {
         return $this->dataQuery->getQueryParam('Foreign.Class');
     }
@@ -37,7 +37,7 @@ class PolymorphicHasManyList extends HasManyList
      * to generate the ID and Class foreign keys.
      * @param string $foreignClass Name of the class filter this relation is filtered against
      */
-    public function __construct($dataClass, $foreignField, $foreignClass)
+    public function __construct(string $dataClass, string $foreignField, string $foreignClass): void
     {
         // Set both id foreign key (as in HasManyList) and the class foreign key
         parent::__construct($dataClass, "{$foreignField}ID");
@@ -62,7 +62,7 @@ class PolymorphicHasManyList extends HasManyList
      *
      * @param DataObject|int $item The DataObject to be added, or its ID
      */
-    public function add($item)
+    public function add(int|SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $item): void
     {
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);
@@ -105,7 +105,7 @@ class PolymorphicHasManyList extends HasManyList
      * @param DataObject $item The DataObject to be removed
      * @todo Maybe we should delete the object instead?
      */
-    public function remove($item)
+    public function remove(SilverStripe\ORM\Tests\DataObjectTest\Fan $item): void
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException(

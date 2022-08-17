@@ -48,7 +48,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array|string $from An array of Tables (FROM clauses). The first one should be just the table name.
      * @param array $where An array of WHERE clauses.
      */
-    function __construct($from = [], $where = [])
+    function __construct(array|string $from = [], array|string $where = []): void
     {
         $this->setFrom($from);
         $this->setWhere($where);
@@ -62,7 +62,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param string|array $from Single, or list of, ANSI quoted table names
      * @return $this
      */
-    public function setFrom($from)
+    public function setFrom(array|string $from): SilverStripe\ORM\Queries\SQLSelect
     {
         $this->from = [];
         return $this->addFrom($from);
@@ -76,7 +76,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param string|array $from Single, or list of, ANSI quoted table names
      * @return $this Self reference
      */
-    public function addFrom($from)
+    public function addFrom(array|string $from): SilverStripe\ORM\Queries\SQLSelect
     {
         if (is_array($from)) {
             $this->from = array_merge($this->from, $from);
@@ -92,7 +92,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @param string $value either 'AND' or 'OR'
      */
-    public function setConnective($value)
+    public function setConnective(string $value): void
     {
         $this->connective = $value;
     }
@@ -102,7 +102,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return string 'AND' or 'OR'
      */
-    public function getConnective()
+    public function getConnective(): string
     {
         return $this->connective;
     }
@@ -136,7 +136,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array $parameters Any additional parameters if the join is a parameterized subquery
      * @return $this Self reference
      */
-    public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
+    public function addLeftJoin(string $table, string $onPredicate, string $tableAlias = '', int $order = 20, array $parameters = []): SilverStripe\ORM\Queries\SQLSelect
     {
         if (!$tableAlias) {
             $tableAlias = $table;
@@ -164,7 +164,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array $parameters Any additional parameters if the join is a parameterized subquery
      * @return $this Self reference
      */
-    public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = [])
+    public function addInnerJoin(string $table, string $onPredicate, string $tableAlias = null, int $order = 20, array $parameters = []): SilverStripe\ORM\Queries\SQLSelect
     {
         if (!$tableAlias) {
             $tableAlias = $table;
@@ -199,7 +199,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param string $filter The "ON" SQL fragment (escaped)
      * @return $this Self reference
      */
-    public function setJoinFilter($table, $filter)
+    public function setJoinFilter(string $table, string $filter): SilverStripe\ORM\Queries\SQLSelect
     {
         $this->from[$table]['filter'] = [$filter];
         return $this;
@@ -211,7 +211,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param string $tableAlias Table name
      * @return boolean
      */
-    public function isJoinedTo($tableAlias)
+    public function isJoinedTo(string $tableAlias): bool
     {
         return isset($this->from[$tableAlias]);
     }
@@ -221,7 +221,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return array Unquoted table names
      */
-    public function queriedTables()
+    public function queriedTables(): array
     {
         $tables = [];
 
@@ -250,7 +250,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return array
      */
-    public function getFrom()
+    public function getFrom(): array
     {
         return $this->from;
     }
@@ -263,7 +263,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array $parameters Out variable for parameters required for this query
      * @return array List of joins as a mapping from array('Alias' => 'Join Expression')
      */
-    public function getJoins(&$parameters = [])
+    public function getJoins(&$parameters = []): array
     {
         if (func_num_args() == 0) {
             Deprecation::notice(
@@ -336,7 +336,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param $from array - in the format of $this->from
      * @return array - and reorderded list of selects
      */
-    protected function getOrderedJoins($from)
+    protected function getOrderedJoins(array $from): array
     {
         if (count($from ?? []) <= 1) {
             return $from;
@@ -377,7 +377,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array $array The array to sort (by reference)
      * @param callable|string $cmpFunction The function to use for comparison
      */
-    protected function mergesort(&$array, $cmpFunction = 'strcmp')
+    protected function mergesort(array &$array, callable $cmpFunction = 'strcmp'): void
     {
         // Arrays of size < 2 require no action.
         if (count($array ?? []) < 2) {
@@ -429,7 +429,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param mixed ...$where Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
-    public function setWhere($where)
+    public function setWhere(array|string $where): SilverStripe\ORM\Queries\SQLSelect
     {
         $where = func_num_args() > 1 ? func_get_args() : $where;
         $this->where = [];
@@ -515,7 +515,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param mixed ...$where Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
-    public function addWhere($where)
+    public function addWhere(array|string|SilverStripe\ORM\DataQuery_SubGroup $where): SilverStripe\ORM\Queries\SQLSelect
     {
         $where = $this->normalisePredicates(func_get_args());
 
@@ -531,7 +531,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param mixed ...$filters Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
-    public function setWhereAny($filters)
+    public function setWhereAny(array $filters): SilverStripe\ORM\Queries\SQLSelect
     {
         $filters = func_num_args() > 1 ? func_get_args() : $filters;
         return $this
@@ -545,7 +545,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param mixed ...$filters Predicate(s) to set, as escaped SQL statements or parameterized queries
      * @return $this Self reference
      */
-    public function addWhereAny($filters)
+    public function addWhereAny(array $filters): SilverStripe\ORM\Queries\SQLSelect
     {
         // Parse and split predicates along with any parameters
         $filters = $this->normalisePredicates(func_get_args());
@@ -560,7 +560,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return array
      */
-    public function getWhere()
+    public function getWhere(): array
     {
         return $this->where;
     }
@@ -571,7 +571,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array $parameters Out variable for parameters required for this query
      * @return array
      */
-    public function getWhereParameterised(&$parameters)
+    public function getWhereParameterised(&$parameters): array
     {
         $this->splitQueryParameters($this->where, $predicates, $parameters);
         return $predicates;
@@ -589,7 +589,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @return array|SQLConditionGroup A single item array in the format
      * array($predicate => array($parameters)), unless it's a SQLConditionGroup
      */
-    protected function parsePredicate($key, $value)
+    protected function parsePredicate(string|int $key, int|string|array|SilverStripe\ORM\DataQuery_SubGroup|bool $value): array|SilverStripe\ORM\DataQuery_SubGroup
     {
         // If a string key is given then presume this is a parameterized condition
         if ($value instanceof SQLConditionGroup) {
@@ -651,7 +651,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * one level more than for addWhere, as query expansion is not supported here.
      * @return array List of normalised predicates
      */
-    protected function normalisePredicates(array $predicates)
+    protected function normalisePredicates(array $predicates): array
     {
         // Since this function is called with func_get_args we should un-nest the single first parameter
         if (count($predicates ?? []) == 1) {
@@ -685,7 +685,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      * @param array $predicates Out parameter for the list of string predicates
      * @param array $parameters Out parameter for the list of parameters
      */
-    public function splitQueryParameters($conditions, &$predicates, &$parameters)
+    public function splitQueryParameters(array $conditions, &$predicates, &$parameters): void
     {
         // Merge all filters with parameterized queries
         $predicates = [];
@@ -714,7 +714,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return boolean
      */
-    public function filtersOnID()
+    public function filtersOnID(): bool
     {
         $regexp = '/^(.*\.)?("|`)?ID("|`)?\s?(=|IN)/';
 
@@ -734,7 +734,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return boolean
      */
-    public function filtersOnFK()
+    public function filtersOnFK(): bool
     {
         $regexp = '/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?(=|IN)/';
 
@@ -748,7 +748,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         return false;
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->from);
     }
@@ -770,7 +770,7 @@ abstract class SQLConditionalExpression extends SQLExpression
      *
      * @return SQLSelect
      */
-    public function toSelect()
+    public function toSelect(): SilverStripe\ORM\Queries\SQLSelect
     {
         $select = new SQLSelect();
         $this->copyTo($select);

@@ -53,7 +53,7 @@ class SSListContainsOnly extends SSListContains implements TestOnly
      *
      * @throws PHPUnit_Framework_ExpectationFailedException|ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false): ?bool
+    public function evaluate(SilverStripe\ORM\ManyManyThroughList $other, string $description = '', bool $returnResult = false): ?bool
     {
         $success = true;
 

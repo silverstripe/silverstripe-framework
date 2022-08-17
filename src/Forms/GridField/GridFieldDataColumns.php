@@ -36,7 +36,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param GridField $gridField
      * @param array $columns List reference of all column names. (by reference)
      */
-    public function augmentColumns($gridField, &$columns)
+    public function augmentColumns(SilverStripe\Forms\GridField\GridField $gridField, &$columns): void
     {
         $baseColumns = array_keys($this->getDisplayFields($gridField) ?? []);
 
@@ -53,7 +53,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param GridField $gridField
      * @return array
      */
-    public function getColumnsHandled($gridField)
+    public function getColumnsHandled(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return array_keys($this->getDisplayFields($gridField) ?? []);
     }
@@ -66,7 +66,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param array $fields
      * @return $this
      */
-    public function setDisplayFields($fields)
+    public function setDisplayFields(array|stdClass $fields): SilverStripe\Forms\GridField\GridFieldDataColumns
     {
         if (!is_array($fields)) {
             throw new InvalidArgumentException(
@@ -84,7 +84,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @return array
      * @see GridFieldDataColumns::setDisplayFields
      */
-    public function getDisplayFields($gridField)
+    public function getDisplayFields(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         if (!$this->displayFields) {
             return singleton($gridField->getModelClass())->summaryFields();
@@ -99,7 +99,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param array $casting
      * @return $this
      */
-    public function setFieldCasting($casting)
+    public function setFieldCasting(array $casting): SilverStripe\Forms\GridField\GridFieldDataColumns
     {
         $this->fieldCasting = $casting;
         return $this;
@@ -108,7 +108,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     /**
      * @return array
      */
-    public function getFieldCasting()
+    public function getFieldCasting(): array
     {
         return $this->fieldCasting;
     }
@@ -128,7 +128,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param array $formatting
      * @return $this
      */
-    public function setFieldFormatting($formatting)
+    public function setFieldFormatting(array $formatting): SilverStripe\Forms\GridField\GridFieldDataColumns
     {
         $this->fieldFormatting = $formatting;
         return $this;
@@ -137,7 +137,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     /**
      * @return array
      */
-    public function getFieldFormatting()
+    public function getFieldFormatting(): array
     {
         return $this->fieldFormatting;
     }
@@ -150,7 +150,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param string $columnName
      * @return string HTML for the column. Return NULL to skip.
      */
-    public function getColumnContent($gridField, $record, $columnName)
+    public function getColumnContent(SilverStripe\Forms\GridField\GridField $gridField, DNADesign\Elemental\Tests\Src\TestElement $record, string $columnName): string|null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Find the data column for the given named column
         $columns = $this->getDisplayFields($gridField);
@@ -184,7 +184,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param  string $columnName
      * @return array
      */
-    public function getColumnAttributes($gridField, $record, $columnName)
+    public function getColumnAttributes(SilverStripe\Forms\GridField\GridField $gridField, DNADesign\Elemental\Tests\Src\TestElement $record, string $columnName): array
     {
         return ['class' => 'col-' . preg_replace('/[^\w]/', '-', $columnName ?? '')];
     }
@@ -197,7 +197,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param string $column
      * @return array Map of arbitrary metadata identifiers to their values.
      */
-    public function getColumnMetadata($gridField, $column)
+    public function getColumnMetadata(SilverStripe\Forms\GridField\GridField $gridField, string $column): array
     {
         $columns = $this->getDisplayFields($gridField);
 
@@ -244,7 +244,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param string $value
      * @return string
      */
-    protected function castValue($gridField, $fieldName, $value)
+    protected function castValue(SilverStripe\Forms\GridField\GridField $gridField, string $fieldName, SilverStripe\ORM\FieldType\DBHTMLText|string|int|float $value): string|null
     {
         // If a fieldCasting is specified, we assume the result is safe
         if (array_key_exists($fieldName, $this->fieldCasting ?? [])) {
@@ -274,7 +274,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param string $value
      * @return string
      */
-    protected function formatValue($gridField, $item, $fieldName, $value)
+    protected function formatValue(SilverStripe\Forms\GridField\GridField $gridField, DNADesign\Elemental\Tests\Src\TestElement $item, string $fieldName, string $value): string|null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (!array_key_exists($fieldName, $this->fieldFormatting ?? [])) {
             return $value;
@@ -299,7 +299,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param string $value
      * @return string
      */
-    protected function escapeValue($gridField, $value)
+    protected function escapeValue(SilverStripe\Forms\GridField\GridField $gridField, string|SilverStripe\ORM\FieldType\DBHTMLText $value): string|null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (!$escape = $gridField->FieldEscape) {
             return $value;

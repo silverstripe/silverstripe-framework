@@ -29,7 +29,7 @@ class ValidationException extends Exception
      * failed result, or error message to build error from
      * @param integer $code The error code number
      */
-    public function __construct($result = null, $code = 0)
+    public function __construct(SilverStripe\ORM\ValidationResult|string $result = null, int $code = 0): void
     {
         // Catch legacy behaviour where second argument was not code
         if ($code && !is_numeric($code)) {
@@ -67,7 +67,7 @@ class ValidationException extends Exception
      *
      * @return ValidationResult
      */
-    public function getResult()
+    public function getResult(): SilverStripe\ORM\ValidationResult
     {
         return $this->result;
     }

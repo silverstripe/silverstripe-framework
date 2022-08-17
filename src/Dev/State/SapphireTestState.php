@@ -17,7 +17,7 @@ class SapphireTestState implements TestState
     /**
      * @return TestState[]
      */
-    public function getStates()
+    public function getStates(): array
     {
         return $this->states;
     }
@@ -27,7 +27,7 @@ class SapphireTestState implements TestState
      *
      * @return bool|TestState
      */
-    public function getStateByName($name)
+    public function getStateByName(string $name): SilverStripe\Dev\State\FixtureTestState
     {
         $states = $this->getStates();
         if (array_key_exists($name, $states ?? [])) {
@@ -56,20 +56,20 @@ class SapphireTestState implements TestState
      * @param TestState[] $states
      * @return $this
      */
-    public function setStates(array $states)
+    public function setStates(array $states): SilverStripe\Dev\State\SapphireTestState
     {
         $this->states = $states;
         return $this;
     }
 
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         foreach ($this->states as $state) {
             $state->setUp($test);
         }
     }
 
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
         // Tear down in reverse order
         /** @var TestState $state */
@@ -78,7 +78,7 @@ class SapphireTestState implements TestState
         }
     }
 
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         foreach ($this->states as $state) {
             $state->setUpOnce($class);
@@ -90,7 +90,7 @@ class SapphireTestState implements TestState
      *
      * @param string $class Class being torn down
      */
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
         // Tear down in reverse order
         /** @var TestState $state */

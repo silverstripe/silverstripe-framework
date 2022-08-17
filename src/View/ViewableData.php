@@ -87,7 +87,7 @@ class ViewableData implements IteratorAggregate
      */
     private $objCache = [];
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -103,7 +103,7 @@ class ViewableData implements IteratorAggregate
      * @param string $property
      * @return bool
      */
-    public function __isset($property)
+    public function __isset(string $property): bool
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
         if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method = "get$property")) {
@@ -126,7 +126,7 @@ class ViewableData implements IteratorAggregate
      * @param string $property
      * @return mixed
      */
-    public function __get($property)
+    public function __get(string $property): string|null|int|bool|array|float|SilverStripe\CMS\Model\SiteTreeLinkTracking_Parser
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
         if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method = "get$property")) {
@@ -149,7 +149,7 @@ class ViewableData implements IteratorAggregate
      * @param string $property
      * @param mixed $value
      */
-    public function __set($property, $value)
+    public function __set(string $property, bool|string|int|array|float|SilverStripe\RealMe\RealMeService $value): void
     {
         $this->objCacheClear();
         if ($this->hasMethod($method = "set$property")) {
@@ -164,7 +164,7 @@ class ViewableData implements IteratorAggregate
      *
      * @param ViewableData $failover
      */
-    public function setFailover(ViewableData $failover)
+    public function setFailover(ViewableData $failover): void
     {
         // Ensure cached methods from previous failover are removed
         if ($this->failover) {
@@ -180,7 +180,7 @@ class ViewableData implements IteratorAggregate
      *
      * @return ViewableData|null
      */
-    public function getFailover()
+    public function getFailover(): null|SilverStripe\ErrorPage\ErrorPage
     {
         return $this->failover;
     }
@@ -191,7 +191,7 @@ class ViewableData implements IteratorAggregate
      * @param string $field
      * @return bool
      */
-    public function hasField($field)
+    public function hasField(string $field): bool
     {
         return property_exists($this, $field ?? '');
     }
@@ -202,7 +202,7 @@ class ViewableData implements IteratorAggregate
      * @param string $field
      * @return mixed
      */
-    public function getField($field)
+    public function getField(string $field): string|array|int|SilverStripe\FrameworkTest\Elemental\Admin\ElementalBehatTestAdmin
     {
         return $this->$field;
     }
@@ -214,7 +214,7 @@ class ViewableData implements IteratorAggregate
      * @param mixed $value
      * @return $this
      */
-    public function setField($field, $value)
+    public function setField(string $field, string|int|array|bool|SilverStripe\ORM\ArrayList $value): SilverStripe\Reports\ReportAdmin
     {
         $this->objCacheClear();
         $this->$field = $value;
@@ -229,7 +229,7 @@ class ViewableData implements IteratorAggregate
      *
      * @throws LogicException
      */
-    public function defineMethods()
+    public function defineMethods(): void
     {
         if ($this->failover && !is_object($this->failover)) {
             throw new LogicException("ViewableData::\$failover set to a non-object");
@@ -255,7 +255,7 @@ class ViewableData implements IteratorAggregate
      * @param array|ViewableData $data
      * @return ViewableData_Customised
      */
-    public function customise($data)
+    public function customise(array|SilverStripe\View\ArrayData $data): SilverStripe\View\ViewableData_Customised
     {
         if (is_array($data) && (empty($data) || ArrayLib::is_associative($data))) {
             $data = new ArrayData($data);
@@ -278,7 +278,7 @@ class ViewableData implements IteratorAggregate
      *
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return true;
     }
@@ -286,7 +286,7 @@ class ViewableData implements IteratorAggregate
     /**
      * @return string the class name
      */
-    public function __toString()
+    public function __toString(): string
     {
         return static::class;
     }
@@ -294,7 +294,7 @@ class ViewableData implements IteratorAggregate
     /**
      * @return ViewableData
      */
-    public function getCustomisedObj()
+    public function getCustomisedObj(): null|SilverStripe\View\ViewableData_Customised
     {
         return $this->customisedObject;
     }
@@ -302,7 +302,7 @@ class ViewableData implements IteratorAggregate
     /**
      * @param ViewableData $object
      */
-    public function setCustomisedObj(ViewableData $object)
+    public function setCustomisedObj(ViewableData $object): void
     {
         $this->customisedObject = $object;
     }
@@ -317,7 +317,7 @@ class ViewableData implements IteratorAggregate
      * @return string Casting helper As a constructor pattern, and may include arguments.
      * @throws Exception
      */
-    public function castingHelper($field)
+    public function castingHelper(string $field): string
     {
         $specs = static::config()->get('casting');
         if (isset($specs[$field])) {
@@ -349,7 +349,7 @@ class ViewableData implements IteratorAggregate
      * @param string $field
      * @return string
      */
-    public function castingClass($field)
+    public function castingClass(string $field): string
     {
         // Strip arguments
         $spec = $this->castingHelper($field);
@@ -362,7 +362,7 @@ class ViewableData implements IteratorAggregate
      * @param string $field
      * @return string 'xml'|'raw'
      */
-    public function escapeTypeForField($field)
+    public function escapeTypeForField(string $field): string
     {
         $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
@@ -386,7 +386,7 @@ class ViewableData implements IteratorAggregate
      * @param array $customFields fields to customise() the object with before rendering
      * @return DBHTMLText
      */
-    public function renderWith($template, $customFields = null)
+    public function renderWith(string|array|SilverStripe\View\SSViewer $template, array|SilverStripe\Security\Member $customFields = null): SilverStripe\ORM\FieldType\DBHTMLText|string
     {
         if (!is_object($template)) {
             $template = SSViewer::create($template);
@@ -413,7 +413,7 @@ class ViewableData implements IteratorAggregate
      * @param array $arguments List of optional arguments given
      * @return string
      */
-    protected function objCacheName($fieldName, $arguments)
+    protected function objCacheName(string $fieldName, array $arguments): string
     {
         return $arguments
             ? $fieldName . ":" . implode(',', $arguments)
@@ -426,7 +426,7 @@ class ViewableData implements IteratorAggregate
      * @param string $key Cache key
      * @return mixed
      */
-    protected function objCacheGet($key)
+    protected function objCacheGet(string|bool $key): null|SilverStripe\SiteConfig\SiteConfig
     {
         if (isset($this->objCache[$key])) {
             return $this->objCache[$key];
@@ -441,7 +441,7 @@ class ViewableData implements IteratorAggregate
      * @param mixed $value
      * @return $this
      */
-    protected function objCacheSet($key, $value)
+    protected function objCacheSet(string|bool $key, SilverStripe\ORM\ArrayList $value): SilverStripe\View\ArrayData
     {
         $this->objCache[$key] = $value;
         return $this;
@@ -452,7 +452,7 @@ class ViewableData implements IteratorAggregate
      *
      * @return $this
      */
-    protected function objCacheClear()
+    protected function objCacheClear(): SilverStripe\CMS\Model\SiteTree
     {
         $this->objCache = [];
         return $this;
@@ -468,7 +468,7 @@ class ViewableData implements IteratorAggregate
      * @param string $cacheName a custom cache name
      * @return Object|DBField
      */
-    public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
+    public function obj(string $fieldName, array $arguments = [], bool $cache = false, bool $cacheName = null): SilverStripe\ORM\ArrayList
     {
         if (!$cacheName && $cache) {
             $cacheName = $this->objCacheName($fieldName, $arguments);
@@ -527,7 +527,7 @@ class ViewableData implements IteratorAggregate
      * @param bool $cache
      * @return bool
      */
-    public function hasValue($field, $arguments = [], $cache = true)
+    public function hasValue(string $field, array $arguments = [], bool $cache = true): bool
     {
         $result = $this->obj($field, $arguments, $cache);
         return $result->exists();
@@ -542,7 +542,7 @@ class ViewableData implements IteratorAggregate
      * @param bool $cache
      * @return string
      */
-    public function XML_val($field, $arguments = [], $cache = false)
+    public function XML_val(string $field, array $arguments = [], bool $cache = false): string|SilverStripe\ORM\FieldType\DBHTMLText|null
     {
         $result = $this->obj($field, $arguments, $cache);
         // Might contain additional formatting over ->XML(). E.g. parse shortcodes, nl2br()
@@ -577,7 +577,7 @@ class ViewableData implements IteratorAggregate
      * @return ArrayIterator
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator([$this]);
     }
@@ -590,7 +590,7 @@ class ViewableData implements IteratorAggregate
      * @param string $suffix
      * @return array
      */
-    public function getViewerTemplates($suffix = '')
+    public function getViewerTemplates($suffix = ''): array
     {
         return SSViewer::get_templates_by_class(static::class, $suffix, self::class);
     }
@@ -601,7 +601,7 @@ class ViewableData implements IteratorAggregate
      *
      * @return ViewableData
      */
-    public function Me()
+    public function Me(): DNADesign\Elemental\Tests\Src\TestElementController
     {
         return $this;
     }
@@ -618,7 +618,7 @@ class ViewableData implements IteratorAggregate
      * @return string URL to the current theme
      * @deprecated 4.0.0:5.0.0 Use $resourcePath or $resourceURL template helpers instead
      */
-    public function ThemeDir()
+    public function ThemeDir(): string
     {
         Deprecation::notice('5.0', 'Use $resourcePath or $resourceURL template helpers instead');
         $themes = SSViewer::get_themes();
@@ -645,7 +645,7 @@ class ViewableData implements IteratorAggregate
      * @return string
      * @uses ClassInfo
      */
-    public function CSSClasses($stopAtClass = self::class)
+    public function CSSClasses($stopAtClass = self::class): string
     {
         $classes       = [];
         $classAncestry = array_reverse(ClassInfo::ancestry(static::class) ?? []);

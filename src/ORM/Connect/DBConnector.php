@@ -44,7 +44,7 @@ abstract class DBConnector
      * @param array $parameters Parameters passed to the query
      * @throws DatabaseException
      */
-    protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = [])
+    protected function databaseError(string $msg, int $errorLevel = E_USER_ERROR, string $sql = null, array $parameters = [])
     {
         // Prevent errors when error checking is set at zero level
         if (empty($errorLevel)) {
@@ -88,7 +88,7 @@ abstract class DBConnector
      * @param string $sql
      * @return bool
      */
-    public function isQueryDDL($sql)
+    public function isQueryDDL(string $sql): bool
     {
         $operations = Config::inst()->get(static::class, 'ddl_operations');
         return $this->isQueryType($sql, $operations);
@@ -114,7 +114,7 @@ abstract class DBConnector
      * @param string|array $type Type or list of types (first word in the query). Must be lowercase
      * @return bool
      */
-    protected function isQueryType($sql, $type)
+    protected function isQueryType(string $sql, array $type): bool
     {
         if (!preg_match('/^(?<operation>\w+)\b/', $sql ?? '', $matches)) {
             return false;
@@ -132,7 +132,7 @@ abstract class DBConnector
      * @param array $parameters
      * @return array List of parameter values
      */
-    protected function parameterValues($parameters)
+    protected function parameterValues(array $parameters): array
     {
         $values = [];
         foreach ($parameters as $value) {

@@ -11,14 +11,14 @@ use SilverStripe\ORM\DB;
 class DBYear extends DBField
 {
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = ['datatype' => 'year', 'precision' => 4, 'arrayValue' => $this->arrayValue];
         $values = ['type' => 'year', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(string $title = null, $params = null): SilverStripe\Forms\DropdownField
     {
         $selectBox = DropdownField::create($this->name, $title);
         $selectBox->setSource($this->getDefaultOptions());
@@ -35,7 +35,7 @@ class DBYear extends DBField
      * @param int|bool $end end date to count down to
      * @return array
      */
-    private function getDefaultOptions($start = null, $end = null)
+    private function getDefaultOptions($start = null, $end = null): array
     {
         if (!$start) {
             $start = (int)date('Y');

@@ -24,7 +24,7 @@ abstract class DBString extends DBField
      *
      * {@inheritDoc}
      */
-    public function __construct($name = null, $options = [])
+    public function __construct(string|int $name = null, array $options = []): void
     {
         $this->options['nullifyEmpty'] = true;
         parent::__construct($name, $options);
@@ -42,7 +42,7 @@ abstract class DBString extends DBField
      *   </li></ul>
      * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): SilverStripe\ORM\FieldType\DBClassName
     {
         parent::setOptions($options);
 
@@ -75,7 +75,7 @@ abstract class DBString extends DBField
      *
      * @return boolean True if empty strings are to be converted to null
      */
-    public function getNullifyEmpty()
+    public function getNullifyEmpty(): bool
     {
         return !empty($this->options['nullifyEmpty']);
     }
@@ -84,14 +84,14 @@ abstract class DBString extends DBField
      * (non-PHPdoc)
      * @see DBField::exists()
      */
-    public function exists()
+    public function exists(): bool
     {
         $value = $this->RAW();
         // All truthy values and non-empty strings exist ('0' but not (int)0)
         return $value || (is_string($value) && strlen($value ?? ''));
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(string|float|int|bool|array $value): string|null
     {
         // Cast non-empty value
         if (is_scalar($value) && strlen($value ?? '')) {
@@ -108,7 +108,7 @@ abstract class DBString extends DBField
     /**
      * @return string
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return nl2br(parent::forTemplate() ?? '');
     }
@@ -122,7 +122,7 @@ abstract class DBString extends DBField
      * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string
      */
-    public function LimitCharacters($limit = 20, $add = false)
+    public function LimitCharacters(int $limit = 20, string $add = false): string
     {
         $value = $this->Plain();
         if (mb_strlen($value ?? '') <= $limit) {
@@ -140,7 +140,7 @@ abstract class DBString extends DBField
      * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string Plain text value with limited characters
      */
-    public function LimitCharactersToClosestWord($limit = 20, $add = false)
+    public function LimitCharactersToClosestWord(int $limit = 20, string $add = false): string
     {
         // Safely convert to plain text
         $value = $this->Plain();
@@ -173,7 +173,7 @@ abstract class DBString extends DBField
      *
      * @return string
      */
-    public function LimitWordCount($numWords = 26, $add = false)
+    public function LimitWordCount(int $numWords = 26, string $add = false): string
     {
         $value = $this->Plain();
         $words = explode(' ', $value ?? '');
@@ -191,7 +191,7 @@ abstract class DBString extends DBField
      *
      * @return string Text with lowercase (HTML for some subclasses)
      */
-    public function LowerCase()
+    public function LowerCase(): string
     {
         return mb_strtolower($this->RAW() ?? '');
     }
@@ -201,7 +201,7 @@ abstract class DBString extends DBField
      *
      * @return string Text with uppercase (HTML for some subclasses)
      */
-    public function UpperCase()
+    public function UpperCase(): string
     {
         return mb_strtoupper($this->RAW() ?? '');
     }
@@ -211,7 +211,7 @@ abstract class DBString extends DBField
      *
      * @return string Plain text
      */
-    public function Plain()
+    public function Plain(): string
     {
         return trim($this->RAW() ?? '');
     }
@@ -222,7 +222,7 @@ abstract class DBString extends DBField
      * @param false|string $add
      * @return string
      */
-    private function addEllipsis(string $string, $add): string
+    private function addEllipsis(string $string, bool|string $add): string
     {
         if ($add === false) {
             $add = $this->defaultEllipsis();

@@ -17,7 +17,7 @@ class SSTemplateParseException extends Exception
      * @param string $message
      * @param SSTemplateParser $parser
      */
-    public function __construct($message, $parser)
+    public function __construct(string $message, SilverStripe\View\SSTemplateParser $parser): void
     {
         $prior = substr($parser->string ?? '', 0, $parser->pos);
 

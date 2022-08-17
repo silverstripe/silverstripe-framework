@@ -49,7 +49,7 @@ abstract class DBComposite extends DBField
      */
     protected $record = [];
 
-    public function __set($property, $value)
+    public function __set(string $property, string|float $value): void
     {
         // Prevent failover / extensions from hijacking composite field setters
         // by intentionally avoiding hasMethod()
@@ -60,7 +60,7 @@ abstract class DBComposite extends DBField
         parent::__set($property, $value);
     }
 
-    public function __get($property)
+    public function __get(string $property): null|string|float
     {
         // Prevent failover / extensions from hijacking composite field getters
         // by intentionally avoiding hasMethod()
@@ -75,7 +75,7 @@ abstract class DBComposite extends DBField
      *
      * @param array $manipulation
      */
-    public function writeToManipulation(&$manipulation)
+    public function writeToManipulation(array &$manipulation): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Write sub-manipulation
@@ -92,7 +92,7 @@ abstract class DBComposite extends DBField
      *
      * @param SQLSelect $query
      */
-    public function addToQuery(&$query)
+    public function addToQuery(SilverStripe\ORM\Queries\SQLSelect &$query): void
     {
         parent::addToQuery($query);
 
@@ -113,7 +113,7 @@ abstract class DBComposite extends DBField
      *
      * @return array
      */
-    public function compositeDatabaseFields()
+    public function compositeDatabaseFields(): array
     {
         return $this->config()->composite_db;
     }
@@ -123,7 +123,7 @@ abstract class DBComposite extends DBField
      * Returns true if this composite field has changed.
      * For fields bound to a DataObject, this will be cleared when the DataObject is written.
      */
-    public function isChanged()
+    public function isChanged(): bool
     {
         // When unbound, use the local changed flag
         if (!$this->record instanceof DataObject) {
@@ -157,7 +157,7 @@ abstract class DBComposite extends DBField
         return true;
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             $key = $this->getName() . $field;
@@ -177,7 +177,7 @@ abstract class DBComposite extends DBField
      * @param bool $markChanged
      * @return $this
      */
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(array|SilverStripe\ORM\FieldType\DBMoney $value, SilverStripe\Assets\Image $record = null, bool $markChanged = true): SilverStripe\Assets\Storage\DBFile
     {
         $this->isChanged = $markChanged;
 
@@ -211,12 +211,12 @@ abstract class DBComposite extends DBField
      *
      * @param DataObject $dataObject
      */
-    public function bindTo($dataObject)
+    public function bindTo(SilverStripe\Assets\Image $dataObject): void
     {
         $this->record = $dataObject;
     }
 
-    public function saveInto($dataObject)
+    public function saveInto(SilverStripe\ORM\Tests\DBMoneyTest\TestObject $dataObject): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Save into record
@@ -231,7 +231,7 @@ abstract class DBComposite extends DBField
      * @param string $field
      * @return mixed
      */
-    public function getField($field)
+    public function getField(string $field): null|string|float|int
     {
         // Skip invalid fields
         $fields = $this->compositeDatabaseFields();
@@ -252,7 +252,7 @@ abstract class DBComposite extends DBField
         return null;
     }
 
-    public function hasField($field)
+    public function hasField(string $field): bool
     {
         $fields = $this->compositeDatabaseFields();
         return isset($fields[$field]);
@@ -266,7 +266,7 @@ abstract class DBComposite extends DBField
      * @param bool $markChanged
      * @return $this
      */
-    public function setField($field, $value, $markChanged = true)
+    public function setField(string $field, string|float|int $value, bool $markChanged = true): SilverStripe\Assets\Storage\DBFile
     {
         $this->objCacheClear();
 
@@ -300,7 +300,7 @@ abstract class DBComposite extends DBField
      * @param string $field Field name
      * @return DBField|null
      */
-    public function dbObject($field)
+    public function dbObject(string $field): SilverStripe\ORM\FieldType\DBVarchar
     {
         $fields = $this->compositeDatabaseFields();
         if (!isset($fields[$field])) {
@@ -316,7 +316,7 @@ abstract class DBComposite extends DBField
         return $fieldObject;
     }
 
-    public function castingHelper($field)
+    public function castingHelper(string $field): string
     {
         $fields = $this->compositeDatabaseFields();
         if (isset($fields[$field])) {
@@ -326,7 +326,7 @@ abstract class DBComposite extends DBField
         return parent::castingHelper($field);
     }
 
-    public function getIndexSpecs()
+    public function getIndexSpecs(): void|array
     {
         if ($type = $this->getIndexType()) {
             $columns = array_map(function ($name) {
@@ -340,7 +340,7 @@ abstract class DBComposite extends DBField
         }
     }
 
-    public function scalarValueOnly()
+    public function scalarValueOnly(): bool
     {
         return false;
     }

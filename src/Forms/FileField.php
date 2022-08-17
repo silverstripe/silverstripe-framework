@@ -67,7 +67,7 @@ class FileField extends FormField implements FileHandleField
      * @param string $title The field label.
      * @param int $value The value of the field.
      */
-    public function __construct($name, $title = null, $value = null)
+    public function __construct(string $name, bool|string $title = null, $value = null): void
     {
         $this->constructUploadReceiver();
         parent::__construct($name, $title, $value);
@@ -77,7 +77,7 @@ class FileField extends FormField implements FileHandleField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $properties = array_merge($properties, [
             'MaxFileSize' => $this->getValidator()->getAllowedMaxFileSize()
@@ -86,7 +86,7 @@ class FileField extends FormField implements FileHandleField
         return parent::Field($properties);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = parent::getAttributes();
 
@@ -103,7 +103,7 @@ class FileField extends FormField implements FileHandleField
      *
      * @return array
      */
-    protected function getAcceptFileTypes()
+    protected function getAcceptFileTypes(): array
     {
         $extensions = $this->getValidator()->getAllowedExtensions();
         if (!$extensions) {
@@ -170,12 +170,12 @@ class FileField extends FormField implements FileHandleField
         }
     }
 
-    public function Value()
+    public function Value(): null
     {
         return isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
     }
 
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         // FileField with the name multi_file_syntax[] or multi_file_syntax[key] will have the brackets trimmed in
         // $_FILES super-global so it will be stored as $_FILES['mutli_file_syntax']
@@ -214,7 +214,7 @@ class FileField extends FormField implements FileHandleField
      * @param array $fileData
      * @return bool
      */
-    private function validateFileData($validator, array $fileData): bool
+    private function validateFileData(SilverStripe\Forms\RequiredFields $validator, array $fileData): bool
     {
         $valid = $this->upload->validate($fileData);
         if (!$valid) {

@@ -33,7 +33,7 @@ class Url implements Rule, Bypass
      * @param string[]|string|null $httpMethods to match against
      * @param string[]|null $params a list of GET parameters
      */
-    public function __construct($path, $httpMethods = null, $params = null)
+    public function __construct(string $path, array|string $httpMethods = null, array $params = null): void
     {
         $this->setPath($path);
         $this->setParams($params);
@@ -53,7 +53,7 @@ class Url implements Rule, Bypass
      *
      * @return $this
      */
-    public function addHttpMethods(...$methods)
+    public function addHttpMethods(...$methods): SilverStripe\Control\Middleware\ConfirmationMiddleware\Url
     {
         $this->httpMethods->addMethods(...$methods);
         return $this;
@@ -64,7 +64,7 @@ class Url implements Rule, Bypass
      *
      * @return string[]
      */
-    public function getHttpMethods()
+    public function getHttpMethods(): array
     {
         return $this->httpMethods->getMethods();
     }
@@ -84,18 +84,18 @@ class Url implements Rule, Bypass
      *
      * @return $this
      */
-    public function setParams($params = null)
+    public function setParams(array $params = null): SilverStripe\Control\Middleware\ConfirmationMiddleware\Url
     {
         $this->params = $params;
         return $this;
     }
 
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return $this->checkRequest($request);
     }
 
-    public function getRequestConfirmationItem(HTTPRequest $request)
+    public function getRequestConfirmationItem(HTTPRequest $request): null|SilverStripe\Security\Confirmation\Item
     {
         if (!$this->checkRequest($request)) {
             return null;
@@ -114,7 +114,7 @@ class Url implements Rule, Bypass
      *
      * @return bool
      */
-    public function checkRequest(HTTPRequest $request)
+    public function checkRequest(HTTPRequest $request): bool
     {
         $httpMethods = $this->getHttpMethods();
 
@@ -161,7 +161,7 @@ class Url implements Rule, Bypass
      *
      * @return bool
      */
-    protected function checkPath($path)
+    protected function checkPath(string $path): bool
     {
         return $this->getPath() === $this->normalisePath($path);
     }
@@ -174,7 +174,7 @@ class Url implements Rule, Bypass
      *
      * @return Confirmation\Item
      */
-    protected function buildConfirmationItem($token, $url)
+    protected function buildConfirmationItem(string $token, string $url): SilverStripe\Security\Confirmation\Item
     {
         return new Confirmation\Item(
             $token,
@@ -191,7 +191,7 @@ class Url implements Rule, Bypass
      *
      * @return string
      */
-    protected function generateToken($httpMethod, $path)
+    protected function generateToken(string $httpMethod, string $path): string
     {
         return sprintf('%s::%s|%s', static::class, $httpMethod, $path);
     }

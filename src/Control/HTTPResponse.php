@@ -134,7 +134,7 @@ class HTTPResponse
      *  See {@link setStatusCode()} for more information.
      * @param string $protocolVersion
      */
-    public function __construct($body = null, $statusCode = null, $statusDescription = null, $protocolVersion = null)
+    public function __construct(string|SilverStripe\ORM\FieldType\DBHTMLText $body = null, int $statusCode = null, string $statusDescription = null, $protocolVersion = null): void
     {
         $this->setBody($body);
         if ($statusCode) {
@@ -157,7 +157,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function setProtocolVersion($protocolVersion)
+    public function setProtocolVersion(string $protocolVersion): SilverStripe\Control\HTTPResponse
     {
         $this->protocolVersion = $protocolVersion;
         return $this;
@@ -172,7 +172,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function setStatusCode($code, $description = null)
+    public function setStatusCode(int $code, string $description = null): SilverStripe\Control\HTTPResponse
     {
         if (isset(self::$status_codes[$code])) {
             $this->statusCode = $code;
@@ -196,7 +196,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function setStatusDescription($description)
+    public function setStatusDescription(string $description): SilverStripe\Control\HTTPResponse
     {
         $this->statusDescription = $description;
         return $this;
@@ -213,7 +213,7 @@ class HTTPResponse
     /**
      * @return int
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -221,7 +221,7 @@ class HTTPResponse
     /**
      * @return string Description for a HTTP status code
      */
-    public function getStatusDescription()
+    public function getStatusDescription(): string
     {
         return str_replace(["\r", "\n"], '', $this->statusDescription ?? '');
     }
@@ -231,7 +231,7 @@ class HTTPResponse
      *
      * @return bool
      */
-    public function isError()
+    public function isError(): bool
     {
         $statusCode = $this->getStatusCode();
         return $statusCode && ($statusCode < 200 || $statusCode > 399);
@@ -242,7 +242,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function setBody($body)
+    public function setBody(SilverStripe\ORM\FieldType\DBHTMLText|string $body): SilverStripe\Control\HTTPResponse
     {
         $this->body = $body ? (string)$body : $body; // Don't type-cast false-ish values, eg null is null not ''
         return $this;
@@ -251,7 +251,7 @@ class HTTPResponse
     /**
      * @return string
      */
-    public function getBody()
+    public function getBody(): string|null
     {
         return $this->body;
     }
@@ -264,7 +264,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function addHeader($header, $value)
+    public function addHeader(string $header, string|bool|int $value): SilverStripe\Control\HTTPResponse
     {
         $header = strtolower($header ?? '');
         $this->headers[$header] = $value;
@@ -278,7 +278,7 @@ class HTTPResponse
      *
      * @return string
      */
-    public function getHeader($header)
+    public function getHeader(string $header): null|string|int
     {
         $header = strtolower($header ?? '');
         if (isset($this->headers[$header])) {
@@ -290,7 +290,7 @@ class HTTPResponse
     /**
      * @return array
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
@@ -303,7 +303,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function removeHeader($header)
+    public function removeHeader(string $header): SilverStripe\Control\HTTPResponse
     {
         $header = strtolower($header ?? '');
         unset($this->headers[$header]);
@@ -316,7 +316,7 @@ class HTTPResponse
      *
      * @return $this
      */
-    public function redirect($dest, $code = 302)
+    public function redirect(string $dest, int $code = 302): SilverStripe\Control\HTTPResponse
     {
         if (!in_array($code, self::$redirect_codes)) {
             trigger_error("Invalid HTTP redirect code {$code}", E_USER_WARNING);
@@ -330,7 +330,7 @@ class HTTPResponse
     /**
      * Send this HTTPResponse to the browser
      */
-    public function output()
+    public function output(): void
     {
         // Attach appropriate X-Include-JavaScript and X-Include-CSS headers
         if (Director::is_ajax()) {
@@ -371,7 +371,7 @@ EOT
     /**
      * Output HTTP headers to the browser
      */
-    protected function outputHeaders()
+    protected function outputHeaders(): void
     {
         $headersSent = headers_sent($file, $line);
         if (!$headersSent) {
@@ -402,7 +402,7 @@ EOT
     /**
      * Output body of this response to the browser
      */
-    protected function outputBody()
+    protected function outputBody(): void
     {
         // Only show error pages or generic "friendly" errors if the status code signifies
         // an error, and the response doesn't have any body yet that might contain
@@ -426,7 +426,7 @@ EOT
      *
      * @return bool
      */
-    public function isFinished()
+    public function isFinished(): bool
     {
         return $this->isRedirect() || $this->isError();
     }
@@ -436,7 +436,7 @@ EOT
      *
      * @return bool
      */
-    public function isRedirect()
+    public function isRedirect(): bool
     {
         return in_array($this->getStatusCode(), self::$redirect_codes);
     }

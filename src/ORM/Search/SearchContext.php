@@ -95,7 +95,7 @@ class SearchContext
      *                      {@link DataObject::scaffoldSearchFields()} if left blank.
      * @param array $filters Optional. Derived from modelclass if left blank
      */
-    public function __construct($modelClass, $fields = null, $filters = null)
+    public function __construct(string $modelClass, SilverStripe\Forms\FieldList $fields = null, array $filters = null): void
     {
         $this->modelClass = $modelClass;
         $this->fields = ($fields) ? $fields : new FieldList();
@@ -107,7 +107,7 @@ class SearchContext
      *
      * @return FieldList
      */
-    public function getSearchFields()
+    public function getSearchFields(): SilverStripe\Forms\FieldList
     {
         return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
         // $this->fields is causing weirdness, so we ignore for now, using the default scaffolding
@@ -146,7 +146,7 @@ class SearchContext
      * @return DataList
      * @throws Exception
      */
-    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
+    public function getQuery(array $searchParams, bool|array $sort = false, bool|array $limit = false, SilverStripe\ORM\DataList $existingQuery = null): SilverStripe\ORM\DataList
     {
         if ($this->connective != "AND") {
             throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
@@ -221,7 +221,7 @@ class SearchContext
      * @return DataList
      * @throws Exception
      */
-    public function getResults($searchParams, $sort = false, $limit = false)
+    public function getResults(array $searchParams, $sort = false, $limit = false): SilverStripe\ORM\DataList
     {
         $searchParams = array_filter((array)$searchParams, [$this, 'clearEmptySearchFields']);
 
@@ -236,7 +236,7 @@ class SearchContext
      * @param mixed $value
      * @return boolean
      */
-    public function clearEmptySearchFields($value)
+    public function clearEmptySearchFields(string|array $value): bool
     {
         return ($value != '');
     }
@@ -247,7 +247,7 @@ class SearchContext
      * @param string $name
      * @return SearchFilter
      */
-    public function getFilter($name)
+    public function getFilter(string $name): null|SilverStripe\ORM\Filters\PartialMatchFilter
     {
         if (isset($this->filters[$name])) {
             return $this->filters[$name];
@@ -261,7 +261,7 @@ class SearchContext
      *
      * @return SearchFilter[]
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters;
     }
@@ -271,7 +271,7 @@ class SearchContext
      *
      * @param array $filters
      */
-    public function setFilters($filters)
+    public function setFilters($filters): void
     {
         $this->filters = $filters;
     }
@@ -281,7 +281,7 @@ class SearchContext
      *
      * @param SearchFilter $filter
      */
-    public function addFilter($filter)
+    public function addFilter(SilverStripe\ORM\Filters\FulltextFilter $filter): void
     {
         $this->filters[$filter->getFullName()] = $filter;
     }
@@ -301,7 +301,7 @@ class SearchContext
      *
      * @return FieldList
      */
-    public function getFields()
+    public function getFields(): SilverStripe\Forms\FieldList
     {
         return $this->fields;
     }
@@ -321,7 +321,7 @@ class SearchContext
      *
      * @param FormField $field
      */
-    public function addField($field)
+    public function addField(SilverStripe\Forms\TextField $field): void
     {
         $this->fields->push($field);
     }
@@ -342,7 +342,7 @@ class SearchContext
      * @param array|HTTPRequest $searchParams
      * @return $this
      */
-    public function setSearchParams($searchParams)
+    public function setSearchParams(array $searchParams): SilverStripe\ORM\Search\SearchContext
     {
         // hack to work with $searchParams when it's an Object
         if ($searchParams instanceof HTTPRequest) {
@@ -356,7 +356,7 @@ class SearchContext
     /**
      * @return array
      */
-    public function getSearchParams()
+    public function getSearchParams(): array
     {
         return $this->searchParams;
     }
@@ -368,7 +368,7 @@ class SearchContext
      *
      * @return ArrayList
      */
-    public function getSummary()
+    public function getSummary(): SilverStripe\ORM\ArrayList
     {
         $list = ArrayList::create();
         foreach ($this->searchParams as $searchField => $searchValue) {

@@ -41,13 +41,13 @@ class PjaxResponseNegotiator
      * @param array $callbacks
      * @param HTTPResponse $response An existing response to reuse (optional)
      */
-    public function __construct($callbacks = [], $response = null)
+    public function __construct(array $callbacks = [], SilverStripe\Control\HTTPResponse $response = null): void
     {
         $this->callbacks = $callbacks;
         $this->response = $response;
     }
 
-    public function getResponse()
+    public function getResponse(): SilverStripe\Control\HTTPResponse
     {
         if (!$this->response) {
             $this->response = new HTTPResponse();
@@ -71,7 +71,7 @@ class PjaxResponseNegotiator
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function respond(HTTPRequest $request, $extraCallbacks = [])
+    public function respond(HTTPRequest $request, array $extraCallbacks = []): SilverStripe\Control\HTTPResponse
     {
         // Prepare the default options and combine with the others
         $callbacks = array_merge($this->callbacks, $extraCallbacks);
@@ -112,7 +112,7 @@ class PjaxResponseNegotiator
      * @param string   $fragment
      * @param Callable $callback
      */
-    public function setCallback($fragment, $callback)
+    public function setCallback(string $fragment, callable $callback): void
     {
         $this->callbacks[$fragment] = $callback;
     }
@@ -123,7 +123,7 @@ class PjaxResponseNegotiator
      * @param array $fragments Fragments to insert.
      * @return $this
      */
-    public function setFragmentOverride($fragments)
+    public function setFragmentOverride(array $fragments): SilverStripe\Control\PjaxResponseNegotiator
     {
         if (!is_array($fragments)) {
             throw new InvalidArgumentException("fragments must be an array");

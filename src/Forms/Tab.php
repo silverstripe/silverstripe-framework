@@ -48,7 +48,7 @@ class Tab extends CompositeField
      * from the {@link $name} parameter.
      * @param FormField ...$fields All following parameters are inserted as children to this tab
      */
-    public function __construct($name, $titleOrField = null, $fields = null)
+    public function __construct(string $name, string|SilverStripe\Forms\TextField $titleOrField = null, SilverStripe\CMS\Forms\SiteTreeURLSegmentField $fields = null): void
     {
         if (!is_string($name)) {
             throw new InvalidArgumentException('Invalid string parameter for $name');
@@ -75,7 +75,7 @@ class Tab extends CompositeField
         $this->setID(Convert::raw2htmlid($name));
     }
 
-    public function ID()
+    public function ID(): string
     {
         if ($this->tabSet) {
             return $this->tabSet->ID() . '_' . $this->id;
@@ -90,7 +90,7 @@ class Tab extends CompositeField
      * @param string $id
      * @return $this
      */
-    public function setID($id)
+    public function setID(string $id): SilverStripe\Forms\Tab
     {
         $this->id = $id;
         return $this;
@@ -101,7 +101,7 @@ class Tab extends CompositeField
      *
      * @return FieldList
      */
-    public function Fields()
+    public function Fields(): SilverStripe\Forms\FieldList
     {
         return $this->children;
     }
@@ -112,7 +112,7 @@ class Tab extends CompositeField
      * @param TabSet $val
      * @return $this
      */
-    public function setTabSet($val)
+    public function setTabSet(SilverStripe\Forms\TabSet $val): SilverStripe\Forms\Tab
     {
         $this->tabSet = $val;
         return $this;
@@ -128,14 +128,14 @@ class Tab extends CompositeField
         return $this->tabSet;
     }
 
-    public function extraClass()
+    public function extraClass(): string
     {
         $classes = (array)$this->extraClasses;
 
         return implode(' ', $classes);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = array_merge(
             $this->attributes,

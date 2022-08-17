@@ -51,7 +51,7 @@ class CookieJar implements Cookie_Backend
      * @param array $cookies The existing cookies to load into the cookie jar.
      * Omit this to default to $_COOKIE
      */
-    public function __construct($cookies = [])
+    public function __construct(array $cookies = []): void
     {
         $this->current = $this->existing = func_num_args()
             ? ($cookies ?: []) // Convert empty values to blank arrays
@@ -69,7 +69,7 @@ class CookieJar implements Cookie_Backend
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
      */
-    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public function set(string $name, string|bool|int $value, int|float $expiry = 90, string $path = null, string $domain = null, bool $secure = false, bool $httpOnly = true): void
     {
         //are we setting or clearing a cookie? false values are reserved for clearing cookies (see PHP manual)
         $clear = false;
@@ -105,7 +105,7 @@ class CookieJar implements Cookie_Backend
      *
      * @return string|null The cookie value or null if unset
      */
-    public function get($name, $includeUnsent = true)
+    public function get(string $name, bool $includeUnsent = true): null|string|int
     {
         $cookies = $includeUnsent ? $this->current : $this->existing;
         if (isset($cookies[$name])) {
@@ -126,7 +126,7 @@ class CookieJar implements Cookie_Backend
      * @param boolean $includeUnsent Include cookies we've yet to send
      * @return array All the cookies
      */
-    public function getAll($includeUnsent = true)
+    public function getAll(bool $includeUnsent = true): array
     {
         return $includeUnsent ? $this->current : $this->existing;
     }
@@ -140,7 +140,7 @@ class CookieJar implements Cookie_Backend
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
      */
-    public function forceExpiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public function forceExpiry(string $name, string $path = null, $domain = null, bool $secure = false, bool $httpOnly = true): void
     {
         $this->set($name, false, -1, $path, $domain, $secure, $httpOnly);
     }
@@ -160,14 +160,14 @@ class CookieJar implements Cookie_Backend
      * @return boolean If the cookie was set or not; doesn't mean it's accepted by the browser
      */
     protected function outputCookie(
-        $name,
+        string $name,
         $value,
         $expiry = 90,
         $path = null,
         $domain = null,
         $secure = false,
         $httpOnly = true
-    ) {
+    ): bool {
         // if headers aren't sent, we can set the cookie
         if (!headers_sent($file, $line)) {
             return setcookie($name ?? '', $value ?? '', $expiry ?? 0, $path ?? '', $domain ?? '', $secure ?? false, $httpOnly ?? false);

@@ -32,7 +32,7 @@ class PasswordField extends TextField
      * @param null|string $title
      * @param string $value
      */
-    public function __construct($name, $title = null, $value = '')
+    public function __construct(string $name, string $title = null, string $value = ''): void
     {
         if (count(func_get_args()) > 3) {
             Deprecation::notice(
@@ -49,7 +49,7 @@ class PasswordField extends TextField
      * @param bool $bool
      * @return $this
      */
-    public function setAllowValuePostback($bool)
+    public function setAllowValuePostback(bool $bool): SilverStripe\Forms\PasswordField
     {
         $this->allowValuePostback = (bool) $bool;
 
@@ -59,7 +59,7 @@ class PasswordField extends TextField
     /**
      * @return bool
      */
-    public function getAllowValuePostback()
+    public function getAllowValuePostback(): bool
     {
         return $this->allowValuePostback;
     }
@@ -67,7 +67,7 @@ class PasswordField extends TextField
     /**
      * {@inheritdoc}
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = [];
 
@@ -106,7 +106,7 @@ class PasswordField extends TextField
     /**
      * {@inheritdoc}
      */
-    public function Type()
+    public function Type(): string
     {
         return 'text password';
     }

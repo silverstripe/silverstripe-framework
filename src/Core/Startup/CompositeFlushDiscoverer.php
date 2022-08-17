@@ -9,7 +9,7 @@ namespace SilverStripe\Core\Startup;
  */
 class CompositeFlushDiscoverer extends \ArrayIterator implements FlushDiscoverer
 {
-    public function shouldFlush()
+    public function shouldFlush(): bool|nothing
     {
         foreach ($this as $discoverer) {
             $flush = $discoverer->shouldFlush();

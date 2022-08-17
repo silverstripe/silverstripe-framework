@@ -69,7 +69,7 @@ class HTMLEditorField extends TextareaField
      *
      * @return HTMLEditorConfig
      */
-    public function getEditorConfig()
+    public function getEditorConfig(): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         // Instance override
         if ($this->editorConfig instanceof HTMLEditorConfig) {
@@ -101,7 +101,7 @@ class HTMLEditorField extends TextareaField
      * @param mixed $value The value of the field.
      * @param string $config HTMLEditorConfig identifier to be used. Default to the active one.
      */
-    public function __construct($name, $title = null, $value = '', $config = null)
+    public function __construct(string $name, string|bool $title = null, string $value = '', $config = null): void
     {
         parent::__construct($name, $title, $value);
 
@@ -112,7 +112,7 @@ class HTMLEditorField extends TextareaField
         $this->setRows(HTMLEditorField::config()->default_rows);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         // Fix CSS height based on rows
         $rowHeight = $this->config()->get('fixed_row_height');
@@ -134,7 +134,7 @@ class HTMLEditorField extends TextareaField
      * @param DataObject|DataObjectInterface $record
      * @throws Exception
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         if ($record->hasField($this->name) && $record->escapeTypeForField($this->name) != 'xml') {
             throw new Exception(
@@ -156,7 +156,7 @@ class HTMLEditorField extends TextareaField
         $record->{$this->name} = $htmlValue->getContent();
     }
 
-    public function setValue($value, $data = null)
+    public function setValue(string $value, array|DNADesign\Elemental\Models\ElementContent $data = null): SilverStripe\Forms\HTMLEditor\HTMLEditorField
     {
         // Regenerate links prior to preview, so that the editor can see them.
         $value = ImageShortcodeProvider::regenerate_html_links($value);
@@ -166,24 +166,24 @@ class HTMLEditorField extends TextareaField
     /**
      * @return HTMLEditorField_Readonly
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly
     {
         return $this->castedCopy(HTMLEditorField_Readonly::class);
     }
 
-    public function performDisabledTransformation()
+    public function performDisabledTransformation(): SilverStripe\Forms\HTMLEditor\HTMLEditorField_Readonly
     {
         return $this->performReadonlyTransformation();
     }
 
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Include requirements
         $this->getEditorConfig()->init();
         return parent::Field($properties);
     }
 
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $stateDefaults = parent::getSchemaStateDefaults();
         $config = $this->getEditorConfig();

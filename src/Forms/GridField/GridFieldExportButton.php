@@ -53,7 +53,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
      */
-    public function __construct($targetFragment = "after", $exportColumns = null)
+    public function __construct(string $targetFragment = "after", $exportColumns = null): void
     {
         $this->targetFragment = $targetFragment;
         $this->exportColumns = $exportColumns;
@@ -66,7 +66,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $button = new GridField_FormAction(
             $gridField,
@@ -89,7 +89,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['export'];
     }
@@ -109,7 +109,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return array
      */
-    public function getURLHandlers($gridField)
+    public function getURLHandlers(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [
             'export' => 'handleExport',
@@ -142,7 +142,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return array
      */
-    protected function getExportColumnsForGridField(GridField $gridField)
+    protected function getExportColumnsForGridField(GridField $gridField): array
     {
         if ($this->exportColumns) {
             return $this->exportColumns;
@@ -164,7 +164,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return string
      */
-    public function generateExportFileData($gridField)
+    public function generateExportFileData(SilverStripe\Forms\GridField\GridField $gridField): string
     {
         $csvColumns = $this->getExportColumnsForGridField($gridField);
 
@@ -275,7 +275,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return array
      */
-    public function getExportColumns()
+    public function getExportColumns(): array
     {
         return $this->exportColumns;
     }
@@ -285,7 +285,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return $this
      */
-    public function setExportColumns($cols)
+    public function setExportColumns(array $cols): SilverStripe\Forms\GridField\GridFieldExportButton
     {
         $this->exportColumns = $cols;
         return $this;
@@ -294,7 +294,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return string
      */
-    public function getCsvSeparator()
+    public function getCsvSeparator(): string
     {
         return $this->csvSeparator;
     }
@@ -313,7 +313,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return string
      */
-    public function getCsvEnclosure()
+    public function getCsvEnclosure(): string
     {
         return $this->csvEnclosure;
     }
@@ -332,7 +332,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return boolean
      */
-    public function getCsvHasHeader()
+    public function getCsvHasHeader(): bool
     {
         return $this->csvHasHeader;
     }
@@ -342,7 +342,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      *
      * @return $this
      */
-    public function setCsvHasHeader($bool)
+    public function setCsvHasHeader(bool $bool): SilverStripe\Forms\GridField\GridFieldExportButton
     {
         $this->csvHasHeader = $bool;
         return $this;

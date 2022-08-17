@@ -12,7 +12,7 @@ use SilverStripe\Core\Flushable;
  */
 class FlushMiddleware implements HTTPMiddleware
 {
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         if (Director::isManifestFlushed()) {
             // Disable cache when flushing

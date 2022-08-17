@@ -15,7 +15,7 @@ class GroupedList extends ListDecorator
      * @param  string $index
      * @return array
      */
-    public function groupBy($index)
+    public function groupBy(string $index): array
     {
         $result = [];
 
@@ -42,7 +42,7 @@ class GroupedList extends ListDecorator
      * @param  string $children Name of the control under which children can be iterated on
      * @return ArrayList
      */
-    public function GroupedBy($index, $children = 'Children')
+    public function GroupedBy(string $index, $children = 'Children'): SilverStripe\ORM\ArrayList
     {
         $grouped = $this->groupBy($index);
         $result  = new ArrayList();

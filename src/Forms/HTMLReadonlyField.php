@@ -22,7 +22,7 @@ class HTMLReadonlyField extends ReadonlyField
      */
     protected $schemaComponent = 'HtmlReadonlyField';
 
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         return $this->renderWith($this->getTemplates());
     }
@@ -32,7 +32,7 @@ class HTMLReadonlyField extends ReadonlyField
      *
      * @return string Raw HTML
      */
-    public function ValueEntities()
+    public function ValueEntities(): string
     {
         return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8');
     }

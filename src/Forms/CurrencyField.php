@@ -22,7 +22,7 @@ class CurrencyField extends TextField
      * @param mixed $data
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string|float $value, $data = null): SilverStripe\Forms\CurrencyField
     {
         if (!$value) {
             $value = 0.00;
@@ -35,7 +35,7 @@ class CurrencyField extends TextField
      * Overwrite the datavalue before saving to the db ;-)
      * return 0.00 if no value, or value is non-numeric
      */
-    public function dataValue()
+    public function dataValue(): string|float
     {
         if ($this->value) {
             return preg_replace('/[^0-9.\-]/', '', $this->value ?? '');
@@ -43,7 +43,7 @@ class CurrencyField extends TextField
         return 0.00;
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'currency text';
     }
@@ -51,12 +51,12 @@ class CurrencyField extends TextField
     /**
      * Create a new class for this field
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\CurrencyField_Readonly
     {
         return $this->castedCopy(CurrencyField_Readonly::class);
     }
 
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         $currencySymbol = preg_quote(DBCurrency::config()->uninherited('currency_symbol') ?? '');
         $regex = '/^\s*(\-?' . $currencySymbol . '?|' . $currencySymbol . '\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
@@ -71,7 +71,7 @@ class CurrencyField extends TextField
         return true;
     }
 
-    public function getSchemaValidation()
+    public function getSchemaValidation(): array
     {
         $rules = parent::getSchemaValidation();
         $rules['currency'] = true;

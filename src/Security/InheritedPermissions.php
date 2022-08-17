@@ -97,7 +97,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param string $baseClass Base class
      * @param CacheInterface $cache
      */
-    public function __construct($baseClass, CacheInterface $cache = null)
+    public function __construct(string $baseClass, CacheInterface $cache = null): SilverStripe\Security\InheritedPermissions
     {
         if (!is_a($baseClass, DataObject::class, true)) {
             throw new InvalidArgumentException('Invalid DataObject class: ' . $baseClass);
@@ -112,7 +112,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     /**
      * Commits the cache
      */
-    public function __destruct()
+    public function __destruct(): void
     {
         // Ensure back-end cache is updated
         if (!empty($this->cachePermissions) && $this->cacheService) {
@@ -129,7 +129,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      *
      * @param array $memberIDs A list of member IDs
      */
-    public function flushMemberCache($memberIDs = null)
+    public function flushMemberCache(array|string $memberIDs = null): void
     {
         if (!$this->cacheService) {
             return;
@@ -154,7 +154,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param DefaultPermissionChecker $callback
      * @return $this
      */
-    public function setDefaultPermissions(DefaultPermissionChecker $callback)
+    public function setDefaultPermissions(DefaultPermissionChecker $callback): SilverStripe\Security\InheritedPermissions
     {
         $this->defaultPermissions = $callback;
         return $this;
@@ -166,7 +166,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param array $permissions
      * @return $this
      */
-    public function setGlobalEditPermissions($permissions)
+    public function setGlobalEditPermissions(array $permissions): SilverStripe\Security\InheritedPermissions
     {
         $this->globalEditPermissions = $permissions;
         return $this;
@@ -175,7 +175,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     /**
      * @return array
      */
-    public function getGlobalEditPermissions()
+    public function getGlobalEditPermissions(): array
     {
         return $this->globalEditPermissions;
     }
@@ -185,7 +185,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      *
      * @return DefaultPermissionChecker|null
      */
-    public function getDefaultPermissions()
+    public function getDefaultPermissions(): null|SilverStripe\SiteConfig\SiteConfigPagePermissions
     {
         return $this->defaultPermissions;
     }
@@ -195,7 +195,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      *
      * @return string
      */
-    public function getBaseClass()
+    public function getBaseClass(): string
     {
         return $this->baseClass;
     }
@@ -206,7 +206,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param string $permission
      * @param array $ids
      */
-    public function prePopulatePermissionCache($permission = 'edit', $ids = [])
+    public function prePopulatePermissionCache(string $permission = 'edit', array $ids = []): void
     {
         switch ($permission) {
             case self::EDIT:
@@ -241,12 +241,12 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * ID keys to boolean values
      */
     protected function batchPermissionCheck(
-        $type,
+        string $type,
         $ids,
         Member $member = null,
         $globalPermission = [],
         $useCached = true
-    ) {
+    ): array {
         // Validate ids
         $ids = array_filter($ids ?? [], 'is_numeric');
         if (empty($ids)) {
@@ -343,12 +343,12 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @return array
      */
     protected function batchPermissionCheckForStage(
-        $type,
+        string $type,
         $globalPermission,
         DataList $stageRecords,
         $groupIDsSQLList,
         Member $member = null
-    ) {
+    ): array {
         // Initialise all IDs to false
         $result = array_fill_keys($stageRecords->column('ID') ?? [], false);
 
@@ -440,7 +440,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param bool $useCached
      * @return array
      */
-    public function canEditMultiple($ids, Member $member = null, $useCached = true)
+    public function canEditMultiple(array $ids, Member $member = null, bool $useCached = true): array
     {
         return $this->batchPermissionCheck(
             self::EDIT,
@@ -457,7 +457,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param bool $useCached
      * @return array
      */
-    public function canViewMultiple($ids, Member $member = null, $useCached = true)
+    public function canViewMultiple(array $ids, Member $member = null, $useCached = true): array
     {
         return $this->batchPermissionCheck(self::VIEW, $ids, $member, [], $useCached);
     }
@@ -468,7 +468,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param bool $useCached
      * @return array
      */
-    public function canDeleteMultiple($ids, Member $member = null, $useCached = true)
+    public function canDeleteMultiple(array $ids, Member $member = null, $useCached = true): array
     {
         // Validate ids
         $ids = array_filter($ids ?? [], 'is_numeric');
@@ -542,7 +542,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member|null $member
      * @return bool|mixed
      */
-    public function canDelete($id, Member $member = null)
+    public function canDelete(int $id, Member $member = null): bool
     {
         // No ID: Check default permission
         if (!$id) {
@@ -564,7 +564,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member|null $member
      * @return bool|mixed
      */
-    public function canEdit($id, Member $member = null)
+    public function canEdit(int $id, Member $member = null): bool
     {
         // No ID: Check default permission
         if (!$id) {
@@ -586,7 +586,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member|null $member
      * @return bool|mixed
      */
-    public function canView($id, Member $member = null)
+    public function canView(int $id, Member $member = null): bool
     {
         // No ID: Check default permission
         if (!$id) {
@@ -610,7 +610,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param string $type
      * @return string
      */
-    protected function getPermissionField($type)
+    protected function getPermissionField(string $type): string
     {
         switch ($type) {
             case self::DELETE:
@@ -631,7 +631,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param string $type
      * @return string
      */
-    protected function getJoinTable($type)
+    protected function getJoinTable(string $type): string
     {
         switch ($type) {
             case self::DELETE:
@@ -652,7 +652,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member $member
      * @return bool
      */
-    protected function checkDefaultPermissions($type, Member $member = null)
+    protected function checkDefaultPermissions(string $type, Member $member = null): bool
     {
         $defaultPermissions = $this->getDefaultPermissions();
         if (!$defaultPermissions) {
@@ -675,7 +675,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      *
      * @return bool
      */
-    protected function isVersioned()
+    protected function isVersioned(): bool
     {
         if (!class_exists(Versioned::class)) {
             return false;
@@ -688,7 +688,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     /**
      * @return $this
      */
-    public function clearCache()
+    public function clearCache(): SilverStripe\Security\InheritedPermissions
     {
         $this->cachePermissions = [];
         return $this;
@@ -699,7 +699,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      *
      * @return string
      */
-    protected function getEditorGroupsTable()
+    protected function getEditorGroupsTable(): string
     {
         $table = DataObject::getSchema()->tableName($this->baseClass);
         return "{$table}_EditorGroups";
@@ -710,7 +710,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      *
      * @return string
      */
-    protected function getViewerGroupsTable()
+    protected function getViewerGroupsTable(): string
     {
         $table = DataObject::getSchema()->tableName($this->baseClass);
         return "{$table}_ViewerGroups";
@@ -722,7 +722,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param string $cacheKey
      * @return mixed
      */
-    protected function getCachePermissions($cacheKey)
+    protected function getCachePermissions(string $cacheKey): null|array
     {
         // Check local cache
         if (isset($this->cachePermissions[$cacheKey])) {
@@ -750,7 +750,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param int $memberID
      * @return string
      */
-    protected function generateCacheKey($type, $memberID)
+    protected function generateCacheKey(string $type, int $memberID): string
     {
         $classKey = str_replace('\\', '-', $this->baseClass ?? '');
         return "{$type}-{$classKey}-{$memberID}";

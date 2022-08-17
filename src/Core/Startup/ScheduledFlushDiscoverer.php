@@ -17,7 +17,7 @@ class ScheduledFlushDiscoverer implements FlushDiscoverer
      */
     protected $kernel;
 
-    public function __construct(Kernel $kernel)
+    public function __construct(Kernel $kernel): void
     {
         $this->kernel = $kernel;
     }
@@ -28,7 +28,7 @@ class ScheduledFlushDiscoverer implements FlushDiscoverer
      *
      * @return bool unix timestamp
      */
-    protected function getFlush()
+    protected function getFlush(): bool
     {
         $classLoader = $this->kernel->getClassLoader();
         $classManifest = $classLoader->getManifest();
@@ -55,7 +55,7 @@ class ScheduledFlushDiscoverer implements FlushDiscoverer
         return false;
     }
 
-    public function shouldFlush()
+    public function shouldFlush(): null
     {
         if ($this->getFlush()) {
             return true;

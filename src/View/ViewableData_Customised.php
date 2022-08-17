@@ -16,7 +16,7 @@ class ViewableData_Customised extends ViewableData
      * @param ViewableData $originalObject
      * @param ViewableData $customisedObject
      */
-    public function __construct(ViewableData $originalObject, ViewableData $customisedObject)
+    public function __construct(ViewableData $originalObject, ViewableData $customisedObject): void
     {
         $this->original = $originalObject;
         $this->customised = $customisedObject;
@@ -26,7 +26,7 @@ class ViewableData_Customised extends ViewableData
         parent::__construct();
     }
 
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments): SilverStripe\View\SSViewer|string
     {
         if ($this->customised->hasMethod($method)) {
             return call_user_func_array([$this->customised, $method], $arguments ?? []);
@@ -35,7 +35,7 @@ class ViewableData_Customised extends ViewableData
         return call_user_func_array([$this->original, $method], $arguments ?? []);
     }
 
-    public function __get($property)
+    public function __get(string $property): string
     {
         if (isset($this->customised->$property)) {
             return $this->customised->$property;
@@ -49,12 +49,12 @@ class ViewableData_Customised extends ViewableData
         $this->customised->$property = $this->original->$property = $value;
     }
 
-    public function __isset($property)
+    public function __isset(string $property): bool
     {
         return isset($this->customised->$property) || isset($this->original->$property) || parent::__isset($property);
     }
 
-    public function hasMethod($method)
+    public function hasMethod(string $method): bool
     {
         return $this->customised->hasMethod($method) || $this->original->hasMethod($method);
     }
@@ -67,7 +67,7 @@ class ViewableData_Customised extends ViewableData
         return $this->original->cachedCall($field, $arguments, $identifier);
     }
 
-    public function obj($fieldName, $arguments = null, $cache = false, $cacheName = null)
+    public function obj(string $fieldName, array $arguments = null, bool $cache = false, $cacheName = null): SilverStripe\ORM\ArrayList
     {
         if ($this->customised->hasField($fieldName) || $this->customised->hasMethod($fieldName)) {
             return $this->customised->obj($fieldName, $arguments, $cache, $cacheName);

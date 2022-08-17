@@ -29,7 +29,7 @@ class ToggleCompositeField extends CompositeField
      * @param string $title
      * @param array|FieldList $children
      */
-    public function __construct($name, $title, $children)
+    public function __construct(string $name, string $title, array|SilverStripe\Forms\FieldList $children): void
     {
         parent::__construct($children);
         $this->setName($name);
@@ -42,7 +42,7 @@ class ToggleCompositeField extends CompositeField
      * @param array $properties
      * @return string
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $context = $this;
 
@@ -58,7 +58,7 @@ class ToggleCompositeField extends CompositeField
      *
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = [
             'id' => $this->ID(),
@@ -80,7 +80,7 @@ class ToggleCompositeField extends CompositeField
     /**
      * @return bool
      */
-    public function getStartClosed()
+    public function getStartClosed(): bool
     {
         return $this->startClosed;
     }
@@ -102,7 +102,7 @@ class ToggleCompositeField extends CompositeField
     /**
      * @return int
      */
-    public function getHeadingLevel()
+    public function getHeadingLevel(): int
     {
         return $this->headingLevel;
     }
@@ -112,7 +112,7 @@ class ToggleCompositeField extends CompositeField
      *
      * @return $this
      */
-    public function setHeadingLevel($headingLevel)
+    public function setHeadingLevel(int $headingLevel): SilverStripe\Forms\ToggleCompositeField
     {
         $this->headingLevel = (int) $headingLevel;
 

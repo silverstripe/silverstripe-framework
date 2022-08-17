@@ -16,7 +16,7 @@ class NullSecurityToken extends SecurityToken
      * @param string $compare
      * @return bool
      */
-    public function check($compare)
+    public function check(string $compare): bool
     {
         return true;
     }
@@ -25,7 +25,7 @@ class NullSecurityToken extends SecurityToken
      * @param HTTPRequest $request
      * @return Boolean
      */
-    public function checkRequest($request)
+    public function checkRequest(SilverStripe\Control\HTTPRequest $request): bool
     {
         return true;
     }
@@ -34,7 +34,7 @@ class NullSecurityToken extends SecurityToken
      * @param FieldList $fieldset
      * @return false
      */
-    public function updateFieldSet(&$fieldset)
+    public function updateFieldSet(SilverStripe\Forms\FieldList &$fieldset): bool
     {
         // Remove, in case it was added beforehand
         $fieldset->removeByName($this->getName());
@@ -46,7 +46,7 @@ class NullSecurityToken extends SecurityToken
      * @param string $url
      * @return string
      */
-    public function addToUrl($url)
+    public function addToUrl(string $url): string
     {
         return $url;
     }
@@ -54,7 +54,7 @@ class NullSecurityToken extends SecurityToken
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): null
     {
         return null;
     }

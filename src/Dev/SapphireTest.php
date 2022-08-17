@@ -253,7 +253,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          *
          * @param bool $bool
          */
-        protected static function set_is_running_test($bool)
+        protected static function set_is_running_test(bool $bool)
         {
             self::$is_running_test = $bool;
         }
@@ -379,7 +379,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param $fixtureFiles
          * @return bool
          */
-        protected function shouldSetupDatabaseForCurrentTest($fixtureFiles)
+        protected function shouldSetupDatabaseForCurrentTest(array $fixtureFiles)
         {
             $databaseEnabledByDefault = $fixtureFiles || $this->usesDatabase;
 
@@ -505,7 +505,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $identifier The identifier string, as provided in your fixture file
          * @return int
          */
-        protected function idFromFixture($className, $identifier)
+        protected function idFromFixture(string $className, string $identifier)
         {
             /** @var FixtureTestState $state */
             $state = static::$state->getStateByName('fixtures');
@@ -529,7 +529,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $className The data class or table name, as specified in your fixture file
          * @return array A map of fixture-identifier => object-id
          */
-        protected function allFixtureIDs($className)
+        protected function allFixtureIDs(string $className)
         {
             /** @var FixtureTestState $state */
             $state = static::$state->getStateByName('fixtures');
@@ -544,7 +544,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          *
          * @return DataObject
          */
-        protected function objFromFixture($className, $identifier)
+        protected function objFromFixture(string $className, string $identifier)
         {
             /** @var FixtureTestState $state */
             $state = static::$state->getStateByName('fixtures');
@@ -672,7 +672,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
          *               'HtmlContent'
          */
-        public static function findEmail($to, $from = null, $subject = null, $content = null)
+        public static function findEmail(string $to, string $from = null, string $subject = null, string $content = null)
         {
             /** @var Mailer $mailer */
             $mailer = Injector::inst()->get(Mailer::class);
@@ -691,7 +691,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $subject
          * @param string $content
          */
-        public static function assertEmailSent($to, $from = null, $subject = null, $content = null)
+        public static function assertEmailSent(string $to, string $from = null, string $subject = null, string $content = null)
         {
             $found = (bool)static::findEmail($to, $from, $subject, $content);
 
@@ -741,7 +741,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          *         ['Email' => 'i...@example.com'],
          *      ], $members);
          */
-        public static function assertListContains($matches, SS_List $list, $message = '')
+        public static function assertListContains(array $matches, SS_List $list, string $message = '')
         {
             if (!is_array($matches)) {
                 throw self::createInvalidArgumentException(
@@ -765,7 +765,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
          *
          */
-        public function assertDOSContains($matches, $dataObjectSet)
+        public function assertDOSContains(array $matches, SilverStripe\ORM\ArrayList $dataObjectSet)
         {
             Deprecation::notice('5.0', 'Use assertListContains() instead');
             static::assertListContains($matches, $dataObjectSet);
@@ -791,7 +791,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          *          ['Email' => 'i...@example.com'],
          *      ], $members);
          */
-        public static function assertListNotContains($matches, SS_List $list, $message = '')
+        public static function assertListNotContains(array $matches, SS_List $list, string $message = '')
         {
             if (!is_array($matches)) {
                 throw self::createInvalidArgumentException(
@@ -843,7 +843,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param mixed $list The {@link SS_List} to test.
          * @param string $message
          */
-        public static function assertListEquals($matches, SS_List $list, $message = '')
+        public static function assertListEquals(array $matches, SS_List $list, string $message = '')
         {
             if (!is_array($matches)) {
                 throw self::createInvalidArgumentException(
@@ -867,7 +867,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
          *
          */
-        public function assertDOSEquals($matches, $dataObjectSet)
+        public function assertDOSEquals(array $matches, SilverStripe\ORM\ArrayList $dataObjectSet)
         {
             Deprecation::notice('5.0', 'Use assertListEquals() instead');
             static::assertListEquals($matches, $dataObjectSet);
@@ -887,7 +887,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param mixed $list The {@link SS_List} to test.
          * @param string $message
          */
-        public static function assertListAllMatch($match, SS_List $list, $message = '')
+        public static function assertListAllMatch(array $match, SS_List $list, string $message = '')
         {
             if (!is_array($match)) {
                 throw self::createInvalidArgumentException(
@@ -924,7 +924,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $sql
          * @return string The cleaned and normalised SQL string
          */
-        protected static function normaliseSQL($sql)
+        protected static function normaliseSQL(string $sql)
         {
             return trim(preg_replace('/\s+/m', ' ', $sql ?? '') ?? '');
         }
@@ -937,7 +937,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $message
          */
         public static function assertSQLEquals(
-            $expectedSQL,
+            string $expectedSQL,
             $actualSQL,
             $message = ''
         ) {
@@ -956,7 +956,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $message
          */
         public static function assertSQLContains(
-            $needleSQL,
+            string $needleSQL,
             $haystackSQL,
             $message = ''
         ) {
@@ -979,7 +979,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $message
          */
         public static function assertSQLNotContains(
-            $needleSQL,
+            string $needleSQL,
             $haystackSQL,
             $message = ''
         ) {
@@ -1064,7 +1064,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param bool $includeExtraDataObjects If true, the extraDataObjects tables will also be included
          * @param bool $forceCreate Force DB to be created if it doesn't exist
          */
-        public static function resetDBSchema($includeExtraDataObjects = false, $forceCreate = false)
+        public static function resetDBSchema(bool $includeExtraDataObjects = false, bool $forceCreate = false)
         {
             if (!static::$tempDB) {
                 return;
@@ -1088,7 +1088,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param callable $callback
          * @return mixed
          */
-        public function actWithPermission($permCode, $callback)
+        public function actWithPermission(string $permCode, callable $callback)
         {
             return Member::actAs($this->createMemberWithPermission($permCode), $callback);
         }
@@ -1099,7 +1099,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string|array $permCode
          * @return Member
          */
-        protected function createMemberWithPermission($permCode)
+        protected function createMemberWithPermission(string|array $permCode)
         {
             if (is_array($permCode)) {
                 $permArray = $permCode;
@@ -1156,7 +1156,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string|array $permCode Either a permission, or list of permissions
          * @return int Member ID
          */
-        public function logInWithPermission($permCode = 'ADMIN')
+        public function logInWithPermission(string|array $permCode = 'ADMIN')
         {
             $member = $this->createMemberWithPermission($permCode);
             $this->logInAs($member);
@@ -1168,7 +1168,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          *
          * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
          */
-        public function logInAs($member)
+        public function logInAs(SilverStripe\Security\Member|string|int $member)
         {
             if (is_numeric($member)) {
                 $member = DataObject::get_by_id(Member::class, $member);
@@ -1201,7 +1201,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param callable $callback
          * @throws Exception
          */
-        protected function useTestTheme($themeBaseDir, $theme, $callback)
+        protected function useTestTheme(string string $themeBaseDir, $theme, callable $callback)
         {
             Config::nest();
             if (strpos($themeBaseDir ?? '', BASE_PATH) === 0) {
@@ -1261,7 +1261,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $fixtureFilePath
          * @return string
          */
-        protected function resolveFixturePath($fixtureFilePath)
+        protected function resolveFixturePath(string $fixtureFilePath)
         {
             // support loading via composer name path.
             if (strpos($fixtureFilePath ?? '', ':') !== false) {
@@ -1804,8 +1804,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * Get the ID of an object from the fixture.
      *
-     * @param string $className The data class or table name, as specified in your fixture file.  Parent classes won't work
-     * @param string $identifier The identifier string, as provided in your fixture file
+     * @param string string $className The data class or table name, as specified in your fixture file.  Parent classes won't work
+     * @param string string $identifier The identifier string, as provided in your fixture file
      * @return int
      */
     protected function idFromFixture($className, $identifier)
@@ -2420,7 +2420,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * @param callable $callback
      * @return mixed
      */
-    public function actWithPermission($permCode, $callback)
+    public function actWithPermission(string|array $permCode, $callback)
     {
         return Member::actAs($this->createMemberWithPermission($permCode), $callback);
     }

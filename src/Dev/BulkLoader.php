@@ -129,7 +129,7 @@ abstract class BulkLoader extends ViewableData
      */
     public $deleteExistingRecords = false;
 
-    public function __construct($objectClass)
+    public function __construct(string $objectClass): void
     {
         $this->objectClass = $objectClass;
         parent::__construct();
@@ -141,7 +141,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @return BulkLoader_Result See {@link self::processAll()}
      */
-    public function load($filepath)
+    public function load(string $filepath): SilverStripe\Dev\BulkLoader_Result
     {
         Environment::increaseTimeLimitTo(3600);
         Environment::increaseMemoryLimitTo('512M');
@@ -221,7 +221,7 @@ abstract class BulkLoader extends ViewableData
      *
      * @return array
      **/
-    public function getImportSpec()
+    public function getImportSpec(): array
     {
         $singleton = DataObject::singleton($this->objectClass);
 
@@ -260,7 +260,7 @@ abstract class BulkLoader extends ViewableData
      * @param string $fieldName Name of the field as specified in the array-values for {@link self::$columnMap}.
      * @return boolean
      */
-    protected function isNullValue($val, $fieldName = null)
+    protected function isNullValue(string $val, $fieldName = null): bool
     {
         return (empty($val) && $val !== '0');
     }

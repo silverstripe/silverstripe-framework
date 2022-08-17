@@ -40,7 +40,7 @@ class Environment
      *
      * @return array List of all super globals
      */
-    public static function getVariables()
+    public static function getVariables(): array
     {
         // Suppress return by-ref
         $vars = [ 'env' => static::$env ];
@@ -57,7 +57,7 @@ class Environment
      *
      * @param array $vars
      */
-    public static function setVariables(array $vars)
+    public static function setVariables(array $vars): void
     {
         foreach ($vars as $varName => $varValue) {
             if ($varName === 'env') {
@@ -78,7 +78,7 @@ class Environment
      * @param string|float|int $memoryLimit A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
      * @return bool true indicates a successful change, false a denied change.
      */
-    public static function increaseMemoryLimitTo($memoryLimit = -1)
+    public static function increaseMemoryLimitTo(string|int $memoryLimit = -1): bool
     {
         $memoryLimit = Convert::memstring2bytes($memoryLimit);
         $curLimit = Convert::memstring2bytes(ini_get('memory_limit'));
@@ -111,7 +111,7 @@ class Environment
      *
      * @param string|float $memoryLimit Memory limit string or float value
      */
-    static function setMemoryLimitMax($memoryLimit)
+    static function setMemoryLimitMax(int|string $memoryLimit): void
     {
         if (isset($memoryLimit) && !is_numeric($memoryLimit)) {
             $memoryLimit = Convert::memstring2bytes($memoryLimit);
@@ -122,7 +122,7 @@ class Environment
     /**
      * @return int Memory limit in bytes
      */
-    public static function getMemoryLimitMax()
+    public static function getMemoryLimitMax(): int
     {
         if (static::$memoryLimitMax === null) {
             return Convert::memstring2bytes(ini_get('memory_limit'));
@@ -138,7 +138,7 @@ class Environment
      * @param int $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
      * @return Boolean TRUE indicates a successful change, FALSE a denied change.
      */
-    public static function increaseTimeLimitTo($timeLimit = null)
+    public static function increaseTimeLimitTo(int $timeLimit = null): bool
     {
         // Check vs max limit
         $max = static::getTimeLimitMax();
@@ -163,7 +163,7 @@ class Environment
      *
      * @param int $timeLimit Limit in seconds
      */
-    public static function setTimeLimitMax($timeLimit)
+    public static function setTimeLimitMax($timeLimit): void
     {
         static::$timeLimitMax = $timeLimit;
     }
@@ -171,7 +171,7 @@ class Environment
     /**
      * @return Int Limit in seconds
      */
-    public static function getTimeLimitMax()
+    public static function getTimeLimitMax(): null
     {
         return static::$timeLimitMax;
     }
@@ -182,7 +182,7 @@ class Environment
      * @param string $name
      * @return mixed Value of the environment variable, or false if not set
      */
-    public static function getEnv($name)
+    public static function getEnv(string $name): bool|string|int|null
     {
         switch (true) {
             case  is_array(static::$env) && array_key_exists($name, static::$env):
@@ -203,7 +203,7 @@ class Environment
      *
      * @param string $string Setting to assign in KEY=VALUE or KEY="VALUE" syntax
      */
-    public static function putEnv($string)
+    public static function putEnv(string $string): void
     {
         // Parse name-value pairs
         $envVars = parse_ini_string($string ?? '') ?: [];
@@ -218,7 +218,7 @@ class Environment
      * @param string $name
      * @param string $value
      */
-    public static function setEnv($name, $value)
+    public static function setEnv(string $name, string|bool|int $value): void
     {
         static::$env[$name] = $value;
     }
@@ -228,7 +228,7 @@ class Environment
      *
      * @return bool
      */
-    public static function isCli()
+    public static function isCli(): bool
     {
         return in_array(strtolower(php_sapi_name() ?? ''), ['cli', 'phpdbg']);
     }

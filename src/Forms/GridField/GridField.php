@@ -149,7 +149,7 @@ class GridField extends FormField
      * @param SS_List $dataList
      * @param GridFieldConfig $config
      */
-    public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null)
+    public function __construct(string $name, string|bool $title = null, SS_List $dataList = null, GridFieldConfig $config = null): void
     {
         parent::__construct($name, $title, null);
 
@@ -176,7 +176,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    public function index($request)
+    public function index(SilverStripe\Control\HTTPRequest $request): string|SilverStripe\Control\HTTPResponse
     {
         return $this->gridFieldAlterAction([], $this->getForm(), $request);
     }
@@ -192,7 +192,7 @@ class GridField extends FormField
      *
      * @return $this
      */
-    public function setModelClass($modelClassName)
+    public function setModelClass(string $modelClassName): SilverStripe\Forms\GridField\GridField
     {
         $this->modelClassName = $modelClassName;
 
@@ -206,7 +206,7 @@ class GridField extends FormField
      *
      * @throws LogicException
      */
-    public function getModelClass()
+    public function getModelClass(): string
     {
         if ($this->modelClassName) {
             return $this->modelClassName;
@@ -232,7 +232,7 @@ class GridField extends FormField
      *
      * @param array $components an array map of component class references to whitelist for a readonly version.
      */
-    public function setReadonlyComponents(array $components)
+    public function setReadonlyComponents(array $components): void
     {
         $this->readonlyComponents = $components;
     }
@@ -242,7 +242,7 @@ class GridField extends FormField
      *
      * @return array a map of component classes.
      */
-    public function getReadonlyComponents()
+    public function getReadonlyComponents(): array
     {
         return $this->readonlyComponents;
     }
@@ -252,7 +252,7 @@ class GridField extends FormField
      *
      * @return GridField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\GridField\GridField
     {
         $copy = clone $this;
         $copy->setReadonly(true);
@@ -293,7 +293,7 @@ class GridField extends FormField
     /**
      * @return GridFieldConfig
      */
-    public function getConfig()
+    public function getConfig(): DNADesign\Elemental\Forms\ElementalAreaConfig
     {
         return $this->config;
     }
@@ -303,7 +303,7 @@ class GridField extends FormField
      *
      * @return $this
      */
-    public function setConfig(GridFieldConfig $config)
+    public function setConfig(GridFieldConfig $config): SilverStripe\Forms\GridField\GridField
     {
         $this->config = $config;
 
@@ -319,7 +319,7 @@ class GridField extends FormField
      *
      * @return $this
      */
-    public function setReadonly($readonly)
+    public function setReadonly(bool $readonly): SilverStripe\Forms\GridField\GridField
     {
         parent::setReadonly($readonly);
         $this->getState()->Readonly = $readonly;
@@ -329,7 +329,7 @@ class GridField extends FormField
     /**
      * @return ArrayList
      */
-    public function getComponents()
+    public function getComponents(): SilverStripe\ORM\ArrayList
     {
         return $this->config->getComponents();
     }
@@ -344,7 +344,7 @@ class GridField extends FormField
      *
      * @return mixed
      */
-    public function getCastedValue($value, $castingDefinition)
+    public function getCastedValue(string $value, string|array $castingDefinition): null|string
     {
         $castingParams = [];
 
@@ -375,7 +375,7 @@ class GridField extends FormField
      *
      * @return $this
      */
-    public function setList(SS_List $list)
+    public function setList(SS_List $list): SilverStripe\Forms\GridField\GridField
     {
         $this->list = $list;
 
@@ -387,7 +387,7 @@ class GridField extends FormField
      *
      * @return SS_List
      */
-    public function getList()
+    public function getList(): null|SilverStripe\ORM\DataList
     {
         return $this->list;
     }
@@ -397,7 +397,7 @@ class GridField extends FormField
      *
      * @return SS_List
      */
-    public function getManipulatedList()
+    public function getManipulatedList(): SilverStripe\ORM\DataList
     {
         $list = $this->getList();
 
@@ -417,7 +417,7 @@ class GridField extends FormField
      *
      * @return GridState_Data|GridState
      */
-    public function getState($getData = true)
+    public function getState(bool $getData = true): SilverStripe\Forms\GridField\GridState_Data
     {
         // Initialise state on first call. This ensures it's evaluated after components have been added
         if (!$this->state) {
@@ -450,7 +450,7 @@ class GridField extends FormField
      * @param array $properties
      * @return string
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): string
     {
         $this->extend('onBeforeRenderHolder', $this, $properties);
 
@@ -697,7 +697,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    protected function newCell($total, $index, $record, $attributes, $content)
+    protected function newCell(int $total, int $index, DNADesign\Elemental\Tests\Src\TestElement $record, array $attributes, string $content): string
     {
         return HTML::createTag(
             'td',
@@ -715,7 +715,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    protected function newRow($total, $index, $record, $attributes, $content)
+    protected function newRow(int $total, int $index, DNADesign\Elemental\Tests\Src\TestElement $record, array $attributes, string $content): string
     {
         return HTML::createTag(
             'tr',
@@ -731,7 +731,7 @@ class GridField extends FormField
      *
      * @return array
      */
-    protected function getRowAttributes($total, $index, $record)
+    protected function getRowAttributes(int $total, int $index, DNADesign\Elemental\Tests\Src\TestElement $record): array
     {
         $rowClasses = $this->newRowClasses($total, $index, $record);
 
@@ -749,7 +749,7 @@ class GridField extends FormField
      *
      * @return array
      */
-    protected function newRowClasses($total, $index, $record)
+    protected function newRowClasses(int $total, int $index, DNADesign\Elemental\Tests\Src\TestElement $record): array
     {
         $classes = ['ss-gridfield-item'];
 
@@ -785,7 +785,7 @@ class GridField extends FormField
     /**
      * {@inheritdoc}
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return array_merge(
             parent::getAttributes(),
@@ -800,7 +800,7 @@ class GridField extends FormField
      *
      * @return array
      */
-    public function getColumns()
+    public function getColumns(): array
     {
         $columns = [];
 
@@ -823,7 +823,7 @@ class GridField extends FormField
      *
      * @throws InvalidArgumentException
      */
-    public function getColumnContent($record, $column)
+    public function getColumnContent(DNADesign\Elemental\Tests\Src\TestElement $record, string $column): string
     {
         if (!$this->columnDispatch) {
             $this->buildColumnDispatch();
@@ -854,7 +854,7 @@ class GridField extends FormField
      * @param array $fields a map of fieldname to callback. The callback will
      *                      be passed the record as an argument.
      */
-    public function addDataFields($fields)
+    public function addDataFields(array $fields): void
     {
         if ($this->customDataFields) {
             $this->customDataFields = array_merge($this->customDataFields, $fields);
@@ -874,7 +874,7 @@ class GridField extends FormField
      *
      * @return mixed
      */
-    public function getDataFieldValue($record, $fieldName)
+    public function getDataFieldValue(DNADesign\Elemental\Tests\Src\TestElement $record, string $fieldName): SilverStripe\ORM\FieldType\DBHTMLText|string|null|int|float
     {
         if (isset($this->customDataFields[$fieldName])) {
             $callback = $this->customDataFields[$fieldName];
@@ -904,7 +904,7 @@ class GridField extends FormField
      * @throws LogicException
      * @throws InvalidArgumentException
      */
-    public function getColumnAttributes($record, $column)
+    public function getColumnAttributes(DNADesign\Elemental\Tests\Src\TestElement $record, string $column): array
     {
         if (!$this->columnDispatch) {
             $this->buildColumnDispatch();
@@ -951,7 +951,7 @@ class GridField extends FormField
      * @throws LogicException
      * @throws InvalidArgumentException
      */
-    public function getColumnMetadata($column)
+    public function getColumnMetadata(string $column): array
     {
         if (!$this->columnDispatch) {
             $this->buildColumnDispatch();
@@ -991,7 +991,7 @@ class GridField extends FormField
      *
      * @return int
      */
-    public function getColumnCount()
+    public function getColumnCount(): int
     {
         if (!$this->columnDispatch) {
             $this->buildColumnDispatch();
@@ -1003,7 +1003,7 @@ class GridField extends FormField
     /**
      * Build an columnDispatch that maps a GridField_ColumnProvider to a column for reference later.
      */
-    protected function buildColumnDispatch()
+    protected function buildColumnDispatch(): void
     {
         $this->columnDispatch = [];
 
@@ -1027,7 +1027,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    public function gridFieldAlterAction($data, $form, HTTPRequest $request)
+    public function gridFieldAlterAction(array $data, SilverStripe\Forms\Form $form, HTTPRequest $request): string|SilverStripe\Control\HTTPResponse
     {
         $data = $request->requestVars();
 
@@ -1102,7 +1102,7 @@ class GridField extends FormField
      *
      * @throws InvalidArgumentException
      */
-    public function handleAlterAction($actionName, $arguments, $data)
+    public function handleAlterAction(string $actionName, array|string $arguments, array $data): null|string|SilverStripe\Control\HTTPResponse
     {
         $actionName = strtolower($actionName ?? '');
 
@@ -1132,7 +1132,7 @@ class GridField extends FormField
      * @return array|RequestHandler|HTTPResponse|string
      * @throws HTTPResponse_Exception
      */
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): string|SilverStripe\Control\HTTPResponse
     {
         if ($this->brokenOnConstruct) {
             user_error(
@@ -1231,7 +1231,7 @@ class GridField extends FormField
     /**
      * {@inheritdoc}
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         foreach ($this->getComponents() as $component) {
             if ($component instanceof GridField_SaveHandler) {
@@ -1245,7 +1245,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    protected function getOptionalTableHeader(array $content)
+    protected function getOptionalTableHeader(array $content): string
     {
         if ($content['header']) {
             return HTML::createTag(
@@ -1263,7 +1263,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    protected function getOptionalTableBody(array $content)
+    protected function getOptionalTableBody(array $content): string
     {
         if ($content['body']) {
             return HTML::createTag(
@@ -1281,7 +1281,7 @@ class GridField extends FormField
      *
      * @return string
      */
-    protected function getOptionalTableFooter($content)
+    protected function getOptionalTableFooter(array $content): string
     {
         if ($content['footer']) {
             return HTML::createTag(

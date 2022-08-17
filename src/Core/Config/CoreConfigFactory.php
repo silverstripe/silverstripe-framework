@@ -33,7 +33,7 @@ class CoreConfigFactory
      *
      * @param CacheFactory $cacheFactory
      */
-    public function __construct(CacheFactory $cacheFactory = null)
+    public function __construct(CacheFactory $cacheFactory = null): void
     {
         $this->cacheFactory = $cacheFactory;
     }
@@ -45,7 +45,7 @@ class CoreConfigFactory
      *
      * @return CachedConfigCollection
      */
-    public function createRoot()
+    public function createRoot(): SilverStripe\Config\Collections\CachedConfigCollection
     {
         $instance = new CachedConfigCollection();
 
@@ -75,7 +75,7 @@ class CoreConfigFactory
      *
      * @return MemoryConfigCollection
      */
-    public function createCore()
+    public function createCore(): SilverStripe\Config\Collections\MemoryConfigCollection
     {
         $config = new MemoryConfigCollection();
 
@@ -97,7 +97,7 @@ class CoreConfigFactory
     /**
      * @return YamlTransformer
      */
-    protected function buildYamlTransformer()
+    protected function buildYamlTransformer(): SilverStripe\Config\Transformer\YamlTransformer
     {
         // Get all module dirs
         $modules = ModuleLoader::inst()->getManifest()->getModules();
@@ -116,7 +116,7 @@ class CoreConfigFactory
     /**
      * @return PrivateStaticTransformer
      */
-    public function buildStaticTransformer()
+    public function buildStaticTransformer(): SilverStripe\Config\Transformer\PrivateStaticTransformer
     {
         return new PrivateStaticTransformer(function () {
             return ClassLoader::inst()
@@ -129,7 +129,7 @@ class CoreConfigFactory
      * @param array|string $dirs Base dir to load from
      * @return YamlTransformer
      */
-    public function buildYamlTransformerForPath($dirs)
+    public function buildYamlTransformerForPath(array|string $dirs): SilverStripe\Config\Transformer\YamlTransformer
     {
         // Construct
         $transformer = YamlTransformer::create(

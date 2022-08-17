@@ -36,7 +36,7 @@ class DefaultAdminService
      */
     protected static $default_password = null;
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -46,7 +46,7 @@ class DefaultAdminService
      * @param string $username
      * @param string $password
      */
-    public static function setDefaultAdmin($username, $password)
+    public static function setDefaultAdmin(string $username, string $password): void
     {
         // don't overwrite if already set
         if (static::hasDefaultAdmin()) {
@@ -68,7 +68,7 @@ class DefaultAdminService
      * @return string The default admin username
      * @throws BadMethodCallException Throws exception if there is no default admin
      */
-    public static function getDefaultAdminUsername()
+    public static function getDefaultAdminUsername(): string
     {
         if (!static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
@@ -82,7 +82,7 @@ class DefaultAdminService
      * @return string The default admin password
      * @throws BadMethodCallException Throws exception if there is no default admin
      */
-    public static function getDefaultAdminPassword()
+    public static function getDefaultAdminPassword(): string
     {
         if (!static::hasDefaultAdmin()) {
             throw new BadMethodCallException(
@@ -97,7 +97,7 @@ class DefaultAdminService
      *
      * @return bool
      */
-    public static function hasDefaultAdmin()
+    public static function hasDefaultAdmin(): bool
     {
         // Check environment if not explicitly set
         if (!isset(static::$has_default_admin)) {
@@ -110,7 +110,7 @@ class DefaultAdminService
     /**
      * Flush the default admin credentials.
      */
-    public static function clearDefaultAdmin()
+    public static function clearDefaultAdmin(): void
     {
         static::$has_default_admin = false;
         static::$default_username = null;
@@ -120,7 +120,7 @@ class DefaultAdminService
     /**
      * @return Member|null
      */
-    public function findOrCreateDefaultAdmin()
+    public function findOrCreateDefaultAdmin(): SilverStripe\Security\Member|null
     {
         $this->extend('beforeFindOrCreateDefaultAdmin');
 
@@ -148,7 +148,7 @@ class DefaultAdminService
      * @param string $name
      * @return Member
      */
-    public function findOrCreateAdmin($email, $name = null)
+    public function findOrCreateAdmin(string $email, string $name = null): SilverStripe\Security\Member
     {
         $this->extend('beforeFindOrCreateAdmin', $email, $name);
 
@@ -194,7 +194,7 @@ class DefaultAdminService
      *
      * @return Group
      */
-    protected function findOrCreateAdminGroup()
+    protected function findOrCreateAdminGroup(): SilverStripe\Security\Group
     {
         // Check pre-existing group
         $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
@@ -226,7 +226,7 @@ class DefaultAdminService
      * @param string $username
      * @return bool
      */
-    public static function isDefaultAdmin($username)
+    public static function isDefaultAdmin(string $username): bool
     {
         return static::hasDefaultAdmin()
             && $username
@@ -241,7 +241,7 @@ class DefaultAdminService
      * @param string $password
      * @return bool
      */
-    public static function isDefaultAdminCredentials($username, $password)
+    public static function isDefaultAdminCredentials(string $username, string $password): bool
     {
         return static::isDefaultAdmin($username)
             && $password

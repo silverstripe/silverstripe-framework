@@ -67,7 +67,7 @@ class GroupedDropdownField extends DropdownField
      * @param string|array $titleOrOptions Title of item, or options in grouip
      * @return ArrayData Data for this item
      */
-    protected function getFieldOption($valueOrGroup, $titleOrOptions)
+    protected function getFieldOption(string|int $valueOrGroup, string|array $titleOrOptions): SilverStripe\View\ArrayData
     {
         // Return flat option
         if (!is_array($titleOrOptions)) {
@@ -86,12 +86,12 @@ class GroupedDropdownField extends DropdownField
         ]);
     }
 
-    public function Type()
+    public function Type(): string
     {
         return 'groupeddropdown dropdown';
     }
 
-    public function getSourceValues()
+    public function getSourceValues(): array
     {
         // Flatten values
         $values = [];
@@ -109,7 +109,7 @@ class GroupedDropdownField extends DropdownField
     /**
      * @return SingleLookupField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\SingleLookupField
     {
         $field = parent::performReadonlyTransformation();
         $field->setSource(ArrayLib::flatten($this->getSource()));

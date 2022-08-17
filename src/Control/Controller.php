@@ -100,7 +100,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @uses BasicAuth::requireLogin()
      */
-    protected function init()
+    protected function init(): void
     {
         // @todo This will be removed in 5.0 and will be controlled by middleware instead
         if ($this->basicAuthEnabled) {
@@ -117,7 +117,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * This should be called on all controllers before handling requests
      */
-    public function doInit()
+    public function doInit(): void
     {
         //extension hook
         $this->extend('onBeforeInit');
@@ -142,7 +142,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * Also set the URLParams
      */
-    public function setRequest($request)
+    public function setRequest(SilverStripe\Control\NullHTTPRequest $request): SilverStripe\CMS\Controllers\CMSMain
     {
         $return = parent::setRequest($request);
         $this->setURLParams($this->getRequest()->allParams());
@@ -157,7 +157,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @param HTTPRequest $request
      */
-    protected function beforeHandleRequest(HTTPRequest $request)
+    protected function beforeHandleRequest(HTTPRequest $request): void
     {
         //Set up the internal dependencies (request, response)
         $this->setRequest($request);
@@ -171,7 +171,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * Cleanup for the handleRequest method
      */
-    protected function afterHandleRequest()
+    protected function afterHandleRequest(): void
     {
         //Pop the current controller from the stack
         $this->popCurrent();
@@ -196,7 +196,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return HTTPResponse
      */
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         if (!$request) {
             throw new \RuntimeException('Controller::handleRequest() not passed a request!');
@@ -228,7 +228,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @param HTTPResponse|Object $response
      */
-    protected function prepareResponse($response)
+    protected function prepareResponse(string|SilverStripe\ORM\FieldType\DBHTMLText $response): void
     {
         if (!is_object($response)) {
             $this->getResponse()->setBody($response);
@@ -271,7 +271,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return DBHTMLText|HTTPResponse
      */
-    protected function handleAction($request, $action)
+    protected function handleAction(SilverStripe\Control\HTTPRequest $request, string $action): null|string|SilverStripe\Dev\DevBuildController
     {
         foreach ($request->latestParams() as $k => $v) {
             if ($v || !isset($this->urlParams[$k])) {
@@ -313,7 +313,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * @param array $urlParams
      * @return $this
      */
-    public function setURLParams($urlParams)
+    public function setURLParams(array $urlParams): SilverStripe\CMS\Controllers\CMSMain
     {
         $this->urlParams = $urlParams;
         return $this;
@@ -324,7 +324,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return array
      */
-    public function getURLParams()
+    public function getURLParams(): array
     {
         return $this->urlParams;
     }
@@ -335,7 +335,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return HTTPResponse
      */
-    public function getResponse()
+    public function getResponse(): SilverStripe\Control\HTTPResponse
     {
         if (!$this->response) {
             $this->setResponse(new HTTPResponse());
@@ -350,7 +350,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return $this
      */
-    public function setResponse(HTTPResponse $response)
+    public function setResponse(HTTPResponse $response): SilverStripe\Dev\DevelopmentAdmin
     {
         $this->response = $response;
         return $this;
@@ -378,7 +378,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -390,7 +390,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return SSViewer
      */
-    public function getViewer($action)
+    public function getViewer(string $action): SilverStripe\View\SSViewer
     {
         // Hard-coded templates
         if (isset($this->templates[$action]) && $this->templates[$action]) {
@@ -426,7 +426,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public function hasAction($action)
+    public function hasAction(string $action): bool
     {
         return parent::hasAction($action) || $this->hasActionTemplate($action);
     }
@@ -462,7 +462,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return string
      */
-    protected function definingClassForAction($action)
+    protected function definingClassForAction(string $action): string|null
     {
         $definingClass = parent::definingClassForAction($action);
         if ($definingClass) {
@@ -490,7 +490,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public function hasActionTemplate($action)
+    public function hasActionTemplate(string $action): bool
     {
         if (isset($this->templates[$action])) {
             return true;
@@ -514,7 +514,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return string
      */
-    public function render($params = null)
+    public function render($params = null): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $template = $this->getViewer($this->getAction());
 
@@ -550,7 +550,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return Controller
      */
-    public static function curr()
+    public static function curr(): SilverStripe\ErrorPage\ErrorPageController
     {
         if (Controller::$controller_stack) {
             return Controller::$controller_stack[0];
@@ -565,7 +565,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function has_curr()
+    public static function has_curr(): bool
     {
         return Controller::$controller_stack ? true : false;
     }
@@ -579,7 +579,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public function can($perm, $member = null)
+    public function can(array|string $perm, SilverStripe\Security\Member $member = null): bool
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -603,7 +603,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Note: Ensure this controller is assigned a request with a valid session before pushing
      * it to the stack.
      */
-    public function pushCurrent()
+    public function pushCurrent(): void
     {
         // Ensure this controller has a valid session
         $this->getRequest()->getSession();
@@ -613,7 +613,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * Pop this controller off the top of the stack.
      */
-    public function popCurrent()
+    public function popCurrent(): void
     {
         if ($this === self::$controller_stack[0]) {
             array_shift(self::$controller_stack);
@@ -633,7 +633,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * @param int $code
      * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, int $code = 302): SilverStripe\Control\HTTPResponse
     {
         if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') != $url) {
             user_error("Already directed to " . $this->getResponse()->getHeader('Location')
@@ -651,7 +651,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * @return null|string
      */
-    public function redirectedTo()
+    public function redirectedTo(): bool
     {
         return $this->getResponse() && $this->getResponse()->getHeader('Location');
     }
@@ -666,7 +666,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * @param string|array $arg One or more link segments, or list of link segments as an array
      * @return string
      */
-    public static function join_links($arg = null)
+    public static function join_links(string|array $arg = null): string
     {
         if (func_num_args() === 1 && is_array($arg)) {
             $args = $arg;
@@ -712,7 +712,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * @return array
      */
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'CurrentPage' => 'curr',

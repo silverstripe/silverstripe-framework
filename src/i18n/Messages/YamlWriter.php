@@ -26,7 +26,7 @@ class YamlWriter implements Writer
     /**
      * @return Dumper
      */
-    protected function getDumper()
+    protected function getDumper(): Symfony\Component\Yaml\Dumper
     {
         if (!$this->dumper) {
             $this->dumper = new Dumper(2);
@@ -35,7 +35,7 @@ class YamlWriter implements Writer
     }
 
 
-    public function write($messages, $locale, $path)
+    public function write(array $messages, string $locale, string $path): void
     {
         // Skip empty entities
         if (empty($messages)) {
@@ -70,7 +70,7 @@ class YamlWriter implements Writer
      * @param array $messages
      * @return array
      */
-    protected function denormaliseMessages($messages)
+    protected function denormaliseMessages(array $messages): array
     {
         // Sort prior to denormalisation
         ksort($messages);
@@ -102,7 +102,7 @@ class YamlWriter implements Writer
      * @param array|string $value Input value
      * @return array|string denormalised value
      */
-    protected function denormaliseValue($value)
+    protected function denormaliseValue(string|array $value): string|array
     {
         // Check plural form
         $plurals = $this->getPluralForm($value);
@@ -130,7 +130,7 @@ class YamlWriter implements Writer
      * @param array|string $value
      * @return array List of plural forms, or empty array if not plural
      */
-    protected function getPluralForm($value)
+    protected function getPluralForm(string|array $value): array
     {
         // Strip non-plural keys away
         if (is_array($value)) {
@@ -151,7 +151,7 @@ class YamlWriter implements Writer
      * @param string $locale
      * @return string
      */
-    public function getYaml($messages, $locale)
+    public function getYaml(array $messages, string $locale): string
     {
         $entities = $this->denormaliseMessages($messages);
         $content = $this->getDumper()->dump([
@@ -166,7 +166,7 @@ class YamlWriter implements Writer
      * @param string $entity
      * @return array Two-length array with class and key as elements
      */
-    protected function getClassKey($entity)
+    protected function getClassKey(string $entity): array
     {
         $parts = explode('.', $entity ?? '');
         $class = array_shift($parts);

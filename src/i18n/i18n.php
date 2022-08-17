@@ -156,7 +156,7 @@ class i18n implements TemplateGlobalProvider
      *    injection parameter to pluralise.
      * @return string
      */
-    public static function _t($entity, $arg = null)
+    public static function _t(string $entity, string|array $arg = null): string
     {
         // Detect args
         $default = null;
@@ -236,7 +236,7 @@ class i18n implements TemplateGlobalProvider
      * @param string $string Input string
      * @return array List of plural forms, or empty array if not plural
      */
-    public static function parse_plurals($string)
+    public static function parse_plurals(string $string): array
     {
         if (strstr($string ?? '', '|') && strstr($string ?? '', '{count}')) {
             $keys = i18n::config()->uninherited('default_plurals');
@@ -255,7 +255,7 @@ class i18n implements TemplateGlobalProvider
      * @param array $plurals
      * @return string Delimited string, or null if not plurals
      */
-    public static function encode_plurals($plurals)
+    public static function encode_plurals(array $plurals): string
     {
         // Validate against global plural list
         $forms = i18n::config()->uninherited('plurals');
@@ -273,7 +273,7 @@ class i18n implements TemplateGlobalProvider
      * @param string $locale locale code
      * @return string Locale of closest available translation, if available
      */
-    public static function get_closest_translation($locale)
+    public static function get_closest_translation(string $locale): null|string
     {
         // Check if exact match
         $pool = self::getSources()->getKnownLocales();
@@ -301,7 +301,7 @@ class i18n implements TemplateGlobalProvider
      * @param string $locale
      * @return string
      */
-    public static function convert_rfc1766($locale)
+    public static function convert_rfc1766(string $locale): string
     {
         return str_replace('_', '-', $locale ?? '');
     }
@@ -317,7 +317,7 @@ class i18n implements TemplateGlobalProvider
      *                       http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html for a list
      *                       of possible locales.
      */
-    public static function set_locale($locale)
+    public static function set_locale(string $locale): void
     {
         if ($locale) {
             self::$current_locale = $locale;
@@ -331,7 +331,7 @@ class i18n implements TemplateGlobalProvider
      * @param callable $callback
      * @return mixed
      */
-    public static function with_locale($locale, $callback)
+    public static function with_locale(string $locale, callable $callback): string
     {
         $oldLocale = self::$current_locale;
         static::set_locale($locale);
@@ -348,7 +348,7 @@ class i18n implements TemplateGlobalProvider
      *
      * @return string Current locale in the system
      */
-    public static function get_locale()
+    public static function get_locale(): string
     {
         if (!self::$current_locale) {
             self::$current_locale = i18n::config()->uninherited('default_locale');
@@ -368,7 +368,7 @@ class i18n implements TemplateGlobalProvider
         return static::getData()->scriptDirection($locale);
     }
 
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'i18nLocale' => 'get_locale',
@@ -380,7 +380,7 @@ class i18n implements TemplateGlobalProvider
     /**
      * @return MessageProvider
      */
-    public static function getMessageProvider()
+    public static function getMessageProvider(): SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider
     {
         return Injector::inst()->get(MessageProvider::class);
     }
@@ -390,7 +390,7 @@ class i18n implements TemplateGlobalProvider
      *
      * @return Locales
      */
-    public static function getData()
+    public static function getData(): SilverStripe\i18n\Data\Intl\IntlLocales
     {
         return Injector::inst()->get(Locales::class);
     }
@@ -400,7 +400,7 @@ class i18n implements TemplateGlobalProvider
      *
      * @return Sources
      */
-    public static function getSources()
+    public static function getSources(): SilverStripe\i18n\Data\Sources
     {
         return Injector::inst()->get(Sources::class);
     }

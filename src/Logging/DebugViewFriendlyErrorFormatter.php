@@ -40,7 +40,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      *
      * @return int
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -51,7 +51,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * @param int $statusCode
      * @return $this
      */
-    public function setStatusCode($statusCode)
+    public function setStatusCode(int $statusCode): Mock_DebugViewFriendlyErrorFormatter_9dc3f595
     {
         $this->statusCode = $statusCode;
         return $this;
@@ -62,7 +62,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->friendlyErrorMessage;
     }
@@ -73,7 +73,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * @param string $title
      * @return $this
      */
-    public function setTitle($title)
+    public function setTitle(string $title): SilverStripe\Logging\DebugViewFriendlyErrorFormatter
     {
         $this->friendlyErrorMessage = $title;
         return $this;
@@ -84,7 +84,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      *
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->friendlyErrorDetail;
     }
@@ -95,20 +95,20 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * @param string $body
      * @return $this
      */
-    public function setBody($body)
+    public function setBody(string $body): SilverStripe\Logging\DebugViewFriendlyErrorFormatter
     {
         $this->friendlyErrorDetail = $body;
         return $this;
     }
 
-    public function format(array $record)
+    public function format(array $record): string
     {
         // Get error code
         $code = empty($record['code']) ? $this->getStatusCode() : $record['code'];
         return $this->output($code);
     }
 
-    public function formatBatch(array $records)
+    public function formatBatch(array $records): string
     {
         $message = '';
         foreach ($records as $record) {
@@ -123,7 +123,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      * @param int $statusCode
      * @return string Content in an appropriate format for the current request
      */
-    public function output($statusCode)
+    public function output(int $statusCode): string
     {
         // TODO: Refactor into a content-type option
         if (Director::is_ajax()) {
@@ -147,7 +147,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      *
      * @return string|null
      */
-    private function addContactAdministratorInfo()
+    private function addContactAdministratorInfo(): string
     {
         if (!$adminEmail = Email::config()->admin_email) {
             return null;

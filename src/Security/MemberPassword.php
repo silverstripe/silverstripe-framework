@@ -33,7 +33,7 @@ class MemberPassword extends DataObject
      *
      * @param Member $member
      */
-    public static function log($member)
+    public static function log(SilverStripe\Security\Member $member): void
     {
         $record = new MemberPassword();
         $record->MemberID = $member->ID;
@@ -50,7 +50,7 @@ class MemberPassword extends DataObject
      * @param string $password Cleartext password
      * @return bool
      */
-    public function checkPassword($password)
+    public function checkPassword(string $password): bool
     {
         $encryptor = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
         return $encryptor->check($this->Password ?? '', $password, $this->Salt, $this->Member());

@@ -113,7 +113,7 @@ class CSVParser implements Iterator
      * @param string $delimiter The character for separating columns
      * @param string $enclosure The character for quoting or enclosing columns
      */
-    public function __construct($filename, $delimiter = ",", $enclosure = '"')
+    public function __construct(string $filename, $delimiter = ",", $enclosure = '"'): void
     {
         Deprecation::notice('5.0', __CLASS__ . ' is deprecated, use ' . Reader::class . ' instead');
         $filename = Director::getAbsFile($filename);
@@ -136,7 +136,7 @@ class CSVParser implements Iterator
      *
      * @param array $columnMap
      */
-    public function mapColumns($columnMap)
+    public function mapColumns(array $columnMap): void
     {
         if ($columnMap) {
             $lowerColumnMap = [];
@@ -158,7 +158,7 @@ class CSVParser implements Iterator
      *
      * @param array $headerRow
      */
-    public function provideHeaderRow($headerRow)
+    public function provideHeaderRow(array $headerRow): void
     {
         $this->providedHeaderRow = $headerRow;
     }
@@ -166,7 +166,7 @@ class CSVParser implements Iterator
     /**
      * Open the CSV file for reading.
      */
-    protected function openFile()
+    protected function openFile(): void
     {
         $this->fileHandle = fopen($this->filename ?? '', 'r');
 
@@ -178,7 +178,7 @@ class CSVParser implements Iterator
     /**
      * Close the CSV file and re-set all of the internal variables.
      */
-    protected function closeFile()
+    protected function closeFile(): void
     {
         if ($this->fileHandle) {
             fclose($this->fileHandle);
@@ -194,7 +194,7 @@ class CSVParser implements Iterator
     /**
      * Get a header row from the CSV file.
      */
-    protected function fetchCSVHeader()
+    protected function fetchCSVHeader(): void
     {
         $srcRow = fgetcsv(
             $this->fileHandle,
@@ -213,7 +213,7 @@ class CSVParser implements Iterator
      *
      * @return array
      */
-    protected function remapHeader($header)
+    protected function remapHeader(array $header): array
     {
         $mappedHeader = [];
 
@@ -232,7 +232,7 @@ class CSVParser implements Iterator
      *
      * @return array
      */
-    protected function fetchCSVRow()
+    protected function fetchCSVRow(): array|null
     {
         if (!$this->fileHandle) {
             $this->openFile();
@@ -284,7 +284,7 @@ class CSVParser implements Iterator
     /**
      * @ignore
      */
-    public function __destruct()
+    public function __destruct(): void
     {
         $this->closeFile();
     }
@@ -295,7 +295,7 @@ class CSVParser implements Iterator
      * @ignore
      */
     #[\ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         $this->closeFile();
         $this->fetchCSVRow();
@@ -305,7 +305,7 @@ class CSVParser implements Iterator
      * @ignore
      */
     #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): array
     {
         return $this->currentRow;
     }
@@ -323,7 +323,7 @@ class CSVParser implements Iterator
      * @ignore
      */
     #[\ReturnTypeWillChange]
-    public function next()
+    public function next(): array|null
     {
         $this->fetchCSVRow();
 
@@ -334,7 +334,7 @@ class CSVParser implements Iterator
      * @ignore
      */
     #[\ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return $this->currentRow ? true : false;
     }

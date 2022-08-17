@@ -52,7 +52,7 @@ class LoginHandler extends RequestHandler
      * @param string $link The URL to recreate this request handler
      * @param MemberAuthenticator $authenticator The authenticator to use
      */
-    public function __construct($link, MemberAuthenticator $authenticator)
+    public function __construct(string $link, MemberAuthenticator $authenticator): void
     {
         $this->link = $link;
         $this->authenticator = $authenticator;
@@ -66,7 +66,7 @@ class LoginHandler extends RequestHandler
      * @param null|string $action
      * @return string
      */
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         $link = Controller::join_links($this->link, $action);
         $this->extend('updateLink', $link, $action);
@@ -78,7 +78,7 @@ class LoginHandler extends RequestHandler
      *
      * @return array
      */
-    public function login()
+    public function login(): array
     {
         return [
             'Form' => $this->loginForm(),
@@ -91,7 +91,7 @@ class LoginHandler extends RequestHandler
      * @skipUpgrade
      * @return MemberLoginForm
      */
-    public function loginForm()
+    public function loginForm(): SilverStripe\Security\MemberAuthenticator\MemberLoginForm
     {
         return MemberLoginForm::create(
             $this,
@@ -110,7 +110,7 @@ class LoginHandler extends RequestHandler
      * @param HTTPRequest $request
      * @return HTTPResponse
      */
-    public function doLogin($data, MemberLoginForm $form, HTTPRequest $request)
+    public function doLogin(array $data, MemberLoginForm $form, HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         $failureMessage = null;
 
@@ -152,7 +152,7 @@ class LoginHandler extends RequestHandler
         return $form->getRequestHandler()->redirectBackToForm();
     }
 
-    public function getReturnReferer()
+    public function getReturnReferer(): string
     {
         return $this->Link();
     }
@@ -171,7 +171,7 @@ class LoginHandler extends RequestHandler
      *
      * @return HTTPResponse
      */
-    protected function redirectAfterSuccessfulLogin()
+    protected function redirectAfterSuccessfulLogin(): SilverStripe\Control\HTTPResponse
     {
         $this
             ->getRequest()
@@ -220,7 +220,7 @@ class LoginHandler extends RequestHandler
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function checkLogin($data, HTTPRequest $request, ValidationResult &$result = null)
+    public function checkLogin(array $data, HTTPRequest $request, ValidationResult &$result = null): SilverStripe\Security\Member|null
     {
         $member = $this->authenticator->authenticate($data, $request, $result);
         if ($member instanceof Member) {
@@ -239,7 +239,7 @@ class LoginHandler extends RequestHandler
      * @return Member Returns the member object on successful authentication
      *                or NULL on failure.
      */
-    public function performLogin($member, $data, HTTPRequest $request)
+    public function performLogin(SilverStripe\Security\Member $member, array $data, HTTPRequest $request): SilverStripe\Security\Member
     {
         /** IdentityStore */
         $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled'));
@@ -256,7 +256,7 @@ class LoginHandler extends RequestHandler
      * @skipUpgrade
      * @return HTTPResponse
      */
-    protected function redirectToChangePassword()
+    protected function redirectToChangePassword(): SilverStripe\Control\HTTPResponse
     {
         $cp = ChangePasswordForm::create($this, 'ChangePasswordForm');
         $cp->sessionMessage(

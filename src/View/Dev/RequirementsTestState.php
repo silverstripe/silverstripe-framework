@@ -18,22 +18,22 @@ class RequirementsTestState implements TestState
      */
     protected $backend = null;
 
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         $this->backend = Requirements::backend();
         Requirements::set_backend(Requirements_Backend::create());
     }
 
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
         Requirements::set_backend($this->backend);
     }
 
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
     }
 
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
     }
 }

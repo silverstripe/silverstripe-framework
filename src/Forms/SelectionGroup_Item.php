@@ -20,7 +20,7 @@ class SelectionGroup_Item extends CompositeField
      * @param FormField|array $fields Contents of the option
      * @param string $title Title to show for the radio button option
      */
-    function __construct($value, $fields = null, $title = null)
+    function __construct(string $value, SilverStripe\Forms\TreeDropdownField $fields = null, string $title = null): void
     {
         $this->setValue($value);
         if ($fields && !is_array($fields)) {
@@ -32,23 +32,23 @@ class SelectionGroup_Item extends CompositeField
         $this->setTitle($title ?: $value);
     }
 
-    function getTitle()
+    function getTitle(): string
     {
         return $this->title;
     }
 
-    function setTitle($title)
+    function setTitle(string $title): SilverStripe\Forms\SelectionGroup_Item
     {
         $this->title = $title;
         return $this;
     }
 
-    function getValue()
+    function getValue(): string
     {
         return $this->value;
     }
 
-    function setValue($Value, $data = null)
+    function setValue(string $Value, $data = null): SilverStripe\Forms\SelectionGroup_Item
     {
         $this->value = $Value;
         return $this;

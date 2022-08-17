@@ -127,7 +127,7 @@ class PasswordValidator
     /**
      * @return int
      */
-    public function getMinLength()
+    public function getMinLength(): int|null
     {
         if ($this->minLength !== null) {
             return $this->minLength;
@@ -139,7 +139,7 @@ class PasswordValidator
      * @param int $minLength
      * @return $this
      */
-    public function setMinLength($minLength)
+    public function setMinLength(int $minLength): SilverStripe\Security\PasswordValidator
     {
         $this->minLength = $minLength;
         return $this;
@@ -148,7 +148,7 @@ class PasswordValidator
     /**
      * @return integer
      */
-    public function getMinTestScore()
+    public function getMinTestScore(): int
     {
         if ($this->minScore !== null) {
             return $this->minScore;
@@ -160,7 +160,7 @@ class PasswordValidator
      * @param int $minScore
      * @return $this
      */
-    public function setMinTestScore($minScore)
+    public function setMinTestScore(int $minScore): SilverStripe\Security\PasswordValidator
     {
         $this->minScore = $minScore;
         return $this;
@@ -171,7 +171,7 @@ class PasswordValidator
      *
      * @return string[]
      */
-    public function getTestNames()
+    public function getTestNames(): array
     {
         if ($this->testNames !== null) {
             return $this->testNames;
@@ -185,7 +185,7 @@ class PasswordValidator
      * @param string[] $testNames
      * @return $this
      */
-    public function setTestNames($testNames)
+    public function setTestNames(array $testNames): SilverStripe\Security\PasswordValidator
     {
         $this->testNames = $testNames;
         return $this;
@@ -194,7 +194,7 @@ class PasswordValidator
     /**
      * @return int
      */
-    public function getHistoricCount()
+    public function getHistoricCount(): int|null
     {
         if ($this->historicalPasswordCount !== null) {
             return $this->historicalPasswordCount;
@@ -206,7 +206,7 @@ class PasswordValidator
      * @param int $count
      * @return $this
      */
-    public function setHistoricCount($count)
+    public function setHistoricCount(int $count): SilverStripe\Security\PasswordValidator
     {
         $this->historicalPasswordCount = $count;
         return $this;
@@ -217,7 +217,7 @@ class PasswordValidator
      *
      * @return array
      */
-    public function getTests()
+    public function getTests(): array
     {
         return $this->config()->get('character_strength_tests');
     }
@@ -227,7 +227,7 @@ class PasswordValidator
      * @param Member $member
      * @return ValidationResult
      */
-    public function validate($password, $member)
+    public function validate(string $password, SilverStripe\Security\Member $member): SilverStripe\ORM\ValidationResult
     {
         $valid = ValidationResult::create();
 

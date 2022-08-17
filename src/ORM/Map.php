@@ -35,7 +35,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @param string $keyField The field to use as the key of each map entry
      * @param string $valueField The field to use as the value of each map entry
      */
-    public function __construct(SS_List $list, $keyField = "ID", $valueField = "Title")
+    public function __construct(SS_List $list, string $keyField = "ID", string $valueField = "Title"): void
     {
         $this->list = $list;
         $this->keyField = $keyField;
@@ -47,7 +47,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @var string $keyField
      */
-    public function setKeyField($keyField)
+    public function setKeyField(string $keyField): void
     {
         $this->keyField = $keyField;
     }
@@ -57,7 +57,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @var string $valueField
      */
-    public function setValueField($valueField)
+    public function setValueField(string $valueField): void
     {
         $this->valueField = $valueField;
     }
@@ -67,7 +67,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $array = [];
 
@@ -83,7 +83,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return array
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->toArray() ?? []);
     }
@@ -93,7 +93,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return array
      */
-    public function values()
+    public function values(): array
     {
         return array_values($this->toArray() ?? []);
     }
@@ -107,7 +107,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var mixed $value
      * @return $this
      */
-    public function unshift($key, $value)
+    public function unshift(string|int $key, string $value): SilverStripe\ORM\Map
     {
         $oldItems = $this->firstItems;
         $this->firstItems = [
@@ -128,7 +128,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var mixed $value
      * @return $this
      */
-    public function push($key, $value)
+    public function push(string|int $key, string $value): SilverStripe\ORM\Map
     {
         $oldItems = $this->lastItems;
 
@@ -172,7 +172,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet(string|int $key): string|null|int
     {
         if (isset($this->firstItems[$key])) {
             return $this->firstItems[$key];
@@ -230,7 +230,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @var mixed $value
      */
     #[\ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset(int $key): void
     {
         if (isset($this->firstItems[$key])) {
             unset($this->firstItems[$key]);
@@ -258,7 +258,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @return Map_Iterator
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): SilverStripe\ORM\Map_Iterator
     {
         return new Map_Iterator(
             $this->list->getIterator(),
@@ -276,7 +276,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * @return int
      */
     #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return $this->list->count() +
             count($this->firstItems ?? []) +

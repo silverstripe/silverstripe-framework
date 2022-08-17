@@ -193,7 +193,7 @@ class SSViewer implements Flushable
      *  </code>
      * @param TemplateParser $parser
      */
-    public function __construct($templates, TemplateParser $parser = null)
+    public function __construct(array|string $templates, TemplateParser $parser = null): void
     {
         if ($parser) {
             $this->setParser($parser);
@@ -219,7 +219,7 @@ class SSViewer implements Flushable
     /**
      * Triggered early in the request when someone requests a flush.
      */
-    public static function flush()
+    public static function flush(): void
     {
         self::flush_template_cache(true);
         self::flush_cacheblock_cache(true);
@@ -232,7 +232,7 @@ class SSViewer implements Flushable
      * @param bool|void $cacheTemplate Whether or not to cache the template from string
      * @return SSViewer
      */
-    public static function fromString($content, $cacheTemplate = null)
+    public static function fromString(string|SilverStripe\ORM\FieldType\DBHTMLText $content, bool $cacheTemplate = null): SilverStripe\View\SSViewer_FromString
     {
         $viewer = SSViewer_FromString::create($content);
         if ($cacheTemplate !== null) {
@@ -247,7 +247,7 @@ class SSViewer implements Flushable
      *
      * @param array $themes
      */
-    public static function set_themes($themes = [])
+    public static function set_themes(array $themes = []): void
     {
         static::$current_themes = $themes;
     }
@@ -257,7 +257,7 @@ class SSViewer implements Flushable
      *
      * @param array $themes
      */
-    public static function add_themes($themes = [])
+    public static function add_themes(array $themes = []): void
     {
         $currentThemes = SSViewer::get_themes();
         $finalThemes = array_merge($themes, $currentThemes);
@@ -270,7 +270,7 @@ class SSViewer implements Flushable
      *
      * @return array
      */
-    public static function get_themes()
+    public static function get_themes(): array
     {
         $default = [self::PUBLIC_THEME, self::DEFAULT_THEME];
 
@@ -316,7 +316,7 @@ class SSViewer implements Flushable
      * @param string $baseClass Class to halt ancestry search at
      * @return array
      */
-    public static function get_templates_by_class($classOrObject, $suffix = '', $baseClass = null)
+    public static function get_templates_by_class(string|SilverStripe\Forms\GridField\GridFieldButtonRow $classOrObject, string $suffix = '', string $baseClass = null): array
     {
         // Figure out the class name from the supplied context.
         if (!is_object($classOrObject) && !(
@@ -365,7 +365,7 @@ class SSViewer implements Flushable
      *
      * @return bool
      */
-    public function getRewriteHashLinks()
+    public function getRewriteHashLinks(): bool|string
     {
         if (isset($this->rewriteHashlinks)) {
             return $this->rewriteHashlinks;
@@ -390,7 +390,7 @@ class SSViewer implements Flushable
      *
      * @return bool
      */
-    public static function getRewriteHashLinksDefault()
+    public static function getRewriteHashLinksDefault(): bool|string
     {
         // Check if config overridden
         if (isset(static::$current_rewrite_hash_links)) {
@@ -404,7 +404,7 @@ class SSViewer implements Flushable
      *
      * @param bool $rewrite
      */
-    public static function setRewriteHashLinksDefault($rewrite)
+    public static function setRewriteHashLinksDefault(bool|string $rewrite): void
     {
         static::$current_rewrite_hash_links = $rewrite;
     }
@@ -412,7 +412,7 @@ class SSViewer implements Flushable
     /**
      * @param string|array $templates
      */
-    public function setTemplate($templates)
+    public function setTemplate(array|string $templates): void
     {
         $this->templates = $templates;
         $this->chosen = $this->chooseTemplate($templates);
@@ -425,7 +425,7 @@ class SSViewer implements Flushable
      * @param array|string $templates
      * @return string
      */
-    public static function chooseTemplate($templates)
+    public static function chooseTemplate(array|string $templates): string|null
     {
         return ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
@@ -435,7 +435,7 @@ class SSViewer implements Flushable
      *
      * @param TemplateParser $parser
      */
-    public function setParser(TemplateParser $parser)
+    public function setParser(TemplateParser $parser): void
     {
         $this->parser = $parser;
     }
@@ -445,7 +445,7 @@ class SSViewer implements Flushable
      *
      * @return TemplateParser
      */
-    public function getParser()
+    public function getParser(): SilverStripe\View\SSTemplateParser
     {
         if (!$this->parser) {
             $this->setParser(Injector::inst()->get('SilverStripe\\View\\SSTemplateParser'));
@@ -460,7 +460,7 @@ class SSViewer implements Flushable
      *
      * @return bool
      */
-    public static function hasTemplate($templates)
+    public static function hasTemplate(string|array $templates): bool
     {
         return (bool)ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
     }
@@ -479,7 +479,7 @@ class SSViewer implements Flushable
     /**
      * @return string
      */
-    public function exists()
+    public function exists(): string|null
     {
         return $this->chosen;
     }
@@ -502,7 +502,7 @@ class SSViewer implements Flushable
      * @param bool $force Set this to true to force a re-flush. If left to false, flushing
      * may only be performed once a request.
      */
-    public static function flush_template_cache($force = false)
+    public static function flush_template_cache(bool $force = false): void
     {
         if (!self::$template_cache_flushed || $force) {
             $dir = dir(TEMP_PATH);
@@ -523,7 +523,7 @@ class SSViewer implements Flushable
      * @param bool $force Set this to true to force a re-flush. If left to false, flushing
      * may only be performed once a request.
      */
-    public static function flush_cacheblock_cache($force = false)
+    public static function flush_cacheblock_cache(bool $force = false): void
     {
         if (!self::$cacheblock_cache_flushed || $force) {
             $cache = Injector::inst()->get(CacheInterface::class . '.cacheblock');
@@ -549,7 +549,7 @@ class SSViewer implements Flushable
      *
      * @return CacheInterface
      */
-    public function getPartialCacheStore()
+    public function getPartialCacheStore(): SilverStripe\Versioned\Caching\VersionedCacheAdapter
     {
         if ($this->partialCacheStore) {
             return $this->partialCacheStore;
@@ -563,7 +563,7 @@ class SSViewer implements Flushable
      *
      * @param bool $incl
      */
-    public function includeRequirements($incl = true)
+    public function includeRequirements(bool $incl = true): void
     {
         $this->includeRequirements = $incl;
     }
@@ -581,7 +581,7 @@ class SSViewer implements Flushable
      * @param ViewableData $inheritedScope The current scope of a parent template including a sub-template
      * @return string The result of executing the template
      */
-    protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay, $inheritedScope = null)
+    protected function includeGeneratedTemplate(string $cacheFile, SilverStripe\View\ArrayData $item, array $overlay, array $underlay, SilverStripe\View\SSViewer_DataPresenter $inheritedScope = null): string
     {
         if (isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
             $lines = file($cacheFile ?? '');
@@ -620,7 +620,7 @@ class SSViewer implements Flushable
      * @param ViewableData $inheritedScope The current scope of a parent template including a sub-template
      * @return DBHTMLText Parsed template output.
      */
-    public function process($item, $arguments = null, $inheritedScope = null)
+    public function process(SilverStripe\View\ArrayData $item, array $arguments = null, SilverStripe\View\SSViewer_DataPresenter $inheritedScope = null): SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Set hashlinks and temporarily modify global state
         $rewrite = $this->getRewriteHashLinks();
@@ -709,7 +709,7 @@ PHP;
      *
      * @return array|null
      */
-    protected function getSubtemplateFor($subtemplate)
+    protected function getSubtemplateFor(string $subtemplate): array|null
     {
         // Get explicit subtemplate name
         if (isset($this->subTemplates[$subtemplate])) {
@@ -749,7 +749,7 @@ PHP;
      *
      * @return string Evaluated result
      */
-    public static function execute_template($template, $data, $arguments = null, $scope = null, $globalRequirements = false)
+    public static function execute_template(array $template, SilverStripe\ErrorPage\ErrorPageController $data, array $arguments = null, SilverStripe\View\SSViewer_DataPresenter $scope = null, bool $globalRequirements = false): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $v = SSViewer::create($template);
 
@@ -781,7 +781,7 @@ PHP;
      *
      * @return string Evaluated result
      */
-    public static function execute_string($content, $data, $arguments = null, $globalRequirements = false)
+    public static function execute_string(string|SilverStripe\ORM\FieldType\DBHTMLText $content, SilverStripe\View\Tests\SSViewerCacheBlockTest\TestModel $data, $arguments = null, $globalRequirements = false): string
     {
         $v = SSViewer::fromString($content);
 
@@ -808,7 +808,7 @@ PHP;
      * @param string $template The template file name
      * @return string
      */
-    public function parseTemplateContent($content, $template = "")
+    public function parseTemplateContent(string|SilverStripe\ORM\FieldType\DBHTMLText $content, string $template = ""): string
     {
         return $this->getParser()->compileString(
             $content,
@@ -823,7 +823,7 @@ PHP;
      *
      * @return array
      */
-    public function templates()
+    public function templates(): array
     {
         return array_merge(['main' => $this->chosen], $this->subTemplates);
     }
@@ -849,7 +849,7 @@ PHP;
      * the DOCTYPE declaration.
      * @return string
      */
-    public static function get_base_tag($contentGeneratedSoFar)
+    public static function get_base_tag(string $contentGeneratedSoFar): string
     {
         $base = Director::absoluteBaseURL();
 

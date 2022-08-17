@@ -34,7 +34,7 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
     /**
      * Initializes the middleware with the required rules
      */
-    public function __construct()
+    public function __construct(): void
     {
         parent::__construct(
             new ConfirmationMiddleware\GetParameter("flush"),
@@ -55,7 +55,7 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
      *
      * @return null|HTTPResponse redirect to the same url
      */
-    public function buildImpactRedirect(HTTPRequest $request)
+    public function buildImpactRedirect(HTTPRequest $request): void
     {
         $flush = $this->scheduleFlush($request);
         $env_type = $this->setSessionEnvType($request);
@@ -75,7 +75,7 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
         }
     }
 
-    protected function confirmedEffect(HTTPRequest $request)
+    protected function confirmedEffect(HTTPRequest $request): void
     {
         if ($response = $this->buildImpactRedirect($request)) {
             HTTPCacheControlMiddleware::singleton()->disableCache(true);

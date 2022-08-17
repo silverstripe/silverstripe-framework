@@ -21,7 +21,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
     /**
      * @return array List of allowed Host header values
      */
-    public function getAllowedHosts()
+    public function getAllowedHosts(): null
     {
         return $this->allowedHosts;
     }
@@ -33,7 +33,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
      * @param array|string $allowedHosts
      * @return $this
      */
-    public function setAllowedHosts($allowedHosts)
+    public function setAllowedHosts($allowedHosts): SilverStripe\Control\Middleware\AllowedHostsMiddleware
     {
         if (is_string($allowedHosts)) {
             $allowedHosts = preg_split('/ *, */', $allowedHosts ?? '');
@@ -45,7 +45,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
     /**
      * @inheritdoc
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         $allowedHosts = $this->getAllowedHosts();
 

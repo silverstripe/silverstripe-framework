@@ -27,7 +27,7 @@ class EmbedContainer implements Embeddable
 
     private array $options = [];
 
-    public function __construct(string $url)
+    public function __construct(string $url): void
     {
         $this->url = $url;
     }
@@ -35,7 +35,7 @@ class EmbedContainer implements Embeddable
     /**
      * @return int
      */
-    public function getWidth()
+    public function getWidth(): int
     {
         $code = $this->getExtractor()->code;
         return $code ? ($code->width ?: 100) : 100;
@@ -44,7 +44,7 @@ class EmbedContainer implements Embeddable
     /**
      * @return int
      */
-    public function getHeight()
+    public function getHeight(): int
     {
         $code = $this->getExtractor()->code;
         return $code ? ($code->height ?: 100) : 100;
@@ -53,7 +53,7 @@ class EmbedContainer implements Embeddable
     /**
      * @return string
      */
-    public function getPreviewURL()
+    public function getPreviewURL(): string
     {
         $extractor = $this->getExtractor();
 
@@ -71,7 +71,7 @@ class EmbedContainer implements Embeddable
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         $extractor = $this->getExtractor();
         if ($extractor->title) {
@@ -86,7 +86,7 @@ class EmbedContainer implements Embeddable
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         $html = $this->getExtractor()->code->html ?? '';
         if (strpos($html ?? '', '<video') !== false) {
@@ -109,7 +109,7 @@ class EmbedContainer implements Embeddable
     /**
      * @return bool
      */
-    public function validate()
+    public function validate(): bool
     {
         return !empty($this->getExtractor()->code->html ?? '');
     }

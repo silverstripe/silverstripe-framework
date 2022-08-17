@@ -15,7 +15,7 @@ class TestSession_STResponseWrapper
      */
     private $response;
 
-    public function __construct(HTTPResponse $response)
+    public function __construct(HTTPResponse $response): void
     {
         $this->response = $response;
     }
@@ -23,7 +23,7 @@ class TestSession_STResponseWrapper
     /**
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->response->getBody();
     }
@@ -31,7 +31,7 @@ class TestSession_STResponseWrapper
     /**
      * @return string
      */
-    public function getError()
+    public function getError(): string
     {
         return "";
     }
@@ -39,7 +39,7 @@ class TestSession_STResponseWrapper
     /**
      * @return null
      */
-    public function getSent()
+    public function getSent(): null
     {
         return null;
     }
@@ -47,7 +47,7 @@ class TestSession_STResponseWrapper
     /**
      * @return string
      */
-    public function getHeaders()
+    public function getHeaders(): string
     {
         return "";
     }
@@ -55,7 +55,7 @@ class TestSession_STResponseWrapper
     /**
      * @return string 'GET'
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return "GET";
     }
@@ -63,7 +63,7 @@ class TestSession_STResponseWrapper
     /**
      * @return string
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return "";
     }
@@ -71,7 +71,7 @@ class TestSession_STResponseWrapper
     /**
      * @return null
      */
-    public function getRequestData()
+    public function getRequestData(): null
     {
         return null;
     }

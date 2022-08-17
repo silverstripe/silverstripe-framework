@@ -58,7 +58,7 @@ abstract class Query implements Iterator
      * @param string $column
      * @return array
      */
-    public function column($column = null)
+    public function column(string $column = null): array
     {
         $result = [];
 
@@ -94,7 +94,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
-    public function map()
+    public function map(): array
     {
         $column = [];
         foreach ($this as $record) {
@@ -110,7 +110,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
-    public function record()
+    public function record(): array|bool
     {
         return $this->next();
     }
@@ -120,7 +120,7 @@ abstract class Query implements Iterator
      *
      * @return string
      */
-    public function value()
+    public function value(): string|int|null|float
     {
         $record = $this->next();
         if ($record) {
@@ -171,7 +171,7 @@ abstract class Query implements Iterator
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void
     {
         if ($this->queryHasBegun && $this->numRecords() > 0) {
             $this->queryHasBegun = false;
@@ -186,7 +186,7 @@ abstract class Query implements Iterator
      * @return array
      */
     #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): array|bool
     {
         if (!$this->currentRecord) {
             return $this->next();
@@ -200,7 +200,7 @@ abstract class Query implements Iterator
      *
      * @return array
      */
-    public function first()
+    public function first(): array|bool
     {
         $this->rewind();
         return $this->current();
@@ -212,7 +212,7 @@ abstract class Query implements Iterator
      * @return int
      */
     #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): int
     {
         return $this->rowNum;
     }
@@ -224,7 +224,7 @@ abstract class Query implements Iterator
      * @return array
      */
     #[\ReturnTypeWillChange]
-    public function next()
+    public function next(): array|bool
     {
         $this->queryHasBegun = true;
         $this->currentRecord = $this->nextRecord();
@@ -238,7 +238,7 @@ abstract class Query implements Iterator
      * @return bool
      */
     #[\ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         if (!$this->queryHasBegun) {
             $this->next();

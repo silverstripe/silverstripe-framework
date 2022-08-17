@@ -38,7 +38,7 @@ class DefaultCacheFactory implements CacheFactory
      * @param array $args List of global options to merge with args during create()
      * @param LoggerInterface $logger Logger instance to assign
      */
-    public function __construct($args = [], LoggerInterface $logger = null)
+    public function __construct(array $args = [], LoggerInterface $logger = null): void
     {
         $this->args = $args;
         $this->logger = $logger;
@@ -47,7 +47,7 @@ class DefaultCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $args = [])
+    public function create(string $service, array $args = []): Symfony\Component\Cache\Simple\FilesystemCache
     {
         // merge args with default
         $args = array_merge($this->args, $args);
@@ -89,7 +89,7 @@ class DefaultCacheFactory implements CacheFactory
      *
      * @return bool
      */
-    protected function isAPCUSupported()
+    protected function isAPCUSupported(): bool
     {
         static $apcuSupported = null;
         if (null === $apcuSupported) {
@@ -104,7 +104,7 @@ class DefaultCacheFactory implements CacheFactory
      *
      * @return bool
      */
-    protected function isPHPFilesSupported()
+    protected function isPHPFilesSupported(): bool
     {
         static $phpFilesSupported = null;
         if (null === $phpFilesSupported) {
@@ -118,7 +118,7 @@ class DefaultCacheFactory implements CacheFactory
      * @param array $args
      * @return CacheInterface
      */
-    protected function createCache($class, $args)
+    protected function createCache(string $class, array $args): Symfony\Component\Cache\Simple\FilesystemCache
     {
         /** @var CacheInterface $cache */
         $cache = Injector::inst()->createWithArgs($class, $args);

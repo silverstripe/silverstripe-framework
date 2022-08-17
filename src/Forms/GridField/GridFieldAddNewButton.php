@@ -22,19 +22,19 @@ class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridFi
 
     protected $buttonName;
 
-    public function setButtonName($name)
+    public function setButtonName(string $name): SilverStripe\Forms\GridField\GridFieldAddNewButton
     {
         $this->buttonName = $name;
 
         return $this;
     }
 
-    public function __construct($targetFragment = 'before')
+    public function __construct(string $targetFragment = 'before'): void
     {
         $this->targetFragment = $targetFragment;
     }
 
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $singleton = singleton($gridField->getModelClass());
         $context = [];

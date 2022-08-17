@@ -89,7 +89,7 @@ abstract class BaseKernel implements Kernel
      *
      * @param string $basePath Path to base dir for this application
      */
-    public function __construct($basePath)
+    public function __construct(string $basePath): void
     {
         $this->basePath = $basePath;
 
@@ -136,7 +136,7 @@ abstract class BaseKernel implements Kernel
     /**
      * Initialise PHP with default variables
      */
-    protected function bootPHP()
+    protected function bootPHP(): void
     {
         if ($this->getEnvironment() === self::LIVE) {
             // limited to fatal errors and warnings in live mode
@@ -177,7 +177,7 @@ abstract class BaseKernel implements Kernel
      *
      * @param bool $flush
      */
-    protected function bootManifests($flush)
+    protected function bootManifests(bool $flush): void
     {
         // Setup autoloader
         $this->getClassLoader()->init(
@@ -220,7 +220,7 @@ abstract class BaseKernel implements Kernel
     /**
      * Include all _config.php files
      */
-    protected function bootConfigs()
+    protected function bootConfigs(): void
     {
         global $project;
         $projectBefore = $project;
@@ -237,7 +237,7 @@ abstract class BaseKernel implements Kernel
      * Turn on error handling
      * @throws Exception
      */
-    protected function bootErrorHandling()
+    protected function bootErrorHandling(): void
     {
         // Register error handler
         $errorHandler = Injector::inst()->get(ErrorHandler::class);
@@ -262,7 +262,7 @@ abstract class BaseKernel implements Kernel
      *
      * @deprecated 5.0 use Director::get_environment_type() instead. Since 5.0 it should return only if kernel overrides. No checking SESSION or Environment.
      */
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         // Check set
         if ($this->enviroment) {
@@ -290,7 +290,7 @@ abstract class BaseKernel implements Kernel
      *
      * @deprecated 5.0 Use Director::get_session_environment_type() instead
      */
-    protected function sessionEnvironment()
+    protected function sessionEnvironment(): null
     {
         if (!$this->booted) {
             // session is not initialyzed yet, neither is manifest
@@ -364,7 +364,7 @@ abstract class BaseKernel implements Kernel
     /**
      * @return ManifestCacheFactory
      */
-    protected function buildManifestCacheFactory()
+    protected function buildManifestCacheFactory(): SilverStripe\Core\Cache\ManifestCacheFactory
     {
         return new ManifestCacheFactory([
             'namespace' => 'manifestcache',
@@ -387,7 +387,7 @@ abstract class BaseKernel implements Kernel
     /**
      * @return bool
      */
-    protected function getIncludeTests()
+    protected function getIncludeTests(): bool
     {
         return false;
     }
@@ -400,11 +400,11 @@ abstract class BaseKernel implements Kernel
         $this->booted = $bool;
     }
 
-    public function shutdown()
+    public function shutdown(): void
     {
     }
 
-    public function nest()
+    public function nest(): SilverStripe\Core\CoreKernel
     {
         // Clone this kernel, nesting config / injector manifest containers
         $kernel = clone $this;
@@ -414,7 +414,7 @@ abstract class BaseKernel implements Kernel
         return $kernel;
     }
 
-    public function activate()
+    public function activate(): SilverStripe\Core\CoreKernel
     {
         $this->configLoader->activate();
         $this->injectorLoader->activate();
@@ -426,7 +426,7 @@ abstract class BaseKernel implements Kernel
         return $this;
     }
 
-    public function getNestedFrom()
+    public function getNestedFrom(): SilverStripe\Dev\TestKernel
     {
         return $this->nestedFrom;
     }
@@ -436,7 +436,7 @@ abstract class BaseKernel implements Kernel
         return $this->getInjectorLoader()->getManifest();
     }
 
-    public function setInjectorLoader(InjectorLoader $injectorLoader)
+    public function setInjectorLoader(InjectorLoader $injectorLoader): SilverStripe\Core\CoreKernel
     {
         $this->injectorLoader = $injectorLoader;
         $injectorLoader
@@ -445,34 +445,34 @@ abstract class BaseKernel implements Kernel
         return $this;
     }
 
-    public function getInjectorLoader()
+    public function getInjectorLoader(): SilverStripe\Core\Injector\InjectorLoader
     {
         return $this->injectorLoader;
     }
 
-    public function getClassLoader()
+    public function getClassLoader(): SilverStripe\Core\Manifest\ClassLoader
     {
         return $this->classLoader;
     }
 
-    public function setClassLoader(ClassLoader $classLoader)
+    public function setClassLoader(ClassLoader $classLoader): SilverStripe\Core\CoreKernel
     {
         $this->classLoader = $classLoader;
         return $this;
     }
 
-    public function getModuleLoader()
+    public function getModuleLoader(): SilverStripe\Core\Manifest\ModuleLoader
     {
         return $this->moduleLoader;
     }
 
-    public function setModuleLoader(ModuleLoader $moduleLoader)
+    public function setModuleLoader(ModuleLoader $moduleLoader): SilverStripe\Core\CoreKernel
     {
         $this->moduleLoader = $moduleLoader;
         return $this;
     }
 
-    public function setEnvironment($environment)
+    public function setEnvironment(string $environment): SilverStripe\Dev\TestKernel
     {
         if (!in_array($environment, [self::DEV, self::TEST, self::LIVE, null])) {
             throw new InvalidArgumentException(
@@ -483,23 +483,23 @@ abstract class BaseKernel implements Kernel
         return $this;
     }
 
-    public function getConfigLoader()
+    public function getConfigLoader(): SilverStripe\Core\Config\ConfigLoader
     {
         return $this->configLoader;
     }
 
-    public function setConfigLoader($configLoader)
+    public function setConfigLoader(SilverStripe\Core\Config\ConfigLoader $configLoader): SilverStripe\Core\CoreKernel
     {
         $this->configLoader = $configLoader;
         return $this;
     }
 
-    public function getThemeResourceLoader()
+    public function getThemeResourceLoader(): SilverStripe\View\ThemeResourceLoader
     {
         return $this->themeResourceLoader;
     }
 
-    public function setThemeResourceLoader($themeResourceLoader)
+    public function setThemeResourceLoader(SilverStripe\View\ThemeResourceLoader $themeResourceLoader): SilverStripe\Core\CoreKernel
     {
         $this->themeResourceLoader = $themeResourceLoader;
         return $this;

@@ -18,17 +18,17 @@ class GridState_Data
 
     protected $defaults = [];
 
-    public function __construct($data = [])
+    public function __construct(array $data = []): void
     {
         $this->data = $data;
     }
 
-    public function __get($name)
+    public function __get(string $name): SilverStripe\Forms\GridField\GridState_Data|null|int|bool|string|float
     {
         return $this->getData($name, new self());
     }
 
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): null|string|int|bool|SilverStripe\Forms\GridField\GridState_Data
     {
         // Assume first parameter is default value
         if (empty($arguments)) {
@@ -61,7 +61,7 @@ class GridState_Data
      * @param mixed $default Default value to assign if not set. Note that this *will* be included in getChangesArray()
      * @return mixed The value associated with this key, or the value specified by $default if not set
      */
-    public function getData($name, $default = null)
+    public function getData(string $name, SilverStripe\Forms\GridField\GridState_Data|string|int|array|bool $default = null): SilverStripe\Forms\GridField\GridState_Data|null|string|int|array|bool|float
     {
         if (!array_key_exists($name, $this->data ?? [])) {
             $this->data[$name] = $default;
@@ -74,22 +74,22 @@ class GridState_Data
         return $this->data[$name];
     }
 
-    public function __set($name, $value)
+    public function __set(string $name, int|bool|array|string|float $value): void
     {
         $this->data[$name] = $value;
     }
 
-    public function __isset($name)
+    public function __isset(string $name): bool
     {
         return isset($this->data[$name]);
     }
 
-    public function __unset($name)
+    public function __unset(string $name): void
     {
         unset($this->data[$name]);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->data) {
             return "";
@@ -101,7 +101,7 @@ class GridState_Data
     /**
      * Return all data, including defaults, as array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $output = [];
 

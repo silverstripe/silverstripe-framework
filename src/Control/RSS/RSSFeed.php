@@ -132,7 +132,7 @@ class RSSFeed extends ViewableData
         $authorField = null,
         $lastModified = null,
         $etag = null
-    ) {
+    ): void {
         $this->entries = $entries;
         $this->link = $link;
         $this->description = $description;
@@ -154,7 +154,7 @@ class RSSFeed extends ViewableData
      * @param string $url URL of the feed
      * @param string $title Title to show
      */
-    public static function linkToFeed($url, $title = null)
+    public static function linkToFeed(string $url, string $title = null): void
     {
         $title = Convert::raw2xml($title);
         Requirements::insertHeadTags(
@@ -167,7 +167,7 @@ class RSSFeed extends ViewableData
      *
      * @return SS_List Returns the {@link RSSFeed_Entry} objects.
      */
-    public function Entries()
+    public function Entries(): SilverStripe\ORM\ArrayList
     {
         $output = new ArrayList();
 
@@ -186,7 +186,7 @@ class RSSFeed extends ViewableData
      *
      * @return string Returns the title of the feed.
      */
-    public function Title()
+    public function Title(): string
     {
         return $this->title;
     }
@@ -197,7 +197,7 @@ class RSSFeed extends ViewableData
      * @param string $action
      * @return string Returns the URL of the feed.
      */
-    public function Link($action = null)
+    public function Link($action = null): string
     {
         return Controller::join_links(Director::absoluteURL($this->link), $action);
     }
@@ -207,7 +207,7 @@ class RSSFeed extends ViewableData
      *
      * @return string Returns the description of the feed.
      */
-    public function Description()
+    public function Description(): null|string
     {
         return $this->description;
     }
@@ -219,7 +219,7 @@ class RSSFeed extends ViewableData
      *
      * @return DBHTMLText
      */
-    public function outputToBrowser()
+    public function outputToBrowser(): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $prevState = SSViewer::config()->uninherited('source_file_comments');
         SSViewer::config()->update('source_file_comments', false);
@@ -246,7 +246,7 @@ class RSSFeed extends ViewableData
      *
      * @param string $template
      */
-    public function setTemplate($template)
+    public function setTemplate(string $template): void
     {
         $this->template = $template;
     }
@@ -256,7 +256,7 @@ class RSSFeed extends ViewableData
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): null|string
     {
         return $this->template;
     }
@@ -267,7 +267,7 @@ class RSSFeed extends ViewableData
      *
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         $templates = SSViewer::get_templates_by_class(static::class, '', __CLASS__);
         // Prefer any custom template

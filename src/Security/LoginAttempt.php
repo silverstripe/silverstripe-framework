@@ -74,7 +74,7 @@ class LoginAttempt extends DataObject
      * @param string $email
      * @return $this
      */
-    public function setEmail($email)
+    public function setEmail(string $email): SilverStripe\Security\LoginAttempt
     {
         // Store hashed email only
         $this->EmailHashed = sha1($email ?? '');
@@ -87,7 +87,7 @@ class LoginAttempt extends DataObject
      * @param string $email
      * @return DataList|LoginAttempt[]
      */
-    public static function getByEmail($email)
+    public static function getByEmail(string $email): SilverStripe\ORM\DataList
     {
         return static::get()->filterAny([
             'EmailHashed' => sha1($email ?? ''),

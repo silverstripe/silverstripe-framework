@@ -16,7 +16,7 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getTitle($gridField, $record, $columnName)
+    public function getTitle(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category $record, string $columnName): string
     {
         return _t(__CLASS__ . '.VIEW', "View");
     }
@@ -24,7 +24,7 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getGroup($gridField, $record, $columnName)
+    public function getGroup(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category $record, string $columnName): string
     {
         return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
@@ -32,7 +32,7 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getExtraData($gridField, $record, $columnName)
+    public function getExtraData(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category $record, string $columnName): array
     {
         return [
             "classNames" => "font-icon-eye action-detail view-link"
@@ -42,24 +42,24 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getUrl($gridField, $record, $columnName)
+    public function getUrl(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person $record, string $columnName): string
     {
         return Controller::join_links($gridField->Link('item'), $record->ID, 'view');
     }
 
-    public function augmentColumns($field, &$columns)
+    public function augmentColumns(SilverStripe\Comments\Admin\CommentsGridField $field, &$columns): void
     {
         if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
         }
     }
 
-    public function getColumnsHandled($field)
+    public function getColumnsHandled(SilverStripe\Comments\Admin\CommentsGridField $field): array
     {
         return ['Actions'];
     }
 
-    public function getColumnContent($field, $record, $col)
+    public function getColumnContent(SilverStripe\Forms\GridField\GridField $field, SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person $record, string $col): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (!$record->canView()) {
             return null;
@@ -71,12 +71,12 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
         return $data->renderWith($template);
     }
 
-    public function getColumnAttributes($field, $record, $col)
+    public function getColumnAttributes(SilverStripe\Forms\GridField\GridField $field, SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person $record, string $col): array
     {
         return ['class' => 'grid-field__col-compact'];
     }
 
-    public function getColumnMetadata($gridField, $col)
+    public function getColumnMetadata(SilverStripe\Comments\Admin\CommentsGridField $gridField, string $col): array
     {
         return ['title' => null];
     }

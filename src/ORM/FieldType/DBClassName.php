@@ -49,7 +49,7 @@ class DBClassName extends DBEnum
      * @param string|null $baseClass Optional base class to limit selections
      * @param array       $options   Optional parameters for this DBField instance
      */
-    public function __construct($name = null, $baseClass = null, $options = [])
+    public function __construct(string $name = null, string $baseClass = null, array $options = []): void
     {
         $this->setBaseClass($baseClass);
         parent::__construct($name, null, null, $options);
@@ -58,7 +58,7 @@ class DBClassName extends DBEnum
     /**
      * @return void
      */
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'enum',
@@ -83,7 +83,7 @@ class DBClassName extends DBEnum
      *
      * @return string
      */
-    public function getBaseClass()
+    public function getBaseClass(): string
     {
         // Use explicit base class
         if ($this->baseClass) {
@@ -109,7 +109,7 @@ class DBClassName extends DBEnum
      *
      * @return string|null
      */
-    public function getShortName()
+    public function getShortName(): string|null
     {
         $value = $this->getValue();
         if (empty($value) || !ClassInfo::exists($value)) {
@@ -124,7 +124,7 @@ class DBClassName extends DBEnum
      * @param string $baseClass
      * @return $this
      */
-    public function setBaseClass($baseClass)
+    public function setBaseClass(string $baseClass): SilverStripe\ORM\FieldType\DBClassName
     {
         $this->baseClass = $baseClass;
         return $this;
@@ -135,7 +135,7 @@ class DBClassName extends DBEnum
      *
      * @return array
      */
-    public function getEnum()
+    public function getEnum(): array
     {
         $classNames = ClassInfo::subclassesFor($this->getBaseClass());
         $dataobject = strtolower(DataObject::class);
@@ -143,7 +143,7 @@ class DBClassName extends DBEnum
         return array_values($classNames ?? []);
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(string $value, SilverStripe\ErrorPage\ErrorPageController $record = null, bool $markChanged = true): void
     {
         parent::setValue($value, $record, $markChanged);
 
@@ -152,7 +152,7 @@ class DBClassName extends DBEnum
         }
     }
 
-    public function getDefault()
+    public function getDefault(): string
     {
         // Check for assigned default
         $default = parent::getDefault();

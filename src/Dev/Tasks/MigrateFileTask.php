@@ -258,7 +258,7 @@ class MigrateFileTask extends BuildTask
         $this->logger->info("Done!");
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return <<<TXT
 Imports all files referenced by File dataobjects into the new Asset Persistence Layer introduced in 4.0.
@@ -272,7 +272,7 @@ TXT;
     /**
      * @param LoggerInterface $logger
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger): SilverStripe\Subsites\Tasks\SubsiteMigrateFileTask
     {
         $this->logger = $logger;
 

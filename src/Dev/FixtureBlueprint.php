@@ -52,7 +52,7 @@ class FixtureBlueprint
      * @param string $class Defaults to $name
      * @param array $defaults
      */
-    public function __construct($name, $class = null, $defaults = [])
+    public function __construct(string $name, string $class = null, array $defaults = []): void
     {
         if (!$class) {
             $class = $name;
@@ -80,7 +80,7 @@ class FixtureBlueprint
      * @return DataObject
      * @throws Exception
      */
-    public function createObject($identifier, $data = null, $fixtures = null)
+    public function createObject(string|int $identifier, array $data = null, array $fixtures = null): DNADesign\Elemental\Models\ElementalArea
     {
         // We have to disable validation while we import the fixtures, as the order in
         // which they are imported doesnt guarantee valid relations until after the import is complete.
@@ -268,7 +268,7 @@ class FixtureBlueprint
     /**
      * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
@@ -280,7 +280,7 @@ class FixtureBlueprint
      * @param callable $callback
      * @return $this
      */
-    public function addCallback($type, $callback)
+    public function addCallback(string $type, callable $callback): SilverStripe\Dev\FixtureBlueprint
     {
         if (!array_key_exists($type, $this->callbacks ?? [])) {
             throw new InvalidArgumentException(sprintf('Invalid type "%s"', $type));
@@ -305,7 +305,7 @@ class FixtureBlueprint
         return $this;
     }
 
-    protected function invokeCallbacks($type, $args = [])
+    protected function invokeCallbacks(string $type, array $args = []): void
     {
         foreach ($this->callbacks[$type] as $callback) {
             call_user_func_array($callback, $args ?? []);
@@ -322,7 +322,7 @@ class FixtureBlueprint
      * will be given the value of that class's name
      * @return string Fixture database ID, or the original value
      */
-    protected function parseValue($value, $fixtures = null, &$class = null)
+    protected function parseValue(string|int|bool|float $value, $fixtures = null, &$class = null): string|int|null|bool|float
     {
         if (substr($value ?? '', 0, 2) == '=>') {
             // Parse a dictionary reference - used to set foreign keys
@@ -342,12 +342,12 @@ class FixtureBlueprint
         }
     }
 
-    protected function setValue($obj, $name, $value, $fixtures = null)
+    protected function setValue(DNADesign\Elemental\Models\ElementalArea $obj, string $name, string|int|bool|float $value, array $fixtures = null): void
     {
         $obj->$name = $this->parseValue($value, $fixtures);
     }
 
-    protected function overrideField($obj, $fieldName, $value, $fixtures = null)
+    protected function overrideField(SilverStripe\Dev\Tests\FixtureFactoryTest\TestDataObject $obj, string $fieldName, string $value, array $fixtures = null): void
     {
         $class = get_class($obj);
         $table = DataObject::getSchema()->tableForField($class, $fieldName);

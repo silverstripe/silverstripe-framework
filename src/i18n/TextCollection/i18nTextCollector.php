@@ -98,7 +98,7 @@ class i18nTextCollector
     /**
      * @param $locale
      */
-    public function __construct($locale = null)
+    public function __construct($locale = null): void
     {
         $this->defaultLocale = $locale
             ? $locale
@@ -114,7 +114,7 @@ class i18nTextCollector
      * @param Writer $writer
      * @return $this
      */
-    public function setWriter($writer)
+    public function setWriter(SilverStripe\i18n\Messages\YamlWriter $writer): SilverStripe\i18n\TextCollection\i18nTextCollector
     {
         $this->writer = $writer;
         return $this;
@@ -125,7 +125,7 @@ class i18nTextCollector
      *
      * @return Writer
      */
-    public function getWriter()
+    public function getWriter(): SilverStripe\i18n\Messages\YamlWriter
     {
         return $this->writer;
     }
@@ -135,7 +135,7 @@ class i18nTextCollector
      *
      * @return Reader
      */
-    public function getReader()
+    public function getReader(): SilverStripe\i18n\Messages\YamlReader
     {
         return $this->reader;
     }
@@ -146,7 +146,7 @@ class i18nTextCollector
      * @param Reader $reader
      * @return $this
      */
-    public function setReader(Reader $reader)
+    public function setReader(Reader $reader): SilverStripe\i18n\TextCollection\i18nTextCollector
     {
         $this->reader = $reader;
         return $this;
@@ -167,7 +167,7 @@ class i18nTextCollector
      * releases, because it allows "translation backports" to older releases
      * without removing strings these older releases still rely on.
      */
-    public function run($restrictToModules = null, $mergeWithExisting = false)
+    public function run($restrictToModules = null, $mergeWithExisting = false): void
     {
         $entitiesByModule = $this->collect($restrictToModules, $mergeWithExisting);
         if (empty($entitiesByModule)) {
@@ -195,7 +195,7 @@ class i18nTextCollector
      * @param bool $mergeWithExisting
      * @return array
      */
-    public function collect($restrictToModules = [], $mergeWithExisting = false)
+    public function collect($restrictToModules = [], bool $mergeWithExisting = false): array
     {
         $entitiesByModule = $this->getEntitiesByModule();
 
@@ -228,7 +228,7 @@ class i18nTextCollector
      * @param array $entitiesByModule List of all modules with keys
      * @return array Filtered listo of modules with duplicate keys unassigned
      */
-    protected function resolveDuplicateConflicts($entitiesByModule)
+    protected function resolveDuplicateConflicts(array $entitiesByModule): array
     {
         // Find all keys that exist across multiple modules
         $conflicts = $this->getConflicts($entitiesByModule);
@@ -255,7 +255,7 @@ class i18nTextCollector
      * @param array $entitiesByModule
      * @return array List of keys
      */
-    protected function getConflicts($entitiesByModule)
+    protected function getConflicts(array $entitiesByModule): array
     {
         $modules = array_keys($entitiesByModule ?? []);
         $allConflicts = [];
@@ -284,7 +284,7 @@ class i18nTextCollector
      * @param string $key
      * @return string Best module, if found
      */
-    protected function getBestModuleForKey($entitiesByModule, $key)
+    protected function getBestModuleForKey(array $entitiesByModule, string $key): string
     {
         // Check classes
         $class = current(explode('.', $key ?? ''));
@@ -325,7 +325,7 @@ class i18nTextCollector
      * @param string $class Either a FQN class name, or a non-qualified class name.
      * @return string Name of module
      */
-    protected function findModuleForClass($class)
+    protected function findModuleForClass(string $class): string
     {
         if (ClassInfo::exists($class)) {
             $module = ClassLoader::inst()
@@ -367,7 +367,7 @@ class i18nTextCollector
      * @param array $entitiesByModule
      * @return array
      */
-    protected function mergeWithExisting($entitiesByModule)
+    protected function mergeWithExisting(array $entitiesByModule): array
     {
         // For each module do a simple merge of the default yml with these strings
         foreach ($entitiesByModule as $module => $messages) {
@@ -392,7 +392,7 @@ class i18nTextCollector
      *
      * @return array
      */
-    protected function getEntitiesByModule()
+    protected function getEntitiesByModule(): array
     {
         // A master string tables array (one mst per module)
         $entitiesByModule = [];
@@ -452,7 +452,7 @@ class i18nTextCollector
      * @param array $entities
      * @return $this
      */
-    public function write(Module $module, $entities)
+    public function write(Module $module, array $entities): SilverStripe\i18n\TextCollection\i18nTextCollector
     {
         $this->getWriter()->write(
             $entities,
@@ -469,7 +469,7 @@ class i18nTextCollector
      * @param Module $module Module instance
      * @return array An array of entities found in the files that comprise the module
      */
-    protected function processModule(Module $module)
+    protected function processModule(Module $module): array
     {
         $entities = [];
 
@@ -506,7 +506,7 @@ class i18nTextCollector
      * @param Module $module Module instance
      * @return array List of files to parse
      */
-    protected function getFileListForModule(Module $module)
+    protected function getFileListForModule(Module $module): array
     {
         $modulePath = $module->getPath();
 
@@ -546,7 +546,7 @@ class i18nTextCollector
      * @param Module $module Module being collected
      * @return array Map of localised keys to default values provided for this code
      */
-    public function collectFromCode($content, $fileName, Module $module)
+    public function collectFromCode(string $content, string $fileName, Module $module): array
     {
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
@@ -779,7 +779,7 @@ class i18nTextCollector
      * @param array $parsedFiles
      * @return array $entities An array of entities representing the extracted template function calls
      */
-    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = [])
+    public function collectFromTemplate(string $content, string $fileName, Module $module, &$parsedFiles = []): array
     {
         // Get namespace either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
@@ -816,7 +816,7 @@ class i18nTextCollector
      * @param Module $module
      * @return array
      */
-    public function collectFromEntityProviders($filePath, Module $module = null)
+    public function collectFromEntityProviders(string $filePath, Module $module = null): array
     {
         $entities = [];
         $classes = ClassInfo::classes_for_file($filePath);
@@ -868,7 +868,7 @@ class i18nTextCollector
      * @param string $_namespace
      * @return string|boolean FALSE
      */
-    protected function normalizeEntity($fullName, $_namespace = null)
+    protected function normalizeEntity(string $fullName, string $_namespace = null): string
     {
         // split fullname into entity parts
         $entityParts = explode('.', $fullName ?? '');
@@ -905,7 +905,7 @@ class i18nTextCollector
      * @param string $folderExclude Regular expression matching folder names to exclude
      * @return array $fileList An array of files
      */
-    protected function getFilesRecursive($folder, $fileList = [], $type = null, $folderExclude = '/\/(tests)$/')
+    protected function getFilesRecursive(string $folder, array $fileList = [], string $type = null, $folderExclude = '/\/(tests): array$/'): array
     {
         if (!$fileList) {
             $fileList = [];
@@ -936,7 +936,7 @@ class i18nTextCollector
         return $fileList;
     }
 
-    public function getDefaultLocale()
+    public function getDefaultLocale(): string
     {
         return $this->defaultLocale;
     }
@@ -949,7 +949,7 @@ class i18nTextCollector
     /**
      * @return bool
      */
-    public function getWarnOnEmptyDefault()
+    public function getWarnOnEmptyDefault(): bool
     {
         return $this->warnOnEmptyDefault;
     }
@@ -958,7 +958,7 @@ class i18nTextCollector
      * @param bool $warnOnEmptyDefault
      * @return $this
      */
-    public function setWarnOnEmptyDefault($warnOnEmptyDefault)
+    public function setWarnOnEmptyDefault(bool $warnOnEmptyDefault): SilverStripe\i18n\TextCollection\i18nTextCollector
     {
         $this->warnOnEmptyDefault = $warnOnEmptyDefault;
         return $this;

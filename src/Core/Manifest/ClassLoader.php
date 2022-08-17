@@ -28,7 +28,7 @@ class ClassLoader
     /**
      * @return ClassLoader
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Core\Manifest\ClassLoader
     {
         return self::$instance ? self::$instance : self::$instance = new static();
     }
@@ -39,7 +39,7 @@ class ClassLoader
      *
      * @return ClassManifest
      */
-    public function getManifest()
+    public function getManifest(): SilverStripe\Core\Manifest\ClassManifest
     {
         return $this->manifests[count($this->manifests) - 1]['instance'];
     }
@@ -59,7 +59,7 @@ class ClassLoader
      * @param bool $exclusive Marks the manifest as exclusive. If set to FALSE, will
      * look for classes in earlier manifests as well.
      */
-    public function pushManifest(ClassManifest $manifest, $exclusive = true)
+    public function pushManifest(ClassManifest $manifest, bool $exclusive = true): void
     {
         $this->manifests[] = ['exclusive' => $exclusive, 'instance' => $manifest];
     }
@@ -67,13 +67,13 @@ class ClassLoader
     /**
      * @return ClassManifest
      */
-    public function popManifest()
+    public function popManifest(): SilverStripe\Core\Manifest\ClassManifest
     {
         $manifest = array_pop($this->manifests);
         return $manifest['instance'];
     }
 
-    public function registerAutoloader()
+    public function registerAutoloader(): void
     {
         spl_autoload_register([$this, 'loadClass']);
     }
@@ -85,7 +85,7 @@ class ClassLoader
      * @param string $class
      * @return String
      */
-    public function loadClass($class)
+    public function loadClass(string $class): string|bool
     {
         if ($path = $this->getItemPath($class)) {
             require_once $path;
@@ -100,7 +100,7 @@ class ClassLoader
      * @param string $class
      * @return string|false
      */
-    public function getItemPath($class)
+    public function getItemPath(string $class): string|bool
     {
         foreach (array_reverse($this->manifests ?? []) as $manifest) {
             /** @var ClassManifest $manifestInst */
@@ -122,7 +122,7 @@ class ClassLoader
      * @param bool $forceRegen
      * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init(bool $includeTests = false, bool $forceRegen = false, array $ignoredCIConfigs = []): void
     {
         foreach ($this->manifests as $manifest) {
             /** @var ClassManifest $instance */

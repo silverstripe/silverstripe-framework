@@ -7,7 +7,7 @@ namespace SilverStripe\Forms;
  */
 class DisabledTransformation extends FormTransformation
 {
-    public function transform(FormField $field)
+    public function transform(FormField $field): SilverStripe\Forms\TextField
     {
         return $field->performDisabledTransformation();
     }

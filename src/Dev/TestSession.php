@@ -55,7 +55,7 @@ class TestSession
      */
     private $lastUrl;
 
-    public function __construct()
+    public function __construct(): void
     {
         $this->session = Injector::inst()->create(Session::class, []);
         $this->cookies = Injector::inst()->create(Cookie_Backend::class);
@@ -67,7 +67,7 @@ class TestSession
         $this->controller->doInit();
     }
 
-    public function __destruct()
+    public function __destruct(): void
     {
         // Shift off anything else that's on the stack.  This can happen if something throws
         // an exception that causes a premature TestSession::__destruct() call
@@ -90,7 +90,7 @@ class TestSession
      * @param array $cookies
      * @return HTTPResponse
      */
-    public function get($url, $session = null, $headers = null, $cookies = null)
+    public function get(string $url, SilverStripe\Control\Session $session = null, array $headers = null, array $cookies = null): SilverStripe\Control\HTTPResponse
     {
         $this->extend('updateGetURL', $url, $session, $headers, $cookies);
         $headers = (array) $headers;
@@ -126,7 +126,7 @@ class TestSession
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null)
+    public function post(string $url, array $data, array $headers = null, SilverStripe\Control\Session $session = null, string $body = null, array $cookies = null): SilverStripe\Control\HTTPResponse
     {
         $this->extend('updatePostURL', $url, $data, $headers, $session, $body, $cookies);
         $headers = (array) $headers;
@@ -210,7 +210,7 @@ class TestSession
      * @return HTTPResponse
      * @throws Exception
      */
-    public function submitForm($formID, $button = null, $data = [])
+    public function submitForm(string $formID, string $button = null, array $data = []): SilverStripe\Control\HTTPResponse
     {
         $page = $this->lastPage();
         if ($page) {
@@ -248,7 +248,7 @@ class TestSession
      *
      * @return HTTPResponse The response given, or null if no redirect occurred
      */
-    public function followRedirection()
+    public function followRedirection(): SilverStripe\Control\HTTPResponse
     {
         if ($this->lastResponse->getHeader('Location')) {
             $url = Director::makeRelative($this->lastResponse->getHeader('Location'));
@@ -283,7 +283,7 @@ class TestSession
      *
      * @return string
      */
-    public function lastUrl()
+    public function lastUrl(): string
     {
         return $this->lastUrl;
     }
@@ -293,7 +293,7 @@ class TestSession
      *
      * @return string
      */
-    public function lastContent()
+    public function lastContent(): string
     {
         if (is_string($this->lastResponse)) {
             return $this->lastResponse;
@@ -317,7 +317,7 @@ class TestSession
      *
      * @return SimplePage The response if available
      */
-    public function lastPage()
+    public function lastPage(): SimplePage
     {
         require_once("simpletest/http.php");
         require_once("simpletest/page.php");
@@ -338,7 +338,7 @@ class TestSession
      *
      * @return Session
      */
-    public function session()
+    public function session(): SilverStripe\Control\Session
     {
         return $this->session;
     }

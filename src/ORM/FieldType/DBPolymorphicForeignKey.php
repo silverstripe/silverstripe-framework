@@ -16,7 +16,7 @@ class DBPolymorphicForeignKey extends DBComposite
         'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])"
     ];
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): null
     {
         // Opt-out of form field generation - Scaffolding should be performed on
         // the has_many end, or set programmatically.
@@ -29,7 +29,7 @@ class DBPolymorphicForeignKey extends DBComposite
      *
      * @return string Name of a subclass of DataObject
      */
-    public function getClassValue()
+    public function getClassValue(): string
     {
         return $this->getField('Class');
     }
@@ -50,7 +50,7 @@ class DBPolymorphicForeignKey extends DBComposite
      *
      * @return integer
      */
-    public function getIDValue()
+    public function getIDValue(): int
     {
         return $this->getField('ID');
     }
@@ -66,7 +66,7 @@ class DBPolymorphicForeignKey extends DBComposite
         $this->setField('ID', $value, $markChanged);
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue($value, SilverStripe\Versioned\ChangeSetItem $record = null, bool $markChanged = true): void
     {
         // Map dataobject value to array
         if ($value instanceof DataObject) {
@@ -79,7 +79,7 @@ class DBPolymorphicForeignKey extends DBComposite
         parent::setValue($value, $record, $markChanged);
     }
 
-    public function getValue()
+    public function getValue(): SilverStripe\ORM\Tests\DataObjectTest\Team
     {
         $id = $this->getIDValue();
         $class = $this->getClassValue();

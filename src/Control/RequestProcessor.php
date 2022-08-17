@@ -27,7 +27,7 @@ class RequestProcessor implements HTTPMiddleware
      *
      * @param RequestFilter[] $filters
      */
-    public function __construct($filters = [])
+    public function __construct(array $filters = []): void
     {
         $this->filters = $filters;
     }
@@ -47,7 +47,7 @@ class RequestProcessor implements HTTPMiddleware
     /**
      * @inheritdoc
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         if ($this->filters) {
             Deprecation::notice(

@@ -32,7 +32,7 @@ class SQLFormatter
         'LIMIT',
     ];
 
-    public function formatPlain($sql)
+    public function formatPlain(string $sql): string
     {
         $sql = $this->addNewlines($sql, false);
 
@@ -55,7 +55,7 @@ class SQLFormatter
      * @param bool $useHtmlFormatting
      * @return string
      */
-    protected function addNewlines($sql, $useHtmlFormatting = false)
+    protected function addNewlines(string $sql, bool $useHtmlFormatting = false): string
     {
         $eol = PHP_EOL;
         foreach (self::$newline_before_tokens as $token) {

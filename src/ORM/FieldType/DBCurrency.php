@@ -25,7 +25,7 @@ class DBCurrency extends DBDecimal
      */
     private static $currency_symbol = '$';
 
-    public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0)
+    public function __construct(string $name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0): void
     {
         parent::__construct($name, $wholeSize, $decimalSize, $defaultValue);
     }
@@ -33,7 +33,7 @@ class DBCurrency extends DBDecimal
     /**
      * Returns the number as a currency, eg “$1,000.00”.
      */
-    public function Nice()
+    public function Nice(): string
     {
         $val = $this->config()->currency_symbol . number_format(abs($this->value ?? 0.0) ?? 0.0, 2);
         if ($this->value < 0) {
@@ -46,7 +46,7 @@ class DBCurrency extends DBDecimal
     /**
      * Returns the number as a whole-number currency, eg “$1,000”.
      */
-    public function Whole()
+    public function Whole(): string
     {
         $val = $this->config()->currency_symbol . number_format(abs($this->value ?? 0.0) ?? 0.0, 0);
         if ($this->value < 0) {
@@ -55,7 +55,7 @@ class DBCurrency extends DBDecimal
         return $val;
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(string|int|float $value, SilverStripe\Dev\Tests\CsvBulkLoaderTest\PlayerContract $record = null, bool $markChanged = true): SilverStripe\ORM\FieldType\DBCurrency
     {
         $matches = null;
         if (is_numeric($value)) {
@@ -75,7 +75,7 @@ class DBCurrency extends DBDecimal
      *
      * @return CurrencyField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = null): SilverStripe\Forms\CurrencyField
     {
         return CurrencyField::create($this->getName(), $title);
     }

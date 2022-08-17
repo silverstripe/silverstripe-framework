@@ -134,7 +134,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param  array  $options
      * @throws InvalidArgumentException If $options was passed by not an array
      */
-    public function __construct($name = null, $options = [])
+    public function __construct(string|int $name = null, array $options = []): void
     {
         $this->name = $name;
 
@@ -161,7 +161,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * Note: Will raise a warning if using both
      * @return static
      */
-    public static function create_field($spec, $value, $name = null, ...$args)
+    public static function create_field(string $spec, string|bool|int|SilverStripe\ORM\FieldType\DBHTMLText|array|float $value, $name = null, ...$args): SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Raise warning if inconsistent with DataObject::dbObject() behaviour
         // This will cause spec args to be shifted down by the number of provided $args
@@ -189,7 +189,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if ($this->name && $this->name !== $name) {
             user_error("DBField::setName() shouldn't be called once a DBField already has a name."
@@ -206,7 +206,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -216,7 +216,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return mixed
      */
-    public function getValue()
+    public function getValue(): string|null|bool|int|array|float|SilverStripe\ORM\FieldType\DBHTMLText
     {
         return $this->value;
     }
@@ -237,7 +237,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *  than setting a new value.
      * @return $this
      */
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(string|bool|int|array|float|SilverStripe\ORM\FieldType\DBHTMLText $value, SilverStripe\View\ArrayData $record = null, bool $markChanged = true): SilverStripe\ORM\FieldType\DBText
     {
         $this->value = $value;
         return $this;
@@ -248,7 +248,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return mixed
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): string|null
     {
         return $this->defaultVal;
     }
@@ -259,7 +259,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param mixed $defaultValue
      * @return $this
      */
-    public function setDefaultValue($defaultValue)
+    public function setDefaultValue(string $defaultValue): SilverStripe\ORM\FieldType\DBEnum
     {
         $this->defaultVal = $defaultValue;
         return $this;
@@ -271,7 +271,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param array $options Array of options
      * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): SilverStripe\ORM\FieldType\DBClassName
     {
         $this->options = $options;
         return $this;
@@ -301,7 +301,7 @@ abstract class DBField extends ViewableData implements DBIndexable
         return $this;
     }
 
-    public function getIndexType()
+    public function getIndexType(): bool|string
     {
         if (array_key_exists('index', $this->options ?? [])) {
             $type = $this->options['index'];
@@ -325,7 +325,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return boolean
      */
-    public function exists()
+    public function exists(): bool
     {
         return (bool)$this->value;
     }
@@ -338,7 +338,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param mixed $value The value to check
      * @return mixed The raw value, or escaped parameterised details
      */
-    public function prepValueForDB($value)
+    public function prepValueForDB(string|array $value): string|null|array
     {
         if ($value === null ||
             $value === "" ||
@@ -363,7 +363,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @param array $manipulation
      */
-    public function writeToManipulation(&$manipulation)
+    public function writeToManipulation(array &$manipulation): void
     {
         $manipulation['fields'][$this->name] = $this->exists()
             ? $this->prepValueForDB($this->value) : $this->nullValue();
@@ -380,7 +380,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @param SQLSelect $query
      */
-    public function addToQuery(&$query)
+    public function addToQuery(SilverStripe\ORM\Queries\SQLSelect &$query): void
     {
     }
 
@@ -390,7 +390,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param string $tableName
      * @return $this
      */
-    public function setTable($tableName)
+    public function setTable(string $tableName): SilverStripe\ORM\FieldType\DBPrimaryKey
     {
         $this->tableName = $tableName;
         return $this;
@@ -401,7 +401,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string|null
      */
-    public function getTable()
+    public function getTable(): string|null
     {
         return $this->tableName;
     }
@@ -411,7 +411,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         // Default to XML encoding
         return $this->XML();
@@ -422,7 +422,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function HTMLATT()
+    public function HTMLATT(): string
     {
         return Convert::raw2htmlatt($this->RAW());
     }
@@ -432,7 +432,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function URLATT()
+    public function URLATT(): string
     {
         return urlencode($this->RAW() ?? '');
     }
@@ -442,7 +442,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function RAWURLATT()
+    public function RAWURLATT(): string
     {
         return rawurlencode($this->RAW() ?? '');
     }
@@ -452,7 +452,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function ATT()
+    public function ATT(): string
     {
         return Convert::raw2att($this->RAW());
     }
@@ -463,7 +463,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return mixed
      */
-    public function RAW()
+    public function RAW(): string|null|bool|int|array|float
     {
         return $this->getValue();
     }
@@ -473,7 +473,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function JS()
+    public function JS(): string
     {
         return Convert::raw2js($this->RAW());
     }
@@ -483,7 +483,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function JSON()
+    public function JSON(): string
     {
         return json_encode($this->RAW());
     }
@@ -493,7 +493,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function HTML()
+    public function HTML(): string
     {
         return $this->XML();
     }
@@ -503,7 +503,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function XML()
+    public function XML(): string
     {
         return Convert::raw2xml($this->RAW());
     }
@@ -513,7 +513,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return string
      */
-    public function CDATA()
+    public function CDATA(): string
     {
         return $this->XML();
     }
@@ -524,7 +524,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @return mixed
      */
-    public function nullValue()
+    public function nullValue(): null
     {
         return null;
     }
@@ -534,7 +534,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      *
      * @param DataObject $dataObject
      */
-    public function saveInto($dataObject)
+    public function saveInto(DNADesign\Elemental\Models\ElementContent $dataObject): void
     {
         $fieldName = $this->name;
         if (empty($fieldName)) {
@@ -569,7 +569,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param string $title Optional. Localized title of the generated instance
      * @return FormField
      */
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): SilverStripe\Forms\TextField
     {
         return $this->scaffoldFormField($title);
     }
@@ -584,7 +584,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param string $name Override name of this field
      * @return SearchFilter
      */
-    public function defaultSearchFilter($name = null)
+    public function defaultSearchFilter($name = null): SilverStripe\ORM\Filters\PartialMatchFilter
     {
         $name = ($name) ? $name : $this->name;
         $filterClass = $this->config()->get('default_search_filter_class');
@@ -607,7 +607,7 @@ abstract class DBField extends ViewableData implements DBIndexable
 DBG;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->forTemplate();
     }
@@ -624,7 +624,7 @@ DBG;
      * @param array $value
      * @return $this
      */
-    public function setArrayValue($value)
+    public function setArrayValue(string $value): SilverStripe\ORM\FieldType\DBPrimaryKey
     {
         $this->arrayValue = $value;
         return $this;
@@ -635,12 +635,12 @@ DBG;
      *
      * @return string|array Encoded string for use in formschema response
      */
-    public function getSchemaValue()
+    public function getSchemaValue(): string|null|bool|int
     {
         return $this->RAW();
     }
 
-    public function getIndexSpecs()
+    public function getIndexSpecs(): null|array
     {
         $type = $this->getIndexType();
         if ($type) {
@@ -658,7 +658,7 @@ DBG;
      * Composite DBFields can override this method and return `false` so they can accept arrays of values.
      * @return boolean
      */
-    public function scalarValueOnly()
+    public function scalarValueOnly(): bool
     {
         return true;
     }

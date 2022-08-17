@@ -15,7 +15,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
 class Member_GroupSet extends ManyManyList
 {
 
-    protected function linkJoinTable()
+    protected function linkJoinTable(): void
     {
         // Do not join the table directly
         if ($this->extraFields) {
@@ -33,7 +33,7 @@ class Member_GroupSet extends ManyManyList
      * ids as per getForeignID
      * @return array Condition In array(SQL => parameters format)
      */
-    public function foreignIDFilter($id = null)
+    public function foreignIDFilter(int $id = null): array
     {
         if ($id === null) {
             $id = $this->getForeignID();
@@ -61,14 +61,14 @@ class Member_GroupSet extends ManyManyList
         return ['"Group"."ID"' => 0];
     }
 
-    public function foreignIDWriteFilter($id = null)
+    public function foreignIDWriteFilter(int $id = null): array
     {
         // Use the ManyManyList::foreignIDFilter rather than the one
         // in this class, otherwise we end up selecting all inherited groups
         return parent::foreignIDFilter($id);
     }
 
-    public function add($item, $extraFields = null)
+    public function add(SilverStripe\Security\Group|int $item, $extraFields = null): void
     {
         // Get Group.ID
         $itemID = null;
@@ -86,7 +86,7 @@ class Member_GroupSet extends ManyManyList
         }
     }
 
-    public function removeAll()
+    public function removeAll(): void
     {
         // Remove the join to the join table to avoid MySQL row locking issues.
         $query = $this->dataQuery();
@@ -122,7 +122,7 @@ class Member_GroupSet extends ManyManyList
      * @param array $itemIDs
      * @return boolean
      */
-    protected function canAddGroups($itemIDs)
+    protected function canAddGroups(array $itemIDs): bool
     {
         if (empty($itemIDs)) {
             return true;
@@ -136,7 +136,7 @@ class Member_GroupSet extends ManyManyList
      *
      * @return Member
      */
-    protected function getMember()
+    protected function getMember(): SilverStripe\Security\Member
     {
         $id = $this->getForeignID();
         if ($id) {

@@ -194,7 +194,7 @@ class Session
      * @param HTTPRequest $request
      * @return string
      */
-    protected function userAgent(HTTPRequest $request)
+    protected function userAgent(HTTPRequest $request): string|null
     {
         return $request->getHeader('User-Agent');
     }
@@ -205,7 +205,7 @@ class Session
      * @param array|null|Session $data Can be an array of data (such as $_SESSION) or another Session object to clone.
      * If null, this session is treated as unstarted.
      */
-    public function __construct($data)
+    public function __construct(array|SilverStripe\Control\Session $data): void
     {
         if ($data instanceof Session) {
             $data = $data->getAll();
@@ -223,7 +223,7 @@ class Session
      *
      * @param HTTPRequest $request
      */
-    public function init(HTTPRequest $request)
+    public function init(HTTPRequest $request): void
     {
         if (!$this->isStarted() && $this->requestContainsSessionId($request)) {
             $this->start($request);
@@ -243,7 +243,7 @@ class Session
      *
      * @param HTTPRequest $request
      */
-    public function restart(HTTPRequest $request)
+    public function restart(HTTPRequest $request): void
     {
         $this->destroy(true, $request);
         $this->start($request);
@@ -254,7 +254,7 @@ class Session
      *
      * @return bool
      */
-    public function isStarted()
+    public function isStarted(): bool
     {
         return $this->started;
     }
@@ -263,7 +263,7 @@ class Session
      * @param HTTPRequest $request
      * @return bool
      */
-    public function requestContainsSessionId(HTTPRequest $request)
+    public function requestContainsSessionId(HTTPRequest $request): bool
     {
         $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
         $name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
@@ -277,7 +277,7 @@ class Session
      *
      * @param HTTPRequest $request The request for which to start a session
      */
-    public function start(HTTPRequest $request)
+    public function start(HTTPRequest $request): void
     {
         if ($this->isStarted()) {
             throw new BadMethodCallException("Session has already started");
@@ -360,7 +360,7 @@ class Session
      * @param bool $removeCookie
      * @param HTTPRequest $request The request for which to destroy a session
      */
-    public function destroy($removeCookie = true, HTTPRequest $request = null)
+    public function destroy(bool $removeCookie = true, HTTPRequest $request = null): void
     {
         if (session_id()) {
             if ($removeCookie) {
@@ -388,7 +388,7 @@ class Session
      * @param mixed $val
      * @return $this
      */
-    public function set($name, $val)
+    public function set(string $name, string|int|bool|array|SilverStripe\MFA\Store\SessionStore $val): SilverStripe\Control\Session
     {
         $var = &$this->nestedValueRef($name, $this->data);
 
@@ -406,7 +406,7 @@ class Session
      * @internal
      * @param string $name
      */
-    protected function markChanged($name)
+    protected function markChanged(string $name): void
     {
         $diffVar = &$this->changedData;
         foreach (explode('.', $name ?? '') as $namePart) {
@@ -453,7 +453,7 @@ class Session
      * @param string $name
      * @return mixed
      */
-    public function get($name)
+    public function get(string $name): null|string|int|array|bool|SilverStripe\MFA\Store\SessionStore
     {
         return $this->nestedValue($name, $this->data);
     }
@@ -464,7 +464,7 @@ class Session
      * @param string $name
      * @return $this
      */
-    public function clear($name)
+    public function clear(string $name): SilverStripe\Control\Session
     {
         // Get var by path
         $var = $this->nestedValue($name, $this->data);
@@ -488,7 +488,7 @@ class Session
     /**
      * Clear all values
      */
-    public function clearAll()
+    public function clearAll(): void
     {
         if ($this->data && is_array($this->data)) {
             foreach (array_keys($this->data ?? []) as $key) {
@@ -502,7 +502,7 @@ class Session
      *
      * @return array|null
      */
-    public function getAll()
+    public function getAll(): array|null
     {
         return $this->data;
     }
@@ -512,7 +512,7 @@ class Session
      *
      * @param HTTPRequest $request
      */
-    public function finalize(HTTPRequest $request)
+    public function finalize(HTTPRequest $request): void
     {
         $this->set('HTTP_USER_AGENT', $this->userAgent($request));
     }
@@ -523,7 +523,7 @@ class Session
      *
      * @param HTTPRequest $request
      */
-    public function save(HTTPRequest $request)
+    public function save(HTTPRequest $request): void
     {
         if ($this->changedData) {
             $this->finalize($request);
@@ -545,7 +545,7 @@ class Session
      * @param array $data
      * @param array $dest
      */
-    protected function recursivelyApply($data, &$dest)
+    protected function recursivelyApply(array $data, &$dest): void
     {
         Deprecation::notice('5.0', 'Use recursivelyApplyChanges() instead');
         foreach ($data as $k => $v) {
@@ -565,7 +565,7 @@ class Session
      *
      * @return array
      */
-    public function changedData()
+    public function changedData(): array
     {
         return $this->changedData;
     }
@@ -579,7 +579,7 @@ class Session
      * @param array $source
      * @return mixed Reference to value in $source
      */
-    protected function &nestedValueRef($name, &$source)
+    protected function &nestedValueRef(string $name, &$source): null|int|string|array|bool|SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Find var to change
         $var = &$source;
@@ -604,7 +604,7 @@ class Session
      * @param array $source
      * @return mixed Value in array in $source
      */
-    protected function nestedValue($name, $source)
+    protected function nestedValue(string $name, array $source): null|string|int|array|bool|SilverStripe\MFA\Store\SessionStore
     {
         // Find var to change
         $var = $source;
@@ -625,7 +625,7 @@ class Session
      * @param array $source
      * @param array $destination
      */
-    protected function recursivelyApplyChanges($changes, $source, &$destination)
+    protected function recursivelyApplyChanges(array $changes, array $source, &$destination): void
     {
         $source = $source ?: [];
         foreach ($changes as $key => $changed) {
@@ -650,7 +650,7 @@ class Session
      *
      * @internal This is for internal use only. Isn't a part of public API.
      */
-    public function regenerateSessionId()
+    public function regenerateSessionId(): void
     {
         if (!headers_sent() && session_status() === PHP_SESSION_ACTIVE) {
             session_regenerate_id(true);

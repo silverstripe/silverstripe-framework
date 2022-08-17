@@ -57,7 +57,7 @@ class FormScaffolder
     /**
      * @param DataObject $obj
      */
-    public function __construct($obj)
+    public function __construct(DNADesign\Elemental\Models\ElementContent $obj): void
     {
         $this->obj = $obj;
     }
@@ -70,7 +70,7 @@ class FormScaffolder
      *
      * @return FieldList
      */
-    public function getFieldList()
+    public function getFieldList(): SilverStripe\Forms\FieldList
     {
         $fields = new FieldList();
 
@@ -202,7 +202,7 @@ class FormScaffolder
         $overrideFieldClass,
         $tabbed,
         DataObject $dataObject
-    ) {
+    ): void {
         if ($tabbed) {
             $fields->findOrMakeTab(
                 "Root.$relationship",
@@ -234,7 +234,7 @@ class FormScaffolder
      *
      * @return array
      */
-    protected function getParamsArray()
+    protected function getParamsArray(): array
     {
         return [
             'tabbed' => $this->tabbed,

@@ -59,19 +59,19 @@ use SilverStripe\View\ViewableData;
 class TreeMultiselectField extends TreeDropdownField
 {
     public function __construct(
-        $name,
+        string $name,
         $title = null,
         $sourceObject = Group::class,
         $keyField = "ID",
         $labelField = "Title"
-    ) {
+    ): void {
         parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
         $this->removeExtraClass('single');
         $this->addExtraClass('multiple');
         $this->value = 'unchanged';
     }
 
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = parent::getSchemaDataDefaults();
 
@@ -82,7 +82,7 @@ class TreeMultiselectField extends TreeDropdownField
         return $data;
     }
 
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $data = parent::getSchemaStateDefaults();
         unset($data['data']['valueObject']);
@@ -119,7 +119,7 @@ class TreeMultiselectField extends TreeDropdownField
      * Return this field's linked items
      * @return ArrayList|DataList $items
      */
-    public function getItems()
+    public function getItems(): SilverStripe\ORM\ArrayList
     {
         $value = $this->Value();
 
@@ -169,7 +169,7 @@ class TreeMultiselectField extends TreeDropdownField
             ->filter($this->getKeyField(), $ids);
     }
 
-    public function setValue($value, $source = null)
+    public function setValue(string|SilverStripe\Auditor\AuditHookManyManyList|array $value, array|SilverStripe\Assets\File $source = null): SilverStripe\Forms\TreeMultiselectField
     {
         // If loading from a dataobject, get items by relation
         if ($source instanceof DataObject) {
@@ -188,7 +188,7 @@ class TreeMultiselectField extends TreeDropdownField
         return parent::setValue($value);
     }
 
-    public function dataValue()
+    public function dataValue(): array
     {
         return $this->getItems()->column($this->getKeyField());
     }
@@ -200,7 +200,7 @@ class TreeMultiselectField extends TreeDropdownField
      * @param array $properties
      * @return DBHTMLText
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $value = '';
         $titleArray = [];
@@ -249,7 +249,7 @@ class TreeMultiselectField extends TreeDropdownField
      *
      * @param DataObjectInterface $record
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         $fieldName = $this->getName();
 
@@ -279,7 +279,7 @@ class TreeMultiselectField extends TreeDropdownField
     /**
      * Changes this field to the readonly field.
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\TreeMultiselectField_Readonly
     {
         /** @var TreeMultiselectField_Readonly $copy */
         $copy = $this->castedCopy(TreeMultiselectField_Readonly::class);
@@ -295,7 +295,7 @@ class TreeMultiselectField extends TreeDropdownField
      *
      * @internal To be removed in 5.0
      */
-    protected function objectForKey($key)
+    protected function objectForKey(SilverStripe\Auditor\AuditHookManyManyList|string $key): null
     {
         /**
          * Fixes https://github.com/silverstripe/silverstripe-framework/issues/8332

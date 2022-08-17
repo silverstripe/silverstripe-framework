@@ -35,7 +35,7 @@ class GridFieldConfig
      */
     protected $components = null;
 
-    public function __construct()
+    public function __construct(): void
     {
         $this->components = new ArrayList();
     }
@@ -45,7 +45,7 @@ class GridFieldConfig
      * @param string $insertBefore The class of the component to insert this one before
      * @return $this
      */
-    public function addComponent(GridFieldComponent $component, $insertBefore = null)
+    public function addComponent(GridFieldComponent $component, string|SilverStripe\Forms\GridField\GridFieldEditButton $insertBefore = null): SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor
     {
         if ($insertBefore) {
             $existingItems = $this->getComponents();
@@ -71,7 +71,7 @@ class GridFieldConfig
      * @param GridFieldComponent|GridFieldComponent[] ...$component One or more components, or an array of components
      * @return $this
      */
-    public function addComponents($component = null)
+    public function addComponents(array|Symbiote\GridFieldExtensions\GridFieldEditableColumns $component = null): SilverStripe\Comments\Admin\CommentsGridFieldConfig
     {
         $components = is_array($component) ? $component : func_get_args();
         foreach ($components as $component) {
@@ -84,7 +84,7 @@ class GridFieldConfig
      * @param GridFieldComponent $component
      * @return $this
      */
-    public function removeComponent(GridFieldComponent $component)
+    public function removeComponent(GridFieldComponent $component): SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor
     {
         $this->getComponents()->remove($component);
         return $this;
@@ -94,7 +94,7 @@ class GridFieldConfig
      * @param string|string[] $types Class name or interface, or an array of the same
      * @return $this
      */
-    public function removeComponentsByType($types)
+    public function removeComponentsByType(string|array $types): SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor
     {
         if (!is_array($types)) {
             $types = [$types];
@@ -113,7 +113,7 @@ class GridFieldConfig
     /**
      * @return ArrayList Of GridFieldComponent
      */
-    public function getComponents()
+    public function getComponents(): SilverStripe\ORM\ArrayList
     {
         if (!$this->components) {
             $this->components = new ArrayList();
@@ -127,7 +127,7 @@ class GridFieldConfig
      * @param string $type Class name or interface
      * @return ArrayList Of GridFieldComponent
      */
-    public function getComponentsByType($type)
+    public function getComponentsByType(string $type): SilverStripe\ORM\ArrayList
     {
         $components = new ArrayList();
         foreach ($this->components as $component) {
@@ -144,7 +144,7 @@ class GridFieldConfig
      * @param string $type ClassName
      * @return GridFieldComponent
      */
-    public function getComponentByType($type)
+    public function getComponentByType(string $type): null|Symbiote\GridFieldExtensions\GridFieldAddNewMultiClass
     {
         foreach ($this->components as $component) {
             if ($component instanceof $type) {

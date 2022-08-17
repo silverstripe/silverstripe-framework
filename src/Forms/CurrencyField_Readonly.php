@@ -17,7 +17,7 @@ class CurrencyField_Readonly extends ReadonlyField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): string
     {
         $currencySymbol = DBCurrency::config()->get('currency_symbol');
         if ($this->value) {
@@ -35,7 +35,7 @@ class CurrencyField_Readonly extends ReadonlyField
     /**
      * This already is a readonly field.
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\CurrencyField_Readonly
     {
         return clone $this;
     }

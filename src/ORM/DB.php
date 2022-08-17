@@ -84,7 +84,7 @@ class DB
      * be accessed through DB::get_conn($name).  This is useful when you have an application that
      * needs to connect to more than one database.
      */
-    public static function set_conn(Database $connection, $name = 'default')
+    public static function set_conn(Database $connection, string $name = 'default'): void
     {
         self::$connections[$name] = $connection;
     }
@@ -96,7 +96,7 @@ class DB
      * the default connection is returned.
      * @return Database
      */
-    public static function get_conn($name = 'default')
+    public static function get_conn(string $name = 'default'): MySQLDatabase_ac19722
     {
         if (isset(self::$connections[$name])) {
             return self::$connections[$name];
@@ -128,7 +128,7 @@ class DB
      * the default connection is returned.
      * @return DBSchemaManager
      */
-    public static function get_schema($name = 'default')
+    public static function get_schema($name = 'default'): SilverStripe\ORM\Connect\MySQLSchemaManager
     {
         $connection = self::get_conn($name);
         if ($connection) {
@@ -146,7 +146,7 @@ class DB
      * the default connection is returned.
      * @return string The resulting SQL as a string
      */
-    public static function build_sql(SQLExpression $expression, &$parameters, $name = 'default')
+    public static function build_sql(SQLExpression $expression, &$parameters, $name = 'default'): string|null
     {
         $connection = self::get_conn($name);
         if ($connection) {
@@ -164,7 +164,7 @@ class DB
      * the default connection is returned.
      * @return DBConnector
      */
-    public static function get_connector($name = 'default')
+    public static function get_connector($name = 'default'): SilverStripe\ORM\Connect\MySQLiConnector
     {
         $connection = self::get_conn($name);
         if ($connection) {
@@ -224,7 +224,7 @@ class DB
      *
      * @return string|false Name of temp database, or false if not set
      */
-    public static function get_alternative_database_name()
+    public static function get_alternative_database_name(): bool|null
     {
         // Ignore if disabled
         if (!Config::inst()->get(static::class, 'alternative_database_enabled')) {
@@ -260,7 +260,7 @@ class DB
      * @param string $name
      * @return bool
      */
-    public static function valid_alternative_database_name($name)
+    public static function valid_alternative_database_name(string $name): bool
     {
         if (Director::isLive() || empty($name)) {
             return false;
@@ -282,7 +282,7 @@ class DB
      * @param string $label identifier for the connection
      * @return Database
      */
-    public static function connect($databaseConfig, $label = 'default')
+    public static function connect(array $databaseConfig, string $label = 'default'): MySQLDatabase_ac19722
     {
         // This is used by the "testsession" module to test up a test session using an alternative name
         if ($name = self::get_alternative_database_name()) {
@@ -312,7 +312,7 @@ class DB
      * @param array $databaseConfig
      * @param string $name
      */
-    public static function setConfig($databaseConfig, $name = 'default')
+    public static function setConfig(array $databaseConfig, $name = 'default'): void
     {
         static::$configs[$name] = $databaseConfig;
     }
@@ -323,7 +323,7 @@ class DB
      * @param string $name
      * @return mixed
      */
-    public static function getConfig($name = 'default')
+    public static function getConfig(string $name = 'default'): array
     {
         if (isset(static::$configs[$name])) {
             return static::$configs[$name];
@@ -346,7 +346,7 @@ class DB
      * @param int $errorLevel The level of error reporting to enable for the query
      * @return Query
      */
-    public static function query($sql, $errorLevel = E_USER_ERROR)
+    public static function query(string $sql, $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         self::$lastQuery = $sql;
 
@@ -362,7 +362,7 @@ class DB
      * @param string $join The string to join each placeholder together with
      * @return string|null Either a list of placeholders, or null
      */
-    public static function placeholders($input, $join = ', ')
+    public static function placeholders(array $input, $join = ', '): string
     {
         if (is_array($input)) {
             $number = count($input ?? []);
@@ -438,7 +438,7 @@ class DB
      * @param int $errorLevel The level of error reporting to enable for the query
      * @return Query
      */
-    public static function prepared_query($sql, $parameters, $errorLevel = E_USER_ERROR)
+    public static function prepared_query(string $sql, array $parameters, $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         self::$lastQuery = $sql;
 
@@ -487,7 +487,7 @@ class DB
      *
      * @param array $manipulation
      */
-    public static function manipulate($manipulation)
+    public static function manipulate(array $manipulation): void
     {
         self::$lastQuery = $manipulation;
         self::get_conn()->manipulate($manipulation);
@@ -499,7 +499,7 @@ class DB
      * @param string $table
      * @return int
      */
-    public static function get_generated_id($table)
+    public static function get_generated_id(string $table): int
     {
         return self::get_conn()->getGeneratedID($table);
     }
@@ -509,7 +509,7 @@ class DB
      *
      * @return boolean
      */
-    public static function is_active()
+    public static function is_active(): bool
     {
         return ($conn = self::get_conn()) && $conn->isActive();
     }
@@ -577,13 +577,13 @@ class DB
      * @param array $extensions List of extensions
      */
     public static function require_table(
-        $table,
+        string $table,
         $fieldSchema = null,
         $indexSchema = null,
         $hasAutoIncPK = true,
         $options = null,
         $extensions = null
-    ) {
+    ): void {
         self::get_schema()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options, $extensions);
     }
 
@@ -594,7 +594,7 @@ class DB
      * @param string $field The field name.
      * @param string $spec The field specification.
      */
-    public static function require_field($table, $field, $spec)
+    public static function require_field(string $table, string $field, string|array $spec): void
     {
         self::get_schema()->requireField($table, $field, $spec);
     }
@@ -616,7 +616,7 @@ class DB
      *
      * @param string $table The table name.
      */
-    public static function dont_require_table($table)
+    public static function dont_require_table(string $table): void
     {
         self::get_schema()->dontRequireTable($table);
     }
@@ -648,7 +648,7 @@ class DB
      *
      * @return integer The number of affected rows
      */
-    public static function affected_rows()
+    public static function affected_rows(): int
     {
         return self::get_conn()->affectedRows();
     }
@@ -659,7 +659,7 @@ class DB
      *
      * @return array The list of tables
      */
-    public static function table_list()
+    public static function table_list(): array
     {
         return self::get_schema()->tableList();
     }
@@ -671,7 +671,7 @@ class DB
      * @param string $table The table name.
      * @return array The list of fields
      */
-    public static function field_list($table)
+    public static function field_list(string $table): array
     {
         return self::get_schema()->fieldList($table);
     }
@@ -681,7 +681,7 @@ class DB
      *
      * @param bool $quiet
      */
-    public static function quiet($quiet = true)
+    public static function quiet(bool $quiet = true): void
     {
         self::get_schema()->quiet($quiet);
     }
@@ -692,7 +692,7 @@ class DB
      * @param string $message to display
      * @param string $type one of [created|changed|repaired|obsolete|deleted|error]
      */
-    public static function alteration_message($message, $type = "")
+    public static function alteration_message(string $message, string $type = ""): void
     {
         self::get_schema()->alterationMessage($message, $type);
     }

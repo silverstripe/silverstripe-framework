@@ -39,7 +39,7 @@ class TaskRunner extends Controller
         'silverstripe/framework:client/styles/task-runner.css',
     ];
 
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -100,7 +100,7 @@ class TaskRunner extends Controller
      * Runs a BuildTask
      * @param HTTPRequest $request
      */
-    public function runTask($request)
+    public function runTask(SilverStripe\Control\HTTPRequest $request): void
     {
         $name = $request->param('TaskName');
         $tasks = $this->getTasks();
@@ -135,7 +135,7 @@ class TaskRunner extends Controller
     /**
      * @return array Array of associative arrays for each task (Keys: 'class', 'title', 'description')
      */
-    protected function getTasks()
+    protected function getTasks(): array
     {
         $availableTasks = [];
 
@@ -171,7 +171,7 @@ class TaskRunner extends Controller
      * @param string $class
      * @return boolean
      */
-    protected function taskEnabled($class)
+    protected function taskEnabled(string $class): bool
     {
         $reflectionClass = new ReflectionClass($class);
         if ($reflectionClass->isAbstract()) {

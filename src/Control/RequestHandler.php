@@ -118,7 +118,7 @@ class RequestHandler extends ViewableData
      */
     private static $allowed_actions = null;
 
-    public function __construct()
+    public function __construct(): void
     {
         $this->brokenOnConstruct = false;
 
@@ -146,7 +146,7 @@ class RequestHandler extends ViewableData
      * @param HTTPRequest $request The object that is responsible for distributing URL parsing
      * @return HTTPResponse|RequestHandler|string|array
      */
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): null|array|string|SilverStripe\ORM\FieldType\DBHTMLText
     {
         // $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
         if ($this->brokenOnConstruct) {
@@ -246,7 +246,7 @@ class RequestHandler extends ViewableData
      * @param HTTPRequest $request
      * @return array
      */
-    protected function findAction($request)
+    protected function findAction(SilverStripe\Control\HTTPRequest $request): array
     {
         $handlerClass = static::class;
 
@@ -288,7 +288,7 @@ class RequestHandler extends ViewableData
      * @param string $link
      * @return string
      */
-    protected function addBackURLParam($link)
+    protected function addBackURLParam(string $link): string
     {
         $backURL = $this->getBackURL();
         if ($backURL) {
@@ -307,7 +307,7 @@ class RequestHandler extends ViewableData
      * @param $action
      * @return HTTPResponse
      */
-    protected function handleAction($request, $action)
+    protected function handleAction(SilverStripe\Control\HTTPRequest $request, string $action): null|array|string|SilverStripe\Dev\DevBuildController
     {
         $classMessage = Director::isLive() ? 'on this handler' : 'on class ' . static::class;
 
@@ -342,7 +342,7 @@ class RequestHandler extends ViewableData
      * @param string $limitToClass
      * @return array|null
      */
-    public function allowedActions($limitToClass = null)
+    public function allowedActions(string $limitToClass = null): array|null
     {
         if ($limitToClass) {
             $actions = Config::forClass($limitToClass)->get('allowed_actions', true);
@@ -379,7 +379,7 @@ class RequestHandler extends ViewableData
      * @param string $action
      * @return bool
      */
-    public function hasAction($action)
+    public function hasAction(string $action): bool
     {
         if ($action == 'index') {
             return true;
@@ -428,7 +428,7 @@ class RequestHandler extends ViewableData
      * @param string $actionOrigCasing
      * @return string
      */
-    protected function definingClassForAction($actionOrigCasing)
+    protected function definingClassForAction(string $actionOrigCasing): string|null
     {
         $action = strtolower($actionOrigCasing ?? '');
 
@@ -453,7 +453,7 @@ class RequestHandler extends ViewableData
      * @return bool
      * @throws Exception
      */
-    public function checkAccessAction($action)
+    public function checkAccessAction(string $action): bool
     {
         $actionOrigCasing = $action;
         $action = strtolower($action ?? '');
@@ -513,7 +513,7 @@ class RequestHandler extends ViewableData
      * @uses HTTPResponse_Exception
      * @throws HTTPResponse_Exception
      */
-    public function httpError($errorCode, $errorMessage = null)
+    public function httpError(int $errorCode, string $errorMessage = null)
     {
         $request = $this->getRequest();
 
@@ -535,7 +535,7 @@ class RequestHandler extends ViewableData
      *
      * @return HTTPRequest
      */
-    public function getRequest()
+    public function getRequest(): SilverStripe\Control\NullHTTPRequest
     {
         return $this->request;
     }
@@ -547,7 +547,7 @@ class RequestHandler extends ViewableData
      * @param HTTPRequest $request
      * @return $this
      */
-    public function setRequest($request)
+    public function setRequest(SilverStripe\Control\NullHTTPRequest $request): SilverStripe\CMS\Controllers\CMSMain
     {
         $this->request = $request;
         return $this;
@@ -559,7 +559,7 @@ class RequestHandler extends ViewableData
      * @param string $action Optional action
      * @return string
      */
-    public function Link($action = null)
+    public function Link(bool|string $action = null): string
     {
         // Check configured url_segment
         $url = $this->config()->get('url_segment');
@@ -586,7 +586,7 @@ class RequestHandler extends ViewableData
      * @param int $code
      * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, int $code = 302): SilverStripe\Control\HTTPResponse
     {
         $url = Director::absoluteURL($url);
         $response = new HTTPResponse();
@@ -598,7 +598,7 @@ class RequestHandler extends ViewableData
      *
      * @return string
      */
-    public function getBackURL()
+    public function getBackURL(): null|string
     {
         $request = $this->getRequest();
         if (!$request) {
@@ -625,7 +625,7 @@ class RequestHandler extends ViewableData
      * @internal called from {@see Form::getValidationErrorResponse}
      * @return string|null
      */
-    public function getReturnReferer()
+    public function getReturnReferer(): null|string
     {
         $referer = $this->getReferer();
         if ($referer && Director::is_site_url($referer)) {
@@ -639,7 +639,7 @@ class RequestHandler extends ViewableData
      *
      * @return string
      */
-    public function getReferer()
+    public function getReferer(): null|string
     {
         $request = $this->getRequest();
         if (!$request) {
@@ -658,7 +658,7 @@ class RequestHandler extends ViewableData
      *
      * @return HTTPResponse
      */
-    public function redirectBack()
+    public function redirectBack(): SilverStripe\Control\HTTPResponse
     {
         // Prefer to redirect to ?BackURL, but fall back to Referer header
         // As a last resort redirect to base url

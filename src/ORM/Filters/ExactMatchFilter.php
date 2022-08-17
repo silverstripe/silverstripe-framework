@@ -15,7 +15,7 @@ use InvalidArgumentException;
 class ExactMatchFilter extends SearchFilter
 {
 
-    public function getSupportedModifiers()
+    public function getSupportedModifiers(): array
     {
         return ['not', 'nocase', 'case'];
     }
@@ -26,7 +26,7 @@ class ExactMatchFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    protected function applyOne(DataQuery $query)
+    protected function applyOne(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         return $this->oneFilter($query, true);
     }
@@ -37,7 +37,7 @@ class ExactMatchFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    protected function excludeOne(DataQuery $query)
+    protected function excludeOne(DataQuery $query): SilverStripe\ORM\DataQuery_SubGroup
     {
         return $this->oneFilter($query, false);
     }
@@ -49,7 +49,7 @@ class ExactMatchFilter extends SearchFilter
      * @param bool $inclusive True if this is inclusive, or false if exclusive
      * @return DataQuery
      */
-    protected function oneFilter(DataQuery $query, $inclusive)
+    protected function oneFilter(DataQuery $query, bool $inclusive): SilverStripe\ORM\DataQuery
     {
         $this->model = $query->applyRelation($this->relation);
         $field = $this->getDbName();
@@ -90,7 +90,7 @@ class ExactMatchFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    protected function applyMany(DataQuery $query)
+    protected function applyMany(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         return $this->manyFilter($query, true);
     }
@@ -102,7 +102,7 @@ class ExactMatchFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    protected function excludeMany(DataQuery $query)
+    protected function excludeMany(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         return $this->manyFilter($query, false);
     }
@@ -114,7 +114,7 @@ class ExactMatchFilter extends SearchFilter
      * @param bool $inclusive True if this is inclusive, or false if exclusive
      * @return DataQuery
      */
-    protected function manyFilter(DataQuery $query, $inclusive)
+    protected function manyFilter(DataQuery $query, bool $inclusive): SilverStripe\ORM\DataQuery
     {
         $this->model = $query->applyRelation($this->relation);
         $caseSensitive = $this->getCaseSensitive();
@@ -201,7 +201,7 @@ class ExactMatchFilter extends SearchFilter
             $query->where($clause);
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
     }

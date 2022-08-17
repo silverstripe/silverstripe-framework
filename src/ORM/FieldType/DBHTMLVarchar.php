@@ -36,7 +36,7 @@ class DBHTMLVarchar extends DBVarchar
      *
      * @return bool
      */
-    public function getProcessShortcodes()
+    public function getProcessShortcodes(): bool
     {
         return $this->processShortcodes;
     }
@@ -47,7 +47,7 @@ class DBHTMLVarchar extends DBVarchar
      * @param bool $process
      * @return $this
      */
-    public function setProcessShortcodes($process)
+    public function setProcessShortcodes(bool $process): SilverStripe\ORM\FieldType\DBHTMLVarchar
     {
         $this->processShortcodes = (bool)$process;
         return $this;
@@ -69,7 +69,7 @@ class DBHTMLVarchar extends DBVarchar
      *
      * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): SilverStripe\ORM\FieldType\DBHTMLVarchar
     {
         if (array_key_exists("shortcodes", $options ?? [])) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
@@ -78,13 +78,13 @@ class DBHTMLVarchar extends DBVarchar
         return parent::setOptions($options);
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         // Suppress XML encoding for DBHtmlText
         return $this->RAW();
     }
 
-    public function RAW()
+    public function RAW(): string
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
@@ -112,7 +112,7 @@ class DBHTMLVarchar extends DBVarchar
      *
      * @return string
      */
-    public function Plain()
+    public function Plain(): string
     {
         // Strip out HTML
         $text = strip_tags($this->RAW() ?? '');
@@ -141,7 +141,7 @@ class DBHTMLVarchar extends DBVarchar
         return null;
     }
 
-    public function exists()
+    public function exists(): bool
     {
         // Optimisation: don't process shortcode just for ->exists()
         $value = $this->getValue();

@@ -33,7 +33,7 @@ class IPUtils
      * @package framework
      * @subpackage core
      */
-    public static function checkIP($requestIP, $ips)
+    public static function checkIP(string $requestIP, string|array $ips): bool
     {
         if (!is_array($ips)) {
             $ips = [$ips];
@@ -58,7 +58,7 @@ class IPUtils
      *
      * @return bool Whether the request IP matches the IP, or whether the request IP is within the CIDR subnet
      */
-    public static function checkIP4($requestIP, $ip)
+    public static function checkIP4(string $requestIP, string $ip): bool|string
     {
         if (!filter_var($requestIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return false;
@@ -96,7 +96,7 @@ class IPUtils
      *
      * @throws \RuntimeException When IPV6 support is not enabled
      */
-    public static function checkIP6($requestIP, $ip)
+    public static function checkIP6(string $requestIP, string $ip): bool
     {
         if (!((extension_loaded('sockets') && defined('AF_INET6')) || @inet_pton('::1'))) {
             throw new \RuntimeException('Unable to check IPv6. Check that PHP was not compiled with option "disable-ipv6".');

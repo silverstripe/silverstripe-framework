@@ -24,7 +24,7 @@ class EnvironmentBypass implements Bypass
      *
      * @param string[] ...$environments
      */
-    public function __construct(...$environments)
+    public function __construct(...$environments): void
     {
         $this->environments = $environments;
     }
@@ -61,7 +61,7 @@ class EnvironmentBypass implements Bypass
      *
      * @return bool
      */
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return in_array(Director::get_environment_type(), $this->environments ?? [], true);
     }

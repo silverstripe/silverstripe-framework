@@ -22,7 +22,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
      * @param callable $delegate
      * @return HTTPResponse
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         /** @var HTTPResponse $response */
         $response = $delegate($request);
@@ -62,7 +62,7 @@ class ChangeDetectionMiddleware implements HTTPMiddleware
      * @param HTTPResponse|string $response
      * @return string|false
      */
-    protected function generateETag(HTTPResponse $response)
+    protected function generateETag(HTTPResponse $response): bool
     {
         // Existing e-tag
         $etag = $response->getHeader('ETag');

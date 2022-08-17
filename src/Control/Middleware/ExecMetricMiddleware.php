@@ -14,7 +14,7 @@ use SilverStripe\Dev\Debug;
 class ExecMetricMiddleware implements HTTPMiddleware
 {
 
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         if (!$this->showMetric($request)) {
             return $delegate($request);
@@ -41,7 +41,7 @@ class ExecMetricMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request
      * @return bool
      */
-    private function showMetric(HTTPRequest $request)
+    private function showMetric(HTTPRequest $request): bool
     {
         return Director::isDev() && array_key_exists('execmetric', $request->getVars() ?? []);
     }

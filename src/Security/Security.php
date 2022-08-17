@@ -200,7 +200,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * @return Authenticator[]
      */
-    public function getAuthenticators()
+    public function getAuthenticators(): array
     {
         return array_filter($this->authenticators ?? []);
     }
@@ -208,12 +208,12 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * @param Authenticator[] $authenticators
      */
-    public function setAuthenticators(array $authenticators)
+    public function setAuthenticators(array $authenticators): void
     {
         $this->authenticators = $authenticators;
     }
 
-    protected function init()
+    protected function init(): void
     {
         parent::init();
 
@@ -242,7 +242,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return Authenticator Class name of Authenticator
      * @throws LogicException
      */
-    protected function getAuthenticator($name = 'default')
+    protected function getAuthenticator(string $name = 'default'): SilverStripe\MFA\Authenticator\MemberAuthenticator
     {
         $authenticators = $this->getAuthenticators();
 
@@ -259,7 +259,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param int $service The type of service that is requested
      * @return Authenticator[] Return an array of Authenticator objects
      */
-    public function getApplicableAuthenticators($service = Authenticator::LOGIN)
+    public function getApplicableAuthenticators($service = Authenticator::LOGIN): array
     {
         $authenticators = $this->getAuthenticators();
 
@@ -284,7 +284,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return bool Returns TRUE if the authenticator is registered, FALSE
      *              otherwise.
      */
-    public function hasAuthenticator($authenticator)
+    public function hasAuthenticator(string $authenticator): bool
     {
         $authenticators = $this->getAuthenticators();
 
@@ -316,7 +316,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * to log in.
      * @return HTTPResponse
      */
-    public static function permissionFailure($controller = null, $messageSet = null)
+    public static function permissionFailure(SilverStripe\CMS\Controllers\CMSPageEditController $controller = null, string|array|SilverStripe\ORM\FieldType\DBHTMLVarchar $messageSet = null): SilverStripe\Control\HTTPResponse|null
     {
         self::set_ignore_disallowed_actions(true);
 
@@ -448,7 +448,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @param null|Member $currentUser
      */
-    public static function setCurrentUser($currentUser = null)
+    public static function setCurrentUser(SilverStripe\Security\Member $currentUser = null): void
     {
         self::$currentUser = $currentUser;
     }
@@ -456,7 +456,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * @return null|Member
      */
-    public static function getCurrentUser()
+    public static function getCurrentUser(): null|SilverStripe\Security\Member
     {
         return self::$currentUser;
     }
@@ -491,7 +491,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $action Name of the action
      * @return string Returns the link to the given action
      */
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         /** @skipUpgrade */
         $link = Controller::join_links(Director::baseURL(), "Security", $action);
@@ -516,7 +516,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return HTTPResponse Substitute response object if the login process should be circumvented.
      * Returns null if should proceed as normal.
      */
-    protected function preLogin()
+    protected function preLogin(): null|SilverStripe\Control\HTTPResponse
     {
         // Event handler for pre-login, with an option to let it break you out of the login form
         $eventResults = $this->extend('onBeforeSecurityLogin');
@@ -550,7 +550,7 @@ class Security extends Controller implements TemplateGlobalProvider
         return null;
     }
 
-    public function getRequest()
+    public function getRequest(): SilverStripe\Control\NullHTTPRequest
     {
         // Support Security::singleton() where a request isn't always injected
         $request = parent::getRequest();
@@ -571,7 +571,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $title Title to use
      * @return Controller
      */
-    protected function getResponseController($title)
+    protected function getResponseController(string $title): SilverStripe\Security\Security
     {
         // Use the default setting for which Page to use to render the security page
         $pageClass = $this->config()->get('page_class');
@@ -622,7 +622,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $messageType Type of message, if available, passed back to caller (by reference)
      * @return string Message in HTML format
      */
-    protected function getSessionMessage(&$messageType = null)
+    protected function getSessionMessage(string &$messageType = null): null|string
     {
         $session = $this->getRequest()->getSession();
         $message = $session->get('Security.Message.message');
@@ -648,10 +648,10 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $messageCast Message cast. One of ValidationResult::CAST_*
      */
     public function setSessionMessage(
-        $message,
+        string|SilverStripe\ORM\FieldType\DBHTMLText $message,
         $messageType = ValidationResult::TYPE_WARNING,
         $messageCast = ValidationResult::CAST_TEXT
-    ) {
+    ): void {
         Controller::curr()
             ->getRequest()
             ->getSession()
@@ -663,7 +663,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Clear login message
      */
-    public static function clearSessionMessage()
+    public static function clearSessionMessage(): void
     {
         Controller::curr()
             ->getRequest()
@@ -682,7 +682,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return HTTPResponse|string Returns the "login" page as HTML code.
      * @throws HTTPResponse_Exception
      */
-    public function login($request = null, $service = Authenticator::LOGIN)
+    public function login(SilverStripe\Control\HTTPRequest $request = null, $service = Authenticator::LOGIN): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if ($request) {
             $this->setRequest($request);
@@ -727,7 +727,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param int $service
      * @return HTTPResponse|string
      */
-    public function logout($request = null, $service = Authenticator::LOGOUT)
+    public function logout(SilverStripe\Control\HTTPRequest $request = null, $service = Authenticator::LOGOUT): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $authName = null;
 
@@ -762,7 +762,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @return array|Authenticator[]
      * @throws HTTPResponse_Exception
      */
-    protected function getServiceAuthenticatorsFromRequest($service, HTTPRequest $request)
+    protected function getServiceAuthenticatorsFromRequest(int $service, HTTPRequest $request): array
     {
         $authName = null;
 
@@ -877,7 +877,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param callable $aggregator
      * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
      */
-    protected function delegateToMultipleHandlers(array $handlers, $title, array $templates, callable $aggregator)
+    protected function delegateToMultipleHandlers(array $handlers, string $title, array $templates, callable $aggregator): SilverStripe\ORM\FieldType\DBHTMLText
     {
 
         // Simpler case for a single authenticator
@@ -911,7 +911,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param array $templates
      * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
      */
-    protected function delegateToHandler(RequestHandler $handler, $title, array $templates = [])
+    protected function delegateToHandler(RequestHandler $handler, string $title, array $templates = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $result = $handler->handleRequest($this->getRequest());
 
@@ -931,7 +931,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param array $templates An array of templates to use for the render
      * @return HTTPResponse|DBHTMLText
      */
-    protected function renderWrappedController($title, array $fragments, array $templates)
+    protected function renderWrappedController(string $title, array $fragments, array $templates): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $controller = $this->getResponseController($title);
 
@@ -972,7 +972,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return string Returns the "lost password" page as HTML code.
      */
-    public function lostpassword()
+    public function lostpassword(): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $handlers = [];
         $authenticators = $this->getApplicableAuthenticators(Authenticator::RESET_PASSWORD);
@@ -1003,7 +1003,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return string|HTTPRequest Returns the "change password" page as HTML code, or a redirect response
      */
-    public function changepassword()
+    public function changepassword(): SilverStripe\Control\HTTPResponse
     {
         /** @var array|Authenticator[] $authenticators */
         $authenticators = $this->getApplicableAuthenticators(Authenticator::CHANGE_PASSWORD);
@@ -1031,7 +1031,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $autologinToken The auto login token.
      * @return string
      */
-    public static function getPasswordResetLink($member, $autologinToken)
+    public static function getPasswordResetLink(SilverStripe\Security\Member $member, string $autologinToken): string
     {
         $autologinToken = urldecode($autologinToken ?? '');
 
@@ -1045,7 +1045,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $action
      * @return array Template list
      */
-    public function getTemplatesFor($action)
+    public function getTemplatesFor(string $action): array
     {
         $templates = SSViewer::get_templates_by_class(static::class, "_{$action}", __CLASS__);
 
@@ -1201,7 +1201,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @throws PasswordEncryptor_NotFoundException
      * @see encrypt_passwords()
      */
-    public static function encrypt_password($password, $salt = null, $algorithm = null, $member = null)
+    public static function encrypt_password(string $password, string $salt = null, string $algorithm = null, SilverStripe\Security\Member $member = null): array
     {
         // Fall back to the default encryption algorithm
         if (!$algorithm) {
@@ -1227,7 +1227,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return bool
      */
-    public static function database_is_ready()
+    public static function database_is_ready(): bool
     {
         // Used for unit tests
         if (self::$force_database_is_ready !== null) {
@@ -1279,7 +1279,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Resets the database_is_ready cache
      */
-    public static function clear_database_is_ready()
+    public static function clear_database_is_ready(): void
     {
         self::$database_is_ready = null;
         self::$force_database_is_ready = null;
@@ -1290,7 +1290,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @param bool $isReady
      */
-    public static function force_database_is_ready($isReady)
+    public static function force_database_is_ready(bool $isReady): void
     {
         self::$force_database_is_ready = $isReady;
     }
@@ -1319,7 +1319,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * Note that this is just a flag that other code needs to check with Security::ignore_disallowed_actions()
      * @param bool $flag True or false
      */
-    public static function set_ignore_disallowed_actions($flag)
+    public static function set_ignore_disallowed_actions(bool $flag): void
     {
         self::$ignore_disallowed_actions = $flag;
     }
@@ -1336,7 +1336,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function login_url()
+    public static function login_url(): string
     {
         return Controller::join_links(Director::baseURL(), self::config()->get('login_url'));
     }
@@ -1349,7 +1349,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function logout_url()
+    public static function logout_url(): string
     {
         $logoutUrl = Controller::join_links(Director::baseURL(), self::config()->get('logout_url'));
         return SecurityToken::inst()->addToUrl($logoutUrl);
@@ -1362,7 +1362,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return string
      */
-    public static function lost_password_url()
+    public static function lost_password_url(): string
     {
         return Controller::join_links(Director::baseURL(), self::config()->get('lost_password_url'));
     }
@@ -1372,7 +1372,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return array
      */
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             "LoginURL" => "login_url",

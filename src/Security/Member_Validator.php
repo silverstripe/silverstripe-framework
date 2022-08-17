@@ -44,7 +44,7 @@ class Member_Validator extends RequiredFields
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(): void
     {
         $required = func_get_args();
 
@@ -67,7 +67,7 @@ class Member_Validator extends RequiredFields
      * Get the member this validator applies to.
      * @return Member
      */
-    public function getForMember()
+    public function getForMember(): SilverStripe\Security\Member|null
     {
         return $this->forMember;
     }
@@ -77,7 +77,7 @@ class Member_Validator extends RequiredFields
      * @param Member $value
      * @return $this
      */
-    public function setForMember(Member $value)
+    public function setForMember(Member $value): SilverStripe\Security\Member_Validator
     {
         $this->forMember = $value;
         return $this;
@@ -93,7 +93,7 @@ class Member_Validator extends RequiredFields
      * @return bool Returns TRUE if the submitted data is valid, otherwise
      *              FALSE.
      */
-    public function php($data)
+    public function php(array $data): bool
     {
         $valid = parent::php($data);
 

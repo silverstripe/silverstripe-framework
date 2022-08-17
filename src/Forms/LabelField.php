@@ -18,7 +18,7 @@ class LabelField extends DatalessField
      * @param string $name
      * @param null|string $title
      */
-    public function __construct($name, $title = null)
+    public function __construct(string $name, string $title = null): void
     {
         // legacy handling:
         // $title, $headingLevel...

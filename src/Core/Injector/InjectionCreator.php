@@ -7,7 +7,7 @@ namespace SilverStripe\Core\Injector;
  */
 class InjectionCreator implements Factory
 {
-    public function create($class, array $params = [])
+    public function create(string $class, array $params = []): emteknetnz\TypeTransitioner\DevBuildExtension|i18nProviderClass|i18nTestModule|SilverStripe\Core\Manifest\PrioritySorter
     {
         if (!class_exists($class ?? '')) {
             throw new InjectorNotFoundException("Class {$class} does not exist");

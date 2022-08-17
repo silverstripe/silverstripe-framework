@@ -24,7 +24,7 @@ class Cookie
      *
      * @return Cookie_Backend
      */
-    public static function get_inst()
+    public static function get_inst(): SilverStripe\Control\CookieJar
     {
         return Injector::inst()->get('SilverStripe\\Control\\Cookie_Backend');
     }
@@ -45,14 +45,14 @@ class Cookie
      * See http://php.net/set_session
      */
     public static function set(
-        $name,
+        string $name,
         $value,
         $expiry = 90,
         $path = null,
         $domain = null,
         $secure = false,
         $httpOnly = true
-    ) {
+    ): null {
         return self::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
     }
 
@@ -64,7 +64,7 @@ class Cookie
      *
      * @return null|string
      */
-    public static function get($name, $includeUnsent = true)
+    public static function get(string $name, bool $includeUnsent = true): null|string|int
     {
         return self::get_inst()->get($name, $includeUnsent);
     }
@@ -76,7 +76,7 @@ class Cookie
      *
      * @return array
      */
-    public static function get_all($includeUnsent = true)
+    public static function get_all(bool $includeUnsent = true): array
     {
         return self::get_inst()->getAll($includeUnsent);
     }
@@ -88,7 +88,7 @@ class Cookie
      * @param bool $secure
      * @param bool $httpOnly
      */
-    public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public static function force_expiry(string $name, string $path = null, $domain = null, bool $secure = false, bool $httpOnly = true): null
     {
         return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
     }

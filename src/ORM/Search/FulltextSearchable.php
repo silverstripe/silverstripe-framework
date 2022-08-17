@@ -53,7 +53,7 @@ class FulltextSearchable extends DataExtension
      *  listed here. Default: {@link SiteTree} and {@link File}.
      * @throws Exception
      */
-    public static function enable($searchableClasses = [SiteTree::class, File::class])
+    public static function enable($searchableClasses = [SiteTree::class, File::class]): void
     {
         $defaultColumns = [
             SiteTree::class => ['Title','MenuTitle','Content','MetaDescription'],
@@ -86,7 +86,7 @@ class FulltextSearchable extends DataExtension
      * @param array|string $searchFields Comma-separated list (or array) of database column names
      *  that can be searched on. Used for generation of the database index definitions.
      */
-    public function __construct($searchFields = [])
+    public function __construct(string $searchFields = []): void
     {
         parent::__construct();
         if (is_array($searchFields)) {
@@ -99,7 +99,7 @@ class FulltextSearchable extends DataExtension
         }
     }
 
-    public static function get_extra_config($class, $extensionClass, $args)
+    public static function get_extra_config(string $class, string $extensionClass, array $args): array
     {
         return [
             'indexes' => [
@@ -117,7 +117,7 @@ class FulltextSearchable extends DataExtension
      *
      * @return array
      */
-    public static function get_searchable_classes()
+    public static function get_searchable_classes(): array
     {
         return self::$searchable_classes;
     }

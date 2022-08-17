@@ -28,7 +28,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
      *
      * @param int $cost range 4-31
      */
-    public static function set_cost($cost)
+    public static function set_cost(int $cost): void
     {
         self::$cost = max(min(31, $cost), 4);
     }
@@ -38,12 +38,12 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
      *
      * @return int
      */
-    public static function get_cost()
+    public static function get_cost(): int
     {
         return self::$cost;
     }
 
-    public function encrypt($password, $salt = null, $member = null)
+    public function encrypt(string $password, string $salt = null, SilverStripe\Security\Member $member = null): string
     {
         // See: http://nz.php.net/security/crypt_blowfish.php
         // There are three version of the algorithm - y, a and x, in order
@@ -88,7 +88,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
         return false;
     }
 
-    public function encryptY($password, $salt)
+    public function encryptY(string $password, string $salt): string
     {
         $methodAndSalt = '$2y$' . $salt;
         $encryptedPassword = crypt($password ?? '', $methodAndSalt ?? '');
@@ -131,7 +131,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
      * version, depending on the version of PHP and the operating system,
      * so we need to test it.
      */
-    public function checkAEncryptionLevel()
+    public function checkAEncryptionLevel(): string
     {
         // Test hashes taken from
         // http://cvsweb.openwall.com/cgi/cvsweb.cgi/~checkout~/Owl/packages/glibc
@@ -159,13 +159,13 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
      * @param Member $member
      * @return string
      */
-    public function salt($password, $member = null)
+    public function salt(string $password, $member = null): string
     {
         $generator = new RandomGenerator();
         return sprintf('%02d', self::$cost) . '$' . substr($generator->randomToken('sha1') ?? '', 0, 22);
     }
 
-    public function check($hash, $password, $salt = null, $member = null)
+    public function check(string $hash, string $password, string $salt = null, $member = null): bool
     {
         if (strpos($hash ?? '', '$2y$') === 0) {
             return $hash === $this->encryptY($password, $salt);

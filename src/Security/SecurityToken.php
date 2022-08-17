@@ -65,7 +65,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * @param string $name
      */
-    public function __construct($name = null)
+    public function __construct(string $name = null): void
     {
         $this->name = $name ?: self::get_default_name();
     }
@@ -75,7 +75,7 @@ class SecurityToken implements TemplateGlobalProvider
      *
      * @return SecurityToken
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Security\NullSecurityToken
     {
         if (!self::$inst) {
             self::$inst = new SecurityToken();
@@ -88,7 +88,7 @@ class SecurityToken implements TemplateGlobalProvider
      * Globally disable the token (override with {@link NullSecurityToken})
      * implementation. Note: Does not apply for
      */
-    public static function disable()
+    public static function disable(): void
     {
         self::$enabled = false;
         self::$inst = new NullSecurityToken();
@@ -97,7 +97,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * Globally enable tokens that have been previously disabled through {@link disable}.
      */
-    public static function enable()
+    public static function enable(): void
     {
         self::$enabled = true;
         self::$inst = new SecurityToken();
@@ -106,7 +106,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * @return boolean
      */
-    public static function is_enabled()
+    public static function is_enabled(): bool
     {
         return self::$enabled;
     }
@@ -114,7 +114,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * @return string
      */
-    public static function get_default_name()
+    public static function get_default_name(): string
     {
         return self::$default_name;
     }
@@ -123,7 +123,7 @@ class SecurityToken implements TemplateGlobalProvider
      * Returns the value of an the global SecurityToken in the current session
      * @return int
      */
-    public static function getSecurityID()
+    public static function getSecurityID(): string
     {
         $token = SecurityToken::inst();
         return $token->getValue();
@@ -142,7 +142,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -150,7 +150,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         $session = $this->getSession();
         $value = $session->get($this->getName());
@@ -168,7 +168,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @param string $val
      * @return $this
      */
-    public function setValue($val)
+    public function setValue(string $val): SilverStripe\Security\SecurityToken
     {
         $this->getSession()->set($this->getName(), $val);
         return $this;
@@ -180,7 +180,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @return Session
      * @throws Exception If the HTTPRequest class hasn't been registered as a service and no controllers exist
      */
-    protected function getSession()
+    protected function getSession(): SilverStripe\Control\Session
     {
         $injector = Injector::inst();
         if ($injector->has(HTTPRequest::class)) {
@@ -194,7 +194,7 @@ class SecurityToken implements TemplateGlobalProvider
     /**
      * Reset the token to a new value.
      */
-    public function reset()
+    public function reset(): void
     {
         $this->setValue($this->generate());
     }
@@ -211,7 +211,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @param string $compare
      * @return boolean
      */
-    public function check($compare)
+    public function check(string $compare): bool
     {
         return ($compare && $this->getValue() && $compare == $this->getValue());
     }
@@ -222,7 +222,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool
      */
-    public function checkRequest($request)
+    public function checkRequest(SilverStripe\Control\HTTPRequest $request): bool
     {
         $token = $this->getRequestToken($request);
         return $this->check($token);
@@ -234,7 +234,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return string
      */
-    protected function getRequestToken($request)
+    protected function getRequestToken(SilverStripe\Control\HTTPRequest $request): string|null
     {
         $name = $this->getName();
         $header = 'X-' . ucwords(strtolower($name ?? ''));
@@ -254,7 +254,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @param FieldList $fieldset
      * @return HiddenField|false
      */
-    public function updateFieldSet(&$fieldset)
+    public function updateFieldSet(SilverStripe\Forms\FieldList &$fieldset): SilverStripe\Forms\HiddenField|bool
     {
         if (!$fieldset->fieldByName($this->getName())) {
             $field = new HiddenField($this->getName(), null, $this->getValue());
@@ -269,7 +269,7 @@ class SecurityToken implements TemplateGlobalProvider
      * @param string $url
      * @return string
      */
-    public function addToUrl($url)
+    public function addToUrl(string $url): string
     {
         return Controller::join_links($url, sprintf('?%s=%s', $this->getName(), $this->getValue()));
     }
@@ -284,7 +284,7 @@ class SecurityToken implements TemplateGlobalProvider
      *
      * @return boolean
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return !($this instanceof NullSecurityToken);
     }
@@ -294,13 +294,13 @@ class SecurityToken implements TemplateGlobalProvider
      *
      * @return string
      */
-    protected function generate()
+    protected function generate(): string
     {
         $generator = new RandomGenerator();
         return $generator->randomToken('sha1');
     }
 
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'getSecurityID',

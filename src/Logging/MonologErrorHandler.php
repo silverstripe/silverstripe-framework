@@ -22,7 +22,7 @@ class MonologErrorHandler implements ErrorHandler
      * @param LoggerInterface $logger
      * @return $this
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger): SilverStripe\Logging\MonologErrorHandler
     {
         Deprecation::notice('4.4.0', 'Please use pushLogger() instead');
 
@@ -49,7 +49,7 @@ class MonologErrorHandler implements ErrorHandler
      * @param LoggerInterface $logger
      * @return $this
      */
-    public function pushLogger(LoggerInterface $logger)
+    public function pushLogger(LoggerInterface $logger): SilverStripe\Logging\MonologErrorHandler
     {
         $this->loggers[] = $logger;
         return $this;
@@ -60,7 +60,7 @@ class MonologErrorHandler implements ErrorHandler
      *
      * @return LoggerInterface[]
      */
-    public function getLoggers()
+    public function getLoggers(): array
     {
         return $this->loggers;
     }
@@ -71,7 +71,7 @@ class MonologErrorHandler implements ErrorHandler
      * @param LoggerInterface[] $loggers
      * @return $this
      */
-    public function setLoggers(array $loggers)
+    public function setLoggers(array $loggers): SilverStripe\Logging\MonologErrorHandler
     {
         $this->loggers = $loggers;
         return $this;
@@ -82,7 +82,7 @@ class MonologErrorHandler implements ErrorHandler
      *
      * @throws InvalidArgumentException
      */
-    public function start()
+    public function start(): void
     {
         $loggers = $this->getLoggers();
         if (empty($loggers)) {

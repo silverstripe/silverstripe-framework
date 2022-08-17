@@ -36,7 +36,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      * @param callable $delegate
      * @return HTTPResponse
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         if (!$limiter = $this->getRateLimiter()) {
             $limiter = RateLimiter::create(
@@ -59,7 +59,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request
      * @return string
      */
-    protected function getKeyFromRequest($request)
+    protected function getKeyFromRequest(SilverStripe\Control\HTTPRequest $request): string
     {
         $key = $this->getExtraKey() ? $this->getExtraKey() . '-' : '';
         $key .= $request->getHost() . '-';
@@ -74,7 +74,7 @@ class RateLimitMiddleware implements HTTPMiddleware
     /**
      * @return HTTPResponse
      */
-    protected function getErrorHTTPResponse()
+    protected function getErrorHTTPResponse(): SilverStripe\Control\HTTPResponse
     {
         return HTTPResponse::create('<h1>429 - Too many requests</h1>', 429);
     }
@@ -83,7 +83,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      * @param HTTPResponse $response
      * @param RateLimiter $limiter
      */
-    protected function addHeadersToResponse($response, $limiter)
+    protected function addHeadersToResponse(SilverStripe\Control\HTTPResponse $response, SilverStripe\Core\Cache\RateLimiter $limiter): void
     {
         $response->addHeader('X-RateLimit-Limit', $limiter->getMaxAttempts());
         $response->addHeader('X-RateLimit-Remaining', $remaining = $limiter->getNumAttemptsRemaining());
@@ -98,7 +98,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      * @param string $key
      * @return $this
      */
-    public function setExtraKey($key)
+    public function setExtraKey(string $key): SilverStripe\Control\Middleware\RateLimitMiddleware
     {
         $this->extraKey = $key;
         return $this;
@@ -107,7 +107,7 @@ class RateLimitMiddleware implements HTTPMiddleware
     /**
      * @return string
      */
-    public function getExtraKey()
+    public function getExtraKey(): string
     {
         return $this->extraKey;
     }
@@ -116,7 +116,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      * @param int $maxAttempts
      * @return $this
      */
-    public function setMaxAttempts($maxAttempts)
+    public function setMaxAttempts(int $maxAttempts): SilverStripe\Control\Middleware\RateLimitMiddleware
     {
         $this->maxAttempts = $maxAttempts;
         return $this;
@@ -125,7 +125,7 @@ class RateLimitMiddleware implements HTTPMiddleware
     /**
      * @return int
      */
-    public function getMaxAttempts()
+    public function getMaxAttempts(): int
     {
         return $this->maxAttempts;
     }
@@ -134,7 +134,7 @@ class RateLimitMiddleware implements HTTPMiddleware
      * @param int $decay Time in minutes
      * @return $this
      */
-    public function setDecay($decay)
+    public function setDecay(int $decay): SilverStripe\Control\Middleware\RateLimitMiddleware
     {
         $this->decay = $decay;
         return $this;
@@ -143,7 +143,7 @@ class RateLimitMiddleware implements HTTPMiddleware
     /**
      * @return int
      */
-    public function getDecay()
+    public function getDecay(): int
     {
         return $this->decay;
     }
@@ -161,7 +161,7 @@ class RateLimitMiddleware implements HTTPMiddleware
     /**
      * @return RateLimiter|null
      */
-    public function getRateLimiter()
+    public function getRateLimiter(): null
     {
         return $this->rateLimiter;
     }

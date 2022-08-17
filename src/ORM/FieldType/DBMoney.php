@@ -31,7 +31,7 @@ class DBMoney extends DBComposite
      *
      * @return NumberFormatter
      */
-    public function getFormatter()
+    public function getFormatter(): NumberFormatter
     {
         $locale = $this->getLocale();
         $currency = $this->getCurrency();
@@ -46,7 +46,7 @@ class DBMoney extends DBComposite
      *
      * @return string
      */
-    public function Nice()
+    public function Nice(): string
     {
         if (!$this->exists()) {
             return null;
@@ -69,7 +69,7 @@ class DBMoney extends DBComposite
      *
      * @return string
      */
-    public function getValue()
+    public function getValue(): string|float
     {
         if (!$this->exists()) {
             return null;
@@ -85,7 +85,7 @@ class DBMoney extends DBComposite
     /**
      * @return string
      */
-    public function getCurrency()
+    public function getCurrency(): string|null
     {
         return $this->getField('Currency');
     }
@@ -95,7 +95,7 @@ class DBMoney extends DBComposite
      * @param bool $markChanged
      * @return $this
      */
-    public function setCurrency($currency, $markChanged = true)
+    public function setCurrency(string $currency, $markChanged = true): SilverStripe\ORM\FieldType\DBMoney
     {
         $this->setField('Currency', $currency, $markChanged);
         return $this;
@@ -104,7 +104,7 @@ class DBMoney extends DBComposite
     /**
      * @return float
      */
-    public function getAmount()
+    public function getAmount(): float|null|int
     {
         return $this->getField('Amount');
     }
@@ -114,7 +114,7 @@ class DBMoney extends DBComposite
      * @param bool $markChanged
      * @return $this
      */
-    public function setAmount($amount, $markChanged = true)
+    public function setAmount(float|int $amount, $markChanged = true): SilverStripe\ORM\FieldType\DBMoney
     {
         // Retain nullability to mark this field as empty
         if (isset($amount)) {
@@ -127,7 +127,7 @@ class DBMoney extends DBComposite
     /**
      * @return boolean
      */
-    public function exists()
+    public function exists(): bool
     {
         return is_numeric($this->getAmount());
     }
@@ -137,7 +137,7 @@ class DBMoney extends DBComposite
      *
      * @return bool
      */
-    public function hasAmount()
+    public function hasAmount(): bool
     {
         $a = $this->getAmount();
         return (!empty($a) && is_numeric($a));
@@ -147,7 +147,7 @@ class DBMoney extends DBComposite
      * @param string $locale
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale(string $locale): SilverStripe\ORM\FieldType\DBMoney
     {
         $this->locale = $locale;
         return $this;
@@ -156,7 +156,7 @@ class DBMoney extends DBComposite
     /**
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale ?: i18n::get_locale();
     }
@@ -166,7 +166,7 @@ class DBMoney extends DBComposite
      *
      * @return string
      */
-    public function getSymbol()
+    public function getSymbol(): string
     {
         return $this->getFormatter()->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
     }

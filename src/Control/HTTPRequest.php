@@ -151,7 +151,7 @@ class HTTPRequest implements ArrayAccess
      * @param array $postVars
      * @param string $body
      */
-    public function __construct($httpMethod, $url, $getVars = [], $postVars = [], $body = null)
+    public function __construct(string $httpMethod, string $url, array $getVars = [], array $postVars = [], string $body = null): void
     {
         $this->httpMethod = strtoupper($httpMethod ?? '');
         $this->setUrl($url);
@@ -170,7 +170,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $url The new URL
      * @return HTTPRequest The updated request
      */
-    public function setUrl($url)
+    public function setUrl(string $url): SilverStripe\Control\HTTPRequest
     {
         $this->url = $url;
 
@@ -194,7 +194,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return bool
      */
-    public function isGET()
+    public function isGET(): bool
     {
         return $this->httpMethod == 'GET';
     }
@@ -202,7 +202,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return bool
      */
-    public function isPOST()
+    public function isPOST(): bool
     {
         return $this->httpMethod == 'POST';
     }
@@ -210,7 +210,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return bool
      */
-    public function isPUT()
+    public function isPUT(): bool
     {
         return $this->httpMethod == 'PUT';
     }
@@ -218,7 +218,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return bool
      */
-    public function isDELETE()
+    public function isDELETE(): bool
     {
         return $this->httpMethod == 'DELETE';
     }
@@ -226,7 +226,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return bool
      */
-    public function isHEAD()
+    public function isHEAD(): bool
     {
         return $this->httpMethod == 'HEAD';
     }
@@ -235,7 +235,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $body
      * @return HTTPRequest $this
      */
-    public function setBody($body)
+    public function setBody(string $body): SilverStripe\Control\HTTPRequest
     {
         $this->body = $body;
         return $this;
@@ -244,7 +244,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return null|string
      */
-    public function getBody()
+    public function getBody(): string|null
     {
         return $this->body;
     }
@@ -252,7 +252,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return array
      */
-    public function getVars()
+    public function getVars(): array
     {
         return $this->getVars;
     }
@@ -260,7 +260,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return array
      */
-    public function postVars()
+    public function postVars(): array
     {
         return $this->postVars;
     }
@@ -272,7 +272,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return array
      */
-    public function requestVars()
+    public function requestVars(): array
     {
         return ArrayLib::array_merge_recursive($this->getVars, $this->postVars);
     }
@@ -281,7 +281,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $name
      * @return mixed
      */
-    public function getVar($name)
+    public function getVar(string $name): null|string|array|int
     {
         if (isset($this->getVars[$name])) {
             return $this->getVars[$name];
@@ -293,7 +293,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $name
      * @return mixed
      */
-    public function postVar($name)
+    public function postVar(string $name): null|array|string|int
     {
         if (isset($this->postVars[$name])) {
             return $this->postVars[$name];
@@ -305,7 +305,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $name
      * @return mixed
      */
-    public function requestVar($name)
+    public function requestVar(string $name): null|string|array|int|bool
     {
         if (isset($this->postVars[$name])) {
             return $this->postVars[$name];
@@ -324,7 +324,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return string
      */
-    public function getExtension()
+    public function getExtension(): null|string
     {
         return $this->extension;
     }
@@ -349,7 +349,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $header Example: "content-type"
      * @param string $value Example: "text/xml"
      */
-    public function addHeader($header, $value)
+    public function addHeader(string $header, string|bool $value): SilverStripe\Control\HTTPRequest
     {
         $header = strtolower($header ?? '');
         $this->headers[$header] = $value;
@@ -370,7 +370,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $header Name of the header (Insensitive to case as per <rfc2616 section 4.2 "Message Headers">)
      * @return mixed
      */
-    public function getHeader($header)
+    public function getHeader(string $header): null|string|bool
     {
         $header = strtolower($header ?? '');
         return (isset($this->headers[$header])) ? $this->headers[$header] : null;
@@ -383,7 +383,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $header
      * @return HTTPRequest $this
      */
-    public function removeHeader($header)
+    public function removeHeader(string $header): SilverStripe\Control\HTTPRequest
     {
         $header = strtolower($header ?? '');
         unset($this->headers[$header]);
@@ -396,7 +396,7 @@ class HTTPRequest implements ArrayAccess
      * @param bool $includeGetVars whether or not to include the get parameters
      * @return string
      */
-    public function getURL($includeGetVars = false)
+    public function getURL(bool $includeGetVars = false): string
     {
         $url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url;
 
@@ -419,7 +419,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return boolean
      */
-    public function isAjax()
+    public function isAjax(): bool
     {
         return (
             $this->requestVar('ajax') ||
@@ -435,7 +435,7 @@ class HTTPRequest implements ArrayAccess
      * @return bool
      */
     #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(string $offset): bool
     {
         return isset($this->postVars[$offset]) || isset($this->getVars[$offset]);
     }
@@ -447,19 +447,19 @@ class HTTPRequest implements ArrayAccess
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(string $offset): string
     {
         return $this->requestVar($offset);
     }
 
     #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(string $offset, string|int|array $value): void
     {
         $this->getVars[$offset] = $value;
     }
 
     #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(string $offset): void
     {
         unset($this->getVars[$offset]);
         unset($this->postVars[$offset]);
@@ -511,7 +511,7 @@ class HTTPRequest implements ArrayAccess
      * @param bool $shiftOnSuccess
      * @return array|bool
      */
-    public function match($pattern, $shiftOnSuccess = false)
+    public function match(string $pattern, bool $shiftOnSuccess = false): bool|array
     {
         // Check if a specific method is required
         if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern ?? '', $matches)) {
@@ -632,7 +632,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return array
      */
-    public function allParams()
+    public function allParams(): array
     {
         return $this->allParams;
     }
@@ -642,7 +642,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return string
      */
-    public function shiftAllParams()
+    public function shiftAllParams(): string
     {
         $keys    = array_keys($this->allParams ?? []);
         $values  = array_values($this->allParams ?? []);
@@ -663,7 +663,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return array
      */
-    public function latestParams()
+    public function latestParams(): array
     {
         return $this->latestParams;
     }
@@ -672,7 +672,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $name
      * @return string|null
      */
-    public function latestParam($name)
+    public function latestParam(string $name): null|string
     {
         if (isset($this->latestParams[$name])) {
             return $this->latestParams[$name];
@@ -693,7 +693,7 @@ class HTTPRequest implements ArrayAccess
      * @param $params
      * @return HTTPRequest $this
      */
-    public function setRouteParams($params)
+    public function setRouteParams(array $params): SilverStripe\Control\HTTPRequest
     {
         $this->routeParams = $params;
         return $this;
@@ -702,7 +702,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return array
      */
-    public function params()
+    public function params(): array
     {
         return array_merge($this->allParams, $this->routeParams);
     }
@@ -714,7 +714,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $name
      * @return string Value of the URL parameter (if found)
      */
-    public function param($name)
+    public function param(string $name): null|string|array|int
     {
         $params = $this->params();
         if (isset($params[$name])) {
@@ -731,7 +731,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return string Partial URL
      */
-    public function remaining()
+    public function remaining(): string
     {
         return implode("/", $this->dirParts);
     }
@@ -743,7 +743,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $pattern
      * @return bool
      */
-    public function isEmptyPattern($pattern)
+    public function isEmptyPattern(string $pattern): bool
     {
         if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern ?? '', $matches)) {
             $pattern = $matches[2];
@@ -762,7 +762,7 @@ class HTTPRequest implements ArrayAccess
      * @param int $count Shift Count
      * @return string|array
      */
-    public function shift($count = 1)
+    public function shift(int $count = 1): string|null|array
     {
         $return = [];
 
@@ -789,7 +789,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return bool
      */
-    public function allParsed()
+    public function allParsed(): bool
     {
         return sizeof($this->dirParts ?? []) <= $this->unshiftedButParsedParts;
     }
@@ -797,7 +797,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return string Return the host from the request
      */
-    public function getHost()
+    public function getHost(): null|string
     {
         return $this->getHeader('host');
     }
@@ -807,7 +807,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return string
      */
-    public function getIP()
+    public function getIP(): string|null
     {
         return $this->ip;
     }
@@ -819,7 +819,7 @@ class HTTPRequest implements ArrayAccess
      * @param $ip string
      * @return $this
      */
-    public function setIP($ip)
+    public function setIP(string $ip): SilverStripe\Control\HTTPRequest
     {
         if (!filter_var($ip, FILTER_VALIDATE_IP)) {
             throw new InvalidArgumentException("Invalid ip $ip");
@@ -836,7 +836,7 @@ class HTTPRequest implements ArrayAccess
      *                                (Default: false)
      * @return array
      */
-    public function getAcceptMimetypes($includeQuality = false)
+    public function getAcceptMimetypes(bool $includeQuality = false): array
     {
         $mimetypes = [];
         $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('accept') ?? '');
@@ -849,7 +849,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return string HTTP method (all uppercase)
      */
-    public function httpMethod()
+    public function httpMethod(): string
     {
         return $this->httpMethod;
     }
@@ -859,7 +859,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $method
      * @return $this
      */
-    public function setHttpMethod($method)
+    public function setHttpMethod(string $method): SilverStripe\Control\HTTPRequest
     {
         if (!self::isValidHttpMethod($method)) {
             throw new \InvalidArgumentException('HTTPRequest::setHttpMethod: Invalid HTTP method');
@@ -875,7 +875,7 @@ class HTTPRequest implements ArrayAccess
      *
      * @return string
      */
-    public function getScheme()
+    public function getScheme(): string
     {
         return $this->scheme;
     }
@@ -887,7 +887,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $scheme
      * @return $this
      */
-    public function setScheme($scheme)
+    public function setScheme(string $scheme): SilverStripe\Control\HTTPRequest
     {
         $this->scheme = $scheme;
         return $this;
@@ -897,7 +897,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $method
      * @return bool
      */
-    private static function isValidHttpMethod($method)
+    private static function isValidHttpMethod(string $method): bool
     {
         return in_array(strtoupper($method ?? ''), ['GET','POST','PUT','DELETE','HEAD']);
     }
@@ -912,7 +912,7 @@ class HTTPRequest implements ArrayAccess
      * @return string HTTP method (all uppercase)
      * @deprecated 4.4.7
      */
-    public static function detect_method($origMethod, $postVars)
+    public static function detect_method(string $origMethod, array $postVars): string
     {
         if (isset($postVars['_method'])) {
             if (!self::isValidHttpMethod($postVars['_method'])) {
@@ -936,7 +936,7 @@ class HTTPRequest implements ArrayAccess
     /**
      * @return Session
      */
-    public function getSession()
+    public function getSession(): SilverStripe\Control\Session
     {
         if (!$this->hasSession()) {
             throw new BadMethodCallException("No session available for this HTTPRequest");
@@ -948,7 +948,7 @@ class HTTPRequest implements ArrayAccess
      * @param Session $session
      * @return $this
      */
-    public function setSession(Session $session)
+    public function setSession(Session $session): SilverStripe\Control\HTTPRequest
     {
         $this->session = $session;
         return $this;

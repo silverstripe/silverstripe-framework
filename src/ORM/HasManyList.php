@@ -24,7 +24,7 @@ class HasManyList extends RelationList
      * @param string $dataClass The class of the DataObjects that this will list.
      * @param string $foreignKey The name of the foreign key field to set the ID filter against.
      */
-    public function __construct($dataClass, $foreignKey)
+    public function __construct(string $dataClass, string $foreignKey): void
     {
         parent::__construct($dataClass);
 
@@ -36,7 +36,7 @@ class HasManyList extends RelationList
      *
      * @return string
      */
-    public function getForeignKey()
+    public function getForeignKey(): string
     {
         return $this->foreignKey;
     }
@@ -45,7 +45,7 @@ class HasManyList extends RelationList
      * @param null|int|array|string $id
      * @return array
      */
-    protected function foreignIDFilter($id = null)
+    protected function foreignIDFilter(int|array $id = null): array
     {
         if ($id === null) {
             $id = $this->getForeignID();
@@ -69,7 +69,7 @@ class HasManyList extends RelationList
      *
      * @param DataObject|int $item The DataObject to be added, or its ID
      */
-    public function add($item)
+    public function add(int|SilverStripe\Versioned\ChangeSetItem $item): void
     {
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);
@@ -106,7 +106,7 @@ class HasManyList extends RelationList
      *
      * @param int $itemID The ID of the item to be removed.
      */
-    public function removeByID($itemID)
+    public function removeByID(int $itemID): null
     {
         $item = $this->byID($itemID);
 
@@ -120,7 +120,7 @@ class HasManyList extends RelationList
      * @param DataObject $item The DataObject to be removed
      * @todo Maybe we should delete the object instead?
      */
-    public function remove($item)
+    public function remove(SilverStripe\ORM\Tests\DataObjectTest\TeamComment $item): void
     {
         if (!($item instanceof $this->dataClass)) {
             throw new InvalidArgumentException("HasManyList::remove() expecting a $this->dataClass object, or ID");

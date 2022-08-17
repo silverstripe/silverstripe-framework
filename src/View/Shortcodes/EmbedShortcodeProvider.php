@@ -49,7 +49,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      *
      * @return string
      */
-    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = [])
+    public static function handle_shortcode(array $arguments, string $content, SilverStripe\View\Parsers\ShortcodeParser $parser, string $shortcode, array $extra = []): string
     {
         // Get service URL
         if (!empty($content)) {
@@ -189,7 +189,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      * @param string $content Raw HTML content
      * @return string
      */
-    protected static function videoEmbed($arguments, $content)
+    protected static function videoEmbed(array $arguments, string $content): string
     {
         // Ensure outer div has given width (but leave height auto)
         if (!empty($arguments['width'])) {
@@ -224,7 +224,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      * @param string $title Default title
      * @return string
      */
-    protected static function linkEmbed($arguments, $href, $title)
+    protected static function linkEmbed(array $arguments, string $href, $title): string
     {
         $data = [
             'Arguments' => $arguments,

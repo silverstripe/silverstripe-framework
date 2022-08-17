@@ -26,7 +26,7 @@ class RequiredFields extends Validator
      * Pass each field to be validated as a separate argument to the constructor
      * of this object. (an array of elements are ok).
      */
-    public function __construct()
+    public function __construct(): void
     {
         $required = func_get_args();
         if (isset($required[0]) && is_array($required[0])) {
@@ -46,7 +46,7 @@ class RequiredFields extends Validator
      *
      * @return $this
      */
-    public function removeValidation()
+    public function removeValidation(): SilverStripe\Forms\RequiredFields
     {
         parent::removeValidation();
         $this->required = [];
@@ -81,7 +81,7 @@ class RequiredFields extends Validator
      *
      * @return boolean
      */
-    public function php($data)
+    public function php(array $data): bool
     {
         $valid = true;
         $fields = $this->form->Fields();
@@ -155,7 +155,7 @@ class RequiredFields extends Validator
      *
      * @return $this
      */
-    public function addRequiredField($field)
+    public function addRequiredField(string $field): SilverStripe\Forms\RequiredFields
     {
         $this->required[$field] = $field;
 
@@ -169,7 +169,7 @@ class RequiredFields extends Validator
      *
      * @return $this
      */
-    public function removeRequiredField($field)
+    public function removeRequiredField(string $field): SilverStripe\Forms\RequiredFields
     {
         unset($this->required[$field]);
 
@@ -182,7 +182,7 @@ class RequiredFields extends Validator
      * @param RequiredFields $requiredFields
      * @return $this
      */
-    public function appendRequiredFields($requiredFields)
+    public function appendRequiredFields(SilverStripe\Forms\RequiredFields $requiredFields): SilverStripe\Forms\RequiredFields
     {
         $this->required = $this->required + ArrayLib::valuekey(
             $requiredFields->getRequired()
@@ -201,7 +201,7 @@ class RequiredFields extends Validator
      *
      * @return boolean
      */
-    public function fieldIsRequired($fieldName)
+    public function fieldIsRequired(string $fieldName): bool
     {
         return isset($this->required[$fieldName]);
     }
@@ -211,7 +211,7 @@ class RequiredFields extends Validator
      *
      * @return array
      */
-    public function getRequired()
+    public function getRequired(): array
     {
         return array_values($this->required ?? []);
     }

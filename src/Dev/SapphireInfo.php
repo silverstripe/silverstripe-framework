@@ -27,7 +27,7 @@ class SapphireInfo extends Controller
         }
     }
 
-    public function Version()
+    public function Version(): string
     {
         $sapphireVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
         if (!$sapphireVersion) {

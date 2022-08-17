@@ -20,7 +20,7 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
      */
     protected $configs = [];
 
-    public function locateConfigFor($name)
+    public function locateConfigFor(string $name): array|null|string
     {
         // Check direct or cached result
         $config = $this->configFor($name);
@@ -44,7 +44,7 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
      * @param string $name Name of service
      * @return mixed Get config for this service
      */
-    protected function configFor($name)
+    protected function configFor(string $name): array|null|string
     {
         // Return cached result
         if (array_key_exists($name, $this->configs ?? [])) {

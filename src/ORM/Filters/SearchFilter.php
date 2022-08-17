@@ -85,7 +85,7 @@ abstract class SearchFilter
      * @param mixed $value
      * @param array $modifiers
      */
-    public function __construct($fullName = null, $value = false, array $modifiers = [])
+    public function __construct(string $fullName = null, int|string|array|bool $value = false, array $modifiers = []): void
     {
         $this->fullName = $fullName;
 
@@ -102,7 +102,7 @@ abstract class SearchFilter
      *
      * @param string $name
      */
-    protected function addRelation($name)
+    protected function addRelation(string $name): void
     {
         if (strstr($name ?? '', '.')) {
             $parts = explode('.', $name ?? '');
@@ -118,7 +118,7 @@ abstract class SearchFilter
      *
      * @param string $name
      */
-    protected function addAggregate($name)
+    protected function addAggregate(string $name): void
     {
         if (!$this->relation) {
             return;
@@ -146,7 +146,7 @@ abstract class SearchFilter
      *
      * @param string|DataObject $className
      */
-    public function setModel($className)
+    public function setModel(string|SilverStripe\ORM\Tests\DataObjectTest\Team $className): void
     {
         $this->model = ClassInfo::class_name($className);
     }
@@ -156,7 +156,7 @@ abstract class SearchFilter
      *
      * @param string|array $value
      */
-    public function setValue($value)
+    public function setValue(string|array $value): void
     {
         $this->value = $value;
     }
@@ -166,7 +166,7 @@ abstract class SearchFilter
      *
      * @return string|array
      */
-    public function getValue()
+    public function getValue(): int|string|array|null|bool
     {
         return $this->value;
     }
@@ -176,7 +176,7 @@ abstract class SearchFilter
      *
      * @param array $modifiers
      */
-    public function setModifiers(array $modifiers)
+    public function setModifiers(array $modifiers): void
     {
         $modifiers = array_map('strtolower', $modifiers ?? []);
 
@@ -197,7 +197,7 @@ abstract class SearchFilter
      *
      * @return array
      */
-    public function getSupportedModifiers()
+    public function getSupportedModifiers(): array
     {
         // By default support 'not' as a modifier for all filters
         return ['not'];
@@ -208,7 +208,7 @@ abstract class SearchFilter
      *
      * @return array
      */
-    public function getModifiers()
+    public function getModifiers(): array
     {
         return $this->modifiers;
     }
@@ -218,7 +218,7 @@ abstract class SearchFilter
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -237,7 +237,7 @@ abstract class SearchFilter
      *
      * @return string
      */
-    public function getFullName()
+    public function getFullName(): string
     {
         return $this->fullName;
     }
@@ -255,7 +255,7 @@ abstract class SearchFilter
      *
      * @return string
      */
-    public function getDbName()
+    public function getDbName(): string
     {
         // Special handler for "NULL" relations
         if ($this->name === "NULL") {
@@ -314,7 +314,7 @@ abstract class SearchFilter
      *
      * @return string
      */
-    public function getDbFormattedValue()
+    public function getDbFormattedValue(): int|string
     {
         // SRM: This code finds the table where the field named $this->name lives
         // Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
@@ -335,7 +335,7 @@ abstract class SearchFilter
      * @param  string    $having
      * @return DataQuery
      */
-    public function applyAggregate(DataQuery $query, $having)
+    public function applyAggregate(DataQuery $query, array $having): SilverStripe\ORM\DataQuery
     {
         $schema = DataObject::getSchema();
         $baseTable = $schema->baseDataTable($query->dataClass());
@@ -351,7 +351,7 @@ abstract class SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    public function apply(DataQuery $query)
+    public function apply(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         if (($key = array_search('not', $this->modifiers ?? [])) !== false) {
             unset($this->modifiers[$key]);
@@ -389,7 +389,7 @@ abstract class SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    public function exclude(DataQuery $query)
+    public function exclude(DataQuery $query): SilverStripe\ORM\DataQuery_SubGroup
     {
         if (($key = array_search('not', $this->modifiers ?? [])) !== false) {
             unset($this->modifiers[$key]);
@@ -439,7 +439,7 @@ abstract class SearchFilter
      *
      * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
      */
-    protected function getCaseSensitive()
+    protected function getCaseSensitive(): null|bool
     {
         $modifiers = $this->getModifiers();
         if (in_array('case', $modifiers ?? [])) {

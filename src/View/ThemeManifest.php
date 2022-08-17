@@ -63,7 +63,7 @@ class ThemeManifest implements ThemeList
      * @param string $project Path to application code
      * @param CacheFactory $cacheFactory Cache factory to generate backend cache with
      */
-    public function __construct($base, $project = null, CacheFactory $cacheFactory = null)
+    public function __construct(string $base, string $project = null, CacheFactory $cacheFactory = null): void
     {
         $this->base = $base;
         $this->project = $project;
@@ -75,7 +75,7 @@ class ThemeManifest implements ThemeList
      * @param bool $forceRegen Force the manifest to be regenerated.
      * @param string[] $ignoredCIConfigs
      */
-    public function init($includeTests = false, $forceRegen = false, array $ignoredCIConfigs = [])
+    public function init(bool $includeTests = false, bool $forceRegen = false, array $ignoredCIConfigs = []): void
     {
         // build cache from factory
         if ($this->cacheFactory) {
@@ -108,7 +108,7 @@ class ThemeManifest implements ThemeList
      * @param bool $includeTests
      * @return string
      */
-    public function getCacheKey($includeTests = false)
+    public function getCacheKey(bool $includeTests = false): string
     {
         return sha1(sprintf(
             "manifest-%s-%s-%u",
@@ -121,7 +121,7 @@ class ThemeManifest implements ThemeList
     /**
      * @return \string[]
      */
-    public function getThemes()
+    public function getThemes(): array
     {
         return $this->themes;
     }
@@ -132,7 +132,7 @@ class ThemeManifest implements ThemeList
      * @param bool $includeTests
      * @param string[] $ignoredCIConfigs
      */
-    public function regenerate($includeTests = false, array $ignoredCIConfigs = [])
+    public function regenerate(bool $includeTests = false, array $ignoredCIConfigs = []): void
     {
         $finder = new ManifestFileFinder();
         $finder->setOptions([
@@ -162,7 +162,7 @@ class ThemeManifest implements ThemeList
      * @param string $pathname
      * @param int $depth
      */
-    public function handleDirectory($basename, $pathname, $depth)
+    public function handleDirectory(string $basename, string $pathname, int $depth): void
     {
         if ($basename !== self::TEMPLATES_DIR) {
             return;
@@ -177,7 +177,7 @@ class ThemeManifest implements ThemeList
      * @param string $project
      * @return $this
      */
-    public function setProject($project)
+    public function setProject(string $project): SilverStripe\View\ThemeManifest
     {
         $this->project = $project;
 

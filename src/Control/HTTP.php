@@ -93,7 +93,7 @@ class HTTP
      * @param string $filename
      * @return string
      */
-    public static function filename2url($filename)
+    public static function filename2url(string $filename): string
     {
         $filename = realpath($filename ?? '');
         if (!$filename) {
@@ -118,7 +118,7 @@ class HTTP
      *
      * @return string
      */
-    public static function absoluteURLs($html)
+    public static function absoluteURLs(SilverStripe\ORM\FieldType\DBHTMLText|string $html): string
     {
         $html = str_replace('$CurrentPageURL', Controller::curr()->getRequest()->getURL() ?? '', $html ?? '');
         return HTTP::urlRewriter($html, function ($url) {
@@ -154,7 +154,7 @@ class HTTP
      *
      * @return string The content with all links rewritten as per the logic specified in $code.
      */
-    public static function urlRewriter($content, $code)
+    public static function urlRewriter(string $content, callable $code): string
     {
         if (!is_callable($code)) {
             throw new InvalidArgumentException(
@@ -217,7 +217,7 @@ class HTTP
      * @param string $separator Separator for http_build_query().
      * @return string
      */
-    public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&')
+    public static function setGetVar(string $varname, int|string|float $varvalue, string $currentURL = null, $separator = '&'): string
     {
         if (!isset($currentURL)) {
             $request = Controller::curr()->getRequest();
@@ -296,7 +296,7 @@ class HTTP
      *
      * @return array
      */
-    public static function findByTagAndAttribute($content, $attributes)
+    public static function findByTagAndAttribute(string $content, array $attributes): null|array
     {
         $regexes = [];
 
@@ -323,7 +323,7 @@ class HTTP
      *
      * @return array
      */
-    public static function getLinksIn($content)
+    public static function getLinksIn(string $content): null|array
     {
         return self::findByTagAndAttribute($content, ["a" => "href"]);
     }
@@ -346,7 +346,7 @@ class HTTP
      * @param string $filename
      * @return string
      */
-    public static function get_mime_type($filename)
+    public static function get_mime_type(string $filename): string
     {
         // If the finfo module is compiled into PHP, use it.
         $path = BASE_PATH . DIRECTORY_SEPARATOR . $filename;
@@ -375,7 +375,7 @@ class HTTP
      * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
      * @param int $age
      */
-    public static function set_cache_age($age)
+    public static function set_cache_age(int $age): void
     {
         Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead');
         self::$cache_age = $age;
@@ -428,7 +428,7 @@ class HTTP
      * @param HTTPResponse $response
      * @deprecated 4.2.0:5.0.0 Headers are added automatically by HTTPCacheControlMiddleware instead.
      */
-    public static function add_cache_headers($response = null)
+    public static function add_cache_headers(SilverStripe\Control\HTTPResponse $response = null): void
     {
         Deprecation::notice('5.0', 'Headers are added automatically by HTTPCacheControlMiddleware instead.');
 
@@ -478,7 +478,7 @@ class HTTP
      * @param HTTPRequest $request
      * @param HTTPResponse $response
      */
-    public static function augmentState(HTTPRequest $request, HTTPResponse $response)
+    public static function augmentState(HTTPRequest $request, HTTPResponse $response): void
     {
         // Skip if deprecated API is disabled
         $config = Config::forClass(HTTP::class);

@@ -32,7 +32,7 @@ abstract class DataExtension extends Extension
      * @param ValidationResult $validationResult Local validation result
      * @throws ValidationException
      */
-    public function validate(ValidationResult $validationResult)
+    public function validate(ValidationResult $validationResult): void
     {
     }
 
@@ -42,7 +42,7 @@ abstract class DataExtension extends Extension
      * @param SQLSelect $query Query to augment.
      * @param DataQuery $dataQuery Container DataQuery for this SQLSelect
      */
-    public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null)
+    public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null): void
     {
     }
 
@@ -52,7 +52,7 @@ abstract class DataExtension extends Extension
      * When duplicating a table's structure, remember to duplicate the create options
      * as well. See {@link Versioned->augmentDatabase} for an example.
      */
-    public function augmentDatabase()
+    public function augmentDatabase(): void
     {
     }
 
@@ -61,7 +61,7 @@ abstract class DataExtension extends Extension
      *
      * @param array $manipulation Array of operations to augment.
      */
-    public function augmentWrite(&$manipulation)
+    public function augmentWrite(array &$manipulation): void
     {
     }
 
@@ -70,7 +70,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onBeforeWrite()} for context.
      */
-    public function onBeforeWrite()
+    public function onBeforeWrite(): void
     {
     }
 
@@ -79,7 +79,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onAfterWrite()} for context.
      */
-    public function onAfterWrite()
+    public function onAfterWrite(): void
     {
     }
 
@@ -88,7 +88,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onBeforeDelete()} for context.
      */
-    public function onBeforeDelete()
+    public function onBeforeDelete(): void
     {
     }
 
@@ -97,7 +97,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onAfterDelete()} for context.
      */
-    public function onAfterDelete()
+    public function onAfterDelete(): void
     {
     }
 
@@ -106,7 +106,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::requireDefaultRecords()} for context.
      */
-    public function requireDefaultRecords()
+    public function requireDefaultRecords(): void
     {
     }
 
@@ -115,7 +115,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::populateDefaults()} for context.
      */
-    public function populateDefaults()
+    public function populateDefaults(): void
     {
     }
 
@@ -124,7 +124,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onAfterBuild()} for context.
      */
-    public function onAfterBuild()
+    public function onAfterBuild(): void
     {
     }
 
@@ -138,7 +138,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function can($member)
+    public function can(SilverStripe\Security\Member $member): void
     {
     }
 
@@ -152,7 +152,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function canEdit($member)
+    public function canEdit(int|SilverStripe\Security\Member|bool $member): void
     {
     }
 
@@ -166,7 +166,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function canDelete($member)
+    public function canDelete(SilverStripe\Security\Member $member): void
     {
     }
 
@@ -180,7 +180,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function canCreate($member)
+    public function canCreate(SilverStripe\Security\Member $member): void
     {
     }
 
@@ -195,7 +195,7 @@ abstract class DataExtension extends Extension
      * @return array Returns a map where the keys are db, has_one, etc, and
      *               the values are additional fields/relations to be defined.
      */
-    public function extraStatics($class = null, $extension = null)
+    public function extraStatics($class = null, $extension = null): array
     {
         return [];
     }
@@ -213,7 +213,7 @@ abstract class DataExtension extends Extension
      *
      * @param FieldList $fields FieldList with a contained TabSet
      */
-    public function updateCMSFields(FieldList $fields)
+    public function updateCMSFields(FieldList $fields): void
     {
     }
 
@@ -236,7 +236,7 @@ abstract class DataExtension extends Extension
      *
      * @param FieldList $fields FieldList without TabSet nesting
      */
-    public function updateFrontEndFields(FieldList $fields)
+    public function updateFrontEndFields(FieldList $fields): void
     {
     }
 
@@ -246,7 +246,7 @@ abstract class DataExtension extends Extension
      *
      * @param FieldList $actions FieldList
      */
-    public function updateCMSActions(FieldList $actions)
+    public function updateCMSActions(FieldList $actions): void
     {
     }
 
@@ -258,7 +258,7 @@ abstract class DataExtension extends Extension
      *
      * @param array $fields Array of field names
      */
-    public function updateSummaryFields(&$fields)
+    public function updateSummaryFields(array &$fields): void
     {
         $summary_fields = Config::inst()->get(static::class, 'summary_fields');
         if ($summary_fields) {
@@ -281,7 +281,7 @@ abstract class DataExtension extends Extension
      *
      * @param array $labels Array of field labels
      */
-    public function updateFieldLabels(&$labels)
+    public function updateFieldLabels(array &$labels): void
     {
         $field_labels = Config::inst()->get(static::class, 'field_labels');
         if ($field_labels) {

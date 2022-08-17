@@ -39,7 +39,7 @@ abstract class ComparisonFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    protected function applyOne(DataQuery $query)
+    protected function applyOne(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         $this->model = $query->applyRelation($this->relation);
 
@@ -58,7 +58,7 @@ abstract class ComparisonFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    protected function excludeOne(DataQuery $query)
+    protected function excludeOne(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         $this->model = $query->applyRelation($this->relation);
 

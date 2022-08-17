@@ -13,7 +13,7 @@ use SilverStripe\View\ArrayData;
 class DBInt extends DBField
 {
 
-    public function __construct($name = null, $defaultVal = 0)
+    public function __construct(string $name = null, int $defaultVal = 0): void
     {
         $this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
 
@@ -24,7 +24,7 @@ class DBInt extends DBField
      * Ensure int values are always returned.
      * This is for mis-configured databases that return strings.
      */
-    public function getValue()
+    public function getValue(): int
     {
         return (int) $this->value;
     }
@@ -37,7 +37,7 @@ class DBInt extends DBField
         return number_format($this->value ?? 0.0);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'int',
@@ -65,17 +65,17 @@ class DBInt extends DBField
         return sprintf('%d', $this->value);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\NumericField
     {
         return NumericField::create($this->name, $title);
     }
 
-    public function nullValue()
+    public function nullValue(): int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(int|string|bool|array $value): int
     {
         if ($value === true) {
             return 1;

@@ -52,7 +52,7 @@ class PopoverField extends FieldGroup
      *
      * @return string
      */
-    public function getPopoverTitle()
+    public function getPopoverTitle(): null|string
     {
         return $this->popoverTitle;
     }
@@ -63,7 +63,7 @@ class PopoverField extends FieldGroup
      * @param string $popoverTitle
      * @return $this
      */
-    public function setPopoverTitle($popoverTitle)
+    public function setPopoverTitle(string $popoverTitle): SilverStripe\Forms\PopoverField
     {
         $this->popoverTitle = $popoverTitle;
         return $this;
@@ -72,7 +72,7 @@ class PopoverField extends FieldGroup
     /**
      * @return string
      */
-    public function getButtonTooltip()
+    public function getButtonTooltip(): string|null
     {
         return $this->buttonTooltip;
     }
@@ -81,7 +81,7 @@ class PopoverField extends FieldGroup
      * @param string $text
      * @return $this
      */
-    public function setButtonTooltip($text)
+    public function setButtonTooltip(string $text): SilverStripe\Forms\PopoverField
     {
         $this->buttonTooltip = $text;
         return $this;
@@ -92,12 +92,12 @@ class PopoverField extends FieldGroup
      *
      * @return string
      */
-    public function getPlacement()
+    public function getPlacement(): string
     {
         return $this->placement;
     }
 
-    public function setPlacement($placement)
+    public function setPlacement(string $placement): SilverStripe\Forms\PopoverField
     {
         $valid = ['top', 'right', 'bottom', 'left'];
 
@@ -112,7 +112,7 @@ class PopoverField extends FieldGroup
         return $this;
     }
 
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $schema = parent::getSchemaDataDefaults();
 

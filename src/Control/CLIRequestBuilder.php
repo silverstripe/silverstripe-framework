@@ -9,7 +9,7 @@ use SilverStripe\Core\Environment;
  */
 class CLIRequestBuilder extends HTTPRequestBuilder
 {
-    public static function cleanEnvironment(array $variables)
+    public static function cleanEnvironment(array $variables): array
     {
         // Create all blank vars
         foreach (['_REQUEST', '_GET', '_POST', '_SESSION', '_SERVER', '_COOKIE', '_ENV', '_FILES'] as $key) {
@@ -75,7 +75,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
      * @param string|null $url
      * @return HTTPRequest
      */
-    public static function createFromVariables(array $variables, $input, $url = null)
+    public static function createFromVariables(array $variables, string $input, $url = null): SilverStripe\Control\HTTPRequest
     {
         $request = parent::createFromVariables($variables, $input, $url);
         // unset scheme so that SS_BASE_URL can provide `is_https` information if required

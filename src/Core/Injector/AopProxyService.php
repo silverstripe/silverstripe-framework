@@ -18,11 +18,11 @@ class AopProxyService
      * Because we don't know exactly how the proxied class is usually called,
      * provide a default constructor
      */
-    public function __construct()
+    public function __construct(): void
     {
     }
 
-    public function __call($method, $args)
+    public function __call(string $method, array $args): int|null
     {
         if (method_exists($this->proxied, $method ?? '')) {
             $continue = true;

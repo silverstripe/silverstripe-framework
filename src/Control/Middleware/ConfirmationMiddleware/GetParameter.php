@@ -22,7 +22,7 @@ class GetParameter implements Rule, Bypass
      *
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct(string $name): void
     {
         $this->setName($name);
     }
@@ -32,7 +32,7 @@ class GetParameter implements Rule, Bypass
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -44,7 +44,7 @@ class GetParameter implements Rule, Bypass
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter
     {
         $this->name = $name;
         return $this;
@@ -58,7 +58,7 @@ class GetParameter implements Rule, Bypass
      *
      * @return Confirmation\Item
      */
-    protected function buildConfirmationItem($token, $value)
+    protected function buildConfirmationItem(string $token, string $value): SilverStripe\Security\Confirmation\Item
     {
         return new Confirmation\Item(
             $token,
@@ -75,7 +75,7 @@ class GetParameter implements Rule, Bypass
      *
      * @return string
      */
-    protected function generateToken($path, $value)
+    protected function generateToken(string $path, string $value): string
     {
         return sprintf('%s::%s?%s=%s', static::class, $path, $this->name, $value);
     }
@@ -87,17 +87,17 @@ class GetParameter implements Rule, Bypass
      *
      * @return bool
      */
-    protected function checkRequestHasParameter(HTTPRequest $request)
+    protected function checkRequestHasParameter(HTTPRequest $request): bool
     {
         return array_key_exists($this->name, $request->getVars() ?? []);
     }
 
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return $this->checkRequestHasParameter($request);
     }
 
-    public function getRequestConfirmationItem(HTTPRequest $request)
+    public function getRequestConfirmationItem(HTTPRequest $request): null|SilverStripe\Security\Confirmation\Item
     {
         if (!$this->checkRequestHasParameter($request)) {
             return null;

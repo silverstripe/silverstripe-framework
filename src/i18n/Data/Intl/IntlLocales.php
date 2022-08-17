@@ -25,7 +25,7 @@ class IntlLocales implements Locales, Resettable
     use Injectable;
     use Configurable;
 
-    public function __construct()
+    public function __construct(): void
     {
         if (!class_exists(Locale::class)) {
             throw new Exception("This backend requires the php-intl extension");
@@ -1397,7 +1397,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $lang Short language code, e.g. "en"
      * @return string Long locale, e.g. "en_US"
      */
-    public function localeFromLang($lang)
+    public function localeFromLang(string $lang): string
     {
         $lang = Locale::canonicalize($lang);
 
@@ -1426,7 +1426,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $locale E.g. "en_US"
      * @return string Short language code, e.g. "en"
      */
-    public function langFromLocale($locale)
+    public function langFromLocale(string $locale): string
     {
         return Locale::getPrimaryLanguage($locale);
     }
@@ -1443,7 +1443,7 @@ class IntlLocales implements Locales, Resettable
      *
      * @return array Map of locale code => name
      */
-    public function getLocales()
+    public function getLocales(): array
     {
         // Cache by locale
         $locale = i18n::get_locale();
@@ -1501,7 +1501,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $locale
      * @return string
      */
-    public function localeName($locale)
+    public function localeName(string $locale): string
     {
         return Locale::getDisplayName($locale, i18n::get_locale());
     }
@@ -1512,7 +1512,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $code
      * @return string
      */
-    public function languageName($code)
+    public function languageName(string $code): string
     {
         return Locale::getDisplayLanguage($code, i18n::get_locale());
     }
@@ -1529,7 +1529,7 @@ class IntlLocales implements Locales, Resettable
      *
      * @return array Map of country code => name
      */
-    public function getCountries()
+    public function getCountries(): array
     {
         // Cache by locale
         $locale = i18n::get_locale();
@@ -1557,7 +1557,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $code ISO 3166-1 country code
      * @return string
      */
-    public function countryName($code)
+    public function countryName(string $code): string
     {
         return Locale::getDisplayRegion('-' . $code, i18n::get_locale());
     }
@@ -1568,7 +1568,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $locale E.g. "en_US"
      * @return string Country code, e.g. "us"
      */
-    public function countryFromLocale($locale)
+    public function countryFromLocale(string $locale): string|null
     {
         return strtolower(Locale::getRegion($locale) ?? '') ?: null;
     }
@@ -1579,7 +1579,7 @@ class IntlLocales implements Locales, Resettable
      * @param string $locale
      * @return bool
      */
-    public function validate($locale)
+    public function validate(string $locale): bool
     {
         if (!$locale) {
             return false;
@@ -1609,7 +1609,7 @@ class IntlLocales implements Locales, Resettable
     /**
      * Reset the local cache of this object
      */
-    public static function reset()
+    public static function reset(): void
     {
         static::$cache_countries = [];
         static::$cache_languages = [];

@@ -11,12 +11,12 @@ namespace SilverStripe\ORM\Filters;
 class LessThanFilter extends ComparisonFilter
 {
 
-    protected function getOperator()
+    protected function getOperator(): string
     {
         return "<";
     }
 
-    protected function getInverseOperator()
+    protected function getInverseOperator(): string
     {
         return ">=";
     }

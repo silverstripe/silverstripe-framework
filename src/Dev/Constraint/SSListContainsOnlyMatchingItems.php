@@ -42,7 +42,7 @@ if (class_exists(Constraint::class)) {
          */
         private $constraint;
 
-        public function __construct($match)
+        public function __construct(array $match)
         {
             $this->exporter = new SSListExporter();
 
@@ -68,7 +68,7 @@ if (class_exists(Constraint::class)) {
          *
          * @throws ExpectationFailedException
          */
-        public function evaluate($other, $description = '', $returnResult = false): ?bool
+        public function evaluate(SilverStripe\ORM\ArrayList $other, string $description = '', bool $returnResult = false): ?bool
         {
             $success = true;
 
@@ -133,7 +133,7 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
      */
     private $constraint;
 
-    public function __construct($match)
+    public function __construct(array $match)
     {
         $this->exporter = new SSListExporter();
 
@@ -159,7 +159,7 @@ class SSListContainsOnlyMatchingItems extends PHPUnit_Framework_Constraint imple
      *
      * @throws PHPUnit_Framework_ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate(SilverStripe\ORM\ArrayList $other, string $description = '', bool $returnResult = false)
     {
         $success = true;
 

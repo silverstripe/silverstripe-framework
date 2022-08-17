@@ -36,7 +36,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getTitle($gridField, $record, $columnName)
+    public function getTitle(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): string
     {
         return _t(__CLASS__ . '.EDIT', "Edit");
     }
@@ -44,7 +44,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getGroup($gridField, $record, $columnName)
+    public function getGroup(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): string
     {
         return GridField_ActionMenuItem::DEFAULT_GROUP;
     }
@@ -52,7 +52,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getExtraData($gridField, $record, $columnName)
+    public function getExtraData(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): array
     {
         return [
             "classNames" => "font-icon-edit action-detail edit-link"
@@ -62,7 +62,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
     /**
      * @inheritdoc
      */
-    public function getUrl($gridField, $record, $columnName, $addState = true)
+    public function getUrl(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $record, string $columnName, bool $addState = true): string
     {
         $link = Controller::join_links(
             $gridField->Link('item'),
@@ -83,7 +83,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param GridField $gridField
      * @param array $columns
      */
-    public function augmentColumns($gridField, &$columns)
+    public function augmentColumns(SilverStripe\Forms\GridField\GridField $gridField, &$columns): void
     {
         if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
@@ -98,7 +98,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param string $columnName
      * @return array
      */
-    public function getColumnAttributes($gridField, $record, $columnName)
+    public function getColumnAttributes(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $record, string $columnName): array
     {
         return ['class' => 'grid-field__col-compact'];
     }
@@ -110,7 +110,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param string $columnName
      * @return array
      */
-    public function getColumnMetadata($gridField, $columnName)
+    public function getColumnMetadata(SilverStripe\Forms\GridField\GridField $gridField, string $columnName): array
     {
         if ($columnName == 'Actions') {
             return ['title' => ''];
@@ -124,7 +124,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param GridField $gridField
      * @return array
      */
-    public function getColumnsHandled($gridField)
+    public function getColumnsHandled(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['Actions'];
     }
@@ -135,7 +135,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [];
     }
@@ -146,7 +146,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param string $columnName
      * @return string The HTML for the column
      */
-    public function getColumnContent($gridField, $record, $columnName)
+    public function getColumnContent(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $record, string $columnName): SilverStripe\ORM\FieldType\DBHTMLText
     {
         // No permission checks, handled through GridFieldDetailForm,
         // which can make the form readonly if no edit permissions are available.
@@ -165,7 +165,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      *
      * @return string
      */
-    public function getExtraClass()
+    public function getExtraClass(): string
     {
         return implode(' ', array_keys($this->extraClass ?? []));
     }
@@ -176,7 +176,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param string $class
      * @return $this
      */
-    public function addExtraClass($class)
+    public function addExtraClass(string $class): SilverStripe\Forms\GridField\GridFieldEditButton
     {
         $this->extraClass[$class] = true;
 
@@ -189,7 +189,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * @param string $class
      * @return $this
      */
-    public function removeExtraClass($class)
+    public function removeExtraClass(string $class): SilverStripe\Forms\GridField\GridFieldEditButton
     {
         unset($this->extraClass[$class]);
 

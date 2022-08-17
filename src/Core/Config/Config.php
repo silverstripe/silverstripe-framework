@@ -40,7 +40,7 @@ abstract class Config
      *
      * @return ConfigCollectionInterface
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Config\Collections\CachedConfigCollection
     {
         return ConfigLoader::inst()->getManifest();
     }
@@ -50,7 +50,7 @@ abstract class Config
      *
      * @return MutableConfigCollectionInterface
      */
-    public static function modify()
+    public static function modify(): SilverStripe\Config\Collections\DeltaConfigCollection
     {
         $instance = static::inst();
         if ($instance instanceof MutableConfigCollectionInterface) {
@@ -76,7 +76,7 @@ abstract class Config
      *
      * @return ConfigCollectionInterface Active config
      */
-    public static function nest()
+    public static function nest(): SilverStripe\Config\Collections\DeltaConfigCollection
     {
         // Clone current config and nest
         $new = self::inst()->nest();
@@ -90,7 +90,7 @@ abstract class Config
      *
      * @return ConfigCollectionInterface
      */
-    public static function unnest()
+    public static function unnest(): SilverStripe\Config\Collections\DeltaConfigCollection
     {
         // Unnest unless we would be left at 0 manifests
         $loader = ConfigLoader::inst();
@@ -114,7 +114,7 @@ abstract class Config
      * @param string $class
      * @return Config_ForClass
      */
-    public static function forClass($class)
+    public static function forClass(string|Page $class): SilverStripe\Core\Config\Config_ForClass
     {
         return new Config_ForClass($class);
     }
@@ -126,7 +126,7 @@ abstract class Config
      * @param callable $callback Callback to run. Will be passed the nested config state as a parameter
      * @return mixed Result of callback
      */
-    public static function withConfig($callback)
+    public static function withConfig(callable $callback): null|string
     {
         static::nest();
         $config = static::modify();

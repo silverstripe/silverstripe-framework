@@ -40,7 +40,7 @@ class GridFieldFooter extends AbstractGridFieldComponent implements GridField_HT
      * @param string $message A message to display in the footer
      * @param bool $showrecordcount
      */
-    public function __construct($message = null, $showrecordcount = true)
+    public function __construct($message = null, $showrecordcount = true): void
     {
         if ($message) {
             $this->message = $message;
@@ -49,7 +49,7 @@ class GridFieldFooter extends AbstractGridFieldComponent implements GridField_HT
     }
 
 
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $count = $gridField->getList()->count();
 

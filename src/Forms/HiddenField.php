@@ -16,7 +16,7 @@ class HiddenField extends FormField
      * @param array $properties
      * @return string
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         return $this->Field($properties);
     }
@@ -24,7 +24,7 @@ class HiddenField extends FormField
     /**
      * @return static
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\HiddenField
     {
         $clone = clone $this;
 

@@ -146,7 +146,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $url The base URL to use for this test
          * @param callable $callback The test to run
          */
-        protected function withBaseURL($url, $callback)
+        protected function withBaseURL(string $url, callable $callback)
         {
             $oldBase = Config::inst()->get(Director::class, 'alternate_base_url');
             Config::modify()->set(Director::class, 'alternate_base_url', $url);
@@ -159,7 +159,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $folder The base folder to use for this test
          * @param callable $callback The test to run
          */
-        protected function withBaseFolder($folder, $callback)
+        protected function withBaseFolder(string $folder, callable $callback)
         {
             $oldFolder = Config::inst()->get(Director::class, 'alternate_base_folder');
             Config::modify()->set(Director::class, 'alternate_base_folder', $folder);
@@ -177,7 +177,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param array $cookies
          * @return HTTPResponse
          */
-        public function get($url, $session = null, $headers = null, $cookies = null)
+        public function get(string $url, SilverStripe\Control\Session $session = null, array $headers = null, array $cookies = null)
         {
             $this->cssParser = null;
             $response = $this->mainSession->get($url, $session, $headers, $cookies);
@@ -199,7 +199,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param array $cookies
          * @return HTTPResponse
          */
-        public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null)
+        public function post(string $url, array $data, array $headers = null, SilverStripe\Control\Session $session = null, string $body = null, array $cookies = null)
         {
             $this->cssParser = null;
             $response = $this->mainSession->post($url, $data, $headers, $session, $body, $cookies);
@@ -228,7 +228,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param array $data Map of GET/POST data.
          * @return HTTPResponse
          */
-        public function submitForm($formID, $button = null, $data = [])
+        public function submitForm(string $formID, string $button = null, array $data = [])
         {
             $this->cssParser = null;
             $response = $this->mainSession->submitForm($formID, $button, $data);
@@ -290,7 +290,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * @param string $message
          * @throws AssertionFailedError
          */
-        public function assertPartialMatchBySelector($selector, $expectedMatches, $message = null)
+        public function assertPartialMatchBySelector(string $selector, array $expectedMatches, string $message = null)
         {
             if (is_string($expectedMatches)) {
                 $expectedMatches = [$expectedMatches];
@@ -585,8 +585,8 @@ class FunctionalTest extends SapphireTest implements TestOnly
 
     /**
      * Run a test while mocking the base url with the provided value
-     * @param string $url The base URL to use for this test
-     * @param callable $callback The test to run
+     * @param string string $url The base URL to use for this test
+     * @param callable callable $callback The test to run
      */
     protected function withBaseURL($url, $callback)
     {
@@ -598,8 +598,8 @@ class FunctionalTest extends SapphireTest implements TestOnly
 
     /**
      * Run a test while mocking the base folder with the provided value
-     * @param string $folder The base folder to use for this test
-     * @param callable $callback The test to run
+     * @param string string $folder The base folder to use for this test
+     * @param callable callable $callback The test to run
      */
     protected function withBaseFolder($folder, $callback)
     {
@@ -634,14 +634,14 @@ class FunctionalTest extends SapphireTest implements TestOnly
      *
      * @uses Director::test()
      * @param string $url
-     * @param array $data
+     * @param array array $data
      * @param array $headers
      * @param Session $session
      * @param string $body
      * @param array $cookies
      * @return HTTPResponse
      */
-    public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null)
+    public function post(string $url, $data, array $headers = null, SilverStripe\Control\Session $session = null, string $body = null, array $cookies = null)
     {
         $this->cssParser = null;
         $response = $this->mainSession->post($url, $data, $headers, $session, $body, $cookies);
@@ -728,11 +728,11 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * Note: &nbsp; characters are stripped from the content; make sure that your assertions take this into account.
      *
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
-     * @param array|string $expectedMatches The content of at least one of the matched tags
+     * @param array|string array $expectedMatches The content of at least one of the matched tags
      * @param string $message
      * @throws PHPUnit_Framework_AssertionFailedError
      */
-    public function assertPartialMatchBySelector($selector, $expectedMatches, $message = null)
+    public function assertPartialMatchBySelector(string $selector, $expectedMatches, string $message = null)
     {
         if (is_string($expectedMatches)) {
             $expectedMatches = [$expectedMatches];

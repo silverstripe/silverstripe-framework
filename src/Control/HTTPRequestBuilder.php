@@ -13,7 +13,7 @@ class HTTPRequestBuilder
      * @throws HTTPResponse_Exception
      * @return HTTPRequest
      */
-    public static function createFromEnvironment()
+    public static function createFromEnvironment(): SilverStripe\Control\HTTPRequest
     {
         // Clean and update live global variables
         $variables = static::cleanEnvironment(Environment::getVariables());
@@ -31,7 +31,7 @@ class HTTPRequestBuilder
      * @param string|null $url Provide specific url (relative to base)
      * @return HTTPRequest
      */
-    public static function createFromVariables(array $variables, $input, $url = null)
+    public static function createFromVariables(array $variables, string $input, string $url = null): SilverStripe\Control\HTTPRequest
     {
         // Infer URL from REQUEST_URI unless explicitly provided
         if (!isset($url)) {
@@ -84,7 +84,7 @@ class HTTPRequestBuilder
      *
      * @return array
      */
-    public static function extractRequestHeaders(array $server)
+    public static function extractRequestHeaders(array $server): array
     {
         $headers = [];
         foreach ($server as $key => $value) {
@@ -133,7 +133,7 @@ class HTTPRequestBuilder
      * @param array $variables
      * @return array Cleaned variables
      */
-    public static function cleanEnvironment(array $variables)
+    public static function cleanEnvironment(array $variables): array
     {
         // Merge $_FILES into $_POST
         $variables['_POST'] = array_merge((array)$variables['_POST'], (array)$variables['_FILES']);

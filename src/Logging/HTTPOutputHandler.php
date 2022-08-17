@@ -35,7 +35,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return string
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentType;
     }
@@ -58,7 +58,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return int
      */
-    public function getStatusCode()
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -82,7 +82,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * @param FormatterInterface $cliFormatter
      * @return HTTPOutputHandler Return $this to allow chainable calls
      */
-    public function setCLIFormatter(FormatterInterface $cliFormatter)
+    public function setCLIFormatter(FormatterInterface $cliFormatter): SilverStripe\Logging\HTTPOutputHandler
     {
         $this->cliFormatter = $cliFormatter;
 
@@ -95,7 +95,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    public function getCLIFormatter()
+    public function getCLIFormatter(): null|SilverStripe\Logging\DebugViewFriendlyErrorFormatter
     {
         return $this->cliFormatter;
     }
@@ -106,7 +106,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    public function getFormatter()
+    public function getFormatter(): SilverStripe\Logging\DetailedErrorFormatter
     {
         if (Director::is_cli() && ($cliFormatter = $this->getCLIFormatter())) {
             return $cliFormatter;
@@ -120,7 +120,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    public function getDefaultFormatter()
+    public function getDefaultFormatter(): SilverStripe\Logging\DetailedErrorFormatter
     {
         return parent::getFormatter();
     }
@@ -131,7 +131,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * @param FormatterInterface $formatter
      * @return $this
      */
-    public function setDefaultFormatter(FormatterInterface $formatter)
+    public function setDefaultFormatter(FormatterInterface $formatter): SilverStripe\Logging\HTTPOutputHandler
     {
         parent::setFormatter($formatter);
         return $this;
@@ -141,7 +141,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * @param array $record
      * @return bool
      */
-    protected function write(array $record)
+    protected function write(array $record): bool
     {
         ini_set('display_errors', 0);
 

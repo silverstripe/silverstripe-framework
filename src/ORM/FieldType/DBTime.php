@@ -27,7 +27,7 @@ class DBTime extends DBField
      */
     const ISO_TIME = 'HH:mm:ss';
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(string $value, BasicFieldsTestPage $record = null, bool $markChanged = true): SilverStripe\ORM\FieldType\DBTime
     {
         $value = $this->parseTime($value);
         if ($value === false) {
@@ -45,7 +45,7 @@ class DBTime extends DBField
      * @param mixed $value
      * @return string|null|false Formatted time, null if empty but valid, or false if invalid
      */
-    protected function parseTime($value)
+    protected function parseTime(string $value): null|string
     {
         // Skip empty values
         if (empty($value) && !is_numeric($value)) {
@@ -77,7 +77,7 @@ class DBTime extends DBField
      * @param int $timeLength
      * @return IntlDateFormatter
      */
-    public function getFormatter($timeLength = IntlDateFormatter::MEDIUM)
+    public function getFormatter($timeLength = IntlDateFormatter::MEDIUM): IntlDateFormatter
     {
         return IntlDateFormatter::create(i18n::get_locale(), IntlDateFormatter::NONE, $timeLength);
     }
@@ -87,7 +87,7 @@ class DBTime extends DBField
      *
      * @return string
      */
-    public function Short()
+    public function Short(): string
     {
         if (!$this->value) {
             return null;
@@ -102,7 +102,7 @@ class DBTime extends DBField
      *
      * @return string
      */
-    public function Nice()
+    public function Nice(): string
     {
         if (!$this->value) {
             return null;
@@ -127,7 +127,7 @@ class DBTime extends DBField
         return $formatter->format($this->getTimestamp());
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'time',
@@ -172,7 +172,7 @@ class DBTime extends DBField
      *
      * @return string
      */
-    public function getISOFormat()
+    public function getISOFormat(): string
     {
         return self::ISO_TIME;
     }
@@ -182,7 +182,7 @@ class DBTime extends DBField
      *
      * @return int
      */
-    public function getTimestamp()
+    public function getTimestamp(): int
     {
         if ($this->value) {
             return strtotime($this->value ?? '');

@@ -75,7 +75,7 @@ class URLSegmentFilter implements FilterInterface
      * @param string $name URL path (without domain or query parameters), in utf8 encoding
      * @return string A filtered path compatible with RFC 3986
      */
-    public function filter($name)
+    public function filter(string|int $name): string
     {
         if (!$this->getAllowMultibyte()) {
             // Only transliterate when no multibyte support is requested
@@ -110,7 +110,7 @@ class URLSegmentFilter implements FilterInterface
      * @param string[] $replacements Map of find/replace used for preg_replace().
      * @return $this
      */
-    public function setReplacements($replacements)
+    public function setReplacements(array $replacements): SilverStripe\View\Parsers\URLSegmentFilter
     {
         $this->replacements = $replacements;
         return $this;
@@ -119,7 +119,7 @@ class URLSegmentFilter implements FilterInterface
     /**
      * @return string[]
      */
-    public function getReplacements()
+    public function getReplacements(): array
     {
         return $this->replacements ?: (array)$this->config()->get('default_replacements');
     }
@@ -127,7 +127,7 @@ class URLSegmentFilter implements FilterInterface
     /**
      * @return Transliterator|null
      */
-    public function getTransliterator()
+    public function getTransliterator(): SilverStripe\View\Parsers\Transliterator
     {
         if ($this->transliterator === null && $this->config()->get('default_use_transliterator')) {
             $this->transliterator = Transliterator::create();
@@ -148,7 +148,7 @@ class URLSegmentFilter implements FilterInterface
     /**
      * @param bool $bool
      */
-    public function setAllowMultibyte($bool)
+    public function setAllowMultibyte(bool $bool): void
     {
         $this->allowMultibyte = $bool;
     }
@@ -156,7 +156,7 @@ class URLSegmentFilter implements FilterInterface
     /**
      * @return boolean
      */
-    public function getAllowMultibyte()
+    public function getAllowMultibyte(): bool
     {
         return ($this->allowMultibyte !== null) ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
     }

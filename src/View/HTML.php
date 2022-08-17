@@ -57,7 +57,7 @@ class HTML
      * @param string $content Content to use between two tags. Not valid for void elements (e.g. link)
      * @return string
      */
-    public static function createTag($tag, $attributes, $content = null)
+    public static function createTag(string $tag, array $attributes, string $content = null): string
     {
         $tag = strtolower($tag ?? '');
 

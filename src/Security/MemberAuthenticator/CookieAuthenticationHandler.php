@@ -42,7 +42,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      *
      * @return string
      */
-    public function getDeviceCookieName()
+    public function getDeviceCookieName(): string
     {
         return $this->deviceCookieName;
     }
@@ -53,7 +53,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param string $deviceCookieName
      * @return $this
      */
-    public function setDeviceCookieName($deviceCookieName)
+    public function setDeviceCookieName(string $deviceCookieName): SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
     {
         $this->deviceCookieName = $deviceCookieName;
         return $this;
@@ -64,7 +64,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      *
      * @return string
      */
-    public function getTokenCookieName()
+    public function getTokenCookieName(): string
     {
         return $this->tokenCookieName;
     }
@@ -75,7 +75,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param string $tokenCookieName
      * @return $this
      */
-    public function setTokenCookieName($tokenCookieName)
+    public function setTokenCookieName(string $tokenCookieName): SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
     {
         $this->tokenCookieName = $tokenCookieName;
         return $this;
@@ -86,7 +86,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      *
      * @return string
      */
-    public function getTokenCookieSecure()
+    public function getTokenCookieSecure(): bool
     {
         return $this->tokenCookieSecure;
     }
@@ -119,7 +119,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param IdentityStore $cascadeInTo
      * @return $this
      */
-    public function setCascadeInTo(IdentityStore $cascadeInTo)
+    public function setCascadeInTo(IdentityStore $cascadeInTo): SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler
     {
         $this->cascadeInTo = $cascadeInTo;
         return $this;
@@ -129,7 +129,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param HTTPRequest $request
      * @return Member
      */
-    public function authenticateRequest(HTTPRequest $request)
+    public function authenticateRequest(HTTPRequest $request): null|SilverStripe\Security\Member
     {
         $uidAndToken = Cookie::get($this->getTokenCookieName());
         $deviceID = Cookie::get($this->getDeviceCookieName());
@@ -204,7 +204,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param bool $persistent
      * @param HTTPRequest $request
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
+    public function logIn(Member $member, bool $persistent = false, HTTPRequest $request = null): void
     {
         // Cleans up any potential previous hash for this member on this device
         if ($alcDevice = Cookie::get($this->getDeviceCookieName())) {
@@ -244,7 +244,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
     /**
      * @param HTTPRequest $request
      */
-    public function logOut(HTTPRequest $request = null)
+    public function logOut(HTTPRequest $request = null): void
     {
         $member = Security::getCurrentUser();
         if ($member) {
@@ -262,7 +262,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
     /**
      * Clear the cookies set for the user
      */
-    protected function clearCookies()
+    protected function clearCookies(): void
     {
         $secure = $this->getTokenCookieSecure();
         Cookie::set($this->getTokenCookieName(), null, null, null, null, $secure);

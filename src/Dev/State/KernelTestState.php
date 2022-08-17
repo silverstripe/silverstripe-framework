@@ -24,7 +24,7 @@ class KernelTestState implements TestState
      *
      * @return \SilverStripe\Dev\TestKernel
      */
-    protected function kernel()
+    protected function kernel(): SilverStripe\Dev\TestKernel
     {
         return end($this->kernels);
     }
@@ -34,7 +34,7 @@ class KernelTestState implements TestState
      *
      * @param SapphireTest $test
      */
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         $this->nest();
     }
@@ -44,7 +44,7 @@ class KernelTestState implements TestState
      *
      * @param SapphireTest $test
      */
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
         $this->unnest();
     }
@@ -54,7 +54,7 @@ class KernelTestState implements TestState
      *
      * @param string $class Class being setup
      */
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         // If first run, get initial kernel
         if (empty($this->kernels)) {
@@ -69,7 +69,7 @@ class KernelTestState implements TestState
      *
      * @param string $class Class being torn down
      */
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
         $this->unnest();
     }
@@ -77,14 +77,14 @@ class KernelTestState implements TestState
     /**
      * Nest the current kernel
      */
-    protected function nest()
+    protected function nest(): void
     {
         // Reset state
         $this->kernel()->reset();
         $this->kernels[] = $this->kernel()->nest();
     }
 
-    protected function unnest()
+    protected function unnest(): void
     {
         // Unnest and reset
         array_pop($this->kernels);

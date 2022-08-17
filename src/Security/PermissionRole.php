@@ -69,7 +69,7 @@ class PermissionRole extends DataObject
         return $fields;
     }
 
-    public function onAfterDelete()
+    public function onAfterDelete(): void
     {
         parent::onAfterDelete();
 
@@ -80,7 +80,7 @@ class PermissionRole extends DataObject
         }
     }
 
-    public function fieldLabels($includerelations = true)
+    public function fieldLabels(bool $includerelations = true): array
     {
         $labels = parent::fieldLabels($includerelations);
         $labels['Title'] = _t('SilverStripe\\Security\\PermissionRole.Title', 'Title');
@@ -93,12 +93,12 @@ class PermissionRole extends DataObject
         return $labels;
     }
 
-    public function canView($member = null)
+    public function canView($member = null): bool
     {
         return Permission::check('APPLY_ROLES', 'any', $member);
     }
 
-    public function canCreate($member = null, $context = [])
+    public function canCreate($member = null, array $context = []): bool
     {
         return Permission::check('APPLY_ROLES', 'any', $member);
     }

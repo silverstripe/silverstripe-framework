@@ -16,7 +16,7 @@ use SilverStripe\Dev\SapphireTest;
  */
 class LoggerState implements TestState
 {
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         /** @var Logger $userLogger */
         $userLogger = Injector::inst()->get(LoggerInterface::class);
@@ -25,17 +25,17 @@ class LoggerState implements TestState
         }
     }
 
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
         // noop
     }
 
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         // noop
     }
 
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
         // noop
     }

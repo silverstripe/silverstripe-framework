@@ -17,7 +17,7 @@ class YamlReader implements Reader
     /**
      * @return Parser
      */
-    protected function getParser()
+    protected function getParser(): Symfony\Component\Yaml\Parser
     {
         if (!$this->parser) {
             $this->parser = new Parser();
@@ -25,7 +25,7 @@ class YamlReader implements Reader
         return $this->parser;
     }
 
-    public function read($locale, $path)
+    public function read(string $locale, string $path): array
     {
         try {
             if (!file_exists($path ?? '')) {
@@ -51,7 +51,7 @@ class YamlReader implements Reader
      * @param array $entities
      * @return mixed
      */
-    protected function normaliseMessages($entities)
+    protected function normaliseMessages(array $entities): array
     {
         $messages = [];
         // Squash second and third levels together (class.key)

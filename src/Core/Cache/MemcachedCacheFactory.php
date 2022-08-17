@@ -17,7 +17,7 @@ class MemcachedCacheFactory implements CacheFactory
     /**
      * @param Memcached $memcachedClient
      */
-    public function __construct(Memcached $memcachedClient = null)
+    public function __construct(Memcached $memcachedClient = null): void
     {
         $this->memcachedClient = $memcachedClient;
     }
@@ -25,7 +25,7 @@ class MemcachedCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = [])
+    public function create(string $service, array $params = []): SilverStripe\Core\Tests\Cache\CacheTest\MockCache
     {
         $namespace = isset($params['namespace'])
             ? $params['namespace'] . '_' . md5(BASE_PATH)

@@ -11,14 +11,14 @@ use SilverStripe\ORM\DB;
 class DBFloat extends DBField
 {
 
-    public function __construct($name = null, $defaultVal = 0)
+    public function __construct(string $name = null, $defaultVal = 0): void
     {
         $this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;
 
         parent::__construct($name);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'float',
@@ -50,19 +50,19 @@ class DBFloat extends DBField
         return number_format(round($this->value ?? 0.0, $precision ?? 0), $precision ?? 0);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\NumericField
     {
         $field = NumericField::create($this->name, $title);
         $field->setScale(null); // remove no-decimal restriction
         return $field;
     }
 
-    public function nullValue()
+    public function nullValue(): int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(string|int|bool|array|float $value): string|int|float
     {
         if ($value === true) {
             return 1;

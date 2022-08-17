@@ -53,7 +53,7 @@ class CompositeField extends FormField
     /** @skipUpgrade */
     protected $schemaComponent = 'CompositeField';
 
-    public function __construct($children = null)
+    public function __construct(array|string|SilverStripe\Forms\TextField $children = null): void
     {
         // Normalise $children to a FieldList
         if (!$children instanceof FieldList) {
@@ -71,7 +71,7 @@ class CompositeField extends FormField
     /**
      * Merge child field data into this form
      */
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $defaults = parent::getSchemaDataDefaults();
         $children = $this->getChildren();
@@ -102,7 +102,7 @@ class CompositeField extends FormField
      *
      * @return FieldList
      */
-    public function FieldList()
+    public function FieldList(): SilverStripe\Forms\FieldList
     {
         return $this->children;
     }
@@ -112,7 +112,7 @@ class CompositeField extends FormField
      *
      * @return FieldList
      */
-    public function getChildren()
+    public function getChildren(): SilverStripe\Forms\FieldList
     {
         return $this->children;
     }
@@ -126,7 +126,7 @@ class CompositeField extends FormField
      *
      * @return String $name
      */
-    public function getName()
+    public function getName(): string
     {
         if ($this->name) {
             return $this->name;
@@ -153,7 +153,7 @@ class CompositeField extends FormField
      * @param FieldList $children
      * @return $this
      */
-    public function setChildren($children)
+    public function setChildren(SilverStripe\Forms\FieldList $children): SilverStripe\Forms\CompositeField
     {
         $this->children = $children;
         $children->setContainerField($this);
@@ -164,7 +164,7 @@ class CompositeField extends FormField
      * @param string $tag
      * @return $this
      */
-    public function setTag($tag)
+    public function setTag(string $tag): SilverStripe\Forms\CompositeField
     {
         $this->tag = $tag;
 
@@ -174,7 +174,7 @@ class CompositeField extends FormField
     /**
      * @return string
      */
-    public function getTag()
+    public function getTag(): string
     {
         return $this->tag;
     }
@@ -183,7 +183,7 @@ class CompositeField extends FormField
      * @param string $legend
      * @return $this
      */
-    public function setLegend($legend)
+    public function setLegend(string $legend): SilverStripe\Forms\CompositeField
     {
         $this->legend = $legend;
         return $this;
@@ -192,12 +192,12 @@ class CompositeField extends FormField
     /**
      * @return string
      */
-    public function getLegend()
+    public function getLegend(): null|string
     {
         return $this->legend;
     }
 
-    public function extraClass()
+    public function extraClass(): string
     {
         /** @skipUpgrade */
         $classes = ['field', 'CompositeField', parent::extraClass()];
@@ -208,7 +208,7 @@ class CompositeField extends FormField
         return implode(' ', $classes);
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return array_merge(
             parent::getAttributes(),
@@ -230,7 +230,7 @@ class CompositeField extends FormField
      * @param array $list
      * @param bool $saveableOnly
      */
-    public function collateDataFields(&$list, $saveableOnly = false)
+    public function collateDataFields(array &$list, bool $saveableOnly = false): void
     {
         foreach ($this->children as $field) {
             if (! $field instanceof FormField) {
@@ -263,7 +263,7 @@ class CompositeField extends FormField
         }
     }
 
-    public function setForm($form)
+    public function setForm(SilverStripe\Comments\Forms\CommentForm $form): SilverStripe\Forms\CompositeField
     {
         foreach ($this->getChildren() as $field) {
             if ($field instanceof FormField) {
@@ -277,7 +277,7 @@ class CompositeField extends FormField
 
 
 
-    public function setDisabled($disabled)
+    public function setDisabled(bool $disabled): SilverStripe\Forms\SelectionGroup_Item
     {
         parent::setDisabled($disabled);
         foreach ($this->getChildren() as $child) {
@@ -286,7 +286,7 @@ class CompositeField extends FormField
         return $this;
     }
 
-    public function setReadonly($readonly)
+    public function setReadonly(bool $readonly): SilverStripe\Forms\CompositeField
     {
         parent::setReadonly($readonly);
         foreach ($this->getChildren() as $child) {
@@ -295,28 +295,28 @@ class CompositeField extends FormField
         return $this;
     }
 
-    public function setColumnCount($columnCount)
+    public function setColumnCount(int $columnCount): SilverStripe\Forms\CompositeField
     {
         $this->columnCount = $columnCount;
         return $this;
     }
 
-    public function getColumnCount()
+    public function getColumnCount(): null
     {
         return $this->columnCount;
     }
 
-    public function isComposite()
+    public function isComposite(): bool
     {
         return true;
     }
 
-    public function hasData()
+    public function hasData(): bool
     {
         return false;
     }
 
-    public function fieldByName($name)
+    public function fieldByName(string $name): null|SilverStripe\Forms\Tab
     {
         return $this->children->fieldByName($name);
     }
@@ -326,7 +326,7 @@ class CompositeField extends FormField
      *
      * @param FormField $field
      */
-    public function push(FormField $field)
+    public function push(FormField $field): void
     {
         $this->children->push($field);
     }
@@ -336,7 +336,7 @@ class CompositeField extends FormField
      *
      * @param FormField $field
      */
-    public function unshift(FormField $field)
+    public function unshift(FormField $field): void
     {
         $this->children->unshift($field);
     }
@@ -349,7 +349,7 @@ class CompositeField extends FormField
      * @param bool $appendIfMissing
      * @return false|FormField
      */
-    public function insertBefore($insertBefore, $field, $appendIfMissing = true)
+    public function insertBefore(string $insertBefore, SilverStripe\Forms\DropdownField $field, bool $appendIfMissing = true): bool|SilverStripe\Forms\DropdownField
     {
         return $this->children->insertBefore($insertBefore, $field, $appendIfMissing);
     }
@@ -361,7 +361,7 @@ class CompositeField extends FormField
      * @param bool $appendIfMissing
      * @return false|FormField
      */
-    public function insertAfter($insertAfter, $field, $appendIfMissing = true)
+    public function insertAfter(string|SilverStripe\Forms\ReadonlyField $insertAfter, string|SilverStripe\AssetAdmin\Forms\UploadField $field, bool $appendIfMissing = true): bool|SilverStripe\AssetAdmin\Forms\UploadField
     {
         return $this->children->insertAfter($insertAfter, $field, $appendIfMissing);
     }
@@ -375,7 +375,7 @@ class CompositeField extends FormField
      * be removed if it's a data field.  Dataless fields, such as tabs, will
      * be left as-is.
      */
-    public function removeByName($fieldName, $dataFieldOnly = false)
+    public function removeByName(string $fieldName, bool $dataFieldOnly = false): void
     {
         $this->children->removeByName($fieldName, $dataFieldOnly);
     }
@@ -388,12 +388,12 @@ class CompositeField extends FormField
      * not be considered for replacement.
      * @return bool
      */
-    public function replaceField($fieldName, $newField, $dataFieldOnly = true)
+    public function replaceField(string $fieldName, DNADesign\Elemental\Forms\TextCheckboxGroupField $newField, $dataFieldOnly = true): bool
     {
         return $this->children->replaceField($fieldName, $newField, $dataFieldOnly);
     }
 
-    public function rootFieldList()
+    public function rootFieldList(): SilverStripe\Forms\FieldList
     {
         if (is_object($this->containerFieldList)) {
             return $this->containerFieldList->rootFieldList();
@@ -402,7 +402,7 @@ class CompositeField extends FormField
         }
     }
 
-    public function __clone()
+    public function __clone(): void
     {
         /** {@see FieldList::__clone(}} */
         $this->setChildren(clone $this->children);
@@ -414,7 +414,7 @@ class CompositeField extends FormField
      *
      * @return CompositeField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\CompositeField
     {
         $newChildren = new FieldList();
         $clone = clone $this;
@@ -463,7 +463,7 @@ class CompositeField extends FormField
         return $clone;
     }
 
-    public function IsReadonly()
+    public function IsReadonly(): null|bool
     {
         return $this->readonly;
     }
@@ -476,7 +476,7 @@ class CompositeField extends FormField
      * @return int Position in children collection (first position starts with 0). Returns FALSE if the field can't
      *             be found.
      */
-    public function fieldPosition($field)
+    public function fieldPosition(string $field): int|bool
     {
         if (is_string($field)) {
             $field = $this->fieldByName($field);
@@ -503,7 +503,7 @@ class CompositeField extends FormField
      * @param string|FormField $field
      * @return bool
      */
-    public function makeFieldReadonly($field)
+    public function makeFieldReadonly(string|SilverStripe\Forms\TextField $field): bool
     {
         $fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 
@@ -524,7 +524,7 @@ class CompositeField extends FormField
         return false;
     }
 
-    public function debug()
+    public function debug(): string
     {
         $class = static::class;
         $result = "$class ($this->name) <ul>";
@@ -541,7 +541,7 @@ class CompositeField extends FormField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\UserForms\Extension\UserFormValidator $validator): bool
     {
         $valid = true;
         foreach ($this->children as $child) {

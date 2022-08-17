@@ -26,7 +26,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param array $where List of where clauses
      * @return static
      */
-    public static function create($table = null, $assignment = [], $where = [])
+    public static function create(string $table = null, array $assignment = [], array $where = []): SilverStripe\ORM\Queries\SQLUpdate
     {
         return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
     }
@@ -38,7 +38,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param array $assignment List of column assignments
      * @param array $where List of where clauses
      */
-    function __construct($table = null, $assignment = [], $where = [])
+    function __construct(string $table = null, array $assignment = [], array $where = []): void
     {
         parent::__construct(null, $where);
         $this->assignment = new SQLAssignmentRow();
@@ -52,7 +52,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      * @param string $table
      * @return $this Self reference
      */
-    public function setTable($table)
+    public function setTable(string $table): SilverStripe\ORM\Queries\SQLUpdate
     {
         return $this->setFrom($table);
     }
@@ -62,35 +62,35 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
      *
      * @return string Name of the table
      */
-    public function getTable()
+    public function getTable(): string
     {
         return reset($this->from);
     }
 
-    public function addAssignments(array $assignments)
+    public function addAssignments(array $assignments): SilverStripe\ORM\Queries\SQLUpdate
     {
         $this->assignment->addAssignments($assignments);
         return $this;
     }
 
-    public function setAssignments(array $assignments)
+    public function setAssignments(array $assignments): SilverStripe\ORM\Queries\SQLUpdate
     {
         $this->assignment->setAssignments($assignments);
         return $this;
     }
 
-    public function getAssignments()
+    public function getAssignments(): array
     {
         return $this->assignment->getAssignments();
     }
 
-    public function assign($field, $value)
+    public function assign(string $field, int|float|string $value): SilverStripe\ORM\Queries\SQLUpdate
     {
         $this->assignment->assign($field, $value);
         return $this;
     }
 
-    public function assignSQL($field, $sql)
+    public function assignSQL(string $field, string $sql): SilverStripe\ORM\Queries\SQLUpdate
     {
         $this->assignment->assignSQL($field, $sql);
         return $this;
@@ -107,7 +107,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression
         return $this;
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->assignment) || $this->assignment->isEmpty() || parent::isEmpty();
     }

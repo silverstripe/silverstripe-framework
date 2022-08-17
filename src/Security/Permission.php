@@ -130,7 +130,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *  exists; FALSE otherwise. If "strict" checking is
      *  disabled, TRUE will be returned if the permission does not exist at all.
      */
-    public static function check($code, $arg = "any", $member = null, $strict = true)
+    public static function check(string|array $code, string $arg = "any", int|SilverStripe\Security\Member $member = null, $strict = true): bool
     {
         if (!$member) {
             if (!Security::getCurrentUser()) {
@@ -152,7 +152,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Flush the permission cache, for example if you have edited group membership or a permission record.
      * @todo Call this whenever Group_Members is added to or removed from
      */
-    public static function reset()
+    public static function reset(): void
     {
         self::$cache_permissions = [];
     }
@@ -170,7 +170,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *  exists; FALSE otherwise. If "strict" checking is
      *  disabled, TRUE will be returned if the permission does not exist at all.
      */
-    public static function checkMember($member, $code, $arg = "any", $strict = true)
+    public static function checkMember(int|SilverStripe\Security\Member $member, string|array $code, string $arg = "any", bool $strict = true): bool
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -299,7 +299,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param int $memberID
      * @return array
      */
-    public static function permissions_for_member($memberID)
+    public static function permissions_for_member(int $memberID): array
     {
         $groupList = self::groupList($memberID);
 
@@ -344,7 +344,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @return array Returns a list of group IDs to which the member belongs
      *               to or NULL.
      */
-    public static function groupList($memberID = null)
+    public static function groupList(int $memberID = null): array|null
     {
         // Default to current member, with session-caching
         if (!$memberID) {
@@ -390,7 +390,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param string $arg Optional: The permission argument (e.g. a page ID).
      * @returns Permission Returns the new permission object.
      */
-    public static function grant($groupID, $code, $arg = "any")
+    public static function grant(int $groupID, string $code, $arg = "any"): SilverStripe\Security\Permission
     {
         $perm = new Permission();
         $perm->GroupID = $groupID;
@@ -425,7 +425,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param string $arg Optional: The permission argument (e.g. a page ID).
      * @returns Permission Returns the new permission object.
      */
-    public static function deny($groupID, $code, $arg = "any")
+    public static function deny(int $groupID, string $code, $arg = "any"): SilverStripe\Security\Permission
     {
         $perm = new Permission();
         $perm->GroupID = $groupID;
@@ -458,7 +458,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @return SS_List Returns a set of member that have the specified
      *                       permission.
      */
-    public static function get_members_by_permission($code)
+    public static function get_members_by_permission(array|string $code): SilverStripe\ORM\DataList
     {
         $toplevelGroups = self::get_groups_by_permission($code);
         if (!$toplevelGroups) {
@@ -492,7 +492,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param array|string $codes Either a single permission code, or an array of permission codes
      * @return SS_List The matching group objects
      */
-    public static function get_groups_by_permission($codes)
+    public static function get_groups_by_permission(string|array $codes): SilverStripe\ORM\DataList
     {
         $codeParams = is_array($codes) ? $codes : [$codes];
         $codeClause = DB::placeholders($codeParams);
@@ -523,7 +523,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *  {@link Permission::check()}. The value is a description
      *  suitable for using in an interface.
      */
-    public static function get_codes($grouped = true)
+    public static function get_codes(bool $grouped = true): array
     {
         $classes = ClassInfo::implementorsOf('SilverStripe\\Security\\PermissionProvider');
 
@@ -631,7 +631,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param array $b
      * @return int
      */
-    public static function sort_permissions($a, $b)
+    public static function sort_permissions(array $a, array $b): int
     {
         if ($a['sort'] == $b['sort']) {
             // Same sort value, do alpha instead
@@ -706,7 +706,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
     }
 
-    public function onBeforeWrite()
+    public function onBeforeWrite(): void
     {
         parent::onBeforeWrite();
 
@@ -714,7 +714,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         Permission::reset();
     }
 
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'HasPerm' => 'check'

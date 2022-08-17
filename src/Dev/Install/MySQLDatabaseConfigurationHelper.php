@@ -209,7 +209,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
      * @param string $database Candidate database name
      * @return boolean
      */
-    public function checkValidDatabaseName($database)
+    public function checkValidDatabaseName(string $database): bool|int
     {
 
         // Reject filename unsafe characters (cross platform)
@@ -231,7 +231,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
      * @param string $grant MySQL syntax grant to check within
      * @return boolean
      */
-    public function checkDatabasePermissionGrant($database, $permission, $grant)
+    public function checkDatabasePermissionGrant(string $database, string $permission, string $grant): int|bool
     {
         // Filter out invalid database names
         if (!$this->checkValidDatabaseName($database)) {

@@ -24,18 +24,18 @@ class DBPrimaryKey extends DBInt
      */
     protected $autoIncrement = true;
 
-    public function setAutoIncrement($autoIncrement)
+    public function setAutoIncrement(bool $autoIncrement): SilverStripe\ORM\FieldType\DBPrimaryKey
     {
         $this->autoIncrement = $autoIncrement;
         return $this;
     }
 
-    public function getAutoIncrement()
+    public function getAutoIncrement(): bool
     {
         return $this->autoIncrement;
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $spec = DB::get_schema()->IdColumn(false, $this->getAutoIncrement());
         DB::require_field($this->getTable(), $this->getName(), $spec);
@@ -45,7 +45,7 @@ class DBPrimaryKey extends DBInt
      * @param string $name
      * @param DataObject $object The object that this is primary key for (should have a relation with $name)
      */
-    public function __construct($name, $object = null)
+    public function __construct(string $name, $object = null): void
     {
         $this->object = $object;
         parent::__construct($name);
@@ -56,12 +56,12 @@ class DBPrimaryKey extends DBInt
         return null;
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField($title = null): void
     {
         parent::scaffoldFormField($title);
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(int $value, DNADesign\Elemental\Models\BaseElement $record = null, bool $markChanged = true): void
     {
         parent::setValue($value, $record, $markChanged);
 

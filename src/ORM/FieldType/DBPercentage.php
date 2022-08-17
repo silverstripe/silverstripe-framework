@@ -22,7 +22,7 @@ class DBPercentage extends DBDecimal
      * @param string $name
      * @param int $precision
      */
-    public function __construct($name = null, $precision = 4)
+    public function __construct(string $name = null, int $precision = 4): void
     {
         if (!$precision) {
             $precision = 4;
@@ -34,7 +34,7 @@ class DBPercentage extends DBDecimal
     /**
      * Returns the number, expressed as a percentage. For example, “36.30%”
      */
-    public function Nice()
+    public function Nice(): string
     {
         return number_format($this->value * 100, $this->decimalSize - 2) . '%';
     }

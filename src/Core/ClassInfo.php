@@ -64,7 +64,7 @@ class ClassInfo
      *
      * @return array List of all class names
      */
-    public static function allClasses()
+    public static function allClasses(): array
     {
         return ClassLoader::inst()->getManifest()->getClassNames();
     }
@@ -75,7 +75,7 @@ class ClassInfo
      * @param string $class
      * @return bool
      */
-    public static function exists($class)
+    public static function exists(string $class): bool
     {
         return class_exists($class ?? '', false)
             || interface_exists($class ?? '', false)
@@ -88,7 +88,7 @@ class ClassInfo
      * @param string $tableName
      * @return bool
      */
-    public static function hasTable($tableName)
+    public static function hasTable(string $tableName): bool
     {
         // Cache the list of all table names to reduce on DB traffic
         if (empty(self::$_cache_all_tables) && DB::is_active()) {
@@ -97,7 +97,7 @@ class ClassInfo
         return !empty(self::$_cache_all_tables[strtolower($tableName)]);
     }
 
-    public static function reset_db_cache()
+    public static function reset_db_cache(): void
     {
         self::$_cache_all_tables = null;
         self::$_cache_ancestry = [];
@@ -111,7 +111,7 @@ class ClassInfo
      * types that don't exist as implemented classes. By default these are excluded.
      * @return array List of subclasses
      */
-    public static function getValidSubClasses($class = SiteTree::class, $includeUnbacked = false)
+    public static function getValidSubClasses($class = SiteTree::class, $includeUnbacked = false): array
     {
         if (is_string($class) && !class_exists($class ?? '')) {
             return [];
@@ -136,7 +136,7 @@ class ClassInfo
      * @param string|object $nameOrObject Class or object instance
      * @return array
      */
-    public static function dataClassesFor($nameOrObject)
+    public static function dataClassesFor(string|DNADesign\Elemental\Tests\TopPage\TestContent $nameOrObject): array
     {
         if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
@@ -160,7 +160,7 @@ class ClassInfo
      * @param string $class
      * @return string
      */
-    public static function baseDataClass($class)
+    public static function baseDataClass(DNADesign\Elemental\Tests\Src\TestPage $class): string
     {
         Deprecation::notice('5.0', 'Use DataObject::getSchema()->baseDataClass()');
         return DataObject::getSchema()->baseDataClass($class);
@@ -187,7 +187,7 @@ class ClassInfo
      * @return array List of class names with lowercase keys and correct-case values
      * @throws \ReflectionException
      */
-    public static function subclassesFor($nameOrObject, $includeBaseClass = true)
+    public static function subclassesFor(string $nameOrObject, bool $includeBaseClass = true): array
     {
         if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
@@ -214,7 +214,7 @@ class ClassInfo
      * @throws \ReflectionException
      * @return string The normalised class name
      */
-    public static function class_name($nameOrObject)
+    public static function class_name(string|i18nTestModule|TractorCow\Fluent\Model\Locale $nameOrObject): string
     {
         if (is_object($nameOrObject)) {
             return get_class($nameOrObject);
@@ -244,7 +244,7 @@ class ClassInfo
      * @param bool $tablesOnly Only return classes that have a table in the db.
      * @return array List of class names with lowercase keys and correct-case values
      */
-    public static function ancestry($nameOrObject, $tablesOnly = false)
+    public static function ancestry(string|SilverStripe\CMS\Model\SiteTree $nameOrObject, bool $tablesOnly = false): array
     {
         if (is_string($nameOrObject) && !class_exists($nameOrObject ?? '')) {
             return [];
@@ -274,7 +274,7 @@ class ClassInfo
      * @return array A self-keyed array of class names with lowercase keys and correct-case values.
      * Note that this is only available with Silverstripe classes and not built-in PHP classes.
      */
-    public static function implementorsOf($interfaceName)
+    public static function implementorsOf(string $interfaceName): array
     {
         return ClassLoader::inst()->getManifest()->getImplementorsOf($interfaceName);
     }
@@ -286,7 +286,7 @@ class ClassInfo
      * @param string $interfaceName
      * @return bool
      */
-    public static function classImplements($className, $interfaceName)
+    public static function classImplements(string $className, string $interfaceName): bool
     {
         $lowerClassName = strtolower($className ?? '');
         $implementors = self::implementorsOf($interfaceName);
@@ -299,7 +299,7 @@ class ClassInfo
      * @param string $filePath Path to a PHP file (absolute or relative to webroot)
      * @return array Map of lowercase class names to correct class name
      */
-    public static function classes_for_file($filePath)
+    public static function classes_for_file(string $filePath): array
     {
         $absFilePath = Director::getAbsFile($filePath);
         $classManifest = ClassLoader::inst()->getManifest();
@@ -322,7 +322,7 @@ class ClassInfo
      * @param string $folderPath Relative or absolute folder path
      * @return array Map of lowercase class names to correct class name
      */
-    public static function classes_for_folder($folderPath)
+    public static function classes_for_folder(string $folderPath): array
     {
         $absFolderPath = Director::getAbsFile($folderPath);
         $classManifest = ClassLoader::inst()->getManifest();
@@ -347,7 +347,7 @@ class ClassInfo
      * @param string $compclass Parent class to test if this is the implementor
      * @return bool True if $class::$method is declared in $compclass
      */
-    public static function has_method_from($class, $method, $compclass)
+    public static function has_method_from(string $class, string $method, string $compclass): bool
     {
         $lClass = strtolower($class ?? '');
         $lMethod = strtolower($method ?? '');
@@ -385,7 +385,7 @@ class ClassInfo
      * @param string|object $nameOrObject Name of class, or instance
      * @return string Name of class without namespace
      */
-    public static function shortName($nameOrObject)
+    public static function shortName(string|i18nTestModule|SilverStripe\ORM\Tests\DataExtensionTest\MyObject $nameOrObject): string
     {
         $name = static::class_name($nameOrObject);
         $parts = explode('\\', $name ?? '');
@@ -399,7 +399,7 @@ class ClassInfo
      * @param string $method
      * @return bool
      */
-    public static function hasMethod($object, $method)
+    public static function hasMethod(string|int|array|SilverStripe\Core\Manifest\PrioritySorter $object, string $method): bool
     {
         if (empty($object) || (!is_object($object) && !is_string($object))) {
             return false;
@@ -418,7 +418,7 @@ class ClassInfo
      * @return array
      * @throws Exception
      */
-    public static function parse_class_spec($classSpec)
+    public static function parse_class_spec(string $classSpec): array
     {
         if (isset(static::$_cache_parse[$classSpec])) {
             return static::$_cache_parse[$classSpec];

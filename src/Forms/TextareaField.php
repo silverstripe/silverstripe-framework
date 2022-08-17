@@ -53,7 +53,7 @@ class TextareaField extends FormField
     /**
      * Set textarea specific schema data
      */
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['rows'] = $this->getRows();
@@ -69,7 +69,7 @@ class TextareaField extends FormField
      *
      * @return $this
      */
-    public function setRows($rows)
+    public function setRows(int $rows): SilverStripe\Forms\HTMLEditor\HTMLEditorField
     {
         $this->rows = $rows;
 
@@ -81,7 +81,7 @@ class TextareaField extends FormField
      *
      * @return int
      */
-    public function getRows()
+    public function getRows(): int
     {
         return $this->rows;
     }
@@ -105,7 +105,7 @@ class TextareaField extends FormField
      *
      * @return int
      */
-    public function getColumns()
+    public function getColumns(): int
     {
         return $this->cols;
     }
@@ -124,7 +124,7 @@ class TextareaField extends FormField
     /**
      * @return null|int
      */
-    public function getMaxLength()
+    public function getMaxLength(): null
     {
         return $this->maxLength;
     }
@@ -132,7 +132,7 @@ class TextareaField extends FormField
     /**
      * {@inheritdoc}
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = array_merge(
             parent::getAttributes(),
@@ -156,7 +156,7 @@ class TextareaField extends FormField
     /**
      * {@inheritdoc}
      */
-    public function Type()
+    public function Type(): string
     {
         $parent = parent::Type();
 
@@ -172,7 +172,7 @@ class TextareaField extends FormField
      *
      * @return string Raw HTML
      */
-    public function ValueEntities()
+    public function ValueEntities(): string
     {
         return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8');
     }

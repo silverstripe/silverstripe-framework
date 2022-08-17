@@ -12,7 +12,7 @@ use InvalidArgumentException;
 class PartialMatchFilter extends SearchFilter
 {
 
-    public function getSupportedModifiers()
+    public function getSupportedModifiers(): array
     {
         return ['not', 'nocase', 'case'];
     }
@@ -23,7 +23,7 @@ class PartialMatchFilter extends SearchFilter
      * @param string $value The raw value
      * @return string
      */
-    protected function getMatchPattern($value)
+    protected function getMatchPattern(string $value): string
     {
         return "%$value%";
     }
@@ -34,7 +34,7 @@ class PartialMatchFilter extends SearchFilter
      * @param DataQuery $query
      * @return DataQuery
      */
-    public function apply(DataQuery $query)
+    public function apply(DataQuery $query): SilverStripe\ORM\DataQuery_SubGroup
     {
         if ($this->aggregate) {
             throw new InvalidArgumentException(sprintf(
@@ -46,7 +46,7 @@ class PartialMatchFilter extends SearchFilter
         return parent::apply($query);
     }
 
-    protected function applyOne(DataQuery $query)
+    protected function applyOne(DataQuery $query): SilverStripe\ORM\DataQuery_SubGroup
     {
         $this->model = $query->applyRelation($this->relation);
         $comparisonClause = DB::get_conn()->comparisonClause(
@@ -65,7 +65,7 @@ class PartialMatchFilter extends SearchFilter
             $query->where($clause);
     }
 
-    protected function applyMany(DataQuery $query)
+    protected function applyMany(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         $this->model = $query->applyRelation($this->relation);
         $whereClause = [];
@@ -83,7 +83,7 @@ class PartialMatchFilter extends SearchFilter
         return $query->whereAny($whereClause);
     }
 
-    protected function excludeOne(DataQuery $query)
+    protected function excludeOne(DataQuery $query): SilverStripe\ORM\DataQuery_SubGroup
     {
         $this->model = $query->applyRelation($this->relation);
         $comparisonClause = DB::get_conn()->comparisonClause(
@@ -121,7 +121,7 @@ class PartialMatchFilter extends SearchFilter
         return $query->where([$predicate => $parameters]);
     }
 
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
     }

@@ -223,13 +223,13 @@ class TreeDropdownField extends FormField
      *      entering the text in the input field.
      */
     public function __construct(
-        $name,
+        string $name,
         $title = null,
         $sourceObject = null,
         $keyField = 'ID',
         $labelField = 'TreeTitle',
         $showSearch = true
-    ) {
+    ): void {
         if (!is_a($sourceObject, DataObject::class, true)) {
             throw new InvalidArgumentException("SourceObject must be a DataObject subclass");
         }
@@ -258,7 +258,7 @@ class TreeDropdownField extends FormField
      *
      * @return int
      */
-    public function getTreeBaseID()
+    public function getTreeBaseID(): int
     {
         return $this->baseID;
     }
@@ -270,7 +270,7 @@ class TreeDropdownField extends FormField
      * @param int $ID
      * @return $this
      */
-    public function setTreeBaseID($ID)
+    public function setTreeBaseID(int $ID): SilverStripe\Forms\TreeDropdownField
     {
         $this->baseID = (int) $ID;
         return $this;
@@ -282,7 +282,7 @@ class TreeDropdownField extends FormField
      *
      * @return callable
      */
-    public function getFilterFunction()
+    public function getFilterFunction(): null|callable
     {
         return $this->filterCallback;
     }
@@ -294,7 +294,7 @@ class TreeDropdownField extends FormField
      * @param callable $callback
      * @return $this
      */
-    public function setFilterFunction($callback)
+    public function setFilterFunction(callable $callback): SilverStripe\Forms\TreeDropdownField
     {
         if (!is_callable($callback, true)) {
             throw new InvalidArgumentException('TreeDropdownField->setFilterCallback(): not passed a valid callback');
@@ -309,7 +309,7 @@ class TreeDropdownField extends FormField
      *
      * @return callable
      */
-    public function getDisableFunction()
+    public function getDisableFunction(): null
     {
         return $this->disableCallback;
     }
@@ -336,7 +336,7 @@ class TreeDropdownField extends FormField
      *
      * @return callable
      */
-    public function getSearchFunction()
+    public function getSearchFunction(): null
     {
         return $this->searchCallback;
     }
@@ -348,7 +348,7 @@ class TreeDropdownField extends FormField
      * @param callable $callback
      * @return $this
      */
-    public function setSearchFunction($callback)
+    public function setSearchFunction(callable $callback): SilverStripe\Forms\TreeDropdownField
     {
         if (!is_callable($callback, true)) {
             throw new InvalidArgumentException('TreeDropdownField->setSearchFunction(): not passed a valid callback');
@@ -363,7 +363,7 @@ class TreeDropdownField extends FormField
      *
      * @return bool
      */
-    public function getShowSearch()
+    public function getShowSearch(): bool
     {
         return $this->showSearch;
     }
@@ -372,7 +372,7 @@ class TreeDropdownField extends FormField
      * @param bool $bool
      * @return $this
      */
-    public function setShowSearch($bool)
+    public function setShowSearch(bool $bool): SilverStripe\Forms\TreeDropdownField
     {
         $this->showSearch = $bool;
         return $this;
@@ -383,7 +383,7 @@ class TreeDropdownField extends FormField
      *
      * @return string
      */
-    public function getChildrenMethod()
+    public function getChildrenMethod(): string
     {
         return $this->childrenMethod;
     }
@@ -397,7 +397,7 @@ class TreeDropdownField extends FormField
      * See {@link Hierarchy} for a complete list of possible methods.
      * @return $this
      */
-    public function setChildrenMethod($method)
+    public function setChildrenMethod(string $method): SilverStripe\Forms\TreeDropdownField
     {
         $this->childrenMethod = $method;
         return $this;
@@ -408,7 +408,7 @@ class TreeDropdownField extends FormField
      *
      * @return string
      */
-    public function getNumChildrenMethod()
+    public function getNumChildrenMethod(): string
     {
         return $this->numChildrenMethod;
     }
@@ -419,13 +419,13 @@ class TreeDropdownField extends FormField
      *
      * @return $this
      */
-    public function setNumChildrenMethod($method)
+    public function setNumChildrenMethod(string $method): SilverStripe\Forms\TreeDropdownField
     {
         $this->numChildrenMethod = $method;
         return $this;
     }
 
-    public function extraClass()
+    public function extraClass(): string
     {
         return implode(' ', [parent::extraClass(), ($this->getShowSearch() ? "searchable" : null)]);
     }
@@ -437,7 +437,7 @@ class TreeDropdownField extends FormField
      * @return HTTPResponse
      * @throws Exception
      */
-    public function tree(HTTPRequest $request)
+    public function tree(HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         // Regular source specification
         $isSubTree = false;
@@ -573,7 +573,7 @@ class TreeDropdownField extends FormField
      * @param DataObject $node
      * @return bool
      */
-    public function filterMarking($node)
+    public function filterMarking(Page $node): bool
     {
         $callback = $this->getFilterFunction();
         if ($callback && !call_user_func($callback, $node)) {
@@ -592,7 +592,7 @@ class TreeDropdownField extends FormField
      * @param $node
      * @return boolean
      */
-    public function nodeIsDisabled($node)
+    public function nodeIsDisabled(SilverStripe\CMS\Model\SiteTree $node): bool
     {
         $callback = $this->getDisableFunction();
         return $callback && call_user_func($callback, $node);
@@ -602,7 +602,7 @@ class TreeDropdownField extends FormField
      * Attributes to be given for this field type
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $attributes = [
             'class' => $this->extraClass(),
@@ -625,7 +625,7 @@ class TreeDropdownField extends FormField
      * @param string $field
      * @return $this
      */
-    public function setLabelField($field)
+    public function setLabelField(string $field): SilverStripe\Forms\TreeDropdownField
     {
         $this->labelField = $field;
         return $this;
@@ -637,7 +637,7 @@ class TreeDropdownField extends FormField
      * @deprecated 4.0.0:5.0.0 Use getTitleField()
      * @return string
      */
-    public function getLabelField()
+    public function getLabelField(): string
     {
         return $this->labelField;
     }
@@ -647,7 +647,7 @@ class TreeDropdownField extends FormField
      *
      * @return string
      */
-    public function getTitleField()
+    public function getTitleField(): string
     {
         return $this->titleField;
     }
@@ -658,7 +658,7 @@ class TreeDropdownField extends FormField
      * @param string $field
      * @return $this
      */
-    public function setTitleField($field)
+    public function setTitleField(string $field): SilverStripe\Forms\TreeDropdownField
     {
         $this->titleField = $field;
         return $this;
@@ -668,7 +668,7 @@ class TreeDropdownField extends FormField
      * @param string $field
      * @return $this
      */
-    public function setKeyField($field)
+    public function setKeyField(string $field): SilverStripe\Forms\TreeDropdownField
     {
         $this->keyField = $field;
         return $this;
@@ -677,7 +677,7 @@ class TreeDropdownField extends FormField
     /**
      * @return string
      */
-    public function getKeyField()
+    public function getKeyField(): string
     {
         return $this->keyField;
     }
@@ -686,7 +686,7 @@ class TreeDropdownField extends FormField
      * @param string $class
      * @return $this
      */
-    public function setSourceObject($class)
+    public function setSourceObject(string $class): SilverStripe\Forms\TreeDropdownField
     {
         $this->sourceObject = $class;
         return $this;
@@ -697,7 +697,7 @@ class TreeDropdownField extends FormField
      *
      * @return string
      */
-    public function getSourceObject()
+    public function getSourceObject(): string
     {
         return $this->sourceObject;
     }
@@ -712,7 +712,7 @@ class TreeDropdownField extends FormField
      * @param array $parentTitles - a list of parent titles, which we use to construct the contextString
      * @return array - flattened list of children
      */
-    protected function flattenChildrenArray($children, $parentTitles = [])
+    protected function flattenChildrenArray(array $children, array $parentTitles = []): array
     {
         $output = [];
 
@@ -738,7 +738,7 @@ class TreeDropdownField extends FormField
      * Reverse-constructs the tree starting from the leaves. Initially taken from CMSSiteTreeFilter, but modified
      * with pluggable search function.
      */
-    protected function populateIDs()
+    protected function populateIDs(): void
     {
         // get all the leaves to be displayed
         $res = $this->getSearchResults();
@@ -778,7 +778,7 @@ class TreeDropdownField extends FormField
      *
      * @return DataList
      */
-    protected function getSearchResults()
+    protected function getSearchResults(): SilverStripe\ORM\DataList
     {
         $callback = $this->getSearchFunction();
         if ($callback) {
@@ -816,7 +816,7 @@ class TreeDropdownField extends FormField
      * @param string|int $key
      * @return DataObject|null
      */
-    protected function objectForKey($key)
+    protected function objectForKey(array|int|string|SilverStripe\Auditor\AuditHookManyManyList $key): null|SilverStripe\Assets\Folder
     {
         if (!is_string($key) && !is_int($key)) {
             return null;
@@ -829,7 +829,7 @@ class TreeDropdownField extends FormField
     /**
      * Changes this field to the readonly field.
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\TreeDropdownField_Readonly
     {
         /** @var TreeDropdownField_Readonly $copy */
         $copy = $this->castedCopy(TreeDropdownField_Readonly::class);
@@ -844,7 +844,7 @@ class TreeDropdownField extends FormField
      * @param string|FormField $classOrCopy
      * @return FormField
      */
-    public function castedCopy($classOrCopy)
+    public function castedCopy(string $classOrCopy): SilverStripe\Forms\TreeDropdownField_Readonly
     {
         $field = $classOrCopy;
 
@@ -855,7 +855,7 @@ class TreeDropdownField extends FormField
         return parent::castedCopy($field);
     }
 
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $data = parent::getSchemaStateDefaults();
         /** @var Hierarchy|DataObject $record */
@@ -891,7 +891,7 @@ class TreeDropdownField extends FormField
      *
      * @return DBDatetime
      */
-    protected function getCacheKey()
+    protected function getCacheKey(): string|null
     {
         $target = $this->getSourceObject();
         if (!isset(self::$cacheKeyCache[$target])) {
@@ -900,7 +900,7 @@ class TreeDropdownField extends FormField
         return self::$cacheKeyCache[$target];
     }
 
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = parent::getSchemaDataDefaults();
         $data['data'] = array_merge($data['data'], [
@@ -919,7 +919,7 @@ class TreeDropdownField extends FormField
      * @param boolean $bool
      * @return self Self reference
      */
-    public function setHasEmptyDefault($bool)
+    public function setHasEmptyDefault(bool $bool): SilverStripe\Forms\TreeDropdownField
     {
         $this->hasEmptyDefault = $bool;
         return $this;
@@ -928,7 +928,7 @@ class TreeDropdownField extends FormField
     /**
      * @return bool
      */
-    public function getHasEmptyDefault()
+    public function getHasEmptyDefault(): bool
     {
         return $this->hasEmptyDefault;
     }
@@ -941,7 +941,7 @@ class TreeDropdownField extends FormField
      * @param string $string
      * @return $this
      */
-    public function setEmptyString($string)
+    public function setEmptyString(string $string): SilverStripe\Forms\TreeDropdownField
     {
         $this->setHasEmptyDefault(true);
         $this->emptyString = $string;
@@ -951,7 +951,7 @@ class TreeDropdownField extends FormField
     /**
      * @return string
      */
-    public function getEmptyString()
+    public function getEmptyString(): string
     {
         if ($this->emptyString !== null) {
             return $this->emptyString;
@@ -969,7 +969,7 @@ class TreeDropdownField extends FormField
     /**
      * @return bool
      */
-    public function getShowSelectedPath()
+    public function getShowSelectedPath(): bool
     {
         return $this->showSelectedPath;
     }
@@ -978,7 +978,7 @@ class TreeDropdownField extends FormField
      * @param bool $showSelectedPath
      * @return TreeDropdownField
      */
-    public function setShowSelectedPath($showSelectedPath)
+    public function setShowSelectedPath(bool $showSelectedPath): SilverStripe\Forms\TreeDropdownField
     {
         $this->showSelectedPath = $showSelectedPath;
         return $this;

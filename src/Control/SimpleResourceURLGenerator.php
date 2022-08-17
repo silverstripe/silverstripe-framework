@@ -48,7 +48,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * @param string|null $nonceStyle The style of nonces to apply, or null to disable
      * @return $this
      */
-    public function setNonceStyle($nonceStyle)
+    public function setNonceStyle(string $nonceStyle): SilverStripe\Control\SimpleResourceURLGenerator
     {
         if ($nonceStyle && !in_array($nonceStyle, ['mtime', 'sha1', 'md5'])) {
             throw new InvalidArgumentException("NonceStyle '$nonceStyle' is not supported");
@@ -64,7 +64,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * @return string Doman-relative URL
      * @throws InvalidArgumentException If the resource doesn't exist
      */
-    public function urlForResource($relativePath)
+    public function urlForResource(SilverStripe\Core\Manifest\ModuleResource|string $relativePath): string
     {
         $query = '';
         if ($relativePath instanceof ModuleResource) {
@@ -134,7 +134,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * @param ModuleResource $resource
      * @return array List of [$exists, $absolutePath, $relativePath]
      */
-    protected function resolveModuleResource(ModuleResource $resource)
+    protected function resolveModuleResource(ModuleResource $resource): array
     {
         // Load from module resource
         $relativePath = $resource->getRelativePath();
@@ -163,7 +163,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * @param string $relativePath
      * @return array List of [$exists, $absolutePath, $relativePath]
      */
-    protected function resolveUnsecuredResource($relativePath)
+    protected function resolveUnsecuredResource(string $relativePath): array
     {
         // Check if the path requested is public-only, but we have no public folder
         $publicOnly = $this->inferPublicResourceRequired($relativePath);
@@ -193,7 +193,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * This prefix will be removed if exists. This path will also be normalised to match DIRECTORY_SEPARATOR
      * @return bool True if the resource must be a public resource
      */
-    protected function inferPublicResourceRequired(&$relativePath)
+    protected function inferPublicResourceRequired(string &$relativePath): bool
     {
         // Normalise path
         $relativePath = Path::normalise($relativePath, true);
@@ -213,7 +213,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
      * @param string $relativePath
      * @return array List of [$exists, $absolutePath, $relativePath]
      */
-    protected function resolvePublicResource($relativePath)
+    protected function resolvePublicResource(string $relativePath): array
     {
         // Determine if we should search both public and base resources, or only public
         $publicOnly = $this->inferPublicResourceRequired($relativePath);

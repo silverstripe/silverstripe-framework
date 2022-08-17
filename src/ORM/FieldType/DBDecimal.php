@@ -40,7 +40,7 @@ class DBDecimal extends DBField
      * @param int $decimalSize
      * @param float|int $defaultValue
      */
-    public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0)
+    public function __construct(string $name = null, int $wholeSize = 9, int $decimalSize = 2, int|float|string $defaultValue = 0): void
     {
         $this->wholeSize = is_int($wholeSize) ? $wholeSize : 9;
         $this->decimalSize = is_int($decimalSize) ? $decimalSize : 2;
@@ -66,7 +66,7 @@ class DBDecimal extends DBField
         return floor($this->value ?? 0.0);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'decimal',
@@ -102,7 +102,7 @@ class DBDecimal extends DBField
      *
      * @return NumericField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(string $title = null, $params = null): SilverStripe\Forms\NumericField
     {
         return NumericField::create($this->name, $title)
             ->setScale($this->decimalSize);
@@ -111,12 +111,12 @@ class DBDecimal extends DBField
     /**
      * @return float
      */
-    public function nullValue()
+    public function nullValue(): int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(string|float|int|bool|array $value): int|float
     {
         if ($value === true) {
             return 1;

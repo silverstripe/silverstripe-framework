@@ -91,7 +91,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param string $targetFragment
      * @param array $searchFields Which fields on the object in the list should be searched
      */
-    public function __construct($targetFragment = 'before', $searchFields = null)
+    public function __construct(string $targetFragment = 'before', array $searchFields = null): void
     {
         $this->targetFragment = $targetFragment;
         $this->searchFields = (array)$searchFields;
@@ -102,7 +102,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param GridField $gridField
      * @return string[] - HTML
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $dataClass = $gridField->getModelClass();
 
@@ -158,7 +158,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['addto', 'find'];
     }
@@ -171,7 +171,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param array $arguments Arguments relevant for this
      * @param array $data All form data
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, string $arguments, array $data): void
     {
         switch ($actionName) {
             case 'addto':
@@ -189,7 +189,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param SS_List $dataList
      * @return SS_List
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, SS_List $dataList): SilverStripe\Auditor\AuditHookManyManyList
     {
         $objectID = $gridField->State->GridFieldAddRelation(null);
         if (empty($objectID)) {
@@ -208,7 +208,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param GridField $gridField
      * @return array
      */
-    public function getURLHandlers($gridField)
+    public function getURLHandlers(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [
             'search' => 'doSearch',
@@ -222,7 +222,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param HTTPRequest $request
      * @return string
      */
-    public function doSearch($gridField, $request)
+    public function doSearch(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Control\HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         $searchStr = $request->getVar('gridfield_relationsearch');
         $dataClass = $gridField->getModelClass();
@@ -283,7 +283,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      *
      * @return $this
      */
-    public function setResultsFormat($format)
+    public function setResultsFormat(string $format): SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter
     {
         $this->resultsFormat = $format;
         return $this;
@@ -303,7 +303,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      *
      * @param SS_List $list
      */
-    public function setSearchList(SS_List $list)
+    public function setSearchList(SS_List $list): SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter
     {
         $this->searchList = $list;
         return $this;
@@ -313,7 +313,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param array $fields
      * @return $this
      */
-    public function setSearchFields($fields)
+    public function setSearchFields(array $fields): SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter
     {
         $this->searchFields = $fields;
         return $this;
@@ -322,7 +322,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
     /**
      * @return array
      */
-    public function getSearchFields()
+    public function getSearchFields(): array
     {
         return $this->searchFields;
     }
@@ -335,7 +335,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      * @param string $dataClass The class name
      * @return array|null names of the searchable fields
      */
-    public function scaffoldSearchFields($dataClass)
+    public function scaffoldSearchFields(string $dataClass): array
     {
         $obj = DataObject::singleton($dataClass);
         $fields = null;
@@ -385,7 +385,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      *
      * @return string
      */
-    public function getPlaceholderText($dataClass)
+    public function getPlaceholderText(string $dataClass): string
     {
         $searchFields = ($this->getSearchFields())
             ? $this->getSearchFields()
@@ -436,7 +436,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      *
      * @return int
      */
-    public function getResultsLimit()
+    public function getResultsLimit(): int
     {
         return $this->resultsLimit;
     }

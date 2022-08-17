@@ -10,7 +10,7 @@ use SilverStripe\Security\Confirmation;
  */
 class UrlPathStartswithCaseInsensitive extends UrlPathStartswith
 {
-    protected function checkPath($path)
+    protected function checkPath(string $path): bool
     {
         $pattern = $this->getPath();
 

@@ -28,7 +28,7 @@ class HTTPResponse_Exception extends Exception
      * @param string $statusDescription
      * @see HTTPResponse::__construct()
      */
-    public function __construct($body = null, $statusCode = null, $statusDescription = null)
+    public function __construct(string|SilverStripe\Control\HTTPResponse $body = null, int $statusCode = null, string $statusDescription = null): void
     {
         if ($body instanceof HTTPResponse) {
             // statusCode and statusDescription should override whatever is passed in the body
@@ -55,7 +55,7 @@ class HTTPResponse_Exception extends Exception
     /**
      * @return HTTPResponse
      */
-    public function getResponse()
+    public function getResponse(): SilverStripe\Control\HTTPResponse
     {
         return $this->response;
     }
@@ -63,7 +63,7 @@ class HTTPResponse_Exception extends Exception
     /**
      * @param HTTPResponse $response
      */
-    public function setResponse(HTTPResponse $response)
+    public function setResponse(HTTPResponse $response): void
     {
         $this->response = $response;
     }

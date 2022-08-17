@@ -18,7 +18,7 @@ use SilverStripe\Core\Environment;
  */
 class ManifestCacheFactory extends DefaultCacheFactory
 {
-    public function __construct(array $args = [], LoggerInterface $logger = null)
+    public function __construct(array $args = [], LoggerInterface $logger = null): void
     {
         // Build default manifest logger
         if (!$logger) {
@@ -41,7 +41,7 @@ class ManifestCacheFactory extends DefaultCacheFactory
      * @param array $params The constructor parameters.
      * @return CacheInterface
      */
-    public function create($service, array $params = [])
+    public function create(string $service, array $params = []): Symfony\Component\Cache\Simple\FilesystemCache
     {
         // Override default cache generation with SS_MANIFESTCACHE
         $cacheClass = Environment::getEnv('SS_MANIFESTCACHE');
@@ -76,7 +76,7 @@ class ManifestCacheFactory extends DefaultCacheFactory
      * @param array $args
      * @return CacheInterface
      */
-    public function createCache($class, $args)
+    public function createCache(string $class, array $args): Symfony\Component\Cache\Simple\FilesystemCache
     {
         /** @var CacheInterface $cache */
         $reflection = new ReflectionClass($class);

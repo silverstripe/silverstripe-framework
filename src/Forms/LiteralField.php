@@ -38,7 +38,7 @@ class LiteralField extends DatalessField
      * @param string $name
      * @param string|FormField $content
      */
-    public function __construct($name, $content)
+    public function __construct(string $name, string|SilverStripe\ORM\FieldType\DBHTMLText|bool $content): void
     {
         $this->setContent($content);
 
@@ -50,7 +50,7 @@ class LiteralField extends DatalessField
      *
      * @return string
      */
-    public function FieldHolder($properties = [])
+    public function FieldHolder(array $properties = []): string|null
     {
         if ($this->content instanceof ViewableData) {
             $context = $this->content;
@@ -70,7 +70,7 @@ class LiteralField extends DatalessField
      *
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): string|null
     {
         return $this->FieldHolder($properties);
     }
@@ -82,7 +82,7 @@ class LiteralField extends DatalessField
      *
      * @return $this
      */
-    public function setContent($content)
+    public function setContent(string|SilverStripe\ORM\FieldType\DBHTMLText|bool $content): SilverStripe\Forms\LiteralField
     {
         $this->content = $content;
 
@@ -92,7 +92,7 @@ class LiteralField extends DatalessField
     /**
      * @return string
      */
-    public function getContent()
+    public function getContent(): string|SilverStripe\ORM\FieldType\DBHTMLText
     {
         return $this->content;
     }
@@ -114,7 +114,7 @@ class LiteralField extends DatalessField
     /**
      * @return static
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\LiteralField
     {
         $clone = clone $this;
 
@@ -128,7 +128,7 @@ class LiteralField extends DatalessField
      *
      * @return array
      */
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $state = parent::getSchemaStateDefaults();
         $state['value'] = $this->FieldHolder();

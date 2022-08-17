@@ -19,7 +19,7 @@ class ClassContentRemover
      *
      * @return string
      */
-    public static function remove_class_content($filePath, $cutOffDepth = 1)
+    public static function remove_class_content(string $filePath, $cutOffDepth = 1): string
     {
 
         // Use PHP's built in method to strip comments and whitespace

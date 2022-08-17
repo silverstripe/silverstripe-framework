@@ -37,7 +37,7 @@ class RateLimiter
      * @param int $maxAttempts
      * @param int $decay
      */
-    public function __construct($identifier, $maxAttempts, $decay)
+    public function __construct(string $identifier, int $maxAttempts, int $decay): void
     {
         $this->setIdentifier($identifier);
         $this->setMaxAttempts($maxAttempts);
@@ -47,7 +47,7 @@ class RateLimiter
     /**
      * @return CacheInterface
      */
-    public function getCache()
+    public function getCache(): Symfony\Component\Cache\Simple\FilesystemCache
     {
         if (!$this->cache) {
             $this->setCache(Injector::inst()->create(CacheInterface::class . '.RateLimiter'));
@@ -60,7 +60,7 @@ class RateLimiter
      *
      * @return $this
      */
-    public function setCache($cache)
+    public function setCache(Symfony\Component\Cache\Simple\FilesystemCache $cache): SilverStripe\Core\Cache\RateLimiter
     {
         $this->cache = $cache;
         return $this;
@@ -69,7 +69,7 @@ class RateLimiter
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
@@ -78,7 +78,7 @@ class RateLimiter
      * @param string $identifier
      * @return $this
      */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): SilverStripe\Core\Cache\RateLimiter
     {
         $this->identifier = $identifier;
         return $this;
@@ -87,7 +87,7 @@ class RateLimiter
     /**
      * @return int
      */
-    public function getMaxAttempts()
+    public function getMaxAttempts(): int
     {
         return $this->maxAttempts;
     }
@@ -96,7 +96,7 @@ class RateLimiter
      * @param int $maxAttempts
      * @return $this
      */
-    public function setMaxAttempts($maxAttempts)
+    public function setMaxAttempts(int $maxAttempts): SilverStripe\Core\Cache\RateLimiter
     {
         $this->maxAttempts = $maxAttempts;
         return $this;
@@ -105,7 +105,7 @@ class RateLimiter
     /**
      * @return int
      */
-    public function getDecay()
+    public function getDecay(): int
     {
         return $this->decay;
     }
@@ -114,7 +114,7 @@ class RateLimiter
      * @param int $decay
      * @return $this
      */
-    public function setDecay($decay)
+    public function setDecay(int $decay): SilverStripe\Core\Cache\RateLimiter
     {
         $this->decay = $decay;
         return $this;
@@ -123,7 +123,7 @@ class RateLimiter
     /**
      * @return int
      */
-    public function getNumAttempts()
+    public function getNumAttempts(): int
     {
         return $this->getCache()->get($this->getIdentifier(), 0);
     }
@@ -131,7 +131,7 @@ class RateLimiter
     /**
      * @return int
      */
-    public function getNumAttemptsRemaining()
+    public function getNumAttemptsRemaining(): int
     {
         return max(0, $this->getMaxAttempts() - $this->getNumAttempts());
     }
@@ -139,7 +139,7 @@ class RateLimiter
     /**
      * @return int
      */
-    public function getTimeToReset()
+    public function getTimeToReset(): int
     {
         if ($expiry = $this->getCache()->get($this->getIdentifier() . '-timer')) {
             return $expiry - DBDatetime::now()->getTimestamp();
@@ -150,7 +150,7 @@ class RateLimiter
     /**
      * @return $this
      */
-    public function clearAttempts()
+    public function clearAttempts(): SilverStripe\Core\Cache\RateLimiter
     {
         $this->getCache()->delete($this->getIdentifier());
         return $this;
@@ -161,7 +161,7 @@ class RateLimiter
      *
      * @return $this
      */
-    public function hit()
+    public function hit(): SilverStripe\Core\Cache\RateLimiter
     {
         if (!$this->getCache()->has($this->getIdentifier())) {
             $ttl = $this->getDecay() * 60;
@@ -178,7 +178,7 @@ class RateLimiter
     /**
      * @return bool
      */
-    public function canAccess()
+    public function canAccess(): bool
     {
         if ($this->getNumAttempts() >= $this->getMaxAttempts()) {
             // if the timer cache item still exists then they are locked out

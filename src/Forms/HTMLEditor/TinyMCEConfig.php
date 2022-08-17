@@ -311,7 +311,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return string
      */
-    public function getTheme()
+    public function getTheme(): string
     {
         return $this->theme;
     }
@@ -322,7 +322,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @param string $theme
      * @return $this
      */
-    public function setTheme($theme)
+    public function setTheme(string $theme): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $this->theme = $theme;
         return $this;
@@ -350,7 +350,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         3 => []
     ];
 
-    public function getOption($key)
+    public function getOption(string $key): null|string
     {
         if (isset($this->settings[$key])) {
             return $this->settings[$key];
@@ -358,13 +358,13 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         return null;
     }
 
-    public function setOption($key, $value)
+    public function setOption(string $key, string|array|bool $value): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $this->settings[$key] = $value;
         return $this;
     }
 
-    public function setOptions($options)
+    public function setOptions(array $options): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         foreach ($options as $key => $value) {
             $this->settings[$key] = $value;
@@ -377,12 +377,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return array
      */
-    protected function getSettings()
+    protected function getSettings(): array
     {
         return $this->settings;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return [
             'data-editor' => 'tinyMCE', // Register ss.editorWrappers.tinyMCE
@@ -411,7 +411,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @param string|array ...$plugin a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
-    public function enablePlugins($plugin)
+    public function enablePlugins(array|string $plugin): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $plugins = func_get_args();
         if (is_array(current($plugins ?? []))) {
@@ -435,7 +435,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @param string|array ...$plugin a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
-    public function disablePlugins($plugin)
+    public function disablePlugins(string|array $plugin): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $plugins = func_get_args();
         if (is_array(current($plugins ?? []))) {
@@ -454,7 +454,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return array
      */
-    public function getPlugins()
+    public function getPlugins(): array
     {
         return $this->plugins;
     }
@@ -466,7 +466,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return array
      */
-    public function getInternalPlugins()
+    public function getInternalPlugins(): array
     {
         // Return only plugins with no custom url
         $plugins = [];
@@ -483,7 +483,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return array
      */
-    public function getButtons()
+    public function getButtons(): array
     {
         return array_filter($this->buttons ?? []);
     }
@@ -513,7 +513,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * The button names to add to this line
      * @return $this
      */
-    public function addButtonsToLine($line, $buttons)
+    public function addButtonsToLine(int $line, string $buttons): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         if (func_num_args() > 2) {
             $buttons = func_get_args();
@@ -538,7 +538,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * or null for no insertion
      * @return bool True if $name matched a button, false otherwise
      */
-    protected function modifyButtons($name, $offset, $del = 0, $add = null)
+    protected function modifyButtons(string $name, int $offset, int $del = 0, array $add = null): bool
     {
         foreach ($this->buttons as &$buttons) {
             if (($idx = array_search($name, $buttons ?? [])) !== false) {
@@ -560,7 +560,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * The button names to insert before that button
      * @return bool True if insertion occurred, false if it did not (because the given button name was not found)
      */
-    public function insertButtonsBefore($before, $buttons)
+    public function insertButtonsBefore(string $before, string $buttons): bool
     {
         if (func_num_args() > 2) {
             $buttons = func_get_args();
@@ -579,7 +579,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * The button names to insert after that button
      * @return bool True if insertion occurred, false if it did not (because the given button name was not found)
      */
-    public function insertButtonsAfter($after, $buttons)
+    public function insertButtonsAfter(string $after, string $buttons): bool
     {
         if (func_num_args() > 2) {
             $buttons = func_get_args();
@@ -595,7 +595,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * Remove the first occurrence of buttons
      * @param string|string[] $buttons,... An array of strings, or one or more strings. The button names to remove.
      */
-    public function removeButtons($buttons)
+    public function removeButtons(string $buttons): void
     {
         if (func_num_args() > 1) {
             $buttons = func_get_args();
@@ -615,7 +615,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return array
      */
-    protected function getConfig()
+    protected function getConfig(): array
     {
         $settings = $this->getSettings();
 
@@ -719,7 +719,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return array
      */
-    protected function getEditorCSS()
+    protected function getEditorCSS(): array
     {
         $editor = [];
         $resourceLoader = ModuleResourceLoader::singleton();
@@ -737,7 +737,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return string[]
      */
-    public function getContentCSS()
+    public function getContentCSS(): array
     {
         // Prioritise instance specific content
         if (isset($this->contentCSS)) {
@@ -772,7 +772,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * e.g. `silverstripe/admin:client/dist/styles/editor.css`
      * @return $this
      */
-    public function setContentCSS($css)
+    public function setContentCSS(array $css): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $this->contentCSS = $css;
         return $this;
@@ -786,20 +786,20 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @return string
      * @throws Exception
      */
-    public function getScriptURL()
+    public function getScriptURL(): string
     {
         /** @var TinyMCEScriptGenerator $generator */
         $generator = Injector::inst()->get(TinyMCEScriptGenerator::class);
         return $generator->getScriptURL($this);
     }
 
-    public function init()
+    public function init(): void
     {
         // include TinyMCE Javascript
         Requirements::javascript($this->getScriptURL());
     }
 
-    public function getConfigSchemaData()
+    public function getConfigSchemaData(): array
     {
         $data = parent::getConfigSchemaData();
         $data['editorjs'] = $this->getScriptURL();
@@ -811,7 +811,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @return string Language
      */
-    public static function get_tinymce_lang()
+    public static function get_tinymce_lang(): string
     {
         $lang = static::config()->get('tinymce_lang');
         $locale = i18n::get_locale();
@@ -861,7 +861,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @return ModuleResource|string
      * @throws Exception
      */
-    public function getTinyMCEResource()
+    public function getTinyMCEResource(): SilverStripe\Core\Manifest\ModuleResource|string
     {
         $configDir = static::config()->get('base_dir');
         if ($configDir) {
@@ -908,7 +908,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         return $this;
     }
 
-    public function provideI18nEntities()
+    public function provideI18nEntities(): array
     {
         $entities = [
             self::class . '.PIXEL_WIDTH' => '{width} pixels',

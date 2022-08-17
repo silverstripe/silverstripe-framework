@@ -70,7 +70,7 @@ if (class_exists(Constraint::class)) {
          *
          * @throws PHPUnit_Framework_ExpectationFailedException
          */
-        public function evaluate($other, $description = '', $returnResult = false): ?bool
+        public function evaluate(SilverStripe\ORM\DataList $other, string $description = '', bool $returnResult = false): ?bool
         {
             $success = true;
 
@@ -213,7 +213,7 @@ class SSListContains extends PHPUnit_Framework_Constraint implements TestOnly
      *
      * @throws ExpectationFailedException
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate(SilverStripe\ORM\DataList $other, string $description = '', bool $returnResult = false)
     {
         $success = true;
 

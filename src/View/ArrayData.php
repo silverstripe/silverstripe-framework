@@ -29,7 +29,7 @@ class ArrayData extends ViewableData
      * @param object|array $value An associative array, or an object with simple properties.
      * Converts object properties to keys of an associative array.
      */
-    public function __construct($value = [])
+    public function __construct(array|stdClass|SilverStripe\Admin\CMSMenuItem $value = []): void
     {
         if (is_object($value)) {
             $this->array = get_object_vars($value);
@@ -55,7 +55,7 @@ class ArrayData extends ViewableData
      *
      * @return array
      */
-    public function toMap()
+    public function toMap(): array
     {
         return $this->array;
     }
@@ -74,7 +74,7 @@ class ArrayData extends ViewableData
      * @param string $field
      * @return mixed
      */
-    public function getField($field)
+    public function getField(string $field): string|bool|int|null|float|SilverStripe\ORM\ArrayList
     {
         $value = $this->array[$field];
         if (is_object($value) && !$value instanceof ViewableData) {
@@ -92,7 +92,7 @@ class ArrayData extends ViewableData
     * @param mixed $value
     * @return $this
     */
-    public function setField($field, $value)
+    public function setField(string $field, string|bool|SilverStripe\ORM\ArrayList $value): SilverStripe\View\ArrayData
     {
         $this->array[$field] = $value;
         return $this;
@@ -104,7 +104,7 @@ class ArrayData extends ViewableData
      * @param string $field Field Key
      * @return bool
      */
-    public function hasField($field)
+    public function hasField(string $field): bool
     {
         return isset($this->array[$field]);
     }
@@ -115,7 +115,7 @@ class ArrayData extends ViewableData
      * @param array $arr
      * @return stdClass $obj
      */
-    public static function array_to_object($arr = null)
+    public static function array_to_object(array $arr = null): stdClass
     {
         $obj = new stdClass();
         if ($arr) {

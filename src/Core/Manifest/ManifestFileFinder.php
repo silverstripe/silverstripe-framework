@@ -38,7 +38,7 @@ class ManifestFileFinder extends FileFinder
         'ignored_ci_configs' => []
     ];
 
-    public function acceptDir($basename, $pathname, $depth)
+    public function acceptDir(string $basename, string $pathname, int $depth): bool
     {
         // Skip if ignored
         if ($this->isInsideIgnored($basename, $pathname, $depth)) {
@@ -95,7 +95,7 @@ class ManifestFileFinder extends FileFinder
      * @param int $depth
      * @return bool
      */
-    public function isInsideVendor($basename, $pathname, $depth)
+    public function isInsideVendor(string $basename, string $pathname, int $depth): bool
     {
         $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
         return $base === self::VENDOR_DIR;
@@ -109,7 +109,7 @@ class ManifestFileFinder extends FileFinder
      * @param int $depth
      * @return bool
      */
-    public function isInsideThemes($basename, $pathname, $depth)
+    public function isInsideThemes(string $basename, string $pathname, int $depth): bool
     {
         $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
         return $base === THEMES_DIR;
@@ -123,7 +123,7 @@ class ManifestFileFinder extends FileFinder
      * @param int $depth
      * @return bool
      */
-    public function isInsideIgnored($basename, $pathname, $depth)
+    public function isInsideIgnored(string $basename, string $pathname, int $depth): bool
     {
         return $this->anyParents($basename, $pathname, $depth, function ($basename, $pathname, $depth) {
             return $this->isDirectoryIgnored($basename, $pathname, $depth);
@@ -138,7 +138,7 @@ class ManifestFileFinder extends FileFinder
      * @param int $depth
      * @return bool
      */
-    public function isInsideModule($basename, $pathname, $depth)
+    public function isInsideModule(string $basename, string $pathname, int $depth): bool
     {
         return $this->anyParents($basename, $pathname, $depth, function ($basename, $pathname, $depth) {
             return $this->isDirectoryModule($basename, $pathname, $depth);
@@ -154,7 +154,7 @@ class ManifestFileFinder extends FileFinder
      * @param callable $callback
      * @return bool
      */
-    protected function anyParents($basename, $pathname, $depth, $callback)
+    protected function anyParents(string $basename, string $pathname, int $depth, callable $callback): bool
     {
         // Check all ignored dir up the path
         while ($depth >= 0) {
@@ -177,7 +177,7 @@ class ManifestFileFinder extends FileFinder
      * @param string $depth
      * @return bool
      */
-    public function isDirectoryModule($basename, $pathname, $depth)
+    public function isDirectoryModule(string $basename, string $pathname, int $depth): bool
     {
         // Depth can either be 0, 1, or 3 (if and only if inside vendor)
         $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
@@ -205,7 +205,7 @@ class ManifestFileFinder extends FileFinder
      * @param int $depth Number of parents to rise
      * @return string
      */
-    protected function upLevels($pathname, $depth)
+    protected function upLevels(string $pathname, int $depth): string|null
     {
         if ($depth < 0) {
             return null;
@@ -221,7 +221,7 @@ class ManifestFileFinder extends FileFinder
      *
      * @return array
      */
-    protected function getIgnoredDirs()
+    protected function getIgnoredDirs(): array
     {
         $ignored = [self::LANG_DIR, 'node_modules'];
         if ($this->getOption('ignore_tests')) {
@@ -237,7 +237,7 @@ class ManifestFileFinder extends FileFinder
      * @param string $depth
      * @return bool
      */
-    public function isDirectoryIgnored($basename, $pathname, $depth)
+    public function isDirectoryIgnored(string $basename, string $pathname, int $depth): bool
     {
         // Don't ignore root
         if ($depth === 0) {

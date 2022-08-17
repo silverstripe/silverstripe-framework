@@ -48,7 +48,7 @@ class NullableField extends FormField
      * @param FormField $valueField
      * @param null|string $isNullLabel
      */
-    public function __construct(FormField $valueField, $isNullLabel = null)
+    public function __construct(FormField $valueField, $isNullLabel = null): void
     {
         $this->valueField = $valueField;
 
@@ -98,7 +98,7 @@ class NullableField extends FormField
      *
      * @return string
      */
-    public function getIsNullId()
+    public function getIsNullId(): string
     {
         return $this->getName() . "_IsNull";
     }
@@ -134,7 +134,7 @@ class NullableField extends FormField
      *
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string $value, $data = null): SilverStripe\Forms\NullableField
     {
         $id = $this->getIsNullId();
 
@@ -154,7 +154,7 @@ class NullableField extends FormField
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): SilverStripe\Forms\NullableField
     {
         $this->valueField->setName($name);
 

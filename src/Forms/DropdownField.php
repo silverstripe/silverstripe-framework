@@ -94,7 +94,7 @@ class DropdownField extends SingleSelectField
      * @param string $title Title of the option
      * @return ArrayData Field option
      */
-    protected function getFieldOption($value, $title)
+    protected function getFieldOption(int|string $value, string $title): SilverStripe\View\ArrayData
     {
         // Check selection
         $selected = $this->isSelectedValue($value, $this->Value());
@@ -119,7 +119,7 @@ class DropdownField extends SingleSelectField
      *
      * @return bool
      */
-    public function getHasEmptyDefault()
+    public function getHasEmptyDefault(): bool
     {
         return parent::getHasEmptyDefault() || $this->Required();
     }
@@ -128,7 +128,7 @@ class DropdownField extends SingleSelectField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $options = [];
 

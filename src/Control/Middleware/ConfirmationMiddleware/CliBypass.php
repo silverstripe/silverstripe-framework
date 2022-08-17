@@ -18,7 +18,7 @@ class CliBypass implements Bypass
      *
      * @return bool
      */
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return Director::is_cli();
     }

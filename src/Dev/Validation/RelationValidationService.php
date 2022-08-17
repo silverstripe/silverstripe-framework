@@ -593,7 +593,7 @@ class RelationValidationService implements Resettable
      * @param array|string $relationData
      * @return string|null
      */
-    protected function parseManyManyRelation($relationData): ?string
+    protected function parseManyManyRelation(string|array $relationData): ?string
     {
         if (is_array($relationData)) {
             foreach (['through', 'to'] as $key) {
@@ -627,7 +627,7 @@ class RelationValidationService implements Resettable
      * @param string $relation
      * @param string $message
      */
-    protected function logError(string $class, string $relation, string $message)
+    protected function logError(string $class, string $relation, string $message): void
     {
         $classPrefix = $relation ? sprintf('%s / %s', $class, $relation) : $class;
         $this->errors[] = sprintf('%s : %s', $classPrefix, $message);

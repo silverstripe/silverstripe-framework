@@ -30,7 +30,7 @@ abstract class SingleSelectField extends SelectField
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_SINGLESELECT;
 
-    public function getSchemaStateDefaults()
+    public function getSchemaStateDefaults(): array
     {
         $data = parent::getSchemaStateDefaults();
 
@@ -39,7 +39,7 @@ abstract class SingleSelectField extends SelectField
         return $data;
     }
 
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = parent::getSchemaDataDefaults();
 
@@ -50,7 +50,7 @@ abstract class SingleSelectField extends SelectField
         return $data;
     }
 
-    public function getDefaultValue()
+    public function getDefaultValue(): string|int
     {
         $value = $this->Value();
         // assign value to field, such as first option available
@@ -69,7 +69,7 @@ abstract class SingleSelectField extends SelectField
      * @param boolean $bool
      * @return self Self reference
      */
-    public function setHasEmptyDefault($bool)
+    public function setHasEmptyDefault(bool $bool): SilverStripe\Forms\DropdownField
     {
         $this->hasEmptyDefault = $bool;
         return $this;
@@ -78,7 +78,7 @@ abstract class SingleSelectField extends SelectField
     /**
      * @return bool
      */
-    public function getHasEmptyDefault()
+    public function getHasEmptyDefault(): bool
     {
         return $this->hasEmptyDefault;
     }
@@ -91,7 +91,7 @@ abstract class SingleSelectField extends SelectField
      * @param string $string
      * @return $this
      */
-    public function setEmptyString($string)
+    public function setEmptyString(string $string): SilverStripe\Forms\DropdownField
     {
         $this->setHasEmptyDefault(true);
         $this->emptyString = $string;
@@ -101,7 +101,7 @@ abstract class SingleSelectField extends SelectField
     /**
      * @return string
      */
-    public function getEmptyString()
+    public function getEmptyString(): string
     {
         return $this->emptyString;
     }
@@ -111,7 +111,7 @@ abstract class SingleSelectField extends SelectField
      *
      * @return array|ArrayAccess
      */
-    public function getSourceEmpty()
+    public function getSourceEmpty(): array
     {
         // Inject default option
         if ($this->getHasEmptyDefault()) {
@@ -127,7 +127,7 @@ abstract class SingleSelectField extends SelectField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Security\Member_Validator $validator): bool
     {
         // Check if valid value is given
         $selected = $this->Value();
@@ -161,7 +161,7 @@ abstract class SingleSelectField extends SelectField
         return false;
     }
 
-    public function castedCopy($classOrCopy)
+    public function castedCopy(string $classOrCopy): SilverStripe\Forms\SingleLookupField
     {
         $field = parent::castedCopy($classOrCopy);
         if ($field instanceof SingleSelectField && $this->getHasEmptyDefault()) {
@@ -173,7 +173,7 @@ abstract class SingleSelectField extends SelectField
     /**
      * @return SingleLookupField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\SingleLookupField
     {
         /** @var SingleLookupField $field */
         $field = $this->castedCopy(SingleLookupField::class);

@@ -24,7 +24,7 @@ class ShortcodeParser
     use Configurable;
     use Extensible;
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -56,7 +56,7 @@ class ShortcodeParser
      * @param string $identifier Defaults to "default".
      * @return ShortcodeParser
      */
-    public static function get($identifier = 'default')
+    public static function get(string $identifier = 'default'): SilverStripe\View\Parsers\ShortcodeParser
     {
         if (!array_key_exists($identifier, self::$instances)) {
             self::$instances[$identifier] = static::create();
@@ -70,7 +70,7 @@ class ShortcodeParser
      *
      * @return ShortcodeParser
      */
-    public static function get_active()
+    public static function get_active(): SilverStripe\View\Parsers\ShortcodeParser
     {
         return static::get(self::$active_instance);
     }
@@ -80,7 +80,7 @@ class ShortcodeParser
      *
      * @param string $identifier
      */
-    public static function set_active($identifier)
+    public static function set_active(string $identifier): void
     {
         self::$active_instance = (string) $identifier;
     }
@@ -102,7 +102,7 @@ class ShortcodeParser
      * @param callback $callback The callback to replace the shortcode with.
      * @return $this
      */
-    public function register($shortcode, $callback)
+    public function register(string $shortcode, array|callable $callback): SilverStripe\View\Parsers\ShortcodeParser
     {
         if (is_callable($callback)) {
             $this->shortcodes[$shortcode] = $callback;
@@ -118,7 +118,7 @@ class ShortcodeParser
      * @param string $shortcode
      * @return bool
      */
-    public function registered($shortcode)
+    public function registered(string $shortcode): bool
     {
         return array_key_exists($shortcode, $this->shortcodes ?? []);
     }
@@ -128,7 +128,7 @@ class ShortcodeParser
      *
      * @param string $shortcode
      */
-    public function unregister($shortcode)
+    public function unregister(string $shortcode): void
     {
         if ($this->registered($shortcode)) {
             unset($this->shortcodes[$shortcode]);
@@ -163,7 +163,7 @@ class ShortcodeParser
      * @param array $extra
      * @return mixed
      */
-    public function callShortcode($tag, $attributes, $content, $extra = [])
+    public function callShortcode(string $tag, array $attributes, string $content, array $extra = []): string|null|bool
     {
         if (!$tag || !isset($this->shortcodes[$tag])) {
             return false;
@@ -184,7 +184,7 @@ class ShortcodeParser
      *
      * @return bool|mixed|string
      */
-    public function getShortcodeReplacementText($tag, $extra = [], $isHTMLAllowed = true)
+    public function getShortcodeReplacementText(array $tag, array $extra = [], bool $isHTMLAllowed = true): string|null
     {
         $content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
 
@@ -206,7 +206,7 @@ class ShortcodeParser
 
     // --------------------------------------------------------------------------------------------------------------
 
-    protected function removeNode($node)
+    protected function removeNode(DOMElement $node): void
     {
         $node->parentNode->removeChild($node);
     }
@@ -231,7 +231,7 @@ class ShortcodeParser
      * @param DOMNodeList $new
      * @param DOMElement $after
      */
-    protected function insertListAfter($new, $after)
+    protected function insertListAfter(DOMNodeList $new, DOMElement $after): void
     {
         $doc = $after->ownerDocument;
         $parent = $after->parentNode;
@@ -269,7 +269,7 @@ class ShortcodeParser
 		)
 ';
 
-    protected static function attrrx()
+    protected static function attrrx(): string
     {
         return '/' . self::$attrrx . '/xS';
     }
@@ -294,7 +294,7 @@ class ShortcodeParser
 		(?<cesc2>\]?)
 ';
 
-    protected static function tagrx()
+    protected static function tagrx(): string
     {
         return '/' . sprintf(self::$tagrx, self::$attrrx) . '/xS';
     }
@@ -317,7 +317,7 @@ class ShortcodeParser
      * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
      * with "content" set to the text between the tags
      */
-    public function extractTags($content)
+    public function extractTags(string $content): array
     {
         $tags = [];
 
@@ -429,7 +429,7 @@ class ShortcodeParser
      * @param callable $generator
      * @return string The HTML string with [tag] style shortcodes replaced by markers
      */
-    protected function replaceTagsWithText($content, $tags, $generator)
+    protected function replaceTagsWithText(string $content, array $tags, callable $generator): string
     {
         // The string with tags replaced with markers
         $str = '';
@@ -464,7 +464,7 @@ class ShortcodeParser
      *
      * @param HTMLValue $htmlvalue
      */
-    protected function replaceAttributeTagsWithContent($htmlvalue)
+    protected function replaceAttributeTagsWithContent(SilverStripe\HTML5\HTML5Value $htmlvalue): void
     {
         $attributes = $htmlvalue->query('//@*[contains(.,"[")][contains(.,"]")]');
         $parser = $this;
@@ -492,7 +492,7 @@ class ShortcodeParser
      * @param string $content
      * @return array
      */
-    protected function replaceElementTagsWithMarkers($content)
+    protected function replaceElementTagsWithMarkers(string $content): array
     {
         $tags = $this->extractTags($content);
 
@@ -511,7 +511,7 @@ class ShortcodeParser
      * @param DOMNodeList $nodes
      * @return array
      */
-    protected function findParentsForMarkers($nodes)
+    protected function findParentsForMarkers(DOMNodeList $nodes): array
     {
         $parents = [];
 
@@ -563,7 +563,7 @@ class ShortcodeParser
      * @param DOMElement $parent
      * @param int $location ShortcodeParser::BEFORE, ShortcodeParser::SPLIT or ShortcodeParser::INLINE
      */
-    protected function moveMarkerToCompliantHome($node, $parent, $location)
+    protected function moveMarkerToCompliantHome(DOMElement $node, DOMElement $parent, string $location): void
     {
         // Move before block parent
         if ($location == self::BEFORE) {
@@ -614,7 +614,7 @@ class ShortcodeParser
      * @param DOMElement $node
      * @param array $tag
      */
-    protected function replaceMarkerWithContent($node, $tag)
+    protected function replaceMarkerWithContent(DOMElement $node, array $tag): void
     {
         $content = $this->getShortcodeReplacementText($tag);
 
@@ -636,7 +636,7 @@ class ShortcodeParser
      * @param string $content
      * @return string
      */
-    public function parse($content)
+    public function parse(string $content): string|null
     {
         $this->extend('onBeforeParse', $content);
 

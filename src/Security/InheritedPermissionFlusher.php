@@ -18,7 +18,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     /**
      * Flush all MemberCacheFlusher services
      */
-    public static function flush()
+    public static function flush(): void
     {
         singleton(__CLASS__)->flushCache();
     }
@@ -26,7 +26,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     /**
      * @param DataObject $owner
      */
-    public function setOwner($owner)
+    public function setOwner(SilverStripe\Security\Group $owner): void
     {
         if (!$owner instanceof Member && !$owner instanceof Group) {
             throw new InvalidArgumentException(sprintf(
@@ -45,7 +45,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
      * @throws InvalidArgumentException
      * @return $this
      */
-    public function setServices($services)
+    public function setServices(array $services): SilverStripe\Security\InheritedPermissionFlusher
     {
         foreach ($services as $service) {
             if (!$service instanceof MemberCacheFlusher) {
@@ -66,7 +66,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     /**
      * @return MemberCacheFlusher[]
      */
-    public function getServices()
+    public function getServices(): array
     {
         return $this->services;
     }
@@ -74,7 +74,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     /**
      * Flushes all registered MemberCacheFlusher services
      */
-    public function flushCache()
+    public function flushCache(): void
     {
         $ids = $this->getMemberIDList();
         foreach ($this->getServices() as $service) {
@@ -87,7 +87,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
      *
      * @return array|null
      */
-    protected function getMemberIDList()
+    protected function getMemberIDList(): null|array
     {
         if (!$this->owner || !$this->owner->exists()) {
             return null;

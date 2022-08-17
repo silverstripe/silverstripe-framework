@@ -49,7 +49,7 @@ class HTMLEditorSanitiser
      *
      * @param HTMLEditorConfig $config
      */
-    public function __construct(HTMLEditorConfig $config)
+    public function __construct(HTMLEditorConfig $config): void
     {
         $valid = $config->getOption('valid_elements');
         if ($valid) {
@@ -68,7 +68,7 @@ class HTMLEditorSanitiser
      * @param $str - The TinyMCE pattern
      * @return string - The equivalent regex
      */
-    protected function patternToRegex($str)
+    protected function patternToRegex(string $str): string
     {
         return '/^' . preg_replace('/([?+*])/', '.$1', $str ?? '') . '$/';
     }
@@ -81,7 +81,7 @@ class HTMLEditorSanitiser
      *
      * @param string $validElements - The valid_elements or extended_valid_elements string to add to the whitelist
      */
-    protected function addValidElements($validElements)
+    protected function addValidElements(string $validElements): void
     {
         $elementRuleRegExp = '/^([#+\-])?([^\[\/]+)(?:\/([^\[]+))?(?:\[([^\]]+)\])?$/';
         $attrRuleRegExp = '/^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/';
@@ -186,7 +186,7 @@ class HTMLEditorSanitiser
      * @param string $tag The element tag
      * @return stdClass The element rule
      */
-    protected function getRuleForElement($tag)
+    protected function getRuleForElement(string $tag): stdClass|null
     {
         if (isset($this->elements[$tag])) {
             return $this->elements[$tag];
@@ -206,7 +206,7 @@ class HTMLEditorSanitiser
      * @param string $name The attribute name
      * @return stdClass The attribute rule
      */
-    protected function getRuleForAttribute($elementRule, $name)
+    protected function getRuleForAttribute(stdClass $elementRule, string $name): stdClass|null
     {
         if (isset($elementRule->attributes[$name])) {
             return $elementRule->attributes[$name];
@@ -225,7 +225,7 @@ class HTMLEditorSanitiser
      * @param stdClass $rule The rule to check against
      * @return bool True if the element passes (and so can be kept), false if it fails (and so needs stripping)
      */
-    protected function elementMatchesRule($element, $rule = null)
+    protected function elementMatchesRule(DOMElement $element, stdClass $rule = null): bool
     {
         // If the rule doesn't exist at all, the element isn't allowed
         if (!$rule) {
@@ -263,7 +263,7 @@ class HTMLEditorSanitiser
      * @param stdClass $rule - the rule to check against
      * @return bool - true if the attribute passes (and so can be kept), false if it fails (and so needs stripping)
      */
-    protected function attributeMatchesRule($attr, $rule = null)
+    protected function attributeMatchesRule(DOMAttr $attr, stdClass $rule = null): bool
     {
         // If the rule doesn't exist at all, the attribute isn't allowed
         if (!$rule) {
@@ -285,7 +285,7 @@ class HTMLEditorSanitiser
      *
      * @param HTMLValue $html - The HTMLValue to remove any non-whitelisted elements & attributes from
      */
-    public function sanitise(HTMLValue $html)
+    public function sanitise(HTMLValue $html): void
     {
         if (!$this->elements && !$this->elementPatterns) {
             return;
@@ -370,7 +370,7 @@ class HTMLEditorSanitiser
      * @param DOMElement $el
      * @param string|null $linkRelValue
      */
-    private function addRelValue(DOMElement $el, $linkRelValue)
+    private function addRelValue(DOMElement $el, string $linkRelValue): void
     {
         // user has checked the checkbox 'open link in new window'
         if ($el->getAttribute('target') && $el->getAttribute('rel') !== $linkRelValue) {

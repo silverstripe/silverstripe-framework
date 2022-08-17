@@ -43,7 +43,7 @@ class ThemeResourceLoader implements Flushable
     /**
      * @return ThemeResourceLoader
      */
-    public static function inst()
+    public static function inst(): SilverStripe\View\ThemeResourceLoader
     {
         return self::$instance ? self::$instance : self::$instance = new self();
     }
@@ -53,12 +53,12 @@ class ThemeResourceLoader implements Flushable
      *
      * @param ThemeResourceLoader $instance
      */
-    public static function set_instance(ThemeResourceLoader $instance)
+    public static function set_instance(ThemeResourceLoader $instance): void
     {
         self::$instance = $instance;
     }
 
-    public function __construct($base = null)
+    public function __construct(string $base = null): void
     {
         $this->base = $base ? $base : BASE_PATH;
     }
@@ -69,7 +69,7 @@ class ThemeResourceLoader implements Flushable
      * @param string $set
      * @param ThemeList $manifest
      */
-    public function addSet($set, ThemeList $manifest)
+    public function addSet(string $set, ThemeList $manifest): void
     {
         $this->sets[$set] = $manifest;
     }
@@ -80,7 +80,7 @@ class ThemeResourceLoader implements Flushable
      * @param string $set
      * @return ThemeList
      */
-    public function getSet($set)
+    public function getSet(string $set): null|SilverStripe\View\ThemeManifest
     {
         if (isset($this->sets[$set])) {
             return $this->sets[$set];
@@ -102,7 +102,7 @@ class ThemeResourceLoader implements Flushable
      * @param string $identifier Theme identifier.
      * @return string Path from root, not including leading or trailing forward slash. E.g. themes/mytheme
      */
-    public function getPath($identifier)
+    public function getPath(string $identifier): string
     {
         $slashPos = strpos($identifier ?? '', '/');
         $parts = explode(':', $identifier ?? '', 2);
@@ -182,7 +182,7 @@ class ThemeResourceLoader implements Flushable
      * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
      * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
      */
-    public function findTemplate($template, $themes = null)
+    public function findTemplate(array|string $template, array $themes = null): string|null
     {
         if ($themes === null) {
             $themes = SSViewer::get_themes();
@@ -260,7 +260,7 @@ class ThemeResourceLoader implements Flushable
      * @param array $themes List of themes, Defaults to {@see SSViewer::get_themes()}
      * @return string Path to resolved CSS file (relative to base dir)
      */
-    public function findThemedCSS($name, $themes = null)
+    public function findThemedCSS(string $name, array $themes = null): string|null
     {
         if ($themes === null) {
             $themes = SSViewer::get_themes();
@@ -289,7 +289,7 @@ class ThemeResourceLoader implements Flushable
      * @param array $themes List of themes, Defaults to {@see SSViewer::get_themes()}
      * @return string Path to resolved javascript file (relative to base dir)
      */
-    public function findThemedJavascript($name, $themes = null)
+    public function findThemedJavascript(string $name, array $themes = null): string|null
     {
         if ($themes === null) {
             $themes = SSViewer::get_themes();
@@ -316,7 +316,7 @@ class ThemeResourceLoader implements Flushable
      * @param array $themes An order listed of themes to search, Defaults to {@see SSViewer::get_themes()}
      * @return string
      */
-    public function findThemedResource($resource, $themes = null)
+    public function findThemedResource(string $resource, array $themes = null): null|string
     {
         if ($themes === null) {
             $themes = SSViewer::get_themes();
@@ -342,7 +342,7 @@ class ThemeResourceLoader implements Flushable
      * @param array $themes List of themes to resolve. Supports named theme sets. Defaults to {@see SSViewer::get_themes()}.
      * @return array List of root-relative folders in order of precedence.
      */
-    public function getThemePaths($themes = null)
+    public function getThemePaths(array $themes = null): array
     {
         if ($themes === null) {
             $themes = SSViewer::get_themes();
@@ -365,7 +365,7 @@ class ThemeResourceLoader implements Flushable
     /**
      * Flush any cached data
      */
-    public static function flush()
+    public static function flush(): void
     {
         self::inst()->getCache()->clear();
     }
@@ -373,7 +373,7 @@ class ThemeResourceLoader implements Flushable
     /**
      * @return CacheInterface
      */
-    public function getCache()
+    public function getCache(): SilverStripe\Versioned\Caching\VersionedCacheAdapter
     {
         if (!$this->cache) {
             $this->setCache(Injector::inst()->get(CacheInterface::class . '.ThemeResourceLoader'));
@@ -385,7 +385,7 @@ class ThemeResourceLoader implements Flushable
      * @param CacheInterface $cache
      * @return ThemeResourceLoader
      */
-    public function setCache(CacheInterface $cache)
+    public function setCache(CacheInterface $cache): SilverStripe\View\ThemeResourceLoader
     {
         $this->cache = $cache;
         return $this;

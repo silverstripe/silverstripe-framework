@@ -86,7 +86,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * @param array $closedBlocks
      * @param array $openBlocks
      */
-    public function __construct($closedBlocks = [], $openBlocks = [])
+    public function __construct($closedBlocks = [], $openBlocks = []): void
     {
         parent::__construct(null);
         $this->setClosedBlocks($closedBlocks);
@@ -96,7 +96,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /**
      * Override the function that constructs the result arrays to also prepare a 'php' item in the array
      */
-    function construct($matchrule, $name, $arguments = null)
+    function construct(string $matchrule, string $name, array $arguments = null): array
     {
         $res = parent::construct($matchrule, $name, $arguments);
         if (!isset($res['php'])) {
@@ -113,7 +113,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * @param array $closedBlocks
      * @throws InvalidArgumentException
      */
-    public function setClosedBlocks($closedBlocks)
+    public function setClosedBlocks(array $closedBlocks): void
     {
         $this->closedBlocks = [];
         foreach ((array) $closedBlocks as $name => $callable) {
@@ -129,7 +129,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * @param array $openBlocks
      * @throws InvalidArgumentException
      */
-    public function setOpenBlocks($openBlocks)
+    public function setOpenBlocks(array $openBlocks): void
     {
         $this->openBlocks = [];
         foreach ((array) $openBlocks as $name => $callable) {
@@ -143,7 +143,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * @param callable $callable The function that modifies the generation of template code
      * @throws InvalidArgumentException
      */
-    public function addClosedBlock($name, $callable)
+    public function addClosedBlock(string $name, callable $callable): void
     {
         $this->validateExtensionBlock($name, $callable, 'Closed block');
         $this->closedBlocks[$name] = $callable;
@@ -155,7 +155,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * @param callable $callable The function that modifies the generation of template code
      * @throws InvalidArgumentException
      */
-    public function addOpenBlock($name, $callable)
+    public function addOpenBlock(string $name, callable $callable): void
     {
         $this->validateExtensionBlock($name, $callable, 'Open block');
         $this->openBlocks[$name] = $callable;
@@ -168,7 +168,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * @param $type
      * @throws InvalidArgumentException
      */
-    protected function validateExtensionBlock($name, $callable, $type)
+    protected function validateExtensionBlock(string $name, callable $callable, string $type): void
     {
         if (!is_string($name)) {
             throw new InvalidArgumentException(
@@ -191,7 +191,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /* Template: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
     OpenBlock | MalformedBlock | MalformedBracketInjection | Injection | Text)+ */
     protected $match_Template_typestack = array('Template');
-    function match_Template ($stack = array()) {
+    function match_Template ($stack = array()): array|bool {
     	$matchrule = "Template"; $result = $this->construct($matchrule, $matchrule, null);
     	$count = 0;
     	while (true) {
@@ -457,14 +457,14 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Template_STR(&$res, $sub)
+    function Template_STR(array &$res, array $sub): void
     {
         $res['php'] .= $sub['php'] . PHP_EOL ;
     }
 
     /* Word: / [A-Za-z_] [A-Za-z0-9_]* / */
     protected $match_Word_typestack = array('Word');
-    function match_Word ($stack = array()) {
+    function match_Word ($stack = array()): array|bool {
     	$matchrule = "Word"; $result = $this->construct($matchrule, $matchrule, null);
     	if (( $subres = $this->rx( '/ [A-Za-z_] [A-Za-z0-9_]* /' ) ) !== FALSE) {
     		$result["text"] .= $subres;
@@ -476,7 +476,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* NamespacedWord: / [A-Za-z_\/\\] [A-Za-z0-9_\/\\]* / */
     protected $match_NamespacedWord_typestack = array('NamespacedWord');
-    function match_NamespacedWord ($stack = array()) {
+    function match_NamespacedWord ($stack = array()): array {
     	$matchrule = "NamespacedWord"; $result = $this->construct($matchrule, $matchrule, null);
     	if (( $subres = $this->rx( '/ [A-Za-z_\/\\\\] [A-Za-z0-9_\/\\\\]* /' ) ) !== FALSE) {
     		$result["text"] .= $subres;
@@ -512,7 +512,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* CallArguments: :Argument ( < "," < :Argument )* */
     protected $match_CallArguments_typestack = array('CallArguments');
-    function match_CallArguments ($stack = array()) {
+    function match_CallArguments ($stack = array()): array|bool {
     	$matchrule = "CallArguments"; $result = $this->construct($matchrule, $matchrule, null);
     	$_66 = NULL;
     	do {
@@ -565,7 +565,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * Values are bare words in templates, but strings in PHP. We rely on PHP's type conversion to back-convert
      * strings to numbers when needed.
      */
-    function CallArguments_Argument(&$res, $sub)
+    function CallArguments_Argument(array &$res, array $sub): void
     {
         if (!empty($res['php'])) {
             $res['php'] .= ', ';
@@ -577,7 +577,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Call: Method:Word ( "(" < :CallArguments? > ")" )? */
     protected $match_Call_typestack = array('Call');
-    function match_Call ($stack = array()) {
+    function match_Call ($stack = array()): array|bool {
     	$matchrule = "Call"; $result = $this->construct($matchrule, $matchrule, null);
     	$_76 = NULL;
     	do {
@@ -635,7 +635,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* LookupStep: :Call &"." */
     protected $match_LookupStep_typestack = array('LookupStep');
-    function match_LookupStep ($stack = array()) {
+    function match_LookupStep ($stack = array()): bool|array {
     	$matchrule = "LookupStep"; $result = $this->construct($matchrule, $matchrule, null);
     	$_80 = NULL;
     	do {
@@ -668,7 +668,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* LastLookupStep: :Call */
     protected $match_LastLookupStep_typestack = array('LastLookupStep');
-    function match_LastLookupStep ($stack = array()) {
+    function match_LastLookupStep ($stack = array()): array|bool {
     	$matchrule = "LastLookupStep"; $result = $this->construct($matchrule, $matchrule, null);
     	$matcher = 'match_'.'Call'; $key = $matcher; $pos = $this->pos;
     	$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
@@ -682,7 +682,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Lookup: LookupStep ("." LookupStep)* "." LastLookupStep | LastLookupStep */
     protected $match_Lookup_typestack = array('Lookup');
-    function match_Lookup ($stack = array()) {
+    function match_Lookup ($stack = array()): array|bool {
     	$matchrule = "Lookup"; $result = $this->construct($matchrule, $matchrule, null);
     	$_94 = NULL;
     	do {
@@ -758,7 +758,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Lookup__construct(&$res)
+    function Lookup__construct(array &$res): void
     {
         $res['php'] = '$scope->locally()';
         $res['LookupSteps'] = [];
@@ -769,7 +769,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      * get the next ViewableData in the sequence, and LastLookupStep calls different methods (XML_val, hasValue, obj)
      * depending on the context the lookup is used in.
      */
-    function Lookup_AddLookupStep(&$res, $sub, $method)
+    function Lookup_AddLookupStep(array &$res, array $sub, string $method): void
     {
         $res['LookupSteps'][] = $sub;
 
@@ -782,12 +782,12 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
     }
 
-    function Lookup_LookupStep(&$res, $sub)
+    function Lookup_LookupStep(array &$res, array $sub): void
     {
         $this->Lookup_AddLookupStep($res, $sub, 'obj');
     }
 
-    function Lookup_LastLookupStep(&$res, $sub)
+    function Lookup_LastLookupStep(array &$res, array $sub): void
     {
         $this->Lookup_AddLookupStep($res, $sub, '$$FINAL');
     }
@@ -796,7 +796,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /* Translate: "<%t" < Entity < (Default:QuotedString)? < (!("is" "=") < "is" < Context:QuotedString)? <
     (InjectionVariables)? > "%>" */
     protected $match_Translate_typestack = array('Translate');
-    function match_Translate ($stack = array()) {
+    function match_Translate ($stack = array()): bool|array {
     	$matchrule = "Translate"; $result = $this->construct($matchrule, $matchrule, null);
     	$_120 = NULL;
     	do {
@@ -909,7 +909,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* InjectionVariables: (< InjectionName:Word "=" Argument)+ */
     protected $match_InjectionVariables_typestack = array('InjectionVariables');
-    function match_InjectionVariables ($stack = array()) {
+    function match_InjectionVariables ($stack = array()): bool|array {
     	$matchrule = "InjectionVariables"; $result = $this->construct($matchrule, $matchrule, null);
     	$count = 0;
     	while (true) {
@@ -954,7 +954,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Entity: / [A-Za-z_\\] [\w\.\\]* / */
     protected $match_Entity_typestack = array('Entity');
-    function match_Entity ($stack = array()) {
+    function match_Entity ($stack = array()): array {
     	$matchrule = "Entity"; $result = $this->construct($matchrule, $matchrule, null);
     	if (( $subres = $this->rx( '/ [A-Za-z_\\\\] [\w\.\\\\]* /' ) ) !== FALSE) {
     		$result["text"] .= $subres;
@@ -966,52 +966,52 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Translate__construct(&$res)
+    function Translate__construct(array &$res): void
     {
         $res['php'] = '$val .= _t(';
     }
 
-    function Translate_Entity(&$res, $sub)
+    function Translate_Entity(array &$res, array $sub): void
     {
         $res['php'] .= "'$sub[text]'";
     }
 
-    function Translate_Default(&$res, $sub)
+    function Translate_Default(array &$res, array $sub): void
     {
         $res['php'] .= ",$sub[text]";
     }
 
-    function Translate_Context(&$res, $sub)
+    function Translate_Context(array &$res, array $sub): void
     {
         $res['php'] .= ",$sub[text]";
     }
 
-    function Translate_InjectionVariables(&$res, $sub)
+    function Translate_InjectionVariables(array &$res, array $sub): void
     {
         $res['php'] .= ",$sub[php]";
     }
 
-    function Translate__finalise(&$res)
+    function Translate__finalise(array &$res): void
     {
         $res['php'] .= ');';
     }
 
-    function InjectionVariables__construct(&$res)
+    function InjectionVariables__construct(array &$res): void
     {
         $res['php'] = "[";
     }
 
-    function InjectionVariables_InjectionName(&$res, $sub)
+    function InjectionVariables_InjectionName(array &$res, array $sub): void
     {
         $res['php'] .= "'$sub[text]'=>";
     }
 
-    function InjectionVariables_Argument(&$res, $sub)
+    function InjectionVariables_Argument(array &$res, array $sub): void
     {
         $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '') . ',';
     }
 
-    function InjectionVariables__finalise(&$res)
+    function InjectionVariables__finalise(array &$res): void
     {
         if (substr($res['php'] ?? '', -1) == ',') {
             $res['php'] = substr($res['php'] ?? '', 0, -1); //remove last comma in the array
@@ -1021,7 +1021,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* MalformedBracketInjection: "{$" :Lookup !( "}" ) */
     protected $match_MalformedBracketInjection_typestack = array('MalformedBracketInjection');
-    function match_MalformedBracketInjection ($stack = array()) {
+    function match_MalformedBracketInjection ($stack = array()): bool {
     	$matchrule = "MalformedBracketInjection"; $result = $this->construct($matchrule, $matchrule, null);
     	$_134 = NULL;
     	do {
@@ -1063,7 +1063,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function MalformedBracketInjection__finalise(&$res)
+    function MalformedBracketInjection__finalise(array &$res)
     {
         $lookup = $res['text'];
         throw new SSTemplateParseException("Malformed bracket injection $lookup. Perhaps you have forgotten the " .
@@ -1072,7 +1072,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* SimpleInjection: '$' :Lookup */
     protected $match_SimpleInjection_typestack = array('SimpleInjection');
-    function match_SimpleInjection ($stack = array()) {
+    function match_SimpleInjection ($stack = array()): bool|array {
     	$matchrule = "SimpleInjection"; $result = $this->construct($matchrule, $matchrule, null);
     	$_138 = NULL;
     	do {
@@ -1097,7 +1097,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* BracketInjection: '{$' :Lookup "}" */
     protected $match_BracketInjection_typestack = array('BracketInjection');
-    function match_BracketInjection ($stack = array()) {
+    function match_BracketInjection ($stack = array()): bool|array {
     	$matchrule = "BracketInjection"; $result = $this->construct($matchrule, $matchrule, null);
     	$_143 = NULL;
     	do {
@@ -1124,7 +1124,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Injection: BracketInjection | SimpleInjection */
     protected $match_Injection_typestack = array('Injection');
-    function match_Injection ($stack = array()) {
+    function match_Injection ($stack = array()): bool|array {
     	$matchrule = "Injection"; $result = $this->construct($matchrule, $matchrule, null);
     	$_148 = NULL;
     	do {
@@ -1155,14 +1155,14 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Injection_STR(&$res, $sub)
+    function Injection_STR(array &$res, array $sub): void
     {
         $res['php'] = '$val .= '. str_replace('$$FINAL', 'XML_val', $sub['Lookup']['php'] ?? '') . ';';
     }
 
     /* DollarMarkedLookup: SimpleInjection */
     protected $match_DollarMarkedLookup_typestack = array('DollarMarkedLookup');
-    function match_DollarMarkedLookup ($stack = array()) {
+    function match_DollarMarkedLookup ($stack = array()): array|bool {
     	$matchrule = "DollarMarkedLookup"; $result = $this->construct($matchrule, $matchrule, null);
     	$matcher = 'match_'.'SimpleInjection'; $key = $matcher; $pos = $this->pos;
     	$subres = ( $this->packhas( $key, $pos ) ? $this->packread( $key, $pos ) : $this->packwrite( $key, $pos, $this->$matcher(array_merge($stack, array($result))) ) );
@@ -1175,14 +1175,14 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function DollarMarkedLookup_STR(&$res, $sub)
+    function DollarMarkedLookup_STR(array &$res, array $sub): void
     {
         $res['Lookup'] = $sub['Lookup'];
     }
 
     /* QuotedString: q:/['"]/   String:/ (\\\\ | \\. | [^$q\\])* /   '$q' */
     protected $match_QuotedString_typestack = array('QuotedString');
-    function match_QuotedString ($stack = array()) {
+    function match_QuotedString ($stack = array()): bool|array {
     	$matchrule = "QuotedString"; $result = $this->construct($matchrule, $matchrule, null);
     	$_154 = NULL;
     	do {
@@ -1218,7 +1218,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* FreeString: /[^,)%!=><|&]+/ */
     protected $match_FreeString_typestack = array('FreeString');
-    function match_FreeString ($stack = array()) {
+    function match_FreeString ($stack = array()): bool|array {
     	$matchrule = "FreeString"; $result = $this->construct($matchrule, $matchrule, null);
     	if (( $subres = $this->rx( '/[^,)%!=><|&]+/' ) ) !== FALSE) {
     		$result["text"] .= $subres;
@@ -1234,7 +1234,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     :Lookup !(< FreeString)|
     :FreeString */
     protected $match_Argument_typestack = array('Argument');
-    function match_Argument ($stack = array()) {
+    function match_Argument ($stack = array()): array|bool {
     	$matchrule = "Argument"; $result = $this->construct($matchrule, $matchrule, null);
     	$_174 = NULL;
     	do {
@@ -1345,19 +1345,19 @@ class SSTemplateParser extends Parser implements TemplateParser
      * if the context indicates a string
      */
 
-    function Argument_DollarMarkedLookup(&$res, $sub)
+    function Argument_DollarMarkedLookup(array &$res, array $sub): void
     {
         $res['ArgumentMode'] = 'lookup';
         $res['php'] = $sub['Lookup']['php'];
     }
 
-    function Argument_QuotedString(&$res, $sub)
+    function Argument_QuotedString(array &$res, array $sub): void
     {
         $res['ArgumentMode'] = 'string';
         $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text'] ?? '') . "'";
     }
 
-    function Argument_Lookup(&$res, $sub)
+    function Argument_Lookup(array &$res, array $sub): void
     {
         if (count($sub['LookupSteps'] ?? []) == 1 && !isset($sub['LookupSteps'][0]['Call']['Arguments'])) {
             $res['ArgumentMode'] = 'default';
@@ -1369,7 +1369,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
     }
 
-    function Argument_FreeString(&$res, $sub)
+    function Argument_FreeString(array &$res, array $sub): void
     {
         $res['ArgumentMode'] = 'string';
         $res['php'] = "'" . str_replace("'", "\\'", trim($sub['text'] ?? '')) . "'";
@@ -1377,7 +1377,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* ComparisonOperator: "!=" | "==" | ">=" | ">" | "<=" | "<" | "=" */
     protected $match_ComparisonOperator_typestack = array('ComparisonOperator');
-    function match_ComparisonOperator ($stack = array()) {
+    function match_ComparisonOperator ($stack = array()): bool|array {
     	$matchrule = "ComparisonOperator"; $result = $this->construct($matchrule, $matchrule, null);
     	$_199 = NULL;
     	do {
@@ -1488,7 +1488,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Comparison: Argument < ComparisonOperator > Argument */
     protected $match_Comparison_typestack = array('Comparison');
-    function match_Comparison ($stack = array()) {
+    function match_Comparison ($stack = array()): bool|array {
     	$matchrule = "Comparison"; $result = $this->construct($matchrule, $matchrule, null);
     	$_206 = NULL;
     	do {
@@ -1521,7 +1521,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Comparison_Argument(&$res, $sub)
+    function Comparison_Argument(array &$res, array $sub): void
     {
         if ($sub['ArgumentMode'] == 'default') {
             if (!empty($res['php'])) {
@@ -1534,14 +1534,14 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
     }
 
-    function Comparison_ComparisonOperator(&$res, $sub)
+    function Comparison_ComparisonOperator(array &$res, array $sub): void
     {
         $res['php'] .= ($sub['text'] == '=' ? '==' : $sub['text']);
     }
 
     /* PresenceCheck: (Not:'not' <)? Argument */
     protected $match_PresenceCheck_typestack = array('PresenceCheck');
-    function match_PresenceCheck ($stack = array()) {
+    function match_PresenceCheck ($stack = array()): array|bool {
     	$matchrule = "PresenceCheck"; $result = $this->construct($matchrule, $matchrule, null);
     	$_213 = NULL;
     	do {
@@ -1584,12 +1584,12 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function PresenceCheck_Not(&$res, $sub)
+    function PresenceCheck_Not(array &$res, array $sub): void
     {
         $res['php'] = '!';
     }
 
-    function PresenceCheck_Argument(&$res, $sub)
+    function PresenceCheck_Argument(array &$res, array $sub): void
     {
         if ($sub['ArgumentMode'] == 'string') {
             $res['php'] .= '((bool)'.$sub['php'].')';
@@ -1603,7 +1603,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* IfArgumentPortion: Comparison | PresenceCheck */
     protected $match_IfArgumentPortion_typestack = array('IfArgumentPortion');
-    function match_IfArgumentPortion ($stack = array()) {
+    function match_IfArgumentPortion ($stack = array()): array|bool {
     	$matchrule = "IfArgumentPortion"; $result = $this->construct($matchrule, $matchrule, null);
     	$_218 = NULL;
     	do {
@@ -1634,14 +1634,14 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function IfArgumentPortion_STR(&$res, $sub)
+    function IfArgumentPortion_STR(array &$res, array $sub): void
     {
         $res['php'] = $sub['php'];
     }
 
     /* BooleanOperator: "||" | "&&" */
     protected $match_BooleanOperator_typestack = array('BooleanOperator');
-    function match_BooleanOperator ($stack = array()) {
+    function match_BooleanOperator ($stack = array()): bool|array {
     	$matchrule = "BooleanOperator"; $result = $this->construct($matchrule, $matchrule, null);
     	$_223 = NULL;
     	do {
@@ -1669,7 +1669,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* IfArgument: :IfArgumentPortion ( < :BooleanOperator < :IfArgumentPortion )* */
     protected $match_IfArgument_typestack = array('IfArgument');
-    function match_IfArgument ($stack = array()) {
+    function match_IfArgument ($stack = array()): array|bool {
     	$matchrule = "IfArgument"; $result = $this->construct($matchrule, $matchrule, null);
     	$_232 = NULL;
     	do {
@@ -1718,19 +1718,19 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function IfArgument_IfArgumentPortion(&$res, $sub)
+    function IfArgument_IfArgumentPortion(array &$res, array $sub): void
     {
         $res['php'] .= $sub['php'];
     }
 
-    function IfArgument_BooleanOperator(&$res, $sub)
+    function IfArgument_BooleanOperator(array &$res, array $sub): void
     {
         $res['php'] .= $sub['text'];
     }
 
     /* IfPart: '<%' < 'if' [ :IfArgument > '%>' Template:$TemplateMatcher? */
     protected $match_IfPart_typestack = array('IfPart');
-    function match_IfPart ($stack = array()) {
+    function match_IfPart ($stack = array()): bool|array {
     	$matchrule = "IfPart"; $result = $this->construct($matchrule, $matchrule, null);
     	$_242 = NULL;
     	do {
@@ -1773,7 +1773,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* ElseIfPart: '<%' < 'else_if' [ :IfArgument > '%>' Template:$TemplateMatcher? */
     protected $match_ElseIfPart_typestack = array('ElseIfPart');
-    function match_ElseIfPart ($stack = array()) {
+    function match_ElseIfPart ($stack = array()): bool|array {
     	$matchrule = "ElseIfPart"; $result = $this->construct($matchrule, $matchrule, null);
     	$_252 = NULL;
     	do {
@@ -1816,7 +1816,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* ElsePart: '<%' < 'else' > '%>' Template:$TemplateMatcher? */
     protected $match_ElsePart_typestack = array('ElsePart');
-    function match_ElsePart ($stack = array()) {
+    function match_ElsePart ($stack = array()): array|bool {
     	$matchrule = "ElsePart"; $result = $this->construct($matchrule, $matchrule, null);
     	$_260 = NULL;
     	do {
@@ -1851,7 +1851,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* If: IfPart ElseIfPart* ElsePart? '<%' < 'end_if' > '%>' */
     protected $match_If_typestack = array('If');
-    function match_If ($stack = array()) {
+    function match_If ($stack = array()): bool|array {
     	$matchrule = "If"; $result = $this->construct($matchrule, $matchrule, null);
     	$_270 = NULL;
     	do {
@@ -1907,7 +1907,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function If_IfPart(&$res, $sub)
+    function If_IfPart(array &$res, array $sub): void
     {
         $res['php'] =
             'if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
@@ -1915,7 +1915,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             '}';
     }
 
-    function If_ElseIfPart(&$res, $sub)
+    function If_ElseIfPart(array &$res, array $sub): void
     {
         $res['php'] .=
             'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
@@ -1923,7 +1923,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             '}';
     }
 
-    function If_ElsePart(&$res, $sub)
+    function If_ElsePart(array &$res, array $sub): void
     {
         $res['php'] .=
             'else { ' . PHP_EOL .
@@ -1933,7 +1933,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Require: '<%' < 'require' [ Call:(Method:Word "(" < :CallArguments  > ")") > '%>' */
     protected $match_Require_typestack = array('Require');
-    function match_Require ($stack = array()) {
+    function match_Require ($stack = array()): bool|array {
     	$matchrule = "Require"; $result = $this->construct($matchrule, $matchrule, null);
     	$_286 = NULL;
     	do {
@@ -1994,7 +1994,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Require_Call(&$res, $sub)
+    function Require_Call(array &$res, array $sub): void
     {
         $requirements = '\\SilverStripe\\View\\Requirements';
         $res['php'] = "{$requirements}::".$sub['Method']['text'].'('.$sub['CallArguments']['php'].');';
@@ -2009,7 +2009,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         :Lookup
     ) */
     protected $match_CacheBlockArgument_typestack = array('CacheBlockArgument');
-    function match_CacheBlockArgument ($stack = array()) {
+    function match_CacheBlockArgument ($stack = array()): bool|array {
     	$matchrule = "CacheBlockArgument"; $result = $this->construct($matchrule, $matchrule, null);
     	$_306 = NULL;
     	do {
@@ -2111,19 +2111,19 @@ class SSTemplateParser extends Parser implements TemplateParser
         $res['php'] = $sub['Lookup']['php'];
     }
 
-    function CacheBlockArgument_QuotedString(&$res, $sub)
+    function CacheBlockArgument_QuotedString(array &$res, array $sub): void
     {
         $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text'] ?? '') . "'";
     }
 
-    function CacheBlockArgument_Lookup(&$res, $sub)
+    function CacheBlockArgument_Lookup(array &$res, array $sub): void
     {
         $res['php'] = $sub['php'];
     }
 
     /* CacheBlockArguments: CacheBlockArgument ( < "," < CacheBlockArgument )* */
     protected $match_CacheBlockArguments_typestack = array('CacheBlockArguments');
-    function match_CacheBlockArguments ($stack = array()) {
+    function match_CacheBlockArguments ($stack = array()): bool|array {
     	$matchrule = "CacheBlockArguments"; $result = $this->construct($matchrule, $matchrule, null);
     	$_315 = NULL;
     	do {
@@ -2171,7 +2171,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function CacheBlockArguments_CacheBlockArgument(&$res, $sub)
+    function CacheBlockArguments_CacheBlockArgument(array &$res, array $sub): void
     {
         if (!empty($res['php'])) {
             $res['php'] .= ".'_'.";
@@ -2185,7 +2185,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /* CacheBlockTemplate: (Comment | Translate | If | Require |    OldI18NTag | Include | ClosedBlock |
     OpenBlock | MalformedBlock | MalformedBracketInjection | Injection | Text)+ */
     protected $match_CacheBlockTemplate_typestack = array('CacheBlockTemplate','Template');
-    function match_CacheBlockTemplate ($stack = array()) {
+    function match_CacheBlockTemplate ($stack = array()): bool|array {
     	$matchrule = "CacheBlockTemplate"; $result = $this->construct($matchrule, $matchrule, array('TemplateMatcher' => 'CacheRestrictedTemplate'));
     	$count = 0;
     	while (true) {
@@ -2421,7 +2421,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         Template:$TemplateMatcher?
         '<%' < 'end_' ("uncached"|"cached"|"cacheblock") > '%>' */
     protected $match_UncachedBlock_typestack = array('UncachedBlock');
-    function match_UncachedBlock ($stack = array()) {
+    function match_UncachedBlock ($stack = array()): bool|array {
     	$matchrule = "UncachedBlock"; $result = $this->construct($matchrule, $matchrule, null);
     	$_400 = NULL;
     	do {
@@ -2574,7 +2574,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function UncachedBlock_Template(&$res, $sub)
+    function UncachedBlock_Template(array &$res, array $sub): void
     {
         $res['php'] = $sub['php'];
     }
@@ -2582,7 +2582,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /* CacheRestrictedTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
     OpenBlock | MalformedBlock | MalformedBracketInjection | Injection | Text)+ */
     protected $match_CacheRestrictedTemplate_typestack = array('CacheRestrictedTemplate','Template');
-    function match_CacheRestrictedTemplate ($stack = array()) {
+    function match_CacheRestrictedTemplate ($stack = array()): array {
     	$matchrule = "CacheRestrictedTemplate"; $result = $this->construct($matchrule, $matchrule, null);
     	$count = 0;
     	while (true) {
@@ -2850,7 +2850,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function CacheRestrictedTemplate_CacheBlock(&$res, $sub)
+    function CacheRestrictedTemplate_CacheBlock(array &$res, array $sub)
     {
         throw new SSTemplateParseException('You cant have cache blocks nested within with, loop or control blocks ' .
             'that are within cache blocks', $this);
@@ -2868,7 +2868,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         (CacheBlock | UncachedBlock | CacheBlockTemplate)*
     '<%' < 'end_' ("cached"|"uncached"|"cacheblock") > '%>' */
     protected $match_CacheBlock_typestack = array('CacheBlock');
-    function match_CacheBlock ($stack = array()) {
+    function match_CacheBlock ($stack = array()): bool|array {
     	$matchrule = "CacheBlock"; $result = $this->construct($matchrule, $matchrule, null);
     	$_511 = NULL;
     	do {
@@ -3104,32 +3104,32 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function CacheBlock__construct(&$res)
+    function CacheBlock__construct(array &$res): void
     {
         $res['subblocks'] = 0;
     }
 
-    function CacheBlock_CacheBlockArguments(&$res, $sub)
+    function CacheBlock_CacheBlockArguments(array &$res, array $sub): void
     {
         $res['key'] = !empty($sub['php']) ? $sub['php'] : '';
     }
 
-    function CacheBlock_Condition(&$res, $sub)
+    function CacheBlock_Condition(array &$res, array $sub): void
     {
         $res['condition'] = ($res['Conditional']['text'] == 'if' ? '(' : '!(') . $sub['php'] . ') && ';
     }
 
-    function CacheBlock_CacheBlock(&$res, $sub)
+    function CacheBlock_CacheBlock(array &$res, array $sub): void
     {
         $res['php'] .= $sub['php'];
     }
 
-    function CacheBlock_UncachedBlock(&$res, $sub)
+    function CacheBlock_UncachedBlock(array &$res, array $sub): void
     {
         $res['php'] .= $sub['php'];
     }
 
-    function CacheBlock_CacheBlockTemplate(&$res, $sub)
+    function CacheBlock_CacheBlockTemplate(array &$res, array $sub): void
     {
         // Get the block counter
         $block = ++$res['subblocks'];
@@ -3166,7 +3166,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* OldTPart: "_t" N "(" N QuotedString (N "," N CallArguments)? N ")" N (";")? */
     protected $match_OldTPart_typestack = array('OldTPart');
-    function match_OldTPart ($stack = array()) {
+    function match_OldTPart ($stack = array()): bool|array {
     	$matchrule = "OldTPart"; $result = $this->construct($matchrule, $matchrule, null);
     	$_530 = NULL;
     	do {
@@ -3276,7 +3276,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* N: / [\s\n]* / */
     protected $match_N_typestack = array('N');
-    function match_N ($stack = array()) {
+    function match_N ($stack = array()): array {
     	$matchrule = "N"; $result = $this->construct($matchrule, $matchrule, null);
     	if (( $subres = $this->rx( '/ [\s\n]* /' ) ) !== FALSE) {
     		$result["text"] .= $subres;
@@ -3287,12 +3287,12 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function OldTPart__construct(&$res)
+    function OldTPart__construct(array &$res): void
     {
         $res['php'] = "_t(";
     }
 
-    function OldTPart_QuotedString(&$res, $sub)
+    function OldTPart_QuotedString(array &$res, array $sub): void
     {
         $entity = $sub['String']['text'];
         if (strpos($entity ?? '', '.') === false) {
@@ -3302,19 +3302,19 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
     }
 
-    function OldTPart_CallArguments(&$res, $sub)
+    function OldTPart_CallArguments(array &$res, array $sub): void
     {
         $res['php'] .= ',' . $sub['php'];
     }
 
-    function OldTPart__finalise(&$res)
+    function OldTPart__finalise(array &$res): void
     {
         $res['php'] .= ')';
     }
 
     /* OldTTag: "<%" < OldTPart > "%>" */
     protected $match_OldTTag_typestack = array('OldTTag');
-    function match_OldTTag ($stack = array()) {
+    function match_OldTTag ($stack = array()): bool|array {
     	$matchrule = "OldTTag"; $result = $this->construct($matchrule, $matchrule, null);
     	$_538 = NULL;
     	do {
@@ -3339,14 +3339,14 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function OldTTag_OldTPart(&$res, $sub)
+    function OldTTag_OldTPart(array &$res, array $sub): void
     {
         $res['php'] = $sub['php'];
     }
 
     /* OldSprintfTag: "<%" < "sprintf" < "(" < OldTPart < "," < CallArguments > ")" > "%>" */
     protected $match_OldSprintfTag_typestack = array('OldSprintfTag');
-    function match_OldSprintfTag ($stack = array()) {
+    function match_OldSprintfTag ($stack = array()): bool {
     	$matchrule = "OldSprintfTag"; $result = $this->construct($matchrule, $matchrule, null);
     	$_555 = NULL;
     	do {
@@ -3399,7 +3399,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function OldSprintfTag__construct(&$res)
+    function OldSprintfTag__construct(array &$res): void
     {
         $res['php'] = "sprintf(";
     }
@@ -3416,7 +3416,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* OldI18NTag: OldSprintfTag | OldTTag */
     protected $match_OldI18NTag_typestack = array('OldI18NTag');
-    function match_OldI18NTag ($stack = array()) {
+    function match_OldI18NTag ($stack = array()): bool|array {
     	$matchrule = "OldI18NTag"; $result = $this->construct($matchrule, $matchrule, null);
     	$_560 = NULL;
     	do {
@@ -3447,14 +3447,14 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function OldI18NTag_STR(&$res, $sub)
+    function OldI18NTag_STR(array &$res, array $sub): void
     {
         $res['php'] = '$val .= ' . $sub['php'] . ';';
     }
 
     /* NamedArgument: Name:Word "=" Value:Argument */
     protected $match_NamedArgument_typestack = array('NamedArgument');
-    function match_NamedArgument ($stack = array()) {
+    function match_NamedArgument ($stack = array()): bool|array {
     	$matchrule = "NamedArgument"; $result = $this->construct($matchrule, $matchrule, null);
     	$_565 = NULL;
     	do {
@@ -3484,12 +3484,12 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function NamedArgument_Name(&$res, $sub)
+    function NamedArgument_Name(array &$res, array $sub): void
     {
         $res['php'] = "'" . $sub['text'] . "' => ";
     }
 
-    function NamedArgument_Value(&$res, $sub)
+    function NamedArgument_Value(array &$res, array $sub): void
     {
         switch ($sub['ArgumentMode']) {
             case 'string':
@@ -3508,7 +3508,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Include: "<%" < "include" < Template:NamespacedWord < (NamedArgument ( < "," < NamedArgument )*)? > "%>" */
     protected $match_Include_typestack = array('Include');
-    function match_Include ($stack = array()) {
+    function match_Include ($stack = array()): bool|array {
     	$matchrule = "Include"; $result = $this->construct($matchrule, $matchrule, null);
     	$_584 = NULL;
     	do {
@@ -3585,22 +3585,22 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Include__construct(&$res)
+    function Include__construct(array &$res): void
     {
         $res['arguments'] = [];
     }
 
-    function Include_Template(&$res, $sub)
+    function Include_Template(array &$res, array $sub): void
     {
         $res['template'] = "'" . $sub['text'] . "'";
     }
 
-    function Include_NamedArgument(&$res, $sub)
+    function Include_NamedArgument(array &$res, array $sub): void
     {
         $res['arguments'][] = $sub['php'];
     }
 
-    function Include__finalise(&$res)
+    function Include__finalise(array &$res): void
     {
         $template = $res['template'];
         $arguments = $res['arguments'];
@@ -3619,7 +3619,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* BlockArguments: :Argument ( < "," < :Argument)* */
     protected $match_BlockArguments_typestack = array('BlockArguments');
-    function match_BlockArguments ($stack = array()) {
+    function match_BlockArguments ($stack = array()): array|bool {
     	$matchrule = "BlockArguments"; $result = $this->construct($matchrule, $matchrule, null);
     	$_593 = NULL;
     	do {
@@ -3668,7 +3668,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* NotBlockTag: "end_" | (("if" | "else_if" | "else" | "require" | "cached" | "uncached" | "cacheblock" | "include")]) */
     protected $match_NotBlockTag_typestack = array('NotBlockTag');
-    function match_NotBlockTag ($stack = array()) {
+    function match_NotBlockTag ($stack = array()): bool|array {
     	$matchrule = "NotBlockTag"; $result = $this->construct($matchrule, $matchrule, null);
     	$_631 = NULL;
     	do {
@@ -3823,7 +3823,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /* ClosedBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > Zap:'%>' Template:$TemplateMatcher?
     '<%' < 'end_' '$BlockName' > '%>' */
     protected $match_ClosedBlock_typestack = array('ClosedBlock');
-    function match_ClosedBlock ($stack = array()) {
+    function match_ClosedBlock ($stack = array()): bool|array {
     	$matchrule = "ClosedBlock"; $result = $this->construct($matchrule, $matchrule, null);
     	$_651 = NULL;
     	do {
@@ -3931,12 +3931,12 @@ class SSTemplateParser extends Parser implements TemplateParser
      * the php result of this block as it's return value, or throw an error if incorrect arguments were passed.
      */
 
-    function ClosedBlock__construct(&$res)
+    function ClosedBlock__construct(array &$res): void
     {
         $res['ArgumentCount'] = 0;
     }
 
-    function ClosedBlock_BlockArguments(&$res, $sub)
+    function ClosedBlock_BlockArguments(array &$res, array $sub): void
     {
         if (isset($sub['Argument']['ArgumentMode'])) {
             $res['Arguments'] = [$sub['Argument']];
@@ -3947,7 +3947,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
     }
 
-    function ClosedBlock__finalise(&$res)
+    function ClosedBlock__finalise(array &$res): void
     {
         $blockname = $res['BlockName']['text'];
 
@@ -3965,7 +3965,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /**
      * This is an example of a block handler function. This one handles the loop tag.
      */
-    function ClosedBlock_Handle_Loop(&$res)
+    function ClosedBlock_Handle_Loop(array &$res): string
     {
         if ($res['ArgumentCount'] > 1) {
             throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one ' .
@@ -3996,7 +3996,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /**
      * The closed block handler for with blocks
      */
-    function ClosedBlock_Handle_With(&$res)
+    function ClosedBlock_Handle_With(array &$res): string
     {
         if ($res['ArgumentCount'] != 1) {
             throw new SSTemplateParseException('Either no or too many arguments in with block. Must be one ' .
@@ -4017,7 +4017,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* OpenBlock: '<%' < !NotBlockTag BlockName:Word ( [ :BlockArguments ] )? > '%>' */
     protected $match_OpenBlock_typestack = array('OpenBlock');
-    function match_OpenBlock ($stack = array()) {
+    function match_OpenBlock ($stack = array()): bool|array {
     	$matchrule = "OpenBlock"; $result = $this->construct($matchrule, $matchrule, null);
     	$_664 = NULL;
     	do {
@@ -4079,7 +4079,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function OpenBlock__construct(&$res)
+    function OpenBlock__construct(array &$res): void
     {
         $res['ArgumentCount'] = 0;
     }
@@ -4095,7 +4095,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
     }
 
-    function OpenBlock__finalise(&$res)
+    function OpenBlock__finalise(array &$res): void
     {
         $blockname = $res['BlockName']['text'];
 
@@ -4134,7 +4134,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /**
      * This is an open block handler, for the <% base_tag %> tag
      */
-    function OpenBlock_Handle_Base_tag(&$res)
+    function OpenBlock_Handle_Base_tag(array &$res): string
     {
         if ($res['ArgumentCount'] != 0) {
             throw new SSTemplateParseException('Base_tag takes no arguments', $this);
@@ -4155,7 +4155,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* MismatchedEndBlock: '<%' < 'end_' :Word > '%>' */
     protected $match_MismatchedEndBlock_typestack = array('MismatchedEndBlock');
-    function match_MismatchedEndBlock ($stack = array()) {
+    function match_MismatchedEndBlock ($stack = array()): bool {
     	$matchrule = "MismatchedEndBlock"; $result = $this->construct($matchrule, $matchrule, null);
     	$_672 = NULL;
     	do {
@@ -4191,7 +4191,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* MalformedOpenTag: '<%' < !NotBlockTag Tag:Word  !( ( [ :BlockArguments ] )? > '%>' ) */
     protected $match_MalformedOpenTag_typestack = array('MalformedOpenTag');
-    function match_MalformedOpenTag ($stack = array()) {
+    function match_MalformedOpenTag ($stack = array()): bool {
     	$matchrule = "MalformedOpenTag"; $result = $this->construct($matchrule, $matchrule, null);
     	$_687 = NULL;
     	do {
@@ -4277,7 +4277,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* MalformedCloseTag: '<%' < Tag:('end_' :Word ) !( > '%>' ) */
     protected $match_MalformedCloseTag_typestack = array('MalformedCloseTag');
-    function match_MalformedCloseTag ($stack = array()) {
+    function match_MalformedCloseTag ($stack = array()): bool {
     	$matchrule = "MalformedCloseTag"; $result = $this->construct($matchrule, $matchrule, null);
     	$_699 = NULL;
     	do {
@@ -4343,7 +4343,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* MalformedBlock: MalformedOpenTag | MalformedCloseTag */
     protected $match_MalformedBlock_typestack = array('MalformedBlock');
-    function match_MalformedBlock ($stack = array()) {
+    function match_MalformedBlock ($stack = array()): bool {
     	$matchrule = "MalformedBlock"; $result = $this->construct($matchrule, $matchrule, null);
     	$_704 = NULL;
     	do {
@@ -4377,7 +4377,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* CommentWithContent: '<%--' ( !"--%>" /(?s)./ )+ '--%>' */
     protected $match_CommentWithContent_typestack = array('CommentWithContent');
-    function match_CommentWithContent ($stack = array()) {
+    function match_CommentWithContent ($stack = array()): bool|array {
     	$matchrule = "CommentWithContent"; $result = $this->construct($matchrule, $matchrule, null);
     	$_712 = NULL;
     	do {
@@ -4429,7 +4429,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* EmptyComment: '<%----%>' */
     protected $match_EmptyComment_typestack = array('EmptyComment');
-    function match_EmptyComment ($stack = array()) {
+    function match_EmptyComment ($stack = array()): bool|array {
     	$matchrule = "EmptyComment"; $result = $this->construct($matchrule, $matchrule, null);
     	if (( $subres = $this->literal( '<%----%>' ) ) !== FALSE) {
     		$result["text"] .= $subres;
@@ -4441,7 +4441,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /* Comment: :EmptyComment | :CommentWithContent */
     protected $match_Comment_typestack = array('Comment');
-    function match_Comment ($stack = array()) {
+    function match_Comment ($stack = array()): bool|array {
     	$matchrule = "Comment"; $result = $this->construct($matchrule, $matchrule, null);
     	$_718 = NULL;
     	do {
@@ -4472,7 +4472,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
 
 
-    function Comment__construct(&$res)
+    function Comment__construct(array &$res): void
     {
         $res['php'] = '';
     }
@@ -4480,7 +4480,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /* TopTemplate: (Comment | Translate | If | Require | CacheBlock | UncachedBlock | OldI18NTag | Include | ClosedBlock |
     OpenBlock |  MalformedBlock | MismatchedEndBlock  | MalformedBracketInjection | Injection | Text)+ */
     protected $match_TopTemplate_typestack = array('TopTemplate','Template');
-    function match_TopTemplate ($stack = array()) {
+    function match_TopTemplate ($stack = array()): array|bool {
     	$matchrule = "TopTemplate"; $result = $this->construct($matchrule, $matchrule, array('TemplateMatcher' => 'Template'));
     	$count = 0;
     	while (true) {
@@ -4772,7 +4772,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /**
      * The TopTemplate also includes the opening stanza to start off the template
      */
-    function TopTemplate__construct(&$res)
+    function TopTemplate__construct(array &$res): void
     {
         $res['php'] = "<?php" . PHP_EOL;
     }
@@ -4786,7 +4786,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         '{$' !(/[A-Za-z_]/)
     )+ */
     protected $match_Text_typestack = array('Text');
-    function match_Text ($stack = array()) {
+    function match_Text ($stack = array()): array|bool {
     	$matchrule = "Text"; $result = $this->construct($matchrule, $matchrule, null);
     	$count = 0;
     	while (true) {
@@ -4993,7 +4993,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     /**
      * We convert text
      */
-    function Text__finalise(&$res)
+    function Text__finalise(array &$res): void
     {
         $text = $res['text'];
 
@@ -5032,7 +5032,7 @@ EOC;
      * @param bool $topTemplate True if this is a top template, false if it's just a template
      * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
      */
-    public function compileString($string, $templateName = "", $includeDebuggingComments = false, $topTemplate = true)
+    public function compileString(string|SilverStripe\ORM\FieldType\DBHTMLText $string, string $templateName = "", bool $includeDebuggingComments = false, bool $topTemplate = true): string
     {
         if (!trim($string ?? '')) {
             $code = '';
@@ -5074,7 +5074,7 @@ EOC;
      * @param string $templateName
      * @return string $code
      */
-    protected function includeDebuggingComments($code, $templateName)
+    protected function includeDebuggingComments(string $code, string $templateName): string
     {
         // If this template contains a doctype, put it right after it,
         // if not, put it after the <html> tag to avoid IE glitches

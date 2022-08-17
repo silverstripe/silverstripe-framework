@@ -68,7 +68,7 @@ class ValidationResult implements Serializable
      * Create a new ValidationResult.
      * By default, it is a successful result.   Call $this->error() to record errors.
      */
-    public function __construct()
+    public function __construct(): void
     {
         if (func_num_args() > 0) {
             Deprecation::notice('3.2', '$valid parameter is deprecated please addError to mark the result as invalid', false);
@@ -92,7 +92,7 @@ class ValidationResult implements Serializable
      * Bool values will be treated as plain text flag.
      * @return $this
      */
-    public function addError($message, $messageType = self::TYPE_ERROR, $code = null, $cast = self::CAST_TEXT)
+    public function addError(string $message, $messageType = self::TYPE_ERROR, string $code = null, $cast = self::CAST_TEXT): SilverStripe\ORM\ValidationResult
     {
         return $this->addFieldError(null, $message, $messageType, $code, $cast);
     }
@@ -111,12 +111,12 @@ class ValidationResult implements Serializable
      * @return $this
      */
     public function addFieldError(
-        $fieldName,
+        string $fieldName,
         $message,
         $messageType = self::TYPE_ERROR,
         $code = null,
         $cast = self::CAST_TEXT
-    ) {
+    ): SilverStripe\ORM\ValidationResult {
         $this->isValid = false;
         return $this->addFieldMessage($fieldName, $message, $messageType, $code, $cast);
     }
@@ -133,7 +133,7 @@ class ValidationResult implements Serializable
      * Bool values will be treated as plain text flag.
      * @return $this
      */
-    public function addMessage($message, $messageType = self::TYPE_ERROR, $code = null, $cast = self::CAST_TEXT)
+    public function addMessage(string $message, $messageType = self::TYPE_ERROR, $code = null, $cast = self::CAST_TEXT): SilverStripe\ORM\ValidationResult
     {
         return $this->addFieldMessage(null, $message, $messageType, $code, $cast);
     }
@@ -152,12 +152,12 @@ class ValidationResult implements Serializable
      * @return $this
      */
     public function addFieldMessage(
-        $fieldName,
+        string $fieldName,
         $message,
         $messageType = self::TYPE_ERROR,
         $code = null,
         $cast = self::CAST_TEXT
-    ) {
+    ): SilverStripe\ORM\ValidationResult {
         if ($code && is_numeric($code)) {
             throw new InvalidArgumentException("Don't use a numeric code '$code'.  Use a string.");
         }
@@ -184,7 +184,7 @@ class ValidationResult implements Serializable
      * Returns true if the result is valid.
      * @return boolean
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->isValid;
     }
@@ -194,7 +194,7 @@ class ValidationResult implements Serializable
      *
      * @return array Array of messages, where each item is an array of data for that message.
      */
-    public function getMessages()
+    public function getMessages(): array
     {
         return $this->messages;
     }
@@ -207,7 +207,7 @@ class ValidationResult implements Serializable
      * @param ValidationResult $other the validation result object to combine
      * @return $this
      */
-    public function combineAnd(ValidationResult $other)
+    public function combineAnd(ValidationResult $other): SilverStripe\ORM\ValidationResult
     {
         $this->isValid = $this->isValid && $other->isValid();
         $this->messages = array_merge($this->messages, $other->getMessages());
@@ -234,7 +234,7 @@ class ValidationResult implements Serializable
      * @return string
      * @deprecated will be removed in 5.0
      */
-    public function serialize()
+    public function serialize(): string
     {
         return json_encode([$this->messages, $this->isValid]);
     }

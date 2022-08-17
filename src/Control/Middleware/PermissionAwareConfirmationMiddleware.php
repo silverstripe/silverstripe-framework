@@ -63,7 +63,7 @@ class PermissionAwareConfirmationMiddleware extends ConfirmationMiddleware
      *
      * @return $this
      */
-    public function setAffectedPermissions($permissions)
+    public function setAffectedPermissions(array $permissions): SilverStripe\Control\Middleware\URLSpecialsMiddleware
     {
         $this->affectedPermissions = $permissions;
         return $this;
@@ -90,7 +90,7 @@ class PermissionAwareConfirmationMiddleware extends ConfirmationMiddleware
      *
      * @return $this
      */
-    public function setEnforceAuthentication($enforce)
+    public function setEnforceAuthentication(bool $enforce): SilverStripe\Control\Middleware\URLSpecialsMiddleware
     {
         $this->enforceAuthentication = $enforce;
         return $this;

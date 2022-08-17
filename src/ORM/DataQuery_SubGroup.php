@@ -21,7 +21,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
      */
     protected $whereQuery;
 
-    public function __construct(DataQuery $base, $connective)
+    public function __construct(DataQuery $base, string $connective): void
     {
         parent::__construct($base->dataClass);
         $this->query = $base->query;
@@ -31,7 +31,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
         $base->where($this);
     }
 
-    public function where($filter)
+    public function where(array|string|SilverStripe\ORM\DataQuery_SubGroup $filter): SilverStripe\ORM\DataQuery_SubGroup
     {
         if ($filter) {
             $this->whereQuery->addWhere($filter);
@@ -49,7 +49,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
         return $this;
     }
 
-    public function conditionSQL(&$parameters)
+    public function conditionSQL(array &$parameters): string|null
     {
         $parameters = [];
 

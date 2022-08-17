@@ -35,7 +35,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
      * @param HTTPRequest $request instance of the request (session is not initialized yet!)
      * @param string $env Environment type (dev, test or live)
      */
-    public function __construct(HTTPRequest $request, $env)
+    public function __construct(HTTPRequest $request, string $env): void
     {
         $this->env = $env;
         $this->request = $request;
@@ -47,7 +47,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
      *
      * @return null|bool flush or don't care
      */
-    protected function lookupRequest()
+    protected function lookupRequest(): bool|null
     {
         $request = $this->request;
 
@@ -68,7 +68,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
      *
      * @return bool|null true for allow, false for denying, or null if don't care
      */
-    protected function isAllowed()
+    protected function isAllowed(): bool
     {
         // WARNING!
         // We specifically return `null` and not `false` here so that
@@ -76,7 +76,7 @@ class RequestFlushDiscoverer implements FlushDiscoverer
         return (Environment::isCli() || $this->env === Kernel::DEV) ? true : null;
     }
 
-    public function shouldFlush()
+    public function shouldFlush(): bool|null
     {
         if (!$allowed = $this->isAllowed()) {
             return $allowed;

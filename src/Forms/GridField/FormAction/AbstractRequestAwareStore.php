@@ -9,7 +9,7 @@ abstract class AbstractRequestAwareStore implements StateStore
     /**
      * @return HTTPRequest
      */
-    public function getRequest()
+    public function getRequest(): SilverStripe\Control\HTTPRequest
     {
         // Replicating existing functionality from GridField_FormAction
         return Controller::curr()->getRequest();

@@ -73,7 +73,7 @@ class FieldGroup extends CompositeField
      * @param mixed $titleOrField Either the field title, list of fields, or first field
      * @param mixed ...$otherFields Subsequent fields or field list (if passing in title to $titleOrField)
      */
-    public function __construct($titleOrField = null, $otherFields = null)
+    public function __construct(string|array|SilverStripe\Forms\CompositeField $titleOrField = null, array|SilverStripe\Forms\GridField\GridField_FormAction $otherFields = null): void
     {
         $title = null;
         if (is_array($titleOrField) || $titleOrField instanceof FieldList) {
@@ -110,7 +110,7 @@ class FieldGroup extends CompositeField
      * TODO this is temporary, and should be removed when FormTemplateHelper is updated to handle ID
      *  for CompositeFields with no name
      */
-    public function getName()
+    public function getName(): string
     {
         if ($this->name) {
             return $this->name;
@@ -142,7 +142,7 @@ class FieldGroup extends CompositeField
     /**
      * @return string
      */
-    public function getZebra()
+    public function getZebra(): null
     {
         return $this->zebra;
     }
@@ -150,7 +150,7 @@ class FieldGroup extends CompositeField
     /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): null|string
     {
         $dataFields = [];
         $this->collateDataFields($dataFields);
@@ -174,7 +174,7 @@ class FieldGroup extends CompositeField
     /**
      * @return string
      */
-    public function getMessageType()
+    public function getMessageType(): string
     {
         $dataFields = [];
         $this->collateDataFields($dataFields);
@@ -190,7 +190,7 @@ class FieldGroup extends CompositeField
         return null;
     }
 
-    public function getMessageCast()
+    public function getMessageCast(): string
     {
         return ValidationResult::CAST_HTML;
     }

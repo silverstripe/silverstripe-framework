@@ -15,7 +15,7 @@ class TempFolder
      * @param string $base The base path to use for determining the temporary path
      * @return string Path to temp
      */
-    public static function getTempFolder($base)
+    public static function getTempFolder(string $base): string
     {
         $parent = static::getTempParentFolder($base);
 
@@ -34,7 +34,7 @@ class TempFolder
      *
      * @return string
      */
-    public static function getTempFolderUsername()
+    public static function getTempFolderUsername(): string
     {
         $user = '';
         if (function_exists('posix_getpwuid') && function_exists('posix_getuid')) {
@@ -66,7 +66,7 @@ class TempFolder
      * @return string
      * @throws Exception
      */
-    protected static function getTempParentFolder($base)
+    protected static function getTempParentFolder(string $base): string
     {
         // first, try finding a silverstripe-cache dir built off the base path
         $localPath = Path::join($base, 'silverstripe-cache');

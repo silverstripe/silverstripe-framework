@@ -26,7 +26,7 @@ class CoreKernel extends BaseKernel
      * @throws HTTPResponse_Exception
      * @throws Exception
      */
-    public function boot($flush = false)
+    public function boot(bool $flush = false): void
     {
         $this->flush = $flush;
 
@@ -46,7 +46,7 @@ class CoreKernel extends BaseKernel
      *
      * @throws HTTPResponse_Exception
      */
-    protected function validateDatabase()
+    protected function validateDatabase(): void
     {
         $databaseConfig = DB::getConfig();
         // Gracefully fail if no DB is configured
@@ -61,7 +61,7 @@ class CoreKernel extends BaseKernel
     /**
      * Load default database configuration from the $database and $databaseConfig globals
      */
-    protected function bootDatabaseGlobals()
+    protected function bootDatabaseGlobals(): void
     {
         // Now that configs have been loaded, we can check global for database config
         global $databaseConfig;
@@ -93,7 +93,7 @@ class CoreKernel extends BaseKernel
     /**
      * Load default database configuration from environment variable
      */
-    protected function bootDatabaseEnvVars()
+    protected function bootDatabaseEnvVars(): void
     {
         // Set default database config
         $databaseConfig = $this->getDatabaseConfig();
@@ -106,7 +106,7 @@ class CoreKernel extends BaseKernel
      *
      * @return array
      */
-    protected function getDatabaseConfig()
+    protected function getDatabaseConfig(): array
     {
         /** @skipUpgrade */
         $databaseConfig = [
@@ -148,7 +148,7 @@ class CoreKernel extends BaseKernel
     /**
      * @return string
      */
-    protected function getDatabasePrefix()
+    protected function getDatabasePrefix(): string
     {
         return Environment::getEnv('SS_DATABASE_PREFIX') ?: '';
     }
@@ -156,7 +156,7 @@ class CoreKernel extends BaseKernel
     /**
      * @return string
      */
-    protected function getDatabaseSuffix()
+    protected function getDatabaseSuffix(): string
     {
         return Environment::getEnv('SS_DATABASE_SUFFIX') ?: '';
     }
@@ -166,7 +166,7 @@ class CoreKernel extends BaseKernel
      *
      * @return string
      */
-    protected function getDatabaseName()
+    protected function getDatabaseName(): string
     {
         // Check globals
         global $database;
@@ -223,7 +223,7 @@ class CoreKernel extends BaseKernel
      *
      * @return bool|null null if the kernel hasn't been booted yet
      */
-    public function isFlushed()
+    public function isFlushed(): bool
     {
         return $this->flush;
     }

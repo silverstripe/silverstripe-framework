@@ -128,13 +128,13 @@ class ConfirmedPasswordField extends FormField
      * @param string $titleConfirmField Alternate title (not localizeable)
      */
     public function __construct(
-        $name,
+        string $name,
         $title = null,
         $value = "",
         $form = null,
         $showOnClick = false,
         $titleConfirmField = null
-    ) {
+    ): void {
 
         // Set field title
         $title = isset($title) ? $title : _t('SilverStripe\\Security\\Member.PASSWORD', 'Password');
@@ -168,13 +168,13 @@ class ConfirmedPasswordField extends FormField
         $this->setValue($value);
     }
 
-    public function Title()
+    public function Title(): null
     {
         // Title is displayed on nested field, not on the top level field
         return null;
     }
 
-    public function setTitle($title)
+    public function setTitle(string $title): SilverStripe\Forms\ConfirmedPasswordField
     {
         $this->getPasswordField()->setTitle($title);
         return parent::setTitle($title);
@@ -185,7 +185,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): string
     {
         // Build inner content
         $fieldContent = '';
@@ -237,7 +237,7 @@ class ConfirmedPasswordField extends FormField
      * Returns the children of this field for use in templating.
      * @return FieldList
      */
-    public function getChildren()
+    public function getChildren(): SilverStripe\Forms\FieldList
     {
         return $this->children;
     }
@@ -252,7 +252,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return ConfirmedPasswordField
      */
-    public function setCanBeEmpty($value)
+    public function setCanBeEmpty(bool $value): SilverStripe\Forms\ConfirmedPasswordField
     {
         $this->canBeEmpty = (bool)$value;
 
@@ -278,7 +278,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * @return string $title
      */
-    public function getShowOnClickTitle()
+    public function getShowOnClickTitle(): null
     {
         return $this->showOnClickTitle;
     }
@@ -288,7 +288,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return $this
      */
-    public function setRightTitle($title)
+    public function setRightTitle(string $title): SilverStripe\Forms\ConfirmedPasswordField
     {
         foreach ($this->getChildren() as $field) {
             /** @var FormField $field */
@@ -307,7 +307,7 @@ class ConfirmedPasswordField extends FormField
      * @param array $titles List of child titles
      * @return $this
      */
-    public function setChildrenTitles($titles)
+    public function setChildrenTitles(array $titles): SilverStripe\Forms\ConfirmedPasswordField
     {
         $expectedChildren = $this->getRequireExistingPassword() ? 3 : 2;
         if (is_array($titles) && count($titles ?? []) === $expectedChildren) {
@@ -332,7 +332,7 @@ class ConfirmedPasswordField extends FormField
      * @param mixed $data
      * @return $this
      */
-    public function setValue($value, $data = null)
+    public function setValue(string|array $value, SilverStripe\Security\Member|array $data = null): SilverStripe\Forms\ConfirmedPasswordField
     {
         // If $data is a DataObject, don't use the value, since it's a hashed value
         if ($data && $data instanceof DataObject) {
@@ -380,7 +380,7 @@ class ConfirmedPasswordField extends FormField
      * @param string $name new name to give to the field.
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): SilverStripe\Forms\ConfirmedPasswordField
     {
         $this->getPasswordField()->setName($name . '[_Password]');
         $this->getConfirmPasswordField()->setName($name . '[_ConfirmPassword]');
@@ -398,7 +398,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return boolean
      */
-    public function isSaveable()
+    public function isSaveable(): bool
     {
         return !$this->showOnClick
             || ($this->showOnClick && $this->hiddenField && $this->hiddenField->Value());
@@ -410,7 +410,7 @@ class ConfirmedPasswordField extends FormField
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Security\Member_Validator $validator): bool
     {
         $name = $this->name;
 
@@ -556,7 +556,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @param DataObjectInterface $record
      */
-    public function saveInto(DataObjectInterface $record)
+    public function saveInto(DataObjectInterface $record): void
     {
         if (!$this->isSaveable()) {
             return;
@@ -572,7 +572,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return ReadonlyField
      */
-    public function performReadonlyTransformation()
+    public function performReadonlyTransformation(): SilverStripe\Forms\ReadonlyField
     {
         /** @var ReadonlyField $field */
         $field = $this->castedCopy(ReadonlyField::class)
@@ -582,7 +582,7 @@ class ConfirmedPasswordField extends FormField
         return $field;
     }
 
-    public function performDisabledTransformation()
+    public function performDisabledTransformation(): SilverStripe\Forms\ReadonlyField
     {
         return $this->performReadonlyTransformation();
     }
@@ -592,7 +592,7 @@ class ConfirmedPasswordField extends FormField
      *
      * @return bool
      */
-    public function getRequireExistingPassword()
+    public function getRequireExistingPassword(): bool
     {
         return $this->requireExistingPassword;
     }
@@ -603,7 +603,7 @@ class ConfirmedPasswordField extends FormField
      * @param bool $show Flag to show or hide this field
      * @return $this
      */
-    public function setRequireExistingPassword($show)
+    public function setRequireExistingPassword(bool $show): SilverStripe\Forms\ConfirmedPasswordField
     {
         // Don't modify if already added / removed
         if ((bool)$show === $this->requireExistingPassword) {
@@ -624,7 +624,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * @return PasswordField
      */
-    public function getPasswordField()
+    public function getPasswordField(): SilverStripe\Forms\PasswordField
     {
         return $this->passwordField;
     }
@@ -632,7 +632,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * @return PasswordField
      */
-    public function getConfirmPasswordField()
+    public function getConfirmPasswordField(): SilverStripe\Forms\PasswordField
     {
         return $this->confirmPasswordfield;
     }
@@ -643,7 +643,7 @@ class ConfirmedPasswordField extends FormField
      * @param int $minLength
      * @return $this
      */
-    public function setMinLength($minLength)
+    public function setMinLength(int $minLength): SilverStripe\Forms\ConfirmedPasswordField
     {
         $this->minLength = (int) $minLength;
         return $this;
@@ -652,7 +652,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * @return int
      */
-    public function getMinLength()
+    public function getMinLength(): null|int
     {
         return $this->minLength;
     }
@@ -663,7 +663,7 @@ class ConfirmedPasswordField extends FormField
      * @param int $maxLength
      * @return $this
      */
-    public function setMaxLength($maxLength)
+    public function setMaxLength(int $maxLength): SilverStripe\Forms\ConfirmedPasswordField
     {
         $this->maxLength = (int) $maxLength;
         return $this;
@@ -672,7 +672,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * @return int
      */
-    public function getMaxLength()
+    public function getMaxLength(): null|int
     {
         return $this->maxLength;
     }
@@ -681,7 +681,7 @@ class ConfirmedPasswordField extends FormField
      * @param bool $requireStrongPassword
      * @return $this
      */
-    public function setRequireStrongPassword($requireStrongPassword)
+    public function setRequireStrongPassword(bool $requireStrongPassword): SilverStripe\Forms\ConfirmedPasswordField
     {
         $this->requireStrongPassword = (bool) $requireStrongPassword;
         return $this;
@@ -690,7 +690,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * @return bool
      */
-    public function getRequireStrongPassword()
+    public function getRequireStrongPassword(): bool
     {
         return $this->requireStrongPassword;
     }

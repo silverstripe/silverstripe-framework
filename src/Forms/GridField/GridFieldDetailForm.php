@@ -82,7 +82,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      */
     protected $itemEditFormCallback;
 
-    public function getURLHandlers($gridField)
+    public function getURLHandlers(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [
             'item/$ID' => 'handleItem'
@@ -101,7 +101,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param bool $showPagination Whether the `Previous` and `Next` buttons should display or not, leave as null to use default
      * @param bool $showAdd Whether the `Add` button should display or not, leave as null to use default
      */
-    public function __construct($name = null, $showPagination = null, $showAdd = null)
+    public function __construct(SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController $name = null, bool|string $showPagination = null, bool $showAdd = null): void
     {
         $this->setName($name ?: 'DetailForm');
         $this->setShowPagination($showPagination);
@@ -114,7 +114,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param HTTPRequest $request
      * @return HTTPResponse
      */
-    public function handleItem($gridField, $request)
+    public function handleItem(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Control\HTTPRequest $request): string|SilverStripe\ORM\FieldType\DBHTMLText
     {
         // Our getController could either give us a true Controller, if this is the top-level GridField.
         // It could also give us a RequestHandler in the form of GridFieldDetailForm_ItemRequest if this is a
@@ -220,7 +220,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param RequestHandler $requestHandler
      * @return GridFieldDetailForm_ItemRequest
      */
-    protected function getItemRequestHandler($gridField, $record, $requestHandler)
+    protected function getItemRequestHandler(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject $record, SilverStripe\FrameworkTest\Elemental\Admin\ElementalBehatTestAdmin $requestHandler): SilverStripe\Versioned\VersionedGridFieldItemRequest
     {
         $class = $this->getItemRequestClass();
         $assignedClass = $this->itemRequestClass;
@@ -250,7 +250,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return String
      */
-    public function getTemplate()
+    public function getTemplate(): null
     {
         return $this->template;
     }
@@ -259,7 +259,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param string $name
      * @return $this
      */
-    public function setName($name)
+    public function setName(string|SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController $name): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->name = $name;
         return $this;
@@ -298,7 +298,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return bool
      */
-    protected function getDefaultShowPagination()
+    protected function getDefaultShowPagination(): bool
     {
         $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
         return isset($formActionsConfig['showPagination']) ? (bool) $formActionsConfig['showPagination'] : false;
@@ -307,7 +307,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return bool
      */
-    public function getShowPagination()
+    public function getShowPagination(): bool
     {
         if ($this->showPagination === null) {
             return $this->getDefaultShowPagination();
@@ -320,7 +320,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param bool|null $showPagination
      * @return GridFieldDetailForm
      */
-    public function setShowPagination($showPagination)
+    public function setShowPagination(bool|string $showPagination): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->showPagination = $showPagination;
         return $this;
@@ -329,7 +329,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return bool
      */
-    protected function getDefaultShowAdd()
+    protected function getDefaultShowAdd(): bool
     {
         $formActionsConfig = GridFieldDetailForm_ItemRequest::config()->get('formActions');
         return isset($formActionsConfig['showAdd']) ? (bool) $formActionsConfig['showAdd'] : false;
@@ -338,7 +338,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return bool
      */
-    public function getShowAdd()
+    public function getShowAdd(): bool
     {
         if ($this->showAdd === null) {
             return $this->getDefaultShowAdd();
@@ -351,7 +351,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param bool|null $showAdd
      * @return GridFieldDetailForm
      */
-    public function setShowAdd($showAdd)
+    public function setShowAdd(bool $showAdd): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->showAdd = $showAdd;
         return $this;
@@ -361,7 +361,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param Validator $validator
      * @return $this
      */
-    public function setValidator(Validator $validator)
+    public function setValidator(Validator $validator): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->validator = $validator;
         return $this;
@@ -370,7 +370,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return Validator
      */
-    public function getValidator()
+    public function getValidator(): null|SilverStripe\Forms\CompositeValidator
     {
         return $this->validator;
     }
@@ -379,7 +379,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param FieldList $fields
      * @return $this
      */
-    public function setFields(FieldList $fields)
+    public function setFields(FieldList $fields): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->fields = $fields;
         return $this;
@@ -388,7 +388,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return FieldList
      */
-    public function getFields()
+    public function getFields(): null|SilverStripe\Forms\FieldList
     {
         return $this->fields;
     }
@@ -397,7 +397,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param string $class
      * @return $this
      */
-    public function setItemRequestClass($class)
+    public function setItemRequestClass(string $class): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->itemRequestClass = $class;
         return $this;
@@ -406,7 +406,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return string name of {@see GridFieldDetailForm_ItemRequest} subclass
      */
-    public function getItemRequestClass()
+    public function getItemRequestClass(): string
     {
         if ($this->itemRequestClass) {
             return $this->itemRequestClass;
@@ -420,7 +420,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * @param Closure $cb Make changes on the edit form after constructing it.
      * @return $this
      */
-    public function setItemEditFormCallback(Closure $cb)
+    public function setItemEditFormCallback(Closure $cb): SilverStripe\Forms\GridField\GridFieldDetailForm
     {
         $this->itemEditFormCallback = $cb;
         return $this;
@@ -429,7 +429,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * @return Closure
      */
-    public function getItemEditFormCallback()
+    public function getItemEditFormCallback(): null|callable
     {
         return $this->itemEditFormCallback;
     }

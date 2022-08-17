@@ -10,19 +10,19 @@ use SilverStripe\View\SSViewer;
  */
 class GridField_ActionMenu extends AbstractGridFieldComponent implements GridField_ColumnProvider, GridField_ActionProvider
 {
-    public function augmentColumns($gridField, &$columns)
+    public function augmentColumns(SilverStripe\Forms\GridField\GridField $gridField, &$columns): void
     {
         if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
         }
     }
 
-    public function getColumnsHandled($gridField)
+    public function getColumnsHandled(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['Actions'];
     }
 
-    public function getColumnContent($gridField, $record, $columnName)
+    public function getColumnContent(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $items = $this->getItems($gridField);
 
@@ -55,17 +55,17 @@ class GridField_ActionMenu extends AbstractGridFieldComponent implements GridFie
         return $templateData->renderWith($template);
     }
 
-    public function getColumnAttributes($gridField, $record, $columnName)
+    public function getColumnAttributes(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): array
     {
         return ['class' => 'grid-field__col-compact action-menu'];
     }
 
-    public function getColumnMetadata($gridField, $columnName)
+    public function getColumnMetadata(SilverStripe\Forms\GridField\GridField $gridField, string $columnName): array
     {
         return ['title' => null];
     }
 
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $actions = [];
 
@@ -78,7 +78,7 @@ class GridField_ActionMenu extends AbstractGridFieldComponent implements GridFie
         return $actions;
     }
 
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, array $arguments, array $data): void
     {
         foreach ($this->getItems($gridField) as $item) {
             $actions = [];
@@ -97,7 +97,7 @@ class GridField_ActionMenu extends AbstractGridFieldComponent implements GridFie
      *
      * @return array
      */
-    public function getItems($gridfield)
+    public function getItems(SilverStripe\Forms\GridField\GridField $gridfield): array
     {
         $items = $gridfield->config->getComponentsByType(GridField_ActionMenuItem::class)->items;
 

@@ -30,14 +30,14 @@ use Exception;
 class FulltextFilter extends SearchFilter
 {
 
-    protected function applyOne(DataQuery $query)
+    protected function applyOne(DataQuery $query): SilverStripe\ORM\DataQuery
     {
         $this->model = $query->applyRelation($this->relation);
         $predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
         return $query->where([$predicate => $this->getValue()]);
     }
 
-    protected function excludeOne(DataQuery $query)
+    protected function excludeOne(DataQuery $query): SilverStripe\ORM\DataQuery_SubGroup
     {
         $this->model = $query->applyRelation($this->relation);
         $predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
@@ -61,7 +61,7 @@ class FulltextFilter extends SearchFilter
      * @throws Exception
      * @return string
     */
-    public function getDbName()
+    public function getDbName(): string
     {
         $indexes = DataObject::getSchema()->databaseIndexes($this->model);
         if (array_key_exists($this->getName(), $indexes ?? [])) {
@@ -87,7 +87,7 @@ class FulltextFilter extends SearchFilter
      * @param array $columns
      * @return string
      */
-    protected function prepareColumns($columns)
+    protected function prepareColumns(array $columns): string
     {
         $prefix = DataQuery::applyRelationPrefix($this->relation);
         $table = DataObject::getSchema()->tableForField($this->model, current($columns ?? []));

@@ -22,7 +22,7 @@ class LostPasswordForm extends MemberLoginForm
      * @skipUpgrade
      * @return FieldList
      */
-    public function getFormFields()
+    public function getFormFields(): SilverStripe\Forms\FieldList
     {
         return FieldList::create(
             EmailField::create('Email', _t('SilverStripe\\Security\\Member.EMAIL', 'Email'))
@@ -34,7 +34,7 @@ class LostPasswordForm extends MemberLoginForm
      *
      * @return FieldList
      */
-    public function getFormActions()
+    public function getFormActions(): SilverStripe\Forms\FieldList
     {
         return FieldList::create(
             FormAction::create(

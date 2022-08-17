@@ -52,7 +52,7 @@ class RSSFeed_Entry extends ViewableData
      * @param string $descriptionField
      * @param string $authorField
      */
-    public function __construct($entry, $titleField, $descriptionField, $authorField)
+    public function __construct(SilverStripe\Blog\Model\BlogPost $entry, string $titleField, string $descriptionField, string $authorField): void
     {
         $this->failover = $entry;
         $this->titleField = $titleField;
@@ -67,7 +67,7 @@ class RSSFeed_Entry extends ViewableData
      *
      * @return DBField Returns the description of the entry.
      */
-    public function Title()
+    public function Title(): SilverStripe\ORM\FieldType\DBVarchar
     {
         return $this->rssField($this->titleField);
     }
@@ -77,7 +77,7 @@ class RSSFeed_Entry extends ViewableData
      *
      * @return DBField Returns the description of the entry.
      */
-    public function Description()
+    public function Description(): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $description = $this->rssField($this->descriptionField);
 
@@ -94,7 +94,7 @@ class RSSFeed_Entry extends ViewableData
      *
      * @return DBField Returns the author of the entry.
      */
-    public function Author()
+    public function Author(): null|SilverStripe\ORM\FieldType\DBVarchar
     {
         return $this->rssField($this->authorField);
     }
@@ -105,7 +105,7 @@ class RSSFeed_Entry extends ViewableData
      * @param string $fieldName Name of field
      * @return DBField
      */
-    public function rssField($fieldName)
+    public function rssField(string $fieldName): null|SilverStripe\ORM\FieldType\DBVarchar
     {
         if ($fieldName) {
             return $this->failover->obj($fieldName);
@@ -119,7 +119,7 @@ class RSSFeed_Entry extends ViewableData
      * @return string Returns the URL of this entry
      * @throws BadMethodCallException
      */
-    public function AbsoluteLink()
+    public function AbsoluteLink(): string
     {
         if ($this->failover->hasMethod('AbsoluteLink')) {
             return $this->failover->AbsoluteLink();

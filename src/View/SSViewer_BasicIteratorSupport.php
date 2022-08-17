@@ -23,7 +23,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     /**
      * @return array
      */
-    public static function get_template_iterator_variables()
+    public static function get_template_iterator_variables(): array
     {
         return [
             'IsFirst',
@@ -50,7 +50,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $pos position in iterator
      * @param int $totalItems total number of items
      */
-    public function iteratorProperties($pos, $totalItems)
+    public function iteratorProperties(int $pos, int $totalItems): void
     {
         $this->iteratorPos = $pos;
         $this->iteratorTotalItems = $totalItems;
@@ -61,7 +61,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function IsFirst()
+    public function IsFirst(): bool
     {
         return $this->iteratorPos == 0;
     }
@@ -70,7 +70,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @deprecated 5.0.0 Use IsFirst() to avoid clashes with SS_Lists
      * @return bool
      */
-    public function First()
+    public function First(): bool
     {
         Deprecation::notice('5.0.0', 'Use IsFirst() to avoid clashes with SS_Lists');
         return $this->IsFirst();
@@ -81,7 +81,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function IsLast()
+    public function IsLast(): bool
     {
         return $this->iteratorPos == $this->iteratorTotalItems - 1;
     }
@@ -90,7 +90,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @deprecated 5.0.0 Use IsLast() to avoid clashes with SS_Lists
      * @return bool
      */
-    public function Last()
+    public function Last(): bool
     {
         Deprecation::notice('5.0.0', 'Use IsLast() to avoid clashes with SS_Lists');
         return $this->IsLast();
@@ -101,7 +101,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return string|null
      */
-    public function FirstLast()
+    public function FirstLast(): string|null
     {
         if ($this->IsFirst() && $this->IsLast()) {
             return 'first last';
@@ -120,7 +120,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return bool
      */
-    public function Middle()
+    public function Middle(): bool
     {
         return !$this->IsFirst() && !$this->IsLast();
     }
@@ -130,7 +130,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return string
      */
-    public function MiddleString()
+    public function MiddleString(): null|string
     {
         if ($this->Middle()) {
             return 'middle';
@@ -145,7 +145,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $startIndex Number to start count from.
      * @return bool
      */
-    public function Even($startIndex = 1)
+    public function Even(int|string $startIndex = 1): bool
     {
         return !$this->Odd($startIndex);
     }
@@ -156,7 +156,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $startIndex Number to start count from.
      * @return bool
      */
-    public function Odd($startIndex = 1)
+    public function Odd(int|string $startIndex = 1): bool
     {
         return (bool)(($this->iteratorPos + $startIndex) % 2);
     }
@@ -167,7 +167,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $startIndex Number to start count from.
      * @return string
      */
-    public function EvenOdd($startIndex = 1)
+    public function EvenOdd($startIndex = 1): string
     {
         return ($this->Even($startIndex)) ? 'even' : 'odd';
     }
@@ -179,7 +179,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $startIndex Number to start count from.
      * @return int
      */
-    public function Pos($startIndex = 1)
+    public function Pos(string $startIndex = 1): int
     {
         return $this->iteratorPos + $startIndex;
     }
@@ -191,7 +191,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $endIndex Value of the last item
      * @return int
      */
-    public function FromEnd($endIndex = 1)
+    public function FromEnd(string $endIndex = 1): int
     {
         return $this->iteratorTotalItems - $this->iteratorPos + $endIndex - 1;
     }
@@ -201,7 +201,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      *
      * @return int
      */
-    public function TotalItems()
+    public function TotalItems(): int
     {
         return $this->iteratorTotalItems;
     }
@@ -214,7 +214,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $startIndex Number to start count from.
      * @return int
      */
-    public function Modulus($mod, $startIndex = 1)
+    public function Modulus(string $mod, int|string $startIndex = 1): int
     {
         return ($this->iteratorPos + $startIndex) % $mod;
     }
@@ -228,7 +228,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @param int $offset Number to start count from.
      * @return bool
      */
-    public function MultipleOf($factor, $offset = 1)
+    public function MultipleOf(string $factor, string $offset = 1): bool
     {
         return (bool)($this->Modulus($factor, $offset) == 0);
     }

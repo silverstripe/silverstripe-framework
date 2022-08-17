@@ -33,7 +33,7 @@ class Transliterator
      * @param string $source
      * @return string
      */
-    public function toASCII($source)
+    public function toASCII(string|int $source): string
     {
         if (function_exists('iconv') && $this->config()->use_iconv) {
             return $this->useIconv($source);
@@ -48,7 +48,7 @@ class Transliterator
      * @param string $source
      * @return string
      */
-    protected function useStrTr($source)
+    protected function useStrTr(string|int $source): string
     {
         $table = [
             'Š'=>'S', 'š'=>'s', 'Đ'=>'Dj', 'đ'=>'dj', 'Ž'=>'Z', 'ž'=>'z', 'Č'=>'C', 'č'=>'c', 'Ć'=>'C', 'ć'=>'c',

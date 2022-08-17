@@ -17,7 +17,7 @@ class FlushableTestState implements TestState
      */
     protected $flushed = false;
 
-    public function setUp(SapphireTest $test)
+    public function setUp(SapphireTest $test): void
     {
         // Reset all resettables
         /** @var Resettable $resettable */
@@ -26,11 +26,11 @@ class FlushableTestState implements TestState
         }
     }
 
-    public function tearDown(SapphireTest $test)
+    public function tearDown(SapphireTest $test): void
     {
     }
 
-    public function setUpOnce($class)
+    public function setUpOnce(string $class): void
     {
         if ($this->flushed) {
             return;
@@ -44,7 +44,7 @@ class FlushableTestState implements TestState
         }
     }
 
-    public function tearDownOnce($class)
+    public function tearDownOnce(string $class): void
     {
     }
 }

@@ -62,7 +62,7 @@ abstract class DBSchemaManager
      *
      * @deprecated 4.0.0:5.0.0
      */
-    public static function showTableNameWarning($table, $class)
+    public static function showTableNameWarning(string $table, string $class): void
     {
         static::$table_name_warnings[$table] = $class;
     }
@@ -72,7 +72,7 @@ abstract class DBSchemaManager
      *
      * @param Database $database
      */
-    public function setDatabase(Database $database)
+    public function setDatabase(Database $database): void
     {
         $this->database = $database;
     }
@@ -104,7 +104,7 @@ abstract class DBSchemaManager
      *
      * @param bool $quiet
      */
-    public function quiet($quiet = true)
+    public function quiet(bool $quiet = true): void
     {
         $this->supressOutput = $quiet;
     }
@@ -118,7 +118,7 @@ abstract class DBSchemaManager
      * @param int $errorLevel The level of error reporting to enable for the query
      * @return Query
      */
-    public function query($sql, $errorLevel = E_USER_ERROR)
+    public function query(string $sql, $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         return $this->database->query($sql, $errorLevel);
     }
@@ -142,7 +142,7 @@ abstract class DBSchemaManager
      *
      * @param callable $callback
      */
-    public function schemaUpdate($callback)
+    public function schemaUpdate(callable $callback): void
     {
         // Begin schema update
         $this->schemaIsUpdating = true;
@@ -204,7 +204,7 @@ abstract class DBSchemaManager
     /**
      * Cancels the schema updates requested during (but not after) schemaUpdate() call.
      */
-    public function cancelSchemaUpdate()
+    public function cancelSchemaUpdate(): void
     {
         $this->schemaUpdateTransaction = null;
         $this->schemaIsUpdating = false;
@@ -215,7 +215,7 @@ abstract class DBSchemaManager
      *
      * @return boolean
      */
-    function isSchemaUpdating()
+    function isSchemaUpdating(): bool
     {
         return $this->schemaIsUpdating;
     }
@@ -225,7 +225,7 @@ abstract class DBSchemaManager
      *
      * @return boolean
      */
-    public function doesSchemaNeedUpdating()
+    public function doesSchemaNeedUpdating(): bool
     {
         return (bool) $this->schemaUpdateTransaction;
     }
@@ -239,7 +239,7 @@ abstract class DBSchemaManager
      * @param array $options Create table options (ENGINE, etc.)
      * @param array $advanced_options Advanced table creation options
      */
-    public function transCreateTable($table, $options = null, $advanced_options = null)
+    public function transCreateTable(string $table, array $options = null, bool $advanced_options = null): void
     {
         $this->schemaUpdateTransaction[$table] = [
             'command' => 'create',
@@ -271,7 +271,7 @@ abstract class DBSchemaManager
      * @param string $field Name of the field to create
      * @param string $schema Field specification as a string
      */
-    public function transCreateField($table, $field, $schema)
+    public function transCreateField(string $table, string $field, string $schema): void
     {
         $this->transInitTable($table);
         $this->schemaUpdateTransaction[$table]['newFields'][$field] = $schema;
@@ -284,7 +284,7 @@ abstract class DBSchemaManager
      * @param string $index Name of the index to create
      * @param array $schema Already parsed index specification
      */
-    public function transCreateIndex($table, $index, $schema)
+    public function transCreateIndex(string $table, string $index, array $schema): void
     {
         $this->transInitTable($table);
         $this->schemaUpdateTransaction[$table]['newIndexes'][$index] = $schema;
@@ -297,7 +297,7 @@ abstract class DBSchemaManager
      * @param string $field Name of the field to update
      * @param string $schema Field specification as a string
      */
-    public function transAlterField($table, $field, $schema)
+    public function transAlterField(string $table, string $field, string $schema): void
     {
         $this->transInitTable($table);
         $this->schemaUpdateTransaction[$table]['alteredFields'][$field] = $schema;
@@ -310,7 +310,7 @@ abstract class DBSchemaManager
      * @param string $index Name of the index to update
      * @param array $schema Already parsed index specification
      */
-    public function transAlterIndex($table, $index, $schema)
+    public function transAlterIndex(string $table, string $index, array $schema): void
     {
         $this->transInitTable($table);
         $this->schemaUpdateTransaction[$table]['alteredIndexes'][$index] = $schema;
@@ -322,7 +322,7 @@ abstract class DBSchemaManager
      *
      * @param string $table Name of the table to initialise
      */
-    protected function transInitTable($table)
+    protected function transInitTable(string $table): void
     {
         if (!isset($this->schemaUpdateTransaction[$table])) {
             $this->schemaUpdateTransaction[$table] = [
@@ -354,13 +354,13 @@ abstract class DBSchemaManager
      * @param array|bool $extensions List of extensions
      */
     public function requireTable(
-        $table,
+        string $table,
         $fieldSchema = null,
         $indexSchema = null,
         $hasAutoIncPK = true,
         $options = [],
         $extensions = false
-    ) {
+    ): void {
         if (!isset($this->tableList[strtolower($table)])) {
             $this->transCreateTable($table, $options, $extensions);
             $this->alterationMessage("Table $table: created", "created");
@@ -455,7 +455,7 @@ MESSAGE
      * If the given table exists, move it out of the way by renaming it to _obsolete_(tablename).
      * @param string $table The table name.
      */
-    public function dontRequireTable($table)
+    public function dontRequireTable(string $table): void
     {
         if (!isset($this->tableList[strtolower($table)])) {
             return;
@@ -488,7 +488,7 @@ MESSAGE
      * @param string|array|boolean $spec The specification of the index in any
      * loose format. See requireTable() for more information.
      */
-    public function requireIndex($table, $index, $spec)
+    public function requireIndex(string $table, string $index, array $spec): void
     {
         // Detect if adding to a new table
         $newTable = !isset($this->tableList[strtolower($table)]);
@@ -548,7 +548,7 @@ MESSAGE
      * @param array $columns List of columns to implode
      * @return string A properly quoted list of column names
      */
-    protected function implodeColumnList($columns)
+    protected function implodeColumnList(array $columns): string
     {
         if (empty($columns)) {
             return '';
@@ -600,7 +600,7 @@ MESSAGE
      * @param string|array $indexSpec
      * @return string
      */
-    protected function convertIndexSpec($indexSpec)
+    protected function convertIndexSpec(array $indexSpec): string
     {
         // Return already converted spec
         if (!is_array($indexSpec)
@@ -636,7 +636,7 @@ MESSAGE
      * @param string $fieldName - The field to check
      * @return bool - True if the table exists and the field exists on the table
      */
-    public function hasField($tableName, $fieldName)
+    public function hasField(string $tableName, string $fieldName): bool
     {
         if (!$this->hasTable($tableName)) {
             return false;
@@ -655,7 +655,7 @@ MESSAGE
      *  be prepared as a direct SQL framgment ready for insertion into ALTER TABLE. In this case you'll
      *  need to take care of database abstraction in your DBField subclass.
      */
-    public function requireField($table, $field, $spec)
+    public function requireField(string $table, string $field, string|array $spec): void
     {
         //TODO: this is starting to get extremely fragmented.
         //There are two different versions of $spec floating around, and their content changes depending
@@ -761,7 +761,7 @@ MESSAGE
      * @param string $table
      * @param string $fieldName
      */
-    public function dontRequireField($table, $fieldName)
+    public function dontRequireField(string $table, string $fieldName): void
     {
         $fieldList = $this->fieldList($table);
         if (array_key_exists($fieldName, $fieldList ?? [])) {
@@ -785,7 +785,7 @@ MESSAGE
      * @param string $message to display
      * @param string $type one of [created|changed|repaired|obsolete|deleted|error]
      */
-    public function alterationMessage($message, $type = "")
+    public function alterationMessage(string $message, string $type = ""): void
     {
         if (!$this->supressOutput) {
             if (Director::is_cli()) {
@@ -858,7 +858,7 @@ MESSAGE
      *
      * @param string $tableName Name of table in desired case
      */
-    public function fixTableCase($tableName)
+    public function fixTableCase(string $tableName): void
     {
         // Check if table exists
         $tables = $this->tableList();
@@ -1060,7 +1060,7 @@ MESSAGE
      * @param string $tableName
      * @return boolean
      */
-    public function clearCachedFieldlist($tableName = null)
+    public function clearCachedFieldlist($tableName = null): bool
     {
         return true;
     }

@@ -24,7 +24,7 @@ class GridFieldLazyLoader extends AbstractGridFieldComponent implements GridFiel
      * @param SS_List $dataList
      * @return SS_List
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, SS_List $dataList): SilverStripe\ORM\ArrayList
     {
         // If we are lazy loading an empty the list
         if ($this->isLazy($gridField)) {
@@ -45,7 +45,7 @@ class GridFieldLazyLoader extends AbstractGridFieldComponent implements GridFiel
      * @param GridField $gridField
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $gridField->addExtraClass($this->isLazy($gridField) ?
             'grid-field--lazy-loadable' :
@@ -58,7 +58,7 @@ class GridFieldLazyLoader extends AbstractGridFieldComponent implements GridFiel
      * @param GridField $gridField
      * @return bool
      */
-    private function isLazy(GridField $gridField)
+    private function isLazy(GridField $gridField): bool
     {
         return
             $gridField->getRequest()->getHeader('X-Pjax') !== 'CurrentField' &&
@@ -70,7 +70,7 @@ class GridFieldLazyLoader extends AbstractGridFieldComponent implements GridFiel
      * @param FormField $field
      * @return bool
      */
-    private function isInTabSet(FormField $field)
+    private function isInTabSet(FormField $field): bool
     {
         $list = $field->getContainerFieldList();
         if ($list && $containerField = $list->getContainerField()) {

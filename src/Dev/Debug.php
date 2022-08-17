@@ -57,7 +57,7 @@ class Debug
      *
      * @return array
      */
-    public static function caller()
+    public static function caller(): array
     {
         $bt = debug_backtrace();
         $caller = isset($bt[2]) ? $bt[2] : [];
@@ -116,7 +116,7 @@ class Debug
      * @param HTTPRequest $request
      * @return string
      */
-    public static function text($val, HTTPRequest $request = null)
+    public static function text(SilverStripe\Forms\TextField $val, HTTPRequest $request = null): string
     {
         return static::create_debug_view($request)
             ->debugVariableText($val);
@@ -130,7 +130,7 @@ class Debug
      * @param bool $showHeader
      * @param HTTPRequest|null $request
      */
-    public static function message($message, $showHeader = true, HTTPRequest $request = null)
+    public static function message(string $message, $showHeader = true, HTTPRequest $request = null): void
     {
         // Don't show on live
         if (Director::isLive()) {
@@ -147,7 +147,7 @@ class Debug
      * @param HTTPRequest $request Optional request to target this view for
      * @return DebugView
      */
-    public static function create_debug_view(HTTPRequest $request = null)
+    public static function create_debug_view(HTTPRequest $request = null): SilverStripe\Dev\DebugView
     {
         $service = static::supportsHTML($request)
             ? DebugView::class
@@ -161,7 +161,7 @@ class Debug
      * @param HTTPRequest $request
      * @return bool
      */
-    protected static function supportsHTML(HTTPRequest $request = null)
+    protected static function supportsHTML(HTTPRequest $request = null): bool
     {
         // No HTML output in CLI
         if (Director::is_cli()) {

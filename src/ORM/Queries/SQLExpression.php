@@ -36,7 +36,7 @@ abstract class SQLExpression
      * @param string $old The old text (escaped)
      * @param string $new The new text (escaped)
      */
-    public function replaceText($old, $new)
+    public function replaceText(string $old, string $new): void
     {
         $this->replacementsOld[] = $old;
         $this->replacementsNew[] = $new;
@@ -68,7 +68,7 @@ abstract class SQLExpression
      * @param string $old Name of the old table (unquoted, escaped)
      * @param string $new Name of the new table (unquoted, escaped)
      */
-    public function renameTable($old, $new)
+    public function renameTable(string $old, string $new): void
     {
         $this->replaceText("`$old`", "`$new`");
         $this->replaceText("\"$old\"", "\"$new\"");
@@ -88,7 +88,7 @@ abstract class SQLExpression
      * @param array $parameters Out variable for parameters required for this query
      * @return string The completed SQL query
      */
-    public function sql(&$parameters = [])
+    public function sql(array &$parameters = []): string|null
     {
         // Build each component as needed
         $sql = DB::build_sql($this, $parameters);
@@ -109,7 +109,7 @@ abstract class SQLExpression
      *
      * @return Query
      */
-    public function execute()
+    public function execute(): SilverStripe\ORM\Connect\MySQLQuery
     {
         $sql = $this->sql($parameters);
         return DB::prepared_query($sql, $parameters);
@@ -121,7 +121,7 @@ abstract class SQLExpression
      *
      * @param SQLExpression $object The object to copy properties to
      */
-    protected function copyTo(SQLExpression $object)
+    protected function copyTo(SQLExpression $object): void
     {
         $target = array_keys(get_object_vars($object));
         foreach (get_object_vars($this) as $variable => $value) {

@@ -41,7 +41,7 @@ class SelectionGroup extends CompositeField
      * @param array $items The list of {@link SelectionGroup_Item}
      * @param mixed $value
      */
-    public function __construct($name, $items, $value = null)
+    public function __construct(string $name, array $items, $value = null): void
     {
         if ($value !== null) {
             $this->setValue($value);
@@ -68,12 +68,12 @@ class SelectionGroup extends CompositeField
         $this->setName($name);
     }
 
-    public function FieldSet()
+    public function FieldSet(): SilverStripe\ORM\ArrayList
     {
         return $this->FieldList();
     }
 
-    public function FieldList()
+    public function FieldList(): SilverStripe\ORM\ArrayList
     {
         $items = parent::FieldList()->toArray();
         $count = 0;
@@ -113,12 +113,12 @@ class SelectionGroup extends CompositeField
         return new ArrayList($newItems);
     }
 
-    public function hasData()
+    public function hasData(): bool
     {
         return true;
     }
 
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         return parent::FieldHolder($properties);
     }

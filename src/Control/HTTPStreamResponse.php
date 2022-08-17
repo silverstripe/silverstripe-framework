@@ -35,7 +35,7 @@ class HTTPStreamResponse extends HTTPResponse
      * @param int $statusCode The numeric status code - 200, 404, etc
      * @param string $statusDescription The text to be given alongside the status code.
      */
-    public function __construct($stream, $contentLength, $statusCode = null, $statusDescription = null)
+    public function __construct(resource $stream, int $contentLength, $statusCode = null, $statusDescription = null): void
     {
         parent::__construct(null, $statusCode, $statusDescription);
         $this->setStream($stream);
@@ -49,7 +49,7 @@ class HTTPStreamResponse extends HTTPResponse
      *
      * @return bool
      */
-    protected function isSeekable()
+    protected function isSeekable(): bool
     {
         $stream = $this->getStream();
         if (!$stream) {
@@ -62,7 +62,7 @@ class HTTPStreamResponse extends HTTPResponse
     /**
      * @return resource
      */
-    public function getStream()
+    public function getStream(): resource
     {
         return $this->stream;
     }
@@ -71,7 +71,7 @@ class HTTPStreamResponse extends HTTPResponse
      * @param resource $stream
      * @return $this
      */
-    public function setStream($stream)
+    public function setStream(resource $stream): SilverStripe\Control\HTTPStreamResponse
     {
         $this->setBody(null);
         $this->stream = $stream;
@@ -83,12 +83,12 @@ class HTTPStreamResponse extends HTTPResponse
      *
      * @return string
      */
-    public function getSavedBody()
+    public function getSavedBody(): null
     {
         return parent::getBody();
     }
 
-    public function getBody()
+    public function getBody(): string
     {
         $body = $this->getSavedBody();
         if (isset($body)) {
@@ -116,7 +116,7 @@ class HTTPStreamResponse extends HTTPResponse
      * @return mixed Result of $callback($stream) or null if no stream available
      * @throws BadMethodCallException Throws exception if stream can't be re-consumed
      */
-    protected function consumeStream($callback)
+    protected function consumeStream(callable $callback): null|string
     {
         // Load from stream
         $stream = $this->getStream();
@@ -142,7 +142,7 @@ class HTTPStreamResponse extends HTTPResponse
     /**
      * Output body of this response to the browser
      */
-    protected function outputBody()
+    protected function outputBody(): void
     {
         // If the output has been overwritten, or the stream is irreversible and has
         // already been consumed, return the cached body.

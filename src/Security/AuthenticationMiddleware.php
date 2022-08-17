@@ -21,7 +21,7 @@ class AuthenticationMiddleware implements HTTPMiddleware
     /**
      * @return AuthenticationHandler
      */
-    public function getAuthenticationHandler()
+    public function getAuthenticationHandler(): SilverStripe\Security\RequestAuthenticationHandler
     {
         return $this->authenticationHandler;
     }
@@ -30,7 +30,7 @@ class AuthenticationMiddleware implements HTTPMiddleware
      * @param AuthenticationHandler $authenticationHandler
      * @return $this
      */
-    public function setAuthenticationHandler(AuthenticationHandler $authenticationHandler)
+    public function setAuthenticationHandler(AuthenticationHandler $authenticationHandler): SilverStripe\Security\AuthenticationMiddleware
     {
         $this->authenticationHandler = $authenticationHandler;
         return $this;
@@ -43,7 +43,7 @@ class AuthenticationMiddleware implements HTTPMiddleware
      * @param callable $delegate
      * @return HTTPResponse
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         try {
             $this

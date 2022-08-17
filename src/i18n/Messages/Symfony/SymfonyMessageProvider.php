@@ -38,7 +38,7 @@ class SymfonyMessageProvider implements MessageProvider
     /**
      * @return Translator
      */
-    public function getTranslator()
+    public function getTranslator(): Symfony\Component\Translation\Translator
     {
         return $this->translator;
     }
@@ -47,7 +47,7 @@ class SymfonyMessageProvider implements MessageProvider
      * @param Translator $translator
      * @return $this
      */
-    public function setTranslator($translator)
+    public function setTranslator(Symfony\Component\Translation\Translator $translator): SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider
     {
         $this->translator = $translator;
         foreach ($translator->getFallbackLocales() as $locale) {
@@ -61,7 +61,7 @@ class SymfonyMessageProvider implements MessageProvider
      *
      * @param string $locale
      */
-    protected function load($locale)
+    protected function load(string $locale): void
     {
         if (isset($this->loadedLocales[$locale])) {
             return;
@@ -84,7 +84,7 @@ class SymfonyMessageProvider implements MessageProvider
         $this->loadedLocales[$locale] = true;
     }
 
-    public function translate($entity, $default, $injection)
+    public function translate(string $entity, string $default, array $injection): string
     {
         // Ensure localisation is ready
         $locale = i18n::get_locale();
@@ -104,7 +104,7 @@ class SymfonyMessageProvider implements MessageProvider
         return $result;
     }
 
-    public function pluralise($entity, $default, $injection, $count)
+    public function pluralise(string $entity, string $default, array $injection, int|float|string $count): string
     {
         if (is_array($default)) {
             $default = $this->normalisePlurals($default);
@@ -136,7 +136,7 @@ class SymfonyMessageProvider implements MessageProvider
      *
      * @return array
      */
-    public function getSourceDirs()
+    public function getSourceDirs(): array
     {
         if (!$this->sourceDirs) {
             $this->setSourceDirs(i18n::getSources()->getLangDirs());
@@ -150,7 +150,7 @@ class SymfonyMessageProvider implements MessageProvider
      * @param array $sourceDirs
      * @return $this
      */
-    public function setSourceDirs($sourceDirs)
+    public function setSourceDirs(array $sourceDirs): SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider
     {
         $this->sourceDirs = $sourceDirs;
         return $this;
@@ -162,7 +162,7 @@ class SymfonyMessageProvider implements MessageProvider
      * @param array $injection
      * @return array Injection array with all keys surrounded with {} placeholders
      */
-    protected function templateInjection($injection)
+    protected function templateInjection(array $injection): array
     {
         $injection = $injection ?: [];
         // Rewrite injection to {} surrounded placeholders

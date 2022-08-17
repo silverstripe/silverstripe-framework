@@ -18,7 +18,7 @@ class RequestHandlerMiddlewareAdapter extends RequestHandler
      */
     protected $requestHandler = null;
 
-    public function __construct(RequestHandler $handler = null)
+    public function __construct(RequestHandler $handler = null): void
     {
         if ($handler) {
             $this->setRequestHandler($handler);
@@ -34,7 +34,7 @@ class RequestHandlerMiddlewareAdapter extends RequestHandler
     /**
      * @return RequestHandler
      */
-    public function getRequestHandler()
+    public function getRequestHandler(): SilverStripe\Control\Tests\DirectorTest\TestController
     {
         return $this->requestHandler;
     }
@@ -43,13 +43,13 @@ class RequestHandlerMiddlewareAdapter extends RequestHandler
      * @param RequestHandler $requestHandler
      * @return $this
      */
-    public function setRequestHandler(RequestHandler $requestHandler)
+    public function setRequestHandler(RequestHandler $requestHandler): SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter
     {
         $this->requestHandler = $requestHandler;
         return $this;
     }
 
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         return $this->callMiddleware($request, function (HTTPRequest $request) {
             $this->setRequest($request);

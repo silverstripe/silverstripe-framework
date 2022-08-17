@@ -91,7 +91,7 @@ class Group extends DataObject
         'Sort' => true,
     ];
 
-    public function getAllChildren()
+    public function getAllChildren(): SilverStripe\ORM\ArrayList
     {
         $doSet = new ArrayList();
 
@@ -105,7 +105,7 @@ class Group extends DataObject
         return $doSet;
     }
 
-    private function getDecodedBreadcrumbs()
+    private function getDecodedBreadcrumbs(): SilverStripe\ORM\ArrayList
     {
         $list = Group::get()->exclude('ID', $this->ID);
         $groups = ArrayList::create();
@@ -122,7 +122,7 @@ class Group extends DataObject
      * @skipUpgrade
      * @return FieldList
      */
-    public function getCMSFields()
+    public function getCMSFields(): SilverStripe\Forms\FieldList
     {
         $fields = new FieldList(
             new TabSet(
@@ -292,7 +292,7 @@ class Group extends DataObject
      * @return array
      * @skipUpgrade
      */
-    public function fieldLabels($includerelations = true)
+    public function fieldLabels($includerelations = true): array
     {
         $labels = parent::fieldLabels($includerelations);
         $labels['Title'] = _t(__CLASS__ . '.GROUPNAME', 'Group name');
@@ -317,7 +317,7 @@ class Group extends DataObject
      * @param string $filter
      * @return ManyManyList
      */
-    public function Members($filter = '')
+    public function Members($filter = ''): SilverStripe\Auditor\AuditHookManyManyList
     {
         // First get direct members as a base result
         $result = $this->DirectMembers();
@@ -347,7 +347,7 @@ class Group extends DataObject
     /**
      * Return only the members directly added to this group
      */
-    public function DirectMembers()
+    public function DirectMembers(): SilverStripe\Auditor\AuditHookManyManyList
     {
         return $this->getManyManyComponents('Members');
     }
@@ -358,7 +358,7 @@ class Group extends DataObject
      *
      * @return array
      */
-    public function collateFamilyIDs()
+    public function collateFamilyIDs(): array
     {
         if (!$this->exists()) {
             throw new \InvalidArgumentException("Cannot call collateFamilyIDs on unsaved Group.");
@@ -383,7 +383,7 @@ class Group extends DataObject
      *
      * @return array
      */
-    public function collateAncestorIDs()
+    public function collateAncestorIDs(): array
     {
         $parent = $this;
         $items = [];
@@ -400,7 +400,7 @@ class Group extends DataObject
      * @param string|int|Group $group Group instance, Group Code or ID
      * @return bool Returns TRUE if the Group is a child of the given group, otherwise FALSE
      */
-    public function inGroup($group)
+    public function inGroup(int|string|SilverStripe\Security\Group $group): bool
     {
         return in_array($this->identifierToGroupID($group), $this->collateAncestorIDs() ?? []);
     }
@@ -412,7 +412,7 @@ class Group extends DataObject
      * @param bool $requireAll set to TRUE if must be in ALL groups, or FALSE if must be in ANY
      * @return bool Returns TRUE if the Group is a child of any of the given groups, otherwise FALSE
      */
-    public function inGroups($groups, $requireAll = false)
+    public function inGroups(array $groups, bool $requireAll = false): bool
     {
         $ancestorIDs = $this->collateAncestorIDs();
         $candidateIDs = [];
@@ -440,7 +440,7 @@ class Group extends DataObject
      * @param string|int|Group $groupID Group instance, Group Code or ID
      * @return int|null the Group ID or NULL if not found
      */
-    protected function identifierToGroupID($groupID)
+    protected function identifierToGroupID(int|string|SilverStripe\Security\Group $groupID): int|null
     {
         if (is_numeric($groupID) && Group::get()->byID($groupID)) {
             return $groupID;
@@ -463,7 +463,7 @@ class Group extends DataObject
     /**
      * Override this so groups are ordered in the CMS
      */
-    public function stageChildren()
+    public function stageChildren(): SilverStripe\ORM\DataList
     {
         return Group::get()
             ->filter("ParentID", $this->ID)
@@ -474,7 +474,7 @@ class Group extends DataObject
     /**
      * @return string
      */
-    public function getTreeTitle()
+    public function getTreeTitle(): string
     {
         $title = htmlspecialchars($this->Title ?? '', ENT_QUOTES);
         $this->extend('updateTreeTitle', $title);
@@ -486,12 +486,12 @@ class Group extends DataObject
      *
      * @param string $val
      */
-    public function setCode($val)
+    public function setCode(string $val): void
     {
         $this->setField('Code', Convert::raw2url($val));
     }
 
-    public function validate()
+    public function validate(): SilverStripe\ORM\ValidationResult
     {
         $result = parent::validate();
 
@@ -543,7 +543,7 @@ class Group extends DataObject
         return $validator;
     }
 
-    public function onBeforeWrite()
+    public function onBeforeWrite(): void
     {
         parent::onBeforeWrite();
 
@@ -558,7 +558,7 @@ class Group extends DataObject
         $this->dedupeCode();
     }
 
-    public function onBeforeDelete()
+    public function onBeforeDelete(): void
     {
         parent::onBeforeDelete();
 
@@ -580,7 +580,7 @@ class Group extends DataObject
      * @param Member $member Member
      * @return boolean
      */
-    public function canEdit($member = null)
+    public function canEdit(SilverStripe\Security\Member $member = null): bool
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -616,7 +616,7 @@ class Group extends DataObject
      * @param Member $member
      * @return boolean
      */
-    public function canView($member = null)
+    public function canView($member = null): bool
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -638,7 +638,7 @@ class Group extends DataObject
         return false;
     }
 
-    public function canDelete($member = null)
+    public function canDelete($member = null): bool
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -661,7 +661,7 @@ class Group extends DataObject
      *
      * @return ArrayList
      */
-    public function AllChildrenIncludingDeleted()
+    public function AllChildrenIncludingDeleted(): SilverStripe\ORM\ArrayList
     {
         $children = parent::AllChildrenIncludingDeleted();
 
@@ -685,7 +685,7 @@ class Group extends DataObject
      * This function is called whenever the database is built, after the
      * database tables have all been created.
      */
-    public function requireDefaultRecords()
+    public function requireDefaultRecords(): void
     {
         parent::requireDefaultRecords();
 

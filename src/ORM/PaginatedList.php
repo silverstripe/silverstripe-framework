@@ -33,7 +33,7 @@ class PaginatedList extends ListDecorator
      *        request object that the pagination offset is read from.
      * @throws Exception
      */
-    public function __construct(SS_List $list, $request = [])
+    public function __construct(SS_List $list, SilverStripe\Control\HTTPRequest|array $request = []): void
     {
         if (!is_array($request) && !$request instanceof ArrayAccess) {
             throw new Exception('The request must be readable as an array.');
@@ -52,7 +52,7 @@ class PaginatedList extends ListDecorator
      *
      * @return string
      */
-    public function getPaginationGetVar()
+    public function getPaginationGetVar(): string
     {
         return $this->getVar;
     }
@@ -63,7 +63,7 @@ class PaginatedList extends ListDecorator
      * @param string $var
      * @return $this
      */
-    public function setPaginationGetVar($var)
+    public function setPaginationGetVar(string $var): SilverStripe\ORM\PaginatedList
     {
         $this->getVar = $var;
         return $this;
@@ -74,7 +74,7 @@ class PaginatedList extends ListDecorator
      *
      * @return int
      */
-    public function getPageLength()
+    public function getPageLength(): int
     {
         return $this->pageLength;
     }
@@ -85,7 +85,7 @@ class PaginatedList extends ListDecorator
      * @param int $length
      * @return $this
      */
-    public function setPageLength($length)
+    public function setPageLength(int $length): SilverStripe\ORM\PaginatedList
     {
         $this->pageLength = (int)$length;
         return $this;
@@ -97,7 +97,7 @@ class PaginatedList extends ListDecorator
      * @param int $page Page index beginning with 1
      * @return $this
      */
-    public function setCurrentPage($page)
+    public function setCurrentPage(int $page): SilverStripe\ORM\PaginatedList
     {
         $this->pageStart = ((int)$page - 1) * $this->getPageLength();
         return $this;
@@ -108,7 +108,7 @@ class PaginatedList extends ListDecorator
      *
      * @return int
      */
-    public function getPageStart()
+    public function getPageStart(): int
     {
         $request = $this->getRequest();
         if ($this->pageStart === null) {
@@ -132,7 +132,7 @@ class PaginatedList extends ListDecorator
      * @param int $start
      * @return $this
      */
-    public function setPageStart($start)
+    public function setPageStart(int $start): SilverStripe\ORM\PaginatedList
     {
         $this->pageStart = (int)$start;
         return $this;
@@ -143,7 +143,7 @@ class PaginatedList extends ListDecorator
      *
      * @return int
      */
-    public function getTotalItems()
+    public function getTotalItems(): int
     {
         if ($this->totalItems === null) {
             $this->totalItems = count($this->list ?? []);
@@ -159,7 +159,7 @@ class PaginatedList extends ListDecorator
      * @param int $items
      * @return $this
      */
-    public function setTotalItems($items)
+    public function setTotalItems(int $items): SilverStripe\ORM\PaginatedList
     {
         $this->totalItems = (int)$items;
         return $this;
@@ -172,7 +172,7 @@ class PaginatedList extends ListDecorator
      * @param SQLSelect $query
      * @return $this
      */
-    public function setPaginationFromQuery(SQLSelect $query)
+    public function setPaginationFromQuery(SQLSelect $query): SilverStripe\ORM\PaginatedList
     {
         if ($limit = $query->getLimit()) {
             $this->setPageLength($limit['limit']);
@@ -202,7 +202,7 @@ class PaginatedList extends ListDecorator
      * @param bool $limit
      * @return $this
      */
-    public function setLimitItems($limit)
+    public function setLimitItems(bool $limit): SilverStripe\ORM\PaginatedList
     {
         $this->limitItems = (bool)$limit;
         return $this;
@@ -212,7 +212,7 @@ class PaginatedList extends ListDecorator
      * @return IteratorIterator
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): IteratorIterator
     {
         $pageLength = $this->getPageLength();
         if ($this->limitItems && $pageLength) {
@@ -236,7 +236,7 @@ class PaginatedList extends ListDecorator
      * @param  int $max
      * @return SS_List
      */
-    public function Pages($max = null)
+    public function Pages(int $max = null): SilverStripe\ORM\ArrayList
     {
         $result = new ArrayList();
 
@@ -308,7 +308,7 @@ class PaginatedList extends ListDecorator
      *         are displayed on either side of the current one.
      * @return SS_List
      */
-    public function PaginationSummary($context = 4)
+    public function PaginationSummary(int|string $context = 4): SilverStripe\ORM\ArrayList
     {
         $result = new ArrayList();
         $current = $this->CurrentPage();
@@ -368,7 +368,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return int
      */
-    public function CurrentPage()
+    public function CurrentPage(): float|int
     {
         $pageLength = $this->getPageLength();
         return $pageLength
@@ -379,7 +379,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return int
      */
-    public function TotalPages()
+    public function TotalPages(): float|int
     {
         $pageLength = $this->getPageLength();
         return $pageLength
@@ -390,7 +390,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
-    public function MoreThanOnePage()
+    public function MoreThanOnePage(): bool
     {
         return $this->TotalPages() > 1;
     }
@@ -398,7 +398,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
-    public function FirstPage()
+    public function FirstPage(): bool
     {
         return $this->CurrentPage() == 1;
     }
@@ -406,7 +406,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
-    public function NotFirstPage()
+    public function NotFirstPage(): bool
     {
         return !$this->FirstPage();
     }
@@ -414,7 +414,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
-    public function LastPage()
+    public function LastPage(): bool
     {
         return $this->CurrentPage() == $this->TotalPages();
     }
@@ -422,7 +422,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return bool
      */
-    public function NotLastPage()
+    public function NotLastPage(): bool
     {
         return !$this->LastPage();
     }
@@ -433,7 +433,7 @@ class PaginatedList extends ListDecorator
      *
      * @return int
      */
-    public function FirstItem()
+    public function FirstItem(): int
     {
         return ($start = $this->getPageStart()) ? $start + 1 : 1;
     }
@@ -443,7 +443,7 @@ class PaginatedList extends ListDecorator
      *
      * @return int
      */
-    public function LastItem()
+    public function LastItem(): int
     {
         $pageLength = $this->getPageLength();
         if (!$pageLength) {
@@ -460,7 +460,7 @@ class PaginatedList extends ListDecorator
      *
      * @return string
      */
-    public function FirstLink()
+    public function FirstLink(): string
     {
         return HTTP::setGetVar(
             $this->getPaginationGetVar(),
@@ -474,7 +474,7 @@ class PaginatedList extends ListDecorator
      *
      * @return string
      */
-    public function LastLink()
+    public function LastLink(): string
     {
         return HTTP::setGetVar(
             $this->getPaginationGetVar(),
@@ -489,7 +489,7 @@ class PaginatedList extends ListDecorator
      *
      * @return string
      */
-    public function NextLink()
+    public function NextLink(): string|nothing
     {
         if ($this->NotLastPage()) {
             return HTTP::setGetVar(
@@ -506,7 +506,7 @@ class PaginatedList extends ListDecorator
      *
      * @return string
      */
-    public function PrevLink()
+    public function PrevLink(): void|string
     {
         if ($this->NotFirstPage()) {
             return HTTP::setGetVar(
@@ -530,7 +530,7 @@ class PaginatedList extends ListDecorator
      *
      * @param HTTPRequest|ArrayAccess $request
      */
-    public function setRequest($request)
+    public function setRequest(SilverStripe\Control\HTTPRequest|array $request): void
     {
         $this->request = $request;
     }
@@ -538,7 +538,7 @@ class PaginatedList extends ListDecorator
     /**
      * Get the request object for this list
      */
-    public function getRequest()
+    public function getRequest(): array|SilverStripe\Control\HTTPRequest
     {
         return $this->request;
     }

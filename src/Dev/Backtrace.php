@@ -70,7 +70,7 @@ class Backtrace
      * @param null|array $ignoredFunctions List of extra functions to filter out
      * @return array
      */
-    public static function filter_backtrace($bt, $ignoredFunctions = null)
+    public static function filter_backtrace(array $bt, $ignoredFunctions = null): array
     {
         $defaultIgnoredFunctions = [
             'SilverStripe\\Logging\\Log::log',
@@ -160,7 +160,7 @@ class Backtrace
      * @param int $argCharLimit
      * @return string
      */
-    public static function full_func_name($item, $showArgs = false, $argCharLimit = 10000)
+    public static function full_func_name(array $item, bool $showArgs = false, int $argCharLimit = 10000): string
     {
         $funcName = '';
         if (isset($item['class'])) {
@@ -198,7 +198,7 @@ class Backtrace
      * @param array $ignoredFunctions List of functions that should be ignored. If not set, a default is provided
      * @return string The rendered backtrace
      */
-    public static function get_rendered_backtrace($bt, $plainText = false, $ignoredFunctions = null)
+    public static function get_rendered_backtrace(array $bt, bool $plainText = false, $ignoredFunctions = null): string
     {
         if (empty($bt)) {
             return '';

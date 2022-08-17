@@ -18,7 +18,7 @@ class AjaxBypass implements Bypass
      *
      * @return bool
      */
-    public function checkRequestForBypass(HTTPRequest $request)
+    public function checkRequestForBypass(HTTPRequest $request): bool
     {
         return $request->isAjax();
     }

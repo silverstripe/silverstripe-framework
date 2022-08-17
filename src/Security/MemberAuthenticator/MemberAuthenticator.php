@@ -24,14 +24,14 @@ class MemberAuthenticator implements Authenticator
 {
     use Extensible;
 
-    public function supportedServices()
+    public function supportedServices(): int
     {
         // Bitwise-OR of all the supported services in this Authenticator, to make a bitmask
         return Authenticator::LOGIN | Authenticator::LOGOUT | Authenticator::CHANGE_PASSWORD
             | Authenticator::RESET_PASSWORD | Authenticator::CHECK_PASSWORD;
     }
 
-    public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null)
+    public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null): SilverStripe\Security\Member|null
     {
         // Find authenticated member
         if (class_exists(Versioned::class)) {
@@ -63,7 +63,7 @@ class MemberAuthenticator implements Authenticator
      * @param Member $member This third parameter is used in the CMSAuthenticator(s)
      * @return Member Found member, regardless of successful login
      */
-    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
+    protected function authenticateMember(array $data, ValidationResult &$result = null, Member $member = null): SilverStripe\Security\Member|null
     {
         $email = !empty($data['Email']) ? $data['Email'] : null;
         $result = $result ?: ValidationResult::create();
@@ -137,7 +137,7 @@ class MemberAuthenticator implements Authenticator
      * @param ValidationResult $result
      * @return ValidationResult
      */
-    public function checkPassword(Member $member, $password, ValidationResult &$result = null)
+    public function checkPassword(Member $member, string $password, ValidationResult &$result = null): SilverStripe\ORM\ValidationResult
     {
         // Check if allowed to login
         $result = $member->validateCanLogin($result);
@@ -177,7 +177,7 @@ class MemberAuthenticator implements Authenticator
      * @param boolean $success
      * @return LoginAttempt|null
      */
-    protected function recordLoginAttempt($data, HTTPRequest $request, $member, $success)
+    protected function recordLoginAttempt(array $data, HTTPRequest $request, SilverStripe\Security\Member $member, bool $success): SilverStripe\Security\LoginAttempt
     {
         if (!Security::config()->get('login_recording')
             && !Member::config()->get('lock_out_after_incorrect_logins')
@@ -228,7 +228,7 @@ class MemberAuthenticator implements Authenticator
      * @param string $link
      * @return LostPasswordHandler
      */
-    public function getLostPasswordHandler($link)
+    public function getLostPasswordHandler(string $link): SilverStripe\Security\MemberAuthenticator\LostPasswordHandler
     {
         return LostPasswordHandler::create($link, $this);
     }
@@ -237,7 +237,7 @@ class MemberAuthenticator implements Authenticator
      * @param string $link
      * @return ChangePasswordHandler
      */
-    public function getChangePasswordHandler($link)
+    public function getChangePasswordHandler(string $link): SilverStripe\Security\MemberAuthenticator\ChangePasswordHandler
     {
         return ChangePasswordHandler::create($link, $this);
     }
@@ -246,7 +246,7 @@ class MemberAuthenticator implements Authenticator
      * @param string $link
      * @return LoginHandler
      */
-    public function getLoginHandler($link)
+    public function getLoginHandler(string $link): SilverStripe\Security\MemberAuthenticator\LoginHandler
     {
         return LoginHandler::create($link, $this);
     }
@@ -255,7 +255,7 @@ class MemberAuthenticator implements Authenticator
      * @param string $link
      * @return LogoutHandler
      */
-    public function getLogoutHandler($link)
+    public function getLogoutHandler(string $link): SilverStripe\Security\MemberAuthenticator\LogoutHandler
     {
         return LogoutHandler::create($link, $this);
     }

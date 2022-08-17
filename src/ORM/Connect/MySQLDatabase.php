@@ -73,7 +73,7 @@ class MySQLDatabase extends Database implements TransactionManager
      */
     private static $collation = 'utf8_general_ci';
 
-    public function connect($parameters)
+    public function connect(array $parameters): void
     {
         // Ensure that driver is available (required by PDO)
         if (empty($parameters['driver'])) {
@@ -113,7 +113,7 @@ class MySQLDatabase extends Database implements TransactionManager
      *
      * @param string $mode Connection mode
      */
-    public function setSQLMode($mode)
+    public function setSQLMode(string $mode): void
     {
         if (empty($mode)) {
             return;
@@ -134,7 +134,7 @@ class MySQLDatabase extends Database implements TransactionManager
         $this->preparedQuery("SET SESSION time_zone = ?", [$timezone]);
     }
 
-    public function supportsCollations()
+    public function supportsCollations(): bool
     {
         return true;
     }
@@ -144,7 +144,7 @@ class MySQLDatabase extends Database implements TransactionManager
         return true;
     }
 
-    public function getDatabaseServer()
+    public function getDatabaseServer(): string
     {
         return "mysql";
     }
@@ -172,7 +172,7 @@ class MySQLDatabase extends Database implements TransactionManager
      * @throws Exception
      */
     public function searchEngine(
-        $classesToSearch,
+        array $classesToSearch,
         $keywords,
         $start,
         $pageLength,
@@ -181,7 +181,7 @@ class MySQLDatabase extends Database implements TransactionManager
         $booleanSearch = false,
         $alternativeFileFilter = "",
         $invertedMatch = false
-    ) {
+    ): SilverStripe\ORM\PaginatedList {
         $pageClass = SiteTree::class;
         $fileClass = File::class;
         if (!class_exists($pageClass ?? '')) {
@@ -322,7 +322,7 @@ class MySQLDatabase extends Database implements TransactionManager
      *
      * @return TransactionManager
      */
-    protected function getTransactionManager()
+    protected function getTransactionManager(): SilverStripe\ORM\Connect\NestedTransactionManager
     {
         if (!$this->transactionManager) {
             // PDOConnector providers this
@@ -335,16 +335,16 @@ class MySQLDatabase extends Database implements TransactionManager
         }
         return $this->transactionManager;
     }
-    public function supportsTransactions()
+    public function supportsTransactions(): bool
     {
         return true;
     }
-    public function supportsSavepoints()
+    public function supportsSavepoints(): bool
     {
         return $this->getTransactionManager()->supportsSavepoints();
     }
 
-    public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
+    public function transactionStart(bool|string $transactionMode = false, $sessionCharacteristics = false): void
     {
         $this->getTransactionManager()->transactionStart($transactionMode, $sessionCharacteristics);
     }
@@ -354,17 +354,17 @@ class MySQLDatabase extends Database implements TransactionManager
         $this->getTransactionManager()->transactionSavepoint($savepoint);
     }
 
-    public function transactionRollback($savepoint = false)
+    public function transactionRollback($savepoint = false): null
     {
         return $this->getTransactionManager()->transactionRollback($savepoint);
     }
 
-    public function transactionDepth()
+    public function transactionDepth(): int
     {
         return $this->getTransactionManager()->transactionDepth();
     }
 
-    public function transactionEnd($chain = false)
+    public function transactionEnd($chain = false): null
     {
         $result = $this->getTransactionManager()->transactionEnd();
 
@@ -379,7 +379,7 @@ class MySQLDatabase extends Database implements TransactionManager
     /**
      * In error condition, set transactionNesting to zero
      */
-    protected function resetTransactionNesting()
+    protected function resetTransactionNesting(): void
     {
         // Check whether to use a connector's built-in transaction methods
         if ($this->connector instanceof TransactionalDBConnector) {
@@ -390,13 +390,13 @@ class MySQLDatabase extends Database implements TransactionManager
         $this->transactionNesting = 0;
     }
 
-    public function query($sql, $errorLevel = E_USER_ERROR)
+    public function query(string $sql, int $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         $this->inspectQuery($sql);
         return parent::query($sql, $errorLevel);
     }
 
-    public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
+    public function preparedQuery(string $sql, array $parameters, int $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         $this->inspectQuery($sql);
         return parent::preparedQuery($sql, $parameters, $errorLevel);
@@ -407,7 +407,7 @@ class MySQLDatabase extends Database implements TransactionManager
      *
      * @param string $sql
      */
-    protected function inspectQuery($sql)
+    protected function inspectQuery(string $sql): void
     {
         // Any DDL discards transactions.
         // See https://dev.mysql.com/doc/internals/en/transactions-notes-on-ddl-and-normal-transaction.html
@@ -419,13 +419,13 @@ class MySQLDatabase extends Database implements TransactionManager
     }
 
     public function comparisonClause(
-        $field,
+        string $field,
         $value,
         $exact = false,
         $negate = false,
         $caseSensitive = null,
         $parameterised = false
-    ) {
+    ): string {
         if ($exact && $caseSensitive === null) {
             $comp = ($negate) ? '!=' : '=';
         } else {
@@ -442,7 +442,7 @@ class MySQLDatabase extends Database implements TransactionManager
         }
     }
 
-    public function formattedDatetimeClause($date, $format)
+    public function formattedDatetimeClause(string $date, string $format): string
     {
         preg_match_all('/%(.)/', $format ?? '', $matches);
         foreach ($matches[1] as $match) {
@@ -495,18 +495,18 @@ class MySQLDatabase extends Database implements TransactionManager
         return "UNIX_TIMESTAMP($date1) - UNIX_TIMESTAMP($date2)";
     }
 
-    public function supportsLocks()
+    public function supportsLocks(): bool
     {
         return true;
     }
 
-    public function canLock($name)
+    public function canLock(string $name): bool
     {
         $id = $this->getLockIdentifier($name);
         return (bool) $this->query(sprintf("SELECT IS_FREE_LOCK('%s')", $id))->value();
     }
 
-    public function getLock($name, $timeout = 5)
+    public function getLock(string $name, $timeout = 5): bool
     {
         $id = $this->getLockIdentifier($name);
 
@@ -516,13 +516,13 @@ class MySQLDatabase extends Database implements TransactionManager
         return (bool) $this->query(sprintf("SELECT GET_LOCK('%s', %d)", $id, $timeout))->value();
     }
 
-    public function releaseLock($name)
+    public function releaseLock(string $name): bool
     {
         $id = $this->getLockIdentifier($name);
         return (bool) $this->query(sprintf("SELECT RELEASE_LOCK('%s')", $id))->value();
     }
 
-    protected function getLockIdentifier($name)
+    protected function getLockIdentifier(string $name): string
     {
         // Prefix with database name
         $dbName = $this->connector->getSelectedDatabase() ;
@@ -535,7 +535,7 @@ class MySQLDatabase extends Database implements TransactionManager
         return 'NOW()';
     }
 
-    public function random()
+    public function random(): string
     {
         return 'RAND()';
     }
@@ -545,7 +545,7 @@ class MySQLDatabase extends Database implements TransactionManager
      *
      * @param string $table Name of table
      */
-    public function clearTable($table)
+    public function clearTable(string $table): void
     {
         $this->query("DELETE FROM \"$table\"");
 

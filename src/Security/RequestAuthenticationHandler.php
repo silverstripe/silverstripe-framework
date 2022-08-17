@@ -19,7 +19,7 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      *
      * @return AuthenticationHandler[]
      */
-    protected function getHandlers()
+    protected function getHandlers(): array
     {
         return $this->handlers;
     }
@@ -30,13 +30,13 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      * @param AuthenticationHandler[] $handlers
      * @return $this
      */
-    public function setHandlers(array $handlers)
+    public function setHandlers(array $handlers): SilverStripe\Security\RequestAuthenticationHandler
     {
         $this->handlers = $handlers;
         return $this;
     }
 
-    public function authenticateRequest(HTTPRequest $request)
+    public function authenticateRequest(HTTPRequest $request): void
     {
         /** @var AuthenticationHandler $handler */
         foreach ($this->getHandlers() as $name => $handler) {
@@ -55,7 +55,7 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      * @param bool $persistent
      * @param HTTPRequest $request
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
+    public function logIn(Member $member, bool $persistent = false, HTTPRequest $request = null): void
     {
         $member->beforeMemberLoggedIn();
 
@@ -72,7 +72,7 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      *
      * @param HTTPRequest $request
      */
-    public function logOut(HTTPRequest $request = null)
+    public function logOut(HTTPRequest $request = null): void
     {
         $member = Security::getCurrentUser();
         if ($member) {

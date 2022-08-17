@@ -12,7 +12,7 @@ class TestMailer implements Mailer
      */
     protected $emailsSent = [];
 
-    public function send($email)
+    public function send(SilverStripe\Control\Email\Email $email): bool
     {
         // Detect body type
         $htmlContent = null;
@@ -68,7 +68,7 @@ class TestMailer implements Mailer
      *
      * @param array $data A map of information about the email
      */
-    protected function saveEmail($data)
+    protected function saveEmail(array $data): void
     {
         $this->emailsSent[] = $data;
     }
@@ -76,7 +76,7 @@ class TestMailer implements Mailer
     /**
      * Clear the log of emails sent
      */
-    public function clearEmails()
+    public function clearEmails(): void
     {
         $this->emailsSent = [];
     }
@@ -92,7 +92,7 @@ class TestMailer implements Mailer
      * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
      *               'HtmlContent'
      */
-    public function findEmail($to, $from = null, $subject = null, $content = null)
+    public function findEmail(string $to, string $from = null, string $subject = null, string $content = null): array|null
     {
         $compare = [
             'To' => $to,
@@ -133,7 +133,7 @@ class TestMailer implements Mailer
     /**
      * @param string $value
      */
-    private function normaliseSpaces(string $value)
+    private function normaliseSpaces(string $value): string
     {
         return str_replace([', ', '; '], [',', ';'], $value ?? '');
     }

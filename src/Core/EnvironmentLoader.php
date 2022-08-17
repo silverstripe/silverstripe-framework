@@ -18,7 +18,7 @@ class EnvironmentLoader
      * @return array|null List of values parsed as an associative array, or null if not loaded
      * If overloading, this list will reflect the final state for all variables
      */
-    public function loadFile($path, $overload = false)
+    public function loadFile(string $path, bool $overload = false): array|null
     {
         // Not readable
         if (!file_exists($path ?? '') || !is_readable($path ?? '')) {

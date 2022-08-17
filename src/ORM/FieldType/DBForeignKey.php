@@ -50,13 +50,13 @@ class DBForeignKey extends DBInt
      */
     protected static $foreignListCache = [];
 
-    public function __construct($name, $object = null)
+    public function __construct(string $name, $object = null): void
     {
         $this->object = $object;
         parent::__construct($name);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, array $params = null): SilverStripe\Forms\DropdownField
     {
         if (empty($this->object)) {
             return null;
@@ -126,7 +126,7 @@ class DBForeignKey extends DBInt
         return $field;
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(int|string $value, DNADesign\Elemental\Models\ElementContent $record = null, bool $markChanged = true): void
     {
         if ($record instanceof DataObject) {
             $this->object = $record;

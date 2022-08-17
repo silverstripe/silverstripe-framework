@@ -28,7 +28,7 @@ class Requirements implements Flushable
     /**
      * Triggered early in the request when a flush is requested
      */
-    public static function flush()
+    public static function flush(): void
     {
         $disabled = Config::inst()->get(static::class, 'disable_flush_combined');
         if (!$disabled) {
@@ -41,7 +41,7 @@ class Requirements implements Flushable
      *
      * @param bool $enable
      */
-    public static function set_combined_files_enabled($enable)
+    public static function set_combined_files_enabled(bool $enable): void
     {
         self::backend()->setCombinedFilesEnabled($enable);
     }
@@ -51,7 +51,7 @@ class Requirements implements Flushable
      *
      * @return bool
      */
-    public static function get_combined_files_enabled()
+    public static function get_combined_files_enabled(): bool
     {
         return self::backend()->getCombinedFilesEnabled();
     }
@@ -100,7 +100,7 @@ class Requirements implements Flushable
     /**
      * @return Requirements_Backend
      */
-    public static function backend()
+    public static function backend(): SilverStripe\View\Requirements_Backend
     {
         if (!self::$backend) {
             self::$backend = Requirements_Backend::create();
@@ -113,7 +113,7 @@ class Requirements implements Flushable
      *
      * @param Requirements_Backend $backend
      */
-    public static function set_backend(Requirements_Backend $backend)
+    public static function set_backend(Requirements_Backend $backend): void
     {
         self::$backend = $backend;
     }
@@ -127,7 +127,7 @@ class Requirements implements Flushable
      * - 'async' : Boolean value to set async attribute to script tag
      * - 'defer' : Boolean value to set defer attribute to script tag
      */
-    public static function javascript($file, $options = [])
+    public static function javascript(string $file, array $options = []): void
     {
         self::backend()->javascript($file, $options);
     }
@@ -138,7 +138,7 @@ class Requirements implements Flushable
      * @param string     $script       The script content as a string (without enclosing `<script>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public static function customScript($script, $uniquenessID = null)
+    public static function customScript(string $script, string $uniquenessID = null): void
     {
         self::backend()->customScript($script, $uniquenessID);
     }
@@ -159,7 +159,7 @@ class Requirements implements Flushable
      * @param string     $script       CSS selectors as a string (without enclosing `<style>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public static function customCSS($script, $uniquenessID = null)
+    public static function customCSS(string $script, string $uniquenessID = null): void
     {
         self::backend()->customCSS($script, $uniquenessID);
     }
@@ -170,7 +170,7 @@ class Requirements implements Flushable
      * @param string     $html         Custom HTML code
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public static function insertHeadTags($html, $uniquenessID = null)
+    public static function insertHeadTags(string $html, $uniquenessID = null): void
     {
         self::backend()->insertHeadTags($html, $uniquenessID);
     }
@@ -198,7 +198,7 @@ class Requirements implements Flushable
      * - 'integrity' : SubResource Integrity hash
      * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public static function css($file, $media = null, $options = [])
+    public static function css(string $file, string $media = null, array $options = []): void
     {
         self::backend()->css($file, $media, $options);
     }
@@ -214,7 +214,7 @@ class Requirements implements Flushable
      * @param string $media  Comma-separated list of media types to use in the link tag
      *                       (e.g. 'screen,projector')
      */
-    public static function themedCSS($name, $media = null)
+    public static function themedCSS(string $name, string $media = null): void
     {
         self::backend()->themedCSS($name, $media);
     }
@@ -230,7 +230,7 @@ class Requirements implements Flushable
      * @param string $type  Comma-separated list of types to use in the script tag
      *                       (e.g. 'text/javascript,text/ecmascript')
      */
-    public static function themedJavascript($name, $type = null)
+    public static function themedJavascript(string $name, $type = null): void
     {
         self::backend()->themedJavascript($name, $type);
     }
@@ -243,7 +243,7 @@ class Requirements implements Flushable
      *
      * @param string|int $fileOrID
      */
-    public static function clear($fileOrID = null)
+    public static function clear($fileOrID = null): void
     {
         self::backend()->clear($fileOrID);
     }
@@ -251,7 +251,7 @@ class Requirements implements Flushable
     /**
      * Restore requirements cleared by call to Requirements::clear
      */
-    public static function restore()
+    public static function restore(): void
     {
         self::backend()->restore();
     }
@@ -269,7 +269,7 @@ class Requirements implements Flushable
      *
      * @param string|int $fileOrID
      */
-    public static function block($fileOrID)
+    public static function block(string $fileOrID): void
     {
         self::backend()->block($fileOrID);
     }
@@ -301,7 +301,7 @@ class Requirements implements Flushable
      *                             through {@link SSViewer}
      * @return string HTML content augmented with the requirements tags
      */
-    public static function includeInHTML($content)
+    public static function includeInHTML(string $content): string
     {
         if (func_num_args() > 1) {
             Deprecation::notice(
@@ -320,7 +320,7 @@ class Requirements implements Flushable
      *
      * @param HTTPResponse $response
      */
-    public static function include_in_response(HTTPResponse $response)
+    public static function include_in_response(HTTPResponse $response): void
     {
         self::backend()->includeInResponse($response);
     }
@@ -338,7 +338,7 @@ class Requirements implements Flushable
      *
      * @return array
      */
-    public static function add_i18n_javascript($langDir, $return = false, $langOnly = false)
+    public static function add_i18n_javascript(string $langDir, bool $return = false, bool $langOnly = false): null
     {
         return self::backend()->add_i18n_javascript($langDir, $return);
     }
@@ -413,7 +413,7 @@ class Requirements implements Flushable
      * Deletes all generated combined files in the configured combined files directory,
      * but doesn't delete the directory itself
      */
-    public static function delete_all_combined_files()
+    public static function delete_all_combined_files(): void
     {
         self::backend()->deleteAllCombinedFiles();
     }
@@ -421,7 +421,7 @@ class Requirements implements Flushable
     /**
      * Re-sets the combined files definition. See {@link Requirements_Backend::clear_combined_files()}
      */
-    public static function clear_combined_files()
+    public static function clear_combined_files(): void
     {
         self::backend()->clearCombinedFiles();
     }

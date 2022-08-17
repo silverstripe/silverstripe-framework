@@ -40,7 +40,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      *
      * @param boolean $removeRelation - true if removing the item from the list, but not deleting it
      */
-    public function __construct($removeRelation = false)
+    public function __construct(bool $removeRelation = false): void
     {
         $this->setRemoveRelation($removeRelation);
     }
@@ -48,7 +48,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      * @inheritdoc
      */
-    public function getTitle($gridField, $record, $columnName)
+    public function getTitle(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): string
     {
         $field = $this->getRemoveAction($gridField, $record, $columnName);
 
@@ -62,7 +62,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      * @inheritdoc
      */
-    public function getGroup($gridField, $record, $columnName)
+    public function getGroup(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): null|string
     {
         $field = $this->getRemoveAction($gridField, $record, $columnName);
 
@@ -76,7 +76,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param string $columnName
      * @return string|null the attribles for the action
      */
-    public function getExtraData($gridField, $record, $columnName)
+    public function getExtraData(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): array
     {
 
         $field = $this->getRemoveAction($gridField, $record, $columnName);
@@ -94,7 +94,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @param array $columns
      */
-    public function augmentColumns($gridField, &$columns)
+    public function augmentColumns(SilverStripe\Forms\GridField\GridField $gridField, &$columns): void
     {
         if (!in_array('Actions', $columns ?? [])) {
             $columns[] = 'Actions';
@@ -109,7 +109,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param string $columnName
      * @return array
      */
-    public function getColumnAttributes($gridField, $record, $columnName)
+    public function getColumnAttributes(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $record, string $columnName): array
     {
         return ['class' => 'grid-field__col-compact'];
     }
@@ -121,7 +121,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param string $columnName
      * @return array
      */
-    public function getColumnMetadata($gridField, $columnName)
+    public function getColumnMetadata(SilverStripe\Forms\GridField\GridField $gridField, string $columnName): array
     {
         if ($columnName == 'Actions') {
             return ['title' => ''];
@@ -134,7 +134,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return array
      */
-    public function getColumnsHandled($gridField)
+    public function getColumnsHandled(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['Actions'];
     }
@@ -145,7 +145,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return ['deleterecord', 'unlinkrelation'];
     }
@@ -157,7 +157,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param string $columnName
      * @return string|null the HTML for the column
      */
-    public function getColumnContent($gridField, $record, $columnName)
+    public function getColumnContent(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $record, string $columnName): SilverStripe\ORM\FieldType\DBHTMLText|null
     {
         $field = $this->getRemoveAction($gridField, $record, $columnName);
 
@@ -177,7 +177,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param array $data Form data
      * @throws ValidationException
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, array $arguments, array $data): void
     {
         if ($actionName == 'deleterecord' || $actionName == 'unlinkrelation') {
             /** @var DataObject $item */
@@ -213,7 +213,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param string $columnName
      * @return GridField_FormAction|null
      */
-    private function getRemoveAction($gridField, $record, $columnName)
+    private function getRemoveAction(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\UserForms\Model\EditableFormField\EditableFormStep $record, string $columnName): SilverStripe\Forms\GridField\GridField_FormAction|null
     {
         if ($this->getRemoveRelation()) {
             if (!$record->canEdit()) {
@@ -259,7 +259,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      *
      * @return bool
      */
-    public function getRemoveRelation()
+    public function getRemoveRelation(): bool
     {
         return $this->removeRelation;
     }
@@ -269,7 +269,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param bool $removeRelation
      * @return $this
      */
-    public function setRemoveRelation($removeRelation)
+    public function setRemoveRelation(bool $removeRelation): SilverStripe\Forms\GridField\GridFieldDeleteAction
     {
         $this->removeRelation = (bool) $removeRelation;
         return $this;

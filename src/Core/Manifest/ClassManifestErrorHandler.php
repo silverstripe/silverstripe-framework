@@ -19,7 +19,7 @@ class ClassManifestErrorHandler implements ErrorHandler
     /**
      * @param string $pathname
      */
-    public function __construct($pathname)
+    public function __construct(string $pathname): void
     {
         $this->pathname = $pathname;
     }

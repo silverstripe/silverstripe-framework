@@ -63,7 +63,7 @@ class BulkLoader_Result implements \Countable
      * @return int
      */
     #[\ReturnTypeWillChange]
-    public function Count()
+    public function Count(): int
     {
         return count($this->created ?? []) + count($this->updated ?? []);
     }
@@ -71,7 +71,7 @@ class BulkLoader_Result implements \Countable
     /**
      * @return int
      */
-    public function CreatedCount()
+    public function CreatedCount(): int
     {
         return count($this->created ?? []);
     }
@@ -79,7 +79,7 @@ class BulkLoader_Result implements \Countable
     /**
      * @return int
      */
-    public function UpdatedCount()
+    public function UpdatedCount(): int
     {
         return count($this->updated ?? []);
     }
@@ -87,7 +87,7 @@ class BulkLoader_Result implements \Countable
     /**
      * @return int
      */
-    public function DeletedCount()
+    public function DeletedCount(): int
     {
         return count($this->deleted ?? []);
     }
@@ -98,7 +98,7 @@ class BulkLoader_Result implements \Countable
      *
      * @return ArrayList
      */
-    public function Created()
+    public function Created(): SilverStripe\ORM\ArrayList
     {
         return $this->mapToArrayList($this->created);
     }
@@ -106,7 +106,7 @@ class BulkLoader_Result implements \Countable
     /**
      * @return ArrayList
      */
-    public function Updated()
+    public function Updated(): SilverStripe\ORM\ArrayList
     {
         return $this->mapToArrayList($this->updated);
     }
@@ -114,7 +114,7 @@ class BulkLoader_Result implements \Countable
     /**
      * @return ArrayList
      */
-    public function Deleted()
+    public function Deleted(): SilverStripe\ORM\ArrayList
     {
         $set = new ArrayList();
         foreach ($this->deleted as $arrItem) {
@@ -137,7 +137,7 @@ class BulkLoader_Result implements \Countable
      * @param $obj DataObject
      * @param $message string
      */
-    public function addCreated($obj, $message = null)
+    public function addCreated(SilverStripe\Dev\Tests\BulkLoaderResultTest\Player $obj, string $message = null): void
     {
         $this->created[] = $this->lastChange = [
             'ID' => $obj->ID,
@@ -151,7 +151,7 @@ class BulkLoader_Result implements \Countable
      * @param $obj DataObject
      * @param $message string
      */
-    public function addUpdated($obj, $message = null)
+    public function addUpdated(SilverStripe\Dev\Tests\BulkLoaderResultTest\Player $obj, string $message = null): void
     {
         $this->updated[] = $this->lastChange = [
             'ID' => $obj->ID,
@@ -165,7 +165,7 @@ class BulkLoader_Result implements \Countable
      * @param $obj DataObject
      * @param $message string
      */
-    public function addDeleted($obj, $message = null)
+    public function addDeleted(SilverStripe\Dev\Tests\BulkLoaderResultTest\Player $obj, string $message = null): void
     {
         $data = $obj->toMap();
         $data['_BulkLoaderMessage'] = $message;
@@ -177,7 +177,7 @@ class BulkLoader_Result implements \Countable
      * @param array $arr containing ID and ClassName maps
      * @return ArrayList
      */
-    protected function mapToArrayList($arr)
+    protected function mapToArrayList(array $arr): SilverStripe\ORM\ArrayList
     {
         $set = new ArrayList();
         foreach ($arr as $arrItem) {

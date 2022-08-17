@@ -42,7 +42,7 @@ class Parser extends SSTemplateParser
      * @param string $string
      * @param bool $warnIfEmpty
      */
-    public function __construct($string, $warnIfEmpty = true)
+    public function __construct(string $string, bool $warnIfEmpty = true): void
     {
         parent::__construct();
         $this->string = $string;
@@ -52,29 +52,29 @@ class Parser extends SSTemplateParser
         $this->warnIfEmpty = $warnIfEmpty;
     }
 
-    public function Translate__construct(&$res)
+    public function Translate__construct(array &$res): void
     {
         $this->currentEntity = [];
         $this->currentEntityKey = null;
     }
 
-    public function Translate_Entity(&$res, $sub)
+    public function Translate_Entity(array &$res, array $sub): void
     {
         // Collapse escaped slashes
         $this->currentEntityKey = str_replace('\\\\', '\\', $sub['text'] ?? ''); // key
     }
 
-    public function Translate_Default(&$res, $sub)
+    public function Translate_Default(array &$res, array $sub): void
     {
         $this->currentEntity['default'] = $sub['String']['text']; // default
     }
 
-    public function Translate_Context(&$res, $sub)
+    public function Translate_Context(array &$res, array $sub): void
     {
         $this->currentEntity['comment'] = $sub['String']['text']; //comment
     }
 
-    public function Translate__finalise(&$res)
+    public function Translate__finalise(array &$res): void
     {
         // Validate entity
         $entity = $this->currentEntity;
@@ -107,7 +107,7 @@ class Parser extends SSTemplateParser
      * @param bool $warnIfEmpty Show warnings if default omitted
      * @return array Map of keys -> values
      */
-    public static function getTranslatables($template, $warnIfEmpty = true)
+    public static function getTranslatables(string $template, bool $warnIfEmpty = true): array
     {
         // Run the parser and throw away the result
         $parser = new Parser($template, $warnIfEmpty);
@@ -121,7 +121,7 @@ class Parser extends SSTemplateParser
     /**
      * @return array
      */
-    public function getEntities()
+    public function getEntities(): array
     {
         return $this->entities;
     }

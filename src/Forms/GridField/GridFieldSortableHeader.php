@@ -45,7 +45,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * @param bool $throwExceptionOnBadDataType
      * @return $this
      */
-    public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
+    public function setThrowExceptionOnBadDataType(bool $throwExceptionOnBadDataType): SilverStripe\Forms\GridField\GridFieldSortableHeader
     {
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
         return $this;
@@ -68,7 +68,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * @param SS_List $dataList
      * @return bool
      */
-    protected function checkDataType($dataList)
+    protected function checkDataType(SilverStripe\ORM\DataList $dataList): bool
     {
         if ($dataList instanceof Sortable) {
             return true;
@@ -89,7 +89,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * @param array $sorting
      * @return $this
      */
-    public function setFieldSorting($sorting)
+    public function setFieldSorting(array $sorting): SilverStripe\Forms\GridField\GridFieldSortableHeader
     {
         $this->fieldSorting = $sorting;
         return $this;
@@ -109,7 +109,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * @param GridField $gridField
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $list = $gridField->getList();
         if (!$this->checkDataType($list)) {
@@ -221,7 +221,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         if (!$this->checkDataType($gridField->getList())) {
             return [];
@@ -230,7 +230,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
         return ['sortasc', 'sortdesc'];
     }
 
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, array $arguments, array $data): void
     {
         if (!$this->checkDataType($gridField->getList())) {
             return;
@@ -259,7 +259,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * @param SS_List $dataList
      * @return SS_List
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, SS_List $dataList): SilverStripe\ORM\DataList
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;

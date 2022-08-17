@@ -36,7 +36,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function process(HTTPRequest $request, callable $delegate)
+    public function process(HTTPRequest $request, callable $delegate): SilverStripe\Control\HTTPResponse
     {
         try {
             $response = $delegate($request);
@@ -198,7 +198,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return array
      */
-    public function getVary()
+    public function getVary(): array
     {
         // Explicitly set vary
         if (isset($this->vary)) {
@@ -216,7 +216,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string|array $vary
      * @return $this
      */
-    public function addVary($vary)
+    public function addVary(string $vary): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         $combied = $this->combineVary($this->getVary(), $vary);
         $this->setVary($combied);
@@ -229,7 +229,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param array|string $vary
      * @return $this
      */
-    public function setVary($vary)
+    public function setVary(string|array $vary): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         $this->vary = $this->combineVary($vary);
         return $this;
@@ -241,7 +241,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string|array[] $varies Each vary as a separate arg
      * @return array
      */
-    protected function combineVary(...$varies)
+    protected function combineVary(...$varies): array
     {
         $merged = [];
         foreach ($varies as $vary) {
@@ -278,7 +278,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $state
      * @return $this
      */
-    protected function setState($state)
+    protected function setState(string $state): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         if (!array_key_exists($state, $this->stateDirectives ?? [])) {
             throw new InvalidArgumentException("Invalid state {$state}");
@@ -292,7 +292,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return string
      */
-    public function getState()
+    public function getState(): string
     {
         return $this->state ?: $this->config()->get('defaultState');
     }
@@ -311,7 +311,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @return bool True if the given change is accepted, and that the internal
      * level threshold is updated (if necessary) to the new minimum level.
      */
-    protected function applyChangeLevel($level, $force)
+    protected function applyChangeLevel(int $level, bool $force): bool
     {
         $forcingLevel = $level + ($force ? self::LEVEL_FORCED : 0);
         if ($forcingLevel < $this->getForcingLevel()) {
@@ -332,7 +332,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * String or int value assign a specific value.
      * @return $this
      */
-    public function setStateDirective($states, $directive, $value = true)
+    public function setStateDirective(array $states, string $directive, int|bool|string $value = true): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         if ($value === null) {
             throw new InvalidArgumentException("Invalid directive value");
@@ -379,7 +379,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $directive
      * @return $this
      */
-    public function removeStateDirective($states, $directive)
+    public function removeStateDirective(array $states, string $directive): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         $this->setStateDirective($states, $directive, false);
         return $this;
@@ -392,7 +392,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $directive
      * @return bool
      */
-    public function hasStateDirective($state, $directive)
+    public function hasStateDirective(string $state, string $directive): bool
     {
         $directive = strtolower($directive ?? '');
         return isset($this->stateDirectives[$state][$directive]);
@@ -404,7 +404,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $directive
      * @return bool
      */
-    public function hasDirective($directive)
+    public function hasDirective(string $directive): bool
     {
         return $this->hasStateDirective($this->getState(), $directive);
     }
@@ -418,7 +418,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $directive
      * @return int|string|bool
      */
-    public function getStateDirective($state, $directive)
+    public function getStateDirective(string $state, string $directive): bool|int|string
     {
         $directive = strtolower($directive ?? '');
         if (isset($this->stateDirectives[$state][$directive])) {
@@ -433,7 +433,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $directive
      * @return bool|int|string
      */
-    public function getDirective($directive)
+    public function getDirective(string $directive): bool|int|string
     {
         return $this->getStateDirective($this->getState(), $directive);
     }
@@ -444,7 +444,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param string $state
      * @return array
      */
-    public function getStateDirectives($state)
+    public function getStateDirectives(string $state): array
     {
         return $this->stateDirectives[$state];
     }
@@ -454,7 +454,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return array
      */
-    public function getDirectives()
+    public function getDirectives(): array
     {
         return $this->getStateDirectives($this->getState());
     }
@@ -468,7 +468,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return $this
      */
-    public function setNoStore($noStore = true)
+    public function setNoStore(bool $noStore = true): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
@@ -489,7 +489,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param bool $noCache
      * @return $this
      */
-    public function setNoCache($noCache = true)
+    public function setNoCache(bool $noCache = true): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
@@ -512,7 +512,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param int $age
      * @return $this
      */
-    public function setMaxAge($age)
+    public function setMaxAge(int|string $age): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
@@ -532,7 +532,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param int $age
      * @return $this
      */
-    public function setSharedMaxAge($age)
+    public function setSharedMaxAge(string $age): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Affect all non-disabled states
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
@@ -551,7 +551,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param bool $mustRevalidate
      * @return $this
      */
-    public function setMustRevalidate($mustRevalidate = true)
+    public function setMustRevalidate($mustRevalidate = true): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 'must-revalidate', $mustRevalidate);
@@ -572,7 +572,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param int $maxAge Shortcut for `setMaxAge()`, which is required to actually enable the cache.
      * @return $this
      */
-    public function enableCache($force = false, $maxAge = null)
+    public function enableCache(bool $force = false, int $maxAge = null): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Only execute this if its forcing level is high enough
         if ($this->applyChangeLevel(self::LEVEL_ENABLED, $force)) {
@@ -603,7 +603,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param bool $force Force the cache to disabled even if it's forced private or public
      * @return $this
      */
-    public function disableCache($force = false)
+    public function disableCache(bool $force = false): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Only execute this if its forcing level is high enough
         if ($this->applyChangeLevel(self::LEVEL_DISABLED, $force)) {
@@ -623,7 +623,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param bool $force Force the cache to private even if it's forced public
      * @return $this
      */
-    public function privateCache($force = false)
+    public function privateCache(bool $force = false): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Only execute this if its forcing level is high enough
         if ($this->applyChangeLevel(self::LEVEL_PRIVATE, $force)) {
@@ -644,7 +644,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param int $maxAge Shortcut for `setMaxAge()`, which is required to actually enable the cache.
      * @return $this
      */
-    public function publicCache($force = false, $maxAge = null)
+    public function publicCache(bool $force = false, int $maxAge = null): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         // Only execute this if its forcing level is high enough
         if ($this->applyChangeLevel(self::LEVEL_PUBLIC, $force)) {
@@ -665,7 +665,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return $this
      */
-    public function applyToResponse($response)
+    public function applyToResponse(SilverStripe\Control\HTTPResponse $response): SilverStripe\Control\Middleware\HTTPCacheControlMiddleware
     {
         $headers = $this->generateHeadersFor($response);
         foreach ($headers as $name => $value) {
@@ -681,7 +681,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return string
      */
-    protected function generateCacheHeader()
+    protected function generateCacheHeader(): string
     {
         $cacheControl = [];
         foreach ($this->getDirectives() as $directive => $value) {
@@ -700,7 +700,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param HTTPResponse $response
      * @return array
      */
-    public function generateHeadersFor(HTTPResponse $response)
+    public function generateHeadersFor(HTTPResponse $response): array
     {
         return array_filter([
             'Last-Modified' => $this->generateLastModifiedHeader(),
@@ -713,7 +713,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Reset registered http cache control and force a fresh instance to be built
      */
-    public static function reset()
+    public static function reset(): void
     {
         Injector::inst()->unregisterNamedObject(__CLASS__);
     }
@@ -721,7 +721,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * @return int
      */
-    protected function getForcingLevel()
+    protected function getForcingLevel(): int
     {
         if (isset($this->forcingLevel)) {
             return $this->forcingLevel;
@@ -735,7 +735,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param HTTPResponse $response
      * @return string|null
      */
-    protected function generateVaryHeader(HTTPResponse $response)
+    protected function generateVaryHeader(HTTPResponse $response): string|null
     {
         // split the current vary header into it's parts and merge it with the config settings
         // to create a list of unique vary values
@@ -754,7 +754,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return string|null
      */
-    protected function generateLastModifiedHeader()
+    protected function generateLastModifiedHeader(): null
     {
         if (!$this->modificationDate) {
             return null;
@@ -767,7 +767,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      *
      * @return null|string
      */
-    protected function generateExpiresHeader()
+    protected function generateExpiresHeader(): null|string
     {
         $maxAge = $this->getDirective('max-age');
         if ($maxAge === false) {
@@ -785,7 +785,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @param HTTPRequest $request
      * @param HTTPResponse $response
      */
-    protected function augmentState(HTTPRequest $request, HTTPResponse $response)
+    protected function augmentState(HTTPRequest $request, HTTPResponse $response): void
     {
         // Errors disable cache (unless some errors are cached intentionally by usercode)
         if ($response->isError() || $response->isRedirect()) {

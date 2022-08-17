@@ -47,7 +47,7 @@ class CompositeValidator extends Validator
      *
      * @param array|Validator[] $validators
      */
-    public function __construct(array $validators = [])
+    public function __construct(array $validators = []): void
     {
         $this->validators = array_values($validators ?? []);
 
@@ -60,7 +60,7 @@ class CompositeValidator extends Validator
      * @param Form $form
      * @return Validator
      */
-    public function setForm($form)
+    public function setForm(SilverStripe\Forms\Form $form): SilverStripe\Forms\CompositeValidator
     {
         foreach ($this->getValidators() as $validator) {
             $validator->setForm($form);
@@ -86,7 +86,7 @@ class CompositeValidator extends Validator
      *
      * @return ValidationResult
      */
-    public function validate()
+    public function validate(): SilverStripe\ORM\ValidationResult
     {
         $this->resetResult();
 
@@ -134,7 +134,7 @@ class CompositeValidator extends Validator
      *
      * @return bool
      */
-    public function fieldIsRequired($fieldName)
+    public function fieldIsRequired(string $fieldName): bool
     {
         foreach ($this->getValidators() as $validator) {
             if ($validator->fieldIsRequired($fieldName)) {

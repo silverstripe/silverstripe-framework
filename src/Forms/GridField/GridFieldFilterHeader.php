@@ -79,7 +79,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     /**
      * @inheritDoc
      */
-    public function getURLHandlers($gridField)
+    public function getURLHandlers(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         return [
             'GET schema/SearchForm' => 'getSearchFormSchema'
@@ -92,10 +92,10 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param callable|null $updateSearchForm This will be removed in 5.0
      */
     public function __construct(
-        $useLegacy = false,
+        bool $useLegacy = false,
         callable $updateSearchContext = null,
         callable $updateSearchForm = null
-    ) {
+    ): void {
         $this->useLegacyFilterHeader = Config::inst()->get(self::class, 'force_legacy') || $useLegacy;
         $this->updateSearchContextCallback = $updateSearchContext;
         $this->updateSearchFormCallback = $updateSearchForm;
@@ -112,7 +112,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      *
      * @param bool $throwExceptionOnBadDataType
      */
-    public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
+    public function setThrowExceptionOnBadDataType(bool $throwExceptionOnBadDataType): void
     {
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
     }
@@ -132,7 +132,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param SS_List $dataList
      * @return bool
      */
-    protected function checkDataType($dataList)
+    protected function checkDataType(SilverStripe\ORM\DataList $dataList): bool
     {
         if ($dataList instanceof Filterable) {
             return true;
@@ -152,7 +152,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return array
      */
-    public function getActions($gridField)
+    public function getActions(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         if (!$this->checkDataType($gridField->getList())) {
             return [];
@@ -169,7 +169,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param array $data
      * @return void
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, array $arguments, array|string $data): void
     {
         if (!$this->checkDataType($gridField->getList())) {
             return;
@@ -205,7 +205,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     /**
      * @inheritDoc
      */
-    public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    public function getManipulatedData(GridField $gridField, SS_List $dataList): SilverStripe\ORM\DataList
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;
@@ -231,7 +231,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return boolean
      */
-    public function canFilterAnyColumns($gridField)
+    public function canFilterAnyColumns(SilverStripe\Forms\GridField\GridField $gridField): bool
     {
         $list = $gridField->getList();
 
@@ -259,7 +259,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridfield
      * @return \SilverStripe\ORM\Search\SearchContext
      */
-    public function getSearchContext(GridField $gridField)
+    public function getSearchContext(GridField $gridField): SilverStripe\ORM\Search\SearchContext
     {
         if (!$this->searchContext) {
             $this->searchContext = singleton($gridField->getModelClass())->getDefaultSearchContext();
@@ -278,7 +278,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridfield
      * @return string
      */
-    public function getSearchFieldSchema(GridField $gridField)
+    public function getSearchFieldSchema(GridField $gridField): string
     {
         $schemaUrl = Controller::join_links($gridField->Link(), 'schema/SearchForm');
 
@@ -328,7 +328,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return Form|null
      */
-    public function getSearchForm(GridField $gridField)
+    public function getSearchForm(GridField $gridField): null|SilverStripe\Forms\Form
     {
         $searchContext = $this->getSearchContext($gridField);
         $searchFields = $searchContext->getSearchFields();
@@ -393,7 +393,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridfield
      * @return HTTPResponse
      */
-    public function getSearchFormSchema(GridField $gridField)
+    public function getSearchFormSchema(GridField $gridField): SilverStripe\Control\HTTPResponse
     {
         $form = $this->getSearchForm($gridField);
 
@@ -419,7 +419,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridfield
      * @return ArrayList|null
      */
-    public function getLegacyFilterHeader(GridField $gridField)
+    public function getLegacyFilterHeader(GridField $gridField): SilverStripe\ORM\ArrayList
     {
         Deprecation::notice('5.0', 'Table row based filter header will be removed in favor of search field in 5.0');
 
@@ -494,7 +494,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return array|null
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array|null
     {
         $forTemplate = new ArrayData([]);
 

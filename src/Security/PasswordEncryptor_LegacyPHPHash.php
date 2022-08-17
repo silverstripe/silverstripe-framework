@@ -11,7 +11,7 @@ namespace SilverStripe\Security;
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash
 {
-    public function encrypt($password, $salt = null, $member = null)
+    public function encrypt(string $password, string $salt = null, SilverStripe\Security\Member $member = null): string
     {
         $password = parent::encrypt($password, $salt, $member);
 
@@ -23,7 +23,7 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash
         return substr(base_convert($password ?? '', 16, 36), 0, 64);
     }
 
-    public function check($hash, $password, $salt = null, $member = null)
+    public function check(string $hash, string $password, string $salt = null, SilverStripe\Security\Member $member = null): bool
     {
         // Due to flawed base_convert() floating point precision,
         // only the first 10 characters are consistently useful for comparisons.

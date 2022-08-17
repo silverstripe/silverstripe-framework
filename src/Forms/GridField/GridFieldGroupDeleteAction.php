@@ -20,7 +20,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      */
     protected $groupID;
 
-    public function __construct($groupID)
+    public function __construct(int $groupID): void
     {
         $this->groupID = $groupID;
         parent::__construct(true);
@@ -33,7 +33,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      * @param string $columnName
      * @return string the HTML for the column
      */
-    public function getColumnContent($gridField, $record, $columnName)
+    public function getColumnContent(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         if ($this->canUnlink($record)) {
             return parent::getColumnContent($gridField, $record, $columnName);
@@ -48,7 +48,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      * @param $columnName
      * @return null|string
      */
-    public function getGroup($gridField, $record, $columnName)
+    public function getGroup(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Security\Member $record, string $columnName): null|string
     {
         if (!$this->canUnlink($record)) {
             return null;
@@ -66,7 +66,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      * @param array $data Form data
      * @throws ValidationException
      */
-    public function handleAction(GridField $gridField, $actionName, $arguments, $data)
+    public function handleAction(GridField $gridField, string $actionName, array $arguments, array $data): void
     {
         $record = $gridField->getList()->find('ID', $arguments['RecordID']);
 
@@ -84,7 +84,7 @@ class GridFieldGroupDeleteAction extends GridFieldDeleteAction
      * @param $record - the record of the User to unlink with
      * @return bool
      */
-    protected function canUnlink($record)
+    protected function canUnlink(SilverStripe\Security\Member $record): bool
     {
         $currentUser = Security::getCurrentUser();
         if ($currentUser

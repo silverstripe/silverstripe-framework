@@ -23,7 +23,7 @@ class ModuleYamlLoader extends ArrayLoader
      */
     protected $reader = null;
 
-    public function load($resource, $locale, $domain = 'messages')
+    public function load(array $resource, string $locale, string $domain = 'messages'): Symfony\Component\Translation\MessageCatalogue
     {
         $messages = [];
         foreach ($resource as $path) {
@@ -44,7 +44,7 @@ class ModuleYamlLoader extends ArrayLoader
     /**
      * @return Reader
      */
-    public function getReader()
+    public function getReader(): SilverStripe\i18n\Messages\YamlReader
     {
         return $this->reader;
     }
@@ -53,7 +53,7 @@ class ModuleYamlLoader extends ArrayLoader
      * @param Reader $reader
      * @return $this
      */
-    public function setReader(Reader $reader)
+    public function setReader(Reader $reader): SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader
     {
         $this->reader = $reader;
         return $this;
@@ -67,7 +67,7 @@ class ModuleYamlLoader extends ArrayLoader
      * @param string $locale
      * @return array
      */
-    protected function loadMessages($path, $locale)
+    protected function loadMessages(string $path, string $locale): array
     {
         $filePath = $path . $locale . '.yml';
         $messages = $this->getReader()->read($locale, $filePath);
@@ -81,7 +81,7 @@ class ModuleYamlLoader extends ArrayLoader
      * @param string $locale
      * @return array Normalised messages
      */
-    protected function normaliseMessages($messages, $locale)
+    protected function normaliseMessages(array $messages, string $locale): array
     {
         foreach ($messages as $key => $value) {
             $messages[$key] = $this->normaliseMessage($key, $value, $locale);
@@ -101,7 +101,7 @@ class ModuleYamlLoader extends ArrayLoader
      * @param string $locale
      * @return string
      */
-    protected function normaliseMessage($key, $value, $locale)
+    protected function normaliseMessage(string $key, string|array $value, string $locale): string|null
     {
         if (!is_array($value)) {
             return $value;

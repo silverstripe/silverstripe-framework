@@ -30,7 +30,7 @@ class CSSContentParser
 
     protected $simpleXML = null;
 
-    public function __construct($content)
+    public function __construct(string|SilverStripe\ORM\FieldType\DBHTMLText $content): void
     {
         if (extension_loaded('tidy')) {
             // using the tidy php extension
@@ -80,7 +80,7 @@ class CSSContentParser
      * @param string $selector
      * @return SimpleXMLElement[]
      */
-    public function getBySelector($selector)
+    public function getBySelector(string $selector): array
     {
         $xpath = $this->selector2xpath($selector);
         return $this->getByXpath($xpath);
@@ -92,7 +92,7 @@ class CSSContentParser
      * @param string $xpath SimpleXML compatible XPATH statement
      * @return SimpleXMLElement[]
      */
-    public function getByXpath($xpath)
+    public function getByXpath(string $xpath): array
     {
         return $this->simpleXML->xpath($xpath);
     }
@@ -104,7 +104,7 @@ class CSSContentParser
      * @param string $selector See {@link getBySelector()}
      * @return String XPath expression
      */
-    public function selector2xpath($selector)
+    public function selector2xpath(string $selector): string
     {
         $parts = preg_split('/\\s+/', $selector ?? '');
         $xpath = "";

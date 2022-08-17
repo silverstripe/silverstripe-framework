@@ -32,7 +32,7 @@ class TextField extends FormField implements TippableFieldInterface
      * matching this size.
      * @param null|Form $form
      */
-    public function __construct($name, $title = null, $value = '', $maxLength = null, $form = null)
+    public function __construct(string $name, bool|string $title = null, string|SilverStripe\Forms\GridField\GridState_Data|int|bool $value = '', int $maxLength = null, SilverStripe\Security\MemberAuthenticator\MemberLoginForm $form = null): void
     {
         if ($maxLength) {
             $this->setMaxLength($maxLength);
@@ -49,7 +49,7 @@ class TextField extends FormField implements TippableFieldInterface
      * @param int $maxLength
      * @return $this
      */
-    public function setMaxLength($maxLength)
+    public function setMaxLength(int $maxLength): SilverStripe\Forms\TextField
     {
         $this->maxLength = $maxLength;
 
@@ -59,7 +59,7 @@ class TextField extends FormField implements TippableFieldInterface
     /**
      * @return null|int
      */
-    public function getMaxLength()
+    public function getMaxLength(): null|int
     {
         return $this->maxLength;
     }
@@ -90,7 +90,7 @@ class TextField extends FormField implements TippableFieldInterface
     /**
      * @return array
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         $maxLength = $this->getMaxLength();
 
@@ -107,7 +107,7 @@ class TextField extends FormField implements TippableFieldInterface
         );
     }
 
-    public function getSchemaDataDefaults()
+    public function getSchemaDataDefaults(): array
     {
         $data = parent::getSchemaDataDefaults();
         $data['data']['maxlength'] =  $this->getMaxLength();
@@ -139,7 +139,7 @@ class TextField extends FormField implements TippableFieldInterface
      * @param Validator $validator
      * @return bool
      */
-    public function validate($validator)
+    public function validate(SilverStripe\Forms\RequiredFields $validator): bool
     {
         if (!is_null($this->maxLength) && mb_strlen($this->value ?? '') > $this->maxLength) {
             $name = strip_tags($this->Title() ? $this->Title() : $this->getName());
@@ -157,7 +157,7 @@ class TextField extends FormField implements TippableFieldInterface
         return true;
     }
 
-    public function getSchemaValidation()
+    public function getSchemaValidation(): array
     {
         $rules = parent::getSchemaValidation();
         if ($this->getMaxLength()) {

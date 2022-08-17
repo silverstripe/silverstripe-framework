@@ -54,7 +54,7 @@ class LostPasswordHandler extends RequestHandler
     /**
      * @param string $link The URL to recreate this request handler
      */
-    public function __construct($link)
+    public function __construct(string $link): void
     {
         $this->link = $link;
         parent::__construct();
@@ -67,7 +67,7 @@ class LostPasswordHandler extends RequestHandler
      * @param string|null $action
      * @return string
      */
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         $link = Controller::join_links($this->link, $action);
         $this->extend('updateLink', $link, $action);
@@ -79,7 +79,7 @@ class LostPasswordHandler extends RequestHandler
      *
      * @return array
      */
-    public function lostpassword()
+    public function lostpassword(): array
     {
 
         $message = _t(
@@ -99,7 +99,7 @@ class LostPasswordHandler extends RequestHandler
      *
      * @return array
      */
-    public function passwordsent()
+    public function passwordsent(): array
     {
         $message = _t(
             'SilverStripe\\Security\\Security.PASSWORDRESETSENTTEXT',
@@ -122,7 +122,7 @@ class LostPasswordHandler extends RequestHandler
      * @skipUpgrade
      * @return Form Returns the lost password form
      */
-    public function lostPasswordForm()
+    public function lostPasswordForm(): SilverStripe\Security\MemberAuthenticator\LostPasswordForm
     {
         return LostPasswordForm::create(
             $this,
@@ -159,7 +159,7 @@ class LostPasswordHandler extends RequestHandler
      * @param LostPasswordForm $form
      * @return HTTPResponse
      */
-    public function forgotPassword($data, $form)
+    public function forgotPassword(array $data, SilverStripe\Security\MemberAuthenticator\LostPasswordForm $form): SilverStripe\Control\HTTPResponse
     {
         // Run a first pass validation check on the data
         $dataValidation = $this->validateForgotPasswordData($data, $form);
@@ -194,7 +194,7 @@ class LostPasswordHandler extends RequestHandler
      * @param  LostPasswordForm $form
      * @return HTTPResponse|null
      */
-    protected function validateForgotPasswordData(array $data, LostPasswordForm $form)
+    protected function validateForgotPasswordData(array $data, LostPasswordForm $form): void
     {
         if (empty($data['Email'])) {
             $form->sessionMessage(
@@ -215,7 +215,7 @@ class LostPasswordHandler extends RequestHandler
      * @param  array $data
      * @return Member|null
      */
-    protected function getMemberFromData(array $data)
+    protected function getMemberFromData(array $data): SilverStripe\Security\Member
     {
         if (!empty($data['Email'])) {
             $uniqueIdentifier = Member::config()->get('unique_identifier_field');
@@ -229,7 +229,7 @@ class LostPasswordHandler extends RequestHandler
      * @param string $token
      * @return bool
      */
-    protected function sendEmail($member, $token)
+    protected function sendEmail(SilverStripe\Security\Member $member, string $token): bool
     {
         /** @var Email $email */
         $email = Email::create()
@@ -253,7 +253,7 @@ class LostPasswordHandler extends RequestHandler
      * @param array $data
      * @return HTTPResponse
      */
-    protected function redirectToSuccess(array $data)
+    protected function redirectToSuccess(array $data): SilverStripe\Control\HTTPResponse
     {
         $link = $this->link('passwordsent');
 

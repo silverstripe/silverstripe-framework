@@ -35,7 +35,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @param string $targetFragment The HTML fragment to write the button into
      */
-    public function __construct($targetFragment = "after")
+    public function __construct(string $targetFragment = "after"): void
     {
         $this->targetFragment = $targetFragment;
     }
@@ -46,7 +46,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
      * @param GridField $gridField
      * @return array
      */
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $modalID = $gridField->ID() . '_ImportModal';
 
@@ -104,7 +104,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return string
      */
-    public function getModalTitle()
+    public function getModalTitle(): string
     {
         return $this->modalTitle;
     }
@@ -113,7 +113,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
      * @param string $modalTitle
      * @return $this
      */
-    public function setModalTitle($modalTitle)
+    public function setModalTitle(string $modalTitle): SilverStripe\Forms\GridField\GridFieldImportButton
     {
         $this->modalTitle = $modalTitle;
         return $this;
@@ -122,7 +122,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return Form
      */
-    public function getImportForm()
+    public function getImportForm(): SilverStripe\Forms\Form|null
     {
         return $this->importForm;
     }
@@ -131,7 +131,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
      * @param Form $importForm
      * @return $this
      */
-    public function setImportForm($importForm)
+    public function setImportForm(SilverStripe\Forms\Form|bool $importForm): SilverStripe\Forms\GridField\GridFieldImportButton
     {
         $this->importForm = $importForm;
         return $this;
@@ -140,7 +140,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @return string
      */
-    public function getImportIframe()
+    public function getImportIframe(): null|string
     {
         return $this->importIframe;
     }
@@ -149,7 +149,7 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
      * @param string $importIframe
      * @return $this
      */
-    public function setImportIframe($importIframe)
+    public function setImportIframe(string $importIframe): SilverStripe\Forms\GridField\GridFieldImportButton
     {
         $this->importIframe = $importIframe;
         return $this;

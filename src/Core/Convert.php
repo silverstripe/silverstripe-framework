@@ -36,7 +36,7 @@ class Convert
      * @param array|string $val String to escape, or array of strings
      * @return array|string
      */
-    public static function raw2att($val)
+    public static function raw2att(string|int|bool $val): string
     {
         return self::raw2xml($val);
     }
@@ -49,7 +49,7 @@ class Convert
      * @param string|array $val String to escape, or array of strings
      * @return array|string
      */
-    public static function raw2htmlatt($val)
+    public static function raw2htmlatt(string $val): string
     {
         return self::raw2att($val);
     }
@@ -66,7 +66,7 @@ class Convert
      *
      * @return array|string
      */
-    public static function raw2htmlname($val)
+    public static function raw2htmlname(string $val): string
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
@@ -91,7 +91,7 @@ class Convert
      *
      * @return array|string
      */
-    public static function raw2htmlid($val)
+    public static function raw2htmlid(string|int $val): string
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
@@ -120,7 +120,7 @@ class Convert
      * @param array|string $val String to escape, or array of strings
      * @return array|string
      */
-    public static function raw2xml($val)
+    public static function raw2xml(string|int|bool|array|float $val): string|array
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
@@ -140,7 +140,7 @@ class Convert
      * @param array|string $val String to escape, or array of strings
      * @return array|string
      */
-    public static function raw2js($val)
+    public static function raw2js(string $val): string
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
@@ -166,7 +166,7 @@ class Convert
      * @param  int   $options Optional bitmask of JSON constants
      * @return string           JSON encoded string
      */
-    public static function raw2json($val, $options = 0)
+    public static function raw2json(array|stdClass|string $val, int $options = 0): string
     {
         Deprecation::notice('4.4', 'Please use json_encode() instead.');
 
@@ -181,7 +181,7 @@ class Convert
      * @param  int    $options Optional bitmask of JSON constants
      * @return string          JSON encoded string
      */
-    public static function array2json($val, $options = 0)
+    public static function array2json(array $val, int $options = 0): string
     {
         Deprecation::notice('4.4', 'Please use json_encode() instead.');
 
@@ -200,7 +200,7 @@ class Convert
      * only escape the string (false).
      * @return string|array Safely encoded value in the same format as the input
      */
-    public static function raw2sql($val, $quoted = false)
+    public static function raw2sql(string|array|SilverStripe\ORM\FieldType\DBDatetime|int $val, bool $quoted = false): string|array
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
@@ -226,7 +226,7 @@ class Convert
      * @param string $separator The string that delimits subsequent identifiers
      * @return string The escaped identifier. E.g. '"SiteTree"."Title"'
      */
-    public static function symbol2sql($identifier, $separator = '.')
+    public static function symbol2sql(string $identifier, $separator = '.'): string
     {
         return DB::get_conn()->escapeIdentifier($identifier, $separator);
     }
@@ -241,7 +241,7 @@ class Convert
      * @param mixed $val
      * @return array|string
      */
-    public static function xml2raw($val)
+    public static function xml2raw(string $val): string
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
@@ -265,7 +265,7 @@ class Convert
      * @param string $val
      * @return object|boolean
      */
-    public static function json2obj($val)
+    public static function json2obj(string $val): stdClass
     {
         Deprecation::notice('4.4', 'Please use json_decode() instead.');
 
@@ -279,7 +279,7 @@ class Convert
      * @param string $val JSON string to convert
      * @return array|boolean
      */
-    public static function json2array($val)
+    public static function json2array(string $val): array
     {
         Deprecation::notice('4.4', 'Please use json_decode() instead.');
 
@@ -299,7 +299,7 @@ class Convert
      * @return array
      * @throws Exception
      */
-    public static function xml2array($val, $disableDoctypes = false, $disableExternals = false)
+    public static function xml2array(string $val, bool $disableDoctypes = false, $disableExternals = false): array
     {
         Deprecation::notice('4.10', 'Use a dedicated XML library instead');
 
@@ -332,7 +332,7 @@ class Convert
      *
      * @return mixed
      */
-    protected static function recursiveXMLToArray($xml)
+    protected static function recursiveXMLToArray(SimpleXMLElement|array|string $xml): string|array
     {
         $x = null;
         if ($xml instanceof SimpleXMLElement) {
@@ -387,7 +387,7 @@ class Convert
      * @param array $config
      * @return string
      */
-    public static function html2raw($data, $preserveLinks = false, $wordWrap = 0, $config = null)
+    public static function html2raw(string $data, bool $preserveLinks = false, int $wordWrap = 0, $config = null): string
     {
         $defaultConfig = [
             'PreserveLinks' => false,
@@ -486,7 +486,7 @@ class Convert
      * @param string $title
      * @return string
      */
-    public static function raw2url($title)
+    public static function raw2url(string $title): string
     {
         $f = URLSegmentFilter::create();
         return $f->filter($title);
@@ -501,7 +501,7 @@ class Convert
      * specified by the current OS
      * @return string
      */
-    public static function nl2os($data, $nl = PHP_EOL)
+    public static function nl2os(string|SilverStripe\ORM\FieldType\DBHTMLText $data, string $nl = PHP_EOL): string
     {
         return preg_replace('~\R~u', $nl ?? '', $data ?? '');
     }
@@ -513,7 +513,7 @@ class Convert
      * @param mixed $val Value to be encoded
      * @return string
      */
-    public static function base64url_encode($val)
+    public static function base64url_encode(array|string|float|bool $val): string
     {
         return rtrim(strtr(base64_encode(json_encode($val) ?? ''), '+/', '~_'), '=');
     }
@@ -524,7 +524,7 @@ class Convert
      * @param string $val Value to be decoded
      * @return mixed Original value
      */
-    public static function base64url_decode($val)
+    public static function base64url_decode(string $val): array|string|float|bool
     {
         return json_decode(
             base64_decode(str_pad(strtr($val ?? '', '~_', '+/'), strlen($val ?? '') % 4, '=', STR_PAD_RIGHT)) ?? '',
@@ -545,7 +545,7 @@ class Convert
      * @param $str
      * @return string
      */
-    public static function upperCamelToLowerCamel($str)
+    public static function upperCamelToLowerCamel(string $str): string
     {
         $return = null;
         $matches = null;
@@ -583,7 +583,7 @@ class Convert
      * @param string $memString A memory limit string, such as "64M"
      * @return int
      */
-    public static function memstring2bytes($memString)
+    public static function memstring2bytes(string|int $memString): int
     {
         // Remove  non-unit characters from the size
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $memString ?? '');
@@ -604,7 +604,7 @@ class Convert
      * @param int $decimal decimal precision
      * @return string
      */
-    public static function bytes2memstring($bytes, $decimal = 0)
+    public static function bytes2memstring(int $bytes, $decimal = 0): string
     {
         $scales = ['B','K','M','G','T','P','E','Z','Y'];
         // Get scale
@@ -626,7 +626,7 @@ class Convert
      * @param bool $multiple Collapses multiple slashes or not
      * @return string
      */
-    public static function slashes($path, $separator = DIRECTORY_SEPARATOR, $multiple = true)
+    public static function slashes(string $path, string $separator = DIRECTORY_SEPARATOR, bool $multiple = true): string
     {
         if ($multiple) {
             return preg_replace('#[/\\\\]+#', $separator ?? '', $path ?? '');

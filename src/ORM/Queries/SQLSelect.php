@@ -77,14 +77,14 @@ class SQLSelect extends SQLConditionalExpression
      * @return static
      */
     public static function create(
-        $select = "*",
+        string|array $select = "*",
         $from = [],
         $where = [],
         $orderby = [],
         $groupby = [],
         $having = [],
         $limit = []
-    ) {
+    ): SilverStripe\ORM\Queries\SQLSelect {
         return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
     }
 
@@ -101,14 +101,14 @@ class SQLSelect extends SQLConditionalExpression
      * @param array|string $limit A LIMIT clause or array with limit and offset keys
      */
     public function __construct(
-        $select = "*",
+        array|string $select = "*",
         $from = [],
         $where = [],
         $orderby = [],
         $groupby = [],
         $having = [],
         $limit = []
-    ) {
+    ): void {
 
         parent::__construct($from, $where);
 
@@ -136,7 +136,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
      * @return $this Self reference
      */
-    public function setSelect($fields)
+    public function setSelect(array|string $fields): SilverStripe\ORM\Queries\SQLSelect
     {
         $this->select = [];
         if (func_num_args() > 1) {
@@ -155,7 +155,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
      * @return $this Self reference
      */
-    public function addSelect($fields)
+    public function addSelect(array|string $fields): SilverStripe\ORM\Queries\SQLSelect
     {
         if (func_num_args() > 1) {
             $fields = func_get_args();
@@ -177,7 +177,7 @@ class SQLSelect extends SQLConditionalExpression
      * Defaults to the unquoted column name of the $field parameter.
      * @return $this Self reference
      */
-    public function selectField($field, $alias = null)
+    public function selectField(string $field, string $alias = null): SilverStripe\ORM\Queries\SQLSelect
     {
         if (!$alias) {
             if (preg_match('/"([^"]+)"$/', $field ?? '', $matches)) {
@@ -198,7 +198,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $field
      * @return string
      */
-    public function expressionForField($field)
+    public function expressionForField(string $field): null|string
     {
         return isset($this->select[$field]) ? $this->select[$field] : null;
     }
@@ -209,7 +209,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param bool $value
      * @return $this Self reference
      */
-    public function setDistinct($value)
+    public function setDistinct(bool $value): SilverStripe\ORM\Queries\SQLSelect
     {
         $this->distinct = $value;
         return $this;
@@ -220,7 +220,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return bool
      */
-    public function getDistinct()
+    public function getDistinct(): bool
     {
         return $this->distinct;
     }
@@ -229,7 +229,7 @@ class SQLSelect extends SQLConditionalExpression
      * Get the limit property.
      * @return array
      */
-    public function getLimit()
+    public function getLimit(): array|null|bool|int
     {
         return $this->limit;
     }
@@ -244,7 +244,7 @@ class SQLSelect extends SQLConditionalExpression
      * @throws InvalidArgumentException
      * @return $this Self reference
      */
-    public function setLimit($limit, $offset = 0)
+    public function setLimit(array|int|bool|string $limit, int|string $offset = 0): SilverStripe\ORM\Queries\SQLSelect
     {
         if ((is_numeric($limit) && $limit < 0) || (is_numeric($offset) && $offset < 0)) {
             throw new InvalidArgumentException("SQLSelect::setLimit() only takes positive values");
@@ -300,7 +300,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return $this Self reference
      */
-    public function setOrderBy($clauses = null, $direction = null)
+    public function setOrderBy(array|string|bool $clauses = null, string $direction = null): SilverStripe\ORM\Queries\SQLSelect
     {
         $this->orderby = [];
         return $this->addOrderBy($clauses, $direction);
@@ -319,7 +319,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $direction Sort direction, ASC or DESC
      * @return $this Self reference
      */
-    public function addOrderBy($clauses = null, $direction = null)
+    public function addOrderBy(array|string|bool $clauses = null, string $direction = null): SilverStripe\ORM\Queries\SQLSelect
     {
         if (empty($clauses)) {
             return $this;
@@ -390,7 +390,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $defaultDirection
      * @return array A two element array: [$column, $direction]
      */
-    private function getDirectionFromString($value, $defaultDirection = null)
+    private function getDirectionFromString(string $value, string $defaultDirection = null): array
     {
         if (preg_match('/^(.*)(asc|desc)$/i', $value ?? '', $matches)) {
             $column = trim($matches[1] ?? '');
@@ -409,7 +409,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return array
      */
-    public function getOrderBy()
+    public function getOrderBy(): array
     {
         $orderby = $this->orderby;
         if (!$orderby) {
@@ -442,7 +442,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return $this Self reference
      */
-    public function reverseOrderBy()
+    public function reverseOrderBy(): SilverStripe\ORM\Queries\SQLSelect
     {
         $order = $this->getOrderBy();
         $this->orderby = [];
@@ -461,7 +461,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string|array $groupby Escaped SQL statement
      * @return $this Self reference
      */
-    public function setGroupBy($groupby)
+    public function setGroupBy(array|string $groupby): SilverStripe\ORM\Queries\SQLSelect
     {
         $this->groupby = [];
         return $this->addGroupBy($groupby);
@@ -473,7 +473,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string|array $groupby Escaped SQL statement
      * @return $this Self reference
      */
-    public function addGroupBy($groupby)
+    public function addGroupBy(array|string $groupby): SilverStripe\ORM\Queries\SQLSelect
     {
         if (is_array($groupby)) {
             $this->groupby = array_merge($this->groupby, $groupby);
@@ -492,7 +492,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param mixed ...$having Predicate(s) to set, as escaped SQL statements or parameterised queries
      * @return $this Self reference
      */
-    public function setHaving($having)
+    public function setHaving(array|string $having): SilverStripe\ORM\Queries\SQLSelect
     {
         $having = func_num_args() > 1 ? func_get_args() : $having;
         $this->having = [];
@@ -507,7 +507,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param mixed ...$having Predicate(s) to set, as escaped SQL statements or parameterised queries
      * @return $this Self reference
      */
-    public function addHaving($having)
+    public function addHaving(array|string $having): SilverStripe\ORM\Queries\SQLSelect
     {
         $having = $this->normalisePredicates(func_get_args());
 
@@ -521,7 +521,7 @@ class SQLSelect extends SQLConditionalExpression
      * Return a list of HAVING clauses used internally.
      * @return array
      */
-    public function getHaving()
+    public function getHaving(): array
     {
         return $this->having;
     }
@@ -532,7 +532,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param array $parameters Out variable for parameters required for this query
      * @return array
      */
-    public function getHavingParameterised(&$parameters)
+    public function getHavingParameterised(&$parameters): array
     {
         $this->splitQueryParameters($this->having, $conditions, $parameters);
         return $conditions;
@@ -543,7 +543,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return array
      */
-    public function getGroupBy()
+    public function getGroupBy(): array|null
     {
         return $this->groupby;
     }
@@ -556,7 +556,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return array
      */
-    public function getSelect()
+    public function getSelect(): array
     {
         return $this->select;
     }
@@ -569,7 +569,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $column
      * @return int
      */
-    public function unlimitedRowCount($column = null)
+    public function unlimitedRowCount(string $column = null): int
     {
         // we can't clear the select if we're relying on its output by a HAVING clause
         if (count($this->having ?? [])) {
@@ -608,7 +608,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $fieldName
      * @return bool
      */
-    public function canSortBy($fieldName)
+    public function canSortBy(string $fieldName): bool
     {
         $fieldName = preg_replace('/(\s+?)(A|DE)SC$/', '', $fieldName ?? '');
 
@@ -622,7 +622,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $column Quoted, escaped column name
      * @return int
      */
-    public function count($column = null)
+    public function count(string $column = null): int
     {
         // we can't clear the select if we're relying on its output by a HAVING clause
         if (!empty($this->having)) {
@@ -666,7 +666,7 @@ class SQLSelect extends SQLConditionalExpression
      * @param string $alias An optional alias for the aggregate column.
      * @return SQLSelect A clone of this object with the given aggregate function
      */
-    public function aggregate($column, $alias = null)
+    public function aggregate(string $column, string $alias = null): SilverStripe\ORM\Queries\SQLSelect
     {
 
         $clone = clone $this;
@@ -699,7 +699,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return SQLSelect A clone of this object with the first row only
      */
-    public function firstRow()
+    public function firstRow(): SilverStripe\ORM\Queries\SQLSelect
     {
         $query = clone $this;
         $offset = $this->limit ? $this->limit['start'] : 0;
@@ -712,7 +712,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @return SQLSelect A clone of this object with the last row only
      */
-    public function lastRow()
+    public function lastRow(): SilverStripe\ORM\Queries\SQLSelect
     {
         $query = clone $this;
         $offset = $this->limit ? $this->limit['start'] : 0;

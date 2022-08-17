@@ -102,7 +102,7 @@ class MarkedSet
         $numChildrenMethod = null,
         $nodeCountThreshold = null,
         $maxChildNodes = null
-    ) {
+    ): void {
         if (! $rootNode::has_extension(Hierarchy::class)) {
             throw new InvalidArgumentException(
                 get_class($rootNode) . " does not have the Hierarchy extension"
@@ -130,7 +130,7 @@ class MarkedSet
      *
      * @return int
      */
-    public function getNodeCountThreshold()
+    public function getNodeCountThreshold(): int
     {
         return $this->nodeCountThreshold
             ?: $this->rootNode->config()->get('node_threshold_total');
@@ -143,7 +143,7 @@ class MarkedSet
      *
      * @return int
      */
-    public function getMaxChildNodes()
+    public function getMaxChildNodes(): int
     {
         return $this->maxChildNodes
             ?: $this->rootNode->config()->get('node_threshold_leaf');
@@ -155,7 +155,7 @@ class MarkedSet
      * @param int $count
      * @return $this
      */
-    public function setMaxChildNodes($count)
+    public function setMaxChildNodes(int $count): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $this->maxChildNodes = $count;
         return $this;
@@ -167,7 +167,7 @@ class MarkedSet
      * @param int $total
      * @return $this
      */
-    public function setNodeCountThreshold($total)
+    public function setNodeCountThreshold(int $total): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $this->nodeCountThreshold = $total;
         return $this;
@@ -178,7 +178,7 @@ class MarkedSet
      *
      * @return string
      */
-    public function getChildrenMethod()
+    public function getChildrenMethod(): string
     {
         return $this->childrenMethod ?: 'AllChildrenIncludingDeleted';
     }
@@ -189,7 +189,7 @@ class MarkedSet
      * @param DataObject $node
      * @return SS_List
      */
-    protected function getChildren(DataObject $node)
+    protected function getChildren(DataObject $node): SilverStripe\ORM\ArrayList
     {
         $method = $this->getChildrenMethod();
         return $node->$method() ?: ArrayList::create();
@@ -202,7 +202,7 @@ class MarkedSet
      * @throws InvalidArgumentException
      * @return $this
      */
-    public function setChildrenMethod($method)
+    public function setChildrenMethod(string $method): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         // Check method is valid
         if (!$this->rootNode->hasMethod($method)) {
@@ -221,7 +221,7 @@ class MarkedSet
      *
      * @return string
      */
-    public function getNumChildrenMethod()
+    public function getNumChildrenMethod(): string
     {
         return $this->numChildrenMethod ?: 'numChildren';
     }
@@ -232,7 +232,7 @@ class MarkedSet
      * @param DataObject $node
      * @return int
      */
-    protected function getNumChildren(DataObject $node)
+    protected function getNumChildren(DataObject $node): int
     {
         $method = $this->getNumChildrenMethod();
         return (int)$node->$method();
@@ -244,7 +244,7 @@ class MarkedSet
      * @param string $method
      * @return $this
      */
-    public function setNumChildrenMethod($method)
+    public function setNumChildrenMethod(string $method): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         // Check method is valid
         if (!$this->rootNode->hasMethod($method)) {
@@ -268,9 +268,9 @@ class MarkedSet
      * @return string
      */
     public function renderChildren(
-        $template = null,
+        array|string $template = null,
         $context = []
-    ) {
+    ): string {
         // Default to HTML template
         if (!$template) {
             $template = [
@@ -291,7 +291,7 @@ class MarkedSet
      * replace the 'node' property at each point in the tree.
      * @return array
      */
-    public function getChildrenAsArray($serialiseEval = null)
+    public function getChildrenAsArray(callable $serialiseEval = null): array
     {
         if (!$serialiseEval) {
             $serialiseEval = function ($data) {
@@ -318,7 +318,7 @@ class MarkedSet
      * due to excessive line length. If callable, this will be executed with the current node dataobject
      * @return ArrayData Viewable object representing the root node. use getField('SubTree') to get HTML
      */
-    protected function renderSubtree($data, $template, $context = [])
+    protected function renderSubtree(array $data, array|string $template, callable|array $context = []): SilverStripe\View\ArrayData
     {
         // Render children
         $childNodes = new ArrayList();
@@ -357,7 +357,7 @@ class MarkedSet
      * replace the 'node' property at each point in the tree.
      * @return mixed|string
      */
-    protected function getSubtreeAsArray($data, $serialiseEval)
+    protected function getSubtreeAsArray(array $data, callable $serialiseEval): array
     {
         $output = $data;
 
@@ -399,7 +399,7 @@ class MarkedSet
      * @param int $depth
      * @return array|string
      */
-    protected function getSubtree($node, $depth = 0)
+    protected function getSubtree(SilverStripe\CMS\Model\SiteTree $node, int $depth = 0): array
     {
         // Check if this node is limited due to child count
         $numChildren = $this->getNumChildren($node);
@@ -448,7 +448,7 @@ class MarkedSet
      *
      * @return $this
      */
-    public function markPartialTree()
+    public function markPartialTree(): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $nodeCountThreshold = $this->getNodeCountThreshold();
 
@@ -497,7 +497,7 @@ class MarkedSet
      * @param callable $callback Callback to filter
      * @return $this
      */
-    public function setMarkingFilterFunction($callback)
+    public function setMarkingFilterFunction(callable $callback): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $this->markingFilter = [
             "func" => $callback,
@@ -511,7 +511,7 @@ class MarkedSet
      * @param DataObject $node Node to check
      * @return bool
      */
-    protected function markingFilterMatches(DataObject $node)
+    protected function markingFilterMatches(DataObject $node): bool
     {
         if (!$this->markingFilter) {
             return true;
@@ -544,7 +544,7 @@ class MarkedSet
      * @param DataObject $node Parent node
      * @return array List of children marked by this operation
      */
-    protected function markChildren(DataObject $node)
+    protected function markChildren(DataObject $node): array
     {
         $this->markExpanded($node);
 
@@ -587,7 +587,7 @@ class MarkedSet
      * @param DataObject $node
      * @return string
      */
-    protected function markingClasses($node)
+    protected function markingClasses(Page $node): string
     {
         $classes = [];
         if (!$this->isExpanded($node)) {
@@ -615,7 +615,7 @@ class MarkedSet
      * @param bool $open If this is true, mark the parent node as opened
      * @return bool
      */
-    public function markById($id, $open = false)
+    public function markById(int $id, bool $open = false): bool
     {
         if (isset($this->markedNodes[$id])) {
             $this->markChildren($this->markedNodes[$id]);
@@ -634,7 +634,7 @@ class MarkedSet
      * @param DataObject|Hierarchy $childObj
      * @return $this
      */
-    public function markToExpose(DataObject $childObj)
+    public function markToExpose(DataObject $childObj): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         if (!$childObj) {
             return $this;
@@ -652,7 +652,7 @@ class MarkedSet
      * @refactor called from CMSMain
      * @return array
      */
-    public function markedNodeIDs()
+    public function markedNodeIDs(): array
     {
         return array_keys($this->markedNodes ?? []);
     }
@@ -672,7 +672,7 @@ class MarkedSet
     /**
      * Reset marked nodes
      */
-    public function clearMarks()
+    public function clearMarks(): void
     {
         $this->markedNodes = [];
         $this->expanded = [];
@@ -685,7 +685,7 @@ class MarkedSet
      * @param DataObject $node
      * @return $this
      */
-    public function markExpanded(DataObject $node)
+    public function markExpanded(DataObject $node): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $id = $node->ID ?: 0;
         $this->markedNodes[$id] = $node;
@@ -699,7 +699,7 @@ class MarkedSet
      * @param DataObject $node
      * @return $this
      */
-    public function markUnexpanded(DataObject $node)
+    public function markUnexpanded(DataObject $node): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $id = $node->ID ?: 0;
         $this->markedNodes[$id] = $node;
@@ -713,7 +713,7 @@ class MarkedSet
      * @param DataObject $node
      * @return $this
      */
-    public function markOpened(DataObject $node)
+    public function markOpened(DataObject $node): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $id = $node->ID ?: 0;
         $this->markedNodes[$id] = $node;
@@ -727,7 +727,7 @@ class MarkedSet
      * @param DataObject $node
      * @return $this
      */
-    public function markClosed(DataObject $node)
+    public function markClosed(DataObject $node): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $id = $node->ID ?: 0;
         $this->markedNodes[$id] = $node;
@@ -741,7 +741,7 @@ class MarkedSet
      * @param DataObject $node
      * @return bool
      */
-    public function isMarked(DataObject $node)
+    public function isMarked(DataObject $node): bool
     {
         $id = $node->ID ?: 0;
         return !empty($this->markedNodes[$id]);
@@ -754,7 +754,7 @@ class MarkedSet
      * @param DataObject $node
      * @return bool
      */
-    public function isExpanded(DataObject $node)
+    public function isExpanded(DataObject $node): bool
     {
         $id = $node->ID ?: 0;
         return !empty($this->expanded[$id]);
@@ -767,7 +767,7 @@ class MarkedSet
      * @param DataObject $node
      * @return bool
      */
-    public function isTreeOpened(DataObject $node)
+    public function isTreeOpened(DataObject $node): bool
     {
         $id = $node->ID ?: 0;
         return !empty($this->treeOpened[$id]);
@@ -780,7 +780,7 @@ class MarkedSet
      * @param int $count Children count (if already calculated)
      * @return bool
      */
-    protected function isNodeLimited(DataObject $node, $count = null)
+    protected function isNodeLimited(DataObject $node, int $count = null): bool
     {
         // Singleton root node isn't limited
         if (!$node->ID) {
@@ -805,7 +805,7 @@ class MarkedSet
      * @param bool $enabled
      * @return $this
      */
-    public function setLimitingEnabled($enabled)
+    public function setLimitingEnabled(bool $enabled): SilverStripe\ORM\Hierarchy\MarkedSet
     {
         $this->enableLimiting = $enabled;
         return $this;
@@ -816,7 +816,7 @@ class MarkedSet
      *
      * @return bool
      */
-    public function getLimitingEnabled()
+    public function getLimitingEnabled(): bool
     {
         return $this->enableLimiting;
     }

@@ -17,7 +17,7 @@ class DevBuildController extends Controller
         'build'
     ];
 
-    public function build($request)
+    public function build(SilverStripe\Control\HTTPRequest $request): SilverStripe\Control\HTTPResponse
     {
         if (Director::is_cli()) {
             $da = DatabaseAdmin::create();

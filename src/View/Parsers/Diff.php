@@ -27,7 +27,7 @@ class Diff extends \Diff
      *    use, overriding self::$html_cleaner_class
      * @return mixed|string
      */
-    public static function cleanHTML($content, $cleaner = null)
+    public static function cleanHTML(string $content, $cleaner = null): string
     {
         if (!$cleaner) {
             if (self::$html_cleaner_class && class_exists(self::$html_cleaner_class)) {
@@ -58,7 +58,7 @@ class Diff extends \Diff
      * @param bool $escape
      * @return string
      */
-    public static function compareHTML($from, $to, $escape = false)
+    public static function compareHTML(string|array $from, string $to, bool $escape = false): string
     {
         // First split up the content into words and tags
         $set1 = self::getHTMLChunks($from);
@@ -164,7 +164,7 @@ class Diff extends \Diff
      * @param string|bool|array $content If passed as an array, values will be concatenated with a comma.
      * @return array
      */
-    public static function getHTMLChunks($content)
+    public static function getHTMLChunks(string|array $content): array
     {
         if ($content && !is_string($content) && !is_array($content) && !is_numeric($content) && !is_bool($content)) {
             throw new InvalidArgumentException('$content parameter needs to be a string or array');

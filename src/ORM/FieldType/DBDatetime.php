@@ -67,7 +67,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         return $this;
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(string|int|bool $value, SilverStripe\ErrorPage\ErrorPageController $record = null, bool $markChanged = true): SilverStripe\ORM\FieldType\DBDatetime
     {
         if ($this->immutable) {
             // This field is set as immutable so we have to create a new field instance
@@ -92,7 +92,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      *
      * @return string Formatted date.
      */
-    public function Date()
+    public function Date(): string
     {
         $formatter = $this->getFormatter(IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
         return $formatter->format($this->getTimestamp());
@@ -103,7 +103,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      *
      * @return string Formatted time.
      */
-    public function Time()
+    public function Time(): string
     {
         $formatter = $this->getFormatter(IntlDateFormatter::NONE, IntlDateFormatter::MEDIUM);
         return $formatter->format($this->getTimestamp());
@@ -124,7 +124,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      *
      * @return string Formatted time.
      */
-    public function Time24()
+    public function Time24(): string
     {
         return $this->Format('H:mm');
     }
@@ -135,7 +135,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @param Member $member
      * @return boolean|string A time and date pair formatted as per user-defined settings.
      */
-    public function FormatFromSettings($member = null)
+    public function FormatFromSettings($member = null): null|string
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -153,7 +153,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         return $this->Format($dateFormat . ' ' . $timeFormat, $member->getLocale());
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'datetime',
@@ -172,12 +172,12 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      *
      * @return string Formatted date and time.
      */
-    public function URLDatetime()
+    public function URLDatetime(): string
     {
         return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE) ?? '');
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(string $title = null, array $params = null): SilverStripe\Forms\DatetimeField
     {
         $field = DatetimeField::create($this->name, $title);
         $dateTimeFormat = $field->getDatetimeFormat();
@@ -208,7 +208,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      *
      * @return static
      */
-    public static function now()
+    public static function now(): SilverStripe\ORM\FieldType\DBDatetime
     {
         $time = self::$mock_now ? self::$mock_now->Value : time();
 
@@ -226,7 +226,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @param DBDatetime|string $datetime Either in object format, or as a DBDatetime compatible string.
      * @throws Exception
      */
-    public static function set_mock_now($datetime)
+    public static function set_mock_now(string|int|SilverStripe\ORM\FieldType\DBDatetime $datetime): void
     {
         if (!$datetime instanceof DBDatetime) {
             $value = $datetime;
@@ -242,7 +242,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * Clear any mocked date, which causes
      * {@link Now()} to return the current system date.
      */
-    public static function clear_mock_now()
+    public static function clear_mock_now(): void
     {
         self::$mock_now = null;
     }
@@ -255,7 +255,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @return mixed
      * @throws Exception
      */
-    public static function withFixedNow($time, $callback)
+    public static function withFixedNow(string $time, callable $callback): bool|null|SilverStripe\Security\Member
     {
         $original = self::$mock_now;
 
@@ -268,7 +268,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         }
     }
 
-    public static function get_template_global_variables()
+    public static function get_template_global_variables(): array
     {
         return [
             'Now' => ['method' => 'now', 'casting' => 'Datetime'],
@@ -282,7 +282,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @param int $timeLength
      * @return IntlDateFormatter
      */
-    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::SHORT)
+    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::SHORT): IntlDateFormatter
     {
         return parent::getFormatter($dateLength, $timeLength);
     }
@@ -298,11 +298,11 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @return IntlDateFormatter
      */
     public function getCustomFormatter(
-        $locale = null,
+        string $locale = null,
         $pattern = null,
         $dateLength = IntlDateFormatter::MEDIUM,
         $timeLength = IntlDateFormatter::MEDIUM
-    ) {
+    ): IntlDateFormatter {
         return parent::getCustomFormatter($locale, $pattern, $dateLength, $timeLength);
     }
 
@@ -312,7 +312,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @internal
      * @return IntlDateFormatter
      */
-    protected function getInternalFormatter()
+    protected function getInternalFormatter(): IntlDateFormatter
     {
         $formatter = $this->getCustomFormatter(DBDate::ISO_LOCALE, DBDatetime::ISO_DATETIME);
         $formatter->setLenient(false);

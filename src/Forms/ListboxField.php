@@ -52,7 +52,7 @@ class ListboxField extends MultiSelectField
      * @param string|array|null $value You can pass an array of values or a single value like a drop down to be selected
      * @param int $size Optional size of the select element
      */
-    public function __construct($name, $title = '', $source = [], $value = null, $size = null)
+    public function __construct(string $name, string|bool $title = '', array|SilverStripe\ORM\Map $source = [], $value = null, $size = null): void
     {
         if ($size) {
             $this->setSize($size);
@@ -67,7 +67,7 @@ class ListboxField extends MultiSelectField
      * @param array $properties
      * @return string
      */
-    public function Field($properties = [])
+    public function Field($properties = []): SilverStripe\ORM\FieldType\DBHTMLText
     {
         $properties = array_merge($properties, [
             'Options' => $this->getOptions(),
@@ -81,7 +81,7 @@ class ListboxField extends MultiSelectField
      *
      * @return ArrayList
      */
-    public function getOptions()
+    public function getOptions(): SilverStripe\ORM\ArrayList
     {
         // Loop through and figure out which values were selected.
         $options = [];
@@ -104,7 +104,7 @@ class ListboxField extends MultiSelectField
         return $options;
     }
 
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return array_merge(
             parent::getAttributes(),
@@ -121,7 +121,7 @@ class ListboxField extends MultiSelectField
      *
      * @return integer
      */
-    public function getSize()
+    public function getSize(): null
     {
         return $this->size;
     }
@@ -132,7 +132,7 @@ class ListboxField extends MultiSelectField
      * @param int $size The height in rows (e.g. 3)
      * @return $this Self reference
      */
-    public function setSize($size)
+    public function setSize(int $size): SilverStripe\Forms\ListboxField
     {
         $this->size = $size;
         return $this;
@@ -145,7 +145,7 @@ class ListboxField extends MultiSelectField
      * @param array $items Collection of array keys, as defined in the $source array
      * @return $this Self reference
      */
-    public function setDisabledItems($items)
+    public function setDisabledItems(array $items): SilverStripe\Forms\ListboxField
     {
         $this->disabledItems = $items;
         return $this;
@@ -154,7 +154,7 @@ class ListboxField extends MultiSelectField
     /**
      * @return array
      */
-    public function getDisabledItems()
+    public function getDisabledItems(): array
     {
         return $this->disabledItems;
     }

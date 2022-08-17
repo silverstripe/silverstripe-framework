@@ -23,7 +23,7 @@ class SSListExporter extends Exporter implements TestOnly
      * @return string
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
      */
-    protected function recursiveExport(&$value, $indentation, $processed = null)
+    protected function recursiveExport(array|string|int|SilverStripe\ORM\ArrayList &$value, int $indentation, SebastianBergmann\RecursionContext\Context $processed = null): string
     {
         if (!$processed) {
             $processed = new Context;
@@ -76,7 +76,7 @@ class SSListExporter extends Exporter implements TestOnly
      * @param ViewableData $object
      * @return array
      */
-    public function toMap(ViewableData $object)
+    public function toMap(ViewableData $object): array
     {
         return $object->hasMethod('toMap')
             ? $object->toMap()

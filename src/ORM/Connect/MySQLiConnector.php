@@ -47,7 +47,7 @@ class MySQLiConnector extends DBConnector
      *
      * @param mysqli_stmt $statement
      */
-    protected function setLastStatement($statement)
+    protected function setLastStatement(mysqli_stmt $statement): void
     {
         $this->lastStatement = $statement;
     }
@@ -59,7 +59,7 @@ class MySQLiConnector extends DBConnector
      * @param boolean $success (by reference)
      * @return mysqli_stmt
      */
-    public function prepareStatement($sql, &$success)
+    public function prepareStatement(string $sql, &$success): mysqli_stmt
     {
         // Record last statement for error reporting
         $statement = $this->dbConn->stmt_init();
@@ -73,7 +73,7 @@ class MySQLiConnector extends DBConnector
         return $statement;
     }
 
-    public function connect($parameters, $selectDB = false)
+    public function connect(array $parameters, bool $selectDB = false): void
     {
         // Normally $selectDB is set to false by the MySQLDatabase controller, as per convention
         $selectedDB = ($selectDB && !empty($parameters['database'])) ? $parameters['database'] : null;
@@ -141,7 +141,7 @@ class MySQLiConnector extends DBConnector
         }
     }
 
-    public function __destruct()
+    public function __destruct(): void
     {
         if (is_resource($this->dbConn)) {
             mysqli_close($this->dbConn);
@@ -149,18 +149,18 @@ class MySQLiConnector extends DBConnector
         }
     }
 
-    public function escapeString($value)
+    public function escapeString(string|int|float|SilverStripe\ORM\FieldType\DBDatetime $value): string
     {
         return $this->dbConn->real_escape_string($value ?? '');
     }
 
-    public function quoteString($value)
+    public function quoteString(string|int|float $value): string
     {
         $value = $this->escapeString($value);
         return "'$value'";
     }
 
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->dbConn->server_info;
     }
@@ -170,13 +170,13 @@ class MySQLiConnector extends DBConnector
      *
      * @param string $sql
      */
-    protected function beforeQuery($sql)
+    protected function beforeQuery(string $sql): void
     {
         // Clear the last statement
         $this->setLastStatement(null);
     }
 
-    public function query($sql, $errorLevel = E_USER_ERROR)
+    public function query(string $sql, int $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         $this->beforeQuery($sql);
 
@@ -199,7 +199,7 @@ class MySQLiConnector extends DBConnector
      * @param array $blobs Out parameter for list of blobs to bind separately (by reference)
      * @return array List of parameters appropriate for mysqli_stmt_bind_param function
      */
-    public function parsePreparedParameters($parameters, &$blobs)
+    public function parsePreparedParameters(array $parameters, &$blobs): array
     {
         $types = '';
         $values = [];
@@ -259,7 +259,7 @@ class MySQLiConnector extends DBConnector
      * @param mysqli_stmt $statement MySQLi statement
      * @param array $parameters List of parameters to pass to bind_param
      */
-    public function bindParameters(mysqli_stmt $statement, array $parameters)
+    public function bindParameters(mysqli_stmt $statement, array $parameters): void
     {
         // Because mysqli_stmt::bind_param arguments must be passed by reference
         // we need to do a bit of hackery
@@ -273,7 +273,7 @@ class MySQLiConnector extends DBConnector
         $statement->bind_param(...$boundNames);
     }
 
-    public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
+    public function preparedQuery(string $sql, array $parameters, int $errorLevel = E_USER_ERROR): SilverStripe\ORM\Connect\MySQLQuery
     {
         // Shortcut to basic query when not given parameters
         if (empty($parameters)) {
@@ -317,7 +317,7 @@ class MySQLiConnector extends DBConnector
         return new MySQLQuery($this, true);
     }
 
-    public function selectDatabase($name)
+    public function selectDatabase(string $name): bool
     {
         if ($this->dbConn->select_db($name ?? '')) {
             $this->databaseName = $name;
@@ -327,32 +327,32 @@ class MySQLiConnector extends DBConnector
         return false;
     }
 
-    public function getSelectedDatabase()
+    public function getSelectedDatabase(): string|null
     {
         return $this->databaseName;
     }
 
-    public function unloadDatabase()
+    public function unloadDatabase(): void
     {
         $this->databaseName = null;
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->databaseName && $this->dbConn && empty($this->dbConn->connect_error);
     }
 
-    public function affectedRows()
+    public function affectedRows(): int
     {
         return $this->dbConn->affected_rows;
     }
 
-    public function getGeneratedID($table)
+    public function getGeneratedID(string $table): int
     {
         return $this->dbConn->insert_id;
     }
 
-    public function getLastError()
+    public function getLastError(): string
     {
         // Check if a statement was used for the most recent query
         if ($this->lastStatement && $this->lastStatement->error) {

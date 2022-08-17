@@ -26,7 +26,7 @@ class CMSMemberLoginForm extends MemberLoginForm
      * @param string $authenticatorClass
      * @param FieldList $name
      */
-    public function __construct(RequestHandler $controller, $authenticatorClass, $name)
+    public function __construct(RequestHandler $controller, string $authenticatorClass, string $name): void
     {
         $this->controller = $controller;
 
@@ -44,7 +44,7 @@ class CMSMemberLoginForm extends MemberLoginForm
     /**
      * @return FieldList
      */
-    public function getFormFields()
+    public function getFormFields(): SilverStripe\Forms\FieldList
     {
         // Set default fields
         $fields = FieldList::create([
@@ -81,7 +81,7 @@ class CMSMemberLoginForm extends MemberLoginForm
     /**
      * @return FieldList
      */
-    public function getFormActions()
+    public function getFormActions(): SilverStripe\Forms\FieldList
     {
         // Determine returnurl to redirect to parent page
         $logoutLink = $this->getExternalLink('logout');
@@ -120,7 +120,7 @@ class CMSMemberLoginForm extends MemberLoginForm
      * @param string $action Action
      * @return string
      */
-    public function getExternalLink($action = null)
+    public function getExternalLink(string $action = null): string
     {
         return Security::singleton()->Link($action);
     }

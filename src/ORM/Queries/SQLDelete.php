@@ -30,7 +30,7 @@ class SQLDelete extends SQLConditionalExpression
      * @param array|string $delete The table(s) to delete, if multiple tables are queried from
      * @return static
      */
-    public static function create($from = [], $where = [], $delete = [])
+    public static function create(string $from = [], array|string $where = [], $delete = []): SilverStripe\ORM\Queries\SQLDelete
     {
         return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
     }
@@ -43,7 +43,7 @@ class SQLDelete extends SQLConditionalExpression
      * @param array $where An array of WHERE clauses.
      * @param array|string $delete The table(s) to delete, if multiple tables are queried from
      */
-    function __construct($from = [], $where = [], $delete = [])
+    function __construct(string $from = [], array|string $where = [], $delete = []): void
     {
         parent::__construct($from, $where);
         $this->setDelete($delete);
@@ -55,7 +55,7 @@ class SQLDelete extends SQLConditionalExpression
      *
      * @return array
      */
-    public function getDelete()
+    public function getDelete(): array
     {
         return $this->delete;
     }
@@ -67,7 +67,7 @@ class SQLDelete extends SQLConditionalExpression
      * @param string|array $tables Escaped SQL statement, usually an unquoted table name
      * @return $this Self reference
      */
-    public function setDelete($tables)
+    public function setDelete(array $tables): SilverStripe\ORM\Queries\SQLDelete
     {
         $this->delete = [];
         return $this->addDelete($tables);
@@ -80,7 +80,7 @@ class SQLDelete extends SQLConditionalExpression
      * @param string|array $tables Escaped SQL statement, usually an unquoted table name
      * @return $this Self reference
      */
-    public function addDelete($tables)
+    public function addDelete(array $tables): SilverStripe\ORM\Queries\SQLDelete
     {
         if (is_array($tables)) {
             $this->delete = array_merge($this->delete, $tables);

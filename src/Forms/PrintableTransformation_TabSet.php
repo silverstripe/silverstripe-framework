@@ -10,13 +10,13 @@ class PrintableTransformation_TabSet extends TabSet
     /**
      * @param array $tabs
      */
-    public function __construct($tabs)
+    public function __construct(array|SilverStripe\Forms\FieldList $tabs): void
     {
         $this->children = $tabs;
         CompositeField::__construct($tabs);
     }
 
-    public function FieldHolder($properties = [])
+    public function FieldHolder($properties = []): string
     {
         // This gives us support for sub-tabs.
         $tag = $this->getTabSet() ? 'h2>' : 'h1>';

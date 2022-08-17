@@ -19,12 +19,12 @@ class GridFieldButtonRow extends AbstractGridFieldComponent implements GridField
 
     protected $targetFragment;
 
-    public function __construct($targetFragment = 'before')
+    public function __construct(string $targetFragment = 'before'): void
     {
         $this->targetFragment = $targetFragment;
     }
 
-    public function getHTMLFragments($gridField)
+    public function getHTMLFragments(SilverStripe\Forms\GridField\GridField $gridField): array
     {
         $data = new ArrayData([
             "TargetFragmentName" => $this->targetFragment,

@@ -55,7 +55,7 @@ class FormRequestHandler extends RequestHandler
      *
      * @param Form $form
      */
-    public function __construct(Form $form)
+    public function __construct(Form $form): void
     {
         $this->form = $form;
         parent::__construct();
@@ -74,7 +74,7 @@ class FormRequestHandler extends RequestHandler
      * @param string $action
      * @return string
      */
-    public function Link($action = null)
+    public function Link(string $action = null): string|null
     {
         // Forms without parent controller have no link;
         // E.g. Submission handled via graphql
@@ -106,7 +106,7 @@ class FormRequestHandler extends RequestHandler
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function httpSubmission($request)
+    public function httpSubmission(SilverStripe\Control\HTTPRequest $request): string|null|SilverStripe\Control\HTTPResponse
     {
         // Strict method check
         if ($this->form->getStrictFormMethodCheck()) {
@@ -268,7 +268,7 @@ class FormRequestHandler extends RequestHandler
      * @param string $action
      * @return bool
      */
-    public function checkAccessAction($action)
+    public function checkAccessAction(string $action): bool
     {
         if (parent::checkAccessAction($action)) {
             return true;
@@ -303,7 +303,7 @@ class FormRequestHandler extends RequestHandler
      * @param ValidationResult $result
      * @return HTTPResponse
      */
-    protected function getValidationErrorResponse(ValidationResult $result)
+    protected function getValidationErrorResponse(ValidationResult $result): SilverStripe\Control\HTTPResponse
     {
         // Check for custom handling mechanism
         $callback = $this->form->getValidationResponseCallback();
@@ -332,7 +332,7 @@ class FormRequestHandler extends RequestHandler
      *
      * @return HTTPResponse
      */
-    public function redirectBackToForm()
+    public function redirectBackToForm(): SilverStripe\Control\HTTPResponse
     {
         $pageURL = $this->getReturnReferer();
         if (!$pageURL) {
@@ -355,7 +355,7 @@ class FormRequestHandler extends RequestHandler
      * @param string $link
      * @return string
      */
-    protected function addBackURLParam($link)
+    protected function addBackURLParam(string $link): string
     {
         $backURL = $this->getBackURL();
         if ($backURL) {
@@ -371,7 +371,7 @@ class FormRequestHandler extends RequestHandler
      * @param ValidationResult $result
      * @return HTTPResponse
      */
-    protected function getAjaxErrorResponse(ValidationResult $result)
+    protected function getAjaxErrorResponse(ValidationResult $result): SilverStripe\Control\HTTPResponse
     {
         // Ajax form submissions accept json encoded errors by default
         $acceptType = $this->getRequest()->getHeader('Accept');
@@ -396,7 +396,7 @@ class FormRequestHandler extends RequestHandler
      * @param callable $funcName
      * @return FormField
      */
-    protected function checkFieldsForAction($fields, $funcName)
+    protected function checkFieldsForAction(SilverStripe\Forms\FieldList $fields, string $funcName): null|SilverStripe\Control\Tests\RequestHandlingTest\HandlingField
     {
         foreach ($fields as $field) {
             /** @skipUpgrade */
@@ -422,7 +422,7 @@ class FormRequestHandler extends RequestHandler
      * @param HTTPRequest $request
      * @return FormField
      */
-    public function handleField($request)
+    public function handleField(SilverStripe\Control\HTTPRequest $request): SilverStripe\Forms\GridField\GridField
     {
         $field = $this->form->Fields()->dataFieldByName($request->param('FieldName'));
 
@@ -440,7 +440,7 @@ class FormRequestHandler extends RequestHandler
      * @param callable $funcName The name of the action method that will be called.
      * @return $this
      */
-    public function setButtonClicked($funcName)
+    public function setButtonClicked(string $funcName): SilverStripe\Forms\FormRequestHandler
     {
         $this->buttonClickedFunc = $funcName;
         return $this;
@@ -451,7 +451,7 @@ class FormRequestHandler extends RequestHandler
      *
      * @return FormAction
      */
-    public function buttonClicked()
+    public function buttonClicked(): SilverStripe\Forms\FormAction|null
     {
         $actions = $this->getAllActions();
         foreach ($actions as $action) {
@@ -467,7 +467,7 @@ class FormRequestHandler extends RequestHandler
      *
      * @return array
      */
-    protected function getAllActions()
+    protected function getAllActions(): array
     {
         $fields = $this->form->Fields()->dataFields();
         $actions = $this->form->Actions()->dataFields();
@@ -524,7 +524,7 @@ class FormRequestHandler extends RequestHandler
      * @param array $vars
      * @return mixed
      */
-    private function invokeFormHandler($subject, string $funcName, HTTPRequest $request, array $vars)
+    private function invokeFormHandler(SilverStripe\MFA\Authenticator\LoginHandler $subject, string $funcName, HTTPRequest $request, array $vars): string|null|SilverStripe\Control\HTTPResponse
     {
         $this->extend('beforeCallFormHandler', $request, $funcName, $vars, $this->form, $subject);
         $result = $subject->$funcName($vars, $this->form, $request, $this);

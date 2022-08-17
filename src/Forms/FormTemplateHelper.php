@@ -32,7 +32,7 @@ class FormTemplateHelper
      *
      * @return string
      */
-    public function generateFormID($form)
+    public function generateFormID(SilverStripe\CMS\Search\SearchForm $form): string
     {
         if ($id = $form->getHTMLID()) {
             return Convert::raw2htmlid($id);
@@ -48,7 +48,7 @@ class FormTemplateHelper
      *
      * @return string
      */
-    public function generateFieldHolderID($field)
+    public function generateFieldHolderID(SilverStripe\Forms\CompositeField $field): string
     {
         return $this->generateFieldID($field) . '_Holder';
     }
@@ -59,7 +59,7 @@ class FormTemplateHelper
      * @param FormField $field
      * @return string
      */
-    public function generateFieldID($field)
+    public function generateFieldID(SilverStripe\Forms\CompositeField $field): string
     {
         // Don't include '.'s in IDs, they confused JavaScript
         $name = str_replace('.', '_', $field->getName() ?? '');

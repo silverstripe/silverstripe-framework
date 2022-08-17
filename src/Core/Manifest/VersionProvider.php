@@ -42,7 +42,7 @@ class VersionProvider
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         $key = sprintf('%s-%s', $this->getComposerLockPath(), 'all');
         $version = $this->getCachedValue($key);
@@ -148,7 +148,7 @@ class VersionProvider
      * @param array $modules
      * @return array
      */
-    private function filterModules(array $modules)
+    private function filterModules(array $modules): array
     {
         $accountModule = [];
         foreach ($modules as $module => $value) {
@@ -171,7 +171,7 @@ class VersionProvider
      *
      * @return array
      */
-    public function getModules()
+    public function getModules(): array
     {
         $modules = Config::inst()->get(self::class, 'modules');
         return !empty($modules) ? $modules : ['silverstripe/framework' => 'Framework'];
@@ -183,7 +183,7 @@ class VersionProvider
      * @param array $modules
      * @return array
      */
-    public function getModuleVersionFromComposer($modules = [])
+    public function getModuleVersionFromComposer(array $modules = []): array
     {
         $versions = [];
         $lockData = $this->getComposerLock();
@@ -203,7 +203,7 @@ class VersionProvider
      * @param bool $cache
      * @return array
      */
-    protected function getComposerLock($cache = true)
+    protected function getComposerLock($cache = true): array
     {
         $composerLockPath = $this->getComposerLockPath();
         if (!file_exists($composerLockPath ?? '')) {

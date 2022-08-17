@@ -36,7 +36,7 @@ abstract class LoginForm extends Form
      * @param string $class
      * @return $this
      */
-    public function setAuthenticatorClass($class)
+    public function setAuthenticatorClass(string $class): SilverStripe\Security\MemberAuthenticator\MemberLoginForm
     {
         $this->authenticatorClass = $class;
 
@@ -59,7 +59,7 @@ abstract class LoginForm extends Form
      *
      * @return string
      */
-    public function getAuthenticatorClass()
+    public function getAuthenticatorClass(): string
     {
         // B/C for deprecated authenticator_class property
         return $this->authenticator_class ?: $this->authenticatorClass;

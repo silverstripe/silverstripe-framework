@@ -12,7 +12,7 @@ use SilverStripe\ORM\DB;
  */
 class DBMultiEnum extends DBEnum
 {
-    public function __construct($name = null, $enum = null, $default = null)
+    public function __construct(string $name = null, string|array $enum = null, $default = null): void
     {
         // MultiEnum needs to take care of its own defaults
         parent::__construct($name, $enum, null);
@@ -33,7 +33,7 @@ class DBMultiEnum extends DBEnum
         }
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         // @todo: Remove mysql-centric logic from this
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');

@@ -38,7 +38,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param array $items - an initial array to fill this object with
      */
-    public function __construct(array $items = [])
+    public function __construct(array $items = []): void
     {
         $this->items = array_values($items ?? []);
         parent::__construct();
@@ -56,7 +56,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return string
      */
-    public function dataClass()
+    public function dataClass(): null|string
     {
         if ($this->dataClass) {
             return $this->dataClass;
@@ -73,7 +73,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $class
      * @return $this
      */
-    public function setDataClass($class)
+    public function setDataClass(string $class): SilverStripe\ORM\ArrayList
     {
         $this->dataClass = $class;
         return $this;
@@ -85,7 +85,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @return int
      */
     #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return count($this->items ?? []);
     }
@@ -95,7 +95,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return !empty($this->items);
     }
@@ -107,7 +107,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @return ArrayIterator
      */
     #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         $items = array_map(
             function ($item) {
@@ -123,7 +123,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->items;
     }
@@ -134,7 +134,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param callable $callback
      * @return $this
      */
-    public function each($callback)
+    public function each(callable $callback): SilverStripe\ORM\ArrayList
     {
         foreach ($this as $item) {
             $callback($item);
@@ -157,7 +157,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return array
      */
-    public function toNestedArray()
+    public function toNestedArray(): array
     {
         $result = [];
 
@@ -183,7 +183,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param int $offset
      * @return static
      */
-    public function limit($length, $offset = 0)
+    public function limit(int $length, int $offset = 0): SilverStripe\ORM\ArrayList
     {
         // Type checking: designed for consistency with DataList::limit()
         if (!is_numeric($length) || !is_numeric($offset)) {
@@ -222,7 +222,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param mixed $item
      */
-    public function add($item)
+    public function add(array|stdClass|SilverStripe\Forms\GridField\GridField $item): void
     {
         $this->push($item);
     }
@@ -232,7 +232,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param mixed $item
      */
-    public function remove($item)
+    public function remove(array|SilverStripe\Forms\GridField\GridFieldFilterHeader $item): void
     {
         $renumberKeys = false;
         foreach ($this->items as $key => $value) {
@@ -253,7 +253,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param array|object $with
      * @return void
      */
-    public function replace($item, $with)
+    public function replace(array|stdClass $item, array $with): void
     {
         foreach ($this->items as $key => $candidate) {
             if ($candidate === $item) {
@@ -269,7 +269,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param array|object $with
      */
-    public function merge($with)
+    public function merge(array|SilverStripe\ORM\ArrayList $with): void
     {
         foreach ($with as $item) {
             $this->push($item);
@@ -283,7 +283,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $field
      * @return $this
      */
-    public function removeDuplicates($field = 'ID')
+    public function removeDuplicates(string $field = 'ID'): SilverStripe\ORM\ArrayList
     {
         $seen = [];
         $renumberKeys = false;
@@ -311,7 +311,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param array|object $item
      */
-    public function push($item)
+    public function push(int|array|stdClass|SilverStripe\View\ArrayData $item): void
     {
         $this->items[] = $item;
     }
@@ -321,7 +321,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return array|object
      */
-    public function pop()
+    public function pop(): array|SilverStripe\ORM\DataObject
     {
         return array_pop($this->items);
     }
@@ -331,7 +331,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param array|object $item
      */
-    public function unshift($item)
+    public function unshift(array|SilverStripe\Forms\PasswordField $item): void
     {
         array_unshift($this->items, $item);
     }
@@ -341,7 +341,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return array|object
      */
-    public function shift()
+    public function shift(): array|SilverStripe\View\ArrayData
     {
         return array_shift($this->items);
     }
@@ -351,7 +351,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return mixed
      */
-    public function first()
+    public function first(): null|array|stdClass|SilverStripe\Forms\TextField
     {
         if (empty($this->items)) {
             return null;
@@ -365,7 +365,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return mixed
      */
-    public function last()
+    public function last(): array|stdClass|SilverStripe\View\ArrayData
     {
         if (empty($this->items)) {
             return null;
@@ -381,7 +381,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $titlefield The value field of the result array
      * @return Map
      */
-    public function map($keyfield = 'ID', $titlefield = 'Title')
+    public function map(string $keyfield = 'ID', string $titlefield = 'Title'): SilverStripe\ORM\Map
     {
         $list = clone $this;
         return new Map($list, $keyfield, $titlefield);
@@ -394,7 +394,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $value
      * @return mixed
      */
-    public function find($key, $value)
+    public function find(string $key, string|int $value): null|stdClass|SilverStripe\View\ArrayData
     {
         foreach ($this->items as $item) {
             if ($this->extractValue($item, $key) == $value) {
@@ -410,7 +410,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $colName
      * @return array
      */
-    public function column($colName = 'ID')
+    public function column(string $colName = 'ID'): array
     {
         $result = [];
 
@@ -438,7 +438,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $by
      * @return bool
      */
-    public function canSortBy($by)
+    public function canSortBy(string $by): bool
     {
         return true;
     }
@@ -448,7 +448,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return ArrayList
      */
-    public function reverse()
+    public function reverse(): SilverStripe\ORM\ArrayList
     {
         $list = clone $this;
         $list->items = array_reverse($this->items ?? []);
@@ -463,7 +463,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param mixed $direction Optional Additional argument which may contain the direction
      * @return array Sort specification in the form array("Column", SORT_ASC).
      */
-    protected function parseSortColumn($column, $direction = null)
+    protected function parseSortColumn(string|int $column, string $direction = null): array
     {
         // Substitute the direction for the column if column is a numeric index
         if ($direction && (empty($column) || is_numeric($column))) {
@@ -507,7 +507,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example $list->sort('Name', 'ASC');
      * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
      */
-    public function sort()
+    public function sort(): SilverStripe\ORM\UnsavedRelationList
     {
         $args = func_get_args();
 
@@ -579,7 +579,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return $this
      */
-    public function shuffle()
+    public function shuffle(): SilverStripe\ORM\ArrayList
     {
         shuffle($this->items);
 
@@ -594,7 +594,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $by
      * @return bool
      */
-    public function canFilterBy($by)
+    public function canFilterBy(string $by): bool
     {
         if (empty($this->items)) {
             return false;
@@ -617,7 +617,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
      *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
      */
-    public function filter()
+    public function filter(): SilverStripe\ORM\ArrayList
     {
 
         $keepUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
@@ -660,7 +660,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string|array See {@link filter()}
      * @return static
      */
-    public function filterAny()
+    public function filterAny(): SilverStripe\ORM\UnsavedRelationList
     {
         $keepUs = $this->normaliseFilterArgs(...func_get_args());
 
@@ -691,7 +691,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @return array The normalised keyed array
      */
-    protected function normaliseFilterArgs($column, $value = null)
+    protected function normaliseFilterArgs(string|array $column, int|bool|array|string $value = null): array
     {
         $args = func_get_args();
         if (count($args ?? []) > 2) {
@@ -722,13 +722,13 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param array $ids Array of integers, will be automatically cast/escaped.
      * @return ArrayList
      */
-    public function byIDs($ids)
+    public function byIDs(array $ids): SilverStripe\ORM\ArrayList
     {
         $ids = array_map('intval', $ids ?? []); // sanitize
         return $this->filter('ID', $ids);
     }
 
-    public function byID($id)
+    public function byID(int $id): array|null|SilverStripe\Versioned\Tests\VersionedTest\TestObject
     {
         $firstElement = $this->filter("ID", $id)->first();
 
@@ -746,7 +746,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param callable $callback
      * @return ArrayList
      */
-    public function filterByCallback($callback)
+    public function filterByCallback(callable $callback): SilverStripe\UserForms\FormField\UserFormsFieldList
     {
         if (!is_callable($callback)) {
             throw new LogicException(sprintf(
@@ -778,7 +778,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // bob age 21 or 43, phil age 21 or 43 would be excluded
      */
-    public function exclude()
+    public function exclude(): SilverStripe\ORM\ArrayList
     {
         $removeUs = $this->normaliseFilterArgs(...func_get_args());
 
@@ -820,7 +820,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @return bool
      */
     #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(int|string $offset): bool
     {
         return array_key_exists($offset, $this->items ?? []);
     }
@@ -832,7 +832,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @return DataObject
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(int|string $offset): array|stdClass|string|SilverStripe\View\ArrayData
     {
         if ($this->offsetExists($offset)) {
             return $this->items[$offset];
@@ -847,7 +847,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param mixed $value
      */
     #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(string|int $offset, array|string|DNADesign\Elemental\Models\ElementalArea $value): void
     {
         if ($offset === null) {
             $this->items[] = $value;
@@ -862,7 +862,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param mixed $offset
      */
     #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(int $offset): void
     {
         unset($this->items[$offset]);
     }
@@ -875,7 +875,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @param string $key
      * @return mixed
      */
-    protected function extractValue($item, $key)
+    protected function extractValue(array|stdClass|DNADesign\Elemental\Tests\Src\TestPage $item, string $key): int|string|null|bool|SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (is_object($item)) {
             if (method_exists($item, 'hasMethod') && $item->hasMethod($key)) {

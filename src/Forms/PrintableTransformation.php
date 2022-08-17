@@ -13,7 +13,7 @@ class PrintableTransformation extends ReadonlyTransformation
      * @param TabSet $field
      * @return PrintableTransformation_TabSet
      */
-    public function transformTabSet($field)
+    public function transformTabSet(SilverStripe\Forms\TabSet $field): SilverStripe\Forms\PrintableTransformation_TabSet
     {
         $transformedField = new PrintableTransformation_TabSet($field->Tabs()->transform($this));
         $transformedField->Title = $field->Title();

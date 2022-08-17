@@ -23,7 +23,7 @@ class InjectorLoader
     /**
      * @return self
      */
-    public static function inst()
+    public static function inst(): SilverStripe\Core\Injector\InjectorLoader
     {
         return self::$instance ? self::$instance : self::$instance = new static();
     }
@@ -34,7 +34,7 @@ class InjectorLoader
      *
      * @return Injector
      */
-    public function getManifest()
+    public function getManifest(): SilverStripe\Core\Injector\Injector
     {
         if ($this !== self::$instance) {
             throw new BadMethodCallException(
@@ -62,7 +62,7 @@ class InjectorLoader
      *
      * @param Injector $manifest
      */
-    public function pushManifest(Injector $manifest)
+    public function pushManifest(Injector $manifest): void
     {
         $this->manifests[] = $manifest;
     }
@@ -70,7 +70,7 @@ class InjectorLoader
     /**
      * @return Injector
      */
-    public function popManifest()
+    public function popManifest(): SilverStripe\Core\Injector\Injector
     {
         return array_pop($this->manifests);
     }
@@ -80,7 +80,7 @@ class InjectorLoader
      *
      * @return int
      */
-    public function countManifests()
+    public function countManifests(): int
     {
         return count($this->manifests ?? []);
     }
@@ -90,7 +90,7 @@ class InjectorLoader
      *
      * @return static
      */
-    public function nest()
+    public function nest(): SilverStripe\Core\Injector\InjectorLoader
     {
         // Nest injector (note: Don't call getManifest()->nest() since that self-pushes a new manifest)
         $manifest = clone $this->getManifest();
@@ -109,7 +109,7 @@ class InjectorLoader
      *
      * @return $this
      */
-    public function activate()
+    public function activate(): SilverStripe\Core\Injector\InjectorLoader
     {
         static::$instance = $this;
         return $this;

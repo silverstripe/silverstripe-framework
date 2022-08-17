@@ -20,7 +20,7 @@ use DOMDocument;
 abstract class HTMLValue extends ViewableData
 {
 
-    public function __construct($fragment = null)
+    public function __construct(string $fragment = null): void
     {
         if ($fragment) {
             $this->setContent($fragment);
@@ -33,7 +33,7 @@ abstract class HTMLValue extends ViewableData
     /**
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         $document = $this->getDocument();
         if (!$document) {
@@ -96,7 +96,7 @@ abstract class HTMLValue extends ViewableData
      * Get the DOMDocument for the passed content
      * @return DOMDocument | false - Return false if HTML not valid, the DOMDocument instance otherwise
      */
-    public function getDocument()
+    public function getDocument(): DOMDocument|bool
     {
         if (!$this->valid) {
             return false;
@@ -115,7 +115,7 @@ abstract class HTMLValue extends ViewableData
      * Is this HTMLValue in an errored state?
      * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->valid;
     }
@@ -123,13 +123,13 @@ abstract class HTMLValue extends ViewableData
     /**
      * @param DOMDocument $document
      */
-    public function setDocument($document)
+    public function setDocument(DOMDocument $document): void
     {
         $this->document = $document;
         $this->valid = true;
     }
 
-    public function setInvalid()
+    public function setInvalid(): void
     {
         $this->document = $this->valid = false;
     }
@@ -142,7 +142,7 @@ abstract class HTMLValue extends ViewableData
      * @param array $arguments
      * @return mixed
      */
-    public function __call($method, $arguments)
+    public function __call(string $method, array $arguments): DOMNodeList|string
     {
         $doc = $this->getDocument();
 
@@ -157,7 +157,7 @@ abstract class HTMLValue extends ViewableData
      * Get the body element, or false if there isn't one (we haven't loaded any content
      * or this instance is in an invalid state)
      */
-    public function getBody()
+    public function getBody(): DOMElement
     {
         $doc = $this->getDocument();
         if (!$doc) {
@@ -178,7 +178,7 @@ abstract class HTMLValue extends ViewableData
      * @param string $query The xpath query string
      * @return DOMNodeList
      */
-    public function query($query)
+    public function query(string $query): DOMNodeList
     {
         $xp = new DOMXPath($this->getDocument());
         return $xp->query($query);

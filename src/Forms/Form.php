@@ -285,7 +285,7 @@ class Form extends ViewableData implements HasRequestHandler
         FieldList $fields = null,
         FieldList $actions = null,
         Validator $validator = null
-    ) {
+    ): void {
         parent::__construct();
 
         $fields = $fields ? $fields : FieldList::create();
@@ -322,7 +322,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @return bool
      */
-    public function getNotifyUnsavedChanges()
+    public function getNotifyUnsavedChanges(): bool
     {
         return $this->notifyUnsavedChanges;
     }
@@ -330,7 +330,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @param bool $flag
      */
-    public function setNotifyUnsavedChanges($flag)
+    public function setNotifyUnsavedChanges(bool $flag): void
     {
         $this->notifyUnsavedChanges = $flag;
     }
@@ -340,7 +340,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return $this
      */
-    public function restoreFormState()
+    public function restoreFormState(): SilverStripe\CMS\Search\SearchForm
     {
         // Restore messages
         $result = $this->getSessionValidationResult();
@@ -361,7 +361,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return $this
      */
-    public function clearFormState()
+    public function clearFormState(): SilverStripe\CMS\Search\SearchForm
     {
         $this
             ->getSession()
@@ -375,7 +375,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return HTTPRequest
      */
-    protected function getRequest()
+    protected function getRequest(): SilverStripe\Control\HTTPRequest
     {
         // Check if current request handler has a request object
         $controller = $this->getController();
@@ -394,7 +394,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return Session
      */
-    protected function getSession()
+    protected function getSession(): SilverStripe\Control\Session
     {
         $request = $this->getRequest();
         if ($request) {
@@ -408,7 +408,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return array
      */
-    public function getSessionData()
+    public function getSessionData(): null|array
     {
         return $this->getSession()->get("FormInfo.{$this->FormName()}.data");
     }
@@ -419,7 +419,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param array $data
      * @return $this
      */
-    public function setSessionData($data)
+    public function setSessionData(array $data): SilverStripe\Forms\Form
     {
         $this->getSession()->set("FormInfo.{$this->FormName()}.data", $data);
         return $this;
@@ -430,7 +430,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return ValidationResult The ValidationResult object stored in the session
      */
-    public function getSessionValidationResult()
+    public function getSessionValidationResult(): null|SilverStripe\ORM\ValidationResult
     {
         $resultData = $this->getSession()->get("FormInfo.{$this->FormName()}.result");
         if (isset($resultData)) {
@@ -445,7 +445,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param bool $combineWithExisting If true, then this will be added to the existing result.
      * @return $this
      */
-    public function setSessionValidationResult(ValidationResult $result, $combineWithExisting = false)
+    public function setSessionValidationResult(ValidationResult $result, $combineWithExisting = false): SilverStripe\Forms\Form
     {
         // Combine with existing result
         if ($combineWithExisting) {
@@ -470,7 +470,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return $this
      */
-    public function clearMessage()
+    public function clearMessage(): SilverStripe\CMS\Search\SearchForm
     {
         $this->setMessage(null);
         $this->clearFormState();
@@ -484,7 +484,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param ValidationResult $result
      * @return $this
      */
-    public function loadMessagesFrom($result)
+    public function loadMessagesFrom(SilverStripe\ORM\ValidationResult $result): SilverStripe\Security\MemberAuthenticator\MemberLoginForm
     {
         // Set message on either a field or the parent form
         foreach ($result->getMessages() as $message) {
@@ -523,7 +523,7 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    public function castingHelper($field)
+    public function castingHelper(string $field): string
     {
         // Override casting for field message
         if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
@@ -536,7 +536,7 @@ class Form extends ViewableData implements HasRequestHandler
      * set up the default classes for the form. This is done on construct so that the default classes can be removed
      * after instantiation
      */
-    protected function setupDefaultClasses()
+    protected function setupDefaultClasses(): void
     {
         $defaultClasses = self::config()->get('default_classes');
         if ($defaultClasses) {
@@ -549,7 +549,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @return callable
      */
-    public function getValidationResponseCallback()
+    public function getValidationResponseCallback(): callable|null
     {
         return $this->validationResponseCallback;
     }
@@ -564,7 +564,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param $callback
      * @return self
      */
-    public function setValidationResponseCallback($callback)
+    public function setValidationResponseCallback(callable $callback): SilverStripe\Forms\Form
     {
         $this->validationResponseCallback = $callback;
 
@@ -576,7 +576,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return $this
      */
-    public function makeReadonly()
+    public function makeReadonly(): SilverStripe\Forms\Form
     {
         $this->transform(new ReadonlyTransformation());
         return $this;
@@ -590,7 +590,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param bool $bool Redirect to form on error?
      * @return $this
      */
-    public function setRedirectToFormOnValidationError($bool)
+    public function setRedirectToFormOnValidationError(bool $bool): SilverStripe\Comments\Forms\CommentForm
     {
         $this->redirectToFormOnValidationError = $bool;
         return $this;
@@ -602,7 +602,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return bool
      */
-    public function getRedirectToFormOnValidationError()
+    public function getRedirectToFormOnValidationError(): bool
     {
         return $this->redirectToFormOnValidationError;
     }
@@ -610,7 +610,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @param FormTransformation $trans
      */
-    public function transform(FormTransformation $trans)
+    public function transform(FormTransformation $trans): void
     {
         $newFields = new FieldList();
         foreach ($this->fields as $field) {
@@ -635,7 +635,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Get the {@link Validator} attached to this form.
      * @return Validator
      */
-    public function getValidator()
+    public function getValidator(): null|SilverStripe\Forms\RequiredFields
     {
         return $this->validator;
     }
@@ -645,7 +645,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param Validator $validator
      * @return $this
      */
-    public function setValidator(Validator $validator)
+    public function setValidator(Validator $validator): SilverStripe\Security\MemberAuthenticator\MemberLoginForm
     {
         if ($validator) {
             $this->validator = $validator;
@@ -657,7 +657,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Remove the {@link Validator} from this from.
      */
-    public function unsetValidator()
+    public function unsetValidator(): SilverStripe\Forms\Form
     {
         $this->validator = null;
         return $this;
@@ -669,7 +669,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param array $actions
      * @return $this
      */
-    public function setValidationExemptActions($actions)
+    public function setValidationExemptActions(array $actions): SilverStripe\Forms\Form
     {
         $this->validationExemptActions = $actions;
         return $this;
@@ -680,7 +680,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return array
      */
-    public function getValidationExemptActions()
+    public function getValidationExemptActions(): array
     {
         return $this->validationExemptActions;
     }
@@ -691,7 +691,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param FormAction $action
      * @return bool
      */
-    public function actionIsValidationExempt($action)
+    public function actionIsValidationExempt(SilverStripe\Forms\FormAction $action): bool
     {
         // Non-actions don't bypass validation
         if (!$action) {
@@ -711,7 +711,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FieldList
      */
-    public function getExtraFields()
+    public function getExtraFields(): SilverStripe\Forms\FieldList
     {
         $extraFields = new FieldList();
 
@@ -739,7 +739,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FieldList The form fields
      */
-    public function Fields()
+    public function Fields(): null|SilverStripe\Forms\FieldList
     {
         foreach ($this->getExtraFields() as $field) {
             if (!$this->fields->fieldByName($field->getName())) {
@@ -777,7 +777,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param FieldList $fields
      * @return $this
      */
-    public function setFields($fields)
+    public function setFields(SilverStripe\Forms\FieldList $fields): SilverStripe\Forms\Form
     {
         $fields->setForm($this);
         $this->fields = $fields;
@@ -790,7 +790,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FieldList The action list
      */
-    public function Actions()
+    public function Actions(): SilverStripe\Forms\FieldList
     {
         return $this->actions;
     }
@@ -801,7 +801,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param FieldList $actions
      * @return $this
      */
-    public function setActions($actions)
+    public function setActions(SilverStripe\Forms\FieldList $actions): SilverStripe\UserForms\Form\UserForm
     {
         $actions->setForm($this);
         $this->actions = $actions;
@@ -839,7 +839,7 @@ class Form extends ViewableData implements HasRequestHandler
         return $attrs;
     }
 
-    public function FormAttributes()
+    public function FormAttributes(): string
     {
         return $this->getAttributesHTML();
     }
@@ -861,7 +861,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FormTemplateHelper
      */
-    public function getTemplateHelper()
+    public function getTemplateHelper(): SilverStripe\Forms\FormTemplateHelper
     {
         if ($this->templateHelper) {
             if (is_string($this->templateHelper)) {
@@ -907,7 +907,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string|array $template The name of the template (without the .ss extension) or array form
      * @return $this
      */
-    public function setTemplate($template)
+    public function setTemplate(string|array $template): SilverStripe\CMS\Search\SearchForm
     {
         $this->template = $template;
         return $this;
@@ -918,7 +918,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string|array
      */
-    public function getTemplate()
+    public function getTemplate(): string|null|array
     {
         return $this->template;
     }
@@ -930,7 +930,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         $templates = SSViewer::get_templates_by_class(static::class, '', __CLASS__);
         // Prefer any custom template
@@ -947,7 +947,7 @@ class Form extends ViewableData implements HasRequestHandler
      * in which case multipart is used. You can also set the enc type using
      * {@link setEncType}.
      */
-    public function getEncType()
+    public function getEncType(): string
     {
         if ($this->encType) {
             return $this->encType;
@@ -971,7 +971,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string $encType
      * @return $this
      */
-    public function setEncType($encType)
+    public function setEncType(string $encType): SilverStripe\Forms\Form
     {
         $this->encType = $encType;
         return $this;
@@ -989,7 +989,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string HTTP method
      */
-    public function FormHttpMethod()
+    public function FormHttpMethod(): string
     {
         return $this->formMethod;
     }
@@ -1000,7 +1000,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string Form HTTP method restricted to 'GET' or 'POST'
      */
-    public function FormMethod()
+    public function FormMethod(): string
     {
         if (in_array($this->formMethod, ['GET','POST'])) {
             return $this->formMethod;
@@ -1016,7 +1016,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param bool $strict If non-null, pass value to {@link setStrictFormMethodCheck()}.
      * @return $this
      */
-    public function setFormMethod($method, $strict = null)
+    public function setFormMethod(string $method, bool $strict = null): SilverStripe\CMS\Search\SearchForm
     {
         $this->formMethod = strtoupper($method ?? '');
         if ($strict !== null) {
@@ -1038,7 +1038,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param $bool boolean
      * @return $this
      */
-    public function setStrictFormMethodCheck($bool)
+    public function setStrictFormMethodCheck(bool $bool): SilverStripe\Security\MemberAuthenticator\MemberLoginForm
     {
         $this->strictFormMethodCheck = (bool)$bool;
         return $this;
@@ -1047,7 +1047,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @return boolean
      */
-    public function getStrictFormMethodCheck()
+    public function getStrictFormMethodCheck(): bool
     {
         return $this->strictFormMethodCheck;
     }
@@ -1058,7 +1058,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string
      */
-    public function FormAction()
+    public function FormAction(): string|null
     {
         if ($this->formActionPath) {
             return $this->formActionPath;
@@ -1078,7 +1078,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string $path
      * @return $this
      */
-    public function setFormAction($path)
+    public function setFormAction(string $path): SilverStripe\CMS\Search\SearchForm
     {
         $this->formActionPath = $path;
 
@@ -1090,7 +1090,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string
      */
-    public function FormName()
+    public function FormName(): string
     {
         return $this->getTemplateHelper()->generateFormID($this);
     }
@@ -1101,7 +1101,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string $id
      * @return $this
      */
-    public function setHTMLID($id)
+    public function setHTMLID(string $id): SilverStripe\Forms\Form
     {
         $this->htmlID = $id;
 
@@ -1111,7 +1111,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * @return string
      */
-    public function getHTMLID()
+    public function getHTMLID(): null|string
     {
         return $this->htmlID;
     }
@@ -1121,7 +1121,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return RequestHandler
      */
-    public function getController()
+    public function getController(): null|SilverStripe\ErrorPage\ErrorPageController
     {
         return $this->controller;
     }
@@ -1132,7 +1132,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param RequestHandler $controller
      * @return $this
      */
-    public function setController(RequestHandler $controller = null)
+    public function setController(RequestHandler $controller = null): SilverStripe\CMS\Search\SearchForm
     {
         $this->controller = $controller;
         return $this;
@@ -1143,7 +1143,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -1154,7 +1154,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string $name
      * @return Form
      */
-    public function setName($name)
+    public function setName(string $name): SilverStripe\CMS\Search\SearchForm
     {
         $this->name = $name;
 
@@ -1182,7 +1182,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
      */
-    public function sessionMessage($message, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT)
+    public function sessionMessage(string $message, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT): void
     {
         $this->setMessage($message, $type, $cast);
         $result = $this->getSessionValidationResult() ?: ValidationResult::create();
@@ -1198,7 +1198,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
      */
-    public function sessionError($message, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT)
+    public function sessionError(string $message, $type = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT): void
     {
         $this->setMessage($message, $type, $cast);
         $result = $this->getSessionValidationResult() ?: ValidationResult::create();
@@ -1229,7 +1229,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return DataObject
      */
-    public function getRecord()
+    public function getRecord(): null|SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject
     {
         return $this->record;
     }
@@ -1240,7 +1240,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string
      */
-    public function getLegend()
+    public function getLegend(): null
     {
         return $this->legend;
     }
@@ -1262,7 +1262,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return ValidationResult
      */
-    public function validationResult()
+    public function validationResult(): SilverStripe\ORM\ValidationResult
     {
         // Automatically pass if there is no validator, or the clicked button is exempt
         // Note: Soft support here for validation with absent request handler
@@ -1336,7 +1336,7 @@ class Form extends ViewableData implements HasRequestHandler
      * form that has some fields that save to one object, and some that save to another.
      * @return $this
      */
-    public function loadDataFrom($data, $mergeStrategy = 0, $fieldList = null)
+    public function loadDataFrom(array|DNADesign\Elemental\Models\ElementContent $data, bool|int $mergeStrategy = 0, array $fieldList = null): SilverStripe\Comments\Forms\CommentForm
     {
         if (!is_object($data) && !is_array($data)) {
             user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
@@ -1485,7 +1485,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param FieldList $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
      */
-    public function saveInto(DataObjectInterface $dataObject, $fieldList = null)
+    public function saveInto(DataObjectInterface $dataObject, bool $fieldList = null): void
     {
         $dataFields = $this->fields->saveableFields();
         $lastField = null;
@@ -1521,7 +1521,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         $dataFields = $this->fields->dataFields();
         $data = [];
@@ -1546,7 +1546,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return DBHTMLText
      */
-    public function forTemplate()
+    public function forTemplate(): SilverStripe\ORM\FieldType\DBHTMLText
     {
         if (!$this->canBeCached()) {
             HTTPCacheControlMiddleware::singleton()->disableCache();
@@ -1631,7 +1631,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FormAction
      */
-    public function defaultAction()
+    public function defaultAction(): SilverStripe\Forms\FormAction
     {
         if ($this->hasDefaultAction && $this->actions) {
             return $this->actions->first();
@@ -1665,7 +1665,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return Form
      */
-    public function disableSecurityToken()
+    public function disableSecurityToken(): SilverStripe\CMS\Search\SearchForm
     {
         $this->securityToken = new NullSecurityToken();
 
@@ -1680,7 +1680,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return Form
      */
-    public function enableSecurityToken()
+    public function enableSecurityToken(): SilverStripe\Forms\Form
     {
         $this->securityToken = new SecurityToken();
 
@@ -1696,7 +1696,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return SecurityToken|null
      */
-    public function getSecurityToken()
+    public function getSecurityToken(): null|SilverStripe\Security\NullSecurityToken
     {
         return $this->securityToken;
     }
@@ -1706,7 +1706,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return string
      */
-    public function extraClass()
+    public function extraClass(): string
     {
         return implode(' ', array_unique($this->extraClasses ?? []));
     }
@@ -1718,7 +1718,7 @@ class Form extends ViewableData implements HasRequestHandler
      * names delimited by a single space.
      * @return boolean True if all of the classnames passed in have been added.
      */
-    public function hasExtraClass($class)
+    public function hasExtraClass(string $class): bool
     {
         //split at white space
         $classes = preg_split('/\s+/', $class ?? '');
@@ -1738,7 +1738,7 @@ class Form extends ViewableData implements HasRequestHandler
      *              names delimited by a single space.
      * @return $this
      */
-    public function addExtraClass($class)
+    public function addExtraClass(string $class): SilverStripe\Forms\Form
     {
         //split at white space
         $classes = preg_split('/\s+/', $class ?? '');
@@ -1756,7 +1756,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param string $class
      * @return $this
      */
-    public function removeExtraClass($class)
+    public function removeExtraClass(string $class): SilverStripe\Forms\Form
     {
         //split at white space
         $classes = preg_split('/\s+/', $class ?? '');
@@ -1797,7 +1797,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FormRequestHandler
      */
-    public function getRequestHandler()
+    public function getRequestHandler(): SilverStripe\Forms\FormRequestHandler
     {
         if (!$this->requestHandler) {
             $this->requestHandler = $this->buildRequestHandler();
@@ -1811,7 +1811,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param FormRequestHandler $handler
      * @return $this
      */
-    public function setRequestHandler(FormRequestHandler $handler)
+    public function setRequestHandler(FormRequestHandler $handler): SilverStripe\Forms\Form
     {
         $this->requestHandler = $handler;
         return $this;
@@ -1822,7 +1822,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return FormRequestHandler
      */
-    protected function buildRequestHandler()
+    protected function buildRequestHandler(): SilverStripe\Forms\FormRequestHandler
     {
         return FormRequestHandler::create($this);
     }
@@ -1832,7 +1832,7 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * @return bool
      */
-    protected function canBeCached()
+    protected function canBeCached(): bool
     {
         if ($this->getSecurityToken()->isEnabled()) {
             return false;

@@ -69,13 +69,13 @@ class MemberLoginForm extends BaseLoginForm
      *                               so, only a logout button will be rendered
      */
     public function __construct(
-        $controller,
+        SilverStripe\MFA\Authenticator\LoginHandler $controller,
         $authenticatorClass,
         $name,
         $fields = null,
         $actions = null,
         $checkCurrentUser = true
-    ) {
+    ): void {
         $this->setController($controller);
         $this->setAuthenticatorClass($authenticatorClass);
 
@@ -122,7 +122,7 @@ class MemberLoginForm extends BaseLoginForm
      * @skipUpgrade
      * @return FieldList
      */
-    protected function getFormFields()
+    protected function getFormFields(): SilverStripe\Forms\FieldList
     {
         $request = $this->getRequest();
         if ($request->getVar('BackURL')) {
@@ -182,7 +182,7 @@ class MemberLoginForm extends BaseLoginForm
      *
      * @return FieldList
      */
-    protected function getFormActions()
+    protected function getFormActions(): SilverStripe\Forms\FieldList
     {
         $actions = FieldList::create(
             FormAction::create('doLogin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
@@ -198,7 +198,7 @@ class MemberLoginForm extends BaseLoginForm
 
 
 
-    public function restoreFormState()
+    public function restoreFormState(): SilverStripe\Security\MemberAuthenticator\MemberLoginForm
     {
         parent::restoreFormState();
 

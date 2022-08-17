@@ -97,7 +97,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param RequestHandler $requestHandler
      * @param string $popupFormName
      */
-    public function __construct($gridField, $component, $record, $requestHandler, $popupFormName)
+    public function __construct(SilverStripe\Forms\GridField\GridField $gridField, SilverStripe\Forms\GridField\GridFieldDetailForm $component, SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject $record, SilverStripe\FrameworkTest\Elemental\Admin\ElementalBehatTestAdmin $requestHandler, string|SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController $popupFormName): void
     {
         $this->gridField = $gridField;
         $this->component = $component;
@@ -107,7 +107,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         parent::__construct();
     }
 
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         return Controller::join_links(
             $this->gridField->Link('item'),
@@ -120,7 +120,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param HTTPRequest $request
      * @return mixed
      */
-    public function view($request)
+    public function view(SilverStripe\Control\HTTPRequest $request): SilverStripe\View\ViewableData_Customised
     {
         if (!$this->record->canView()) {
             $this->httpError(403, _t(
@@ -152,7 +152,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param HTTPRequest $request
      * @return mixed
      */
-    public function edit($request)
+    public function edit(SilverStripe\Control\HTTPRequest $request): null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         $controller = $this->getToplevelController();
         $form = $this->ItemEditForm();
@@ -183,7 +183,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return Form|HTTPResponse
      */
-    public function ItemEditForm()
+    public function ItemEditForm(): SilverStripe\Forms\Form
     {
         $list = $this->gridField->getList();
 
@@ -292,7 +292,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return array
      */
-    protected function getCreateContext()
+    protected function getCreateContext(): array
     {
         $gridField = $this->gridField;
         $context = [];
@@ -308,7 +308,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return CompositeField Returns the right aligned toolbar group field along with its FormAction's
      */
-    protected function getRightGroupField()
+    protected function getRightGroupField(): SilverStripe\Forms\CompositeField
     {
         $rightGroup = CompositeField::create()->setName('RightGroup');
         $rightGroup->addExtraClass('ml-auto');
@@ -380,7 +380,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return FieldList
      */
-    protected function getFormActions()
+    protected function getFormActions(): SilverStripe\Forms\FieldList
     {
         $manager = $this->getStateManager();
 
@@ -446,7 +446,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return Controller
      */
-    protected function getToplevelController()
+    protected function getToplevelController(): SilverStripe\FrameworkTest\Elemental\Admin\ElementalBehatTestAdmin
     {
         $c = $this->popupController;
         while ($c && $c instanceof GridFieldDetailForm_ItemRequest) {
@@ -455,7 +455,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         return $c;
     }
 
-    protected function getBackLink()
+    protected function getBackLink(): string
     {
         // TODO Coupling with CMS
         $backlink = '';
@@ -488,7 +488,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param SS_List $list
      * @return array List of data to write to the relation
      */
-    protected function getExtraSavedData($record, $list)
+    protected function getExtraSavedData(SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject $record, SilverStripe\ORM\DataList $list): null|array
     {
         // Skip extra data if not ManyManyList
         if (!($list instanceof ManyManyList)) {
@@ -505,7 +505,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         return $data;
     }
 
-    public function doSave($data, $form)
+    public function doSave(array $data, SilverStripe\Forms\Form $form): string|null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         $isNewRecord = $this->record->ID == 0;
 
@@ -546,7 +546,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param  int $id The ID of the record in the GridField
      * @return string
      */
-    public function getEditLink($id)
+    public function getEditLink(int $id): string
     {
         $link = Controller::join_links(
             $this->gridField->Link(),
@@ -561,7 +561,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param int $offset The offset from the current record
      * @return int|bool
      */
-    private function getAdjacentRecordID($offset)
+    private function getAdjacentRecordID(int $offset): bool|int
     {
         $gridField = $this->getGridField();
         $list = $gridField->getManipulatedList();
@@ -592,7 +592,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return int
      */
-    public function getPreviousRecordID()
+    public function getPreviousRecordID(): bool|int
     {
         return $this->getAdjacentRecordID(-1);
     }
@@ -602,7 +602,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return int
      */
-    public function getNextRecordID()
+    public function getNextRecordID(): bool|int
     {
         return $this->getAdjacentRecordID(1);
     }
@@ -613,7 +613,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param bool $isNewRecord True if this record was just created
      * @return HTTPResponse|DBHTMLText
      */
-    protected function redirectAfterSave($isNewRecord)
+    protected function redirectAfterSave(bool $isNewRecord): string|null|SilverStripe\ORM\FieldType\DBHTMLText
     {
         $controller = $this->getToplevelController();
         if ($isNewRecord) {
@@ -651,7 +651,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @throws ValidationException On error
      * @return DataObject Saved record
      */
-    protected function saveFormIntoRecord($data, $form)
+    protected function saveFormIntoRecord(array $data, SilverStripe\Forms\Form $form): SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject
     {
         $list = $this->gridField->getList();
 
@@ -685,7 +685,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @return HTTPResponse
      * @throws ValidationException
      */
-    public function doDelete($data, $form)
+    public function doDelete(array $data, SilverStripe\Forms\Form $form): string
     {
         $title = $this->record->Title;
         if (!$this->record->canDelete()) {
@@ -723,7 +723,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param string $template
      * @return $this
      */
-    public function setTemplate($template)
+    public function setTemplate($template): Symbiote\GridFieldExtensions\GridFieldAddNewMultiClassHandler
     {
         $this->template = $template;
         return $this;
@@ -732,7 +732,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): null
     {
         return $this->template;
     }
@@ -742,7 +742,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
         // Prefer any custom template
@@ -755,7 +755,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return Controller
      */
-    public function getController()
+    public function getController(): SilverStripe\FrameworkTest\Elemental\Admin\ElementalBehatTestAdmin
     {
         return $this->popupController;
     }
@@ -763,7 +763,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return GridField
      */
-    public function getGridField()
+    public function getGridField(): SilverStripe\Forms\GridField\GridField
     {
         return $this->gridField;
     }
@@ -771,7 +771,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * @return DataObject
      */
-    public function getRecord()
+    public function getRecord(): SilverStripe\FrameworkTest\Elemental\Model\ElementalBehatTestObject
     {
         return $this->record;
     }
@@ -784,7 +784,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param boolean $unlinked
      * @return ArrayList
      */
-    public function Breadcrumbs($unlinked = false)
+    public function Breadcrumbs(bool $unlinked = false): SilverStripe\ORM\ArrayList|null
     {
         if (!$this->popupController->hasMethod('Breadcrumbs')) {
             return null;

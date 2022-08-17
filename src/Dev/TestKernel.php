@@ -14,7 +14,7 @@ class TestKernel extends CoreKernel
     private $ciConfigs = [];
 
 
-    public function __construct($basePath)
+    public function __construct(string $basePath): void
     {
         $this->setEnvironment(self::DEV);
         parent::__construct($basePath);
@@ -26,14 +26,14 @@ class TestKernel extends CoreKernel
      *
      * @return $this
      */
-    public function reset()
+    public function reset(): SilverStripe\Dev\TestKernel
     {
         $this->setEnvironment(self::DEV);
         $this->bootPHP();
         return $this;
     }
 
-    protected function bootPHP()
+    protected function bootPHP(): void
     {
         parent::bootPHP();
 
@@ -41,7 +41,7 @@ class TestKernel extends CoreKernel
         date_default_timezone_set('UTC');
     }
 
-    protected function getIncludeTests()
+    protected function getIncludeTests(): bool
     {
         return true;
     }
@@ -62,7 +62,7 @@ class TestKernel extends CoreKernel
         return $this->ciConfigs;
     }
 
-    protected function bootErrorHandling()
+    protected function bootErrorHandling(): void
     {
         // Leave phpunit to capture errors
         restore_error_handler();

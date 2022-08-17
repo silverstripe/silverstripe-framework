@@ -16,7 +16,7 @@ class RandomGenerator
      * @throws Exception If no suitable CSPRNG is installed
      * @deprecated 4.4.0:5.0.0
      */
-    public function generateEntropy()
+    public function generateEntropy(): string
     {
         Deprecation::notice('4.4', __METHOD__ . ' has been deprecated. Use random_bytes instead');
 
@@ -44,7 +44,7 @@ class RandomGenerator
      * @return string Returned length will depend on the used $algorithm
      * @throws Exception When there is no valid source of CSPRNG
      */
-    public function randomToken($algorithm = 'whirlpool')
+    public function randomToken(string $algorithm = 'whirlpool'): string
     {
         return hash($algorithm ?? '', random_bytes(64));
     }

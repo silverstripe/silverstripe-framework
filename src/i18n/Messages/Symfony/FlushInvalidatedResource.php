@@ -16,7 +16,7 @@ use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serializable, Flushable
 {
 
-    public function __toString()
+    public function __toString(): string
     {
         return md5(__CLASS__);
     }
@@ -27,7 +27,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
         return null;
     }
 
-    public function isFresh($timestamp)
+    public function isFresh(int $timestamp): bool
     {
         // Check mtime of canary
         $canary = static::canary();
@@ -74,7 +74,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
         // no-op
     }
 
-    public static function flush()
+    public static function flush(): void
     {
         // Mark canary as dirty
         static::touch();
@@ -85,7 +85,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
      *
      * @return string
      */
-    protected static function canary()
+    protected static function canary(): string
     {
         return TEMP_PATH . DIRECTORY_SEPARATOR . 'catalog.i18n_canary';
     }
@@ -93,7 +93,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
     /**
      * Touch the canary
      */
-    protected static function touch()
+    protected static function touch(): void
     {
         touch(static::canary() ?? '');
     }

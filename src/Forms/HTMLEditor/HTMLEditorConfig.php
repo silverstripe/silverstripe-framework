@@ -75,7 +75,7 @@ abstract class HTMLEditorConfig
      * @return static The configuration object.
      * This will be created if it does not yet exist for that identifier
      */
-    public static function get($identifier = null)
+    public static function get(string $identifier = null): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         if (!$identifier) {
             return static::get_active();
@@ -95,7 +95,7 @@ abstract class HTMLEditorConfig
      * @param HTMLEditorConfig $config Config to set, or null to clear
      * @return HTMLEditorConfig The assigned config
      */
-    public static function set_config($identifier, HTMLEditorConfig $config = null)
+    public static function set_config(string $identifier, HTMLEditorConfig $config = null): SilverStripe\Forms\HTMLEditor\TinyMCEConfig|null
     {
         if ($config) {
             self::$configs[$identifier] = $config;
@@ -110,7 +110,7 @@ abstract class HTMLEditorConfig
      * Gets the current themes, if it is not set this will fallback to config
      * @return array
      */
-    public static function getThemes()
+    public static function getThemes(): array
     {
         if (isset(static::$current_themes)) {
             return static::$current_themes;
@@ -123,7 +123,7 @@ abstract class HTMLEditorConfig
      *
      * @param array $themes
      */
-    public static function setThemes($themes)
+    public static function setThemes(array $themes): void
     {
         static::$current_themes = $themes;
     }
@@ -134,7 +134,7 @@ abstract class HTMLEditorConfig
      *
      * @param string $identifier The identifier for the config set
      */
-    public static function set_active_identifier($identifier)
+    public static function set_active_identifier(string $identifier): void
     {
         self::$current = $identifier;
     }
@@ -145,7 +145,7 @@ abstract class HTMLEditorConfig
      *
      * @return string The active configuration identifier
      */
-    public static function get_active_identifier()
+    public static function get_active_identifier(): string
     {
         $identifier = self::$current ?: static::config()->get('default_config');
         return $identifier;
@@ -156,7 +156,7 @@ abstract class HTMLEditorConfig
      *
      * @return HTMLEditorConfig The active configuration object
      */
-    public static function get_active()
+    public static function get_active(): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $identifier = self::get_active_identifier();
         return self::get($identifier);
@@ -168,7 +168,7 @@ abstract class HTMLEditorConfig
      * @param HTMLEditorConfig $config
      * @return HTMLEditorConfig The given config
      */
-    public static function set_active(HTMLEditorConfig $config)
+    public static function set_active(HTMLEditorConfig $config): SilverStripe\Forms\HTMLEditor\TinyMCEConfig
     {
         $identifier = static::get_active_identifier();
         return static::set_config($identifier, $config);
@@ -180,7 +180,7 @@ abstract class HTMLEditorConfig
      *
      * @return array
      */
-    public static function get_available_configs_map()
+    public static function get_available_configs_map(): array
     {
         $configs = [];
 
@@ -232,7 +232,7 @@ abstract class HTMLEditorConfig
      *
      * @return array
      */
-    public function getConfigSchemaData()
+    public function getConfigSchemaData(): array
     {
         return [
             'attributes' => $this->getAttributes(),

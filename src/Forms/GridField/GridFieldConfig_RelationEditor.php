@@ -25,7 +25,7 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig
     /**
      * @param int $itemsPerPage - How many items per page should show up
      */
-    public function __construct($itemsPerPage = null)
+    public function __construct($itemsPerPage = null): void
     {
         parent::__construct();
 

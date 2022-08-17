@@ -49,7 +49,7 @@ class ChangePasswordHandler extends RequestHandler
      * @param string $link The URL to recreate this request handler
      * @param MemberAuthenticator $authenticator
      */
-    public function __construct($link, MemberAuthenticator $authenticator)
+    public function __construct(string $link, MemberAuthenticator $authenticator): void
     {
         $this->link = $link;
         $this->authenticator = $authenticator;
@@ -62,7 +62,7 @@ class ChangePasswordHandler extends RequestHandler
      *
      * @return array|HTTPResponse
      */
-    public function changepassword()
+    public function changepassword(): SilverStripe\Control\HTTPResponse|array
     {
         $request = $this->getRequest();
 
@@ -150,7 +150,7 @@ class ChangePasswordHandler extends RequestHandler
      * @param Member $member
      * @param string $token
      */
-    protected function setSessionToken($member, $token)
+    protected function setSessionToken(SilverStripe\Security\Member $member, string $token): void
     {
         // if there is a current member, they should be logged out
         if ($curMember = Security::getCurrentUser()) {
@@ -170,7 +170,7 @@ class ChangePasswordHandler extends RequestHandler
      * @param string|null $action
      * @return string
      */
-    public function Link($action = null)
+    public function Link(string $action = null): string
     {
         $link = Controller::join_links($this->link, $action);
         $this->extend('updateLink', $link, $action);
@@ -183,7 +183,7 @@ class ChangePasswordHandler extends RequestHandler
      * @skipUpgrade
      * @return ChangePasswordForm Returns the lost password form
      */
-    public function changePasswordForm()
+    public function changePasswordForm(): SilverStripe\Security\MemberAuthenticator\ChangePasswordForm
     {
         return ChangePasswordForm::create(
             $this,
@@ -200,7 +200,7 @@ class ChangePasswordHandler extends RequestHandler
      * @throws ValidationException
      * @throws NotFoundExceptionInterface
      */
-    public function doChangePassword(array $data, $form)
+    public function doChangePassword(array $data, SilverStripe\Security\MemberAuthenticator\ChangePasswordForm $form): SilverStripe\Control\HTTPResponse
     {
         $member = Security::getCurrentUser();
         // The user was logged in, check the current password
@@ -308,7 +308,7 @@ class ChangePasswordHandler extends RequestHandler
      *
      * @return HTTPResponse
      */
-    public function redirectBackToForm()
+    public function redirectBackToForm(): SilverStripe\Control\HTTPResponse
     {
         // Redirect back to form
         $url = $this->addBackURLParam(Security::singleton()->Link('changepassword'));
@@ -323,7 +323,7 @@ class ChangePasswordHandler extends RequestHandler
      * @param string $password
      * @return bool
      */
-    protected function checkPassword($member, $password)
+    protected function checkPassword(SilverStripe\Security\Member $member, string $password): bool
     {
         if (empty($password)) {
             return false;

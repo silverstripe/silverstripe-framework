@@ -52,11 +52,11 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @var SSViewer_Scope $inheritedScope
      */
     public function __construct(
-        $item,
+        SilverStripe\View\ArrayData $item,
         array $overlay = null,
         array $underlay = null,
         SSViewer_Scope $inheritedScope = null
-    ) {
+    ): void {
         parent::__construct($item, $inheritedScope);
 
         $this->overlay = $overlay ?: [];
@@ -69,7 +69,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     /**
      * Build cache of global properties
      */
-    protected function cacheGlobalProperties()
+    protected function cacheGlobalProperties(): void
     {
         if (self::$globalProperties !== null) {
             return;
@@ -84,7 +84,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     /**
      * Build cache of global iterator properties
      */
-    protected function cacheIteratorProperties()
+    protected function cacheIteratorProperties(): void
     {
         if (self::$iteratorProperties !== null) {
             return;
@@ -103,7 +103,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @var boolean $createObject
      * @return array
      */
-    protected function getPropertiesFromProvider($interfaceToQuery, $variableMethod, $createObject = false)
+    protected function getPropertiesFromProvider(string $interfaceToQuery, string $variableMethod, bool $createObject = false): array
     {
         $methods = [];
 
@@ -159,7 +159,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @param bool $cast If true, an object is always returned even if not an object.
      * @return array|null
      */
-    public function getInjectedValue($property, array $params, $cast = true)
+    public function getInjectedValue(string $property, array $params, $cast = true): null|array
     {
         // Get source for this value
         $source = $this->getValueSource($property);
@@ -196,7 +196,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      *
      * @return SSViewer_Scope
      */
-    public function pushScope()
+    public function pushScope(): SilverStripe\View\SSViewer_DataPresenter
     {
         $scope = parent::pushScope();
         $upIndex = $this->getUpIndex();
@@ -219,7 +219,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      *
      * @return SSViewer_Scope
      */
-    public function popScope()
+    public function popScope(): SilverStripe\View\SSViewer_DataPresenter
     {
         $upIndex = $this->getUpIndex();
 
@@ -241,7 +241,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @param string $cacheName
      * @return $this
      */
-    public function obj($name, $arguments = [], $cache = false, $cacheName = null)
+    public function obj(string $name, array $arguments = [], bool $cache = false, $cacheName = null): SilverStripe\View\SSViewer_DataPresenter
     {
         $overlayIndex = false;
 
@@ -273,7 +273,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     /**
      * {@inheritdoc}
      */
-    public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
+    public function getObj(string $name, array $arguments = [], bool $cache = false, $cacheName = null): SilverStripe\ORM\ArrayList
     {
         $result = $this->getInjectedValue($name, (array)$arguments);
         if ($result) {
@@ -285,7 +285,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
     /**
      * {@inheritdoc}
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): string|bool|SilverStripe\ORM\FieldType\DBHTMLText|null
     {
         // Extract the method name and parameters
         $property = $arguments[0];  // The name of the public function being called
@@ -316,7 +316,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @param array $overrides List of overrides available
      * @return null|array Null if not provided, or array with 'value' or 'callable' key
      */
-    protected function processTemplateOverride($property, $overrides)
+    protected function processTemplateOverride(string $property, array $overrides): null|array
     {
         if (!isset($overrides[$property])) {
             return null;
@@ -344,7 +344,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @param string $property
      * @return array|null
      */
-    protected function getValueSource($property)
+    protected function getValueSource(string $property): null|array
     {
         // Check for a presenter-specific override
         $overlay = $this->processTemplateOverride($property, $this->overlay);
@@ -400,7 +400,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      * @param array $source
      * @return DBField
      */
-    protected function castValue($value, $source)
+    protected function castValue(string|bool|int|SilverStripe\ORM\FieldType\DBHTMLText $value, array $source): SilverStripe\ORM\FieldType\DBText
     {
         // Already cast
         if (is_object($value)) {

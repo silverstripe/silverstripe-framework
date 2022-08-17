@@ -11,7 +11,7 @@ class InheritanceMiddleware implements Middleware
 {
     use MiddlewareCommon;
 
-    public function __construct($disableFlag = 0)
+    public function __construct(int $disableFlag = 0): void
     {
         $this->setDisableFlag($disableFlag);
     }
@@ -24,7 +24,7 @@ class InheritanceMiddleware implements Middleware
      * @param callable $next Callback to next middleware
      * @return array Complete class config
      */
-    public function getClassConfig($class, $excludeMiddleware, $next)
+    public function getClassConfig(string $class, int $excludeMiddleware, callable $next): array
     {
         // Skip if disabled
         $config = $next($class, $excludeMiddleware);

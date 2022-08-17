@@ -104,7 +104,7 @@ class Hierarchy extends DataExtension
      */
     protected static $cache_numChildren = [];
 
-    public static function get_extra_config($class, $extension, $args)
+    public static function get_extra_config(string $class, string $extension, array $args): array
     {
         return [
             'has_one' => ['Parent' => $class]
@@ -116,7 +116,7 @@ class Hierarchy extends DataExtension
      *
      * @param ValidationResult $validationResult
      */
-    public function validate(ValidationResult $validationResult)
+    public function validate(ValidationResult $validationResult): void
     {
         // The object is new, won't be looping.
         /** @var DataObject|Hierarchy $owner */
@@ -160,7 +160,7 @@ class Hierarchy extends DataExtension
      *
      * @return int[]
      */
-    public function getDescendantIDList()
+    public function getDescendantIDList(): array
     {
         $idList = [];
         $this->loadDescendantIDListInto($idList);
@@ -173,7 +173,7 @@ class Hierarchy extends DataExtension
      * @param array $idList Array to put results in.
      * @param DataObject|Hierarchy $node
      */
-    protected function loadDescendantIDListInto(&$idList, $node = null)
+    protected function loadDescendantIDListInto(array &$idList, SilverStripe\ORM\Tests\HierarchyTest\TestObject $node = null): void
     {
         if (!$node) {
             $node = $this->owner;
@@ -192,7 +192,7 @@ class Hierarchy extends DataExtension
      *
      * @return SS_List
      */
-    public function Children()
+    public function Children(): SilverStripe\ORM\ArrayList
     {
         $children = $this->owner->_cache_children;
         if ($children) {
@@ -214,7 +214,7 @@ class Hierarchy extends DataExtension
      *
      * @return DataList
      */
-    public function AllChildren()
+    public function AllChildren(): SilverStripe\ORM\DataList
     {
         return $this->owner->stageChildren(true);
     }
@@ -228,7 +228,7 @@ class Hierarchy extends DataExtension
      *
      * @return ArrayList
      */
-    public function AllChildrenIncludingDeleted()
+    public function AllChildrenIncludingDeleted(): SilverStripe\ORM\ArrayList
     {
         /** @var DataObject|Hierarchy|Versioned $owner */
         $owner = $this->owner;
@@ -255,7 +255,7 @@ class Hierarchy extends DataExtension
      * @return DataList
      * @throws Exception
      */
-    public function AllHistoricalChildren()
+    public function AllHistoricalChildren(): SilverStripe\ORM\DataList
     {
         /** @var DataObject|Versioned|Hierarchy $owner */
         $owner = $this->owner;
@@ -279,7 +279,7 @@ class Hierarchy extends DataExtension
      *
      * @return int
      */
-    public function numHistoricalChildren()
+    public function numHistoricalChildren(): int
     {
         return $this->AllHistoricalChildren()->count();
     }
@@ -291,7 +291,7 @@ class Hierarchy extends DataExtension
      * @param bool $cache Whether to retrieve values from cache
      * @return int
      */
-    public function numChildren($cache = true)
+    public function numChildren(bool $cache = true): int
     {
 
         $baseClass = $this->owner->baseClass();
@@ -330,7 +330,7 @@ class Hierarchy extends DataExtension
      * @param array $options A map of hints about what should be cached. "numChildrenMethod" and
      *                       "childrenMethod" are allowed keys.
      */
-    public function prepopulateTreeDataCache($recordList = null, array $options = [])
+    public function prepopulateTreeDataCache(array $recordList = null, array $options = []): void
     {
         if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
             $idList = is_array($recordList) ? $recordList :
@@ -349,7 +349,7 @@ class Hierarchy extends DataExtension
      * @param string $baseClass
      * @param array $idList
      */
-    public static function prepopulate_numchildren_cache($baseClass, $idList = null)
+    public static function prepopulate_numchildren_cache(string $baseClass, array $idList = null): void
     {
         if (!Config::inst()->get(static::class, 'prepopulate_numchildren_cache')) {
             return;
@@ -433,7 +433,7 @@ class Hierarchy extends DataExtension
      * @param bool $skipParentIDFilter Set to true to suppress the ParentID and ID where statements.
      * @return DataList
      */
-    public function stageChildren($showAll = false, $skipParentIDFilter = false)
+    public function stageChildren(bool $showAll = false, bool $skipParentIDFilter = false): SilverStripe\ORM\DataList
     {
         /** @var DataObject|Hierarchy $owner */
         $owner = $this->owner;
@@ -480,7 +480,7 @@ class Hierarchy extends DataExtension
      * @return DataList
      * @throws Exception
      */
-    public function liveChildren($showAll = false, $onlyDeletedFromStage = false)
+    public function liveChildren(bool $showAll = false, bool $onlyDeletedFromStage = false): SilverStripe\ORM\DataList
     {
         /** @var Versioned|DataObject|Hierarchy $owner */
         $owner = $this->owner;
@@ -517,7 +517,7 @@ class Hierarchy extends DataExtension
      * @param string $filter
      * @return DataObject
      */
-    public function getParent($filter = null)
+    public function getParent($filter = null): null|SilverStripe\Assets\Folder
     {
         $parentID = $this->owner->ParentID;
         if (empty($parentID)) {
@@ -537,7 +537,7 @@ class Hierarchy extends DataExtension
      * @param bool $includeSelf
      * @return ArrayList
      */
-    public function getAncestors($includeSelf = false)
+    public function getAncestors(bool $includeSelf = false): SilverStripe\ORM\ArrayList
     {
         $ancestors = new ArrayList();
         $object = $this->owner;
@@ -558,7 +558,7 @@ class Hierarchy extends DataExtension
      * @param string $separator
      * @return string
      */
-    public function getBreadcrumbs($separator = ' &raquo; ')
+    public function getBreadcrumbs(string $separator = ' &raquo; '): string
     {
         $crumbs = [];
         $ancestors = array_reverse($this->owner->getAncestors()->toArray() ?? []);
@@ -575,7 +575,7 @@ class Hierarchy extends DataExtension
      * - Children (instance)
      * - NumChildren (instance)
      */
-    public function flushCache()
+    public function flushCache(): void
     {
         $this->owner->_cache_children = null;
         self::$cache_numChildren = [];

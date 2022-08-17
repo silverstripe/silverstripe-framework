@@ -33,7 +33,7 @@ class Map_Iterator implements Iterator
      * @param array $firstItems An optional map of items to show first
      * @param array $lastItems An optional map of items to show last
      */
-    public function __construct(Iterator $items, $keyField, $titleField, $firstItems = null, $lastItems = null)
+    public function __construct(Iterator $items, string $keyField, string $titleField, array $firstItems = null, array $lastItems = null): void
     {
         $this->items = $items;
         $this->keyField = $keyField;
@@ -61,7 +61,7 @@ class Map_Iterator implements Iterator
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function rewind()
+    public function rewind(): void|string
     {
         $this->firstItemIdx = 0;
         $this->endItemIdx = null;
@@ -89,7 +89,7 @@ class Map_Iterator implements Iterator
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): string|null|int|Symbiote\GridFieldExtensions\Tests\Stub\StubOrdered
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
             return $this->lastItems[$this->endItemIdx][1];
@@ -109,7 +109,7 @@ class Map_Iterator implements Iterator
      * @param  string $key
      * @return mixed
      */
-    protected function extractValue($item, $key)
+    protected function extractValue(stdClass|DNADesign\Elemental\Models\ElementalArea $item, string $key): string|int|null|Symbiote\GridFieldExtensions\Tests\Stub\StubOrdered
     {
         if (is_object($item)) {
             if (method_exists($item, 'hasMethod') && $item->hasMethod($key)) {
@@ -129,7 +129,7 @@ class Map_Iterator implements Iterator
      * @return string
      */
     #[\ReturnTypeWillChange]
-    public function key()
+    public function key(): int|string|null
     {
         if (($this->endItemIdx !== null) && isset($this->lastItems[$this->endItemIdx])) {
             return $this->lastItems[$this->endItemIdx][0];
@@ -148,7 +148,7 @@ class Map_Iterator implements Iterator
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function next()
+    public function next(): void|bool|array|string
     {
         $this->firstItemIdx++;
 
@@ -189,7 +189,7 @@ class Map_Iterator implements Iterator
      * @return boolean
      */
     #[\ReturnTypeWillChange]
-    public function valid()
+    public function valid(): bool
     {
         return (
             (isset($this->firstItems[$this->firstItemIdx])) ||

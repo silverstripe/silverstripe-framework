@@ -66,7 +66,7 @@ class CsvBulkLoader extends BulkLoader
      *
      * @return null|BulkLoader_Result
      */
-    protected function processAll($filepath, $preview = false)
+    protected function processAll(string $filepath, $preview = false): SilverStripe\Dev\BulkLoader_Result
     {
         $this->extend('onBeforeProcessAll', $filepath, $preview);
 
@@ -148,7 +148,7 @@ class CsvBulkLoader extends BulkLoader
         return $result;
     }
 
-    protected function getNormalisedColumnMap()
+    protected function getNormalisedColumnMap(): array
     {
         $map = [];
         foreach ($this->columnMap as $column => $newColumn) {
@@ -292,7 +292,7 @@ class CsvBulkLoader extends BulkLoader
      *
      * @return int
      */
-    protected function processRecord($record, $columnMap, &$results, $preview = false)
+    protected function processRecord(array $record, array $columnMap, &$results, bool $preview = false): int
     {
         $class = $this->objectClass;
 
@@ -417,7 +417,7 @@ class CsvBulkLoader extends BulkLoader
      * @param array $columnMap
      * @return DataObject
      */
-    public function findExistingObject($record, $columnMap = [])
+    public function findExistingObject(array $record, array $columnMap = []): bool|SilverStripe\Dev\Tests\CsvBulkLoaderTest\Player
     {
         $SNG_objectClass = singleton($this->objectClass);
         // checking for existing records (only if not already found)

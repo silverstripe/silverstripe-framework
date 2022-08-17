@@ -30,7 +30,7 @@ class MySQLQuery extends Query
      * @param mixed $handle the internal mysql handle that is points to the resultset.
      * Non-mysqli_result values could be given for non-select queries (e.g. true)
      */
-    public function __construct($database, $handle)
+    public function __construct(SilverStripe\ORM\Connect\MySQLiConnector $database, bool|mysqli_result $handle): void
     {
         $this->handle = $handle;
         if (is_object($this->handle)) {
@@ -38,14 +38,14 @@ class MySQLQuery extends Query
         }
     }
 
-    public function __destruct()
+    public function __destruct(): void
     {
         if (is_object($this->handle)) {
             $this->handle->free();
         }
     }
 
-    public function seek($row)
+    public function seek(int $row): array
     {
         if (is_object($this->handle)) {
             // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
@@ -57,7 +57,7 @@ class MySQLQuery extends Query
         return null;
     }
 
-    public function numRecords()
+    public function numRecords(): int
     {
         if (is_object($this->handle)) {
             return $this->handle->num_rows;
@@ -65,7 +65,7 @@ class MySQLQuery extends Query
         return null;
     }
 
-    public function nextRecord()
+    public function nextRecord(): array|bool
     {
         $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
 

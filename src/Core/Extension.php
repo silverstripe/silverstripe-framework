@@ -36,7 +36,7 @@ abstract class Extension
      */
     private $ownerStack = [];
 
-    public function __construct()
+    public function __construct(): void
     {
     }
 
@@ -47,7 +47,7 @@ abstract class Extension
      * @param string $extensionClass
      * @param mixed $args
      */
-    public static function add_to_class($class, $extensionClass, $args = null)
+    public static function add_to_class(string $class, string $extensionClass, array $args = null): void
     {
         // NOP
     }
@@ -57,7 +57,7 @@ abstract class Extension
      *
      * @param object $owner The owner object
      */
-    public function setOwner($owner)
+    public function setOwner(i18nTestModule|SilverStripe\Control\Director $owner): void
     {
         $this->ownerStack[] = $this->owner;
         $this->owner = $owner;
@@ -84,7 +84,7 @@ abstract class Extension
     /**
      * Clear the current owner, and restore extension to the state prior to the last setOwner()
      */
-    public function clearOwner()
+    public function clearOwner(): void
     {
         if (empty($this->ownerStack)) {
             throw new BadMethodCallException("clearOwner() called more than setOwner()");
@@ -97,7 +97,7 @@ abstract class Extension
      *
      * @return Object
      */
-    public function getOwner()
+    public function getOwner(): null|Page
     {
         return $this->owner;
     }
@@ -110,7 +110,7 @@ abstract class Extension
      * @param string $extensionStr E.g. "Versioned('Stage','Live')"
      * @return string Extension classname, e.g. "Versioned"
      */
-    public static function get_classname_without_arguments($extensionStr)
+    public static function get_classname_without_arguments(string $extensionStr): string
     {
         // Split out both args and service name
         return strtok(strtok($extensionStr ?? '', '(') ?? '', '.');
