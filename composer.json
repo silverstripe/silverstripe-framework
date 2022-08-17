@@ -59,7 +59,8 @@
         "squizlabs/php_codesniffer": "^3.7"
     },
     "conflict": {
-        "egulias/email-validator": "^2"
+        "egulias/email-validator": "^2",
+        "oscarotero/html-parser": "<0.1.5"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
