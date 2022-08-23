@@ -98,6 +98,12 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 '<iframe></iframe>',
                 'Javascript in the src attribute of an iframe is completely removed'
             ],
+            [
+                'iframe[src]',
+                '<iframe src="jAvAsCrIpT:alert(0);"></iframe>',
+                '<iframe></iframe>',
+                'Mixed case javascript in the src attribute of an iframe is completely removed'
+            ],
         ];
 
         $config = HTMLEditorConfig::get('htmleditorsanitisertest');
