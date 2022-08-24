@@ -129,7 +129,6 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
 
     public function suppress()
     {
-        unset($_GET[$this->parameterName]);
         $this->request->offsetUnset($this->parameterName);
     }
 
