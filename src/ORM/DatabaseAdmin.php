@@ -12,7 +12,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\DevelopmentAdmin;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Connect\TableBuilder;
 use SilverStripe\ORM\FieldType\DBClassName;

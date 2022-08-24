@@ -99,7 +99,7 @@ class ShortcodeParser
      *   - An associative array of extra information about the shortcode being parsed.
      *
      * @param string $shortcode The shortcode tag to map to the callback - normally in lowercase_underscore format.
-     * @param callback $callback The callback to replace the shortcode with.
+     * @param callable $callback The callback to replace the shortcode with.
      * @return $this
      */
     public function register($shortcode, $callback)
