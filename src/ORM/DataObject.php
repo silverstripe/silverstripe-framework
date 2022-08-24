@@ -3399,24 +3399,34 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * $member = DataObject::get_one('Member', [ '"FirstName"' => 'John' ]);
      * </code>
      *
-     * @param string $callerClass The class of objects to be returned
+     * @param string|null $callerClass The class of objects to be returned. Defaults to the class that calls the method
+     * e.g. MyObject::get_one() will return a MyObject
      * @param string|array $filter A filter to be inserted into the WHERE clause.
      * @param boolean $cache Use caching
-     * @param string $orderby A sort expression to be inserted into the ORDER BY clause.
+     * @param string $orderBy A sort expression to be inserted into the ORDER BY clause.
      *
      * @return DataObject|null The first item matching the query
      */
-    public static function get_one($callerClass, $filter = "", $cache = true, $orderby = "")
+    public static function get_one($callerClass = null, $filter = "", $cache = true, $orderBy = "")
     {
+        if ($callerClass === null) {
+            $callerClass = static::class;
+        }
+
+        // Validate class
+        if ($callerClass === self::class) {
+            throw new InvalidArgumentException('DataObject::get_one() cannot query non-subclass DataObject directly');
+        }
+
         /** @var DataObject $singleton */
         $singleton = singleton($callerClass);
 
-        $cacheComponents = [$filter, $orderby, $singleton->getUniqueKeyComponents()];
+        $cacheComponents = [$filter, $orderBy, $singleton->getUniqueKeyComponents()];
         $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
-            $dl = DataObject::get($callerClass)->where($filter)->sort($orderby);
+            $dl = DataObject::get($callerClass)->where($filter)->sort($orderBy);
             $item = $dl->first();
 
             if ($cache) {
