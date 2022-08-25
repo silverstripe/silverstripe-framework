@@ -319,9 +319,12 @@ class ViewableData implements IteratorAggregate
      */
     public function castingHelper($field)
     {
-        $specs = static::config()->get('casting');
-        if (isset($specs[$field])) {
-            return $specs[$field];
+        // Get casting if it has been configured.
+        // DB fields and PHP methods are all case insensitive so we normalise casing before checking.
+        $specs = array_change_key_case(static::config()->get('casting'), CASE_LOWER);
+        $fieldLower = strtolower($field);
+        if (isset($specs[$fieldLower])) {
+            return $specs[$fieldLower];
         }
 
         // If no specific cast is declared, fall back to failover.
