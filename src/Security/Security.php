@@ -402,7 +402,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
             list($messageText, $messageCast) = $parseMessage($message);
             static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
-            $request = new HTTPRequest('GET', '/');
+            $request = new HTTPRequest();
             if ($controller) {
                 $request->setSession($controller->getRequest()->getSession());
             }
@@ -652,12 +652,10 @@ class Security extends Controller implements TemplateGlobalProvider
         $messageType = ValidationResult::TYPE_WARNING,
         $messageCast = ValidationResult::CAST_TEXT
     ) {
-        Controller::curr()
-            ->getRequest()
-            ->getSession()
-            ->set("Security.Message.message", $message)
-            ->set("Security.Message.type", $messageType)
-            ->set("Security.Message.cast", $messageCast);
+        $session = Controller::curr()->getRequest()->getSession();
+        $session->set("Security.Message.message", $message);
+        $session->set("Security.Message.type", $messageType);
+        $session->set("Security.Message.cast", $messageCast);
     }
 
     /**
@@ -668,7 +666,7 @@ class Security extends Controller implements TemplateGlobalProvider
         Controller::curr()
             ->getRequest()
             ->getSession()
-            ->clear("Security.Message");
+            ->remove("Security.Message");
     }
 
     /**

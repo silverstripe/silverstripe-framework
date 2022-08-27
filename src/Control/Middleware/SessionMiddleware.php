@@ -14,7 +14,7 @@ class SessionMiddleware implements HTTPMiddleware
     {
         try {
             // Start session and execute
-            $request->getSession()->init($request);
+            $request->getSession()->start();
 
             // Generate output
             $response = $delegate($request);

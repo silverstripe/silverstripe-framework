@@ -42,6 +42,7 @@
         "symfony/config": "^4.4.44",
         "symfony/translation": "^4.4.44",
         "symfony/yaml": "^4.4.44",
+        "symfony/http-foundation": "^6.1",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-hash": "*",

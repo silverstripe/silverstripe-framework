@@ -5,6 +5,11 @@ namespace SilverStripe\Control;
 use BadMethodCallException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\Deprecation;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\HttpFoundation\Session\Session as SymfonySession;
+use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 /**
  * Handles all manipulation of the session.
@@ -74,20 +79,20 @@ use SilverStripe\Dev\Deprecation;
  * to specifically remove it. To clear a value you can either delete 1 session value by the name that you saved it
  *
  * <code>
- * $session->clear('MyValue'); // MyValue is no longer 6.
+ * $session->remove('MyValue'); // MyValue is no longer 6.
  * </code>
  *
  * Or you can clear every single value in the session at once. Note SilverStripe stores some of its own session data
  * including form and page comment information. None of this is vital but `clearAll()` will clear everything.
  *
  * <code>
- *  $session->clearAll();
+ *  $session->clear();
  * </code>
  *
  * @see Cookie
  * @see HTTPRequest
  */
-class Session
+class Session extends SymfonySession
 {
     use Configurable;
 
@@ -194,54 +199,18 @@ class Session
      */
     protected $changedData = [];
 
-    /**
-     * Get user agent for this request
-     *
-     * @param HTTPRequest $request
-     * @return string
-     */
-    protected function userAgent(HTTPRequest $request)
+    public function __construct(SessionStorageInterface $storage = null, AttributeBagInterface $attributes = null, FlashBagInterface $flashes = null, callable $usageReporter = null)
     {
-        return $request->getHeader('User-Agent');
-    }
 
-    /**
-     * Start PHP session, then create a new Session object with the given start data.
-     *
-     * @param array|null|Session $data Can be an array of data (such as $_SESSION) or another Session object to clone.
-     * If null, this session is treated as unstarted.
-     */
-    public function __construct($data)
-    {
-        if ($data instanceof Session) {
-            $data = $data->getAll();
+
+        if (!$storage) {
+
+            $config = $this->config();
+
+            $storage = new NativeSessionStorage($this->buildCookieParams());
         }
 
-        $this->data = $data;
-        $this->started = isset($data);
-    }
-
-    /**
-     * Init this session instance before usage,
-     * if a session identifier is part of the passed in request.
-     * Otherwise, a session might be started in {@link save()}
-     * if session data needs to be written with a new session identifier.
-     *
-     * @param HTTPRequest $request
-     */
-    public function init(HTTPRequest $request)
-    {
-        if (!$this->isStarted() && $this->requestContainsSessionId($request)) {
-            $this->start($request);
-        }
-
-        // Funny business detected!
-        if (self::config()->get('strict_user_agent_check') && isset($this->data['HTTP_USER_AGENT'])) {
-            if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
-                $this->clearAll();
-                $this->restart($request);
-            }
-        }
+        parent::__construct($storage);
     }
 
     /**
@@ -251,115 +220,19 @@ class Session
      */
     public function restart(HTTPRequest $request)
     {
-        $this->destroy(true, $request);
-        $this->start($request);
-    }
-
-    /**
-     * Determine if this session has started
-     *
-     * @return bool
-     */
-    public function isStarted()
-    {
-        return $this->started;
-    }
-
-    /**
-     * @param HTTPRequest $request
-     * @return bool
-     */
-    public function requestContainsSessionId(HTTPRequest $request)
-    {
-        $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
-        $name = $secure ? $this->config()->get('cookie_name_secure') : session_name();
-        return (bool)Cookie::get($name);
-    }
-
-    /**
-     * Begin session, regardless if a session identifier is present in the request,
-     * or whether any session data needs to be written.
-     * See {@link init()} if you want to "lazy start" a session.
-     *
-     * @param HTTPRequest $request The request for which to start a session
-     */
-    public function start(HTTPRequest $request)
-    {
-        if ($this->isStarted()) {
-            throw new BadMethodCallException("Session has already started");
-        }
-
-        $session_path = $this->config()->get('session_store_path');
-
-        // If the session cookie is already set, then the session can be read even if headers_sent() = true
-        // This helps with edge-case such as debugging.
-        $data = [];
-        if (!session_id() && (!headers_sent() || $this->requestContainsSessionId($request))) {
-            if (!headers_sent()) {
-                $cookieParams = $this->buildCookieParams($request);
-                session_set_cookie_params($cookieParams);
-
-                $limiter = $this->config()->get('sessionCacheLimiter');
-                if (isset($limiter)) {
-                    session_cache_limiter($limiter);
-                }
-
-                // Allow storing the session in a non standard location
-                if ($session_path) {
-                    session_save_path($session_path);
-                }
-
-                // If we want a secure cookie for HTTPS, use a separate session name. This lets us have a
-                // separate (less secure) session for non-HTTPS requests
-                // if headers_sent() is true then it's best to throw the resulting error rather than risk
-                // a security hole.
-                if ($cookieParams['secure']) {
-                    session_name($this->config()->get('cookie_name_secure'));
-                }
-
-                session_start();
-
-                // Session start emits a cookie, but only if there's no existing session. If there is a session timeout
-                // tied to this request, make sure the session is held for the entire timeout by refreshing the cookie age.
-                if ($cookieParams['lifetime'] && $this->requestContainsSessionId($request)) {
-                    Cookie::set(
-                        session_name(),
-                        session_id(),
-                        $cookieParams['lifetime'] / 86400,
-                        $cookieParams['path'],
-                        $cookieParams['domain'],
-                        $cookieParams['secure'],
-                        true
-                    );
-                }
-            } else {
-                // If headers are sent then we can't have a session_cache_limiter otherwise we'll get a warning
-                session_cache_limiter(null);
-            }
-
-            if (isset($_SESSION)) {
-                // Initialise data from session store if present
-                $data = $_SESSION;
-
-                // Merge in existing in-memory data, taking priority over session store data
-                $this->recursivelyApply((array)$this->data, $data);
-            }
-        }
-
-        // Save any modified session data back to the session store if present, otherwise initialise it to an array.
-        $this->data = $data;
-
-        $this->started = true;
+        $this->invalidate();
+        $this->start();
     }
 
     /**
      * Build the parameters used for setting the session cookie.
      */
-    private function buildCookieParams(HTTPRequest $request): array
+    private function buildCookieParams(): array
     {
-        $timeout = $this->config()->get('timeout');
-        $path = $this->config()->get('cookie_path');
-        $domain = $this->config()->get('cookie_domain');
+        $config = $this->config();
+        $timeout = $config->get('timeout');
+        $path = $config->get('cookie_path');
+        $domain = $config->get('cookie_domain');
         if (!$path) {
             $path = Director::baseURL();
         }
@@ -374,29 +247,31 @@ class Session
             }
         }
 
-        $sameSite = static::config()->get('cookie_samesite');
+        $sameSite = $config->get('cookie_samesite');
         Cookie::validateSameSite($sameSite);
-        $secure = $this->isCookieSecure($sameSite, Director::is_https($request));
+
+
+        $secure = $this->isCookieSecure($sameSite);
 
         return [
-            'lifetime' => $timeout ?: 0,
-            'path' => $path,
-            'domain' => $domain ?: null,
-            'secure' => $secure,
-            'httponly' => true,
-            'samesite' => $sameSite,
+            'cookie_lifetime' => $timeout ?: 0,
+            'cookie_path' => $path,
+            'cookie_domain' => $domain ?: null,
+            'cookie_secure' => $secure,
+            'cookie_httponly' => true,
+            'cookie_samesite' => $sameSite,
         ];
     }
 
     /**
      * Determines what the value for the `secure` cookie attribute should be.
      */
-    private function isCookieSecure(string $sameSite, bool $isHttps): bool
+    private function isCookieSecure(string $sameSite): bool
     {
         if ($sameSite === 'None') {
             return true;
         }
-        return $isHttps && $this->config()->get('cookie_secure');
+        return $this->config()->get('cookie_secure');
     }
 
     /**
@@ -407,7 +282,7 @@ class Session
      */
     public function destroy($removeCookie = true, HTTPRequest $request = null)
     {
-        if (session_id()) {
+        if ($this->isStarted()) {
             if ($removeCookie) {
                 if (!$request) {
                     $request = Controller::curr()->getRequest();
@@ -417,129 +292,17 @@ class Session
                 $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
                 Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
             }
-            session_destroy();
+            $this->invalidate();
         }
-        // Clean up the superglobal - session_destroy does not do it.
-        // http://nz1.php.net/manual/en/function.session-destroy.php
-        unset($_SESSION);
-        $this->data = null;
-        $this->started = false;
-    }
-
-    /**
-     * Set session value
-     *
-     * @param string $name
-     * @param mixed $val
-     * @return $this
-     */
-    public function set($name, $val)
-    {
-        $var = &$this->nestedValueRef($name, $this->data);
-
-        // Mark changed
-        if ($var !== $val) {
-            $var = $val;
-            $this->markChanged($name);
-        }
-        return $this;
-    }
-
-    /**
-     * Mark key as changed
-     *
-     * @internal
-     * @param string $name
-     */
-    protected function markChanged($name)
-    {
-        $diffVar = &$this->changedData;
-        foreach (explode('.', $name ?? '') as $namePart) {
-            if (!isset($diffVar[$namePart])) {
-                $diffVar[$namePart] = [];
-            }
-            $diffVar = &$diffVar[$namePart];
-
-            // Already diffed
-            if ($diffVar === true) {
-                return;
-            }
-        }
-        // Mark changed
-        $diffVar = true;
-    }
-
-    /**
-     * Merge value with array
-     *
-     * @param string $name
-     * @param mixed $val
-     */
-    public function addToArray($name, $val)
-    {
-        $names = explode('.', $name ?? '');
-
-        // We still want to do this even if we have strict path checking for legacy code
-        $var = &$this->data;
-        $diffVar = &$this->changedData;
-
-        foreach ($names as $n) {
-            $var = &$var[$n];
-            $diffVar = &$diffVar[$n];
-        }
-
-        $var[] = $val;
-        $diffVar[sizeof($var) - 1] = $val;
-    }
-
-    /**
-     * Get session value
-     *
-     * @param string $name
-     * @return mixed
-     */
-    public function get($name)
-    {
-        return $this->nestedValue($name, $this->data);
-    }
-
-    /**
-     * Clear session value
-     *
-     * @param string $name
-     * @return $this
-     */
-    public function clear($name)
-    {
-        // Get var by path
-        $var = $this->nestedValue($name, $this->data);
-
-        // Unset var
-        if ($var !== null) {
-            // Unset parent key
-            $parentParts = explode('.', $name ?? '');
-            $basePart = array_pop($parentParts);
-            if ($parentParts) {
-                $parent = &$this->nestedValueRef(implode('.', $parentParts), $this->data);
-                unset($parent[$basePart]);
-            } else {
-                unset($this->data[$name]);
-            }
-            $this->markChanged($name);
-        }
-        return $this;
     }
 
     /**
      * Clear all values
+     *
      */
     public function clearAll()
     {
-        if ($this->data && is_array($this->data)) {
-            foreach (array_keys($this->data ?? []) as $key) {
-                $this->clear($key);
-            }
-        }
+        $this->clear();
     }
 
     /**
@@ -549,7 +312,7 @@ class Session
      */
     public function getAll()
     {
-        return $this->data;
+        return $this->all();
     }
 
     /**
@@ -559,135 +322,7 @@ class Session
      */
     public function finalize(HTTPRequest $request)
     {
-        $this->set('HTTP_USER_AGENT', $this->userAgent($request));
-    }
-
-    /**
-     * Save data to session
-     * Only save the changes, so that anyone manipulating $_SESSION directly doesn't get burned.
-     *
-     * @param HTTPRequest $request
-     */
-    public function save(HTTPRequest $request)
-    {
-        if ($this->changedData) {
-            $this->finalize($request);
-
-            if (!$this->isStarted()) {
-                $this->start($request);
-            }
-
-            // Apply all changes recursively, implicitly writing them to the actual PHP session store.
-            $this->recursivelyApplyChanges($this->changedData, $this->data, $_SESSION);
-        }
-    }
-
-    /**
-     * Recursively apply the changes represented in $data to $dest.
-     * Used to update $_SESSION
-     *
-     * @deprecated 4.1.0:5.0.0 Use recursivelyApplyChanges() instead
-     * @param array $data
-     * @param array $dest
-     */
-    protected function recursivelyApply($data, &$dest)
-    {
-        Deprecation::notice('5.0', 'Use recursivelyApplyChanges() instead');
-        foreach ($data as $k => $v) {
-            if (is_array($v)) {
-                if (!isset($dest[$k]) || !is_array($dest[$k])) {
-                    $dest[$k] = [];
-                }
-                $this->recursivelyApply($v, $dest[$k]);
-            } else {
-                $dest[$k] = $v;
-            }
-        }
-    }
-
-    /**
-     * Returns the list of changed keys
-     *
-     * @return array
-     */
-    public function changedData()
-    {
-        return $this->changedData;
-    }
-
-    /**
-     * Navigate to nested value in source array by name,
-     * creating a null placeholder if it doesn't exist.
-     *
-     * @internal
-     * @param string $name
-     * @param array $source
-     * @return mixed Reference to value in $source
-     */
-    protected function &nestedValueRef($name, &$source)
-    {
-        // Find var to change
-        $var = &$source;
-        foreach (explode('.', $name ?? '') as $namePart) {
-            if (!isset($var)) {
-                $var = [];
-            }
-            if (!isset($var[$namePart])) {
-                $var[$namePart] = null;
-            }
-            $var = &$var[$namePart];
-        }
-        return $var;
-    }
-
-    /**
-     * Navigate to nested value in source array by name,
-     * returning null if it doesn't exist.
-     *
-     * @internal
-     * @param string $name
-     * @param array $source
-     * @return mixed Value in array in $source
-     */
-    protected function nestedValue($name, $source)
-    {
-        // Find var to change
-        $var = $source;
-        foreach (explode('.', $name ?? '') as $namePart) {
-            if (!isset($var[$namePart])) {
-                return null;
-            }
-            $var = $var[$namePart];
-        }
-        return $var;
-    }
-
-    /**
-     * Apply all changes using separate keys and data sources and a destination
-     *
-     * @internal
-     * @param array $changes
-     * @param array $source
-     * @param array $destination
-     */
-    protected function recursivelyApplyChanges($changes, $source, &$destination)
-    {
-        $source = $source ?: [];
-        foreach ($changes as $key => $changed) {
-            if ($changed === true) {
-                // Determine if replacement or removal
-                if (array_key_exists($key, $source ?? [])) {
-                    $destination[$key] = $source[$key];
-                } else {
-                    unset($destination[$key]);
-                }
-            } else {
-                // Recursively apply
-                $destVal = &$this->nestedValueRef($key, $destination);
-                $sourceVal = $this->nestedValue($key, $source);
-                $this->recursivelyApplyChanges($changed, $sourceVal, $destVal);
-            }
-        }
+        $this->set('HTTP_USER_AGENT', $request->headers->get('user-agent'));
     }
 
     /**

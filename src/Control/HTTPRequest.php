@@ -7,6 +7,8 @@ use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\ArrayLib;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
@@ -19,13 +21,8 @@ use SilverStripe\ORM\ArrayLib;
  * match() to get the information that they need out of the URL.  This is generally handled by
  * {@link RequestHandler::handleRequest()}.
  */
-class HTTPRequest implements ArrayAccess
+class HTTPRequest extends Request implements ArrayAccess
 {
-    /**
-     * @var string
-     */
-    protected $url;
-
     /**
      * The non-extension parts of the passed URL as an array, originally exploded by the "/" separator.
      * All elements of the URL are loaded in here,
@@ -42,56 +39,6 @@ class HTTPRequest implements ArrayAccess
      * @var string
      */
     protected $extension;
-
-    /**
-     * The HTTP method in all uppercase: GET/PUT/POST/DELETE/HEAD
-     *
-     * @var string
-     */
-    protected $httpMethod;
-
-    /**
-     * The URL scheme in lowercase: http or https
-     *
-     * @var string
-     */
-    protected $scheme;
-
-    /**
-     * The client IP address
-     *
-     * @var string
-     */
-    protected $ip;
-
-    /**
-     * Contains all HTTP GET parameters passed into this request.
-     *
-     * @var array
-     */
-    protected $getVars = [];
-
-    /**
-     * Contains all HTTP POST parameters passed into this request.
-     *
-     * @var array
-     */
-    protected $postVars = [];
-
-    /**
-     * HTTP Headers like "Content-Type: text/xml"
-     *
-     * @see http://en.wikipedia.org/wiki/List_of_HTTP_headers
-     * @var array
-     */
-    protected $headers = [];
-
-    /**
-     * Raw HTTP body, used by PUT and POST requests.
-     *
-     * @var string
-     */
-    protected $body;
 
     /**
      * Contains an associative array of all
@@ -142,23 +89,10 @@ class HTTPRequest implements ArrayAccess
      */
     protected $session;
 
-    /**
-     * Construct a HTTPRequest from a URL relative to the site root.
-     *
-     * @param string $httpMethod
-     * @param string $url
-     * @param array $getVars
-     * @param array $postVars
-     * @param string $body
-     */
-    public function __construct($httpMethod, $url, $getVars = [], $postVars = [], $body = null)
+    public function initialize(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null)
     {
-        $this->httpMethod = strtoupper($httpMethod ?? '');
-        $this->setUrl($url);
-        $this->getVars = (array) $getVars;
-        $this->postVars = (array) $postVars;
-        $this->body = $body;
-        $this->scheme = "http";
+        parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
+        $this->prepareDirParts();
     }
 
     /**
@@ -170,25 +104,36 @@ class HTTPRequest implements ArrayAccess
      * @param string $url The new URL
      * @return HTTPRequest The updated request
      */
-    public function setUrl($url)
+    public function setUrl($url): static
     {
-        $this->url = $url;
+        $this->requestUri = $url;
+        $this->pathInfo = $this->preparePathInfo();
 
-        // Normalize URL if its relative (strictly speaking), or has leading slashes
-        if (Director::is_relative_url($url) || preg_match('/^\//', $url ?? '')) {
-            $this->url = preg_replace(['/\/+/','/^\//', '/\/$/'], ['/','',''], $this->url ?? '');
-        }
-        if (preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url ?? '', $matches)) {
-            $this->url = $matches[1];
-            $this->extension = $matches[2];
-        }
-        if ($this->url) {
-            $this->dirParts = preg_split('|/+|', $this->url ?? '');
+        $this->prepareDirParts();
+
+        return $this;
+    }
+
+    /**
+     * Legacy method to split the url into it's subpart
+     */
+    private function prepareDirParts(): void
+    {
+        $url = $this->getUrl();
+
+        // Remove any trailing slashes
+        $url = trim($url, '/\\');
+
+        if ($url) {
+            // Strip out extension from url
+            if (preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $url ?? '', $matches)) {
+                $url = $matches[1];
+            }
+
+            $this->dirParts = preg_split('|/+|', $url ?? '');
         } else {
             $this->dirParts = [];
         }
-
-        return $this;
     }
 
     /**
@@ -196,7 +141,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isGET()
     {
-        return $this->httpMethod == 'GET';
+        return $this->getMethod() === self::METHOD_GET;
     }
 
     /**
@@ -204,7 +149,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isPOST()
     {
-        return $this->httpMethod == 'POST';
+        return $this->getMethod() === self::METHOD_POST;
     }
 
     /**
@@ -212,7 +157,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isPUT()
     {
-        return $this->httpMethod == 'PUT';
+        return $this->getMethod() === self::METHOD_PUT;
     }
 
     /**
@@ -220,7 +165,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isDELETE()
     {
-        return $this->httpMethod == 'DELETE';
+        return $this->getMethod() === self::METHOD_DELETE;
     }
 
     /**
@@ -228,17 +173,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isHEAD()
     {
-        return $this->httpMethod == 'HEAD';
-    }
-
-    /**
-     * @param string $body
-     * @return HTTPRequest $this
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-        return $this;
+        return $this->getMethod() === self::METHOD_HEAD;
     }
 
     /**
@@ -246,7 +181,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getBody()
     {
-        return $this->body;
+        return $this->getContent();
     }
 
     /**
@@ -254,7 +189,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getVars()
     {
-        return $this->getVars;
+        return $this->query->all();
     }
 
     /**
@@ -262,7 +197,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function postVars()
     {
-        return $this->postVars;
+        return $this->request->all();
     }
 
     /**
@@ -274,7 +209,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function requestVars()
     {
-        return ArrayLib::array_merge_recursive($this->getVars, $this->postVars);
+        return ArrayLib::array_merge_recursive($this->query->all(), $this->request->all());
     }
 
     /**
@@ -283,8 +218,8 @@ class HTTPRequest implements ArrayAccess
      */
     public function getVar($name)
     {
-        if (isset($this->getVars[$name])) {
-            return $this->getVars[$name];
+        if ($this->query->has($name)) {
+            return $this->query->all()[$name];
         }
         return null;
     }
@@ -295,8 +230,8 @@ class HTTPRequest implements ArrayAccess
      */
     public function postVar($name)
     {
-        if (isset($this->postVars[$name])) {
-            return $this->postVars[$name];
+        if ($this->request->has($name)) {
+            return $this->request->all()[$name];
         }
         return null;
     }
@@ -307,13 +242,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function requestVar($name)
     {
-        if (isset($this->postVars[$name])) {
-            return $this->postVars[$name];
-        }
-        if (isset($this->getVars[$name])) {
-            return $this->getVars[$name];
-        }
-        return null;
+        return $this->get($name);
     }
 
     /**
@@ -351,8 +280,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function addHeader($header, $value)
     {
-        $header = strtolower($header ?? '');
-        $this->headers[$header] = $value;
+        $this->headers->set($header, $value);
         return $this;
     }
 
@@ -361,7 +289,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getHeaders()
     {
-        return $this->headers;
+        return $this->headers->all();
     }
 
     /**
@@ -372,8 +300,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getHeader($header)
     {
-        $header = strtolower($header ?? '');
-        return (isset($this->headers[$header])) ? $this->headers[$header] : null;
+        return $this->headers->get($header);
     }
 
     /**
@@ -385,8 +312,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function removeHeader($header)
     {
-        $header = strtolower($header ?? '');
-        unset($this->headers[$header]);
+        $this->headers->remove($header);
         return $this;
     }
 
@@ -398,18 +324,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getURL($includeGetVars = false)
     {
-        $url = ($this->getExtension()) ? $this->url . '.' . $this->getExtension() : $this->url;
-
-        if ($includeGetVars) {
-            $vars = $this->getVars();
-            if (count($vars ?? [])) {
-                $url .= '?' . http_build_query($vars ?? []);
-            }
-        } elseif (strpos($url ?? '', "?") !== false) {
-            $url = substr($url ?? '', 0, strpos($url ?? '', "?"));
-        }
-
-        return $url;
+        return $includeGetVars ? $this->getRequestUri() : $this->getPathInfo();
     }
 
     /**
@@ -421,10 +336,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function isAjax()
     {
-        return (
-            $this->requestVar('ajax') ||
-            $this->getHeader('x-requested-with') === "XMLHttpRequest"
-        );
+        return $this->isXmlHttpRequest();
     }
 
     /**
@@ -480,6 +392,8 @@ class HTTPRequest implements ArrayAccess
      */
     public static function send_file($fileData, $fileName, $mimeType = null)
     {
+        // TODO Nuke this.
+
         if (!$mimeType) {
             $mimeType = HTTP::get_mime_type($fileName);
         }
@@ -516,7 +430,7 @@ class HTTPRequest implements ArrayAccess
         // Check if a specific method is required
         if (preg_match('/^([A-Za-z]+) +(.*)$/', $pattern ?? '', $matches)) {
             $requiredMethod = $matches[1];
-            if ($requiredMethod != $this->httpMethod) {
+            if ($requiredMethod != $this->getMethod()) {
                 return false;
             }
 
@@ -544,6 +458,7 @@ class HTTPRequest implements ArrayAccess
         $patternParts = array_values(array_filter($patternParts ?? []));
 
         $arguments = [];
+
         foreach ($patternParts as $i => $part) {
             $part = trim($part ?? '');
 
@@ -795,37 +710,13 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
-     * @return string Return the host from the request
-     */
-    public function getHost()
-    {
-        return $this->getHeader('host');
-    }
-
-    /**
      * Returns the client IP address which originated this request.
      *
      * @return string
      */
     public function getIP()
     {
-        return $this->ip;
-    }
-
-    /**
-     * Sets the client IP address which originated this request.
-     * Use setIPFromHeaderValue if assigning from header value.
-     *
-     * @param $ip string
-     * @return $this
-     */
-    public function setIP($ip)
-    {
-        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
-            throw new InvalidArgumentException("Invalid ip $ip");
-        }
-        $this->ip = $ip;
-        return $this;
+        return $this->getClientIp();
     }
 
     /**
@@ -838,12 +729,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function getAcceptMimetypes($includeQuality = false)
     {
-        $mimetypes = [];
-        $mimetypesWithQuality = preg_split('#\s*,\s*#', $this->getHeader('accept') ?? '');
-        foreach ($mimetypesWithQuality as $mimetypeWithQuality) {
-            $mimetypes[] = ($includeQuality) ? $mimetypeWithQuality : preg_replace('/;.*/', '', $mimetypeWithQuality ?? '');
-        }
-        return $mimetypes;
+        return $this->getAcceptableContentTypes();
     }
 
     /**
@@ -851,33 +737,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function httpMethod()
     {
-        return $this->httpMethod;
-    }
-
-    /**
-     * Explicitly set the HTTP method for this request.
-     * @param string $method
-     * @return $this
-     */
-    public function setHttpMethod($method)
-    {
-        if (!self::isValidHttpMethod($method)) {
-            throw new \InvalidArgumentException('HTTPRequest::setHttpMethod: Invalid HTTP method');
-        }
-
-        $this->httpMethod = strtoupper($method ?? '');
-        return $this;
-    }
-
-    /**
-     * Return the URL scheme (e.g. "http" or "https").
-     * Equivalent to PSR-7 getUri()->getScheme()
-     *
-     * @return string
-     */
-    public function getScheme()
-    {
-        return $this->scheme;
+        return $this->getMethod();
     }
 
     /**
@@ -890,67 +750,6 @@ class HTTPRequest implements ArrayAccess
     public function setScheme($scheme)
     {
         $this->scheme = $scheme;
-        return $this;
-    }
-
-    /**
-     * @param string $method
-     * @return bool
-     */
-    private static function isValidHttpMethod($method)
-    {
-        return in_array(strtoupper($method ?? ''), ['GET','POST','PUT','DELETE','HEAD']);
-    }
-
-    /**
-     * Gets the "real" HTTP method for a request. This method is no longer used to mitigate the risk of web cache
-     * poisoning.
-     *
-     * @see https://www.silverstripe.org/download/security-releases/CVE-2019-19326
-     * @param string $origMethod Original HTTP method from the browser request
-     * @param array $postVars
-     * @return string HTTP method (all uppercase)
-     * @deprecated 4.4.7
-     */
-    public static function detect_method($origMethod, $postVars)
-    {
-        if (isset($postVars['_method'])) {
-            if (!self::isValidHttpMethod($postVars['_method'])) {
-                throw new InvalidArgumentException('HTTPRequest::detect_method(): Invalid "_method" parameter');
-            }
-            return strtoupper($postVars['_method'] ?? '');
-        }
-        return $origMethod;
-    }
-
-    /**
-     * Determines whether the request has a session
-     *
-     * @return bool
-     */
-    public function hasSession(): bool
-    {
-        return !empty($this->session);
-    }
-
-    /**
-     * @return Session
-     */
-    public function getSession()
-    {
-        if (!$this->hasSession()) {
-            throw new BadMethodCallException("No session available for this HTTPRequest");
-        }
-        return $this->session;
-    }
-
-    /**
-     * @param Session $session
-     * @return $this
-     */
-    public function setSession(Session $session)
-    {
-        $this->session = $session;
         return $this;
     }
 }

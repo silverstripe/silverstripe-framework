@@ -102,7 +102,7 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
             // request, so we're deleting the flag from the session so it's not affecting other
             // requests.
             // This flag would usually be set from within $handler->authenticateRequest()
-            $session->clear(static::SESSION_KEY_ALLOW_CURRENT_REQUEST);
+            $session->remove(static::SESSION_KEY_ALLOW_CURRENT_REQUEST);
 
             return null;
         }

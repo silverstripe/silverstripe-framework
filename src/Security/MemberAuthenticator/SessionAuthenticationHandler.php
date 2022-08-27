@@ -70,9 +70,10 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      */
     public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
     {
-        static::regenerateSessionId();
         $request = $request ?: Controller::curr()->getRequest();
-        $request->getSession()->set($this->getSessionVariable(), $member->ID);
+        $session = $request->getSession();
+        $session->migrate();
+        $session->set($this->getSessionVariable(), $member->ID);
 
         // This lets apache rules detect whether the user has logged in
         // @todo make this a setting on the authentication handler
@@ -82,37 +83,12 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     }
 
     /**
-     * Regenerate the session_id.
-     */
-    protected static function regenerateSessionId()
-    {
-        if (!Member::config()->get('session_regenerate_id')) {
-            return;
-        }
-
-        // This can be called via CLI during testing.
-        if (Director::is_cli()) {
-            return;
-        }
-
-        $file = '';
-        $line = '';
-
-        // TODO: deprecate and use Session::regenerateSessionId
-        // @ is to suppress win32 warnings/notices when session wasn't cleaned up properly
-        // There's nothing we can do about this, because it's an operating system function!
-        if (!headers_sent($file, $line)) {
-            @session_regenerate_id(true);
-        }
-    }
-
-    /**
      * @param HTTPRequest $request
      */
     public function logOut(HTTPRequest $request = null)
     {
         $request = $request ?: Controller::curr()->getRequest();
-        $request->getSession()->destroy(true, $request);
+        $request->getSession()->invalidate();
 
         if (Member::config()->get('login_marker_cookie')) {
             Cookie::force_expiry(Member::config()->get('login_marker_cookie'));

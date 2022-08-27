@@ -163,7 +163,7 @@ class SessionTest extends SapphireTest
     public function testClearElement()
     {
         $this->session->set('Test', 'Test');
-        $this->session->clear('Test');
+        $this->session->remove('Test');
 
         $this->assertEquals($this->session->get('Test'), '');
     }
@@ -173,7 +173,7 @@ class SessionTest extends SapphireTest
         $this->session->set('Test', 'Test');
         $this->session->set('Test-1', 'Test-1');
 
-        $this->session->clearAll();
+        $this->session->clear();
 
         // should session get return null? The array key should probably be
         // unset from the data array
@@ -183,7 +183,7 @@ class SessionTest extends SapphireTest
 
     public function testGetAllElements()
     {
-        $this->session->clearAll(); // Remove all session that might've been set by the test harness
+        $this->session->clear(); // Remove all session that might've been set by the test harness
 
         $this->session->set('Test', 'Test');
         $this->session->set('Test-2', 'Test-2');
