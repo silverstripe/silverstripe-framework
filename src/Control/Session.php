@@ -204,9 +204,6 @@ class Session extends SymfonySession
 
 
         if (!$storage) {
-
-            $config = $this->config();
-
             $storage = new NativeSessionStorage($this->buildCookieParams());
         }
 

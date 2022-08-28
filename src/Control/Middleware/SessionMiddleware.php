@@ -3,6 +3,7 @@
 namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
 
 class SessionMiddleware implements HTTPMiddleware
 {
@@ -14,7 +15,9 @@ class SessionMiddleware implements HTTPMiddleware
     {
         try {
             // Start session and execute
-            $request->getSession()->start();
+            $session = new Session();
+            $request->setSession($session);
+            $session->start();
 
             // Generate output
             $response = $delegate($request);
