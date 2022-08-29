@@ -2,6 +2,9 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use ArrayIterator;
+use Iterator;
+
 /**
  * A result-set from a PDO database.
  */
@@ -14,7 +17,7 @@ class PDOQuery extends Query
 
     /**
      * Hook the result-set given into a Query class, suitable for use by SilverStripe.
-     * @param PDOStatement $statement The internal PDOStatement containing the results
+     * @param PDOStatementHandle $statement The internal PDOStatement containing the results
      */
     public function __construct(PDOStatementHandle $statement)
     {
@@ -26,25 +29,13 @@ class PDOQuery extends Query
         $statement->closeCursor();
     }
 
-    public function seek($row)
+    public function getIterator(): Iterator
     {
-        $this->rowNum = $row - 1;
-        return $this->nextRecord();
+        return new ArrayIterator($this->results);
     }
 
     public function numRecords()
     {
-        return count($this->results ?? []);
-    }
-
-    public function nextRecord()
-    {
-        $index = $this->rowNum + 1;
-
-        if (isset($this->results[$index])) {
-            return $this->results[$index];
-        } else {
-            return false;
-        }
+        return count($this->results);
     }
 }

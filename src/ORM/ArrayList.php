@@ -2,8 +2,8 @@
 
 namespace SilverStripe\ORM;
 
-use ArrayIterator;
 use InvalidArgumentException;
+use Iterator;
 use LogicException;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
@@ -103,19 +103,16 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Returns an Iterator for this ArrayList.
      * This function allows you to use ArrayList in foreach loops
-     *
-     * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Iterator
     {
-        $items = array_map(
-            function ($item) {
-                return is_array($item) ? new ArrayData($item) : $item;
-            },
-            $this->items ?? []
-        );
-        return new ArrayIterator($items);
+        foreach ($this->items as $i => $item) {
+            if (is_array($item)) {
+                yield new ArrayData($item);
+            } else {
+                yield $item;
+            }
+        }
     }
 
     /**

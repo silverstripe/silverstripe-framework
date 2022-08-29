@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
+use Iterator;
 use IteratorAggregate;
 use LogicException;
 use SilverStripe\Core\ClassInfo;
@@ -573,11 +574,8 @@ class ViewableData implements IteratorAggregate
      *
      * This is useful so you can use a single record inside a <% control %> block in a template - and then use
      * to access individual fields on this object.
-     *
-     * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         return new ArrayIterator([$this]);
     }

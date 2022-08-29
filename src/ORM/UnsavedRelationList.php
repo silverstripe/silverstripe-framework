@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use ArrayIterator;
+use Iterator;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -120,11 +121,8 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * Returns an Iterator for this relation.
-     *
-     * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         return new ArrayIterator($this->toArray());
     }
