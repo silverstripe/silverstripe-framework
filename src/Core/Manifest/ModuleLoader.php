@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Core\Manifest;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * Module manifest holder
  */
@@ -96,10 +94,6 @@ class ModuleLoader
      */
     public function init($includeTests = false, $forceRegen = false)
     {
-        if (!empty($ignoredCIConfigs)) {
-            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
-        }
-
         foreach ($this->manifests as $manifest) {
             $manifest->init($includeTests, $forceRegen);
         }
