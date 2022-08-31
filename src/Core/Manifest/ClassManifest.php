@@ -11,6 +11,7 @@ use PhpParser\ParserFactory;
 use PhpParser\ErrorHandler\ErrorHandler;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 
 /**
@@ -279,6 +280,10 @@ class ClassManifest
      */
     public function init($includeTests = false, $forceRegen = false)
     {
+        if (!empty($ignoredCIConfigs)) {
+            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
+        }
+
         $this->cache = $this->buildCache($includeTests);
 
         // Check if cache is safe to use
@@ -541,6 +546,10 @@ class ClassManifest
      */
     public function regenerate($includeTests)
     {
+        if (!empty($ignoredCIConfigs)) {
+            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
+        }
+
         // Reset the manifest so stale info doesn't cause errors.
         $this->loadState([]);
         $this->roots = [];
@@ -551,7 +560,7 @@ class ClassManifest
             'name_regex' => '/^[^_].*\\.php$/',
             'ignore_files' => ['index.php', 'cli-script.php'],
             'ignore_tests' => !$includeTests,
-            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests, $finder) {
+            'file_callback' => function ($basename, $pathname, $depth) use ($includeTests) {
                 $this->handleFile($basename, $pathname, $includeTests);
             },
         ]);

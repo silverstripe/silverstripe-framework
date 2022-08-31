@@ -264,6 +264,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     protected function setUp(): void
     {
+        Deprecation::notice('5.0.0', 'This class will be removed in CMS 5', Deprecation::SCOPE_CLASS);
+
         if (!defined('FRAMEWORK_PATH')) {
             trigger_error(
                 'Missing constants, did you remember to include the test bootstrap in your phpunit.xml file?',

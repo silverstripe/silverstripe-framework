@@ -338,6 +338,7 @@ abstract class BaseKernel implements Kernel
     }
 
     /**
+>>>>>>> 4
      * @return bool
      */
     protected function getIncludeTests()

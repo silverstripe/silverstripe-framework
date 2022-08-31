@@ -13,6 +13,7 @@ use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Control\SimpleResourceURLGenerator;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 
@@ -75,6 +76,219 @@ class RequirementsTest extends SapphireTest
         $this->assertStringContainsString('https://www.mysecuredomain.com/test.css', $html, 'Load external secure CSS URL');
         $this->assertStringContainsString('//scheme-relative.example.com/test.css', $html, 'Load scheme-relative CSS URL');
         $this->assertStringContainsString('http://www.mydomain.com:3000/test.css', $html, 'Load external with port');
+    }
+
+    public function testResolveCSSReferencesDisabled()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        Config::forClass(get_class($backend))->set('resolve_relative_css_refs', false);
+
+        $backend->combineFiles(
+            'RequirementsTest_pc.css',
+            [
+                'css/RequirementsTest_d.css',
+                'css/deep/deeper/RequirementsTest_p.css'
+            ]
+        );
+
+        $backend->includeInHTML(self::$html_template);
+
+        // we get the file path here
+        $allCSS = $backend->getCSS();
+        $this->assertCount(
+            1,
+            $allCSS,
+            'only one combined file'
+        );
+
+        $files = array_keys($allCSS);
+        $combinedFileName = $files[0];
+        $combinedFileName = str_replace('/' . ASSETS_DIR . '/', '/', $combinedFileName);
+
+        $combinedFilePath = TestAssetStore::base_path() . $combinedFileName;
+
+        $content = file_get_contents($combinedFilePath);
+
+        /* DISABLED COMBINED CSS URL RESOLVER IGNORED ONE DOT */
+        $this->assertStringContainsString(
+            ".p0 { background: url(./zero.gif); }",
+            $content,
+            'disabled combined css url resolver ignored one dot'
+        );
+
+        /* DISABLED COMBINED CSS URL RESOLVER IGNORED DOUBLE-DOT */
+        $this->assertStringContainsString(
+            ".p1 { background: url(../one.gif); }",
+            $content,
+            'disabled combined css url resolver ignored double-dot'
+        );
+    }
+
+    public function testResolveCSSReferences()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+        Config::forClass(get_class($backend))->set('resolve_relative_css_refs', true);
+
+        $backend->combineFiles(
+            'RequirementsTest_pc.css',
+            [
+                'css/RequirementsTest_d.css',
+                'css/deep/deeper/RequirementsTest_p.css'
+            ]
+        );
+
+        $backend->includeInHTML(self::$html_template);
+
+        // we get the file path here
+        $allCSS = $backend->getCSS();
+        $this->assertCount(
+            1,
+            $allCSS,
+            'only one combined file'
+        );
+        $files = array_keys($allCSS);
+        $combinedFileName = $files[0];
+        $combinedFileName = str_replace('/' . ASSETS_DIR . '/', '/', $combinedFileName);
+
+        $combinedFilePath = TestAssetStore::base_path() . $combinedFileName;
+
+        /* COMBINED JAVASCRIPT FILE EXISTS */
+        $this->assertTrue(
+            file_exists($combinedFilePath),
+            'combined css file exists'
+        );
+
+        $content = file_get_contents($combinedFilePath);
+
+        /* COMBINED CSS URL RESOLVER IGNORE FULL URLS */
+        $this->assertStringContainsString(
+            ".url { background: url(http://example.com/zero.gif); }",
+            $content,
+            'combined css url resolver ignore full urls'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED ONE DOT */
+        $this->assertStringContainsString(
+            ".p0 { background: url(/css/deep/deeper/zero.gif); }",
+            $content,
+            'combined css url resolver decoded one dot'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED NO DOTS */
+        $this->assertStringContainsString(
+            ".p0-plain { background: url(/css/deep/deeper/zero.gif); }",
+            $content,
+            'combined css url resolver decoded no dots'
+        );
+
+        /* COMBINED CSS URL RESOLVER DAMAGED A QUERYSTRING */
+        $this->assertStringContainsString(
+            ".p0-qs { background: url(/css/deep/deeper/zero.gif?some=param); }",
+            $content,
+            'combined css url resolver damaged a querystring'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED ONE DOT WITH SINGLE QUOTES */
+        $this->assertStringContainsString(
+            ".p0sq { background: url('/css/deep/deeper/zero-sq.gif'); }",
+            $content,
+            'combined css url resolver decoded one dot with single quotes'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED ONE DOT WITH DOUBLE QUOTES */
+        $this->assertStringContainsString(
+            ".p0dq { background: url(\"/css/deep/deeper/zero-dq.gif\"); }",
+            $content,
+            'combined css url resolver decoded one dot with double quotes'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED ONE DOT WITH DOUBLE QUOTES AND SPACES NEW LINE */
+        $this->assertStringContainsString(
+            "\n  \"/css/deep/deeper/zero-dq-nls.gif\"\n",
+            $content,
+            'combined css url resolver decoded one dot with double quotes and spaces new line'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED ONE DOT WITH DOUBLE QUOTES NEW LINE */
+        $this->assertStringContainsString(
+            "\"/css/deep/deeper/zero-dq-nl.gif\"",
+            $content,
+            'combined css url resolver decoded one dot with double quotes new line'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED ONE DOT WITH DOUBLE QUOTES NEW LINE WITH SPACES */
+        $this->assertStringContainsString(
+            "\"/css/deep/deeper/zero-dq-nls.gif\"",
+            $content,
+            'combined css url resolver decoded one dot with double quotes new line with spaces'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED 1 DOUBLE-DOT */
+        $this->assertStringContainsString(
+            ".p1 { background: url(/css/deep/one.gif); }",
+            $content,
+            'combined css url resolver decoded 1 double-dot'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED 2 DOUBLE-DOT */
+        $this->assertStringContainsString(
+            ".p2 { background: url(/css/two.gif); }",
+            $content,
+            'combined css url resolver decoded 2 double-dot'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED 2 DOUBLE-DOT SINGLE QUOTES */
+        $this->assertStringContainsString(
+            ".p2sq { background: url('/css/two-sq.gif'); }",
+            $content,
+            'combined css url resolver decoded 2 double-dot single quotes'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED 2 DOUBLE-DOT DOUBLE QUOTES */
+        $this->assertStringContainsString(
+            ".p2dq { background: url(\"/css/two-dq.gif\"); }",
+            $content,
+            'combined css url resolver decoded 2 double-dot double quotes'
+        );
+
+        /* COMBINED CSS URL RESOLVER SHOULD NOT TOUCH ABSOLUTE PATH */
+        $this->assertStringContainsString(
+            ".p2abs { background: url(/foo/bar/../../two-abs.gif); }",
+            $content,
+            'combined css url resolver should not touch absolute path'
+        );
+
+        /* COMBINED CSS URL RESOLVER SHOULD NOT TOUCH ABSOLUTE PATH ON NEW LINE */
+        $this->assertStringContainsString(
+            "\n  /foo/bar/../../two-abs-ln.gif\n",
+            $content,
+            'combined css url resolver should not touch absolute path on new line'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED 3 DOUBLE-DOT */
+        $this->assertStringContainsString(
+            ".p3 { background: url(/three.gif); }",
+            $content,
+            'combined css url resolver decoded 3 double-dot'
+        );
+
+        /* COMBINED CSS URL RESOLVER DECODED 4 DOUBLE-DOT WHEN ONLY 3 LEVELS AVAILABLE*/
+        $this->assertStringContainsString(
+            ".p4 { background: url(/four.gif); }",
+            $content,
+            'combined css url resolver decoded 4 double-dot when only 3 levels available'
+        );
+
+        /* COMBINED CSS URL RESOLVER MODIFIED AN ARBITRARY VALUE */
+        $this->assertStringContainsString(
+            ".weird { content: \"./keepme.gif\"; }",
+            $content,
+            'combined css url resolver modified an arbitrary value'
+        );
     }
 
     /**

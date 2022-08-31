@@ -72,7 +72,6 @@ class ViewableDataContains extends Constraint implements TestOnly
         return null;
     }
 
-
     /**
      * Returns a string representation of the object.
      *
