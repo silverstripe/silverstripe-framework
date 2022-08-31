@@ -59,8 +59,6 @@ abstract class DBSchemaManager
     /**
      * @param string $table
      * @param string $class
-     *
-     * @deprecated 4.0.0:5.0.0
      */
     public static function showTableNameWarning($table, $class)
     {
@@ -436,11 +434,10 @@ abstract class DBSchemaManager
             if (!$table_name_info_sent) {
                 $this->alterationMessage(
                     <<<'MESSAGE'
-<strong>Please note:</strong> It is strongly recommended to define a
-table_name for all namespaced models. Not defining a table_name may cause generated table
-names to be too long and may not be supported by your current database engine. The generated
-naming scheme will also change when upgrading to SilverStripe 5.0 and potentially break.
-MESSAGE
+                    <strong>Please note:</strong> It is strongly recommended to define a
+                    table_name for all namespaced models. Not defining a table_name may cause generated table
+                    names to be too long and may not be supported by your current database engine.
+                    MESSAGE
                     ,
                     'error'
                 );
