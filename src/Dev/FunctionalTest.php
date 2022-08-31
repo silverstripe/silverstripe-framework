@@ -83,8 +83,6 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
 
     protected function setUp(): void
     {
-        Deprecation::notice('5.0.0', 'This class will be removed in CMS 5', Deprecation::SCOPE_CLASS);
-
         parent::setUp();
 
         // Skip calling FunctionalTest directly.

@@ -4,7 +4,6 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
@@ -30,8 +29,6 @@ class SSListContains extends Constraint implements TestOnly
 
     public function __construct(array $matches)
     {
-        Deprecation::notice('5.0.0', 'This class will be removed in CMS 5', Deprecation::SCOPE_CLASS);
-
         $this->exporter = new SSListExporter();
 
         $this->matches = $matches;

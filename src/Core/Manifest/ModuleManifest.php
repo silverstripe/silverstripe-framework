@@ -7,7 +7,6 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -125,10 +124,6 @@ class ModuleManifest
      */
     public function init($includeTests = false, $forceRegen = false)
     {
-        if (!empty($ignoredCIConfigs)) {
-            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
-        }
-
         // build cache from factory
         if ($this->cacheFactory) {
             $this->cache = $this->cacheFactory->create(
@@ -170,10 +165,6 @@ class ModuleManifest
      */
     public function regenerate($includeTests = false)
     {
-        if (!empty($ignoredCIConfigs)) {
-            Deprecation::notice('5.0.0', 'The $ignoredCIConfigs parameter will be removed in CMS 5');
-        }
-
         $this->modules = [];
 
         $finder = new ManifestFileFinder();
