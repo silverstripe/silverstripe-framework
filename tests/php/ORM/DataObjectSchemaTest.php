@@ -58,9 +58,9 @@ class DataObjectSchemaTest extends SapphireTest
             'DOSTWithCustomTable',
             $schema->tableName(WithCustomTable::class)
         );
-        // Default table name is Vendor plus base class
+        // Default table name is FQN
         $this->assertEquals(
-            'SilverStripe_DefaultTableName',
+            'SilverStripe_ORM_Tests_DataObjectSchemaTest_DefaultTableName',
             $schema->tableName(DefaultTableName::class)
         );
     }
