@@ -4,7 +4,6 @@ namespace SilverStripe\ORM;
 
 use ArrayAccess;
 use Countable;
-use Iterator;
 use IteratorAggregate;
 
 /**
@@ -251,55 +250,23 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Returns an Iterator for iterating over the complete set
+     * Returns an Map_Iterator instance for iterating over the complete set
      * of items in the map.
      *
-     * Satisfies the IteratorAggregate interface.
-     */
-    public function getIterator(): Iterator
-    {
-        $keyField = $this->keyField;
-        $valueField = $this->valueField;
-
-        foreach ($this->firstItems as $k => $v) {
-            yield $k => $v;
-        }
-
-        foreach ($this->list as $record) {
-            if (isset($this->firstItems[$record->$keyField])) {
-                continue;
-            }
-            if (isset($this->lastItems[$record->$keyField])) {
-                continue;
-            }
-            yield $this->extractValue($record, $this->keyField) => $this->extractValue($record, $this->valueField);
-        }
-
-        foreach ($this->lastItems as $k => $v) {
-            yield $k => $v;
-        }
-    }
-
-    /**
-     * Extracts a value from an item in the list, where the item is either an
-     * object or array.
+     * Satisfies the IteratorAggreagte interface.
      *
-     * @param  array|object $item
-     * @param  string $key
-     * @return mixed
+     * @return Map_Iterator
      */
-    protected function extractValue($item, $key)
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
-        if (is_object($item)) {
-            if (method_exists($item, 'hasMethod') && $item->hasMethod($key)) {
-                return $item->{$key}();
-            }
-            return $item->{$key};
-        } else {
-            if (array_key_exists($key, $item)) {
-                return $item[$key];
-            }
-        }
+        return new Map_Iterator(
+            $this->list->getIterator(),
+            $this->keyField,
+            $this->valueField,
+            $this->firstItems,
+            $this->lastItems
+        );
     }
 
     /**

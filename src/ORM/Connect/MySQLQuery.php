@@ -2,8 +2,6 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use Iterator;
-
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
  * Note that this class is only used for the results of non-prepared statements
@@ -47,13 +45,16 @@ class MySQLQuery extends Query
         }
     }
 
-    public function getIterator(): Iterator
+    public function seek($row)
     {
         if (is_object($this->handle)) {
-            while ($data = $this->handle->fetch_assoc()) {
-                yield $data;
-            }
+            // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
+            $this->handle->data_seek($row);
+            $result = $this->nextRecord();
+            $this->handle->data_seek($row);
+            return $result;
         }
+        return null;
     }
 
     public function numRecords()
@@ -61,7 +62,27 @@ class MySQLQuery extends Query
         if (is_object($this->handle)) {
             return $this->handle->num_rows;
         }
-
         return null;
+    }
+
+    public function nextRecord()
+    {
+        $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
+
+        if (is_object($this->handle) && ($row = $this->handle->fetch_array(MYSQLI_NUM))) {
+            $data = [];
+            foreach ($row as $i => $value) {
+                if (!isset($this->columns[$i])) {
+                    throw new DatabaseException("Can't get metadata for column $i");
+                }
+                if (in_array($this->columns[$i]->type, $floatTypes ?? [])) {
+                    $value = (float)$value;
+                }
+                $data[$this->columns[$i]->name] = $value;
+            }
+            return $data;
+        } else {
+            return false;
+        }
     }
 }

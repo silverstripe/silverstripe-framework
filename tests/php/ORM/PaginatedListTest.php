@@ -90,7 +90,7 @@ class PaginatedListTest extends SapphireTest
         $this->assertEquals(1, $list->CurrentPage());
     }
 
-    public function testIteration()
+    public function testGetIterator()
     {
         $list = new PaginatedList(
             new ArrayList([
@@ -105,23 +105,26 @@ class PaginatedListTest extends SapphireTest
 
         $this->assertListEquals(
             [['Num' => 1], ['Num' => 2]],
-            $list
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(2);
         $this->assertListEquals(
             [['Num' => 3], ['Num' => 4]],
-            $list
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(3);
         $this->assertListEquals(
             [['Num' => 5]],
-            $list
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         $list->setCurrentPage(999);
-        $this->assertListEquals([], $list);
+        $this->assertListEquals(
+            [],
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
+        );
 
         // Test disabled paging
         $list->setPageLength(0);
@@ -134,13 +137,14 @@ class PaginatedListTest extends SapphireTest
                 ['Num' => 4],
                 ['Num' => 5],
             ],
-            $list
+            ArrayList::create($list->getIterator()->getInnerIterator()->getArrayCopy())
         );
 
         // Test with dataobjectset
         $players = Player::get();
         $list = new PaginatedList($players);
         $list->setPageLength(1);
+        $list->getIterator();
         $this->assertEquals(
             4,
             $list->getTotalItems(),
@@ -219,10 +223,10 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList($list);
 
         $list->setCurrentPage(3);
-        $this->assertEquals(10, count($list->toArray()));
+        $this->assertCount(10, $list->getIterator()->getInnerIterator());
 
         $list->setLimitItems(false);
-        $this->assertEquals(50, count($list->toArray()));
+        $this->assertCount(50, $list->getIterator()->getInnerIterator());
     }
 
     public function testCurrentPage()
