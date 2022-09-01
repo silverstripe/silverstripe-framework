@@ -40,7 +40,7 @@
         "swiftmailer/swiftmailer": "^6.3.0",
         "symfony/cache": "^4.4.44",
         "symfony/config": "^4.4.44",
-        "symfony/filesystem": "^6.0",
+        "symfony/filesystem": "^5.4 || ^6.0",
         "symfony/translation": "^4.4.44",
         "symfony/yaml": "^4.4.44",
         "ext-ctype": "*",
