@@ -6,12 +6,10 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
-use SilverStripe\View\TemplateIterator;
 use SilverStripe\View\ViewableData;
 use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
-use Iterator;
 use LogicException;
 
 /**
@@ -52,13 +50,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected $dataQuery;
 
     /**
-     * A cached Query to save repeated database calls. {@see DataList::getTemplateIteratorCount()}
-     *
-     * @var SilverStripe\ORM\Connect\Query
-     */
-    protected $finalisedQuery;
-
-    /**
      * Create a new DataList.
      * No querying is done on construction, but the initial query schema is set up.
      *
@@ -88,7 +79,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function __clone()
     {
         $this->dataQuery = clone $this->dataQuery;
-        $this->finalisedQuery = null;
     }
 
     /**
@@ -791,6 +781,20 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this;
     }
 
+    /**
+     * Returns a generator for this DataList
+     *
+     * @return \Generator&DataObject[]
+     */
+    public function getGenerator()
+    {
+        $query = $this->dataQuery->query()->execute();
+
+        while ($row = $query->record()) {
+            yield $this->createDataObject($row);
+        }
+    }
+
     public function debug()
     {
         $val = "<h2>" . static::class . "</h2><ul>";
@@ -859,32 +863,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns an Iterator for this DataList.
      * This function allows you to use DataLists in foreach loops
-     */
-    public function getIterator(): Iterator
-    {
-        foreach ($this->getFinalisedQuery() as $row) {
-            yield $this->createDataObject($row);
-        }
-
-        // Re-set the finaliseQuery so that it can be re-executed
-        $this->finalisedQuery = null;
-    }
-
-    /**
-     * Returns the Query result for this DataList. Repeated calls will return
-     * a cached result, unless the DataQuery underlying this list has been
-     * modified
      *
-     * @return SilverStripe\ORM\Connect\Query
-     * @internal This API may change in minor releases
+     * @return ArrayIterator
      */
-    protected function getFinalisedQuery()
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
-        if (!$this->finalisedQuery) {
-            $this->finalisedQuery = $this->dataQuery->query()->execute();
-        }
-
-        return $this->finalisedQuery;
+        return new ArrayIterator($this->toArray());
     }
 
     /**
@@ -895,10 +880,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     #[\ReturnTypeWillChange]
     public function count()
     {
-        if ($this->finalisedQuery) {
-            return $this->finalisedQuery->numRecords();
-        }
-
         return $this->dataQuery->count();
     }
 
@@ -1046,7 +1027,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function column($colName = "ID")
     {
-        return $this->dataQuery->distinct(false)->column($colName);
+        $dataQuery = clone $this->dataQuery;
+        return $dataQuery->distinct(false)->column($colName);
     }
 
     /**
@@ -1192,7 +1174,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function removeAll()
     {
-        foreach ($this as $item) {
+        foreach ($this->getGenerator() as $item) {
             $this->remove($item);
         }
         return $this;
@@ -1335,15 +1317,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $currentChunk = 0;
 
         // Keep looping until we run out of chunks
-        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)) {
+        while ($chunk = $this->limit($chunkSize, $chunkSize * $currentChunk)->getIterator()) {
             // Loop over all the item in our chunk
-            $count = 0;
             foreach ($chunk as $item) {
-                $count++;
                 yield $item;
             }
 
-            if ($count < $chunkSize) {
+
+            if ($chunk->count() < $chunkSize) {
                 // If our last chunk had less item than our chunkSize, we've reach the end.
                 break;
             }
