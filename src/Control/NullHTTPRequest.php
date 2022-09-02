@@ -12,6 +12,6 @@ class NullHTTPRequest extends HTTPRequest
 
     public function __construct()
     {
-        parent::__construct(null, null);
+        parent::__construct();
     }
 }

@@ -61,7 +61,7 @@ class Storage
     public function cleanup()
     {
         Cookie::force_expiry($this->getCookieKey());
-        $this->session->clear($this->getNamespace());
+        $this->session->remove($this->getNamespace());
     }
 
     /**

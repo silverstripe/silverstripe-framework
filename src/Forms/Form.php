@@ -363,10 +363,9 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function clearFormState()
     {
-        $this
-            ->getSession()
-            ->clear("FormInfo.{$this->FormName()}.result")
-            ->clear("FormInfo.{$this->FormName()}.data");
+        $session = $this->getSession();
+        $session->remove("FormInfo.{$this->FormName()}.result");
+        $session->remove("FormInfo.{$this->FormName()}.data");
         return $this;
     }
 

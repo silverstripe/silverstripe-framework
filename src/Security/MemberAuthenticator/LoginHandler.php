@@ -173,11 +173,9 @@ class LoginHandler extends RequestHandler
      */
     protected function redirectAfterSuccessfulLogin()
     {
-        $this
-            ->getRequest()
-            ->getSession()
-            ->clear('SessionForms.MemberLoginForm.Email')
-            ->clear('SessionForms.MemberLoginForm.Remember');
+        $session = $this->getRequest()->getSession();
+        $session->remove('SessionForms.MemberLoginForm.Email');
+        $session->remove('SessionForms.MemberLoginForm.Remember');
 
         $member = Security::getCurrentUser();
         if ($member->isPasswordExpired()) {

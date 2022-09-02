@@ -158,7 +158,7 @@ class ChangePasswordHandler extends RequestHandler
             Injector::inst()->get(IdentityStore::class)->logOut();
         }
 
-        $this->getRequest()->getSession()->regenerateSessionId();
+        $this->getRequest()->getSession()->migrate();
         // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
         $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
     }
@@ -226,7 +226,7 @@ class ChangePasswordHandler extends RequestHandler
 
             // The user is not logged in and no valid auto login hash is available
             if (!$member) {
-                $session->clear('AutoLoginHash');
+                $session->remove('AutoLoginHash');
 
                 return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
             }
@@ -282,7 +282,7 @@ class ChangePasswordHandler extends RequestHandler
             $identityStore->logIn($member, false, $this->getRequest());
         }
 
-        $session->clear('AutoLoginHash');
+        $session->remove('AutoLoginHash');
 
         // Redirect to backurl
         $backURL = $this->getBackURL();

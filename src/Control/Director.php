@@ -215,7 +215,7 @@ class Director implements TemplateGlobalProvider
                     }
                     // Unset removed keys
                     foreach (array_diff_key($sessionArray ?? [], $_SESSION) as $key => $value) {
-                        $session->clear($key);
+                        $session->remove($key);
                     }
                 }
             };

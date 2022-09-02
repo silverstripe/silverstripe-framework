@@ -30,7 +30,7 @@ trait SessionEnvTypeSwitcher
                 }
             }
 
-            $session->clear('isDev');
+            $session->remove('isDev');
             $session->set('isTest', $isTest);
 
             return true;
@@ -41,7 +41,7 @@ trait SessionEnvTypeSwitcher
                 }
             }
 
-            $session->clear('isTest');
+            $session->remove('isTest');
             $session->set('isDev', $isDev);
 
             return true;
