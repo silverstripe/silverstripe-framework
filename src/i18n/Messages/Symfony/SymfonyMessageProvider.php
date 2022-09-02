@@ -121,11 +121,11 @@ class SymfonyMessageProvider implements MessageProvider
         ));
 
         // Pass to symfony translator
-        $result = $this->getTranslator()->transChoice($entity, $count, $arguments, 'messages', $locale);
+        $result = $this->getTranslator()->trans($entity, $arguments, 'messages', $locale);
 
         // Manually inject default if no translation found
         if ($entity === $result) {
-            $result = $this->getTranslator()->transChoice($default, $count, $arguments, 'messages', $locale);
+            $result = $this->getTranslator()->trans($default, $arguments, 'messages', $locale);
         }
 
         return $result;

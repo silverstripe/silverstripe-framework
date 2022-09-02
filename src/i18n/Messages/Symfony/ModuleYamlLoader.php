@@ -7,6 +7,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\Reader;
 use Symfony\Component\Translation\Loader\ArrayLoader;
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\PluralizationRules;
 
 /**
@@ -23,7 +24,7 @@ class ModuleYamlLoader extends ArrayLoader
      */
     protected $reader = null;
 
-    public function load($resource, $locale, $domain = 'messages')
+    public function load(mixed $resource, string $locale, string $domain = 'messages'): MessageCatalogue
     {
         $messages = [];
         foreach ($resource as $path) {

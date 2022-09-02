@@ -27,7 +27,7 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
         return null;
     }
 
-    public function isFresh($timestamp)
+    public function isFresh(int $timestamp): bool
     {
         // Check mtime of canary
         $canary = static::canary();
