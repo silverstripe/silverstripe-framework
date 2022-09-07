@@ -6,10 +6,9 @@ use BadMethodCallException;
 use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Psr\Log\LoggerAwareInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Psr\SimpleCache\CacheInterface;
-use ReflectionClass;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 
@@ -45,6 +44,8 @@ class ManifestCacheFactory extends DefaultCacheFactory
     {
         // Override default cache generation with SS_MANIFESTCACHE
         $cacheClass = Environment::getEnv('SS_MANIFESTCACHE');
+        $params['useInjector'] = false;
+
         if (!$cacheClass) {
             return parent::create($service, $params);
         }
@@ -56,37 +57,18 @@ class ManifestCacheFactory extends DefaultCacheFactory
             return $factory->create($service, $params);
         }
 
-        // Check if SS_MANIFESTCACHE is a cache subclass
-        if (is_a($cacheClass, CacheInterface::class, true)) {
+        // Check if SS_MANIFESTCACHE is a PSR-6 or PSR-16 class
+        if (is_a($cacheClass, CacheItemPoolInterface::class, true) ||
+            is_a($cacheClass, CacheInterface::class, true)
+        ) {
             $args = array_merge($this->args, $params);
             $namespace = isset($args['namespace']) ? $args['namespace'] : '';
-            return $this->createCache($cacheClass, [$namespace]);
+            return $this->createCache($cacheClass, [$namespace], false);
         }
 
         // Validate type
         throw new BadMethodCallException(
-            'SS_MANIFESTCACHE is not a valid CacheInterface or CacheFactory class name'
+            'SS_MANIFESTCACHE is not a valid CacheInterface, CacheItemPoolInterface or CacheFactory class name'
         );
-    }
-
-    /**
-     * Create cache directly without config / injector
-     *
-     * @param string $class
-     * @param array $args
-     * @return CacheInterface
-     */
-    public function createCache($class, $args)
-    {
-        /** @var CacheInterface $cache */
-        $reflection = new ReflectionClass($class);
-        $cache = $reflection->newInstanceArgs($args);
-
-        // Assign cache logger
-        if ($this->logger && $cache instanceof LoggerAwareInterface) {
-            $cache->setLogger($this->logger);
-        }
-
-        return $cache;
     }
 }
