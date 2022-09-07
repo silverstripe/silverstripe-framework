@@ -6,7 +6,8 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\RateLimiter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use Symfony\Component\Cache\Simple\ArrayCache;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 class RateLimiterTest extends SapphireTest
 {
@@ -19,7 +20,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testConstruct()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             5,
@@ -33,7 +34,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testGetNumberOfAttempts()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             5,
@@ -48,7 +49,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testGetNumAttemptsRemaining()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             1,
@@ -64,7 +65,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testGetTimeToReset()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             1,
@@ -80,7 +81,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testClearAttempts()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             1,
@@ -97,7 +98,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testHit()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             1,
@@ -113,7 +114,7 @@ class RateLimiterTest extends SapphireTest
 
     public function testCanAccess()
     {
-        $cache = new ArrayCache();
+        $cache = $this->getCache();
         $rateLimiter = new RateLimiter(
             'test',
             1,
@@ -123,5 +124,10 @@ class RateLimiterTest extends SapphireTest
         $this->assertTrue($rateLimiter->canAccess());
         $rateLimiter->hit();
         $this->assertFalse($rateLimiter->canAccess());
+    }
+
+    private function getCache()
+    {
+        return new Psr16Cache(new ArrayAdapter());
     }
 }

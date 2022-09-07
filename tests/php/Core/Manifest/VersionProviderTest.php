@@ -2,8 +2,9 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
-use SebastianBergmann\Version;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\VersionProvider;
 use SilverStripe\Dev\SapphireTest;
 
@@ -14,6 +15,12 @@ class VersionProviderTest extends SapphireTest
      * @var VersionProvider
      */
     protected $provider;
+
+    protected function setup(): void
+    {
+        parent::setup();
+        $this->clearCache();
+    }
 
     public function getMockProvider($composerLockPath = '')
     {
@@ -95,6 +102,8 @@ class VersionProviderTest extends SapphireTest
         $result = $provider->getVersion();
         $this->assertStringContainsString('Framework: 1.2.3', $result);
 
+        $this->clearCache();
+
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
             'silverstripe/recipe-core' => 'Core Recipe',
@@ -144,6 +153,8 @@ class VersionProviderTest extends SapphireTest
         $this->assertStringNotContainsString('Core Recipe: 7.7.7', $result);
         $this->assertStringContainsString('CMS Recipe: 8.8.8', $result);
         $this->assertStringNotContainsString('CWP: 9.9.9', $result);
+
+        $this->clearCache();
 
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
@@ -201,5 +212,11 @@ class VersionProviderTest extends SapphireTest
         $result = $provider->getVersion();
         $this->assertStringNotContainsString('Framework: 1.2.3', $result);
         $this->assertStringContainsString('Core Recipe: 7.7.7', $result);
+    }
+
+    private function clearCache()
+    {
+        $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider');
+        $cache->clear();
     }
 }

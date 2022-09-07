@@ -3,11 +3,11 @@
 namespace SilverStripe\Core\Cache;
 
 use SilverStripe\Core\Injector\Injector;
-use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 class FilesystemCacheFactory implements CacheFactory
 {
-
     /**
      * @var string Absolute directory path
      */
@@ -26,10 +26,11 @@ class FilesystemCacheFactory implements CacheFactory
      */
     public function create($service, array $params = [])
     {
-        return Injector::inst()->create(FilesystemCache::class, false, [
+        $psr6Cache = Injector::inst()->createWithArgs(FilesystemAdapter::class, [
             (isset($params['namespace'])) ? $params['namespace'] : '',
             (isset($params['defaultLifetime'])) ? $params['defaultLifetime'] : 0,
             $this->directory
         ]);
+        return Injector::inst()->createWithArgs(Psr16Cache::class, [$psr6Cache]);
     }
 }

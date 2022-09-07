@@ -11,8 +11,9 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
 use SilverStripe\View\SSTemplateParseException;
 use SilverStripe\View\SSViewer;
-use Symfony\Component\Cache\Simple\FilesystemCache;
-use Symfony\Component\Cache\Simple\NullCache;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 
 // Not actually a data object, we just want a ViewableData object that's just for us
 
@@ -44,9 +45,10 @@ class SSViewerCacheBlockTest extends SapphireTest
 
         $cache = null;
         if ($cacheOn) {
-            $cache = new FilesystemCache('cacheblock', 0, TempFolder::getTempFolder(BASE_PATH)); // cache indefinitely
+            // cache indefinitely
+            $cache = new Psr16Cache(new FilesystemAdapter('cacheblock', 0, TempFolder::getTempFolder(BASE_PATH)));
         } else {
-            $cache = new NullCache();
+            $cache = new Psr16Cache(new NullAdapter());
         }
 
         Injector::inst()->registerService($cache, CacheInterface::class . '.cacheblock');
@@ -151,6 +153,7 @@ class SSViewerCacheBlockTest extends SapphireTest
         $this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', ['Foo' => 1]), '1');
 
         // Test without flush
+        Injector::inst()->get(Kernel::class)->boot();
         Director::test('/');
         $this->assertEquals($this->_runtemplate('<% cached %>$Foo<% end_cached %>', ['Foo' => 3]), '1');
 
