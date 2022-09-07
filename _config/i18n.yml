@@ -33,7 +33,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       0: [ '%$Symfony\Component\Config\Resource\SelfCheckingResourceChecker' ]
   # Create default translator with standard cache path and our custom loader
-  Symfony\Component\Translation\TranslatorInterface:
+  Symfony\Contracts\Translation\TranslatorInterface:
     class: Symfony\Component\Translation\Translator
     constructor:
       0: 'en'
@@ -48,7 +48,7 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\i18n\Messages\MessageProvider:
     class: SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider
     properties:
-      Translator: '%$Symfony\Component\Translation\TranslatorInterface'
+      Translator: '%$Symfony\Contracts\Translation\TranslatorInterface'
 ---
 Name: textcollector
 ---

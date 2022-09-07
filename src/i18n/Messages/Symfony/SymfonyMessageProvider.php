@@ -115,17 +115,15 @@ class SymfonyMessageProvider implements MessageProvider
         $this->load($locale);
 
         // Prepare arguments
-        $arguments = $this->templateInjection(array_merge(
-            $injection,
-            [ 'count' => $count ]
-        ));
+        $arguments = $this->templateInjection($injection);
+        $arguments['%count%'] = $count;
 
         // Pass to symfony translator
-        $result = $this->getTranslator()->transChoice($entity, $count, $arguments, 'messages', $locale);
+        $result = $this->getTranslator()->trans($entity, $arguments, 'messages', $locale);
 
         // Manually inject default if no translation found
         if ($entity === $result) {
-            $result = $this->getTranslator()->transChoice($default, $count, $arguments, 'messages', $locale);
+            $result = $this->getTranslator()->trans($default, $arguments, 'messages', $locale);
         }
 
         return $result;
