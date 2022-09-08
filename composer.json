@@ -41,7 +41,7 @@
         "symfony/cache": "^6.1",
         "symfony/config": "^6.1",
         "symfony/filesystem": "^6.1",
-        "symfony/translation": "^4.4.44",
+        "symfony/translation": "^6.1",
         "symfony/yaml": "^6.1",
         "ext-ctype": "*",
         "ext-dom": "*",

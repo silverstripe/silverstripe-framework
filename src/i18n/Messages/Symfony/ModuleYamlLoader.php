@@ -2,12 +2,10 @@
 
 namespace SilverStripe\i18n\Messages\Symfony;
 
-use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\Reader;
 use Symfony\Component\Translation\Loader\ArrayLoader;
-use Symfony\Component\Translation\PluralizationRules;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * Loads yaml localisations across all modules simultaneously.
@@ -23,7 +21,7 @@ class ModuleYamlLoader extends ArrayLoader
      */
     protected $reader = null;
 
-    public function load($resource, $locale, $domain = 'messages')
+    public function load(mixed $resource, string $locale, string $domain = 'messages'): MessageCatalogue
     {
         $messages = [];
         foreach ($resource as $path) {
