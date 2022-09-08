@@ -29,6 +29,15 @@ abstract class DBSchemaManager
     private static $check_and_repair_on_build = true;
 
     /**
+     * @config
+     * For large database, you can exclude a list of table names for checking and rapairs
+     * In this way smaller tables are still checked for consistency and health.
+     *
+     * @var array
+     */
+    private static $exclude_tables_for_checks = [];
+
+    /**
      * Check if tables should be renamed in a case-sensitive fashion.
      * Note: This should still work even on case-insensitive databases.
      *

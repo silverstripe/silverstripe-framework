@@ -149,6 +149,12 @@ class MySQLSchemaManager extends DBSchemaManager
             return true;
         }
 
+        if (in_array($tableName, Config::inst()->get(self::class, 'exclude_tables_for_checks'))) {
+            $this->alterationMessage("CHECK TABLE is excluded for $tableName", 'notice');
+
+            return true;
+        }
+
         // Perform check
         if ($this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
             return true;
