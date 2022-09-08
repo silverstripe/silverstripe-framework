@@ -102,6 +102,7 @@ class MySQLStatement extends Query
         call_user_func_array([$this->statement, 'bind_result'], $variables ?? []);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         while ($this->statement->fetch()) {

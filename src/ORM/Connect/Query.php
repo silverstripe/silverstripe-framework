@@ -155,9 +155,8 @@ abstract class Query implements \IteratorAggregate
 
     /**
      * Return the next record in the query result.
-     *
-     * @return array
      */
+    #[\ReturnTypeWillChange]
     abstract public function getIterator();
 
     /**

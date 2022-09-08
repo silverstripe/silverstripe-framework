@@ -45,6 +45,7 @@ class MySQLQuery extends Query
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
