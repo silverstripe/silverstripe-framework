@@ -42,7 +42,6 @@ class DataListTest extends SapphireTest
         );
     }
 
-
     public function testFilterDataObjectByCreatedDate()
     {
         // create an object to test with

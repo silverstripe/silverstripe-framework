@@ -63,6 +63,11 @@ class MySQLQuery extends Query
                 }
                 yield $data;
             }
+            // Check for the method first since $this->handle is a mixed type
+            if (method_exists($this->handle, 'data_seek')) {
+                // Reset so the query can be iterated over again
+                $this->handle->data_seek(0);
+            }
         }
     }
 
