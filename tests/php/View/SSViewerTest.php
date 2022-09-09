@@ -759,6 +759,12 @@ after'
             ['string:1', '\'1\''],
             ['string:foobar', '"foobar"'],
             ['string:foo bar baz', '"foo bar baz"'],
+            ['string:false', '\'false\''],
+            ['string:true', '\'true\''],
+            ['string:null', '\'null\''],
+            ['string:false', '"false"'],
+            ['string:true', '"true"'],
+            ['string:null', '"null"'],
             // Implicit strings
             ['string:foobar', 'foobar'],
             ['string:foo bar baz', 'foo bar baz']
