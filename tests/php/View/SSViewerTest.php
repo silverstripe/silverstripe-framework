@@ -4,6 +4,7 @@ namespace SilverStripe\View\Tests;
 
 use Exception;
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Silverstripe\Assets\Dev\TestAssetStore;
 use SilverStripe\Control\ContentNegotiator;
@@ -1557,12 +1558,10 @@ after'
         );
     }
 
-    /**
-     * @expectedException \LogicException
-     * @expectedExceptionMessage Up called when we're already at the top of the scope
-     */
     public function testTooManyUps()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage("Up called when we're already at the top of the scope");
         $data = new ArrayData([
             'Foo' => new ArrayData([
                 'Name' => 'Foo',
