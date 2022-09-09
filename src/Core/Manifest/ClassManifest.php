@@ -227,13 +227,13 @@ class ClassManifest
      */
     public function getManifestTimestamp($includeTests = false)
     {
-        $cache = $this->buildCache($includeTests);
+        $this->cache = $this->buildCache($includeTests);
 
-        if (!$cache) {
+        if (!$this->cache) {
             return null;
         }
 
-        return $cache->get('generated_at');
+        return $this->cache->get('generated_at');
     }
 
     /**
@@ -241,13 +241,13 @@ class ClassManifest
      */
     public function scheduleFlush($includeTests = false)
     {
-        $cache = $this->buildCache($includeTests);
+        $this->cache = $this->buildCache($includeTests);
 
-        if (!$cache) {
+        if (!$this->cache) {
             return null;
         }
 
-        $cache->set('regenerate', true);
+        $this->cache->set('regenerate', true);
     }
 
     /**
@@ -255,13 +255,13 @@ class ClassManifest
      */
     public function isFlushScheduled($includeTests = false)
     {
-        $cache = $this->buildCache($includeTests);
+        $this->cache = $this->buildCache($includeTests);
 
-        if (!$cache) {
+        if (!$this->cache) {
             return null;
         }
 
-        return $cache->get('regenerate');
+        return $this->cache->get('regenerate');
     }
 
     /**
