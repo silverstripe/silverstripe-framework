@@ -3,12 +3,10 @@
 namespace SilverStripe\Dev\Install;
 
 use mysqli;
-use PDO;
 use Exception;
 use mysqli_result;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\Connect\MySQLiConnector;
-use SilverStripe\ORM\Connect\PDOConnector;
 
 /**
  * This is a helper class for the SS installer.
@@ -63,41 +61,6 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
                         $error = ($conn->connect_errno)
                             ? $conn->connect_error
                             : 'Unknown connection error';
-                        return null;
-                    }
-                case 'MySQLPDODatabase':
-                    // May throw a PDOException if fails
-
-                    // Set SSL parameters
-                    $ssl = null;
-
-                    if (array_key_exists('ssl_key', $databaseConfig) &&
-                        array_key_exists('ssl_cert', $databaseConfig)
-                    ) {
-                        $ssl = [
-                            PDO::MYSQL_ATTR_SSL_KEY => $databaseConfig['ssl_key'],
-                            PDO::MYSQL_ATTR_SSL_CERT => $databaseConfig['ssl_cert'],
-                        ];
-                        if (array_key_exists('ssl_ca', $databaseConfig)) {
-                            $ssl[PDO::MYSQL_ATTR_SSL_CA] = $databaseConfig['ssl_ca'];
-                        }
-                        // use default cipher if not provided
-                        $ssl[PDO::MYSQL_ATTR_SSL_CA] = array_key_exists('ssl_ca', $databaseConfig)
-                            ? $databaseConfig['ssl_ca']
-                            : Config::inst()->get(PDOConnector::class, 'ssl_cipher_default');
-                    }
-
-                    $conn = @new PDO(
-                        'mysql:host=' . $databaseConfig['server'],
-                        $databaseConfig['username'],
-                        $databaseConfig['password'],
-                        $ssl
-                    );
-                    if ($conn) {
-                        $conn->query("SET sql_mode = 'ANSI'");
-                        return $conn;
-                    } else {
-                        $error = 'Unknown connection error';
                         return null;
                     }
                 default:
@@ -155,8 +118,6 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
             return false;
         } elseif ($conn instanceof mysqli) {
             return $conn->server_info;
-        } elseif ($conn instanceof PDO) {
-            return $conn->getAttribute(PDO::ATTR_SERVER_VERSION);
         }
         return false;
     }

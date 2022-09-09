@@ -10,14 +10,14 @@ if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABA
     // Database connection, including PDO and legacy ORM support
     switch (Environment::getEnv('DB')) {
         case "PGSQL";
-            $pgDatabaseClass = Environment::getEnv('PDO') ? 'PostgrePDODatabase' : 'PostgreSQLDatabase';
+            $pgDatabaseClass = 'PostgreSQLDatabase';
             Environment::setEnv('SS_DATABASE_CLASS', $pgDatabaseClass);
             Environment::setEnv('SS_DATABASE_USERNAME', 'postgres');
             Environment::setEnv('SS_DATABASE_PASSWORD', '');
             break;
 
         case "SQLITE":
-            $sqliteDatabaseClass = Environment::getEnv('PDO') ? 'SQLite3PDODatabase' : 'SQLite3Database';
+            $sqliteDatabaseClass = 'SQLite3Database';
             Environment::setEnv('SS_DATABASE_CLASS', $sqliteDatabaseClass);
             Environment::setEnv('SS_DATABASE_USERNAME', 'root');
             Environment::setEnv('SS_DATABASE_PASSWORD', '');
@@ -25,7 +25,7 @@ if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABA
             break;
 
         default:
-            $mysqlDatabaseClass = Environment::getEnv('PDO') ? 'MySQLPDODatabase' : 'MySQLDatabase';
+            $mysqlDatabaseClass = 'MySQLDatabase';
             Environment::setEnv('SS_DATABASE_CLASS', $mysqlDatabaseClass);
             Environment::setEnv('SS_DATABASE_USERNAME', 'root');
             Environment::setEnv('SS_DATABASE_PASSWORD', '');

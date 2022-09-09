@@ -136,19 +136,6 @@ class MySQLSchemaManager extends DBSchemaManager
 
     public function checkAndRepairTable($tableName)
     {
-        // Flag to ensure we only send the warning about PDO + native mode once
-        static $pdo_warning_sent = false;
-
-        // If running PDO and not in emulated mode, check table will fail
-        if ($this->database->getConnector() instanceof PDOConnector && !PDOConnector::is_emulate_prepare()) {
-            if (!$pdo_warning_sent) {
-                $this->alterationMessage('CHECK TABLE command disabled for PDO in native mode', 'notice');
-                $pdo_warning_sent = true;
-            }
-
-            return true;
-        }
-
         // Perform check
         if ($this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
             return true;

@@ -9,7 +9,6 @@ SilverStripe\Dev\Backtrace:
     - ['mysqli', 'mysqli']
     - ['mysqli', 'real_connect']
     - ['mysqli', 'select_db']
-    - ['PDO', '__construct']
     - ['SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter', buildConfirmationItem]
     - ['SilverStripe\Control\Middleware\ConfirmationMiddleware\Url', buildConfirmationItem]
     - ['SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith', buildConfirmationItem]
