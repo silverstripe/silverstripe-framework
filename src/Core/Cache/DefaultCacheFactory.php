@@ -72,17 +72,26 @@ class DefaultCacheFactory implements CacheFactory
         }
 
         // Create filesystem cache
-        $fs = $this->createCache(FilesystemAdapter::class, [$namespace, $defaultLifetime, $directory], $useInjector);
         if (!$apcuSupported) {
-            return $fs;
+            return $this->createCache(
+                FilesystemAdapter::class,
+                [$namespace, $defaultLifetime, $directory],
+                $useInjector
+            );
         }
 
-        // Chain this cache with ApcuCache
+        // Create PSR6 filesystem + apcu cache's wrapped in a PSR6 chain adapter, then wrap in a PSR16 class
+        $fs = $this->instantiateCache(
+            FilesystemAdapter::class,
+            [$namespace, $defaultLifetime, $directory],
+            $useInjector
+        );
+
         // Note that the cache lifetime will be shorter there by default, to ensure there's enough
         // resources for "hot cache" items in APCu as a resource constrained in memory cache.
         $apcuNamespace = $namespace . ($namespace ? '_' : '') . md5(BASE_PATH);
         $lifetime = (int) $defaultLifetime / 5;
-        $apcu = $this->createCache(ApcuAdapter::class, [$apcuNamespace, $lifetime, $version], $useInjector);
+        $apcu = $this->instantiateCache(ApcuAdapter::class, [$apcuNamespace, $lifetime, $version], $useInjector);
 
         return $this->createCache(ChainAdapter::class, [[$apcu, $fs]], $useInjector);
     }
@@ -129,8 +138,11 @@ class DefaultCacheFactory implements CacheFactory
      * - https://symfony.com/doc/current/components/cache/psr6_psr16_adapters.html#using-a-psr-6-cache-object-as-a-psr-16-cache
      * - https://github.com/php-fig/simple-cache
      */
-    protected function createCache(string $class, array $args, bool $useInjector = true): CacheInterface
-    {
+    protected function createCache(
+        string $class,
+        array $args,
+        bool $useInjector = true
+    ): CacheInterface {
         $loggerAdded = false;
         $classIsPsr6 = is_a($class, CacheItemPoolInterface::class, true);
         $classIsPsr16 = is_a($class, CacheInterface::class, true);
