@@ -3501,7 +3501,7 @@ class SSTemplateParser extends Parser implements TemplateParser
                 break;
 
             default:
-                $res['php'] .= str_replace('$$FINAL', 'obj', $sub['php']) . '->self()';
+                $res['php'] .= str_replace('$$FINAL', 'obj', $sub['php'] ?? '') . '->self()';
                 break;
         }
     }
