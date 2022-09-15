@@ -2,12 +2,6 @@
 name: databaseconnectors
 ---
 SilverStripe\Core\Injector\Injector:
-  MySQLPDODatabase:
-    class: 'SilverStripe\ORM\Connect\MySQLDatabase'
-    properties:
-      connector: '%$PDOConnector'
-      schemaManager: '%$MySQLSchemaManager'
-      queryBuilder: '%$MySQLQueryBuilder'
   MySQLDatabase:
     class: 'SilverStripe\ORM\Connect\MySQLDatabase'
     properties:
@@ -16,9 +10,6 @@ SilverStripe\Core\Injector\Injector:
       queryBuilder: '%$MySQLQueryBuilder'
   MySQLiConnector:
     class: 'SilverStripe\ORM\Connect\MySQLiConnector'
-    type: prototype
-  PDOConnector:
-    class: 'SilverStripe\ORM\Connect\PDOConnector'
     type: prototype
   MySQLSchemaManager:
     class: 'SilverStripe\ORM\Connect\MySQLSchemaManager'

@@ -76,11 +76,6 @@ class MySQLDatabase extends Database implements TransactionManager
 
     public function connect($parameters)
     {
-        // Ensure that driver is available (required by PDO)
-        if (empty($parameters['driver'])) {
-            $parameters['driver'] = $this->getDatabaseServer();
-        }
-
         // Set charset
         if (empty($parameters['charset']) && ($charset = static::config()->get('connection_charset'))) {
             $parameters['charset'] = $charset;
@@ -317,7 +312,6 @@ class MySQLDatabase extends Database implements TransactionManager
         return $list;
     }
 
-
     /**
      * Returns the TransactionManager to handle transactions for this database.
      *
@@ -326,13 +320,7 @@ class MySQLDatabase extends Database implements TransactionManager
     protected function getTransactionManager()
     {
         if (!$this->transactionManager) {
-            // PDOConnector providers this
-            if ($this->connector instanceof TransactionManager) {
-                $this->transactionManager = new NestedTransactionManager($this->connector);
-            // Direct database access does not
-            } else {
-                $this->transactionManager = new NestedTransactionManager(new MySQLTransactionManager($this));
-            }
+            $this->transactionManager = new NestedTransactionManager(new MySQLTransactionManager($this));
         }
         return $this->transactionManager;
     }

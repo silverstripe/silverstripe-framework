@@ -845,11 +845,6 @@ abstract class Database
      */
     public function connect($parameters)
     {
-        // Ensure that driver is available (required by PDO)
-        if (empty($parameters['driver'])) {
-            $parameters['driver'] = $this->getDatabaseServer();
-        }
-
         // Notify connector of parameters
         $this->connector->connect($parameters);
 

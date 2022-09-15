@@ -6,7 +6,7 @@ namespace SilverStripe\ORM\Connect;
  * Represents an object that is capable of controlling transactions.
  *
  * The TransactionManager might be the database connection itself, calling queries to orchestrate
- * transactions, or a connector such as the PDOConnector.
+ * transactions, or a connector.
  *
  * Generally speaking you should rely on your Database object to manage the creation of a TansactionManager
  * for you; unless you are building new database connectors this should be treated as an internal API.
@@ -58,8 +58,8 @@ interface TransactionManager
 
     /**
      * Return true if savepoints are supported by this transaction manager.
-     * Savepoints aren't supported by all database connectors (notably PDO doesn't support them)
-     * and should be used with caution.
+     * Savepoints aren't supported by all database connectors and should be
+     * used with caution.
      *
      * @return boolean
      */

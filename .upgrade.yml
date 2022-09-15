@@ -56,8 +56,6 @@ mappings:
   MySQLQueryBuilder: SilverStripe\ORM\Connect\MySQLQueryBuilder
   MySQLSchemaManager: SilverStripe\ORM\Connect\MySQLSchemaManager
   MySQLStatement: SilverStripe\ORM\Connect\MySQLStatement
-  PDOConnector: SilverStripe\ORM\Connect\PDOConnector
-  PDOQuery: SilverStripe\ORM\Connect\PDOQuery
   SS_Query: SilverStripe\ORM\Connect\Query
   SilverStripe\ORM\Connect\SS_Query: SilverStripe\ORM\Connect\Query
   DBBoolean: SilverStripe\ORM\FieldType\DBBoolean
@@ -703,7 +701,6 @@ mappings:
   MySQLDatabaseTest: SilverStripe\ORM\Tests\MySQLDatabaseTest
   MySQLDatabaseTest_Data: SilverStripe\ORM\Tests\MySQLDatabaseTest\Data
   PaginatedListTest: SilverStripe\ORM\Tests\PaginatedListTest
-  PDODatabaseTest: SilverStripe\ORM\Tests\PDODatabaseTest
   PolymorphicHasManyListTest: SilverStripe\ORM\Tests\PolymorphicHasManyListTest
   SQLInsertTest: SilverStripe\ORM\Tests\SQLInsertTest
   SQLInsertTestBase: SilverStripe\ORM\Tests\SQLInsertTest\SQLInsertTestBase
@@ -887,10 +884,8 @@ mappings:
   ForgotPasswordEmail_ss: SilverStripe\Control\Email\ChangePasswordEmail_ss
   GridFieldEditButton_ss: SilverStripe\Forms\GridField\GridFieldEditButton_ss
 skipYML:
-  - MySQLPDODatabase
   - MySQLDatabase
   - MySQLiConnector
-  - PDOConnector
   - MySQLSchemaManager
   - MySQLQueryBuilder
   - EndsWithFilter
