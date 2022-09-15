@@ -226,6 +226,21 @@ class PaginatedList extends ListDecorator
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = [];
+
+        // Use getIterator()
+        foreach ($this as $record) {
+            $result[] = $record;
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns a set of links to all the pages in the list. This is useful for
      * basic pagination.
      *
@@ -344,8 +359,8 @@ class PaginatedList extends ListDecorator
             $num = $i + 1;
 
             $emptyRange = $num != 1 && $num != $total && (
-                $num == $left - 1 || $num == $right + 1
-            );
+                    $num == $left - 1 || $num == $right + 1
+                );
 
             if ($emptyRange) {
                 $result->push(new ArrayData([

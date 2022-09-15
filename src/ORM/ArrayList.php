@@ -109,13 +109,13 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     #[\ReturnTypeWillChange]
     public function getIterator()
     {
-        $items = array_map(
-            function ($item) {
-                return is_array($item) ? new ArrayData($item) : $item;
-            },
-            $this->items ?? []
-        );
-        return new ArrayIterator($items);
+        foreach ($this->items as $i => $item) {
+            if (is_array($item)) {
+                yield new ArrayData($item);
+            } else {
+                yield $item;
+            }
+        }
     }
 
     /**

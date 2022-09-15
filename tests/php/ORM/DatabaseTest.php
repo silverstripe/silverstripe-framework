@@ -7,6 +7,7 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\MSSQL\MSSQLDatabase;
 use SilverStripe\Dev\SapphireTest;
 use Exception;
+use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Tests\DatabaseTest\MyObject;
 
 /**
@@ -74,7 +75,7 @@ class DatabaseTest extends SapphireTest
                 'SHOW TABLE STATUS WHERE "Name" = \'%s\'',
                 'DatabaseTest_MyObject'
             )
-        )->first();
+        )->record();
         $this->assertEquals(
             $ret['Engine'],
             'InnoDB',
@@ -292,5 +293,59 @@ class DatabaseTest extends SapphireTest
 
         $this->assertEquals($inputData, $query->map());
         $this->assertEquals($inputData, $query->map());
+    }
+
+    /**
+     * Test that repeated abstracted iteration of a query returns all records.
+     */
+    public function testRepeatedIterationUsingAbstraction()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        $select = SQLSelect::create(['"MyInt"', '"MyField"'], '"DatabaseTest_MyObject"', orderby: ['"MyInt"']);
+
+        $this->assertEquals($inputData, $select->execute()->map());
+        $this->assertEquals($inputData, $select->execute()->map());
+    }
+
+    /**
+     * Test that stopping iteration part-way through produces predictable results
+     * on a subsequent iteration.
+     * This test is here to ensure consistency between implementations (e.g. mysql vs postgres, etc)
+     */
+    public function testRepeatedPartialIteration()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        $query = DB::query('SELECT "MyInt", "MyField" FROM "DatabaseTest_MyObject" ORDER BY "MyInt"');
+
+        $i = 0;
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+            if ($i > 1) {
+                break;
+            }
+        }
+
+        // Continue from where we left off, since we're using a Generator
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+        }
     }
 }
