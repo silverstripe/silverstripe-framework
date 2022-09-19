@@ -58,7 +58,7 @@ class HTMLEditorConfigTest extends SapphireTest
         $c = new TinyMCEConfig();
         $c->setTheme('modern');
         $c->setOption('language', 'es');
-        $c->disablePlugins('table', 'emoticons', 'paste', 'code', 'link', 'importcss', 'lists');
+        $c->disablePlugins('table', 'emoticons', 'code', 'link', 'importcss', 'lists', 'autolink', 'searchreplace', 'visualblocks', 'wordcount');
         $c->enablePlugins(
             [
                 'plugin1' => 'mypath/plugin1.js',

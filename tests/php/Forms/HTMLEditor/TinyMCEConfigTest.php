@@ -21,15 +21,20 @@ class TinyMCEConfigTest extends SapphireTest
      */
     public function testLanguagesValid()
     {
-        $configDir = TinyMCEConfig::config()->get('base_dir');
+        $configDir = TinyMCEConfig::config()->get('lang_dir');
         if (!$configDir) {
-            $this->markTestSkipped("Test skipped without TinyMCE resources folder being installed");
+            $this->markTestSkipped("Test skipped without TinyMCE language resource folder being installed");
         }
 
-        $langs = Director::baseFolder() . '/' . ModuleResourceLoader::resourcePath($configDir) . '/langs';
+        $langs = Director::baseFolder() . '/' . ModuleResourceLoader::resourcePath($configDir);
 
         // Test all langs exist as real files
+        $checked = [];
         foreach (TinyMCEConfig::config()->get('tinymce_lang') as $locale => $resource) {
+            // No need to check the same file twice.
+            if (array_key_exists($resource, $checked)) {
+                continue;
+            }
             // Check valid
             $this->assertFileExists(
                 "{$langs}/{$resource}.js",
@@ -42,6 +47,7 @@ class TinyMCEConfigTest extends SapphireTest
                     "Locale code {$locale} doesn't map to simple {$resource}.js when a better {$locale}.js is available"
                 );
             }
+            $checked[$resource] = true;
         }
     }
 
