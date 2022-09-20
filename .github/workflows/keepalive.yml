@@ -6,8 +6,12 @@ on:
     - cron: '50 10 4 * *'
   workflow_dispatch:
 
+permissions: {}
 jobs:
   keepalive:
+    permissions:
+      actions: write # to re-enable workflows
+
     name: Keepalive
     # Only run cron on the silverstripe account
     if: (github.event_name == 'schedule' && github.repository_owner == 'silverstripe') || (github.event_name != 'schedule')
