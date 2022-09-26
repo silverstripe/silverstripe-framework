@@ -116,7 +116,7 @@ class Hierarchy extends DataExtension
      *
      * @param ValidationResult $validationResult
      */
-    public function validate(ValidationResult $validationResult)
+    protected function validate(ValidationResult $validationResult)
     {
         // The object is new, won't be looping.
         /** @var DataObject|Hierarchy $owner */

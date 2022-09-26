@@ -21,7 +21,7 @@ class DatabaseAdminExtension extends Extension
      * @param bool $testMode
      * @throws ReflectionException
      */
-    public function onAfterBuild(bool $quiet, bool $populate, bool $testMode): void
+    protected function onAfterBuild(bool $quiet, bool $populate, bool $testMode): void
     {
         $service = RelationValidationService::singleton();
 

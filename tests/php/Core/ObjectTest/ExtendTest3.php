@@ -15,7 +15,7 @@ class ExtendTest3 extends Extension implements TestOnly
         $this->constructorArgs = func_get_args();
     }
 
-    public function extendableMethod($argument = null)
+    protected function extendableMethod($argument = null)
     {
         return "ExtendTest3($argument)";
     }

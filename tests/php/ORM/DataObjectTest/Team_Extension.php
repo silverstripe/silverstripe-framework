@@ -24,7 +24,7 @@ class Team_Extension extends DataExtension implements TestOnly
         return "extended dynamic field";
     }
 
-    public function augmentHydrateFields()
+    protected function augmentHydrateFields()
     {
         return [
             'CustomHydratedField' => true,

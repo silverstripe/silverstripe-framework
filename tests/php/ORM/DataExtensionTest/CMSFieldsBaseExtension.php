@@ -17,7 +17,7 @@ class CMSFieldsBaseExtension extends DataExtension implements TestOnly
         'ExtendedFieldRemove' => 'Varchar(255)'
     ];
 
-    public function updateCMSFields(FieldList $fields)
+    protected function updateCMSFields(FieldList $fields)
     {
         $fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldRemove'));
         $fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldKeep'));

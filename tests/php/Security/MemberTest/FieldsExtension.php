@@ -9,7 +9,7 @@ use SilverStripe\ORM\DataExtension;
 
 class FieldsExtension extends DataExtension implements TestOnly
 {
-    public function updateCMSFields(FieldList $fields)
+    protected function updateCMSFields(FieldList $fields)
     {
         $fields->addFieldToTab('Root.Main', new TextField('TestMemberField', 'Test'));
     }
