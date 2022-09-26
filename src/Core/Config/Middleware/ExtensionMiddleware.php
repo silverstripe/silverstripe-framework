@@ -63,6 +63,11 @@ class ExtensionMiddleware implements Middleware
 
         $extensions = $extensionSourceConfig['extensions'];
         foreach ($extensions as $extension) {
+            // Allow removing extensions via yaml config by setting named extension config to null
+            if ($extension === null) {
+                continue;
+            }
+
             list($extensionClass, $extensionArgs) = ClassInfo::parse_class_spec($extension);
             // Strip service name specifier
             $extensionClass = strtok($extensionClass ?? '', '.');
