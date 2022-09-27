@@ -1217,7 +1217,9 @@ class Member extends DataObject
      */
     public function getName()
     {
-        return ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
+        $name = ($this->Surname) ? trim($this->FirstName . ' ' . $this->Surname) : $this->FirstName;
+        $this->extend('updateName', $name);
+        return $name;
     }
 
 
