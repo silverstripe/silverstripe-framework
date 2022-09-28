@@ -528,7 +528,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$_64 = NULL;
     			do {
     				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    				if (substr($this->string,$this->pos,1) == ',') {
+    				if (substr($this->string ?? '',$this->pos ?? 0,1) == ',') {
     					$this->pos += 1;
     					$result["text"] .= ',';
     				}
@@ -572,7 +572,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
 
         $res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] :
-            str_replace('$$FINAL', 'XML_val', $sub['php']);
+            str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '');
     }
 
     /* Call: Method:Word ( "(" < :CallArguments? > ")" )? */
@@ -591,7 +591,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$pos_75 = $this->pos;
     		$_74 = NULL;
     		do {
-    			if (substr($this->string,$this->pos,1) == '(') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == '(') {
     				$this->pos += 1;
     				$result["text"] .= '(';
     			}
@@ -611,7 +611,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				unset( $pos_71 );
     			}
     			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    			if (substr($this->string,$this->pos,1) == ')') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == ')') {
     				$this->pos += 1;
     				$result["text"] .= ')';
     			}
@@ -647,7 +647,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		else { $_80 = FALSE; break; }
     		$res_79 = $result;
     		$pos_79 = $this->pos;
-    		if (substr($this->string,$this->pos,1) == '.') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == '.') {
     			$this->pos += 1;
     			$result["text"] .= '.';
     			$result = $res_79;
@@ -701,7 +701,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				$pos_88 = $this->pos;
     				$_87 = NULL;
     				do {
-    					if (substr($this->string,$this->pos,1) == '.') {
+    					if (substr($this->string ?? '',$this->pos ?? 0,1) == '.') {
     						$this->pos += 1;
     						$result["text"] .= '.';
     					}
@@ -723,7 +723,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     					break;
     				}
     			}
-    			if (substr($this->string,$this->pos,1) == '.') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == '.') {
     				$this->pos += 1;
     				$result["text"] .= '.';
     			}
@@ -841,7 +841,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			do {
     				if (( $subres = $this->literal( 'is' ) ) !== FALSE) { $result["text"] .= $subres; }
     				else { $_106 = FALSE; break; }
-    				if (substr($this->string,$this->pos,1) == '=') {
+    				if (substr($this->string ?? '',$this->pos ?? 0,1) == '=') {
     					$this->pos += 1;
     					$result["text"] .= '=';
     				}
@@ -925,7 +925,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				$this->store( $result, $subres, "InjectionName" );
     			}
     			else { $_126 = FALSE; break; }
-    			if (substr($this->string,$this->pos,1) == '=') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == '=') {
     				$this->pos += 1;
     				$result["text"] .= '=';
     			}
@@ -1009,13 +1009,13 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function InjectionVariables_Argument(&$res, $sub)
     {
-        $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']) . ',';
+        $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '') . ',';
     }
 
     function InjectionVariables__finalise(&$res)
     {
-        if (substr($res['php'], -1) == ',') {
-            $res['php'] = substr($res['php'], 0, -1); //remove last comma in the array
+        if (substr($res['php'] ?? '', -1) == ',') {
+            $res['php'] = substr($res['php'] ?? '', 0, -1); //remove last comma in the array
         }
         $res['php'] .= ']';
     }
@@ -1038,7 +1038,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$pos_133 = $this->pos;
     		$_132 = NULL;
     		do {
-    			if (substr($this->string,$this->pos,1) == '}') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == '}') {
     				$this->pos += 1;
     				$result["text"] .= '}';
     			}
@@ -1077,7 +1077,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     	$matchrule = "SimpleInjection"; $result = $this->construct($matchrule, $matchrule, null);
     	$_138 = NULL;
     	do {
-    		if (substr($this->string,$this->pos,1) == '$') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == '$') {
     			$this->pos += 1;
     			$result["text"] .= '$';
     		}
@@ -1110,7 +1110,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$this->store( $result, $subres, "Lookup" );
     		}
     		else { $_143 = FALSE; break; }
-    		if (substr($this->string,$this->pos,1) == '}') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == '}') {
     			$this->pos += 1;
     			$result["text"] .= '}';
     		}
@@ -1158,7 +1158,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function Injection_STR(&$res, $sub)
     {
-        $res['php'] = '$val .= '. str_replace('$$FINAL', 'XML_val', $sub['Lookup']['php']) . ';';
+        $res['php'] = '$val .= '. str_replace('$$FINAL', 'XML_val', $sub['Lookup']['php'] ?? '') . ';';
     }
 
     /* DollarMarkedLookup: SimpleInjection */
@@ -1627,7 +1627,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     function Argument_QuotedString(&$res, $sub)
     {
         $res['ArgumentMode'] = 'string';
-        $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
+        $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text'] ?? '') . "'";
     }
 
     function Argument_Null(&$res, $sub)
@@ -1650,7 +1650,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function Argument_Lookup(&$res, $sub)
     {
-        if (count($sub['LookupSteps']) == 1 && !isset($sub['LookupSteps'][0]['Call']['Arguments'])) {
+        if (count($sub['LookupSteps'] ?? []) == 1 && !isset($sub['LookupSteps'][0]['Call']['Arguments'])) {
             $res['ArgumentMode'] = 'default';
             $res['lookup_php'] = $sub['php'];
             $res['string_php'] = "'".$sub['LookupSteps'][0]['Call']['Method']['text']."'";
@@ -1663,7 +1663,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     function Argument_FreeString(&$res, $sub)
     {
         $res['ArgumentMode'] = 'string';
-        $res['php'] = "'" . str_replace("'", "\\'", trim($sub['text'])) . "'";
+        $res['php'] = "'" . str_replace("'", "\\'", trim($sub['text'] ?? '')) . "'";
     }
 
     /* ComparisonOperator: "!=" | "==" | ">=" | ">" | "<=" | "<" | "=" */
@@ -1704,7 +1704,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				do {
     					$res_226 = $result;
     					$pos_226 = $this->pos;
-    					if (substr($this->string,$this->pos,1) == '>') {
+    					if (substr($this->string ?? '',$this->pos ?? 0,1) == '>') {
     						$this->pos += 1;
     						$result["text"] .= '>';
     						$_237 = TRUE; break;
@@ -1725,14 +1725,14 @@ class SSTemplateParser extends Parser implements TemplateParser
     						do {
     							$res_230 = $result;
     							$pos_230 = $this->pos;
-    							if (substr($this->string,$this->pos,1) == '<') {
+    							if (substr($this->string ?? '',$this->pos ?? 0,1) == '<') {
     								$this->pos += 1;
     								$result["text"] .= '<';
     								$_233 = TRUE; break;
     							}
     							$result = $res_230;
     							$this->pos = $pos_230;
-    							if (substr($this->string,$this->pos,1) == '=') {
+    							if (substr($this->string ?? '',$this->pos ?? 0,1) == '=') {
     								$this->pos += 1;
     								$result["text"] .= '=';
     								$_233 = TRUE; break;
@@ -1818,10 +1818,10 @@ class SSTemplateParser extends Parser implements TemplateParser
             if (!empty($res['php'])) {
                 $res['php'] .= $sub['string_php'];
             } else {
-                $res['php'] = str_replace('$$FINAL', 'XML_val', $sub['lookup_php']);
+                $res['php'] = str_replace('$$FINAL', 'XML_val', $sub['lookup_php'] ?? '');
             }
         } else {
-            $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
+            $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '');
         }
     }
 
@@ -1888,7 +1888,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             $php = ($sub['ArgumentMode'] == 'default' ? $sub['lookup_php'] : $sub['php']);
             // TODO: kinda hacky - maybe we need a way to pass state down the parse chain so
             // Lookup_LastLookupStep and Argument_BareWord can produce hasValue instead of XML_val
-            $res['php'] .= str_replace('$$FINAL', 'hasValue', $php);
+            $res['php'] .= str_replace('$$FINAL', 'hasValue', $php ?? '');
         }
     }
 
@@ -2244,7 +2244,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				$this->store( $result, $subres, "Method" );
     			}
     			else { $_326 = FALSE; break; }
-    			if (substr($this->string,$this->pos,1) == '(') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == '(') {
     				$this->pos += 1;
     				$result["text"] .= '(';
     			}
@@ -2257,7 +2257,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			}
     			else { $_326 = FALSE; break; }
     			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    			if (substr($this->string,$this->pos,1) == ')') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == ')') {
     				$this->pos += 1;
     				$result["text"] .= ')';
     			}
@@ -2404,7 +2404,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function CacheBlockArgument_QuotedString(&$res, $sub)
     {
-        $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text']) . "'";
+        $res['php'] = "'" . str_replace("'", "\\'", $sub['String']['text'] ?? '') . "'";
     }
 
     function CacheBlockArgument_Lookup(&$res, $sub)
@@ -2430,7 +2430,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$_357 = NULL;
     			do {
     				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    				if (substr($this->string,$this->pos,1) == ',') {
+    				if (substr($this->string ?? '',$this->pos ?? 0,1) == ',') {
     					$this->pos += 1;
     					$result["text"] .= ',';
     				}
@@ -2470,7 +2470,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['php'] = '';
         }
 
-        $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
+        $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '');
     }
 
     /* CacheBlockTemplate: (Comment | Translate | If | Require |    OldI18NTag | Include | ClosedBlock |
@@ -3442,7 +3442,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         $res['php'] .= 'return $val;' . PHP_EOL;
         $res['php'] .= '};' . PHP_EOL;
         $key = 'sha1($keyExpression())' // Global key
-            . '.\'_' . sha1($sub['php']) // sha of template
+            . '.\'_' . sha1($sub['php'] ?? '') // sha of template
             . (isset($res['key']) && $res['key'] ? "_'.sha1(".$res['key'].")" : "'") // Passed key
             . ".'_$block'"; // block index
         // Get any condition
@@ -3469,7 +3469,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$this->store( $result, $subres );
     		}
     		else { $_574 = FALSE; break; }
-    		if (substr($this->string,$this->pos,1) == '(') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == '(') {
     			$this->pos += 1;
     			$result["text"] .= '(';
     		}
@@ -3496,7 +3496,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				$this->store( $result, $subres );
     			}
     			else { $_566 = FALSE; break; }
-    			if (substr($this->string,$this->pos,1) == ',') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == ',') {
     				$this->pos += 1;
     				$result["text"] .= ',';
     			}
@@ -3528,7 +3528,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$this->store( $result, $subres );
     		}
     		else { $_574 = FALSE; break; }
-    		if (substr($this->string,$this->pos,1) == ')') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == ')') {
     			$this->pos += 1;
     			$result["text"] .= ')';
     		}
@@ -3543,7 +3543,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		$pos_573 = $this->pos;
     		$_572 = NULL;
     		do {
-    			if (substr($this->string,$this->pos,1) == ';') {
+    			if (substr($this->string ?? '',$this->pos ?? 0,1) == ';') {
     				$this->pos += 1;
     				$result["text"] .= ';';
     			}
@@ -3586,7 +3586,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     function OldTPart_QuotedString(&$res, $sub)
     {
         $entity = $sub['String']['text'];
-        if (strpos($entity, '.') === false) {
+        if (strpos($entity ?? '', '.') === false) {
             $res['php'] .= "\$scope->XML_val('I18NNamespace').'.$entity'";
         } else {
             $res['php'] .= "'$entity'";
@@ -3647,7 +3647,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		if (( $subres = $this->literal( 'sprintf' ) ) !== FALSE) { $result["text"] .= $subres; }
     		else { $_599 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		if (substr($this->string,$this->pos,1) == '(') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == '(') {
     			$this->pos += 1;
     			$result["text"] .= '(';
     		}
@@ -3660,7 +3660,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		}
     		else { $_599 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		if (substr($this->string,$this->pos,1) == ',') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == ',') {
     			$this->pos += 1;
     			$result["text"] .= ',';
     		}
@@ -3673,7 +3673,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     		}
     		else { $_599 = FALSE; break; }
     		if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    		if (substr($this->string,$this->pos,1) == ')') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == ')') {
     			$this->pos += 1;
     			$result["text"] .= ')';
     		}
@@ -3755,7 +3755,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$this->store( $result, $subres, "Name" );
     		}
     		else { $_609 = FALSE; break; }
-    		if (substr($this->string,$this->pos,1) == '=') {
+    		if (substr($this->string ?? '',$this->pos ?? 0,1) == '=') {
     			$this->pos += 1;
     			$result["text"] .= '=';
     		}
@@ -3792,7 +3792,7 @@ class SSTemplateParser extends Parser implements TemplateParser
                 break;
 
             default:
-                $res['php'] .= str_replace('$$FINAL', 'obj', $sub['php']) . '->self()';
+                $res['php'] .= str_replace('$$FINAL', 'obj', $sub['php'] ?? '') . '->self()';
                 break;
         }
     }
@@ -3832,7 +3832,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     				$_622 = NULL;
     				do {
     					if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    					if (substr($this->string,$this->pos,1) == ',') {
+    					if (substr($this->string ?? '',$this->pos ?? 0,1) == ',') {
     						$this->pos += 1;
     						$result["text"] .= ',';
     					}
@@ -3902,9 +3902,9 @@ class SSTemplateParser extends Parser implements TemplateParser
 
         if ($this->includeDebuggingComments) { // Add include filename comments on dev sites
             $res['php'] =
-                '$val .= \'<!-- include '.addslashes($template).' -->\';'. "\n".
+                '$val .= \'<!-- include '.addslashes($template ?? '').' -->\';'. "\n".
                 $res['php'].
-                '$val .= \'<!-- end include '.addslashes($template).' -->\';'. "\n";
+                '$val .= \'<!-- end include '.addslashes($template ?? '').' -->\';'. "\n";
         }
     }
 
@@ -3926,7 +3926,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     			$_635 = NULL;
     			do {
     				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-    				if (substr($this->string,$this->pos,1) == ',') {
+    				if (substr($this->string ?? '',$this->pos ?? 0,1) == ',') {
     					$this->pos += 1;
     					$result["text"] .= ',';
     				}
@@ -4234,7 +4234,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['ArgumentCount'] = 1;
         } else {
             $res['Arguments'] = $sub['Argument'];
-            $res['ArgumentCount'] = count($res['Arguments']);
+            $res['ArgumentCount'] = count($res['Arguments'] ?? []);
         }
     }
 
@@ -4243,7 +4243,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         $blockname = $res['BlockName']['text'];
 
         $method = 'ClosedBlock_Handle_'.$blockname;
-        if (method_exists($this, $method)) {
+        if (method_exists($this, $method ?? '')) {
             $res['php'] = $this->$method($res);
         } elseif (isset($this->closedBlocks[$blockname])) {
             $res['php'] = call_user_func($this->closedBlocks[$blockname], $res);
@@ -4382,7 +4382,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['ArgumentCount'] = 1;
         } else {
             $res['Arguments'] = $sub['Argument'];
-            $res['ArgumentCount'] = count($res['Arguments']);
+            $res['ArgumentCount'] = count($res['Arguments'] ?? []);
         }
     }
 
@@ -4391,7 +4391,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         $blockname = $res['BlockName']['text'];
 
         $method = 'OpenBlock_Handle_'.$blockname;
-        if (method_exists($this, $method)) {
+        if (method_exists($this, $method ?? '')) {
             $res['php'] = $this->$method($res);
         } elseif (isset($this->openBlocks[$blockname])) {
             $res['php'] = call_user_func($this->openBlocks[$blockname], $res);
@@ -4416,7 +4416,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             }
 
             $php = ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php'];
-            return '$val .= Debug::show('.str_replace('FINALGET!', 'cachedCall', $php).');';
+            return '$val .= Debug::show('.str_replace('FINALGET!', 'cachedCall', $php ?? '').');';
         } else {
             throw new SSTemplateParseException('Debug takes 0 or 1 argument only.', $this);
         }
@@ -5111,14 +5111,14 @@ class SSTemplateParser extends Parser implements TemplateParser
     						$pos_827 = $this->pos;
     						$_830 = NULL;
     						do {
-    							if (substr($this->string,$this->pos,1) == '<') {
+    							if (substr($this->string ?? '',$this->pos ?? 0,1) == '<') {
     								$this->pos += 1;
     								$result["text"] .= '<';
     							}
     							else { $_830 = FALSE; break; }
     							$res_829 = $result;
     							$pos_829 = $this->pos;
-    							if (substr($this->string,$this->pos,1) == '%') {
+    							if (substr($this->string ?? '',$this->pos ?? 0,1) == '%') {
     								$this->pos += 1;
     								$result["text"] .= '%';
     								$result = $res_829;
@@ -5141,7 +5141,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     							$pos_832 = $this->pos;
     							$_837 = NULL;
     							do {
-    								if (substr($this->string,$this->pos,1) == '$') {
+    								if (substr($this->string ?? '',$this->pos ?? 0,1) == '$') {
     									$this->pos += 1;
     									$result["text"] .= '$';
     								}
@@ -5178,14 +5178,14 @@ class SSTemplateParser extends Parser implements TemplateParser
     								$pos_839 = $this->pos;
     								$_842 = NULL;
     								do {
-    									if (substr($this->string,$this->pos,1) == '{') {
+    									if (substr($this->string ?? '',$this->pos ?? 0,1) == '{') {
     										$this->pos += 1;
     										$result["text"] .= '{';
     									}
     									else { $_842 = FALSE; break; }
     									$res_841 = $result;
     									$pos_841 = $this->pos;
-    									if (substr($this->string,$this->pos,1) == '$') {
+    									if (substr($this->string ?? '',$this->pos ?? 0,1) == '$') {
     										$this->pos += 1;
     										$result["text"] .= '$';
     										$result = $res_841;
@@ -5289,8 +5289,8 @@ class SSTemplateParser extends Parser implements TemplateParser
         $text = $res['text'];
 
         // Unescape any escaped characters in the text, then put back escapes for any single quotes and backslashes
-        $text = stripslashes($text);
-        $text = addcslashes($text, '\'\\');
+        $text = stripslashes($text ?? '');
+        $text = addcslashes($text ?? '', '\'\\');
 
         // TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
         // non-dynamically calculated
@@ -5302,8 +5302,8 @@ EOC;
         // Because preg_replace replacement requires escaped slashes, addcslashes here
         $text = preg_replace(
             '/(<a[^>]+href *= *)"#/i',
-            '\\1"\' . ' . addcslashes($code, '\\')  . ' . \'#',
-            $text
+            '\\1"\' . ' . addcslashes($code ?? '', '\\')  . ' . \'#',
+            $text ?? ''
         );
 
         $res['php'] .= '$val .= \'' . $text . '\';' . PHP_EOL;
@@ -5325,7 +5325,7 @@ EOC;
      */
     public function compileString($string, $templateName = "", $includeDebuggingComments = false, $topTemplate = true)
     {
-        if (!trim($string)) {
+        if (!trim($string ?? '')) {
             $code = '';
         } else {
             parent::__construct($string);
@@ -5334,7 +5334,7 @@ EOC;
 
             // Ignore UTF8 BOM at beginning of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
             // (and other encodings) properly
-            if (substr($string, 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
+            if (substr($string ?? '', 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
                 $this->pos = 3;
             }
 
@@ -5353,7 +5353,7 @@ EOC;
         }
 
         // Include top level debugging comments if desired
-        if ($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
+        if ($includeDebuggingComments && $templateName && stripos($code ?? '', "<?xml") === false) {
             $code = $this->includeDebuggingComments($code, $templateName);
         }
 
@@ -5369,12 +5369,12 @@ EOC;
     {
         // If this template contains a doctype, put it right after it,
         // if not, put it after the <html> tag to avoid IE glitches
-        if (stripos($code, "<!doctype") !== false) {
-            $code = preg_replace('/(<!doctype[^>]*("[^"]")*[^>]*>)/im', "$1\r\n<!-- template $templateName -->", $code);
+        if (stripos($code ?? '', "<!doctype") !== false) {
+            $code = preg_replace('/(<!doctype[^>]*("[^"]")*[^>]*>)/im', "$1\r\n<!-- template $templateName -->", $code ?? '');
             $code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
-        } elseif (stripos($code, "<html") !== false) {
+        } elseif (stripos($code ?? '', "<html") !== false) {
             $code = preg_replace_callback('/(.*)(<html[^>]*>)(.*)/i', function ($matches) use ($templateName) {
-                if (stripos($matches[3], '<!--') === false && stripos($matches[3], '-->') !== false) {
+                if (stripos($matches[3] ?? '', '<!--') === false && stripos($matches[3] ?? '', '-->') !== false) {
                     // after this <html> tag there is a comment close but no comment has been opened
                     // this most likely means that this <html> tag is inside a comment
                     // we should not add a comment inside a comment (invalid html)
@@ -5385,11 +5385,11 @@ EOC;
                     // all other cases, add the comment and return it
                     return "{$matches[1]}{$matches[2]}<!-- template $templateName -->{$matches[3]}";
                 }
-            }, $code);
-            $code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->$1", $code);
+            }, $code ?? '');
+            $code = preg_replace('/(<\/html[^>]*>)/i', "<!-- end template $templateName -->$1", $code ?? '');
         } else {
             $code = str_replace('<?php' . PHP_EOL, '<?php' . PHP_EOL . '$val .= \'<!-- template ' . $templateName .
-                ' -->\';' . "\r\n", $code);
+                ' -->\';' . "\r\n", $code ?? '');
             $code .= "\r\n" . '$val .= \'<!-- end template ' . $templateName . ' -->\';';
         }
         return $code;
@@ -5405,6 +5405,6 @@ EOC;
      */
     public function compileFile($template)
     {
-        return $this->compileString(file_get_contents($template), $template);
+        return $this->compileString(file_get_contents($template ?? ''), $template);
     }
 }

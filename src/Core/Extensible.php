@@ -522,6 +522,11 @@ trait Extensible
 
             if ($extensions) {
                 foreach ($extensions as $extension) {
+                    // Allow removing extensions via yaml config by setting named extension config to null
+                    if ($extension === null) {
+                        continue;
+                    }
+
                     $name = $extension;
                     // Allow service names of the form "%$ServiceName"
                     if (substr($name ?? '', 0, 2) == '%$') {
