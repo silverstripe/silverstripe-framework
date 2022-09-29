@@ -24,18 +24,23 @@ use SilverStripe\View\ThemeResourceLoader;
 class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 {
     /**
+     * Map of locales to tinymce's supported languages
+     *
+     * @link https://www.tiny.cloud/get-tiny/language-packages/
      * @config
      * @var array
      */
     private static $tinymce_lang = [
         'ar_EG' => 'ar',
+        'az_AZ' => 'az',
+        'bg_BG' => 'bg_BG',
         'ca_AD' => 'ca',
         'ca_ES' => 'ca',
         'cs_CZ' => 'cs',
         'cy_GB' => 'cy',
         'da_DK' => 'da',
         'da_GL' => 'da',
-        'de_AT' => 'de_AT',
+        'de_AT' => 'de',
         'de_BE' => 'de',
         'de_CH' => 'de',
         'de_DE' => 'de',
@@ -70,9 +75,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'es_AD' => 'es',
         'es_BZ' => 'es',
         'es_US' => 'es',
-        'fa_AF' => 'fa_IR',
-        'fa_IR' => 'fa_IR',
-        'fa_PK' => 'fa_IR',
+        'et_EE' => 'et',
+        'eo_XX' => 'eo',
+        'fa_AF' => 'fa',
+        'fa_IR' => 'fa',
+        'fa_PK' => 'fa',
+        'ff_FI' => 'fi',
         'fr_BE' => 'fr_FR',
         'fr_BF' => 'fr_FR',
         'fr_BI' => 'fr_FR',
@@ -117,10 +125,14 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'fr_GB' => 'fr_FR',
         'fr_US' => 'fr_FR',
         'he_IL' => 'he_IL',
+        'hi_IN' => 'hi',
+        'hr_HR' => 'hr',
         'hu_HU' => 'hu_HU',
         'hu_AT' => 'hu_HU',
         'hu_RO' => 'hu_HU',
         'hu_RS' => 'hu_HU',
+        'id_ID' => 'id',
+        'is_IS' => 'is_IS',
         'it_CH' => 'it',
         'it_IT' => 'it',
         'it_SM' => 'it',
@@ -132,23 +144,27 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'ko_KP' => 'ko_KR',
         'ko_KR' => 'ko_KR',
         'ko_CN' => 'ko_KR',
+        'lt_LT' => 'lt',
+        'lv_LV' => 'lv',
         'nb_NO' => 'nb_NO',
         'nb_SJ' => 'nb_NO',
+        'ne_NP' => 'ne',
         'nl_AN' => 'nl',
         'nl_AW' => 'nl',
-        'nl_BE' => 'nl',
+        'nl_BE' => 'nl_BE',
         'nl_NL' => 'nl',
         'nl_SR' => 'nl',
         'pl_PL' => 'pl',
         'pl_UA' => 'pl',
-        'pt_AO' => 'pt_PT',
+        // Note: All of the pt_* except pt_BR should map to pt_PT but that translation isn't available for tinymce6 yet.
+        'pt_AO' => 'pt_BR',
         'pt_BR' => 'pt_BR',
-        'pt_CV' => 'pt_PT',
-        'pt_GW' => 'pt_PT',
-        'pt_MZ' => 'pt_PT',
-        'pt_PT' => 'pt_PT',
-        'pt_ST' => 'pt_PT',
-        'pt_TL' => 'pt_PT',
+        'pt_CV' => 'pt_BR',
+        'pt_GW' => 'pt_BR',
+        'pt_MZ' => 'pt_BR',
+        'pt_PT' => 'pt_BR',
+        'pt_ST' => 'pt_BR',
+        'pt_TL' => 'pt_BR',
         'ro_MD' => 'ro',
         'ro_RO' => 'ro',
         'ro_RS' => 'ro',
@@ -160,24 +176,27 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'ru_UA' => 'ru',
         'sk_SK' => 'sk',
         'sk_RS' => 'sk',
+        'sl_SI' => 'sl_SI',
+        'sr_RS' => 'sr',
         'sv_FI' => 'sv_SE',
         'sv_SE' => 'sv_SE',
+        'th_TH' => 'th_TH',
         'tr_CY' => 'tr',
-        'tr_TR' => 'tr_TR',
+        'tr_TR' => 'tr',
         'tr_DE' => 'tr',
         'tr_MK' => 'tr',
-        'uk_UA' => 'uk_UA',
-        'vi_VN' => 'vi_VN',
-        'vi_US' => 'vi_VN',
-        'zh_CN' => 'zh_CN',
-        'zh_HK' => 'zh_CN',
-        'zh_MO' => 'zh_CN',
-        'zh_SG' => 'zh_CN',
-        'zh_TW' => 'zh_TW',
-        'zh_ID' => 'zh_CN',
-        'zh_MY' => 'zh_CN',
-        'zh_TH' => 'zh_CN',
-        'zh_US' => 'zh_CN',
+        'uk_UA' => 'uk',
+        'vi_VN' => 'vi',
+        'vi_US' => 'vi',
+        'zh_CN' => 'zh_Hans',
+        'zh_HK' => 'zh_Hans',
+        'zh_MO' => 'zh_Hans',
+        'zh_SG' => 'zh_Hans',
+        'zh_TW' => 'zh_Hans',
+        'zh_ID' => 'zh_Hans',
+        'zh_MY' => 'zh_Hans',
+        'zh_TH' => 'zh_Hans',
+        'zh_US' => 'zh_Hans',
     ];
 
     /**
@@ -192,6 +211,16 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @var string
      */
     private static $base_dir = null;
+
+    /**
+     * Location of tinymce translation files relative to BASE_DIR.
+     *
+     * Supports vendor/module:path
+     *
+     * @config
+     * @var string
+     */
+    private static $lang_dir = null;
 
     /**
      * Extra editor.css file paths.
@@ -226,12 +255,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * TinyMCE JS settings
      *
-     * @link https://www.tinymce.com/docs/configure/
+     * @link https://www.tiny.cloud/docs/tinymce/6/tinydrive-getting-started/#configure-the-required-tinymce-options
      *
      * @var array
      */
     protected $settings = [
-        'fix_list_elements' => true, // https://www.tinymce.com/docs/configure/content-filtering/#fix_list_elements
+        'fix_list_elements' => true, // https://www.tiny.cloud/docs/tinymce/6/content-filtering/#fix_list_elements
         'formats' => [
             'alignleft' => [
                 [
@@ -275,14 +304,16 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'browser_spellcheck' => true,
         'body_class' => 'typography',
         'statusbar' => true,
-        'elementpath' => true, // https://www.tinymce.com/docs/configure/editor-appearance/#elementpath
+        'elementpath' => true, // https://www.tiny.cloud/docs/tinymce/6/statusbar-configuration-options/#elementpath
         'relative_urls' => true,
         'remove_script_host' => true,
         'convert_urls' => false, // Prevent site-root images being rewritten to base relative
         'menubar' => false,
         'language' => 'en',
         'branding' => false,
+        'promotion' => false,
         'upload_folder_id' => null, // Set folder ID for insert media dialog
+        'link_default_target' => '_blank', // https://www.tiny.cloud/docs/tinymce/6/autolink/#example-using-link_default_target
     ];
 
     /**
@@ -293,10 +324,13 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     protected $plugins = [
         'table' => null,
         'emoticons' => null,
-        'paste' => null,
         'code' => null,
         'importcss' => null,
         'lists' => null,
+        'autolink' => null,
+        'searchreplace' => null,
+        'visualblocks' => null,
+        'wordcount' => null,
     ];
 
     /**
@@ -304,7 +338,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      *
      * @var string
      */
-    protected $theme = 'modern';
+    protected $theme = 'silver';
 
     /**
      * Get the theme
@@ -331,7 +365,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * Holder list of buttons, organised by line. This array is 1-based indexed array
      *
-     * {@link https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols}
+     * {@link https://www.tiny.cloud/docs/tinymce/6/basic-setup/#toolbar-configuration}
      *
      * @var array
      */
@@ -342,10 +376,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'bullist', 'numlist', 'outdent', 'indent',
         ],
         2 => [
-            'formatselect', '|',
-            'paste', 'pastetext', '|',
+            'blocks', '|',
+            'pastetext', '|',
             'table', 'sslink', 'unlink', '|',
-            'code'
+            'code', 'visualblocks'
         ],
         3 => []
     ];
@@ -396,7 +430,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * the plugin will be loaded by tinymce.PluginManager.load() instead of through tinyMCE.init().
      * Keep in mind that these externals plugins require a dash-prefix in their name.
      *
-     * @see http://wiki.moxiecode.com/index.php/TinyMCE:API/tinymce.PluginManager/load
+     * @see https://www.tiny.cloud/docs/tinymce/6/editor-important-options/#external_plugins
      *
      * If passing in a non-associative array, the plugin name should be located in the standard tinymce
      * plugins folder.
@@ -619,10 +653,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     {
         $settings = $this->getSettings();
 
-        // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
+        // https://www.tiny.cloud/docs/tinymce/6/url-handling/#document_base_url
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
-        // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
+        // https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.root/#properties
         $baseResource = $this->getTinyMCEResource();
         if ($baseResource instanceof ModuleResource) {
             $tinyMCEBaseURL = $baseResource->getURL();
@@ -649,12 +683,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             $plugins[$plugin] = $path;
         }
 
-        // https://www.tinymce.com/docs/configure/integration-and-setup/#external_plugins
+        // https://www.tiny.cloud/docs/tinymce/6/editor-important-options/#external_plugins
         if ($plugins) {
             $settings['external_plugins'] = $plugins;
         }
 
-        // https://www.tinymce.com/docs/configure/editor-appearance/#groupingtoolbarcontrols
+        // https://www.tiny.cloud/docs/tinymce/6/basic-setup/#toolbar-configuration
         $buttons = $this->getButtons();
         $settings['toolbar'] = [];
         foreach ($buttons as $rowButtons) {
@@ -666,10 +700,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             }
         }
 
-        // https://www.tinymce.com/docs/configure/content-appearance/#content_css
+        // https://www.tiny.cloud/docs/tinymce/6/add-css-options/#content_css
         $settings['content_css'] = $this->getEditorCSS();
 
-        // https://www.tinymce.com/docs/configure/editor-appearance/#theme_url
+        // https://www.tiny.cloud/docs/tinymce/6/editor-theme/#theme_url
         $theme = $this->getTheme();
         if (!Director::is_absolute_url($theme)) {
             $theme = Controller::join_links($tinyMCEBaseURL, "themes/{$theme}/theme.min.js");
@@ -822,6 +856,22 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     }
 
     /**
+     * Get the URL for the language pack of the current language
+     *
+     * @return string Language
+     */
+    public static function get_tinymce_lang_url(): string
+    {
+        $lang = static::get_tinymce_lang();
+        $dir = static::config()->get('lang_dir');
+        if ($lang !== 'en' && !empty($dir)) {
+            $resource = ModuleResourceLoader::singleton()->resolveResource($dir);
+            return Director::absoluteURL($resource->getRelativeResource($lang . '.js')->getURL());
+        }
+        return '';
+    }
+
+    /**
      * Returns the full filesystem path to TinyMCE resources (which could be different from the original tinymce
      * location in the module).
      *
@@ -892,7 +942,6 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
     }
-
 
     /**
      * Sets the upload folder name used by the insert media dialog
