@@ -11,6 +11,7 @@ use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -256,10 +257,13 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * @return Swift_Message
      */
     public function getSwiftMessage()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         if (!$this->swiftMessage) {
             $message = new Swift_Message(null, null, 'text/html', 'utf-8');
             // Set priority to fix PHP 8.1 SimpleMessage::getPriority() sscanf() null parameter
@@ -271,12 +275,15 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * @param Swift_Message $swiftMessage
      *
      * @return $this
      */
     public function setSwiftMessage($swiftMessage)
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         $dateTime = new DateTime();
         $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
         $swiftMessage->setDate($dateTime);
@@ -706,30 +713,39 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be replaced with html()
+     *
      * @return $this
      */
     public function invalidateBody()
     {
+        Deprecation::notice('4.12.0', 'Will be replaced with html()');
         $this->setBody(null);
 
         return $this;
     }
 
     /**
+     * @deprecated 4.12.0 Will be replaced with getData()
+     *
      * @return string The base URL for the email
      */
     public function BaseURL()
     {
+        Deprecation::notice('4.12.0', 'Will be replaced with getData()');
         return Director::absoluteBaseURL();
     }
 
     /**
+     * @deprecated Will be removed without equivalent functionality to replace it
+     *
      * Debugging help
      *
      * @return string Debug info
      */
     public function debug()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         $this->render();
 
         $class = static::class;
@@ -794,31 +810,40 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * @param array $recipients
      * @return $this
      */
     public function setFailedRecipients($recipients)
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         $this->failedRecipients = $recipients;
 
         return $this;
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * @return array
      */
     public function getFailedRecipients()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         return $this->failedRecipients;
     }
 
     /**
+     * @deprecated 4.12.0 Will be replaced with getData()
+     *
      * Used by {@link SSViewer} templates to detect if we're rendering an email template rather than a page template
      *
      * @return bool
      */
     public function IsEmail()
     {
+        Deprecation::notice('4.12.0', 'Will be replaced with getData()');
         return true;
     }
 
@@ -920,10 +945,13 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * @return Swift_MimePart|false
      */
     public function findPlainPart()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         foreach ($this->getSwiftMessage()->getChildren() as $child) {
             if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
                 return $child;
@@ -933,10 +961,13 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * @return bool
      */
     public function hasPlainPart()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         if ($this->getSwiftMessage()->getContentType() === 'text/plain') {
             return true;
         }
@@ -944,12 +975,15 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * Automatically adds a plain part to the email generated from the current Body
      *
      * @return $this
      */
     public function generatePlainPartFromBody()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         $plainPart = $this->findPlainPart();
         if ($plainPart) {
             $this->getSwiftMessage()->detach($plainPart);
