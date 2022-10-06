@@ -962,7 +962,7 @@ after'
 				<body><p>test</p><body>
 			</html>';
         $this->assertMatchesRegularExpression(
-            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            '/<head><base href=".*" \/><\/head>/',
             $this->render($tmpl2)
         );
 
@@ -973,7 +973,7 @@ after'
 				<body><p>test</p><body>
 			</html>';
         $this->assertMatchesRegularExpression(
-            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            '/<head><base href=".*" \/><\/head>/',
             $this->render($tmpl3)
         );
 
@@ -983,7 +983,7 @@ after'
         $response = new HTTPResponse($this->render($tmpl1));
         $negotiator->html($response);
         $this->assertMatchesRegularExpression(
-            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            '/<head><base href=".*" \/><\/head>/',
             $response->getBody()
         );
 
