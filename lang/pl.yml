@@ -2,12 +2,12 @@ pl:
   SilverStripe\Admin\LeftAndMain:
     VersionUnknown: Nieznany
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Rozmiar
+    Dimensions: Rozmiary
     EDIT: Edytuj
     EDITINFO: 'Edytuj plik'
     REMOVE: Usuń
   SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Hasło do konta o adresie e-mail {email} zostało zmienione. Jeśli nie zmieniłeś swojego hasła, zmień hasło, korzystając z poniższego linku'
+    CHANGEPASSWORDFOREMAIL: 'Hasło do konta o adresie e-mail {email} zostało zmienione. Jeśli nie prosiłeś o zmianę danych do logowania, zmień hasło, korzystając z poniższego linku'
     CHANGEPASSWORDTEXT1: 'Zmieniłeś hasło na'
     CHANGEPASSWORDTEXT3: 'Zmień hasło'
     HELLO: 'Witaj,'
@@ -28,12 +28,12 @@ pl:
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Brak dostępnych opcji'
   SilverStripe\Forms\ConfirmedPasswordField:
-    ATLEAST: 'Hasła muszą mieć przynajmniej {min} znaków.'
+    ATLEAST: 'Hasła muszą mieć minimum {min} znaków.'
     BETWEEN: 'Hasła muszą mieć długość pomiędzy {min} a {max} znaków.'
     CURRENT_PASSWORD_ERROR: 'Podane hasło jest nieprawidłowe'
     CURRENT_PASSWORD_MISSING: 'Musisz podać swoje aktualne hasło.'
     LOGGED_IN_ERROR: 'Musisz być zalogowany aby zmienić hasło'
-    MAXIMUM: 'Hasła mogą mieć co najwyżej {max} znaków.'
+    MAXIMUM: 'Hasła mogą mieć co maksymalnie {max} znaków.'
     SHOWONCLICKTITLE: 'Zmiana Hasła'
   SilverStripe\Forms\DateField:
     NOTSET: 'nie ustawiony'
@@ -69,8 +69,8 @@ pl:
     TABMAIN: Główny
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
-    CSVEXPORT: 'Eksportuj do CSV'
-    CSVIMPORT: 'Import z CSV'
+    CSVEXPORT: 'Eksportuj do pliku CSV'
+    CSVIMPORT: 'Import z pliku CSV'
     Filter: Filtr
     FilterBy: 'Filtruj wg '
     Find: Wyszukaj
@@ -87,27 +87,27 @@ pl:
     ResetFilter: Resetuj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Usuń
-    DeletePermissionsFailure: 'Brak uprawnień do usuwania'
-    EditPermissionsFailure: 'Nie masz uprawnień, aby odłączyć rekord'
+    DeletePermissionsFailure: 'Nie masz uprawnień do usuwania rekordów'
+    EditPermissionsFailure: 'Nie masz uprawnień, aby edytować rekord'
     UnlinkRelation: 'Usuń łącze'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Anuluj
     Create: Stwórz
     Delete: Usuń
-    DeletePermissionsFailure: 'Brak uprawnień do usuwania'
+    DeletePermissionsFailure: ''Nie masz uprawnień do usuwania rekordów'
     Deleted: 'Usunięto {type} {name}'
     Save: Zapisz
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
     NEW: Dodaj
-    NEXT: 'Przejdź do następnego rekordu'
-    PREVIOUS: 'Przejdź do poprzedniego rekordu'
+    NEXT: 'Następny rekord'
+    PREVIOUS: 'Poprzedni rekord'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Zmień
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
     Search: 'Wyszukaj "{name}"'
     SearchFormFaliure: 'Nie można wygenerować formularza wyszukiwania'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
-    UnlinkSelfFailure: 'Nie możesz usunąć siebie z tej grupy, stracone zostałby prawa administratora'
+    UnlinkSelfFailure: 'Nie możesz usunąć siebie z tej grupy, w wyniku tej operacji zostałby utracone prawa administratora'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: z
     Page: Strona
@@ -116,12 +116,12 @@ pl:
     VIEW: Widok
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Ilość
-    FIELDLABELCURRENCY: waluta
+    FIELDLABELCURRENCY: Waluta
     INVALID_CURRENCY: 'Waluta {currency} nie znajduje się na liście dozwolonych walut'
   SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: 'Wybierz wartości z podanej listy. Podano niepoprawną opcję {value}'
   SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Jest Pusty'
+    IsNullLabel: 'Jest Puste'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
   SilverStripe\Forms\TimeField:
@@ -132,7 +132,7 @@ pl:
       one: 'Obiekt danych'
       few: 'Obiektów danych'
       many: 'Obiektów danych'
-      other: 'Obiektów danych {count}'
+      other: '{count} obiektów danych'
     SINGULARNAME: 'Obiekt danych'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakikolwiek
@@ -184,9 +184,9 @@ pl:
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Niepoprawne dane'
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Wprowadź username i hasło'
+    ENTERINFO: 'Wprowadź nazwę użytkownika i hasło'
     ERRORNOTADMIN: 'Ten użytkownik nie jest administratorem'
-    ERRORNOTREC: 'Nie istnieje taki username/hasło'
+    ERRORNOTREC: 'Nie istnieje taki użytkownik lub hasło'
   SilverStripe\Security\CMSMemberLoginForm:
     PASSWORDEXPIRED: '<p>Twoje hasło wygasło. <a target="_top" href="{link}">Prosimy wybrać nowe.</a></p>'
   SilverStripe\Security\CMSSecurity:
@@ -305,13 +305,13 @@ pl:
       other: '{count} haseł użytkownika '
     SINGULARNAME: 'Hasło użytkownika'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
+    LOWCHARSTRENGTH: 'Zwiększ siłę hasła, dodając niektóre z następujących znaków: % s'
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
     TOOSHORT: 'Hasło jest za krótkie, proszę podać {minimum} znaków lub więcej'
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMS''a'
-    CONTENT_CATEGORY: 'Uprawnienie edycji treści'
+    CONTENT_CATEGORY: 'Uprawnienie do edycji treści'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
     PERMISSIONS_CATEGORY: 'Uprawnienia ról i dostępu'
@@ -357,16 +357,16 @@ pl:
     SINGULARNAME: 'Hasło logowania'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
-    BUTTONSEND: 'Wyślij mi link do zresetowania hasła'
+    BUTTONSEND: 'Wyślij link do zresetowania hasła'
     CHANGEPASSWORDBELOW: 'Możesz zmienić swoje hasło poniżej'
     CHANGEPASSWORDHEADER: 'Zmień swoje hasło'
     CONFIRMLOGOUT: 'Kliknij przycisk poniżej, aby potwierdzić, że chcesz się wylogować.'
-    ENTERNEWPASSWORD: 'Proszę wprowadż nowe hasło'
+    ENTERNEWPASSWORD: 'Wprowadż nowe hasło'
     ERRORPASSWORDPERMISSION: 'Musisz być zalogowany aby zmienić hasło'
     LOGIN: Logowanie
     LOGOUT: 'Wyloguj się'
     LOSTPASSWORDHEADER: 'Nie pamiętam hasła'
     NOTEPAGESECURED: 'Ta strona jest zabezpieczona. Wpisz swoje dane a my wyślemy Ci potwierdzenie niebawem'
-    NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
-    PASSWORDRESETSENTHEADER: 'Link resetowania hasła wysłany'
-    PASSWORDRESETSENTTEXT: 'Dziękujemy! Link resetujący hasło został wysłany do ''{email}'', o ile konto użytkownika dla takiego e-maila istnieje.'
+    NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link do zresetowania hasła'
+    PASSWORDRESETSENTHEADER: 'Link do zresetowania hasła wysłany'
+    PASSWORDRESETSENTTEXT: 'Dziękujemy! Link do zresetowania hasła został wysłany do ''{email}'', o ile konto użytkownika dla takiego e-maila istnieje.'
