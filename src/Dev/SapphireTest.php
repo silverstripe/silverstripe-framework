@@ -98,7 +98,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         protected static $fixture_file = null;
 
         /**
-         * @deprecated 4.0..5.0 Use FixtureTestState instead
+         * @deprecated 4.0 Use FixtureTestState instead
          * @var FixtureFactory
          */
         protected $fixtureFactory;
@@ -472,7 +472,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
         /**
          * @return FixtureFactory|false
-         * @deprecated 4.0.0:5.0.0
+         * @deprecated 4.0.0
          */
         public function getFixtureFactory()
         {
@@ -486,7 +486,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * Sets a new fixture factory
          * @param FixtureFactory $factory
          * @return $this
-         * @deprecated 4.0.0:5.0.0
+         * @deprecated 4.0.0
          */
         public function setFixtureFactory(FixtureFactory $factory)
         {
@@ -566,7 +566,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
          * Doesn't clear existing fixtures.
          * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
-         * @deprecated 4.0.0:5.0.0
+         * @deprecated 4.0.0
          *
          */
         public function loadFixture($fixtureFile)
@@ -762,7 +762,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         /**
          * @param $matches
          * @param $dataObjectSet
-         * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
+         * @deprecated 4.0.0 Use assertListContains() instead
          *
          */
         public function assertDOSContains($matches, $dataObjectSet)
@@ -816,7 +816,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         /**
          * @param $matches
          * @param $dataObjectSet
-         * @deprecated 4.0.0:5.0.0 Use assertListNotContains() instead
+         * @deprecated 4.0.0 Use assertListNotContains() instead
          *
          */
         public static function assertNotDOSContains($matches, $dataObjectSet)
@@ -864,7 +864,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         /**
          * @param $matches
          * @param SS_List $dataObjectSet
-         * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
+         * @deprecated 4.0.0 Use assertListEquals() instead
          *
          */
         public function assertDOSEquals($matches, $dataObjectSet)
@@ -908,7 +908,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         /**
          * @param $match
          * @param SS_List $dataObjectSet
-         * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
+         * @deprecated 4.0.0 Use assertListAllMatch() instead
          *
          */
         public function assertDOSAllMatch($match, SS_List $dataObjectSet)
@@ -1416,7 +1416,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     protected static $fixture_file = null;
 
     /**
-     * @deprecated 4.0..5.0 Use FixtureTestState instead
+     * @deprecated 4.0 Use FixtureTestState instead
      * @var FixtureFactory
      */
     protected $fixtureFactory;
@@ -1793,7 +1793,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
     /**
      * @return FixtureFactory|false
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.0
      */
     public function getFixtureFactory()
     {
@@ -1807,7 +1807,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Sets a new fixture factory
      * @param FixtureFactory $factory
      * @return $this
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.0
      */
     public function setFixtureFactory(FixtureFactory $factory)
     {
@@ -1887,7 +1887,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
      * Doesn't clear existing fixtures.
      * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.0
      *
      */
     public function loadFixture($fixtureFile)
@@ -2110,7 +2110,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @param $matches
      * @param $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
+     * @deprecated 4.0.0 Use assertListContains() instead
      *
      */
     public function assertDOSContains($matches, $dataObjectSet)
@@ -2164,7 +2164,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @param $matches
      * @param $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListNotContains() instead
+     * @deprecated 4.0.0 Use assertListNotContains() instead
      *
      */
     public static function assertNotDOSContains($matches, $dataObjectSet)
@@ -2212,7 +2212,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @param $matches
      * @param SS_List $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
+     * @deprecated 4.0.0 Use assertListEquals() instead
      *
      */
     public function assertDOSEquals($matches, $dataObjectSet)
@@ -2255,7 +2255,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
     /**
      * @param $match
      * @param SS_List $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
+     * @deprecated 4.0.0 Use assertListAllMatch() instead
      *
      */
     public function assertDOSAllMatch($match, SS_List $dataObjectSet)
