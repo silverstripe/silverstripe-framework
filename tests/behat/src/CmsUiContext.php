@@ -141,7 +141,7 @@ class CmsUiContext implements Context
     {
         $this->getSession()->wait(
             5000,
-            "window.jQuery && window.jQuery('.cms-content-header-tabs').size() > 0"
+            "window.jQuery && window.jQuery('.cms-content-header-tabs').length > 0"
         );
 
         $page = $this->getSession()->getPage();
@@ -155,8 +155,8 @@ class CmsUiContext implements Context
     {
         $this->getSession()->wait(
             5000,
-            "window.jQuery && window.jQuery('.cms-content-toolbar').size() > 0 "
-            . "&& window.jQuery('.cms-content-toolbar').children().size() > 0"
+            "window.jQuery && window.jQuery('.cms-content-toolbar').length > 0 "
+            . "&& window.jQuery('.cms-content-toolbar').children().length > 0"
         );
 
         $page = $this->getSession()->getPage();
@@ -170,7 +170,7 @@ class CmsUiContext implements Context
     {
         $this->getSession()->wait(
             5000,
-            "window.jQuery && window.jQuery('.cms-tree').size() > 0"
+            "window.jQuery && window.jQuery('.cms-tree').length > 0"
         );
 
         $page = $this->getSession()->getPage();
@@ -281,7 +281,7 @@ class CmsUiContext implements Context
         // Wait until context menu has appeared
         $this->getSession()->wait(
             1000,
-            "window.jQuery && window.jQuery('.jstree-apple-context').size() > 0"
+            "window.jQuery && window.jQuery('.jstree-apple-context').length > 0"
         );
         $regionObj = $context->getRegionObj('.jstree-apple-context');
         Assert::assertNotNull($regionObj, "Context menu could not be found");
@@ -448,7 +448,7 @@ SCRIPT
     {
         $this->getSession()->wait(
             5000,
-            "window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
+            "window.jQuery && window.jQuery('.ui-tabs-nav').length > 0"
         );
 
         $page = $this->getSession()->getPage();
@@ -477,7 +477,7 @@ SCRIPT
     {
         $this->getSession()->wait(
             5000,
-            "window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
+            "window.jQuery && window.jQuery('.ui-tabs-nav').length > 0"
         );
 
         $page = $this->getSession()->getPage();

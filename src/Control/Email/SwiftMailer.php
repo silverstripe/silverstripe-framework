@@ -9,6 +9,8 @@ use Swift_Mailer;
 use Swift_Message;
 
 /**
+ * @deprecated 4.12.0 Will be replaced with symfony/mailer
+ *
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
  */

@@ -2,6 +2,9 @@
 
 namespace SilverStripe\Control\Email;
 
+/**
+ * @deprecated 4.12.0 Will be replaced with symfony/mailer
+ */
 class SwiftPlugin implements \Swift_Events_SendListener
 {
     /**
