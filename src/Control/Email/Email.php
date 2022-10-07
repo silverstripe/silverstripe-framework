@@ -875,12 +875,16 @@ class Email extends ViewableData
     }
 
     /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     *
      * Render the email
      * @param bool $plainOnly Only render the message as plain text
      * @return $this
      */
     public function render($plainOnly = false)
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
+
         if ($existingPlainPart = $this->findPlainPart()) {
             $this->getSwiftMessage()->detach($existingPlainPart);
         }
