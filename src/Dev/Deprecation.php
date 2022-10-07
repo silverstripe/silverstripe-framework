@@ -74,6 +74,11 @@ class Deprecation
     public static $notice_level = null;
 
     /**
+     * Used to prevent infinite call loops
+     */
+    protected static $inside_notice = false;
+
+    /**
      * Set the version that is used to check against the version passed to notice. If the ::notice version is
      * greater than or equal to this version, a message will be raised
      *
@@ -171,6 +176,10 @@ class Deprecation
      */
     public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD)
     {
+        if (static::$inside_notice) {
+            return;
+        }
+        static::$inside_notice = true;
         if (!static::get_enabled()) {
             return;
         }
@@ -238,6 +247,7 @@ class Deprecation
                 user_error($string ?? '', $level ?? 0);
             }
         }
+        static::$inside_notice = false;
     }
 
     /**

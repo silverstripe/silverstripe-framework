@@ -47,7 +47,7 @@ class MemberAuthenticator implements Authenticator
         // Optionally record every login attempt as a {@link LoginAttempt} object
         $this->recordLoginAttempt($data, $request, $member, $result->isValid());
 
-        if ($member) {
+        if ($member && $request->hasSession()) {
             $request->getSession()->clear('BackURL');
         }
 
