@@ -67,6 +67,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     protected HTTPResponse $response;
 
     /**
+     * If true, a trailing slash is added to the end of URLs, e.g. from {@link Controller::join_links()}
+     */
+    private static bool $add_trailing_slash = false;
+
+    /**
      * Default URL handlers.
      *
      * @var array
@@ -648,6 +653,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
                 parse_str($suffix ?? '', $localargs);
                 $queryargs = array_merge($queryargs, $localargs);
             }
+            // Join paths together
             if ((is_string($arg) && $arg) || is_numeric($arg)) {
                 $arg = (string) $arg;
                 if ($result && substr($result ?? '', -1) != '/' && $arg[0] != '/') {
@@ -658,6 +664,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             }
         }
 
+        $result = static::normaliseTrailingSlash($result);
+
         if ($queryargs) {
             $result .= '?' . http_build_query($queryargs ?? []);
         }
@@ -667,6 +675,52 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         return $result;
+    }
+
+    /**
+     * Normalises a URL according to the configuration for add_trailing_slash
+     */
+    public static function normaliseTrailingSlash(string $url): string
+    {
+        $querystring = null;
+        $fragmentIdentifier = null;
+
+        // Find fragment identifier
+        if (strpos($url, '#') !== false) {
+            list($url, $fragmentIdentifier) = explode('#', $url, 2);
+        }
+        // Find querystrings
+        if (strpos($url, '?') !== false) {
+            list($url, $querystring) = explode('?', $url, 2);
+        }
+
+        // Normlise trailing slash
+        $shouldHaveTrailingSlash = self::config()->uninherited('add_trailing_slash');
+        if ($shouldHaveTrailingSlash
+            && !str_ends_with($url, '/')
+            && !preg_match('/^(.*)\.([^\/]*)$/', Director::makeRelative($url))
+        ) {
+            // Add trailing slash if enabled and url does not end with a file extension
+            $url .= '/';
+        } elseif (!$shouldHaveTrailingSlash) {
+            // Remove trailing slash if it shouldn't be there
+            $url = rtrim($url, '/');
+        }
+
+        // Ensure relative root URLs are represented with a slash
+        if ($url === '') {
+            $url = '/';
+        }
+
+        // Add back fragment identifier and querystrings
+        if ($querystring) {
+            $url .= '?' . $querystring;
+        }
+        if ($fragmentIdentifier) {
+            $url .= "#$fragmentIdentifier";
+        }
+
+        return $url;
     }
 
     /**

@@ -4,11 +4,12 @@ namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\CoreKernel;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 
@@ -17,10 +18,31 @@ use SilverStripe\Core\Injector\Injector;
  *  - redirect basic auth requests to HTTPS
  *  - force WWW, redirect to the subdomain "www."
  *  - force SSL, redirect to https
+ *  - force the correct path (with vs without trailing slash)
  */
 class CanonicalURLMiddleware implements HTTPMiddleware
 {
     use Injectable;
+    use Configurable;
+
+    /**
+     * If set, the trailing slash configuration set in {@link Controller::add_trailing_slash} is enforced
+     * with a redirect.
+     */
+    protected bool $enforceTrailingSlashConfig = true;
+
+    /**
+     * If enforceTrailingSlashConfig is enabled, this is the list of paths that are ignored
+     */
+    protected array $enforceTrailingSlashConfigIgnorePaths = [
+        'admin/',
+        'dev/',
+    ];
+
+    /**
+     * If enforceTrailingSlashConfig is enabled, this is the list of user agents that are ignored
+     */
+    protected array $enforceTrailingSlashConfigIgnoreUserAgents = [];
 
     /**
      * Set if we should redirect to WWW
@@ -75,6 +97,39 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @var string
      */
     protected $forceSSLDomain = null;
+
+    public function setEnforceTrailingSlashConfig(bool $value): static
+    {
+        $this->enforceTrailingSlashConfig = $value;
+        return $this;
+    }
+
+    public function getEnforceTrailingSlashConfig(): bool
+    {
+        return $this->enforceTrailingSlashConfig;
+    }
+
+    public function setEnforceTrailingSlashConfigIgnorePaths(array $value): static
+    {
+        $this->enforceTrailingSlashConfigIgnorePaths = $value;
+        return $this;
+    }
+
+    public function getEnforceTrailingSlashConfigIgnorePaths(): array
+    {
+        return $this->enforceTrailingSlashConfigIgnorePaths;
+    }
+
+    public function setEnforceTrailingSlashConfigIgnoreUserAgents(array $value): static
+    {
+        $this->enforceTrailingSlashConfigIgnoreUserAgents = $value;
+        return $this;
+    }
+
+    public function getEnforceTrailingSlashConfigIgnoreUserAgents(): array
+    {
+        return $this->enforceTrailingSlashConfigIgnoreUserAgents;
+    }
 
     /**
      * @return array
@@ -214,6 +269,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         // Get properties of current request
         $host = $request->getHost();
         $scheme = $request->getScheme();
+        $url = strtok(Environment::getEnv('REQUEST_URI'), '?');
 
         // Check https
         if ($this->requiresSSL($request)) {
@@ -228,8 +284,16 @@ class CanonicalURLMiddleware implements HTTPMiddleware
             $host = "www.{$host}";
         }
 
+        // Check trailing Slash
+        if ($this->requiresTrailingSlashRedirect($request, $url)) {
+            $url = Controller::normaliseTrailingSlash($url);
+        }
+
         // No-op if no changes
-        if ($request->getScheme() === $scheme && $request->getHost() === $host) {
+        if ($request->getScheme() === $scheme
+            && $request->getHost() === $host
+            && strtok(Environment::getEnv('REQUEST_URI'), '?') === $url
+        ) {
             return null;
         }
 
@@ -310,6 +374,72 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     }
 
     /**
+     * Check if a redirect for trailing slash is necessary
+     */
+    protected function requiresTrailingSlashRedirect(HTTPRequest $request, string $url)
+    {
+        // Get the URL without querystrings or fragment identifiers
+        if (strpos($url, '#') !== false) {
+            $url = explode('#', $url, 2)[0];
+        }
+        if (strpos($url, '?') !== false) {
+            $url = explode('?', $url, 2)[0];
+        }
+
+        // Check if force Trailing Slash is enabled
+        if ($this->getEnforceTrailingSlashConfig() !== true) {
+            return false;
+        }
+
+        $requestPath = $request->getURL();
+
+        // skip if requesting root
+        if ($requestPath === '/' || $requestPath === '') {
+            return false;
+        }
+
+        // Skip if is AJAX request
+        if (Director::is_ajax()) {
+            return false;
+        }
+
+        // Skip if request has a file extension
+        if (!empty($request->getExtension())) {
+            return false;
+        }
+
+        // Skip if any configured ignore paths match
+        $paths = (array) $this->getEnforceTrailingSlashConfigIgnorePaths();
+        if (!empty($paths)) {
+            foreach ($paths as $path) {
+                if (str_starts_with(trim($path, '/'), trim($requestPath, '/'))) {
+                    return false;
+                }
+            }
+        }
+
+        // Skip if any configured ignore user agents match
+        $agents = (array) $this->getEnforceTrailingSlashConfigIgnoreUserAgents();
+        if (!empty($agents)) {
+            if (in_array(
+                $request->getHeader('User-Agent'),
+                $agents
+            )) {
+                return false;
+            }
+        }
+
+        // Already using trailing slash correctly
+        $addTrailingSlash = Controller::config()->uninherited('add_trailing_slash');
+        $hasTrailingSlash = str_ends_with($url, '/');
+        if (($addTrailingSlash && $hasTrailingSlash) || (!$addTrailingSlash && !$hasTrailingSlash)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return int
      */
     public function getRedirectType()
@@ -357,7 +487,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
     protected function isEnabled()
     {
         // At least one redirect must be enabled
-        if (!$this->getForceWWW() && !$this->getForceSSL()) {
+        if (!$this->getForceWWW() && !$this->getForceSSL() && $this->getEnforceTrailingSlashConfig() !== true) {
             return false;
         }
 

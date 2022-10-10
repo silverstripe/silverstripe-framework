@@ -332,7 +332,7 @@ class SecurityTest extends FunctionalTest
         $this->get(
             Config::inst()->get(Security::class, 'logout_url'),
             null,
-            ['Referer' => Director::absoluteBaseURL() . 'testpage']
+            ['Referer' => Controller::join_links(Director::absoluteBaseURL(), 'testpage')]
         );
 
         /* Make sure the user is still logged in */
@@ -388,11 +388,11 @@ class SecurityTest extends FunctionalTest
         $response = $this->doTestLoginForm(
             'noexpiry@silverstripe.com',
             '1nitialPassword',
-            Director::absoluteBaseURL() . 'testpage'
+            Controller::join_links(Director::absoluteBaseURL(), 'testpage')
         );
         // for some reason the redirect happens to a relative URL
         $this->assertMatchesRegularExpression(
-            '/^' . preg_quote(Director::absoluteBaseURL() ?? '', '/') . 'testpage/',
+            '/^' . preg_quote(Controller::join_links(Director::absoluteBaseURL(), 'testpage'), '/') . '/',
             $response->getHeader('Location'),
             "Internal absolute BackURLs work when passed through to login form"
         );

@@ -24,7 +24,7 @@ class RSSFeedTest extends SapphireTest
         $rssFeed = new RSSFeed($list, "http://www.example.com", "Test RSS Feed", "Test RSS Feed Description");
         $content = $rssFeed->outputToBrowser();
 
-        $this->assertStringContainsString('<link>http://www.example.org/item-a/</link>', $content);
+        $this->assertStringContainsString('<link>http://www.example.org/item-a</link>', $content);
         $this->assertStringContainsString('<link>http://www.example.com/item-b.html</link>', $content);
         $this->assertStringContainsString('<link>http://www.example.com/item-c.html</link>', $content);
 
@@ -60,9 +60,9 @@ class RSSFeedTest extends SapphireTest
     public function testLinkEncoding()
     {
         $list = new ArrayList();
-        $rssFeed = new RSSFeed($list, "http://www.example.com/?param1=true&param2=true", "Test RSS Feed");
+        $rssFeed = new RSSFeed($list, "http://www.example.com?param1=true&param2=true", "Test RSS Feed");
         $content = $rssFeed->outputToBrowser();
-        $this->assertStringContainsString('<link>http://www.example.com/?param1=true&amp;param2=true', $content);
+        $this->assertStringContainsString('<link>http://www.example.com?param1=true&amp;param2=true', $content);
     }
 
     public function testRSSFeedWithShortcode()

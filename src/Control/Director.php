@@ -400,13 +400,13 @@ class Director implements TemplateGlobalProvider
     {
         // Check if there is already a protocol given
         if (preg_match('/^http(s?):\/\//', $url ?? '')) {
-            return $url;
+            return Controller::normaliseTrailingSlash($url);
         }
 
         // Absolute urls without protocol are added
         // E.g. //google.com -> http://google.com
         if (strpos($url ?? '', '//') === 0) {
-            return self::protocol() . substr($url ?? '', 2);
+            return Controller::normaliseTrailingSlash(self::protocol() . substr($url ?? '', 2));
         }
 
         // Determine method for mapping the parent to this relative url
@@ -686,7 +686,7 @@ class Director implements TemplateGlobalProvider
         $url = preg_replace('#([^:])//#', '\\1/', trim($url ?? ''));
 
         // If using a real url, remove protocol / hostname / auth / port
-        if (preg_match('#^(?<protocol>https?:)?//(?<hostpart>[^/]*)(?<url>(/.*)?)$#i', $url ?? '', $matches)) {
+        if (preg_match('@^(?<protocol>https?:)?//(?<hostpart>[^/?#]*)(?<url>([/?#].*)?)$@i', $url ?? '', $matches)) {
             $url = $matches['url'];
         }
 
@@ -878,10 +878,11 @@ class Director implements TemplateGlobalProvider
      */
     public static function absoluteBaseURL()
     {
-        return self::absoluteURL(
+        $baseURL = self::absoluteURL(
             self::baseURL(),
             self::ROOT
         );
+        return Controller::normaliseTrailingSlash($baseURL);
     }
 
     /**

@@ -561,7 +561,7 @@ class RequestHandler extends ViewableData
         // Check configured url_segment
         $url = $this->config()->get('url_segment');
         if ($url) {
-            $link = Controller::join_links($url, $action, '/');
+            $link = Controller::join_links($url, $action);
 
             // Give extensions the chance to modify by reference
             $this->extend('updateLink', $link, $action);

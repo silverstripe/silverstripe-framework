@@ -172,7 +172,7 @@ class HTTP
         $isRelative = false;
         // We need absolute URLs for parse_url()
         if (Director::is_relative_url($uri)) {
-            $uri = Director::absoluteBaseURL() . $uri;
+            $uri = Controller::join_links(Director::absoluteBaseURL(), $uri);
             $isRelative = true;
         }
 
@@ -212,7 +212,7 @@ class HTTP
         $newUri = $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
 
         if ($isRelative) {
-            return Director::baseURL() . Director::makeRelative($newUri);
+            return Controller::join_links(Director::baseURL(), Director::makeRelative($newUri));
         }
 
         return $newUri;
