@@ -24,15 +24,15 @@
     "require": {
         "php": "^8.1",
         "bramus/monolog-colored-line-formatter": "^2.0.3",
-        "composer/installers": "^2.1.1",
-        "guzzlehttp/guzzle": "^7.4.5",
+        "composer/installers": "^2.2",
+        "guzzlehttp/guzzle": "^7.5.0",
         "guzzlehttp/psr7": "^2.4.0",
         "embed/embed": "^4.4.4",
         "league/csv": "^9.8.0",
         "m1/env": "^2.2.0",
-        "monolog/monolog": "^1.27.1",
-        "nikic/php-parser": "^4.14.0",
-        "psr/container": "^1.1.2",
+        "monolog/monolog": "^3.2.0",
+        "nikic/php-parser": "^4.15.0",
+        "psr/container": "^2.0",
         "silverstripe/config": "^2",
         "silverstripe/assets": "^2",
         "silverstripe/vendor-plugin": "^2",
@@ -102,8 +102,6 @@
         ]
     },
     "include-path": [
-        "src/",
-        "src/includes/",
         "thirdparty/"
     ],
     "scripts": {

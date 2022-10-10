@@ -4,6 +4,7 @@ namespace SilverStripe\Logging;
 
 use SilverStripe\Dev\Debug;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 use Exception;
 
 /**
@@ -11,7 +12,7 @@ use Exception;
  */
 class DetailedErrorFormatter implements FormatterInterface
 {
-    public function format(array $record)
+    public function format(array|LogRecord $record)
     {
         if (isset($record['context']['exception'])) {
             /** @var Exception $exception */

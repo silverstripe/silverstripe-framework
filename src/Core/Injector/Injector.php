@@ -874,10 +874,8 @@ class Injector implements ContainerInterface
      *
      * Will recursively call itself for each depth of dotting.
      *
-     * @param string $name
-     * @return boolean
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         return (bool)$this->getServiceName($name);
     }

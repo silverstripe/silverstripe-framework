@@ -7,6 +7,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use Monolog\Formatter\FormatterInterface;
+use Monolog\LogRecord;
 
 /**
  * Produce a friendly error message
@@ -101,7 +102,7 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
         return $this;
     }
 
-    public function format(array $record)
+    public function format(array|LogRecord $record)
     {
         // Get error code
         $code = empty($record['code']) ? $this->getStatusCode() : $record['code'];

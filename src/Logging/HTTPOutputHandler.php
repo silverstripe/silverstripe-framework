@@ -4,6 +4,7 @@ namespace SilverStripe\Logging;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
@@ -106,7 +107,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    public function getFormatter()
+    public function getFormatter(): FormatterInterface
     {
         if (Director::is_cli() && ($cliFormatter = $this->getCLIFormatter())) {
             return $cliFormatter;
@@ -120,7 +121,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      *
      * @return FormatterInterface
      */
-    public function getDefaultFormatter()
+    public function getDefaultFormatter(): FormatterInterface
     {
         return parent::getFormatter();
     }
@@ -141,7 +142,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * @param array $record
      * @return bool
      */
-    protected function write(array $record)
+    protected function write(LogRecord $record): void
     {
         ini_set('display_errors', 0);
 
@@ -164,7 +165,5 @@ class HTTPOutputHandler extends AbstractProcessingHandler
 
         $response->setBody($record['formatted']);
         $response->output();
-
-        return false === $this->getBubble();
     }
 }
