@@ -257,7 +257,6 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     /**
      * Build a list of HTML attributes from embed arguments - used to preserve backward compatibility
      *
-     * @deprecated 4.5.0 Use {$Arguments.name} directly in shortcode templates to access argument values
      * @param array $arguments List of embed arguments
      * @param array $exclude List of attribute names to exclude from the resulting list
      * @return ArrayList
