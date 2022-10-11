@@ -60,7 +60,7 @@ abstract class DBSchemaManager
      * @param string $table
      * @param string $class
      *
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.0:5.0.0 Will be removed without equivalent functionality
      */
     public static function showTableNameWarning($table, $class)
     {

@@ -160,7 +160,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      * @param Adapter $embed
      * @param array $arguments Additional shortcode params
      * @return string
-     * @deprecated 4.11..5.0 Use embeddableToHtml instead
+     * @deprecated 4.11..5.0 Use embeddableToHtml() instead
      */
     public static function embedForTemplate($embed, $arguments)
     {

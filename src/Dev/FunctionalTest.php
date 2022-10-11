@@ -425,7 +425,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
          * your test.
          *
-         * @deprecated 4.2.0 Use ?stage=Stage querystring arguments instead of useDraftSite
+         * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
          * @param bool $enabled toggle the use of the draft site
          */
         public function useDraftSite($enabled = true)
@@ -449,7 +449,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         }
 
         /**
-         * @deprecated 4.2.0 Use ?stage=Stage in your querystring arguments instead
+         * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
          * @return bool
          */
         public static function get_use_draft_site()
@@ -509,7 +509,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     /**
      * Set this to true on your sub-class to use the draft site by default for every test in this class.
      *
-     * @deprecated 4.2.0 Use ?stage=Stage in your ->get() querystring requests instead
+     * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
      * @var bool
      */
     protected static $use_draft_site = false;
@@ -870,7 +870,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
      * your test.
      *
-     * @deprecated 4.2.0 Use ?stage=Stage querystring arguments instead of useDraftSite
+     * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
      * @param bool $enabled toggle the use of the draft site
      */
     public function useDraftSite($enabled = true)
@@ -894,7 +894,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
     }
 
     /**
-     * @deprecated 4.2.0 Use ?stage=Stage in your querystring arguments instead
+     * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
      * @return bool
      */
     public static function get_use_draft_site()

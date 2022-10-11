@@ -875,7 +875,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.0:5.0.0 Use getTinyMCEResourcePath() instead
      */
     public function getTinyMCEPath()
     {

@@ -53,7 +53,7 @@ class TestKernel extends CoreKernel
      */
     public function setIgnoredCIConfigs(array $ciConfigs): self
     {
-        Deprecation::notice('5.0.0', 'This method will be removed in CMS 5');
+        Deprecation::notice('5.0.0', 'Will be removed without equivalent functionality');
 
         $this->ciConfigs = $ciConfigs;
         return $this;
@@ -61,7 +61,7 @@ class TestKernel extends CoreKernel
 
     protected function getIgnoredCIConfigs(): array
     {
-        Deprecation::notice('5.0.0', 'This method will be removed in CMS 5');
+        Deprecation::notice('5.0.0', 'Will be removed without equivalent functionality');
 
         return $this->ciConfigs;
     }

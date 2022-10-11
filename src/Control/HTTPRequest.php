@@ -910,7 +910,7 @@ class HTTPRequest implements ArrayAccess
      * @param string $origMethod Original HTTP method from the browser request
      * @param array $postVars
      * @return string HTTP method (all uppercase)
-     * @deprecated 4.4.7
+     * @deprecated 4.4.7 Will be removed without equivalent functionality
      */
     public static function detect_method($origMethod, $postVars)
     {

@@ -11,7 +11,7 @@ if (!class_exists(VersionedGridFieldState::class)) {
 
 
 /**
- * @deprecated 4.1.0:5.0.0
+ * @deprecated 4.1.0:5.0.0 Use VersionedGridFieldState instead
  */
 class GridFieldVersionedState extends VersionedGridFieldState
 {

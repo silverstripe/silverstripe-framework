@@ -16,7 +16,7 @@ use SilverStripe\Security\RandomGenerator;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  *
- * @deprecated 5.0 To be removed in SilverStripe 5.0
+ * @deprecated 5.0 Will be removed without equivalent functionality
  */
 class ParameterConfirmationToken extends AbstractConfirmationToken
 {

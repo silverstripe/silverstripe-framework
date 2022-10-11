@@ -660,7 +660,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * Get a linear list of the permissions in the system.
      *
      * @return array Linear list of declared permissions in the system.
-     * @deprecated 4.4.0
+     * @deprecated 4.4.0 Will be removed without equivalent functionality
      */
     public static function get_declared_permissions_list()
     {
@@ -684,7 +684,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *
      * @param string $perm Permission code
      * @return string Label for the given permission, or the permission itself if the label doesn't exist
-     * @deprecated 4.4.0
+     * @deprecated 4.4.0 Will be removed without equivalent functionality
      */
     public static function get_label_for_permission($perm)
     {
@@ -702,7 +702,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      * @param array $declared Nested structure of permissions.
      * @param array $list List of permissions in the structure. The result will be
      *              written to this array.
-     * @deprecated 4.4.0
+     * @deprecated 4.4.0 Will be removed without equivalent functionality
      */
     protected static function traverse_declared_permissions($declared, &$list)
     {

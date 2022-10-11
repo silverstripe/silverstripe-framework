@@ -76,11 +76,11 @@ class PasswordValidator
     protected $historicalPasswordCount = null;
 
     /**
-     * @deprecated 4.5.0
      * Minimum password length
      *
      * @param int $minLength
      * @return $this
+     * @deprecated 4.5.0 Use setMinLength() instead
      */
     public function minLength($minLength)
     {
@@ -89,7 +89,6 @@ class PasswordValidator
     }
 
     /**
-     * @deprecated 4.5.0
      * Check the character strength of the password.
      *
      * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
@@ -97,6 +96,7 @@ class PasswordValidator
      * @param int $minScore The minimum number of character tests that must pass
      * @param string[] $testNames The names of the tests to perform
      * @return $this
+     * @deprecated 4.5.0 Use setMinTestScore($score) and setTestNames($names) instead
      */
     public function characterStrength($minScore, $testNames = null)
     {
@@ -112,11 +112,11 @@ class PasswordValidator
     }
 
     /**
-     * @deprecated 4.5.0
      * Check a number of previous passwords that the user has used, and don't let them change to that.
      *
      * @param int $count
      * @return $this
+     * @deprecated 4.5.0 Use setHistoricCount($value) instead
      */
     public function checkHistoricalPasswords($count)
     {

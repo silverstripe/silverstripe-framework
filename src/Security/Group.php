@@ -721,7 +721,7 @@ class Group extends DataObject
      * Code needs to be unique as it is used to identify a specific group. Ensure no duplicate
      * codes are created.
      *
-     * @deprecated 5.0 Remove deduping in favour of throwing a validation error for duplicates.
+     * @deprecated 5.0 Replaced with a validation error when a duplicate is found.
      */
     private function dedupeCode(): void
     {

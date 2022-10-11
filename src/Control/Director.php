@@ -386,7 +386,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      *
-     * @deprecated 5.0 Kernel::isFlushed to be used instead
+     * @deprecated 5.0 Use Kernel::isFlushed instead
      */
     public static function isManifestFlushed()
     {

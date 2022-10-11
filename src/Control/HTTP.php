@@ -560,7 +560,7 @@ class HTTP
      * is always in GMT: the number of seconds since January 1 1970 00:00:00 GMT)
      *
      * @param int $timestamp
-     * @deprecated 4.2.0:5.0.0 Inline if you need this
+     * @deprecated 4.2.0:5.0.0 Use native php function gmdate() instead
      * @return string
      */
     public static function gmt_date($timestamp)

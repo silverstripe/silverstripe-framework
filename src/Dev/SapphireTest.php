@@ -472,7 +472,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
         /**
          * @return FixtureFactory|false
-         * @deprecated 4.0.0
+         * @deprecated 4.0.0 Use FixtureTestState instead
          */
         public function getFixtureFactory()
         {
@@ -486,7 +486,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          * Sets a new fixture factory
          * @param FixtureFactory $factory
          * @return $this
-         * @deprecated 4.0.0
+         * @deprecated 4.0.0 Use FixtureTestState instead
          */
         public function setFixtureFactory(FixtureFactory $factory)
         {
@@ -1793,7 +1793,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
     /**
      * @return FixtureFactory|false
-     * @deprecated 4.0.0
+     * @deprecated 4.0.0 Use FixtureTestState instead
      */
     public function getFixtureFactory()
     {
@@ -1807,7 +1807,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
      * Sets a new fixture factory
      * @param FixtureFactory $factory
      * @return $this
-     * @deprecated 4.0.0
+     * @deprecated 4.0.0 Use FixtureTestState instead
      */
     public function setFixtureFactory(FixtureFactory $factory)
     {

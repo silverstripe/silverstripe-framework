@@ -206,7 +206,7 @@ class Module implements Serializable
      * The __serialize() magic method will be automatically used instead of this
      *
      * @return string
-     * @deprecated will be removed in 5.0
+     * @deprecated Use __serialize() instead
      */
     public function serialize()
     {
@@ -219,7 +219,7 @@ class Module implements Serializable
      * and the PHP version used in less than PHP 9.0
      *
      * @param string $serialized
-     * @deprecated will be removed in 5.0
+     * @deprecated Use __unserialize() instead
      */
     public function unserialize($serialized)
     {
@@ -288,7 +288,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->getPath() instead
+     * @deprecated 4.0.0:5.0.0 Use getResource($path)->getPath() instead
      * @param string $path
      * @return string
      */
@@ -301,7 +301,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->getURL() instead
+     * @deprecated 4.0.0:5.0.0 Use getResource($path)->getURL() instead
      * @param string $path
      * @return string
      */
@@ -314,7 +314,7 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->exists() instead
+     * @deprecated 4.0.0:5.0.0 Use getResource($path)->exists() instead
      * @param string $path
      * @return string
      */
@@ -331,7 +331,7 @@ class Module implements Serializable
      * that is observed is `PHP`
      * @return array List of configuration aspects e.g.: `['PHP' => 'CI_PHPUNIT_NINE']`
      * @internal
-     * @deprecated 5.0.0
+     * @deprecated 5.0.0 Will be removed without equivalent functionality
      */
     public function getCIConfig(): array
     {

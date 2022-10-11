@@ -19,7 +19,7 @@ abstract class DataExtension extends Extension
 {
 
     /**
-     * @deprecated 4.7.0 No longer used by internal code
+     * @deprecated 4.7.0 Will be removed without equivalent functionality
      */
     public static function unload_extra_statics($class, $extension)
     {

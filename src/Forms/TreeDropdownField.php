@@ -621,7 +621,7 @@ class TreeDropdownField extends FormField
     /**
      * HTML-encoded label for this node, including css classes and other markup.
      *
-     * @deprecated 4.0.0:5.0.0 Use setTitleField()
+     * @deprecated 4.0.0:5.0.0 Use setTitleField() instead
      * @param string $field
      * @return $this
      */
@@ -634,7 +634,7 @@ class TreeDropdownField extends FormField
     /**
      * HTML-encoded label for this node, including css classes and other markup.
      *
-     * @deprecated 4.0.0:5.0.0 Use getTitleField()
+     * @deprecated 4.0.0:5.0.0 Use getTitleField() instead
      * @return string
      */
     public function getLabelField()

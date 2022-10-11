@@ -529,8 +529,9 @@ class Member extends DataObject
     }
 
     /**
-     * @deprecated Use Security::setCurrentUser(null) or an IdentityStore
      * Logs this member out.
+     *
+     * @deprecated Use Security::setCurrentUser(null) or an IdentityStore instead
      */
     public function logOut()
     {
