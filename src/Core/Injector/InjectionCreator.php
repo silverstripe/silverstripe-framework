@@ -12,8 +12,8 @@ class InjectionCreator implements Factory
         // Allow anonymous classes or other classes to pass without ReflectionClass
         if (is_object($class)) {
             return $class;
-        }
-        elseif (!class_exists($class ?? '')) { 
+        } 
+        elseif (!class_exists($class ?? '')) {
             throw new InjectorNotFoundException("Class {$class} does not exist");
         }
 

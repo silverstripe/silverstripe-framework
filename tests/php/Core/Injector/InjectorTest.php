@@ -22,11 +22,10 @@ use SilverStripe\Core\Tests\Injector\InjectorTest\NewRequirementsBackend;
 use SilverStripe\Core\Tests\Injector\InjectorTest\OriginalRequirementsBackend;
 use SilverStripe\Core\Tests\Injector\InjectorTest\OtherTestObject;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestObject;
+use SilverStripe\Core\Tests\Injector\InjectorTest\TestObjectTwo;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestSetterInjections;
 use SilverStripe\Core\Tests\Injector\InjectorTest\TestStaticInjections;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-use stdClass;
 
 define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
 
@@ -1064,5 +1063,28 @@ class InjectorTest extends SapphireTest
         // Return to nestingLevel 0
         Injector::unnest();
         $this->nestingLevel--;
+    }
+
+    public function testAnonymousClass()
+    {
+        // load a mock & method override via Injector
+        Injector::inst()->load([
+            TestObject::class => [
+                'class' => new class {
+                    public function foo(): string
+                    {
+                        return TestObject::TEST_BAZ;
+                    }
+                },
+            ],
+        ]);
+
+        $myObject = new TestObjectTwo();
+
+        $this->assertEquals(
+            TestObject::TEST_BAZ,
+            $myObject->fooViaTestObject(),
+            'Function return does not match what was mocked above'
+        );
     }
 }
