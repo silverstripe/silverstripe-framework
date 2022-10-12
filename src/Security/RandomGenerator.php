@@ -14,7 +14,7 @@ class RandomGenerator
     /**
      * @return string A 128-character, randomly generated ASCII string
      * @throws Exception If no suitable CSPRNG is installed
-     * @deprecated 4.4.0:5.0.0
+     * @deprecated 4.4.0:5.0.0 Use native php function random_bytes() instead
      */
     public function generateEntropy()
     {

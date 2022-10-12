@@ -464,7 +464,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get the login forms for all available authentication methods
      *
-     * @deprecated 5.0.0 Now handled by {@link static::delegateToMultipleHandlers}
+     * @deprecated 5.0.0 Use delegateToMultipleHandlers() instead
      *
      * @return array Returns an array of available login forms (array of Form
      *               objects).
@@ -1073,7 +1073,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return Member
      *
-     * @deprecated 4.0.0:5.0.0 Please use DefaultAdminService::findOrCreateDefaultAdmin()
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin()
      */
     public static function findAnAdministrator()
     {
@@ -1086,7 +1086,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Flush the default admin credentials
      *
-     * @deprecated 4.0.0:5.0.0 Please use DefaultAdminService::clearDefaultAdmin()
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::clearDefaultAdmin()
      */
     public static function clear_default_admin()
     {
@@ -1107,7 +1107,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password The password (in cleartext)
      * @return bool True if successfully set
      *
-     * @deprecated 4.0.0:5.0.0 Please use DefaultAdminService::setDefaultAdmin($username, $password)
+     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::setDefaultAdmin($username, $password)
      */
     public static function setDefaultAdmin($username, $password)
     {

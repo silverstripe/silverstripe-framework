@@ -67,7 +67,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     }
 
     /**
-     * @deprecated 5.0.0 Use IsFirst() to avoid clashes with SS_Lists
+     * @deprecated 5.0.0 Use IsFirst() instead
      * @return bool
      */
     public function First()
@@ -87,7 +87,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     }
 
     /**
-     * @deprecated 5.0.0 Use IsLast() to avoid clashes with SS_Lists
+     * @deprecated 5.0.0 Use IsLast() instead
      * @return bool
      */
     public function Last()

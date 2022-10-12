@@ -124,7 +124,7 @@ class TextField extends FormField implements TippableFieldInterface
      */
     public function InternallyLabelledField()
     {
-        Deprecation::notice('4.0', 'Please use ->setValue() instead');
+        Deprecation::notice('4.0', 'Use setValue() instead');
 
         if (!$this->value) {
             $this->value = $this->Title();
