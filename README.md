@@ -8,8 +8,8 @@ Requires a [`silverstripe-installer`](https://github.com/silverstripe/silverstri
 
 ## Installation ##
 
-See [installation on different platforms](https://doc.silverstripe.org/framework/en/installation/),
-and [installation from source](https://doc.silverstripe.org/framework/en/installation/from-source).
+See [getting started](https://docs.silverstripe.org/en/4/getting_started/),
+for instructions on how to start the installation process.
 
 ## Bugtracker ##
 
