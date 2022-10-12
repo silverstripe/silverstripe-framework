@@ -448,7 +448,7 @@ class Member extends DataObject
     }
 
     /**
-     * @deprecated 5.0.0 Use Security::setCurrentUser() or IdentityStore::logIn()
+     * @deprecated 5.0.0 Use Security::setCurrentUser() or IdentityStore::logIn() instead
      *
      */
     public function logIn()
@@ -509,7 +509,7 @@ class Member extends DataObject
      * has a database record of the same ID. If there is
      * no logged in user, FALSE is returned anyway.
      *
-     * @deprecated Not needed anymore, as it returns Security::getCurrentUser();
+     * @deprecated Use Security::getCurrentUser() instead
      *
      * @return boolean TRUE record found FALSE no record found
      */
@@ -770,7 +770,7 @@ class Member extends DataObject
     /**
      * Returns the current logged in user
      *
-     * @deprecated 5.0.0 use Security::getCurrentUser()
+     * @deprecated 5.0.0 Use Security::getCurrentUser() instead
      *
      * @return Member
      */
@@ -820,7 +820,7 @@ class Member extends DataObject
     /**
      * Get the ID of the current logged in user
      *
-     * @deprecated 5.0.0 use Security::getCurrentUser()
+     * @deprecated 5.0.0 Use Security::getCurrentUser() instead
      *
      * @return int Returns the ID of the current logged in user or 0.
      */

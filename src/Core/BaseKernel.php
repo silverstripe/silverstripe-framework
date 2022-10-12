@@ -378,7 +378,7 @@ abstract class BaseKernel implements Kernel
      * The purpose of this method is to avoid loading PHPUnit test files with incompatible definitions.
      *
      * @return string[] List of CI types to ignore as defined by `Module`.
-     * @deprecated 5.0.0
+     * @deprecated 5.0.0 Will be removed without equivalent functionality
      */
     protected function getIgnoredCIConfigs(): array
     {

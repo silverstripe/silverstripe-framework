@@ -1269,7 +1269,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function doValidate()
     {
-        Deprecation::notice('5.0', 'Use validate');
+        Deprecation::notice('5.0', 'Use validate() instead');
         return $this->validate();
     }
 
