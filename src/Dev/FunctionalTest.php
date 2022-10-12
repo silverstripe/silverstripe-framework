@@ -430,7 +430,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          */
         public function useDraftSite($enabled = true)
         {
-            Deprecation::notice('5.0', 'Use ?stage=Stage querystring arguments instead of useDraftSite');
+            Deprecation::notice('4.2.0', 'Use ?stage=Stage in your request\'s querystring instead');
             if ($enabled) {
                 $this->session()->set('readingMode', 'Stage.Stage');
                 $this->session()->set('unsecuredDraftSite', true);
@@ -454,7 +454,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
          */
         public static function get_use_draft_site()
         {
-            Deprecation::notice('4.2.0', 'Use ?stage=Stage in your querystring arguments instead');
+            Deprecation::notice('4.2.0', 'Use ?stage=Stage in your request\'s querystring instead');
             return static::$use_draft_site;
         }
     }
@@ -875,7 +875,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      */
     public function useDraftSite($enabled = true)
     {
-        Deprecation::notice('5.0', 'Use ?stage=Stage querystring arguments instead of useDraftSite');
+        Deprecation::notice('4.2.0', 'Use ?stage=Stage in your request\'s querystring instead');
         if ($enabled) {
             $this->session()->set('readingMode', 'Stage.Stage');
             $this->session()->set('unsecuredDraftSite', true);
@@ -899,7 +899,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
      */
     public static function get_use_draft_site()
     {
-        Deprecation::notice('4.2.0', 'Use ?stage=Stage in your querystring arguments instead');
+        Deprecation::notice('4.2.0', 'Use ?stage=Stage in your request\'s querystring instead');
         return static::$use_draft_site;
     }
 }
