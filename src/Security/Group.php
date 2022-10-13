@@ -720,8 +720,6 @@ class Group extends DataObject
     /**
      * Code needs to be unique as it is used to identify a specific group. Ensure no duplicate
      * codes are created.
-     *
-     * @todo Replace with a validation error when a duplicate is found.
      */
     private function dedupeCode(): void
     {

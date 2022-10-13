@@ -66,7 +66,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         /**
          * Set this to true on your sub-class to use the draft site by default for every test in this class.
          *
-         * @deprecated 4.2.0 Use ?stage=Stage in your ->get() querystring requests instead
+         * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
          * @var bool
          */
         protected static $use_draft_site = false;

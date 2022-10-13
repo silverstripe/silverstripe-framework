@@ -38,7 +38,7 @@ class DBClassName extends DBEnum
      */
     public static function clear_classname_cache()
     {
-        Deprecation::notice('4.3', 'Call DBEnum::flushCache() instead');
+        Deprecation::notice('4.3', 'Use DBEnum::flushCache() instead');
         DBEnum::flushCache();
     }
 
