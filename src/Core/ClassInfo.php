@@ -156,13 +156,13 @@ class ClassInfo
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Use DataObject::getSchema()->baseDataClass()
      * @param string $class
      * @return string
      */
     public static function baseDataClass($class)
     {
-        Deprecation::notice('5.0', 'Use DataObject::getSchema()->baseDataClass()');
+        Deprecation::notice('4.0.1', 'Use DataObject::getSchema()->baseDataClass()');
         return DataObject::getSchema()->baseDataClass($class);
     }
 
@@ -371,11 +371,11 @@ class ClassInfo
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Use DataObject::getSchema()->tableForField()
      */
     public static function table_for_object_field($candidateClass, $fieldName)
     {
-        Deprecation::notice('5.0', 'Use DataObject::getSchema()->tableForField()');
+        Deprecation::notice('4.0.1', 'Use DataObject::getSchema()->tableForField()');
         return DataObject::getSchema()->tableForField($candidateClass, $fieldName);
     }
 

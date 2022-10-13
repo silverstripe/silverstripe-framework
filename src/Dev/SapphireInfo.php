@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Security\Permission;
@@ -18,6 +19,11 @@ class SapphireInfo extends Controller
         'version',
         'environmenttype',
     ];
+
+    public function __construct()
+    {
+        Deprecation::notice('4.4.7', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
+    }
 
     protected function init()
     {

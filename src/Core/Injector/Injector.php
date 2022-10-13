@@ -854,13 +854,13 @@ class Injector implements ContainerInterface
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use Injector::has() instead
+     * @deprecated 4.0.1 Use Injector::has() instead
      * @param $name
      * @return string
      */
     public function hasService($name)
     {
-        Deprecation::notice('5.0', 'Use Injector::has() instead');
+        Deprecation::notice('4.0.1', 'Use Injector::has() instead');
 
         return $this->has($name);
     }

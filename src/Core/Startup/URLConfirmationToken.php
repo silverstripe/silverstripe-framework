@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -12,7 +13,7 @@ use SilverStripe\Control\HTTPRequest;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  *
- * @deprecated 5.0 Will be removed without equivalent functionality
+ * @deprecated 4.12.0 Will be removed without equivalent functionality
  */
 class URLConfirmationToken extends AbstractConfirmationToken
 {
@@ -42,6 +43,7 @@ class URLConfirmationToken extends AbstractConfirmationToken
      */
     public function __construct($urlToCheck, HTTPRequest $request)
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
         $this->urlToCheck = $urlToCheck;
         $this->request = $request;
         $this->currentURL = $request->getURL(false);

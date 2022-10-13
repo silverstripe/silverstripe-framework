@@ -600,14 +600,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object.
      *
-     * @deprecated 4.1.0:5.0.0 Use duplicateRelations() instead
+     * @deprecated 4.1.0 Use duplicateRelations() instead
      * @param DataObject $sourceObject the source object to duplicate from
      * @param DataObject $destinationObject the destination object to populate with the duplicated relations
      * @param bool|string $filter
      */
     protected function duplicateManyManyRelations($sourceObject, $destinationObject, $filter)
     {
-        Deprecation::notice('5.0', 'Use duplicateRelations() instead');
+        Deprecation::notice('4.1.0', 'Use duplicateRelations() instead');
 
         // Get list of relations to duplicate
         if ($filter === 'many_many' || $filter === 'belongs_many_many') {
@@ -1266,10 +1266,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Public accessor for {@see DataObject::validate()}
      *
      * @return ValidationResult
+     * @deprecated 4.12.0 Use validate() instead
      */
     public function doValidate()
     {
-        Deprecation::notice('5.0', 'Use validate() instead');
+        Deprecation::notice('4.12.0', 'Use validate() instead');
         return $this->validate();
     }
 

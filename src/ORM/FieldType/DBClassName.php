@@ -35,10 +35,11 @@ class DBClassName extends DBEnum
     /**
      * Clear all cached classname specs. It's necessary to clear all cached subclassed names
      * for any classes if a new class manifest is generated.
+     * @deprecated 4.3.0 Use DBEnum::flushCache() instead
      */
     public static function clear_classname_cache()
     {
-        Deprecation::notice('4.3', 'Use DBEnum::flushCache() instead');
+        Deprecation::notice('4.3.0', 'Use DBEnum::flushCache() instead');
         DBEnum::flushCache();
     }
 

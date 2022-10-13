@@ -464,7 +464,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get the login forms for all available authentication methods
      *
-     * @deprecated 5.0.0 Use delegateToMultipleHandlers() instead
+     * @deprecated 4.12.0 Use delegateToMultipleHandlers() instead
      *
      * @return array Returns an array of available login forms (array of Form
      *               objects).
@@ -472,7 +472,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function getLoginForms()
     {
-        Deprecation::notice('5.0.0', 'Now handled by delegateToMultipleHandlers');
+        Deprecation::notice('4.12.0', 'Use delegateToMultipleHandlers() instead');
 
         return array_map(
             function (Authenticator $authenticator) {
@@ -1073,11 +1073,11 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @return Member
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin()
+     * @deprecated 4.0.1 Use DefaultAdminService::findOrCreateDefaultAdmin()
      */
     public static function findAnAdministrator()
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::findOrCreateDefaultAdmin()');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::findOrCreateDefaultAdmin()');
 
         $service = DefaultAdminService::singleton();
         return $service->findOrCreateDefaultAdmin();
@@ -1086,11 +1086,11 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Flush the default admin credentials
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::clearDefaultAdmin()
+     * @deprecated 4.0.1 Use DefaultAdminService::clearDefaultAdmin()
      */
     public static function clear_default_admin()
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::clearDefaultAdmin()');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::clearDefaultAdmin()');
 
         DefaultAdminService::clearDefaultAdmin();
     }
@@ -1107,11 +1107,11 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password The password (in cleartext)
      * @return bool True if successfully set
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::setDefaultAdmin($username, $password)
+     * @deprecated 4.0.1 Use DefaultAdminService::setDefaultAdmin($username, $password)
      */
     public static function setDefaultAdmin($username, $password)
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::setDefaultAdmin($username, $password)');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::setDefaultAdmin($username, $password)');
 
         DefaultAdminService::setDefaultAdmin($username, $password);
         return true;
@@ -1125,11 +1125,11 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $password
      * @return bool
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::isDefaultAdminCredentials() instead
+     * @deprecated 4.0.1 Use DefaultAdminService::isDefaultAdminCredentials() instead
      */
     public static function check_default_admin($username, $password)
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::isDefaultAdminCredentials($username, $password)');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::isDefaultAdminCredentials() instead');
 
         /** @var DefaultAdminService $service */
         return DefaultAdminService::isDefaultAdminCredentials($username, $password);
@@ -1138,11 +1138,11 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Check that the default admin account has been set.
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::hasDefaultAdmin() instead
+     * @deprecated 4.0.1 Use DefaultAdminService::hasDefaultAdmin() instead
      */
     public static function has_default_admin()
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::hasDefaultAdmin()');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::hasDefaultAdmin() instead');
 
         return DefaultAdminService::hasDefaultAdmin();
     }
@@ -1150,12 +1150,12 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get default admin username
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::getDefaultAdminUsername() instead
+     * @deprecated 4.0.1 Use DefaultAdminService::getDefaultAdminUsername() instead
      * @return string
      */
     public static function default_admin_username()
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminUsername()');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::getDefaultAdminUsername() instead');
 
         return DefaultAdminService::getDefaultAdminUsername();
     }
@@ -1163,12 +1163,12 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Get default admin password
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::getDefaultAdminPassword() instead
+     * @deprecated 4.0.1 Use DefaultAdminService::getDefaultAdminPassword() instead
      * @return string
      */
     public static function default_admin_password()
     {
-        Deprecation::notice('5.0.0', 'Please use DefaultAdminService::getDefaultAdminPassword()');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::getDefaultAdminPassword() instead');
 
         return DefaultAdminService::getDefaultAdminPassword();
     }

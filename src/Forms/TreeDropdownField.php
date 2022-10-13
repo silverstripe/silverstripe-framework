@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Dev\Deprecation;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Assets\Folder;
@@ -621,12 +622,13 @@ class TreeDropdownField extends FormField
     /**
      * HTML-encoded label for this node, including css classes and other markup.
      *
-     * @deprecated 4.0.0:5.0.0 Use setTitleField() instead
+     * @deprecated 4.0.1 Use setTitleField() instead
      * @param string $field
      * @return $this
      */
     public function setLabelField($field)
     {
+        Deprecation::notice('4.0.1', 'Use setTitleField() instead');
         $this->labelField = $field;
         return $this;
     }
@@ -634,11 +636,12 @@ class TreeDropdownField extends FormField
     /**
      * HTML-encoded label for this node, including css classes and other markup.
      *
-     * @deprecated 4.0.0:5.0.0 Use getTitleField() instead
+     * @deprecated 4.0.1 Use getTitleField() instead
      * @return string
      */
     public function getLabelField()
     {
+        Deprecation::notice('4.0.1', 'Use getTitleField() instead');
         return $this->labelField;
     }
 

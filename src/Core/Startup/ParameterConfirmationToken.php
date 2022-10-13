@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -16,7 +17,7 @@ use SilverStripe\Security\RandomGenerator;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  *
- * @deprecated 5.0 Will be removed without equivalent functionality
+ * @deprecated 4.12.0 Will be removed without equivalent functionality
  */
 class ParameterConfirmationToken extends AbstractConfirmationToken
 {
@@ -47,6 +48,7 @@ class ParameterConfirmationToken extends AbstractConfirmationToken
      */
     public function __construct($parameterName, HTTPRequest $request)
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
         // Store the parameter name
         $this->parameterName = $parameterName;
         $this->request = $request;

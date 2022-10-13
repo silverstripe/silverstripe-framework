@@ -586,13 +586,13 @@ class Session
      * Recursively apply the changes represented in $data to $dest.
      * Used to update $_SESSION
      *
-     * @deprecated 4.1.0:5.0.0 Use recursivelyApplyChanges() instead
+     * @deprecated 4.1.0 Use recursivelyApplyChanges() instead
      * @param array $data
      * @param array $dest
      */
     protected function recursivelyApply($data, &$dest)
     {
-        Deprecation::notice('5.0', 'Use recursivelyApplyChanges() instead');
+        Deprecation::notice('4.1.0', 'Use recursivelyApplyChanges() instead');
         foreach ($data as $k => $v) {
             if (is_array($v)) {
                 if (!isset($dest[$k]) || !is_array($dest[$k])) {

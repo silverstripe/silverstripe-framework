@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Dev\Deprecation;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -159,12 +160,13 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
     /**
      * Resolve resource in the absence of a public/ folder
      *
-     * @deprecated 4.1.0:5.0.0 Will be removed without equivalent functionality when public/ folder becomes mandatory
+     * @deprecated 4.1.0 Will be removed without equivalent functionality when public/ folder becomes mandatory
      * @param string $relativePath
      * @return array List of [$exists, $absolutePath, $relativePath]
      */
     protected function resolveUnsecuredResource($relativePath)
     {
+        Deprecation::notice('4.1.0', 'Will be removed without equivalent functionality when public/ folder becomes mandatory');
         // Check if the path requested is public-only, but we have no public folder
         $publicOnly = $this->inferPublicResourceRequired($relativePath);
         if ($publicOnly) {

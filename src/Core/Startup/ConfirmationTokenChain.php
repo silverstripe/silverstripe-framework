@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
@@ -13,7 +14,7 @@ use SilverStripe\Core\Convert;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  *
- * @deprecated 5.0 Will be removed without equivalent functionality
+ * @deprecated 4.12.0 Will be removed without equivalent functionality
  */
 class ConfirmationTokenChain
 {
@@ -25,6 +26,11 @@ class ConfirmationTokenChain
     /**
      * @param AbstractConfirmationToken $token
      */
+    public function __construct()
+    {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
+    }
+
     public function pushToken(AbstractConfirmationToken $token)
     {
         $this->tokens[] = $token;

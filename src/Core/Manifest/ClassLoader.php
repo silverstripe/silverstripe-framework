@@ -142,10 +142,11 @@ class ClassLoader
      *
      * @param  string $class
      * @return bool
+     * @deprecated 4.0.1 Use ClassInfo::exists() instead
      */
     public function classExists($class)
     {
-        Deprecation::notice('4.0', 'Use ClassInfo::exists() instead');
+        Deprecation::notice('4.0.1', 'Use ClassInfo::exists() instead');
         return ClassInfo::exists($class);
     }
 }

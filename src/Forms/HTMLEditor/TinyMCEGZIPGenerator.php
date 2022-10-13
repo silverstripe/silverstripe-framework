@@ -11,7 +11,7 @@ use TinyMCE_Compressor;
 /**
  * Uses the default tiny_mc_gzip.php handler
  *
- * @deprecated 4.0.0:5.0.0 Will be removed without equivalent functionality
+ * @deprecated 4.0.1 Will be removed without equivalent functionality
  */
 class TinyMCEGZIPGenerator implements TinyMCEScriptGenerator
 {
@@ -19,7 +19,7 @@ class TinyMCEGZIPGenerator implements TinyMCEScriptGenerator
 
     public function __construct()
     {
-        Deprecation::notice('5.0', 'Legacy tiny_mce_gzip compressor is deprecated');
+        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
     }
 
     /**

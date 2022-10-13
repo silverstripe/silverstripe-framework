@@ -737,7 +737,7 @@ class Email extends ViewableData
     }
 
     /**
-     * @deprecated Will be removed without equivalent functionality to replace it
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      *
      * Debugging help
      *

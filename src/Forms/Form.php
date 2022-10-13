@@ -1587,12 +1587,12 @@ class Form extends ViewableData implements HasRequestHandler
      * and _form_enctype.  These are the attributes of the form.  These fields
      * can be used to send the form to Ajax.
      *
-     * @deprecated 5.0 Will be removed without equivalent functionality
+     * @deprecated 4.12.0 Will be removed without equivalent functionality
      * @return string
      */
     public function formHtmlContent()
     {
-        Deprecation::notice('5.0');
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality');
         $this->IncludeFormTag = false;
         $content = $this->forTemplate();
         $this->IncludeFormTag = true;

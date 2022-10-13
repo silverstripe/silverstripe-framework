@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Dev\Deprecation;
 use Exception;
 
 /**
@@ -17,7 +18,7 @@ use Exception;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  *
- * @deprecated 5.0 Will be removed without equivalent functionality
+ * @deprecated 4.12.0 Will be removed without equivalent functionality
  */
 class ErrorControlChain
 {
@@ -62,6 +63,11 @@ class ErrorControlChain
      *
      * @return bool
      */
+    public function __construct()
+    {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
+    }
+
     public function hasErrored()
     {
         return $this->error;

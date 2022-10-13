@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
@@ -664,6 +665,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function get_declared_permissions_list()
     {
+        Deprecation::notice('4.4.0', 'Will be removed without equivalent functionality');
         if (!self::$declared_permissions) {
             return null;
         }
@@ -688,6 +690,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function get_label_for_permission($perm)
     {
+        Deprecation::notice('4.4.0', 'Will be removed without equivalent functionality');
         $list = self::get_declared_permissions_list();
         if (array_key_exists($perm, $list ?? [])) {
             return $list[$perm];
@@ -706,6 +709,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     protected static function traverse_declared_permissions($declared, &$list)
     {
+        Deprecation::notice('4.4.0', 'Will be removed without equivalent functionality');
         if (!is_array($declared)) {
             return;
         }

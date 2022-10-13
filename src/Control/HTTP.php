@@ -372,43 +372,43 @@ class HTTP
     /**
      * Set the maximum age of this page in web caches, in seconds.
      *
-     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
+     * @deprecated 4.2.0 Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead
      * @param int $age
      */
     public static function set_cache_age($age)
     {
-        Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead');
+        Deprecation::notice('4.2.0', 'Use HTTPCacheControlMiddleware::singleton()->setMaxAge($age) instead');
         self::$cache_age = $age;
         HTTPCacheControlMiddleware::singleton()->setMaxAge($age);
     }
 
     /**
      * @param string $dateString
-     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
+     * @deprecated 4.2.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
      */
     public static function register_modification_date($dateString)
     {
-        Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
+        Deprecation::notice('4.2.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
         HTTPCacheControlMiddleware::singleton()->registerModificationDate($dateString);
     }
 
     /**
      * @param int $timestamp
-     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
+     * @deprecated 4.2.0 Use HTTPCacheControlMiddleware::registerModificationDate() instead
      */
     public static function register_modification_timestamp($timestamp)
     {
-        Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
+        Deprecation::notice('4.2.0', 'Use HTTPCacheControlMiddleware::registerModificationDate() instead');
         HTTPCacheControlMiddleware::singleton()->registerModificationDate($timestamp);
     }
 
     /**
-     * @deprecated 4.2.0:5.0.0 Use ChangeDetectionMiddleware instead
+     * @deprecated 4.2.0 Use ChangeDetectionMiddleware instead
      * @param string $etag
      */
     public static function register_etag($etag)
     {
-        Deprecation::notice('5.0', 'Use ChangeDetectionMiddleware instead');
+        Deprecation::notice('4.2.0', 'Use ChangeDetectionMiddleware instead');
         if (strpos($etag ?? '', '"') !== 0) {
             $etag =  "\"{$etag}\"";
         }
@@ -426,11 +426,11 @@ class HTTP
      * output directly.
      *
      * @param HTTPResponse $response
-     * @deprecated 4.2.0:5.0.0 Headers are added automatically by HTTPCacheControlMiddleware instead.
+     * @deprecated 4.2.0 Headers are added automatically by HTTPCacheControlMiddleware instead.
      */
     public static function add_cache_headers($response = null)
     {
-        Deprecation::notice('5.0', 'Headers are added automatically by HTTPCacheControlMiddleware instead.');
+        Deprecation::notice('4.2.0', 'Headers are added automatically by HTTPCacheControlMiddleware instead.');
 
         // Skip if deprecated API is disabled
         if (Config::inst()->get(HTTP::class, 'ignoreDeprecatedCaching')) {
@@ -473,13 +473,14 @@ class HTTP
     /**
      * Ensure that all deprecated HTTP cache settings are respected
      *
-     * @deprecated 4.2.0:5.0.0 Use HTTPCacheControlMiddleware instead
+     * @deprecated 4.2.0 Use HTTPCacheControlMiddleware instead
      * @throws \LogicException
      * @param HTTPRequest $request
      * @param HTTPResponse $response
      */
     public static function augmentState(HTTPRequest $request, HTTPResponse $response)
     {
+        Deprecation::notice('4.2.0', 'Use HTTPCacheControlMiddleware instead');
         // Skip if deprecated API is disabled
         $config = Config::forClass(HTTP::class);
         if ($config->get('ignoreDeprecatedCaching')) {
@@ -560,11 +561,12 @@ class HTTP
      * is always in GMT: the number of seconds since January 1 1970 00:00:00 GMT)
      *
      * @param int $timestamp
-     * @deprecated 4.2.0:5.0.0 Use native php function gmdate() instead
+     * @deprecated 4.2.0 Use native php function gmdate() instead
      * @return string
      */
     public static function gmt_date($timestamp)
     {
+        Deprecation::notice('4.2.0', 'Use native php function gmdate() instead');
         return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
     }
 

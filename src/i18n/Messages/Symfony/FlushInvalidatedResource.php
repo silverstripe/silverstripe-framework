@@ -2,6 +2,7 @@
 
 namespace SilverStripe\i18n\Messages\Symfony;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\Flushable;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
@@ -54,10 +55,11 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
      * The __serialize() magic method will be automatically used instead of this
      *
      * @return string
-     * @deprecated Use __serialize() instead
+     * @deprecated 4.12.0 Use __serialize() instead
      */
     public function serialize()
     {
+        Deprecation::notice('4.12.0', 'Use __serialize() instead');
         return '';
     }
 
@@ -67,10 +69,11 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
      * and the PHP version used in less than PHP 9.0
      *
      * @param string $serialized
-     * @deprecated Use __unserialize() instead
+     * @deprecated 4.12.0 Use __unserialize() instead
      */
     public function unserialize($serialized)
     {
+        Deprecation::notice('4.12.0', 'Use __unserialize() instead');
         // no-op
     }
 

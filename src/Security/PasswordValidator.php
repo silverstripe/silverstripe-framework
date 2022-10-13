@@ -84,7 +84,7 @@ class PasswordValidator
      */
     public function minLength($minLength)
     {
-        Deprecation::notice('4.5.0', 'Use ->setMinLength($value) instead.');
+        Deprecation::notice('4.5.0', 'Use setMinLength() instead');
         return $this->setMinLength($minLength);
     }
 
@@ -100,10 +100,7 @@ class PasswordValidator
      */
     public function characterStrength($minScore, $testNames = null)
     {
-        Deprecation::notice(
-            '4.5.0',
-            'Use ->setMinTestScore($score) and ->setTestNames($names) instead.'
-        );
+        Deprecation::notice('4.5.0', 'Use setMinTestScore($score) and setTestNames($names) instead');
         $this->setMinTestScore($minScore);
         if ($testNames) {
             $this->setTestNames($testNames);
@@ -120,7 +117,7 @@ class PasswordValidator
      */
     public function checkHistoricalPasswords($count)
     {
-        Deprecation::notice('4.5.0', 'Use ->setHistoricCount($value) instead.');
+        Deprecation::notice('4.5.0', 'Use setHistoricCount($value) instead');
         return $this->setHistoricCount($count);
     }
 

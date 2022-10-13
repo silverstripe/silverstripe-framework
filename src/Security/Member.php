@@ -282,26 +282,26 @@ class Member extends DataObject
     /**
      * Get the default admin record if it exists, or creates it otherwise if enabled
      *
-     * @deprecated 4.0.0:5.0.0 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
+     * @deprecated 4.0.1 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
      * @return Member
      */
     public static function default_admin()
     {
-        Deprecation::notice('5.0', 'Use DefaultAdminService::findOrCreateDefaultAdmin() instead');
+        Deprecation::notice('4.0.1', 'Use DefaultAdminService::findOrCreateDefaultAdmin() instead');
         return DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
     }
 
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
-     * @deprecated 4.0.0:5.0.0 Use Authenticator::checkPassword() instead
+     * @deprecated 4.0.1 Use Authenticator::checkPassword() instead
      *
      * @param  string $password
      * @return ValidationResult
      */
     public function checkPassword($password)
     {
-        Deprecation::notice('5.0', 'Use Authenticator::checkPassword() instead');
+        Deprecation::notice('4.0.1', 'Use Authenticator::checkPassword() instead');
 
         // With a valid user and password, check the password is correct
         $result = ValidationResult::create();
@@ -448,15 +448,12 @@ class Member extends DataObject
     }
 
     /**
-     * @deprecated 5.0.0 Use Security::setCurrentUser() or IdentityStore::logIn() instead
+     * @deprecated 4.12.0 Use Security::setCurrentUser() or IdentityStore::logIn() instead
      *
      */
     public function logIn()
     {
-        Deprecation::notice(
-            '5.0.0',
-            'This method is deprecated and only logs in for the current request. Please use Security::setCurrentUser($user) or an IdentityStore'
-        );
+        Deprecation::notice('4.12.0', 'Use Security::setCurrentUser() or IdentityStore::logIn() instead');
         Security::setCurrentUser($this);
     }
 
@@ -509,16 +506,13 @@ class Member extends DataObject
      * has a database record of the same ID. If there is
      * no logged in user, FALSE is returned anyway.
      *
-     * @deprecated Use Security::getCurrentUser() instead
+     * @deprecated 4.12.0 Use Security::getCurrentUser() instead
      *
      * @return boolean TRUE record found FALSE no record found
      */
     public static function logged_in_session_exists()
     {
-        Deprecation::notice(
-            '5.0.0',
-            'This method is deprecated and now does not add value. Please use Security::getCurrentUser()'
-        );
+        Deprecation::notice('4.12.0', 'Use Security::getCurrentUser() instead');
 
         $member = Security::getCurrentUser();
         if ($member && $member->exists()) {
@@ -531,14 +525,11 @@ class Member extends DataObject
     /**
      * Logs this member out.
      *
-     * @deprecated Use Security::setCurrentUser(null) or an IdentityStore instead
+     * @deprecated 4.12.0 Use Security::setCurrentUser(null) or an IdentityStore instead
      */
     public function logOut()
     {
-        Deprecation::notice(
-            '5.0.0',
-            'This method is deprecated and now does not persist. Please use Security::setCurrentUser(null) or an IdentityStore'
-        );
+        Deprecation::notice('4.12.0', 'Use Security::setCurrentUser(null) or an IdentityStore instead');
 
         Injector::inst()->get(IdentityStore::class)->logOut(Controller::curr()->getRequest());
     }
@@ -770,16 +761,13 @@ class Member extends DataObject
     /**
      * Returns the current logged in user
      *
-     * @deprecated 5.0.0 Use Security::getCurrentUser() instead
+     * @deprecated 4.12.0 Use Security::getCurrentUser() instead
      *
      * @return Member
      */
     public static function currentUser()
     {
-        Deprecation::notice(
-            '5.0.0',
-            'This method is deprecated. Please use Security::getCurrentUser() or an IdentityStore'
-        );
+        Deprecation::notice('4.12.0', 'Use Security::getCurrentUser() instead');
 
         return Security::getCurrentUser();
     }
@@ -820,16 +808,13 @@ class Member extends DataObject
     /**
      * Get the ID of the current logged in user
      *
-     * @deprecated 5.0.0 Use Security::getCurrentUser() instead
+     * @deprecated 4.12.0 Use Security::getCurrentUser() instead
      *
      * @return int Returns the ID of the current logged in user or 0.
      */
     public static function currentUserID()
     {
-        Deprecation::notice(
-            '5.0.0',
-            'This method is deprecated. Please use Security::getCurrentUser() or an IdentityStore'
-        );
+        Deprecation::notice('4.12.0', 'Use Security::getCurrentUser() instead');
 
         $member = Security::getCurrentUser();
         if ($member) {
@@ -1118,10 +1103,11 @@ class Member extends DataObject
     /**
      * @param array $columns Column names on the Member record to show in {@link getTitle()}.
      * @param string $sep Separator
+     * @deprecated 4.12.0 Use Member.title_format config instead
      */
     public static function set_title_columns($columns, $sep = ' ')
     {
-        Deprecation::notice('5.0', 'Use Member.title_format config instead');
+        Deprecation::notice('4.12.0', 'Use Member.title_format config instead');
         if (!is_array($columns)) {
             $columns = [$columns];
         }

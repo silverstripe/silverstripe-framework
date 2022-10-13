@@ -140,9 +140,12 @@ class PDOConnector extends DBConnector implements TransactionManager
         return self::config()->get('emulate_prepare');
     }
 
+    /**
+     * @deprecated 4.5.0 Use native database drivers instead
+     */
     public function connect($parameters, $selectDB = false)
     {
-        Deprecation::notice('4.5', 'Use native database drivers instead');
+        Deprecation::notice('4.5.0', 'Use native database drivers instead');
 
         $this->flushStatements();
 

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Dev\Deprecation;
 use ArrayAccess;
 use BadMethodCallException;
 use InvalidArgumentException;
@@ -914,6 +915,7 @@ class HTTPRequest implements ArrayAccess
      */
     public static function detect_method($origMethod, $postVars)
     {
+        Deprecation::notice('4.4.7', 'Will be removed without equivalent functionality');
         if (isset($postVars['_method'])) {
             if (!self::isValidHttpMethod($postVars['_method'])) {
                 throw new InvalidArgumentException('HTTPRequest::detect_method(): Invalid "_method" parameter');

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
@@ -23,6 +24,7 @@ abstract class DataExtension extends Extension
      */
     public static function unload_extra_statics($class, $extension)
     {
+        Deprecation::notice('4.7.0', 'Will be removed without equivalent functionality');
         throw new Exception('unload_extra_statics gone');
     }
 

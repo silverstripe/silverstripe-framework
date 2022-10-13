@@ -112,12 +112,12 @@ class DB
     }
 
     /**
-     * @deprecated Use DB::get_conn() instead
+     * @deprecated 4.0.1 Use DB::get_conn() instead
      * @todo PSR-2 standardisation will probably un-deprecate this
      */
     public static function getConn($name = 'default')
     {
-        Deprecation::notice('4.0', 'Use DB::get_conn() instead');
+        Deprecation::notice('4.0.1', 'Use DB::get_conn() instead');
         return self::get_conn($name);
     }
 
