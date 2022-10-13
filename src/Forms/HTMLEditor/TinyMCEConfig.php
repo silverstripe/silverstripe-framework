@@ -875,21 +875,21 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Use getTinyMCEResourcePath() instead
      */
     public function getTinyMCEPath()
     {
-        Deprecation::notice('5.0', 'use getTinyMCEResourcePath instead');
+        Deprecation::notice('4.0.1', 'Use getTinyMCEResourcePath() instead');
         return $this->getTinyMCEResourcePath();
     }
 
     /**
      * @return Module
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Set base_dir or editor_css config instead
      */
     protected function getAdminModule()
     {
-        Deprecation::notice('5.0', 'Set base_dir or editor_css config instead');
+        Deprecation::notice('4.0.1', 'Set base_dir or editor_css config instead');
         return ModuleLoader::getModule('silverstripe/admin');
     }
 

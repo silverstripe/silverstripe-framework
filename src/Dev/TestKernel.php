@@ -50,18 +50,22 @@ class TestKernel extends CoreKernel
     /**
      * Set a list of CI configurations that should cause a module's test not to be added to a manifest
      * @param string[] $ciConfigs
+     * @deprecated 4.12.0 Will be removed without equivalent functionality
      */
     public function setIgnoredCIConfigs(array $ciConfigs): self
     {
-        Deprecation::notice('5.0.0', 'This method will be removed in CMS 5');
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality');
 
         $this->ciConfigs = $ciConfigs;
         return $this;
     }
 
+    /**
+     * @deprecated 4.12.0 Will be removed without equivalent functionality
+     */
     protected function getIgnoredCIConfigs(): array
     {
-        Deprecation::notice('5.0.0', 'This method will be removed in CMS 5');
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality');
 
         return $this->ciConfigs;
     }

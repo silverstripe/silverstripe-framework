@@ -238,11 +238,12 @@ class Requirements_Backend
     /**
      * Gets the minification service for this backend
      *
-     * @deprecated 4.0.0:5.0.0
      * @return Requirements_Minifier
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     public function getMinifier()
     {
+        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality');
         return $this->minifier;
     }
 

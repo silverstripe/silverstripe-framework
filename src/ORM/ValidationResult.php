@@ -232,10 +232,11 @@ class ValidationResult implements Serializable
      * The __serialize() magic method will be automatically used instead of this
      *
      * @return string
-     * @deprecated will be removed in 5.0
+     * @deprecated 4.12.0 Use __serialize() instead
      */
     public function serialize()
     {
+        Deprecation::notice('4.12.0', 'Use __serialize() instead');
         return json_encode([$this->messages, $this->isValid]);
     }
 
@@ -245,10 +246,11 @@ class ValidationResult implements Serializable
      * and the PHP version used in less than PHP 9.0
      *
      * @param string $serialized
-     * @deprecated will be removed in 5.0
+     * @deprecated 4.12.0 Use __unserialize() instead
      */
     public function unserialize($serialized)
     {
+        Deprecation::notice('4.12.0', 'Use __unserialize() instead');
         list($this->messages, $this->isValid) = json_decode($serialized ?? '', true);
     }
 }

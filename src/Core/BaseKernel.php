@@ -260,10 +260,11 @@ abstract class BaseKernel implements Kernel
      *
      * @return string
      *
-     * @deprecated 5.0 use Director::get_environment_type() instead. Since 5.0 it should return only if kernel overrides. No checking SESSION or Environment.
+     * @deprecated 4.12.0 Use Director::get_environment_type() instead
      */
     public function getEnvironment()
     {
+        Deprecation::notice('4.12.0', 'Use Director::get_environment_type() instead');
         // Check set
         if ($this->enviroment) {
             return $this->enviroment;
@@ -288,10 +289,11 @@ abstract class BaseKernel implements Kernel
      *
      * @return null|string
      *
-     * @deprecated 5.0 Use Director::get_session_environment_type() instead
+     * @deprecated 4.12.0 Use Director::get_session_environment_type() instead
      */
     protected function sessionEnvironment()
     {
+        Deprecation::notice('4.12.0', 'Use Director::get_session_environment_type() instead');
         if (!$this->booted) {
             // session is not initialyzed yet, neither is manifest
             return null;
@@ -378,11 +380,11 @@ abstract class BaseKernel implements Kernel
      * The purpose of this method is to avoid loading PHPUnit test files with incompatible definitions.
      *
      * @return string[] List of CI types to ignore as defined by `Module`.
-     * @deprecated 5.0.0
+     * @deprecated 4.12.0 Will be removed without equivalent functionality
      */
     protected function getIgnoredCIConfigs(): array
     {
-        Deprecation::notice('5.0.0', 'This method will be removed in CMS 5');
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality');
         return [];
     }
 

@@ -14,11 +14,11 @@ class RandomGenerator
     /**
      * @return string A 128-character, randomly generated ASCII string
      * @throws Exception If no suitable CSPRNG is installed
-     * @deprecated 4.4.0:5.0.0
+     * @deprecated 4.4.0 Use native php function random_bytes() instead
      */
     public function generateEntropy()
     {
-        Deprecation::notice('4.4', __METHOD__ . ' has been deprecated. Use random_bytes instead');
+        Deprecation::notice('4.4.0', 'Use native php function random_bytes() instead');
 
         try {
             return bin2hex(random_bytes(64));

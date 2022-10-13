@@ -43,10 +43,11 @@ class Config_ForClass
      * @param string $name
      * @param mixed $value
      * @return $this
+     * @deprecated 4.12.0 Use merge() instead
      */
     public function update($name, $value)
     {
-        Deprecation::notice('5.0', 'Use merge() instead');
+        Deprecation::notice('4.12.0', 'Use merge() instead');
         return $this->merge($name, $value);
     }
 

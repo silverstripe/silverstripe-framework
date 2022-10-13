@@ -161,14 +161,14 @@ class Convert
      * Encode a value as a JSON encoded string. You can optionally pass a bitmask of
      * JSON constants as options through to the encode function.
      *
-     * @deprecated 4.4.0:5.0.0 Use json_encode() instead
+     * @deprecated 4.4.0 Use json_encode() instead
      * @param  mixed $val     Value to be encoded
      * @param  int   $options Optional bitmask of JSON constants
      * @return string           JSON encoded string
      */
     public static function raw2json($val, $options = 0)
     {
-        Deprecation::notice('4.4', 'Please use json_encode() instead.');
+        Deprecation::notice('4.4.0', 'Use json_encode() instead');
 
         return json_encode($val, $options ?? 0);
     }
@@ -176,14 +176,14 @@ class Convert
     /**
      * Encode an array as a JSON encoded string.
      *
-     * @deprecated 4.4.0:5.0.0 Use json_encode() instead
+     * @deprecated 4.4.0 Use json_encode() instead
      * @param  array  $val     Array to convert
      * @param  int    $options Optional bitmask of JSON constants
      * @return string          JSON encoded string
      */
     public static function array2json($val, $options = 0)
     {
-        Deprecation::notice('4.4', 'Please use json_encode() instead.');
+        Deprecation::notice('4.4.0', 'Use json_encode() instead');
 
         return json_encode($val, $options ?? 0);
     }
@@ -261,13 +261,13 @@ class Convert
     /**
      * Convert a JSON encoded string into an object.
      *
-     * @deprecated 4.4.0:5.0.0 Use json_decode() instead
+     * @deprecated 4.4.0 Use json_decode() instead
      * @param string $val
      * @return object|boolean
      */
     public static function json2obj($val)
     {
-        Deprecation::notice('4.4', 'Please use json_decode() instead.');
+        Deprecation::notice('4.4.0', 'Use json_decode() instead');
 
         return json_decode($val ?? '');
     }
@@ -275,13 +275,13 @@ class Convert
     /**
      * Convert a JSON string into an array.
      *
-     * @deprecated 4.4.0:5.0.0 Use json_decode() instead
+     * @deprecated 4.4.0 Use json_decode() instead
      * @param string $val JSON string to convert
      * @return array|boolean
      */
     public static function json2array($val)
     {
-        Deprecation::notice('4.4', 'Please use json_decode() instead.');
+        Deprecation::notice('4.4.0', 'Use json_decode() instead');
 
         return json_decode($val ?? '', true);
     }
@@ -295,13 +295,13 @@ class Convert
      * @param boolean $disableDoctypes Disables the use of DOCTYPE, and will trigger an error if encountered.
      * false by default.
      * @param boolean $disableExternals Does nothing because xml entities are removed
-     * @deprecated 4.11.0:5.0.0
+     * @deprecated 4.11.0 Use a dedicated XML library instead
      * @return array
      * @throws Exception
      */
     public static function xml2array($val, $disableDoctypes = false, $disableExternals = false)
     {
-        Deprecation::notice('4.10', 'Use a dedicated XML library instead');
+        Deprecation::notice('4.11.0', 'Use a dedicated XML library instead');
 
         // Check doctype
         if ($disableDoctypes && strpos($val ?? '', '<!DOCTYPE') !== false) {

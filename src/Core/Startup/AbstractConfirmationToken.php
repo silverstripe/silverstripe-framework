@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -15,7 +16,7 @@ use SilverStripe\Security\RandomGenerator;
  *
  * @internal This class is designed specifically for use pre-startup and may change without warning
  *
- * @deprecated 5.0 To be removed in SilverStripe 5.0
+ * @deprecated 4.12.0 Will be removed without equivalent functionality
  */
 abstract class AbstractConfirmationToken
 {
@@ -39,6 +40,11 @@ abstract class AbstractConfirmationToken
      * @param HTTPRequest $request
      * @return static The token container for the unvalidated $key given with the highest priority
      */
+    public function __construct()
+    {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
+    }
+
     public static function prepare_tokens($keys, HTTPRequest $request)
     {
         $target = null;

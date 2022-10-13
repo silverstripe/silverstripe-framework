@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Email;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
@@ -37,6 +38,11 @@ class SwiftMailer implements Mailer
      * @param Email $message
      * @return bool Whether the sending was "successful" or not
      */
+    public function __construct()
+    {
+        Deprecation::notice('4.12.0', 'Will be replaced with symfony/mailer', Deprecation::SCOPE_CLASS);
+    }
+
     public function send($message)
     {
         $swiftMessage = $message->getSwiftMessage();

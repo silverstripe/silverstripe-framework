@@ -173,10 +173,11 @@ class CsvBulkLoader extends BulkLoader
      * @param int $lines Number of lines per file
      *
      * @return array List of file paths
+     * @deprecated 4.12.0 Process files using a stream instead
      */
     protected function splitFile($path, $lines = null)
     {
-        Deprecation::notice('5.0', 'splitFile is deprecated, please process files using a stream');
+        Deprecation::notice('4.12.0', 'Process files using a stream instead');
 
         if (!is_int($lines)) {
             $lines = $this->config()->get("lines");
@@ -229,10 +230,11 @@ class CsvBulkLoader extends BulkLoader
 
     /**
      * @return string
+     * @deprecated 4.12.0 Name files yourself instead
      */
     protected function getNewSplitFileName()
     {
-        Deprecation::notice('5.0', 'getNewSplitFileName is deprecated, please name your files yourself');
+        Deprecation::notice('4.12.0', 'Name files yourself instead');
         return TEMP_PATH . DIRECTORY_SEPARATOR . uniqid(str_replace('\\', '_', static::class) ?? '', true) . '.csv';
     }
 
@@ -241,10 +243,11 @@ class CsvBulkLoader extends BulkLoader
      * @param boolean $preview
      *
      * @return BulkLoader_Result
+     * @deprecated 4.12.0 Process rows individually instead
      */
     protected function processChunk($filepath, $preview = false)
     {
-        Deprecation::notice('5.0', 'processChunk is deprecated, please process rows individually');
+        Deprecation::notice('4.12.0', 'Process rows individually instead');
         $results = BulkLoader_Result::create();
 
         $csv = new CSVParser(

@@ -296,12 +296,12 @@ class SSViewer implements Flushable
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use the "SSViewer#set_themes" instead
      * @param string $theme The "base theme" name (without underscores).
+     * @deprecated 4.0.1 Use SSViewer::set_themes() instead
      */
     public static function set_theme($theme)
     {
-        Deprecation::notice('4.0', 'Use the "SSViewer#set_themes" instead');
+        Deprecation::notice('4.0.1', 'Use SSViewer::set_themes() instead');
         self::set_themes([$theme, self::DEFAULT_THEME]);
     }
 
