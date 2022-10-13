@@ -67,6 +67,8 @@ class Deprecation
      */
     protected static $module_version_overrides = [];
 
+    protected static bool $inside_notice = false;
+
     /**
      * @var int - the notice level to raise on a deprecation notice. Defaults to E_USER_DEPRECATED if that exists,
      * E_USER_NOTICE if not
@@ -171,72 +173,81 @@ class Deprecation
      */
     public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD)
     {
-        if (!static::get_enabled()) {
+        if (static::$inside_notice) {
             return;
         }
+        static::$inside_notice = true;
+        // try block needs to wrap all code in case anything inside the try block
+        // calls something else that calls Deprecation::notice()
+        try {
+            if (!static::get_enabled()) {
+                return;
+            }
+            $checkVersion = self::$version;
+            // Getting a backtrace is slow, so we only do it if we need it
+            $backtrace = null;
 
-        $checkVersion = self::$version;
-        // Getting a backtrace is slow, so we only do it if we need it
-        $backtrace = null;
+            // If you pass #.#, assume #.#.0
+            if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion ?? '')) {
+                $atVersion .= '.0';
+            }
+            if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion ?? '')) {
+                $checkVersion .= '.0';
+            }
 
-        // If you pass #.#, assume #.#.0
-        if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion ?? '')) {
-            $atVersion .= '.0';
-        }
-        if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion ?? '')) {
-            $checkVersion .= '.0';
-        }
-
-        if (self::$module_version_overrides) {
-            $module = self::get_calling_module_from_trace($backtrace = debug_backtrace(0));
-            if ($module) {
-                if (($name = $module->getComposerName())
-                    && isset(self::$module_version_overrides[$name])
-                ) {
-                    $checkVersion = self::$module_version_overrides[$name];
-                } elseif (($name = $module->getShortName())
-                    && isset(self::$module_version_overrides[$name])
-                ) {
-                    $checkVersion = self::$module_version_overrides[$name];
+            if (self::$module_version_overrides) {
+                $module = self::get_calling_module_from_trace($backtrace = debug_backtrace(0));
+                if ($module) {
+                    if (($name = $module->getComposerName())
+                        && isset(self::$module_version_overrides[$name])
+                    ) {
+                        $checkVersion = self::$module_version_overrides[$name];
+                    } elseif (($name = $module->getShortName())
+                        && isset(self::$module_version_overrides[$name])
+                    ) {
+                        $checkVersion = self::$module_version_overrides[$name];
+                    }
                 }
             }
-        }
 
-        // Check the version against the notice version
-        if ($checkVersion && version_compare($checkVersion ?? '', $atVersion ?? '', '>=')) {
-            // Get the calling scope
-            if ($scope == Deprecation::SCOPE_METHOD) {
-                if (!$backtrace) {
-                    $backtrace = debug_backtrace(0);
+            // Check the version against the notice version
+            if ($checkVersion && version_compare($checkVersion ?? '', $atVersion ?? '', '>=')) {
+                // Get the calling scope
+                if ($scope == Deprecation::SCOPE_METHOD) {
+                    if (!$backtrace) {
+                        $backtrace = debug_backtrace(0);
+                    }
+                    $caller = self::get_called_method_from_trace($backtrace);
+                } elseif ($scope == Deprecation::SCOPE_CLASS) {
+                    if (!$backtrace) {
+                        $backtrace = debug_backtrace(0);
+                    }
+                    $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
+                } else {
+                    $caller = false;
                 }
-                $caller = self::get_called_method_from_trace($backtrace);
-            } elseif ($scope == Deprecation::SCOPE_CLASS) {
-                if (!$backtrace) {
-                    $backtrace = debug_backtrace(0);
+
+                // Get the level to raise the notice as
+                $level = self::$notice_level;
+                if (!$level) {
+                    $level = E_USER_DEPRECATED;
                 }
-                $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
-            } else {
-                $caller = false;
-            }
 
-            // Get the level to raise the notice as
-            $level = self::$notice_level;
-            if (!$level) {
-                $level = E_USER_DEPRECATED;
-            }
+                // Then raise the notice
+                if (substr($string ?? '', -1) != '.') {
+                    $string .= ".";
+                }
 
-            // Then raise the notice
-            if (substr($string ?? '', -1) != '.') {
-                $string .= ".";
-            }
+                $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
-            $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
-
-            if ($caller) {
-                user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level ?? 0);
-            } else {
-                user_error($string ?? '', $level ?? 0);
+                if ($caller) {
+                    user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level ?? 0);
+                } else {
+                    user_error($string ?? '', $level ?? 0);
+                }
             }
+        } finally {
+            static::$inside_notice = false;
         }
     }
 
