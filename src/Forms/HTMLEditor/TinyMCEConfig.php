@@ -226,12 +226,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * TinyMCE JS settings
      *
-     * @link https://www.tinymce.com/docs/configure/
+     * @link https://www.tiny.cloud/docs-4x/general-configuration-guide/
      *
      * @var array
      */
     protected $settings = [
-        'fix_list_elements' => true, // https://www.tinymce.com/docs/configure/content-filtering/#fix_list_elements
+        'fix_list_elements' => true, // https://www.tiny.cloud/docs-4x/configure/content-filtering/#fix_list_elements
         'formats' => [
             'alignleft' => [
                 [
@@ -275,7 +275,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'browser_spellcheck' => true,
         'body_class' => 'typography',
         'statusbar' => true,
-        'elementpath' => true, // https://www.tinymce.com/docs/configure/editor-appearance/#elementpath
+        'elementpath' => true, // https://www.tiny.cloud/docs-4x/configure/editor-appearance/#elementpath
         'relative_urls' => true,
         'remove_script_host' => true,
         'convert_urls' => false, // Prevent site-root images being rewritten to base relative
@@ -331,7 +331,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     /**
      * Holder list of buttons, organised by line. This array is 1-based indexed array
      *
-     * {@link https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols}
+     * {@link https://www.tiny.cloud/docs-4x/advanced/editor-control-identifiers/#toolbarcontrols}
      *
      * @var array
      */
@@ -619,10 +619,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     {
         $settings = $this->getSettings();
 
-        // https://www.tinymce.com/docs/configure/url-handling/#document_base_url
+        // https://www.tiny.cloud/docs-4x/configure/url-handling/#document_base_url
         $settings['document_base_url'] = Director::absoluteBaseURL();
 
-        // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
+        // https://www.tiny.cloud/docs-4x/api/tinymce/tinymce.editormanager/#properties
         $baseResource = $this->getTinyMCEResource();
         if ($baseResource instanceof ModuleResource) {
             $tinyMCEBaseURL = $baseResource->getURL();
@@ -649,12 +649,12 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             $plugins[$plugin] = $path;
         }
 
-        // https://www.tinymce.com/docs/configure/integration-and-setup/#external_plugins
+        // https://www.tiny.cloud/docs-4x/configure/integration-and-setup/#external_plugins
         if ($plugins) {
             $settings['external_plugins'] = $plugins;
         }
 
-        // https://www.tinymce.com/docs/configure/editor-appearance/#groupingtoolbarcontrols
+        // https://www.tiny.cloud/docs-4x/configure/editor-appearance/#groupingtoolbarcontrols
         $buttons = $this->getButtons();
         $settings['toolbar'] = [];
         foreach ($buttons as $rowButtons) {
@@ -666,10 +666,10 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             }
         }
 
-        // https://www.tinymce.com/docs/configure/content-appearance/#content_css
+        // https://www.tiny.cloud/docs-4x/configure/content-appearance/#content_css
         $settings['content_css'] = $this->getEditorCSS();
 
-        // https://www.tinymce.com/docs/configure/editor-appearance/#theme_url
+        // https://www.tiny.cloud/docs-4x/configure/editor-appearance/#theme_url
         $theme = $this->getTheme();
         if (!Director::is_absolute_url($theme)) {
             $theme = Controller::join_links($tinyMCEBaseURL, "themes/{$theme}/theme.min.js");
