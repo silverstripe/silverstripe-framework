@@ -82,13 +82,13 @@ class ControllerWithSpecialSubmittedValueFields extends Controller implements Te
         return $form;
     }
 
-    public function doSubmit($data, $form, $request)
+    public function doSubmit(array $data, Form $form): HTTPResponse
     {
         $form->sessionMessage('Test save was successful', 'good');
         return $this->redirectBack();
     }
 
-    public function doTriggerException($data, $form, $request)
+    public function doTriggerException(array $data, Form $form): HTTPResponse
     {
         $result = new ValidationResult();
         $result->addFieldError('Email', 'Error on Email field');

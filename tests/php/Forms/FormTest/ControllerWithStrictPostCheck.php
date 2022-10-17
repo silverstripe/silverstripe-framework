@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\FormTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
@@ -48,7 +49,7 @@ class ControllerWithStrictPostCheck extends Controller implements TestOnly
         return $form;
     }
 
-    public function doSubmit($data, $form, $request)
+    public function doSubmit(array $data, Form $form): HTTPResponse
     {
         $form->sessionMessage('Test save was successful', 'good');
         return $this->redirectBack();

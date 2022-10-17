@@ -3,6 +3,8 @@
 
 namespace SilverStripe\Control\Tests\RequestHandlingTest;
 
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\FormRequestHandler;
 
 /**
@@ -29,13 +31,13 @@ class TestFormHandler extends FormRequestHandler
         return $this->form->Fields()->dataFieldByName($request->param('FieldName'));
     }
 
-    public function handleSubmission($request)
+    public function handleSubmission(HTTPRequest $request): HTTPResponse
     {
-        return "Form posted";
+        return HTTPResponse::create()->setBody("Form posted");
     }
 
-    public function handleGet($request)
+    public function handleGet(HTTPRequest $request): HTTPResponse
     {
-        return "Get request on form";
+        return HTTPResponse::create()->setBody("Get request on form");
     }
 }

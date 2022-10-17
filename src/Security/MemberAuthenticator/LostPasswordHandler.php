@@ -153,13 +153,8 @@ class LostPasswordHandler extends RequestHandler
      * the logic, by returning FALSE. In this case, the user will be redirected back
      * to the form without further action. It is recommended to set a message
      * in the form detailing why the action was denied.
-     *
-     * @skipUpgrade
-     * @param array $data Submitted data
-     * @param LostPasswordForm $form
-     * @return HTTPResponse
      */
-    public function forgotPassword($data, $form)
+    public function forgotPassword(array $data, Form $form): HTTPResponse
     {
         // Run a first pass validation check on the data
         $dataValidation = $this->validateForgotPasswordData($data, $form);

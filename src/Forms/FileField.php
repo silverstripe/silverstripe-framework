@@ -23,7 +23,8 @@ use SilverStripe\ORM\DataObjectInterface;
  * <code>
  * class ExampleFormController extends PageController {
  *
- *  function Form() {
+ *  public function Form(): Form
+ *  {
  *      $fields = new FieldList(
  *          new TextField('MyName'),
  *          new FileField('MyFile')
@@ -31,12 +32,13 @@ use SilverStripe\ORM\DataObjectInterface;
  *      $actions = new FieldList(
  *          new FormAction('doUpload', 'Upload file')
  *      );
- *    $validator = new RequiredFields(['MyName', 'MyFile']);
+ *      $validator = new RequiredFields(['MyName', 'MyFile']);
  *
  *      return new Form($this, 'Form', $fields, $actions, $validator);
  *  }
  *
- *  function doUpload($data, $form) {
+ *  public function doUpload((array $data, Form $form): HTTPResponse
+ *  {
  *      $file = $data['MyFile'];
  *      $content = file_get_contents($file['tmp_name']);
  *      // ... process content

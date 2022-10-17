@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -83,9 +84,9 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
         );
     }
 
-    public function doAction($data, $form)
+    public function doAction(array $data, Form $form): HTTPResponse
     {
-        return "Submitted " . $data['Test'] . " to component";
+        return HTTPResponse::create()->setBody("Submitted " . $data['Test'] . " to component");
     }
 
     public function testpage(GridField $gridField, HTTPRequest $request)

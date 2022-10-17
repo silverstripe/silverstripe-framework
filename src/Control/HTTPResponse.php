@@ -310,13 +310,7 @@ class HTTPResponse
         return $this;
     }
 
-    /**
-     * @param string $dest
-     * @param int $code
-     *
-     * @return $this
-     */
-    public function redirect($dest, $code = 302)
+    public function redirect(string $dest, int $code = 302): static
     {
         if (!in_array($code, self::$redirect_codes)) {
             trigger_error("Invalid HTTP redirect code {$code}", E_USER_WARNING);

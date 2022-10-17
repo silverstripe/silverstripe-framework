@@ -17,7 +17,7 @@ use Exception;
 class HTTPResponse_Exception extends Exception
 {
 
-    protected $response;
+    protected HTTPResponse $response;
 
     /**
      * @param HTTPResponse|string $body Either the plaintext content of the error
@@ -52,17 +52,11 @@ class HTTPResponse_Exception extends Exception
         parent::__construct((string) $this->getResponse()->getBody(), $this->getResponse()->getStatusCode());
     }
 
-    /**
-     * @return HTTPResponse
-     */
-    public function getResponse()
+    public function getResponse(): HTTPResponse
     {
         return $this->response;
     }
 
-    /**
-     * @param HTTPResponse $response
-     */
     public function setResponse(HTTPResponse $response)
     {
         $this->response = $response;
