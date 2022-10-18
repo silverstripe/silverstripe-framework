@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\FormTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\EmailField;
@@ -79,13 +80,13 @@ class TestController extends Controller implements TestOnly
         return $form;
     }
 
-    public function doSubmit($data, $form, $request)
+    public function doSubmit(array $data, Form $form): HTTPResponse
     {
         $form->sessionMessage('Test save was successful', 'good');
         return $this->redirectBack();
     }
 
-    public function doTriggerException($data, $form, $request)
+    public function doTriggerException(array $data, Form $form): HTTPResponse
     {
         $result = new ValidationResult();
         $result->addFieldError('Email', 'Error on Email field');
@@ -93,13 +94,13 @@ class TestController extends Controller implements TestOnly
         throw new ValidationException($result);
     }
 
-    public function doSubmitValidationExempt($data, $form, $request)
+    public function doSubmitValidationExempt(array $data, Form $form): HTTPResponse
     {
         $form->sessionMessage('Validation skipped', 'good');
         return $this->redirectBack();
     }
 
-    public function doSubmitActionExempt($data, $form, $request)
+    public function doSubmitActionExempt(array $data, Form $form): HTTPResponse
     {
         $form->sessionMessage('Validation bypassed!', 'good');
         return $this->redirectBack();

@@ -103,7 +103,7 @@ class FormRequestHandler extends RequestHandler
      * if the form is valid.
      *
      * @param HTTPRequest $request
-     * @return HTTPResponse
+     * @return mixed
      * @throws HTTPResponse_Exception
      */
     public function httpSubmission($request)
@@ -200,7 +200,7 @@ class FormRequestHandler extends RequestHandler
             // buttonClicked() validates that the action set above is valid
             && !$this->buttonClicked()
         ) {
-            return $this->httpError(
+            $this->httpError(
                 403,
                 sprintf('Action "%s" not allowed on controller (Class: %s)', $funcName, get_class($controller))
             );
@@ -209,7 +209,7 @@ class FormRequestHandler extends RequestHandler
             $this->hasMethod($funcName)
             && !$this->checkAccessAction($funcName)
         ) {
-            return $this->httpError(
+            $this->httpError(
                 403,
                 sprintf('Action "%s" not allowed on form request handler (Class: "%s")', $funcName, static::class)
             );
@@ -261,7 +261,7 @@ class FormRequestHandler extends RequestHandler
             );
         }
 
-        return $this->httpError(404, "Could not find a suitable form-action callback function");
+        $this->httpError(404, "Could not find a suitable form-action callback function");
     }
 
     /**
@@ -299,11 +299,8 @@ class FormRequestHandler extends RequestHandler
      * handles 'application/json' requests with a JSON object containing the error messages.
      * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError},
      * and can be overruled by setting {@link $validationResponseCallback}.
-     *
-     * @param ValidationResult $result
-     * @return HTTPResponse
      */
-    protected function getValidationErrorResponse(ValidationResult $result)
+    protected function getValidationErrorResponse(ValidationResult $result): HTTPResponse
     {
         // Check for custom handling mechanism
         $callback = $this->form->getValidationResponseCallback();
@@ -329,10 +326,8 @@ class FormRequestHandler extends RequestHandler
 
     /**
      * Redirect back to this form with an added #anchor link
-     *
-     * @return HTTPResponse
      */
-    public function redirectBackToForm()
+    public function redirectBackToForm(): HTTPResponse
     {
         $pageURL = $this->getReturnReferer();
         if (!$pageURL) {
@@ -369,9 +364,8 @@ class FormRequestHandler extends RequestHandler
      *
      * @internal called from {@see Form::getValidationErrorResponse}
      * @param ValidationResult $result
-     * @return HTTPResponse
      */
-    protected function getAjaxErrorResponse(ValidationResult $result)
+    protected function getAjaxErrorResponse(ValidationResult $result): HTTPResponse
     {
         // Ajax form submissions accept json encoded errors by default
         $acceptType = $this->getRequest()->getHeader('Accept');

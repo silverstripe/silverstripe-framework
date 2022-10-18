@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest;
 
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -53,9 +54,9 @@ class TestComponent_ItemRequest extends RequestHandler
         );
     }
 
-    public function doAction($data, $form)
+    public function doAction(array $data, Form $form): HTTPResponse
     {
-        return "Submitted " . $data['Test'] . " to item #" . $this->id;
+        return HTTPResponse::create()->setBody("Submitted " . $data['Test'] . " to item #" . $this->id);
     }
 
     public function testpage()

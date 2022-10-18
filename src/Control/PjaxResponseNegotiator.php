@@ -30,7 +30,7 @@ class PjaxResponseNegotiator
      */
     protected $callbacks = [];
 
-    protected $response = null;
+    protected HTTPResponse $response;
 
     /**
      * Overridden fragments (if any). Otherwise uses fragments from the request.
@@ -41,21 +41,18 @@ class PjaxResponseNegotiator
      * @param array $callbacks
      * @param HTTPResponse $response An existing response to reuse (optional)
      */
-    public function __construct($callbacks = [], $response = null)
+    public function __construct($callbacks = [], HTTPResponse $response = null)
     {
         $this->callbacks = $callbacks;
-        $this->response = $response;
+        $this->response = $response ?: HTTPResponse::create();
     }
 
-    public function getResponse()
+    public function getResponse(): HTTPResponse
     {
-        if (!$this->response) {
-            $this->response = new HTTPResponse();
-        }
         return $this->response;
     }
 
-    public function setResponse($response)
+    public function setResponse(HTTPResponse $response)
     {
         $this->response = $response;
     }
@@ -68,10 +65,9 @@ class PjaxResponseNegotiator
      * @param array $extraCallbacks List of anonymous functions or callables returning either a string
      * or HTTPResponse, keyed by their fragment identifier. The 'default' key can
      * be used as a fallback for non-ajax responses.
-     * @return HTTPResponse
      * @throws HTTPResponse_Exception
      */
-    public function respond(HTTPRequest $request, $extraCallbacks = [])
+    public function respond(HTTPRequest $request, $extraCallbacks = []): HTTPResponse
     {
         // Prepare the default options and combine with the others
         $callbacks = array_merge($this->callbacks, $extraCallbacks);

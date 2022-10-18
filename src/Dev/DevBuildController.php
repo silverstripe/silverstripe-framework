@@ -4,6 +4,8 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DatabaseAdmin;
 
 class DevBuildController extends Controller
@@ -17,7 +19,7 @@ class DevBuildController extends Controller
         'build'
     ];
 
-    public function build($request)
+    public function build(HTTPRequest $request): HTTPResponse
     {
         if (Director::is_cli()) {
             $da = DatabaseAdmin::create();

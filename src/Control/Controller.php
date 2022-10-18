@@ -73,10 +73,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * The response object that the controller returns.
      *
      * Set in {@link handleRequest()}.
-     *
-     * @var HTTPResponse
      */
-    protected $response;
+    protected HTTPResponse $response;
 
     /**
      * Default URL handlers.
@@ -94,6 +92,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         'handleAction',
         'handleIndex',
     ];
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setResponse(HTTPResponse::create());
+    }
 
     /**
      * Initialisation function that is run before any action on the controller is called.
@@ -142,12 +146,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      *
      * Also set the URLParams
      */
-    public function setRequest($request)
+    public function setRequest(HTTPRequest $request): static
     {
-        $return = parent::setRequest($request);
+        parent::setRequest($request);
         $this->setURLParams($this->getRequest()->allParams());
-
-        return $return;
+        return $this;
     }
 
     /**
@@ -192,11 +195,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Important: If you are going to overload handleRequest,
      * make sure that you start the method with $this->beforeHandleRequest()
      * and end the method with $this->afterHandleRequest()
-     *
-     * @param HTTPRequest $request
-     * @return HTTPResponse
      */
-    public function handleRequest(HTTPRequest $request)
+    public function handleRequest(HTTPRequest $request): HTTPResponse
     {
         if (!$request) {
             throw new \RuntimeException('Controller::handleRequest() not passed a request!');
@@ -332,14 +332,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * Returns the HTTPResponse object that this controller is building up. Can be used to set the
      * status code and headers.
-     *
-     * @return HTTPResponse
      */
-    public function getResponse()
+    public function getResponse(): HTTPResponse
     {
-        if (!$this->response) {
-            $this->setResponse(new HTTPResponse());
-        }
         return $this->response;
     }
 
@@ -628,17 +623,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
     /**
      * Redirect to the given URL.
-     *
-     * @param string $url
-     * @param int $code
-     * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, int $code = 302): HTTPResponse
     {
-        if ($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') != $url) {
+        $response = $this->getResponse();
+        if ($response->getHeader('Location') && $response->getHeader('Location') != $url) {
             user_error("Already directed to " . $this->getResponse()->getHeader('Location')
                 . "; now trying to direct to $url", E_USER_WARNING);
-            return null;
+            return $response;
         }
         $response = parent::redirect($url, $code);
         $this->setResponse($response);

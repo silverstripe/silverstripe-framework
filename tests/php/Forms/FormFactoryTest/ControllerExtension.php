@@ -3,9 +3,12 @@
 namespace SilverStripe\Forms\Tests\FormFactoryTest;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extension;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObject;
@@ -75,13 +78,15 @@ class ControllerExtension extends Extension
         }
     }
 
-    public function publish($data, $form)
+    public function publish(array $data, Form $form): HTTPResponse
     {
         // noop
+        return HTTPResponse::create();
     }
 
-    public function preview()
+    public function preview(HTTPRequest $request): HTTPResponse
     {
         // noop
+        return HTTPResponse::create();
     }
 }

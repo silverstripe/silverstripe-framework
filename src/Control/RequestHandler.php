@@ -60,7 +60,7 @@ class RequestHandler extends ViewableData
      * @var HTTPRequest $request The request object that the controller was called with.
      * Set in {@link handleRequest()}. Useful to generate the {}
      */
-    protected $request = null;
+    protected HTTPRequest $request;
 
     /**
      * The DataModel for this request
@@ -543,11 +543,8 @@ class RequestHandler extends ViewableData
     /**
      * Typically the request is set through {@link handleAction()}
      * or {@link handleRequest()}, but in some based we want to set it manually.
-     *
-     * @param HTTPRequest $request
-     * @return $this
      */
-    public function setRequest($request)
+    public function setRequest(HTTPRequest $request): static
     {
         $this->request = $request;
         return $this;
@@ -581,12 +578,8 @@ class RequestHandler extends ViewableData
 
     /**
      * Redirect to the given URL.
-     *
-     * @param string $url
-     * @param int $code
-     * @return HTTPResponse
      */
-    public function redirect($url, $code = 302)
+    public function redirect(string $url, int $code = 302): HTTPResponse
     {
         $url = Director::absoluteURL($url);
         $response = new HTTPResponse();
@@ -655,10 +648,8 @@ class RequestHandler extends ViewableData
      * URL (see {@link Director::baseURL()}).
      *
      * @uses redirect()
-     *
-     * @return HTTPResponse
      */
-    public function redirectBack()
+    public function redirectBack(): HTTPResponse
     {
         // Prefer to redirect to ?BackURL, but fall back to Referer header
         // As a last resort redirect to base url

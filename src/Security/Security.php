@@ -314,9 +314,8 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
      * to log in.
-     * @return HTTPResponse
      */
-    public static function permissionFailure($controller = null, $messageSet = null)
+    public static function permissionFailure($controller = null, $messageSet = null): HTTPResponse
     {
         self::set_ignore_disallowed_actions(true);
 
