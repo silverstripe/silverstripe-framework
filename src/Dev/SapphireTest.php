@@ -15,7 +15,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
@@ -39,6 +38,10 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport\NullTransport;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Test case class for the Silverstripe framework.
@@ -317,19 +320,16 @@ abstract class SapphireTest extends TestCase implements TestOnly
             SSViewer::config()->update('source_file_comments', false);
         }
 
-        // Set up the test mailer
-        if (class_exists(TestMailer::class)) {
-            Injector::inst()->registerService(new TestMailer(), Mailer::class);
-        }
-
-        if (class_exists(Email::class)) {
-            Email::config()->remove('send_all_emails_to');
-            Email::config()->remove('send_all_emails_from');
-            Email::config()->remove('cc_all_emails_to');
-            Email::config()->remove('bcc_all_emails_to');
-        }
+        // Set up the test mailer and register it as a service
+        $dispatcher = Injector::inst()->get(EventDispatcherInterface::class . '.mailer');
+        $transport = new NullTransport($dispatcher);
+        $testMailer = new TestMailer($transport, $dispatcher);
+        Injector::inst()->registerService($testMailer, MailerInterface::class);
+        Email::config()->remove('send_all_emails_to');
+        Email::config()->remove('send_all_emails_from');
+        Email::config()->remove('cc_all_emails_to');
+        Email::config()->remove('bcc_all_emails_to');
     }
-
 
     /**
      * Helper method to determine if the current test should enable a test database
@@ -611,8 +611,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     public function clearEmails()
     {
-        /** @var Mailer $mailer */
-        $mailer = Injector::inst()->get(Mailer::class);
+        /** @var MailerInterface $mailer */
+        $mailer = Injector::inst()->get(MailerInterface::class);
         if ($mailer instanceof TestMailer) {
             $mailer->clearEmails();
             return true;
@@ -632,8 +632,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     public static function findEmail($to, $from = null, $subject = null, $content = null)
     {
-        /** @var Mailer $mailer */
-        $mailer = Injector::inst()->get(Mailer::class);
+        /** @var MailerInterface $mailer */
+        $mailer = Injector::inst()->get(MailerInterface::class);
         if ($mailer instanceof TestMailer) {
             return $mailer->findEmail($to, $from, $subject, $content);
         }

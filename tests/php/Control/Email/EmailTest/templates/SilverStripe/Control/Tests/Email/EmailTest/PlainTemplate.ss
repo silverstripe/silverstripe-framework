@@ -1,0 +1,3 @@
+# My Plain Template
+
+$EmailContent

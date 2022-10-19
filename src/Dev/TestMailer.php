@@ -2,98 +2,72 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\Email\Mailer;
-use Swift_Attachment;
+use Exception;
+use InvalidArgumentException;
+use SilverStripe\Control\Email\Email;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Mailer\Envelope;
+use Symfony\Component\Mailer\Event\MessageEvent;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Messenger\SendEmailMessage;
+use Symfony\Component\Mime\RawMessage;
+use Symfony\Component\Mailer\Transport\TransportInterface;
+use Symfony\Component\Messenger\Event\SendMessageToTransportsEvent;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Envelope as MessagerEnvelope;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Part\DataPart;
 
-class TestMailer implements Mailer
+class TestMailer implements MailerInterface
 {
-    /**
-     * @var array
-     */
-    protected $emailsSent = [];
+    private array $emailsSent = [];
 
-    public function send($email)
+    private TransportInterface $transport;
+    private EventDispatcherInterface $dispatcher;
+
+    public function __construct(
+        TransportInterface $transport,
+        EventDispatcherInterface $dispatcher
+    ) {
+        $this->transport = $transport;
+        $this->dispatcher = $dispatcher;
+    }
+
+    public function send(RawMessage $message, Envelope $envelope = null): void
     {
-        // Detect body type
-        $htmlContent = null;
-        $plainContent = null;
-        if ($email->getSwiftMessage()->getContentType() === 'text/plain') {
-            $type = 'plain';
-            $plainContent = $email->getBody();
-        } else {
-            $type = 'html';
-            $htmlContent = $email->getBody();
-            $plainPart = $email->findPlainPart();
-            if ($plainPart) {
-                $plainContent = $plainPart->getBody();
-            }
+        if (!is_a($message, Email::class)) {
+            throw new InvalidArgumentException('$message must be a ' . Email::class);
         }
-
-        // Get attachments
-        $attachedFiles = [];
-        foreach ($email->getSwiftMessage()->getChildren() as $child) {
-            if ($child instanceof Swift_Attachment) {
-                $attachedFiles[] = [
-                    'contents' => $child->getBody(),
-                    'filename' => $child->getFilename(),
-                    'mimetype' => $child->getContentType(),
-                ];
-            }
-        }
-
-        // Serialise email
-        $serialised = [
-            'Type' => $type,
-            'To' => implode(';', array_keys($email->getTo() ?: [])),
-            'From' => implode(';', array_keys($email->getFrom() ?: [])),
+        /** @var Email $email */
+        $email = $message;
+        $this->dispatchEvent($email, $envelope);
+        $this->emailsSent[] = [
+            'Type' => $email->getHtmlBody() ? 'html' : 'plain',
+            'To' => $this->convertAddressesToString($email->getTo()),
+            'From' => $this->convertAddressesToString($email->getFrom()),
             'Subject' => $email->getSubject(),
-            'Content' => $email->getBody(),
-            'AttachedFiles' => $attachedFiles,
-            'Headers' => $email->getSwiftMessage()->getHeaders(),
+            'Content' => $email->getHtmlBody() ?: $email->getTextBody(),
+            'Headers' => $email->getHeaders(),
+            'PlainContent' => $email->getTextBody(),
+            'HtmlContent' => $email->getHtmlBody(),
+            'AttachedFiles' => array_map(fn(DataPart $attachment) => [
+                'contents' => $attachment->getBody(),
+                'filename' => $attachment->getFilename(),
+                'mimetype' => $attachment->getContentType()
+            ], $email->getAttachments()),
         ];
-        if ($plainContent) {
-            $serialised['PlainContent'] = $plainContent;
-        }
-        if ($htmlContent) {
-            $serialised['HtmlContent'] = $htmlContent;
-        }
-
-        $this->saveEmail($serialised);
-
-        return true;
-    }
-
-    /**
-     * Save a single email to the log
-     *
-     * @param array $data A map of information about the email
-     */
-    protected function saveEmail($data)
-    {
-        $this->emailsSent[] = $data;
-    }
-
-    /**
-     * Clear the log of emails sent
-     */
-    public function clearEmails()
-    {
-        $this->emailsSent = [];
     }
 
     /**
      * Search for an email that was sent.
      * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
-     *
-     * @param string $to
-     * @param string $from
-     * @param string $subject
-     * @param string $content
-     * @return array|null Contains keys: 'Type', 'To', 'From', 'Subject', 'Content', 'PlainContent', 'AttachedFiles',
-     *               'HtmlContent'
      */
-    public function findEmail($to, $from = null, $subject = null, $content = null)
-    {
+    public function findEmail(
+        string $to,
+        ?string $from = null,
+        ?string $subject = null,
+        ?string $content = null
+    ): ?array {
         $compare = [
             'To' => $to,
             'From' => $from,
@@ -131,9 +105,28 @@ class TestMailer implements Mailer
     }
 
     /**
-     * @param string $value
+     * Clear the log of emails sent
      */
-    private function normaliseSpaces(string $value)
+    public function clearEmails(): void
+    {
+        $this->emailsSent = [];
+    }
+
+    private function convertAddressesToString(array $addresses): string
+    {
+        return implode(',', array_map(fn(Address $address) => $address->getAddress(), $addresses));
+    }
+
+    private function dispatchEvent(Email $email, Envelope $envelope = null): void
+    {
+        $sender = $email->getSender()[0] ?? $email->getFrom()[0] ?? new Address('test.sender@example.com');
+        $recipients = empty($email->getTo()) ? [new Address('test.recipient@example.com')] : $email->getTo();
+        $envelope ??= new Envelope($sender, $recipients);
+        $event = new MessageEvent($email, $envelope, $this->transport);
+        $this->dispatcher->dispatch($event);
+    }
+
+    private function normaliseSpaces(string $value): string
     {
         return str_replace([', ', '; '], [',', ';'], $value ?? '');
     }
