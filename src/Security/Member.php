@@ -9,7 +9,6 @@ use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -36,6 +35,7 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use Symfony\Component\Mailer\MailerInterface;
 
 /**
  * The member class which represents the users of the system
@@ -907,7 +907,7 @@ class Member extends DataObject
         // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
         // @todo some developers use external tools, so emailing might be a good idea anyway
-        if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
+        if ((Director::isLive() || Injector::inst()->get(MailerInterface::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
             && $this->Email

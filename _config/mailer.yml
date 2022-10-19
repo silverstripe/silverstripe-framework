@@ -1,0 +1,28 @@
+---
+Name: mailer
+---
+SilverStripe\Core\Injector\Injector:
+  Symfony\Component\Mailer\MailerInterface:
+    class: Symfony\Component\Mailer\Mailer
+    constructor:
+      transport: '%$Symfony\Component\Mailer\Transport\TransportInterface'
+  Symfony\Component\EventDispatcher\EventDispatcherInterface.mailer:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+    calls:
+      - [addSubscriber, ['%$SilverStripe\Control\Email\MailerSubscriber']]
+  Symfony\Component\Mailer\Transport\TransportInterface:
+    factory: Symfony\Component\Mailer\Transport
+    factory_method: fromDsn
+    constructor:
+      dsn: 'sendmail://default'
+      dispatcher: '%$Symfony\Component\EventDispatcher\EventDispatcherInterface.mailer'
+---
+Name: mailer-dsn-env
+After: '*'
+Only:
+  envvarset: MAILER_DSN
+---
+SilverStripe\Core\Injector\Injector:
+  Symfony\Component\Mailer\Transport\TransportInterface:
+    constructor:
+      dsn: '`MAILER_DSN`'

@@ -37,10 +37,11 @@
         "silverstripe/assets": "^2",
         "silverstripe/vendor-plugin": "^2",
         "sminnee/callbacklist": "^0.1.1",
-        "swiftmailer/swiftmailer": "^6.3.0",
         "symfony/cache": "^6.1",
         "symfony/config": "^6.1",
         "symfony/filesystem": "^6.1",
+        "symfony/mailer": "^6.1",
+        "symfony/mime": "^6.1",
         "symfony/translation": "^6.1",
         "symfony/yaml": "^6.1",
         "ext-ctype": "*",
@@ -96,9 +97,6 @@
         },
         "files": [
             "src/includes/constants.php"
-        ],
-        "classmap": [
-            "thirdparty/swiftmailer"
         ]
     },
     "include-path": [

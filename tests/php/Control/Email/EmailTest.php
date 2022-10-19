@@ -2,73 +2,74 @@
 
 namespace SilverStripe\Control\Tests\Email;
 
-use DateTime;
-use PHPUnit\Framework\MockObject\MockObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
-use SilverStripe\Control\Email\SwiftMailer;
 use SilverStripe\Control\Tests\Email\EmailTest\EmailSubClass;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestMailer;
-use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
-use Swift_Attachment;
-use Swift_Mailer;
-use Swift_Message;
-use Swift_NullTransport;
-use Swift_RfcComplianceException;
+use SilverStripe\View\ViewableData;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Part\DataPart;
+use Symfony\Component\Mime\Part\AbstractPart;
 
 class EmailTest extends SapphireTest
 {
+    private array $origThemes = [];
+
     protected function setUp(): void
     {
         parent::setUp();
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/');
+        $this->origThemes = SSViewer::get_themes();
+        SSViewer::set_themes([
+            'silverstripe/framework:/tests/php/Control/Email/EmailTest',
+            '$default',
+        ]);
     }
 
-    public function testAddAttachment()
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        SSViewer::set_themes($this->origThemes);
+    }
+
+    public function testAddAttachment(): void
     {
         $email = new Email();
-
         $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
-
-        $children = $email->getSwiftMessage()->getChildren();
-        $this->assertCount(1, $children);
-
-        /** @var Swift_Attachment $child */
-        $child = reset($children);
-
-        $this->assertInstanceOf(Swift_Attachment::class, $child);
-        $this->assertEquals('text/plain', $child->getContentType());
-        $this->assertEquals('attachment.txt', $child->getFilename());
+        $attachments = $email->getAttachments();
+        $this->assertCount(1, $attachments);
+        $attachment = $this->getFirstAttachment($attachments);
+        $this->assertSame('text/plain', $attachment->getContentType());
+        $this->assertSame('attachment.txt', $attachment->getFilename());
     }
 
-    public function testAddAttachmentFromData()
+    public function testAddAttachmentFromData(): void
     {
         $email = new Email();
-
         $email->addAttachmentFromData('foo bar', 'foo.txt', 'text/plain');
-        $children = $email->getSwiftMessage()->getChildren();
+        $attachments = $email->getAttachments();
+        $this->assertCount(1, $attachments);
+        $attachment = $this->getFirstAttachment($attachments);
+        $this->assertSame('text/plain', $attachment->getContentType());
+        $this->assertSame('foo.txt', $attachment->getFilename());
+        $this->assertSame('foo bar', $attachment->getBody());
+    }
 
-        $this->assertCount(1, $children);
-
-        /** @var Swift_Attachment $child */
-        $child = reset($children);
-
-        $this->assertInstanceOf(Swift_Attachment::class, $child);
-        $this->assertEquals('foo bar', $child->getBody());
-        $this->assertEquals('text/plain', $child->getContentType());
-        $this->assertEquals('foo.txt', $child->getFilename());
+    private function getFirstAttachment(array $attachments): DataPart
+    {
+        return $attachments[0];
     }
 
     /**
      * @dataProvider provideValidEmailAddresses
      */
-    public function testValidEmailAddress($email)
+    public function testValidEmailAddress($email): void
     {
         $this->assertTrue(Email::is_valid_address($email));
     }
@@ -76,26 +77,26 @@ class EmailTest extends SapphireTest
     /**
      * @dataProvider provideInvalidEmailAddresses
      */
-    public function testInvalidEmailAddress($email)
+    public function testInvalidEmailAddress($email): void
     {
         $this->assertFalse(Email::is_valid_address($email));
     }
 
-    public function provideValidEmailAddresses()
+    public function provideValidEmailAddresses(): array
     {
         return [
             ['test@example.com', 'test-123@sub.example.com'],
         ];
     }
 
-    public function provideInvalidEmailAddresses()
+    public function provideInvalidEmailAddresses(): array
     {
         return [
             ['foo.bar@', '@example.com', 'foo@'],
         ];
     }
 
-    public function testObfuscate()
+    public function testObfuscate(): void
     {
         $emailAddress = 'test-1@example.com';
 
@@ -111,392 +112,272 @@ class EmailTest extends SapphireTest
         );
     }
 
-    public function testSendPlain()
+    private function getTemplateClass(string $templateName): string
     {
-        $email = $this->makeEmailMock('Test send plain');
-
-        // email should not call render if a body is supplied
-        $email->expects($this->never())->method('renderWith');
-        $successful = $email->sendPlain();
-
-        $this->assertTrue($successful);
-        $this->assertEmpty($email->getFailedRecipients());
-
-        /** @var TestMailer $mailer */
-        $mailer = Injector::inst()->get(Mailer::class);
-        $sentMail = $mailer->findEmail('to@example.com');
-
-        $this->assertTrue(is_array($sentMail));
-
-        $this->assertEquals('to@example.com', $sentMail['To']);
-        $this->assertEquals('from@example.com', $sentMail['From']);
-        $this->assertEquals('Test send plain', $sentMail['Subject']);
-        $this->assertEquals('Body for Test send plain', $sentMail['Content']);
-
-        $this->assertCount(1, $sentMail['AttachedFiles']);
-        $child = reset($sentMail['AttachedFiles']);
-        $this->assertEquals('text/plain', $child['mimetype']);
-        $this->assertEquals('attachment.txt', $child['filename']);
-        $this->assertEquals('Hello, I\'m a text document.', $child['contents']);
+        return implode('\\', ['SilverStripe', 'Control', 'Tests', 'Email', 'EmailTest', $templateName]);
     }
 
-    public function testSend()
+    private function getMailer(): TestMailer
     {
-        /** @var Email|MockObject $email */
-        $email = $this->makeEmailMock('Test send HTML');
-
-        // email should not call render if a body is supplied
-        $email->expects($this->never())->method('renderWith');
-        $successful = $email->send();
-
-        $this->assertTrue($successful);
-        $this->assertEmpty($email->getFailedRecipients());
-
-        /** @var TestMailer $mailer */
-        $mailer = Injector::inst()->get(Mailer::class);
-        $sentMail = $mailer->findEmail('to@example.com');
-
-        $this->assertTrue(is_array($sentMail));
-
-        $this->assertEquals('to@example.com', $sentMail['To']);
-        $this->assertEquals('from@example.com', $sentMail['From']);
-        $this->assertEquals('Test send HTML', $sentMail['Subject']);
-        $this->assertEquals('Body for Test send HTML', $sentMail['Content']);
-
-        $this->assertCount(1, $sentMail['AttachedFiles']);
-        $child = reset($sentMail['AttachedFiles']);
-        $this->assertEquals('text/plain', $child['mimetype']);
-        $this->assertEquals('attachment.txt', $child['filename']);
-        $this->assertEquals('Hello, I\'m a text document.', $child['contents']);
+        return Injector::inst()->get(MailerInterface::class);
     }
 
-    public function testRenderedSend()
+    private function createTestEmail(string $subject = 'My subject', $setPlain = true): Email
     {
-        /** @var Email|MockObject $email */
-        $email = $this->getMockBuilder(Email::class)
-            ->enableProxyingToOriginalMethods()
-            ->getMock();
-        $email->setFrom('from@example.com');
-        $email->setTo('to@example.com');
-        $email->setData([
-            'EmailContent' => 'test',
-        ]);
-        $this->assertFalse($email->hasPlainPart());
-        $this->assertEmpty($email->getBody());
-        // these seem to fail for some reason :/
-        //$email->expects($this->once())->method('render');
-        //$email->expects($this->once())->method('generatePlainPartFromBody');
-        $email->send();
-        $this->assertTrue($email->hasPlainPart());
-        $this->assertNotEmpty($email->getBody());
-    }
-
-    public function testRenderedSendSubclass()
-    {
-        // Include dev theme
-        SSViewer::set_themes([
-            'silverstripe/framework:/tests/php/Control/Email/EmailTest',
-            '$default',
-        ]);
-
-        /** @var Email|MockObject $email */
-        $email = $this->getMockBuilder(EmailSubClass::class)
-            ->enableProxyingToOriginalMethods()
-            ->getMock();
-        $email->setFrom('from@example.com');
-        $email->setTo('to@example.com');
-        $email->setData([
-            'EmailContent' => 'test',
-        ]);
-        $this->assertFalse($email->hasPlainPart());
-        $this->assertEmpty($email->getBody());
-        $email->send();
-        $this->assertTrue($email->hasPlainPart());
-        $this->assertNotEmpty($email->getBody());
-        $this->assertStringContainsString('<h1>Email Sub-class</h1>', $email->getBody());
-    }
-
-    public function testConsturctor()
-    {
-        $email = new Email(
-            'from@example.com',
-            'to@example.com',
-            'subject',
-            'body',
-            'cc@example.com',
-            'bcc@example.com',
-            'bounce@example.com'
-        );
-
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
-        $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
-        $this->assertEquals('subject', $email->getSubject());
-        $this->assertEquals('body', $email->getBody());
-        $this->assertCount(1, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
-        $this->assertCount(1, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
-        $this->assertEquals('bounce@example.com', $email->getReturnPath());
-    }
-
-    public function testGetSwiftMessage()
-    {
-        $email = new Email(
-            'from@example.com',
-            'to@example.com',
-            'subject',
-            'body',
-            'cc@example.com',
-            'bcc@example.com',
-            'bounce@example.com'
-        );
-        $swiftMessage = $email->getSwiftMessage();
-
-        $this->assertInstanceOf(Swift_Message::class, $swiftMessage);
-
-        $this->assertCount(1, $swiftMessage->getFrom());
-        $this->assertContains('from@example.com', array_keys($swiftMessage->getFrom() ?? []));
-        $this->assertCount(1, $swiftMessage->getTo());
-        $this->assertContains('to@example.com', array_keys($swiftMessage->getTo() ?? []));
-        $this->assertEquals('subject', $swiftMessage->getSubject());
-        $this->assertEquals('body', $swiftMessage->getBody());
-        $this->assertCount(1, $swiftMessage->getCC());
-        $this->assertContains('cc@example.com', array_keys($swiftMessage->getCc() ?? []));
-        $this->assertCount(1, $swiftMessage->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($swiftMessage->getBcc() ?? []));
-        $this->assertEquals('bounce@example.com', $swiftMessage->getReturnPath());
-    }
-
-    public function testSetSwiftMessage()
-    {
-        Email::config()->update('admin_email', 'admin@example.com');
-        DBDatetime::set_mock_now('2017-01-01 07:00:00');
         $email = new Email();
-        $swiftMessage = new Swift_Message();
-        $email->setSwiftMessage($swiftMessage);
-        $dateTime = new DateTime();
-        $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
-        $email->getSwiftMessage()->setDate($dateTime);
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('admin@example.com', array_keys($swiftMessage->getFrom() ?? []));
-        $this->assertEquals(strtotime('2017-01-01 07:00:00'), $swiftMessage->getDate()->getTimestamp());
-        $this->assertEquals($swiftMessage, $email->getSwiftMessage());
+        $email->setFrom('from@example.com');
+        $email->setTo('to@example.com');
+        $email->setSubject($subject);
+        if ($setPlain) {
+            $email->text("Plain body for $subject");
+        }
+        $email->html("<p>HTML body for $subject</p>");
+        $email->setCC('cc@example.com');
+        $email->setBCC('bcc@example.com');
+        $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
+        return $email;
+    }
 
-        // check from field is retained
-        $swiftMessage = new Swift_Message();
-        $swiftMessage->setFrom('from@example.com');
-        $email->setSwiftMessage($swiftMessage);
+    public function testSendPlain(): void
+    {
+        $email = $this->createTestEmail('Test send plain');
+        $email->sendPlain();
+        $this->assertStringNotContainsString($email->getTextBody(), 'My Plain Template');
+        $sentMail = $this->getMailer()->findEmail('to@example.com');
+
+        $this->assertSame('to@example.com', $sentMail['To']);
+        $this->assertSame('from@example.com', $sentMail['From']);
+        $this->assertSame('Test send plain', $sentMail['Subject']);
+        $this->assertStringContainsString('Plain body for Test send plain', $sentMail['Content']);
+
+        $this->assertCount(1, $sentMail['AttachedFiles']);
+        $child = reset($sentMail['AttachedFiles']);
+        $this->assertSame('text/plain', $child['mimetype']);
+        $this->assertSame('attachment.txt', $child['filename']);
+        $this->assertSame('Hello, I\'m a text document.', $child['contents']);
+
+        // assert MIME types
+        // explicitly setting $email->html(null) because sendPlain() will itself set $this->html(null), and then
+        // revert it to its previous AFTER sending the email. For testing purposes, we need to manuall set it
+        // to null in order to test the MIME types for what would have been sent in practice
+        $email->html(null);
+        $this->assertSame([
+            'text/plain charset: utf-8',
+            'text/plain disposition: attachment filename: attachment.txt'
+        ], array_map(fn(AbstractPart $part) => $part->asDebugString(), $email->getBody()->getParts()));
+    }
+
+    public function testSendPlainFallback(): void
+    {
+        $email = $this->createTestEmail('Test send plain', false);
+        $email->sendPlain();
+        $sentMail = $this->getMailer()->findEmail('to@example.com');
+        // assert that it has HTML body with HTML tags removed
+        $this->assertSame('HTML body for Test send plain', $sentMail['Content']);
+    }
+
+    public function testSendPlainThenNormalWithSetData(): void
+    {
+        $email = $this->createTestEmail('Test send plain', false);
+        $email->setData([
+            'EmailContent' => 'This is the content of the email',
+        ]);
+        $email->sendPlain();
+        $email->send();
+        $sentMail = $this->getMailer()->findEmail('to@example.com');
+        $this->assertSame('This is the content of the email', $sentMail['Content']);
+        $email->to('to2@example.com');
+        $email->send();
+        $sentMail = $this->getMailer()->findEmail('to2@example.com');
+        $this->assertStringContainsString('This is the content of the email', $sentMail['Content']);
+    }
+
+    public function testSend(): void
+    {
+        $email = $this->createTestEmail('Test send HTML');
+
+        // email should not call render if a body is supplied
+        $email->setHTMLTemplate($this->getTemplateClass('HtmlTemplate'));
+        $email->send();
+        $this->assertStringNotContainsString($email->getHtmlBody(), 'My HTML Template');
+
+        $sentMail = $this->getMailer()->findEmail('to@example.com');
+
+        $this->assertSame('to@example.com', $sentMail['To']);
+        $this->assertSame('from@example.com', $sentMail['From']);
+        $this->assertSame('Test send HTML', $sentMail['Subject']);
+        $this->assertStringContainsString('<p>HTML body for Test send HTML</p>', $sentMail['Content']);
+
+        $this->assertCount(1, $sentMail['AttachedFiles']);
+        $child = reset($sentMail['AttachedFiles']);
+        $this->assertSame('text/plain', $child['mimetype']);
+        $this->assertSame('attachment.txt', $child['filename']);
+        $this->assertSame('Hello, I\'m a text document.', $child['contents']);
+
+        // assert MIME types
+        $this->assertSame([
+            implode("\n  └ ", [
+                'multipart/alternative',
+                'text/plain charset: utf-8',
+                'text/html charset: utf-8'
+            ]),
+            'text/plain disposition: attachment filename: attachment.txt'
+        ], array_map(fn(AbstractPart $part) => $part->asDebugString(), $email->getBody()->getParts()));
+    }
+
+    public function testRenderedSend(): void
+    {
+        $email = new Email(to: 'to@example.com');
+        $email->setHTMLTemplate($this->getTemplateClass('HtmlTemplate'));
+        $email->setData([
+            'EmailContent' => '<p>test</p>',
+        ]);
+        $email->send();
+        $sentMail = $this->getMailer()->findEmail('to@example.com');
+        $this->assertStringContainsString('My HTML Template', $sentMail['Content']);
+    }
+
+    public function testRenderedSendSubclass(): void
+    {
+        $email = new EmailSubClass(to: 'to@example.com');
+        $email->setData([
+            'EmailContent' => 'test',
+        ]);
+        $email->send();
+        $sentMail = $this->getMailer()->findEmail('to@example.com');
+        $this->assertStringContainsString('<h1>Email Sub-class</h1>', $sentMail['Content']);
+    }
+
+    public function testConstructor(): void
+    {
+        $email = new Email(
+            'from@example.com',
+            'to@example.com',
+            'subject',
+            '<p>body</p>',
+            'cc@example.com',
+            'bcc@example.com',
+            'bounce@example.com'
+        );
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
+        $this->assertSame('from@example.com', $email->getFrom()[0]->getAddress());
+        $this->assertCount(1, $email->getTo());
+        $this->assertSame('to@example.com', $email->getTo()[0]->getAddress());
+        $this->assertEquals('subject', $email->getSubject());
+        $this->assertEquals('<p>body</p>', $email->getHtmlBody());
+        $this->assertCount(1, $email->getCC());
+        $this->assertEquals('cc@example.com', $email->getCC()[0]->getAddress());
+        $this->assertCount(1, $email->getBCC());
+        $this->assertEquals('bcc@example.com', $email->getBcc()[0]->getAddress());
+        $this->assertEquals('bounce@example.com', $email->getReturnPath()->getAddress());
+    }
+
+    public function testSetBody(): void
+    {
+        $email = new Email();
+        $email->setBody('<p>body</p>');
+        $this->assertSame('<p>body</p>', $email->getHtmlBody());
+    }
+
+    public function testSetFrom(): void
+    {
+        $email = new Email();
+        $email->setFrom('from@example.com');
+        $this->assertCount(1, $email->getFrom());
+        $this->assertSame('from@example.com', $email->getFrom()[0]->getAddress());
+    }
+
+    public function testSender(): void
+    {
+        $email = new Email();
+        $email->setSender('sender@example.com');
+        $this->assertSame('sender@example.com', $email->getSender()->getAddress());
+    }
+
+    public function testSetTo(): void
+    {
+        $email = new Email();
+        $email->setTo('to@example.com');
+        $this->assertCount(1, $email->getTo());
+        $this->assertSame('to@example.com', $email->getTo()[0]->getAddress());
+    }
+
+    public function testSetReplyTo(): void
+    {
+        $email = new Email();
+        $email->setReplyTo('reply-to@example.com');
+        $this->assertCount(1, $email->getReplyTo());
+        $this->assertSame('reply-to@example.com', $email->getReplyTo()[0]->getAddress());
+    }
+
+    public function testSetSubject(): void
+    {
+        $email = new Email();
+        $email->setSubject('my subject');
+        $this->assertSame('my subject', $email->getSubject());
+    }
+
+    public function testSetReturnPath(): void
+    {
+        $email = new Email();
+        $email->setReturnPath('return-path@example.com');
+        $this->assertSame('return-path@example.com', $email->getReturnPath()->getAddress());
+    }
+
+    public function testSetPriority(): void
+    {
+        $email = new Email();
+        // Intentionally set above 5 to test that Symfony\Component\Mime\Email->priority() is being called
+        $email->setPriority(7);
+        $this->assertSame(5, $email->getPriority());
     }
 
     public function testAdminEmailApplied()
     {
         Email::config()->update('admin_email', 'admin@example.com');
         $email = new Email();
-
         $this->assertCount(1, $email->getFrom());
-        $this->assertContains('admin@example.com', array_keys($email->getFrom() ?? []));
+        $this->assertSame('admin@example.com', $email->getFrom()[0]->getAddress());
     }
 
-    public function testGetFrom()
-    {
-        $email = new Email('from@example.com');
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
-    }
-
-    public function testSetFrom()
-    {
-        $email = new Email('from@example.com');
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
-        $email->setFrom('new-from@example.com');
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('new-from@example.com', array_keys($email->getFrom() ?? []));
-    }
-
-    public function testAddFrom()
-    {
-        $email = new Email('from@example.com');
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
-        $email->addFrom('new-from@example.com');
-        $this->assertCount(2, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom() ?? []));
-        $this->assertContains('new-from@example.com', array_keys($email->getFrom() ?? []));
-    }
-
-    public function testSetGetSender()
+    public function testDataWithArray(): void
     {
         $email = new Email();
-        $this->assertEmpty($email->getSender());
-        $email->setSender('sender@example.com', 'Silver Stripe');
-        $this->assertEquals(['sender@example.com' => 'Silver Stripe'], $email->getSender());
-    }
-
-    public function testSetGetReturnPath()
-    {
-        $email = new Email();
-        $this->assertEmpty($email->getReturnPath());
-        $email->setReturnPath('return@example.com');
-        $this->assertEquals('return@example.com', $email->getReturnPath());
-    }
-
-    public function testSetGetTo()
-    {
-        $email = new Email('from@example.com', 'to@example.com');
-        $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
-        $email->setTo('new-to@example.com', 'Silver Stripe');
-        $this->assertEquals(['new-to@example.com' => 'Silver Stripe'], $email->getTo());
-    }
-
-    public function testAddTo()
-    {
-        $email = new Email('from@example.com', 'to@example.com');
-        $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
-        $email->addTo('new-to@example.com');
-        $this->assertCount(2, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo() ?? []));
-        $this->assertContains('new-to@example.com', array_keys($email->getTo() ?? []));
-    }
-
-    public function testSetGetCC()
-    {
-        $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com');
-        $this->assertCount(1, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
-        $email->setCC('new-cc@example.com', 'Silver Stripe');
-        $this->assertEquals(['new-cc@example.com' => 'Silver Stripe'], $email->getCC());
-    }
-
-    public function testAddCC()
-    {
-        $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com');
-        $this->assertCount(1, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
-        $email->addCC('new-cc@example.com', 'Silver Stripe');
-        $this->assertCount(2, $email->getCC());
-        $this->assertContains('cc@example.com', array_keys($email->getCC() ?? []));
-        $this->assertContains('new-cc@example.com', array_keys($email->getCC() ?? []));
-    }
-
-    public function testSetGetBCC()
-    {
-        $email = new Email(
-            'from@example.com',
-            'to@example.com',
-            'subject',
-            'body',
-            'cc@example.com',
-            'bcc@example.com'
-        );
-        $this->assertCount(1, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
-        $email->setBCC('new-bcc@example.com', 'Silver Stripe');
-        $this->assertEquals(['new-bcc@example.com' => 'Silver Stripe'], $email->getBCC());
-    }
-
-    public function testAddBCC()
-    {
-        $email = new Email(
-            'from@example.com',
-            'to@example.com',
-            'subject',
-            'body',
-            'cc@example.com',
-            'bcc@example.com'
-        );
-        $this->assertCount(1, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
-        $email->addBCC('new-bcc@example.com', 'Silver Stripe');
-        $this->assertCount(2, $email->getBCC());
-        $this->assertContains('bcc@example.com', array_keys($email->getBCC() ?? []));
-        $this->assertContains('new-bcc@example.com', array_keys($email->getBCC() ?? []));
-    }
-
-    public function testReplyTo()
-    {
-        $email = new Email();
-        $this->assertEmpty($email->getReplyTo());
-        $email->setReplyTo('reply-to@example.com', 'Silver Stripe');
-        $this->assertEquals(['reply-to@example.com' => 'Silver Stripe'], $email->getReplyTo());
-        $email->addReplyTo('new-reply-to@example.com');
-        $this->assertCount(2, $email->getReplyTo());
-        $this->assertContains('reply-to@example.com', array_keys($email->getReplyTo() ?? []));
-        $this->assertContains('new-reply-to@example.com', array_keys($email->getReplyTo() ?? []));
-    }
-
-    public function testSubject()
-    {
-        $email = new Email('from@example.com', 'to@example.com', 'subject');
-        $this->assertEquals('subject', $email->getSubject());
-        $email->setSubject('new subject');
-        $this->assertEquals('new subject', $email->getSubject());
-    }
-
-    public function testPriority()
-    {
-        $email = new Email();
-        $this->assertEquals(3, $email->getPriority());
-        $email->setPriority(5);
-        $this->assertEquals(5, $email->getPriority());
-    }
-
-    public function testData()
-    {
-        $email = new Email();
-        $this->assertEmpty($email->getData());
-        $email->setData([
-            'Title' => 'My Title',
-        ]);
-        $this->assertCount(1, $email->getData());
-        $this->assertEquals(['Title' => 'My Title'], $email->getData());
-
+        $this->assertSame(true, $email->getData()->IsEmail);
+        $this->assertSame(Director::absoluteBaseURL(), $email->getData()->BaseURL);
+        $email->setData(['Lorem' => 'Ipsum']);
+        $this->assertSame(true, $email->getData()->IsEmail);
+        $this->assertSame(Director::absoluteBaseURL(), $email->getData()->BaseURL);
+        $this->assertSame('Ipsum', $email->getData()->Lorem);
         $email->addData('Content', 'My content');
-        $this->assertCount(2, $email->getData());
-        $this->assertEquals([
-            'Title' => 'My Title',
-            'Content' => 'My content',
-        ], $email->getData());
-        $email->removeData('Title');
-        $this->assertEquals(['Content' => 'My content'], $email->getData());
+        $this->assertSame(true, $email->getData()->IsEmail);
+        $this->assertSame(Director::absoluteBaseURL(), $email->getData()->BaseURL);
+        $this->assertSame('Ipsum', $email->getData()->Lorem);
+        $this->assertSame('My content', $email->getData()->Content);
     }
 
-    public function testDataWithViewableData()
+    public function testDataWithViewableData(): void
     {
+        $email = new Email();
+        $viewableData = new ViewableData();
+        $viewableData->ABC = 'XYZ';
+        $email->setData($viewableData);
+        $data = $email->getData();
+        $this->assertSame('XYZ', $data->ABC);
+        $this->assertSame(true, $data->IsEmail);
+        $this->assertSame(Director::absoluteBaseURL(), $data->BaseURL);
         $member = new Member();
         $member->FirstName = 'First Name';
-        $email = new Email();
-        $this->assertEmpty($email->getData());
         $email->setData($member);
-        $this->assertEquals($member, $email->getData());
+        $this->assertSame($member->FirstName, $email->getData()->FirstName);
         $email->addData('Test', 'Test value');
         $this->assertEquals('Test value', $email->getData()->Test);
         $email->removeData('Test');
         $this->assertNull($email->getData()->Test);
     }
 
-    public function testBody()
+    public function testHTMLTemplate(): void
     {
-        $email = new Email();
-        $this->assertEmpty($email->getBody());
-        $email->setBody('<h1>Title</h1>');
-        $this->assertEquals('<h1>Title</h1>', $email->getBody());
-    }
-
-    public function testHTMLTemplate()
-    {
-        // Include dev theme
-        SSViewer::set_themes([
-            'silverstripe/framework:/tests/php/Control/Email/EmailTest',
-            '$default',
-        ]);
-
         // Find template on disk
         $emailTemplate = ModuleResourceLoader::singleton()->resolveResource(
             'silverstripe/framework:templates/SilverStripe/Control/Email/Email.ss'
@@ -522,7 +403,7 @@ class EmailTest extends SapphireTest
         $this->assertEquals('MyTemplate', $email->getHTMLTemplate());
     }
 
-    public function testPlainTemplate()
+    public function testPlainTemplate(): void
     {
         $email = new Email();
         $this->assertEmpty($email->getPlainTemplate());
@@ -530,145 +411,64 @@ class EmailTest extends SapphireTest
         $this->assertEquals('MyTemplate', $email->getPlainTemplate());
     }
 
-    public function testGetFailedRecipients()
-    {
-        $mailer = new SwiftMailer();
-        /** @var Swift_NullTransport|MockObject $transport */
-        $transport = $this->getMockBuilder(Swift_NullTransport::class)->getMock();
-        $transport->expects($this->once())
-            ->method('send')
-            ->willThrowException(new Swift_RfcComplianceException('Bad email'));
-        $mailer->setSwiftMailer(new Swift_Mailer($transport));
-        $email = new Email();
-        $email->setTo('to@example.com');
-        $email->setFrom('from@example.com');
-        $mailer->send($email);
-        $this->assertCount(1, $email->getFailedRecipients());
-    }
-
-    public function testIsEmail()
-    {
-        $this->assertTrue((new Email)->IsEmail());
-    }
-
-    public function testRenderAgain()
+    public function testRerender(): void
     {
         $email = new Email();
+        $email->setPlainTemplate($this->getTemplateClass('PlainTemplate'));
         $email->setData([
-            'EmailContent' => 'my content',
+            'EmailContent' => '<p>my content</p>',
         ]);
-        $email->render();
-        $this->assertStringContainsString('my content', $email->getBody());
-        $children = $email->getSwiftMessage()->getChildren();
-        $this->assertCount(1, $children);
-        $plainPart = reset($children);
-        $this->assertEquals('my content', $plainPart->getBody());
+        $email->send();
+        $this->assertStringContainsString('&lt;p&gt;my content&lt;/p&gt;', $email->getHtmlBody());
 
-        // ensure repeat renders don't add multiple plain parts
-        $email->render();
-        $this->assertCount(1, $email->getSwiftMessage()->getChildren());
-    }
-
-    public function testRerender()
-    {
-        $email = new Email();
+        // Ensure setting data causes html() to be updated
         $email->setData([
-            'EmailContent' => 'my content',
+            'EmailContent' => '<p>your content</p>'
         ]);
-        $email->render();
-        $this->assertStringContainsString('my content', $email->getBody());
-        $children = $email->getSwiftMessage()->getChildren();
-        $this->assertCount(1, $children);
-        $plainPart = reset($children);
-        $this->assertEquals('my content', $plainPart->getBody());
+        $email->send();
+        $this->assertStringContainsString('&lt;p&gt;your content&lt;/p&gt;', $email->getHtmlBody());
 
-        // Ensure setting data causes a rerender
-        $email->setData([
-            'EmailContent' => 'your content'
-        ]);
-        $email->render();
-        $this->assertStringContainsString('your content', $email->getBody());
-
-        // Ensure removing data causes a rerender
+        // Ensure removing data causes html() to be updated
         $email->removeData('EmailContent');
-        $email->render();
-        $this->assertStringNotContainsString('your content', $email->getBody());
+        $email->send();
+        $this->assertStringNotContainsString('&lt;p&gt;your content&lt;/p&gt;', $email->getHtmlBody());
 
-        // Ensure adding data causes a rerender
+        // Ensure adding data causes html() to be updated
         $email->addData([
-            'EmailContent' => 'their content'
+            'EmailContent' => '<p>their content</p>'
         ]);
-        $email->render();
-        $this->assertStringContainsString('their content', $email->getBody());
+        $email->send();
+        $this->assertStringContainsString('&lt;p&gt;their content&lt;/p&gt;', $email->getHtmlBody());
     }
 
-    public function testRenderPlainOnly()
+    public function testRenderPlainOnly(): void
     {
         $email = new Email();
         $email->setData([
             'EmailContent' => 'test content',
         ]);
-        $email->render(true);
-        $this->assertEquals('text/plain', $email->getSwiftMessage()->getContentType());
-        $this->assertEmpty($email->getSwiftMessage()->getChildren());
+        $email->sendPlain();
+        $this->assertSame('test content', $email->getTextBody());
     }
 
-    public function testHasPlainPart()
+    public function testMultipleEmailSends(): void
     {
-        $email = new Email();
+        $email = new Email(to: 'to@example.com');
         $email->setData([
-            'EmailContent' => 'test',
+            'EmailContent' => '<p>Test</p>',
         ]);
-        //emails are assumed to be HTML by default
-        $this->assertFalse($email->hasPlainPart());
-        //make sure plain attachments aren't picked up as a plain part
-        $email->addAttachmentFromData('data', 'attachent.txt', 'text/plain');
-        $this->assertFalse($email->hasPlainPart());
-        $email->getSwiftMessage()->addPart('plain', 'text/plain');
-        $this->assertTrue($email->hasPlainPart());
-    }
-
-    public function testGeneratePlainPartFromBody()
-    {
-        $email = new Email();
-        $email->setBody('<h1>Test</h1>');
-        $this->assertEmpty($email->getSwiftMessage()->getChildren());
-        $email->generatePlainPartFromBody();
-        $children = $email->getSwiftMessage()->getChildren();
-        $this->assertCount(1, $children);
-        $plainPart = reset($children);
-        $this->assertStringContainsString('Test', $plainPart->getBody());
-        $this->assertStringNotContainsString('<h1>Test</h1>', $plainPart->getBody());
-    }
-
-    public function testMultipleEmailSends()
-    {
-        $email = new Email();
-        $email->setData([
-            'EmailContent' => 'Test',
-        ]);
-        $this->assertEmpty($email->getBody());
-        $this->assertEmpty($email->getSwiftMessage()->getChildren());
+        $this->assertSame(null, $email->getHtmlBody());
+        $this->assertSame(null, $email->getTextBody());
         $email->send();
-        $this->assertStringContainsString('Test', $email->getBody());
-        $this->assertCount(1, $email->getSwiftMessage()->getChildren());
-        $children = $email->getSwiftMessage()->getChildren();
-        /** @var \Swift_MimePart $plainPart */
-        $plainPart = reset($children);
-        $this->assertStringContainsString('Test', $plainPart->getBody());
-
-
+        $this->assertStringContainsString('&lt;p&gt;Test&lt;/p&gt;', $email->getHtmlBody());
+        $this->assertSame('Test', $email->getTextBody());
         //send again
         $email->send();
-        $this->assertStringContainsString('Test', $email->getBody());
-        $this->assertCount(1, $email->getSwiftMessage()->getChildren());
-        $children = $email->getSwiftMessage()->getChildren();
-        /** @var \Swift_MimePart $plainPart */
-        $plainPart = reset($children);
-        $this->assertStringContainsString('Test', $plainPart->getBody());
+        $this->assertStringContainsString('&lt;p&gt;Test&lt;/p&gt;', $email->getHtmlBody());
+        $this->assertSame('Test', $email->getTextBody());
     }
 
-    public function testGetDefaultFrom()
+    public function testGetDefaultFrom(): void
     {
         $email = new Email();
         $class = new \ReflectionClass(Email::class);
@@ -695,22 +495,43 @@ class EmailTest extends SapphireTest
     }
 
     /**
-     * @return MockObject|Email
+     * @dataProvider provideCreateAddressArray
      */
-    protected function makeEmailMock($subject)
+    public function testCreateAddressArray(string|array $address, string $name, array $expected): void
     {
-        /** @var Email|MockObject $email */
-        $email = $this->getMockBuilder(Email::class)
-            ->enableProxyingToOriginalMethods()
-            ->getMock();
+        $method = new \ReflectionMethod(Email::class, 'createAddressArray');
+        $method->setAccessible(true);
+        $obj = new Email();
+        $actual = $method->invoke($obj, $address, $name);
+        for ($i = 0; $i < count($expected); $i++) {
+            $this->assertSame($expected[$i]->getAddress(), $actual[$i]->getAddress());
+            $this->assertSame($expected[$i]->getName(), $actual[$i]->getName());
+        }
+    }
 
-        $email->setFrom('from@example.com');
-        $email->setTo('to@example.com');
-        $email->setSubject($subject);
-        $email->setBody("Body for {$subject}");
-        $email->setCC('cc@example.com');
-        $email->setBCC('bcc@example.com');
-        $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
-        return $email;
+    public function provideCreateAddressArray(): array
+    {
+        return [
+            [
+                'my@email.com',
+                'My name',
+                [
+                    new Address('my@email.com', 'My name'),
+                ],
+            ],
+            [
+                [
+                    'my@email.com' => 'My name',
+                    'other@email.com' => 'My other name',
+                    'no-name@email.com'
+                ],
+                '',
+                [
+                    new Address('my@email.com', 'My name'),
+                    new Address('other@email.com', 'My other name'),
+                    new Address('no-name@email.com', ''),
+                ],
+            ]
+        ];
     }
 }

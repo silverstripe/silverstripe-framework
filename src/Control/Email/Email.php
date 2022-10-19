@@ -2,176 +2,131 @@
 
 namespace SilverStripe\Control\Email;
 
-use DateTime;
+use Exception;
 use RuntimeException;
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\HTTP;
-use SilverStripe\Core\Convert;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Extensible;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ViewableData;
-use Swift_Message;
-use Swift_Mime_SimpleMessage;
-use Swift_MimePart;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email as SymfonyEmail;
+use Symfony\Component\Mime\Part\AbstractPart;
 
-/**
- * Class to support sending emails.
- */
-class Email extends ViewableData
+class Email extends SymfonyEmail
 {
-    /**
-     * @var array
-     * @config
-     */
-    private static $send_all_emails_to = [];
+    use Configurable;
+    use Extensible;
+    use Injectable;
+
+    private static string|array $send_all_emails_to = [];
+
+    private static string|array $cc_all_emails_to = [];
+
+    private static string|array $bcc_all_emails_to = [];
+
+    private static string|array $send_all_emails_from = [];
 
     /**
-     * @var array
-     * @config
-     */
-    private static $cc_all_emails_to = [];
-
-    /**
-     * @var array
-     * @config
-     */
-    private static $bcc_all_emails_to = [];
-
-    /**
-     * @var array
-     * @config
-     */
-    private static $send_all_emails_from = [];
-
-    /**
+     * The default "from" email address or array of [email => name], or the email address as a string
      * This will be set in the config on a site-by-site basis
      * @see https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
-     *
-     * @config
-     * @var string|array The default administrator email address or array of [email => name]
      */
-    private static $admin_email = null;
+    private static string|array $admin_email = '';
 
     /**
-     * @var Swift_Message
+     * The name of the HTML template to render the email with (without *.ss extension)
      */
-    private $swiftMessage;
+    private string $HTMLTemplate = '';
 
     /**
-     * @var string The name of the HTML template to render the email with (without *.ss extension)
+     * The name of the plain text template to render the plain part of the email with
      */
-    private $HTMLTemplate = null;
+    private string $plainTemplate = '';
 
     /**
-     * @var string The name of the plain text template to render the plain part of the email with
-     */
-    private $plainTemplate = null;
-
-    /**
-     * @var Swift_MimePart
-     */
-    private $plainPart;
-
-    /**
-     * @var array|ViewableData Additional data available in a template.
+     * Additional data available in a template.
      * Used in the same way than {@link ViewableData->customize()}.
      */
-    private $data = [];
+    private ViewableData $data;
 
-    /**
-     * @var array
-     */
-    private $failedRecipients = [];
+    private bool $dataHasBeenSet = false;
 
     /**
      * Checks for RFC822-valid email format.
-     *
-     * @param string $address
-     * @return boolean
      *
      * @copyright Cal Henderson <cal@iamcal.com>
      *    This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License
      *    http://creativecommons.org/licenses/by-sa/2.5/
      */
-    public static function is_valid_address($address)
+    public static function is_valid_address(string $address): bool
     {
         $validator = new EmailValidator();
         return $validator->isValid($address, new RFCValidation());
     }
 
-    /**
-     * Get send_all_emails_to
-     *
-     * @return array Keys are addresses, values are names
-     */
-    public static function getSendAllEmailsTo()
+    public static function getSendAllEmailsTo(): array
     {
-        return static::mergeConfiguredEmails('send_all_emails_to', 'SS_SEND_ALL_EMAILS_TO');
+        return static::mergeConfiguredAddresses('send_all_emails_to', 'SS_SEND_ALL_EMAILS_TO');
     }
 
-    /**
-     * Get cc_all_emails_to
-     *
-     * @return array
-     */
-    public static function getCCAllEmailsTo()
+    public static function getCCAllEmailsTo(): array
     {
-        return static::mergeConfiguredEmails('cc_all_emails_to', 'SS_CC_ALL_EMAILS_TO');
+        return static::mergeConfiguredAddresses('cc_all_emails_to', 'SS_CC_ALL_EMAILS_TO');
     }
 
-    /**
-     * Get bcc_all_emails_to
-     *
-     * @return array
-     */
-    public static function getBCCAllEmailsTo()
+    public static function getBCCAllEmailsTo(): array
     {
-        return static::mergeConfiguredEmails('bcc_all_emails_to', 'SS_BCC_ALL_EMAILS_TO');
+        return static::mergeConfiguredAddresses('bcc_all_emails_to', 'SS_BCC_ALL_EMAILS_TO');
     }
 
-    /**
-     * Get send_all_emails_from
-     *
-     * @return array
-     */
-    public static function getSendAllEmailsFrom()
+    public static function getSendAllEmailsFrom(): array
     {
-        return static::mergeConfiguredEmails('send_all_emails_from', 'SS_SEND_ALL_EMAILS_FROM');
+        return static::mergeConfiguredAddresses('send_all_emails_from', 'SS_SEND_ALL_EMAILS_FROM');
     }
 
     /**
      * Normalise email list from config merged with env vars
      *
-     * @param string $config Config key
-     * @param string $env Env variable key
-     * @return array Array of email addresses
+     * @return Address[]
      */
-    protected static function mergeConfiguredEmails($config, $env)
+    private static function mergeConfiguredAddresses(string $configKey, string $envKey): array
     {
-        // Normalise config list
-        $normalised = [];
-        $source = (array)static::config()->get($config);
-        foreach ($source as $address => $name) {
-            if ($address && !is_numeric($address)) {
-                $normalised[$address] = $name;
-            } elseif ($name) {
-                $normalised[$name] = null;
+        $addresses = [];
+        $config = (array) static::config()->get($configKey);
+        $addresses = self::convertConfigToAddreses($config);
+        $env = Environment::getEnv($envKey);
+        if ($env) {
+            $addresses = array_merge($addresses, self::convertConfigToAddreses($env));
+        }
+        return $addresses;
+    }
+
+    private static function convertConfigToAddreses(array|string $config): array
+    {
+        $addresses = [];
+        if (is_array($config)) {
+            foreach ($config as $key => $val) {
+                if (filter_var($key, FILTER_VALIDATE_EMAIL)) {
+                    $addresses[] = new Address($key, $val);
+                } else {
+                    $addresses[] = new Address($val);
+                }
             }
+        } else {
+            $addresses[] = new Address($config);
         }
-        $extra = Environment::getEnv($env);
-        if ($extra) {
-            $normalised[$extra] = null;
-        }
-        return $normalised;
+        return $addresses;
     }
 
     /**
@@ -179,23 +134,19 @@ class Email extends ViewableData
      * At the moment only simple string substitutions,
      * which are not 100% safe from email harvesting.
      *
-     * @param string $email Email-address
-     * @param string $method Method for obfuscating/encoding the address
-     *    - 'direction': Reverse the text and then use CSS to put the text direction back to normal
-     *    - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
-     *    - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
-     * @return string
+     * $method defines the method for obfuscating/encoding the address
+     * - 'direction': Reverse the text and then use CSS to put the text direction back to normal
+     * - 'visible': Simple string substitution ('@' to '[at]', '.' to '[dot], '-' to [dash])
+     * - 'hex': Hexadecimal URL-Encoding - useful for mailto: links
      */
-    public static function obfuscate($email, $method = 'visible')
+    public static function obfuscate(string $email, string $method = 'visible'): string
     {
         switch ($method) {
             case 'direction':
                 Requirements::customCSS('span.codedirection { unicode-bidi: bidi-override; direction: rtl; }', 'codedirectionCSS');
-
                 return '<span class="codedirection">' . strrev($email) . '</span>';
             case 'visible':
                 $obfuscated = ['@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] '];
-
                 return strtr($email, $obfuscated);
             case 'hex':
                 $encoded = '';
@@ -203,36 +154,27 @@ class Email extends ViewableData
                 for ($x = 0; $x < $emailLength; $x++) {
                     $encoded .= '&#x' . bin2hex($email[$x]) . ';';
                 }
-
                 return $encoded;
             default:
                 user_error('Email::obfuscate(): Unknown obfuscation method', E_USER_NOTICE);
-
                 return $email;
         }
     }
 
-    /**
-     * Email constructor.
-     * @param string|array|null $from
-     * @param string|array|null $to
-     * @param string|null $subject
-     * @param string|null $body
-     * @param string|array|null $cc
-     * @param string|array|null $bcc
-     * @param string|null $returnPath
-     */
     public function __construct(
-        $from = null,
-        $to = null,
-        $subject = null,
-        $body = null,
-        $cc = null,
-        $bcc = null,
-        $returnPath = null
+        string $from = '',
+        string $to = '',
+        string $subject = '',
+        string $body = '',
+        string $cc = '',
+        string $bcc = '',
+        string $returnPath = ''
     ) {
+        parent::__construct();
         if ($from) {
             $this->setFrom($from);
+        } else {
+            $this->setFrom($this->getDefaultFrom());
         }
         if ($to) {
             $this->setTo($to);
@@ -252,52 +194,9 @@ class Email extends ViewableData
         if ($returnPath) {
             $this->setReturnPath($returnPath);
         }
-
-        parent::__construct();
+        $this->data = ViewableData::create();
     }
 
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * @return Swift_Message
-     */
-    public function getSwiftMessage()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        if (!$this->swiftMessage) {
-            $message = new Swift_Message(null, null, 'text/html', 'utf-8');
-            // Set priority to fix PHP 8.1 SimpleMessage::getPriority() sscanf() null parameter
-            $message->setPriority(Swift_Mime_SimpleMessage::PRIORITY_NORMAL);
-            $this->setSwiftMessage($message);
-        }
-
-        return $this->swiftMessage;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * @param Swift_Message $swiftMessage
-     *
-     * @return $this
-     */
-    public function setSwiftMessage($swiftMessage)
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $dateTime = new DateTime();
-        $dateTime->setTimestamp(DBDatetime::now()->getTimestamp());
-        $swiftMessage->setDate($dateTime);
-        if (!$swiftMessage->getFrom()) {
-            $swiftMessage->setFrom($this->getDefaultFrom());
-        }
-        $this->swiftMessage = $swiftMessage;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     private function getDefaultFrom(): string
     {
         // admin_email can have a string or an array config
@@ -324,438 +223,178 @@ class Email extends ViewableData
     }
 
     /**
-     * @return string[]
+     * Passing a string of HTML for $body will have no affect if you also call either setData() or addData()
      */
-    public function getFrom()
+    public function setBody(AbstractPart|string $body = null): static
     {
-        return $this->getSwiftMessage()->getFrom();
+        if ($body instanceof AbstractPart) {
+            // pass to Symfony\Component\Mime\Message::setBody()
+            return parent::setBody($body);
+        }
+        // Set HTML content directly.
+        return $this->html($body);
     }
 
     /**
-     * @param string|array $address
-     * @return string|array
+     * The following arguments combinations are valid
+     * a) $address = 'my@email.com', $name = 'My name'
+     * b) $address = ['my@email.com' => 'My name', 'other@email.com' => 'My other name']
+     * c) $address = ['my@email.com' => 'My name', 'other@email.com']
      */
-    private function sanitiseAddress($address)
+    private function createAddressArray(string|array $address, $name = ''): array
     {
         if (is_array($address)) {
-            return array_map('trim', $address ?? []);
+            $ret = [];
+            foreach ($address as $key => $val) {
+                $addr = is_numeric($key) ? $val : $key;
+                $name2 = is_numeric($key) ? '' : $val;
+                $ret[] = new Address($addr, $name2);
+            }
+            return $ret;
         }
-        return trim($address ?? '');
+        return [new Address($address, $name)];
     }
 
     /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
+     * @see createAddressArray()
      */
-    public function setFrom($address, $name = null)
+    public function setFrom(string|array $address, string $name = ''): static
     {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setFrom($address, $name);
-
-        return $this;
+        return $this->from(...$this->createAddressArray($address, $name));
     }
 
     /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
+     * @see createAddressArray()
      */
-    public function addFrom($address, $name = null)
+    public function setTo(string|array $address, $name = ''): static
     {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addFrom($address, $name);
-
-        return $this;
+        return $this->to(...$this->createAddressArray($address, $name));
     }
 
     /**
-     * @return string
+     * @see createAddressArray()
      */
-    public function getSender()
+    public function setCC(string|array $address, string $name = ''): static
     {
-        return $this->getSwiftMessage()->getSender();
+        return $this->cc(...$this->createAddressArray($address, $name));
     }
 
     /**
-     * @param string $address
-     * @param string|null $name
-     * @return $this
+     * @see createAddressArray()
      */
-    public function setSender($address, $name = null)
+    public function setBCC(string|array $address, string $name = ''): static
     {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setSender($address, $name);
-
-        return $this;
+        return $this->bcc(...$this->createAddressArray($address, $name));
     }
 
-    /**
-     * @return string
-     */
-    public function getReturnPath()
+    public function setSender(string $address, string $name = ''): static
     {
-        return $this->getSwiftMessage()->getReturnPath();
+        return $this->sender(new Address($address, $name));
     }
 
-    /**
-     * The bounce handler address
-     *
-     * @param string $address Email address where bounce notifications should be sent
-     * @return $this
-     */
-    public function setReturnPath($address)
+    public function setReplyTo(string $address, string $name = ''): static
     {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setReturnPath($address);
-        return $this;
+        return $this->replyTo(new Address($address, $name));
     }
 
-    /**
-     * @return array
-     */
-    public function getTo()
+    public function setSubject(string $subject): static
     {
-        return $this->getSwiftMessage()->getTo();
+        return $this->subject($subject);
     }
 
-    /**
-     * Set recipient(s) of the email
-     *
-     * To send to many, pass an array:
-     * ['me@example.com' => 'My Name', 'other@example.com'];
-     *
-     * @param string|array $address The message recipient(s) - if sending to multiple, use an array of address => name
-     * @param string|null $name The name of the recipient (if one)
-     * @return $this
-     */
-    public function setTo($address, $name = null)
+    public function setReturnPath(string $address): static
     {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setTo($address, $name);
-
-        return $this;
+        return $this->returnPath($address);
     }
 
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function addTo($address, $name = null)
+    public function setPriority(int $priority): static
     {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addTo($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCC()
-    {
-        return $this->getSwiftMessage()->getCc();
-    }
-
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function setCC($address, $name = null)
-    {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setCc($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function addCC($address, $name = null)
-    {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addCc($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBCC()
-    {
-        return $this->getSwiftMessage()->getBcc();
-    }
-
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function setBCC($address, $name = null)
-    {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setBcc($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function addBCC($address, $name = null)
-    {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addBcc($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReplyTo()
-    {
-        return $this->getSwiftMessage()->getReplyTo();
-    }
-
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function setReplyTo($address, $name = null)
-    {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setReplyTo($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @param string|array $address
-     * @param string|null $name
-     * @return $this
-     */
-    public function addReplyTo($address, $name = null)
-    {
-        $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addReplyTo($address, $name);
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->getSwiftMessage()->getSubject();
-    }
-
-    /**
-     * @param string $subject The Subject line for the email
-     * @return $this
-     */
-    public function setSubject($subject)
-    {
-        $this->getSwiftMessage()->setSubject($subject);
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPriority()
-    {
-        return $this->getSwiftMessage()->getPriority();
-    }
-
-    /**
-     * @param int $priority
-     * @return $this
-     */
-    public function setPriority($priority)
-    {
-        $this->getSwiftMessage()->setPriority($priority);
-
-        return $this;
+        return $this->priority($priority);
     }
 
     /**
      * @param string $path Path to file
      * @param string $alias An override for the name of the file
      * @param string $mime The mime type for the attachment
-     * @return $this
      */
-    public function addAttachment($path, $alias = null, $mime = null)
+    public function addAttachment(string $path, ?string $alias = null, ?string $mime = null): static
     {
-        $attachment = \Swift_Attachment::fromPath($path);
-        if ($alias) {
-            $attachment->setFilename($alias);
-        }
-        if ($mime) {
-            $attachment->setContentType($mime);
-        }
-        $this->getSwiftMessage()->attach($attachment);
+        return $this->attachFromPath($path, $alias, $mime);
+    }
 
-        return $this;
+    public function addAttachmentFromData(string $data, string $name, string $mime = null): static
+    {
+        return $this->attach($data, $name, $mime);
     }
 
     /**
-     * @param string $data
-     * @param string $name
-     * @param string $mime
-     * @return $this
+     * Get data which is exposed to the template
+     *
+     * The following data is exposed via this method by default:
+     * IsEmail: used to detect if rendering an email template rather than a page template
+     * BaseUrl: used to get the base URL for the email
      */
-    public function addAttachmentFromData($data, $name, $mime = null)
+    public function getData(): ViewableData
     {
-        $attachment = new \Swift_Attachment($data, $name);
-        if ($mime) {
-            $attachment->setContentType($mime);
+        $extraData = [
+            'IsEmail' => true,
+            'BaseURL' => Director::absoluteBaseURL(),
+        ];
+        $data = clone $this->data;
+        foreach ($extraData as $key => $value) {
+            if (is_null($data->{$key})) {
+                $data->{$key} = $value;
+            }
         }
-        $this->getSwiftMessage()->attach($attachment);
-
-        return $this;
+        $this->extend('updateGetData', $data);
+        return $data;
     }
 
     /**
-     * @return array|ViewableData The template data
+     * Set template data
+     *
+     * Calling setData() once means that any content set via text()/html()/setBody() will have no effect
      */
-    public function getData()
+    public function setData(array|ViewableData $data)
     {
-        return $this->data;
-    }
-
-    /**
-     * @param array|ViewableData $data The template data to set
-     * @return $this
-     */
-    public function setData($data)
-    {
+        if (is_array($data)) {
+            $data = ArrayData::create($data);
+        }
         $this->data = $data;
-        $this->invalidateBody();
-
+        $this->dataHasBeenSet = true;
         return $this;
     }
 
     /**
-     * @param string|array $name The data name to add or array to names => value
-     * @param string|null $value The value of the data to add
-     * @return $this
+     * Add data to be used in the template
+     *
+     * Calling addData() once means that any content set via text()/html()/setBody() will have no effect
+     *
+     * @param string|array $nameOrData can be either the name to add, or an array of [name => value]
      */
-    public function addData($name, $value = null)
+    public function addData(string|array $nameOrData, mixed $value = null): static
     {
-        if (is_array($name)) {
-            $this->data = array_merge($this->data, $name);
-        } elseif (is_array($this->data)) {
-            $this->data[$name] = $value;
+        if (is_array($nameOrData)) {
+            foreach ($nameOrData as $key => $val) {
+                $this->data->{$key} = $val;
+            }
         } else {
-            $this->data->$name = $value;
+            $this->data->{$nameOrData} = $value;
         }
-
-        $this->invalidateBody();
-
+        $this->dataHasBeenSet = true;
         return $this;
     }
 
     /**
-     * Remove a datum from the message
-     *
-     * @param string $name
-     * @return $this
+     * Remove a single piece of template data
      */
-    public function removeData($name)
+    public function removeData(string $name)
     {
-        if (is_array($this->data)) {
-            unset($this->data[$name]);
-        } else {
-            $this->data->$name = null;
-        }
-
-        $this->invalidateBody();
-
+        $this->data->{$name} = null;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBody()
-    {
-        return $this->getSwiftMessage()->getBody();
-    }
-
-    /**
-     * @param string $body The email body
-     * @return $this
-     */
-    public function setBody($body)
-    {
-        $plainPart = $this->findPlainPart();
-        if ($plainPart) {
-            $this->getSwiftMessage()->detach($plainPart);
-        }
-        unset($plainPart);
-
-        $body = HTTP::absoluteURLs($body);
-        $this->getSwiftMessage()->setBody($body);
-
-        return $this;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be replaced with html()
-     *
-     * @return $this
-     */
-    public function invalidateBody()
-    {
-        Deprecation::notice('4.12.0', 'Will be replaced with html()');
-        $this->setBody(null);
-
-        return $this;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be replaced with getData()
-     *
-     * @return string The base URL for the email
-     */
-    public function BaseURL()
-    {
-        Deprecation::notice('4.12.0', 'Will be replaced with getData()');
-        return Director::absoluteBaseURL();
-    }
-
-    /**
-     * @deprecated Will be removed without equivalent functionality to replace it
-     *
-     * Debugging help
-     *
-     * @return string Debug info
-     */
-    public function debug()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $this->render();
-
-        $class = static::class;
-        return "<h2>Email template {$class}:</h2>\n" . '<pre>' . $this->getSwiftMessage()->toString() . '</pre>';
-    }
-
-    /**
-     * @return string
-     */
-    public function getHTMLTemplate()
+    public function getHTMLTemplate(): string
     {
         if ($this->HTMLTemplate) {
             return $this->HTMLTemplate;
@@ -769,237 +408,123 @@ class Email extends ViewableData
 
     /**
      * Set the template to render the email with
-     *
-     * @param string $template
-     * @return $this
      */
-    public function setHTMLTemplate($template)
+    public function setHTMLTemplate(string $template): static
     {
         if (substr($template ?? '', -3) == '.ss') {
             $template = substr($template ?? '', 0, -3);
         }
         $this->HTMLTemplate = $template;
-
         return $this;
     }
 
     /**
      * Get the template to render the plain part with
-     *
-     * @return string
      */
-    public function getPlainTemplate()
+    public function getPlainTemplate(): string
     {
         return $this->plainTemplate;
     }
 
     /**
      * Set the template to render the plain part with
-     *
-     * @param string $template
-     * @return $this
      */
-    public function setPlainTemplate($template)
+    public function setPlainTemplate(string $template): static
     {
         if (substr($template ?? '', -3) == '.ss') {
             $template = substr($template ?? '', 0, -3);
         }
         $this->plainTemplate = $template;
-
         return $this;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * @param array $recipients
-     * @return $this
-     */
-    public function setFailedRecipients($recipients)
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $this->failedRecipients = $recipients;
-
-        return $this;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * @return array
-     */
-    public function getFailedRecipients()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        return $this->failedRecipients;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be replaced with getData()
-     *
-     * Used by {@link SSViewer} templates to detect if we're rendering an email template rather than a page template
-     *
-     * @return bool
-     */
-    public function IsEmail()
-    {
-        Deprecation::notice('4.12.0', 'Will be replaced with getData()');
-        return true;
     }
 
     /**
      * Send the message to the recipients
-     *
-     * @return bool true if successful or array of failed recipients
      */
-    public function send()
+    public function send(): void
     {
-        if (!$this->getBody()) {
-            $this->render();
-        }
-        if (!$this->hasPlainPart()) {
-            $this->generatePlainPartFromBody();
-        }
-        return Injector::inst()->get(Mailer::class)->send($this);
+        $this->updateHtmlAndTextWithRenderedTemplates();
+        Injector::inst()->get(MailerInterface::class)->send($this);
     }
 
     /**
-     * @return array|bool
+     * Send the message to the recipients as plain-only
      */
-    public function sendPlain()
+    public function sendPlain(): void
     {
-        if (!$this->hasPlainPart()) {
-            $this->render(true);
-        }
-        return Injector::inst()->get(Mailer::class)->send($this);
+        $html = $this->getHtmlBody();
+        $this->updateHtmlAndTextWithRenderedTemplates(true);
+        $this->html(null);
+        Injector::inst()->get(MailerInterface::class)->send($this);
+        $this->html($html);
     }
 
     /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     * Call html() and/or text() after rendering email templates
+     * If either body html or text were previously explicitly set, those values will not be overwritten
      *
-     * Render the email
-     * @param bool $plainOnly Only render the message as plain text
-     * @return $this
+     * @param bool $plainOnly - if true then do not call html()
      */
-    public function render($plainOnly = false)
+    private function updateHtmlAndTextWithRenderedTemplates(bool $plainOnly = false): void
     {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-
-        if ($existingPlainPart = $this->findPlainPart()) {
-            $this->getSwiftMessage()->detach($existingPlainPart);
-        }
-        unset($existingPlainPart);
-
-        // Respect explicitly set body
-        $htmlPart = $plainOnly ? null : $this->getBody();
-        $plainPart = $plainOnly ? $this->getBody() : null;
+        $htmlBody = $this->getHtmlBody();
+        $plainBody = $this->getTextBody();
 
         // Ensure we can at least render something
         $htmlTemplate = $this->getHTMLTemplate();
         $plainTemplate = $this->getPlainTemplate();
-        if (!$htmlTemplate && !$plainTemplate && !$plainPart && !$htmlPart) {
-            return $this;
+        if (!$htmlTemplate && !$plainTemplate && !$plainBody && !$htmlBody) {
+            return;
+        }
+
+        $htmlRender = null;
+        $plainRender = null;
+
+        if ($htmlBody && !$this->dataHasBeenSet) {
+            $htmlRender = $htmlBody;
+        }
+
+        if ($plainBody && !$this->dataHasBeenSet) {
+            $plainRender = $plainBody;
         }
 
         // Do not interfere with emails styles
         Requirements::clear();
 
-        // Render plain part
-        if ($plainTemplate && !$plainPart) {
-            $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
+        // Render plain
+        if (!$plainRender && $plainTemplate) {
+            $plainRender = $this->getData()->renderWith($plainTemplate)->Plain();
         }
 
-        // Render HTML part, either if sending html email, or a plain part is lacking
-        if (!$htmlPart && $htmlTemplate && (!$plainOnly || empty($plainPart))) {
-            $htmlPart = $this->renderWith($htmlTemplate, $this->getData());
-        }
-
-        // Plain part fails over to generated from html
-        if (!$plainPart && $htmlPart) {
-            /** @var DBHTMLText $htmlPartObject */
-            $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
-            $plainPart = $htmlPartObject->Plain();
+        // Render HTML
+        if (!$htmlRender && $htmlTemplate) {
+            $htmlRender = $this->getData()->renderWith($htmlTemplate)->RAW();
         }
 
         // Rendering is finished
         Requirements::restore();
 
-        // Fail if no email to send
-        if (!$plainPart && !$htmlPart) {
-            return $this;
+        // Plain render fallbacks to using the html render with html tags removed
+        if (!$plainRender && $htmlRender) {
+            // call html_entity_decode() to ensure any encoded HTML is also stripped inside ->Plain()
+            $dbField = DBField::create_field('HTMLFragment', html_entity_decode($htmlRender));
+            $plainRender = $dbField->Plain();
         }
 
-        // Build HTML / Plain components
-        if ($htmlPart && !$plainOnly) {
-            $this->setBody($htmlPart);
-            $this->getSwiftMessage()->setContentType('text/html');
-            $this->getSwiftMessage()->setCharset('utf-8');
-            if ($plainPart) {
-                $this->getSwiftMessage()->addPart($plainPart, 'text/plain', 'utf-8');
-            }
-        } else {
-            if ($plainPart) {
-                $this->setBody($plainPart);
-            }
-            $this->getSwiftMessage()->setContentType('text/plain');
-            $this->getSwiftMessage()->setCharset('utf-8');
+        // Handle edge case where no template was found
+        if (!$htmlRender && $htmlBody) {
+            $htmlRender = $htmlBody;
         }
 
-        return $this;
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * @return Swift_MimePart|false
-     */
-    public function findPlainPart()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        foreach ($this->getSwiftMessage()->getChildren() as $child) {
-            if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
-                return $child;
-            }
+        if (!$plainRender && $plainBody) {
+            $plainRender = $plainBody;
         }
-        return false;
-    }
 
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * @return bool
-     */
-    public function hasPlainPart()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        if ($this->getSwiftMessage()->getContentType() === 'text/plain') {
-            return true;
+        if ($plainRender) {
+            $this->text($plainRender);
         }
-        return (bool) $this->findPlainPart();
-    }
-
-    /**
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     *
-     * Automatically adds a plain part to the email generated from the current Body
-     *
-     * @return $this
-     */
-    public function generatePlainPartFromBody()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $plainPart = $this->findPlainPart();
-        if ($plainPart) {
-            $this->getSwiftMessage()->detach($plainPart);
+        if ($htmlRender && !$plainOnly) {
+            $this->html($htmlRender);
         }
-        unset($plainPart);
-
-        $this->getSwiftMessage()->addPart(
-            Convert::xml2raw($this->getBody()),
-            'text/plain',
-            'utf-8'
-        );
-
-        return $this;
     }
 }
