@@ -9,7 +9,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Middleware that provides back-support for the deprecated RequestFilter API.
  *
- * @deprecated 4.0.0:5.0.0 Use HTTPMiddleware directly instead.
+ * @deprecated 4.0.1 Use HTTPMiddleware directly instead.
  */
 class RequestProcessor implements HTTPMiddleware
 {
@@ -29,6 +29,7 @@ class RequestProcessor implements HTTPMiddleware
      */
     public function __construct($filters = [])
     {
+        Deprecation::notice('4.0.1', 'Use HTTPMiddleware directly instead.', Deprecation::SCOPE_CLASS);
         $this->filters = $filters;
     }
 

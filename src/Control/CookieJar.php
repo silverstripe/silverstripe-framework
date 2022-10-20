@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use LogicException;
 
@@ -200,10 +201,11 @@ class CookieJar implements Cookie_Backend
     /**
      * Get the correct samesite value - Session cookies use a different configuration variable.
      *
-     * @deprecated 5.0 The relevant methods will include a `$sameSite` parameter instead.
+     * @deprecated 4.12.0 The relevant methods will include a `$sameSite` parameter instead.
      */
     private function getSameSite(string $name): string
     {
+        Deprecation::notice('4.12.0', 'The relevant methods will include a `$sameSite` parameter instead.');
         if ($name === session_name()) {
             return Session::config()->get('cookie_samesite');
         }

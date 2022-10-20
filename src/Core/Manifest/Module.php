@@ -187,10 +187,11 @@ class Module implements Serializable
      * The __serialize() magic method will be automatically used instead of this
      *
      * @return string
-     * @deprecated will be removed in 5.0
+     * @deprecated 4.12.0 Use __serialize() instead
      */
     public function serialize()
     {
+        Deprecation::notice('4.12.0', 'Use __serialize() instead');
         return json_encode([$this->path, $this->basePath, $this->composerData]);
     }
 
@@ -200,10 +201,11 @@ class Module implements Serializable
      * and the PHP version used in less than PHP 9.0
      *
      * @param string $serialized
-     * @deprecated will be removed in 5.0
+     * @deprecated 4.12.0 Use __unserialize() instead
      */
     public function unserialize($serialized)
     {
+        Deprecation::notice('4.12.0', 'Use __unserialize() instead');
         list($this->path, $this->basePath, $this->composerData) = json_decode($serialized ?? '', true);
         $this->resources = [];
     }
@@ -256,52 +258,52 @@ class Module implements Serializable
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use getResource($path)->getRelativePath() instead
+     * @deprecated 4.0.1 Use getResource($path)->getRelativePath() instead
      * @param string $path
      * @return string
      */
     public function getRelativeResourcePath($path)
     {
-        Deprecation::notice('5.0', 'Use getResource($path)->getRelativePath() instead');
+        Deprecation::notice('4.0.1', 'Use getResource($path)->getRelativePath() instead');
         return $this
             ->getResource($path)
             ->getRelativePath();
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->getPath() instead
+     * @deprecated 4.0.1 Use getResource($path)->getPath() instead
      * @param string $path
      * @return string
      */
     public function getResourcePath($path)
     {
-        Deprecation::notice('5.0', 'Use getResource($path)->getPath() instead');
+        Deprecation::notice('4.0.1', 'Use getResource($path)->getPath() instead');
         return $this
             ->getResource($path)
             ->getPath();
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->getURL() instead
+     * @deprecated 4.0.1 Use getResource($path)->getURL() instead
      * @param string $path
      * @return string
      */
     public function getResourceURL($path)
     {
-        Deprecation::notice('5.0', 'Use getResource($path)->getURL() instead');
+        Deprecation::notice('4.0.1', 'Use getResource($path)->getURL() instead');
         return $this
             ->getResource($path)
             ->getURL();
     }
 
     /**
-     * @deprecated 4.0.0:5.0.0 Use ->getResource($path)->exists() instead
+     * @deprecated 4.0.1 Use getResource($path)->exists() instead
      * @param string $path
      * @return string
      */
     public function hasResource($path)
     {
-        Deprecation::notice('5.0', 'Use getResource($path)->exists() instead');
+        Deprecation::notice('4.0.1', 'Use getResource($path)->exists() instead');
         return $this
             ->getResource($path)
             ->exists();

@@ -180,13 +180,13 @@ class FieldList extends ArrayList
     }
 
     /**
-     * @deprecated 4.1.0:5.0.0 Please use dataFields or saveableFields
+     * @deprecated 4.1.0 Please use dataFields or saveableFields instead
      * @param $list
      * @param bool $saveableOnly
      */
     protected function collateDataFields(&$list, $saveableOnly = false)
     {
-        Deprecation::notice('5.0', 'Please use dataFields or SaveableFields');
+        Deprecation::notice('4.1.0', 'Please use dataFields or saveableFields instead');
         if (!isset($list)) {
             $list = [];
         }

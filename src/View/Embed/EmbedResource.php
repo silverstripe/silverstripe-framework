@@ -15,7 +15,7 @@ use SilverStripe\Dev\Deprecation;
  * Encapsulation of an embed tag, linking to an external media source.
  *
  * @see Embed
- * @deprecated 4.11..5.0 Use EmbedContainer instead
+ * @deprecated 4.11.0 Use EmbedContainer instead
  */
 class EmbedResource implements Embeddable
 {
@@ -46,7 +46,7 @@ class EmbedResource implements Embeddable
      */
     public function __construct($url)
     {
-        Deprecation::notice('4.11', 'Use EmbedContainer instead');
+        Deprecation::notice('4.11.0', 'Use EmbedContainer instead', Deprecation::SCOPE_CLASS);
         $this->url = $url;
     }
 

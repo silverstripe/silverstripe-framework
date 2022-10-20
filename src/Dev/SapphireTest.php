@@ -64,7 +64,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
     protected static $fixture_file = null;
 
     /**
-     * @deprecated 4.0..5.0 Use FixtureTestState instead
+     * @deprecated 4.0.1 Use FixtureTestState instead
      * @var FixtureFactory
      */
     protected $fixtureFactory;
@@ -430,11 +430,11 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
     /**
      * @return FixtureFactory|false
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Use FixtureTestState instead
      */
     public function getFixtureFactory()
     {
-        Deprecation::notice('5.0', __FUNCTION__ . ' is deprecated, use ' . FixtureTestState::class . ' instead');
+        Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
         /** @var FixtureTestState $state */
         $state = static::$state->getStateByName('fixtures');
         return $state->getFixtureFactory(static::class);
@@ -444,11 +444,11 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * Sets a new fixture factory
      * @param FixtureFactory $factory
      * @return $this
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Use FixtureTestState instead
      */
     public function setFixtureFactory(FixtureFactory $factory)
     {
-        Deprecation::notice('5.0', __FUNCTION__ . ' is deprecated, use ' . FixtureTestState::class . ' instead');
+        Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
         /** @var FixtureTestState $state */
         $state = static::$state->getStateByName('fixtures');
         $state->setFixtureFactory($factory, static::class);
@@ -524,12 +524,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
      * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
      * Doesn't clear existing fixtures.
      * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
-     * @deprecated 4.0.0:5.0.0
+     * @deprecated 4.0.1 Use FixtureTestState instead
      *
      */
     public function loadFixture($fixtureFile)
     {
-        Deprecation::notice('5.0', __FUNCTION__ . ' is deprecated, use ' . FixtureTestState::class . ' instead');
+        Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
         $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
         $fixture->writeInto($this->getFixtureFactory());
     }
@@ -720,12 +720,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * @param $matches
      * @param $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListContains() instead
+     * @deprecated 4.0.1 Use assertListContains() instead
      *
      */
     public function assertDOSContains($matches, $dataObjectSet)
     {
-        Deprecation::notice('5.0', 'Use assertListContains() instead');
+        Deprecation::notice('4.0.1', 'Use assertListContains() instead');
         static::assertListContains($matches, $dataObjectSet);
     }
 
@@ -774,12 +774,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * @param $matches
      * @param $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListNotContains() instead
+     * @deprecated 4.0.1 Use assertListNotContains() instead
      *
      */
     public static function assertNotDOSContains($matches, $dataObjectSet)
     {
-        Deprecation::notice('5.0', 'Use assertListNotContains() instead');
+        Deprecation::notice('4.0.1', 'Use assertListNotContains() instead');
         static::assertListNotContains($matches, $dataObjectSet);
     }
 
@@ -822,12 +822,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * @param $matches
      * @param SS_List $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListEquals() instead
+     * @deprecated 4.0.1 Use assertListEquals() instead
      *
      */
     public function assertDOSEquals($matches, $dataObjectSet)
     {
-        Deprecation::notice('5.0', 'Use assertListEquals() instead');
+        Deprecation::notice('4.0.1', 'Use assertListEquals() instead');
         static::assertListEquals($matches, $dataObjectSet);
     }
 
@@ -866,12 +866,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * @param $match
      * @param SS_List $dataObjectSet
-     * @deprecated 4.0.0:5.0.0 Use assertListAllMatch() instead
+     * @deprecated 4.0.1 Use assertListAllMatch() instead
      *
      */
     public function assertDOSAllMatch($match, SS_List $dataObjectSet)
     {
-        Deprecation::notice('5.0', 'Use assertListAllMatch() instead');
+        Deprecation::notice('4.0.1', 'Use assertListAllMatch() instead');
         static::assertListAllMatch($match, $dataObjectSet);
     }
 

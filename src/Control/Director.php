@@ -386,10 +386,11 @@ class Director implements TemplateGlobalProvider
      *
      * @return bool
      *
-     * @deprecated 5.0 Kernel::isFlushed to be used instead
+     * @deprecated 4.12.0 Use Kernel::isFlushed instead
      */
     public static function isManifestFlushed()
     {
+        Deprecation::notice('4.12.0', 'Use Kernel::isFlushed instead');
         $kernel = Injector::inst()->get(Kernel::class);
 
         // Only CoreKernel implements this method at the moment

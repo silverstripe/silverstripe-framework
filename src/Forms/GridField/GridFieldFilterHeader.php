@@ -435,13 +435,13 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     /**
      * Generate fields for the legacy filter header row
      *
-     * @deprecated 5.0
+     * @deprecated 4.12.0 Use search field instead
      * @param GridField $gridfield
      * @return ArrayList|null
      */
     public function getLegacyFilterHeader(GridField $gridField)
     {
-        Deprecation::notice('5.0', 'Table row based filter header will be removed in favor of search field in 5.0');
+        Deprecation::notice('4.12.0', 'Use search field instead');
 
         $list = $gridField->getList();
         if (!$this->checkDataType($list)) {

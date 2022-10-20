@@ -248,10 +248,11 @@ abstract class BaseKernel implements Kernel
      *
      * @return string
      *
-     * @deprecated 5.0 use Director::get_environment_type() instead. Since 5.0 it should return only if kernel overrides. No checking SESSION or Environment.
+     * @deprecated 4.12.0 Use Director::get_environment_type() instead
      */
     public function getEnvironment()
     {
+        Deprecation::notice('4.12.0', 'Use Director::get_environment_type() instead');
         // Check set
         if ($this->enviroment) {
             return $this->enviroment;

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use SilverStripe\Dev\Deprecation;
 use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
@@ -59,9 +60,12 @@ abstract class DBSchemaManager
     /**
      * @param string $table
      * @param string $class
+     *
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     public static function showTableNameWarning($table, $class)
     {
+        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality');
         static::$table_name_warnings[$table] = $class;
     }
 

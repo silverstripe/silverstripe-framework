@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -15,7 +16,7 @@ use SilverStripe\Security\Security;
  *
  * @internal This class is experimental API and may change without warning
  *
- * @deprecated 5.0 To be removed in SilverStripe 5.0
+ * @deprecated 4.12.0 Will be removed without equivalent functionality
  */
 class ErrorDirector extends Director
 {
@@ -27,6 +28,11 @@ class ErrorDirector extends Director
      * @param Kernel $kernel
      * @return null|HTTPResponse Redirection response, or null if not able to redirect
      */
+    public function __construct()
+    {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality', Deprecation::SCOPE_CLASS);
+    }
+
     public function handleRequestWithTokenChain(
         HTTPRequest $request,
         ConfirmationTokenChain $confirmationTokenChain,
