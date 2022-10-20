@@ -3,6 +3,7 @@
 namespace SilverStripe\Logging;
 
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\LogRecord;
 
 /**
  * Echo the output as preformatted HTML, emulating console output in a browser.
@@ -17,10 +18,7 @@ use Monolog\Handler\AbstractProcessingHandler;
 class PreformattedEchoHandler extends AbstractProcessingHandler
 {
 
-    /**
-     * @param array $record
-     */
-    protected function write(array $record)
+    protected function write(LogRecord $record): void
     {
         echo sprintf('<pre>%s</pre>', htmlspecialchars($record['formatted'], ENT_QUOTES, 'UTF-8'));
     }
