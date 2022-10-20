@@ -1155,4 +1155,27 @@ class InjectorTest extends SapphireTest
         Injector::unnest();
         $this->nestingLevel--;
     }
+
+    public function testAnonymousClass()
+    {
+        Injector::inst()->load([
+            'Some\\Project\\Class' => [
+                // the php anonymous class syntax will instantiate a new anonymous class object, with ('abc')
+                // passed to the constructor
+                'class' => new class ('abc') {
+                    private string $property;
+                    public function __construct(string $value)
+                    {
+                        $this->property = $value;
+                    }
+                    public function foo(): string
+                    {
+                        return $this->property;
+                    }
+                }
+            ],
+        ]);
+        // assert that Injector creates a new instance of the anonymous class, with ('def') passed to the constructor
+        $this->assertSame('def', Injector::inst()->create('Some\\Project\\Class', 'def')->foo());
+    }
 }
