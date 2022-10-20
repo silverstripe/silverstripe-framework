@@ -2,8 +2,11 @@
 
 namespace SilverStripe\Dev;
 
+use BadMethodCallException;
+use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\Module;
 
 /**
@@ -233,6 +236,14 @@ class Deprecation
                 user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), self::$notice_level);
             } else {
                 user_error($string, self::$notice_level);
+            }
+        } catch (BadMethodCallException $e) {
+            if ($e->getMessage() === InjectorLoader::NO_MANIFESTS_AVAILABLE) {
+                // noop
+                // this can happen when calling Deprecation::notice() before manifests are available, i.e.
+                // some of the code involved in creating the manifests calls Deprecation::notice()
+            } else {
+                throw $e;
             }
         } finally {
             static::$inside_notice = false;
