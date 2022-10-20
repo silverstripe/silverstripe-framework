@@ -4,9 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
-use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
-use SilverStripe\Core\Manifest\ModuleLoader;
 
 /**
  * Handles raising an notice when accessing a deprecated method
@@ -37,14 +35,13 @@ use SilverStripe\Core\Manifest\ModuleLoader;
  */
 class Deprecation
 {
-
     const SCOPE_METHOD = 1;
     const SCOPE_CLASS = 2;
     const SCOPE_GLOBAL = 4;
 
     /**
-     *
      * @var string
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     protected static $version;
 
@@ -58,26 +55,47 @@ class Deprecation
      * must be available before this to avoid infinite loops.
      *
      * @var boolean|null
+     * @deprecated 4.12.0 Use $is_enabled instead
      */
     protected static $enabled = null;
 
     /**
+     * Must be configured outside of the config API, as deprecation API
+     * must be available before this to avoid infinite loops.
      *
+     * This will be overriden by the SS_DEPRECATION_ENABLED environment if present
+     */
+    protected static bool $is_enabled = false;
+
+    /**
      * @var array
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     protected static $module_version_overrides = [];
 
     protected static bool $inside_notice = false;
 
     /**
-     * @var int - the notice level to raise on a deprecation notice. Defaults to E_USER_DEPRECATED if that exists,
-     * E_USER_NOTICE if not
+     * Switched out by unit-testing to E_USER_NOTICE because E_USER_DEPRECATED is not
+     * caught by $this->expectDeprecated() by default
+     * https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
+     *
+     * @var int
      */
-    public static $notice_level = null;
+    public static $notice_level = E_USER_DEPRECATED;
+
+    public static function enable(): void
+    {
+        static::$is_enabled = true;
+    }
+
+    public static function disable(): void
+    {
+        static::$is_enabled = false;
+    }
 
     /**
-     * Set the version that is used to check against the version passed to notice. If the ::notice version is
-     * greater than or equal to this version, a message will be raised
+     * This method is no longer used
      *
      * @static
      * @param $ver string -
@@ -86,32 +104,25 @@ class Deprecation
      *    The name of a module. The passed version will be used as the check value for
      *    calls directly from this module rather than the global value
      * @return void
+     * @deprecated 4.12.0 Use enable() instead
      */
     public static function notification_version($ver, $forModule = null)
     {
-        if ($forModule) {
-            self::$module_version_overrides[$forModule] = $ver;
-        } else {
-            self::$version = $ver;
-        }
+        static::notice('4.12.0', 'Use enable() instead');
+        // noop
     }
 
     /**
-     * Given a backtrace, get the module name from the caller two removed (the caller of the method that called
-     * #notice)
+     * This method is no longer used
      *
      * @param array $backtrace A backtrace as returned from debug_backtrace
      * @return Module The module being called
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     protected static function get_calling_module_from_trace($backtrace)
     {
-        if (!isset($backtrace[1]['file'])) {
-            return null;
-        }
-
-        $callingfile = realpath($backtrace[1]['file'] ?? '');
-
-        return ModuleLoader::inst()->getManifest()->getModuleByPath($callingfile);
+        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
+        // noop
     }
 
     /**
@@ -137,30 +148,38 @@ class Deprecation
     }
 
     /**
-     * Determine if deprecation notices should be displayed
+     * This method is no longer used
      *
      * @return bool
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     public static function get_enabled()
     {
-        // Deprecation is only available on dev
+        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
+        // noop
+    }
+
+    private static function get_is_enabled(): bool
+    {
         if (!Director::isDev()) {
             return false;
         }
-        if (isset(self::$enabled)) {
-            return self::$enabled;
+        if (Environment::getEnv('SS_DEPRECATION_ENABLED')) {
+            return true;
         }
-        return Environment::getEnv('SS_DEPRECATION_ENABLED') ?: true;
+        return static::$is_enabled;
     }
 
     /**
-     * Toggle on or off deprecation notices. Will be ignored in live.
+     * This method is no longer used
      *
      * @param bool $enabled
+     * @deprecated 4.12.0 Use enable() instead
      */
     public static function set_enabled($enabled)
     {
-        self::$enabled = $enabled;
+        static::notice('4.12.0', 'Use enable() instead');
+        // noop
     }
 
     /**
@@ -180,71 +199,40 @@ class Deprecation
         // try block needs to wrap all code in case anything inside the try block
         // calls something else that calls Deprecation::notice()
         try {
-            if (!static::get_enabled()) {
+            if (!self::get_is_enabled()) {
                 return;
             }
-            $checkVersion = self::$version;
-            // Getting a backtrace is slow, so we only do it if we need it
-            $backtrace = null;
 
             // If you pass #.#, assume #.#.0
             if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion ?? '')) {
                 $atVersion .= '.0';
             }
-            if (preg_match('/^[0-9]+\.[0-9]+$/', $checkVersion ?? '')) {
-                $checkVersion .= '.0';
+
+            // Getting a backtrace is slow, so we only do it if we need it
+            $backtrace = null;
+
+            // Get the calling scope
+            if ($scope == Deprecation::SCOPE_METHOD) {
+                $backtrace = debug_backtrace(0);
+                $caller = self::get_called_method_from_trace($backtrace);
+            } elseif ($scope == Deprecation::SCOPE_CLASS) {
+                $backtrace = debug_backtrace(0);
+                $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
+            } else {
+                $caller = false;
             }
 
-            if (self::$module_version_overrides) {
-                $module = self::get_calling_module_from_trace($backtrace = debug_backtrace(0));
-                if ($module) {
-                    if (($name = $module->getComposerName())
-                        && isset(self::$module_version_overrides[$name])
-                    ) {
-                        $checkVersion = self::$module_version_overrides[$name];
-                    } elseif (($name = $module->getShortName())
-                        && isset(self::$module_version_overrides[$name])
-                    ) {
-                        $checkVersion = self::$module_version_overrides[$name];
-                    }
-                }
+            // Then raise the notice
+            if (substr($string, -1) != '.') {
+                $string .= ".";
             }
 
-            // Check the version against the notice version
-            if ($checkVersion && version_compare($checkVersion ?? '', $atVersion ?? '', '>=')) {
-                // Get the calling scope
-                if ($scope == Deprecation::SCOPE_METHOD) {
-                    if (!$backtrace) {
-                        $backtrace = debug_backtrace(0);
-                    }
-                    $caller = self::get_called_method_from_trace($backtrace);
-                } elseif ($scope == Deprecation::SCOPE_CLASS) {
-                    if (!$backtrace) {
-                        $backtrace = debug_backtrace(0);
-                    }
-                    $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
-                } else {
-                    $caller = false;
-                }
+            $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
-                // Get the level to raise the notice as
-                $level = self::$notice_level;
-                if (!$level) {
-                    $level = E_USER_DEPRECATED;
-                }
-
-                // Then raise the notice
-                if (substr($string ?? '', -1) != '.') {
-                    $string .= ".";
-                }
-
-                $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
-
-                if ($caller) {
-                    user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), $level ?? 0);
-                } else {
-                    user_error($string ?? '', $level ?? 0);
-                }
+            if ($caller) {
+                user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), self::$notice_level);
+            } else {
+                user_error($string, self::$notice_level);
             }
         } finally {
             static::$inside_notice = false;
@@ -252,30 +240,26 @@ class Deprecation
     }
 
     /**
-     * Method for when testing. Dump all the current version settings to a variable for later passing to restore
+     * This method is no longer used
      *
      * @return array Opaque array that should only be used to pass to {@see Deprecation::restore_settings()}
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     public static function dump_settings()
     {
-        return [
-            'level' => self::$notice_level,
-            'version' => self::$version,
-            'moduleVersions' => self::$module_version_overrides,
-            'enabled' => self::$enabled,
-        ];
+        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
+        // noop
     }
 
     /**
-     * Method for when testing. Restore all the current version settings from a variable
+     * This method is no longer used
      *
      * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     public static function restore_settings($settings)
     {
-        self::$notice_level = $settings['level'];
-        self::$version = $settings['version'];
-        self::$module_version_overrides = $settings['moduleVersions'];
-        self::$enabled = $settings['enabled'];
+        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
+        // noop
     }
 }
