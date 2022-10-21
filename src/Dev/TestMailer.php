@@ -41,7 +41,12 @@ class TestMailer implements MailerInterface
         /** @var Email $email */
         $email = $message;
         $this->dispatchEvent($email, $envelope);
-        $this->emailsSent[] = [
+        $this->emailsSent[] = $this->createData($email);
+    }
+
+    protected function createData(Email $email): array
+    {
+        return [
             'Type' => $email->getHtmlBody() ? 'html' : 'plain',
             'To' => $this->convertAddressesToString($email->getTo()),
             'From' => $this->convertAddressesToString($email->getFrom()),
