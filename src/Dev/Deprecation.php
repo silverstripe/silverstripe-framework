@@ -3,7 +3,6 @@
 namespace SilverStripe\Dev;
 
 use BadMethodCallException;
-use Exception;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\InjectorLoader;
@@ -41,6 +40,7 @@ class Deprecation
     const SCOPE_METHOD = 1;
     const SCOPE_CLASS = 2;
     const SCOPE_GLOBAL = 4;
+    const SCOPE_CONFIG = 8;
 
     /**
      * @var string
@@ -67,8 +67,10 @@ class Deprecation
      * must be available before this to avoid infinite loops.
      *
      * This will be overriden by the SS_DEPRECATION_ENABLED environment if present
+     *
+     * @internal - Marked as internal so this and other private static's are not treated as config
      */
-    protected static bool $is_enabled = false;
+    private static bool $is_enabled = false;
 
     /**
      * @var array
@@ -76,20 +78,35 @@ class Deprecation
      */
     protected static $module_version_overrides = [];
 
-    protected static bool $inside_notice = false;
+    /**
+     * @internal
+     */
+    private static bool $inside_notice = false;
 
     /**
-     * Switched out by unit-testing to E_USER_NOTICE because E_USER_DEPRECATED is not
-     * caught by $this->expectDeprecated() by default
-     * https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
-     *
-     * @var int
+     * @var array
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     public static $notice_level = E_USER_DEPRECATED;
+
+    /**
+     * Buffer of user_errors to be raised when enabled() is called
+     *
+     * This is used when setting deprecated config via yaml, before Deprecation::enable() has been called in _config.php
+     * Deprecated config set via yaml will only be shown in the browser when using ?flush=1
+     * It will not show in CLI when running dev/build flush=1
+     *
+     * @internal
+     */
+    private static array $user_error_message_buffer = [];
 
     public static function enable(): void
     {
         static::$is_enabled = true;
+        foreach (self::$user_error_message_buffer as $message) {
+            user_error($message, E_USER_DEPRECATED);
+        }
+        self::$user_error_message_buffer = [];
     }
 
     public static function disable(): void
@@ -167,10 +184,7 @@ class Deprecation
         if (!Director::isDev()) {
             return false;
         }
-        if (Environment::getEnv('SS_DEPRECATION_ENABLED')) {
-            return true;
-        }
-        return static::$is_enabled;
+        return static::$is_enabled || Environment::getEnv('SS_DEPRECATION_ENABLED');
     }
 
     /**
@@ -202,40 +216,44 @@ class Deprecation
         // try block needs to wrap all code in case anything inside the try block
         // calls something else that calls Deprecation::notice()
         try {
-            if (!self::get_is_enabled()) {
-                return;
-            }
-
-            // If you pass #.#, assume #.#.0
-            if (preg_match('/^[0-9]+\.[0-9]+$/', $atVersion ?? '')) {
-                $atVersion .= '.0';
-            }
-
-            // Getting a backtrace is slow, so we only do it if we need it
-            $backtrace = null;
-
-            // Get the calling scope
-            if ($scope == Deprecation::SCOPE_METHOD) {
-                $backtrace = debug_backtrace(0);
-                $caller = self::get_called_method_from_trace($backtrace);
-            } elseif ($scope == Deprecation::SCOPE_CLASS) {
-                $backtrace = debug_backtrace(0);
-                $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
+            if ($scope === self::SCOPE_CONFIG) {
+                if (self::get_is_enabled()) {
+                    user_error($string, E_USER_DEPRECATED);
+                } else {
+                    self::$user_error_message_buffer[] = $string;
+                }
             } else {
-                $caller = false;
-            }
+                if (!self::get_is_enabled()) {
+                    // Do not add to self::$user_error_message_buffer, as the backtrace is too expensive
+                    return;
+                }
+    
+                // Getting a backtrace is slow, so we only do it if we need it
+                $backtrace = null;
+    
+                // Get the calling scope
+                if ($scope == Deprecation::SCOPE_METHOD) {
+                    $backtrace = debug_backtrace(0);
+                    $caller = self::get_called_method_from_trace($backtrace);
+                } elseif ($scope == Deprecation::SCOPE_CLASS) {
+                    $backtrace = debug_backtrace(0);
+                    $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
+                } else {
+                    $caller = false;
+                }
+    
+                // Then raise the notice
+                if (substr($string, -1) != '.') {
+                    $string .= ".";
+                }
 
-            // Then raise the notice
-            if (substr($string, -1) != '.') {
-                $string .= ".";
-            }
+                $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
 
-            $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
-
-            if ($caller) {
-                user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), self::$notice_level);
-            } else {
-                user_error($string, self::$notice_level);
+                if ($caller) {
+                    user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), E_USER_DEPRECATED);
+                } else {
+                    user_error($string, E_USER_DEPRECATED);
+                }
             }
         } catch (BadMethodCallException $e) {
             if ($e->getMessage() === InjectorLoader::NO_MANIFESTS_AVAILABLE) {
