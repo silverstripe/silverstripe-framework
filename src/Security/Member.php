@@ -828,9 +828,12 @@ class Member extends DataObject
      * filesystem.
      *
      * @return string Returns a random password.
+     *
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
      */
     public static function create_new_password()
     {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         $words = Security::config()->uninherited('word_list');
 
         if ($words && file_exists($words ?? '')) {
