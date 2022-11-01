@@ -24,12 +24,18 @@ class DeprecationTest extends SapphireTest
         //   https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
         parent::setup();
         $this->oldHandler = set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) {
-            if (str_contains($errstr, 'SilverStripe\\Dev\\Tests\\DeprecationTest')) {
-                throw new Deprecated($errstr, $errno, '', 1);
+            if ($errno === E_USER_DEPRECATED) {
+                if (str_contains($errstr, 'SilverStripe\\Dev\\Tests\\DeprecationTest')) {
+                    throw new Deprecated($errstr, $errno, '', 1);
+                } else {
+                    // Surpress any E_USER_DEPRECATED unrelated to this unit-test
+                    return true;
+                }
             }
             if (is_callable($this->oldHandler)) {
                 return call_user_func($this->oldHandler, $errno, $errstr, $errfile, $errline);
             }
+            // Fallback to default PHP error handler
             return false;
         });
     }
