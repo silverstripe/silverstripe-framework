@@ -16,6 +16,8 @@ class DeprecationTest extends SapphireTest
 
     private $oldHandler = null;
 
+    private bool $noticesWereEnabled = false;
+
     protected function setup(): void
     {
         // Use custom error handler for two reasons:
@@ -23,6 +25,7 @@ class DeprecationTest extends SapphireTest
         // - Allow the use of expectDeprecation(), which doesn't work with E_USER_DEPRECATION by default
         //   https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
         parent::setup();
+        $this->noticesWereEnabled = Deprecation::get_is_enabled();
         $this->oldHandler = set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) {
             if ($errno === E_USER_DEPRECATED) {
                 if (str_contains($errstr, 'SilverStripe\\Dev\\Tests\\DeprecationTest')) {
@@ -42,7 +45,9 @@ class DeprecationTest extends SapphireTest
 
     protected function tearDown(): void
     {
-        Deprecation::disable();
+        if (!$this->noticesWereEnabled) {
+            Deprecation::disable();
+        }
         set_error_handler($this->oldHandler);
         $this->oldHandler = null;
         parent::tearDown();

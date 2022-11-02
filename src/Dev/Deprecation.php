@@ -179,7 +179,7 @@ class Deprecation
         // noop
     }
 
-    private static function get_is_enabled(): bool
+    public static function get_is_enabled(): bool
     {
         if (!Director::isDev()) {
             return false;
