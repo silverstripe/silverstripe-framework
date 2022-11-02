@@ -959,7 +959,7 @@ class FormField extends RequestHandler
         $this->extend('onBeforeRenderHolder', $context, $properties);
 
         if (count($properties ?? [])) {
-            $context = $this->customise($properties);
+            $context = $context->customise($properties);
         }
 
         return $context->renderWith($this->getFieldHolderTemplates());
