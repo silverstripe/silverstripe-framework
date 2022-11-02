@@ -1552,10 +1552,13 @@ class Form extends ViewableData implements HasRequestHandler
             HTTPCacheControlMiddleware::singleton()->disableCache();
         }
 
-        $return = $this->renderWith($this->getTemplates());
+        $context = $this;
+        $this->extend('onBeforeRender', $context);
+
+        $return = $context->renderWith($this->getTemplates());
 
         // Now that we're rendered, clear message
-        $this->clearMessage();
+        $context->clearMessage();
 
         return $return;
     }
