@@ -1555,7 +1555,7 @@ class Form extends ViewableData implements HasRequestHandler
         $context = $this;
         $this->extend('onBeforeRender', $context);
 
-        $return = $context->renderWith($this->getTemplates());
+        $return = $context->renderWith($context->getTemplates());
 
         // Now that we're rendered, clear message
         $context->clearMessage();
