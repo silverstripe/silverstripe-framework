@@ -43,7 +43,7 @@ class DeprecationTest extends SapphireTest
     protected function tearDown(): void
     {
         Deprecation::disable();
-        set_error_handler($this->oldHandler);
+        restore_error_handler();
         $this->oldHandler = null;
         parent::tearDown();
     }
