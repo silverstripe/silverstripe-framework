@@ -166,16 +166,16 @@ class CmsFormsContext implements Context
         } else if ($formatting == 'left aligned') {
             if ($matchedNode->getAttribute('class')) {
                 if ($negate) {
-                    Assert::assertNotEquals('text-left', $matchedNode->getAttribute('class'));
+                    Assert::assertNotEquals('text-start', $matchedNode->getAttribute('class'));
                 } else {
-                    Assert::assertEquals('text-left', $matchedNode->getAttribute('class'));
+                    Assert::assertEquals('text-start', $matchedNode->getAttribute('class'));
                 }
             }
         } else if ($formatting == 'right aligned') {
             if ($negate) {
-                Assert::assertNotEquals('text-right', $matchedNode->getAttribute('class'));
+                Assert::assertNotEquals('text-end', $matchedNode->getAttribute('class'));
             } else {
-                Assert::assertEquals('text-right', $matchedNode->getAttribute('class'));
+                Assert::assertEquals('text-end', $matchedNode->getAttribute('class'));
             }
         }
     }
@@ -326,14 +326,14 @@ JS;
     {
         $locator = $this->fixStepArgument($locator);
         $page = $this->getSession()->getPage();
-        
+
         // Searching by name is usually good...
         $element = $page->find('css', 'textarea.htmleditor[name=\'' . $locator . '\']');
-        
+
         if ($element === null) {
             $element = $this->findInputByLabelContent($locator);
         }
-        
+
         Assert::assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
         return $element;
     }

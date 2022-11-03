@@ -5,7 +5,7 @@
                 <% if $ImportModalTitle %>
                     <h2 class="modal-title">$ImportModalTitle</h2>
                 <% end_if %>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>

@@ -265,7 +265,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'alignleft' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-left'
+                    'classes' =>'text-left text-start'
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',
@@ -285,7 +285,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'alignright' => [
                 [
                     'selector' => 'p,h1,h2,h3,h4,h5,h6,td,th,li',
-                    'classes' =>'text-right'
+                    'classes' =>'text-right text-end'
                 ],
                 [
                     'selector' => 'div,ul,ol,table,img,figure',

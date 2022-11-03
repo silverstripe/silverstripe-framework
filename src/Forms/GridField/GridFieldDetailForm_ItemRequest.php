@@ -319,11 +319,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     protected function getRightGroupField()
     {
         $rightGroup = CompositeField::create()->setName('RightGroup');
-        $rightGroup->addExtraClass('ml-auto');
+        $rightGroup->addExtraClass('ms-auto');
         $rightGroup->setFieldHolderTemplate(get_class($rightGroup) . '_holder_buttongroup');
 
         $previousAndNextGroup = CompositeField::create()->setName('PreviousAndNextGroup');
-        $previousAndNextGroup->addExtraClass('btn-group--circular mr-2');
+        $previousAndNextGroup->addExtraClass('btn-group--circular me-2');
         $previousAndNextGroup->setFieldHolderTemplate(CompositeField::class . '_holder_buttongroup');
 
         /** @var GridFieldDetailForm $component */
