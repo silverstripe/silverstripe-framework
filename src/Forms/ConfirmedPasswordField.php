@@ -416,7 +416,7 @@ class ConfirmedPasswordField extends FormField
 
         // if field isn't visible, don't validate
         if (!$this->isSaveable()) {
-            return true;
+            return $this->extendValidationResult(true, $validator);
         }
 
         $this->getPasswordField()->setValue($this->value);
@@ -431,7 +431,7 @@ class ConfirmedPasswordField extends FormField
                 "validation"
             );
 
-            return false;
+            return $this->extendValidationResult(false, $validator);
         }
 
         if (!$this->canBeEmpty) {
@@ -443,7 +443,7 @@ class ConfirmedPasswordField extends FormField
                     "validation"
                 );
 
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
@@ -483,7 +483,7 @@ class ConfirmedPasswordField extends FormField
                     "validation"
                 );
 
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
@@ -498,7 +498,7 @@ class ConfirmedPasswordField extends FormField
                     "validation"
                 );
 
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
@@ -513,7 +513,7 @@ class ConfirmedPasswordField extends FormField
                     ),
                     "validation"
                 );
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
 
             // Check this password is valid for the current user
@@ -527,7 +527,7 @@ class ConfirmedPasswordField extends FormField
                     ),
                     "validation"
                 );
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
 
             // With a valid user and password, check the password is correct
@@ -543,12 +543,12 @@ class ConfirmedPasswordField extends FormField
                         ),
                         "validation"
                     );
-                    return false;
+                    return $this->extendValidationResult(false, $validator);
                 }
             }
         }
 
-        return true;
+        return $this->extendValidationResult(true, $validator);
     }
 
     /**

@@ -545,6 +545,6 @@ class CompositeField extends FormField
             /** @var FormField $child */
             $valid = ($child && $child->validate($validator) && $valid);
         }
-        return $valid;
+        return $this->extendValidationResult($valid, $validator);
     }
 }

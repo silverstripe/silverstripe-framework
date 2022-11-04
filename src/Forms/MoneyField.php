@@ -334,11 +334,12 @@ class MoneyField extends FormField
                     ['currency' => $currency]
                 )
             );
-            return false;
+            return $this->extendValidationResult(false, $validator);
         }
 
         // Field-specific validation
-        return $this->fieldAmount->validate($validator) && $this->fieldCurrency->validate($validator);
+        $result = $this->fieldAmount->validate($validator) && $this->fieldCurrency->validate($validator);
+        return $this->extendValidationResult($result, $validator);
     }
 
     public function setForm($form)
