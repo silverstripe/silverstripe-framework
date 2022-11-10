@@ -548,9 +548,10 @@ class i18nTextCollector
      */
     public function collectFromCode($content, $fileName, Module $module)
     {
-        // Get namespace either from $fileName or $module fallback
+        // Get "namespace" either from $fileName or $module fallback
         $namespace = $fileName ? basename($fileName) : $module->getName();
 
+        $usedFQCNs = [];
         $entities = [];
 
         $tokens = token_get_all("<?php\n" . $content);
@@ -558,12 +559,17 @@ class i18nTextCollector
         $inConcat = false;
         $inNamespace = false;
         $inClass = false; // after `class` but before `{`
+        $inUse = false; // pulling in classes from other namespaces
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
         $inSelf = false; // Tracks progress of collecting self::class
         $currentEntity = [];
+        $currentNameSpace = []; // The actual namespace for the current class
         $currentClass = []; // Class components
         $previousToken = null;
         $thisToken = null; // used to populate $previousToken on next iteration
+        $potentialClassName = null;
+        $currentUse = null;
+        $currentUseAlias = null;
         foreach ($tokens as $token) {
             // Shuffle last token to $lastToken
             $previousToken = $thisToken;
@@ -571,15 +577,52 @@ class i18nTextCollector
             if (is_array($token)) {
                 list($id, $text) = $token;
 
+                // Collect use statements so we can get fully qualified class names
+                if ($id === T_USE) {
+                    $inUse = true;
+                    $currentUse = [];
+                    continue;
+                }
+
+                if ($inUse) {
+                    // PHP 8.0+
+                    if (defined('T_NAME_QUALIFIED') && $id === T_NAME_QUALIFIED) {
+                        $currentUse[] = $text;
+                        $text = explode('\\', $text);
+                        $currentUseAlias = end($text);
+                        continue;
+                    }
+                    // PHP 7.4 or an alias declaration
+                    if ($id === T_STRING) {
+                        // Only add to the FQCN if it's the first string or comes after a namespace separator
+                        if (empty($currentUse) || (is_array($previousToken) && $previousToken[0] === T_NS_SEPARATOR)) {
+                            $currentUse[] = $text;
+                        }
+                        // The last part of the use statement is always the alias or the actual class name
+                        $currentUseAlias = $text;
+                        continue;
+                    }
+                }
+
                 // Check class
                 if ($id === T_NAMESPACE) {
                     $inNamespace = true;
                     $currentClass = [];
+                    $currentNameSpace = [];
                     continue;
                 }
                 if ($inNamespace && ($id === T_STRING || (defined('T_NAME_QUALIFIED') && $id === T_NAME_QUALIFIED))) {
                     $currentClass[] = $text;
+                    $currentNameSpace[] = $text;
                     continue;
+                }
+
+                // This could be a ClassName::class declaration
+                if ($id === T_DOUBLE_COLON && is_array($previousToken) && $previousToken[0] === T_STRING) {
+                    $prevString = $previousToken[1];
+                    if (!in_array($prevString, ['self', 'static', 'parent'])) {
+                        $potentialClassName = $prevString;
+                    }
                 }
 
                 // Check class
@@ -591,6 +634,16 @@ class i18nTextCollector
                             // for __CLASS__ to handle an array of class parts
                             $id = T_CLASS_C;
                             $inSelf = false;
+                        } elseif ($potentialClassName) {
+                            $id = T_CONSTANT_ENCAPSED_STRING;
+                            if (array_key_exists($potentialClassName, $usedFQCNs)) {
+                                // Handle classes that we explicitly know about from use statements
+                                $text = "'" . $usedFQCNs[$potentialClassName] . "'";
+                            } else {
+                                // Assume the class is in the current namespace
+                                $potentialFQCN = [...$currentNameSpace, $potentialClassName];
+                                $text = "'" . implode('\\', $potentialFQCN) . "'";
+                            }
                         } else {
                             // Don't handle other ::class definitions. We can't determine which
                             // class was invoked, so parent::class is not possible at this point.
@@ -600,7 +653,11 @@ class i18nTextCollector
                         $inClass = true;
                         continue;
                     }
+                } elseif (is_array($previousToken) && $previousToken[0] === T_DOUBLE_COLON) {
+                    // We had a potential class but it turns out it was probably a method call.
+                    $potentialClassName = null;
                 }
+
                 if ($inClass && $id === T_STRING) {
                     $currentClass[] = $text;
                     $inClass = false;
@@ -691,10 +748,19 @@ class i18nTextCollector
                 continue;
             }
 
-            // Check if we can close the namespace
-            if ($inNamespace && $token === ';') {
-                $inNamespace = false;
-                continue;
+            // Check if we can close the namespace or use statement
+            if ($token === ';') {
+                if ($inNamespace) {
+                    $inNamespace = false;
+                    continue;
+                }
+                if ($inUse) {
+                    $inUse = false;
+                    $usedFQCNs[$currentUseAlias] = implode('\\', $currentUse);
+                    $currentUse = null;
+                    $currentUseAlias = null;
+                    continue;
+                }
             }
 
             // Continue only if in translation and not in array

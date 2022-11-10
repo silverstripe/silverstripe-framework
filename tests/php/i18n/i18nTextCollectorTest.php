@@ -348,6 +348,64 @@ PHP;
         );
     }
 
+    public function testCollectFromClassSyntax()
+    {
+        $c = i18nTextCollector::create();
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
+        $php = <<<PHP
+        <?php
+        namespace SilverStripe\Framework\Core;
+
+        use SilverStripe\ORM\DataObject;
+        use SilverStripe\Versioned\Versioned;
+        use Some\Space\MyClass as AliasClass;
+        use NoNamespaceClass;
+
+        class MyClass extends Base implements SomeService {
+            public function pointlessFunction1(\$class) {
+                if (
+                    !is_subclass_of(\$class, DataObject::class)
+                    || !Object::has_extension(\$class, Versioned::class)
+                ) {
+                    return null;
+                }
+                return _t(
+                    Versioned::class . '.OTHER_NAMESPACE',
+                    'New Lines'
+                );
+            }
+            public function pointlessFunction2() {
+                return _t(
+                    SameNamespaceClass::class . '.SAME_NAMESPACE',
+                    'Slash=\\\\, Quote=\\''
+                );
+            }
+            public function pointlessFunction3() {
+                return _t(
+                    AliasClass::class . ".ALIAS_CLASS",
+                    "Slash=\\\\, Quote=\\""
+                );
+            }
+            public function pointlessFunction4()
+            {
+                return _t(
+                    NoNamespaceClass::class . '.NO_NAMESPACE',
+                    'Self Class'
+                );
+            }
+        }
+        PHP;
+
+        $this->assertEquals(
+            [
+                'SilverStripe\\Versioned\\Versioned.OTHER_NAMESPACE' => "New Lines",
+                'SilverStripe\\Framework\\Core\\SameNamespaceClass.SAME_NAMESPACE' => 'Slash=\\, Quote=\'',
+                'Some\\Space\\MyClass.ALIAS_CLASS' => 'Slash=\\, Quote="',
+                'NoNamespaceClass.NO_NAMESPACE' => 'Self Class',
+            ],
+            $c->collectFromCode($php, null, $mymodule)
+        );
+    }
 
     public function testNewlinesInEntityValues()
     {
