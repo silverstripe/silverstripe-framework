@@ -187,7 +187,7 @@ PHP
         $backURLs = [
             $this->getRequest()->requestVar('BackURL'),
             $this->getRequest()->getSession()->get('BackURL'),
-            Director::absoluteURL(AdminRootController::config()->get('url_base'), true),
+            Director::absoluteURL(AdminRootController::config()->get('url_base')),
         ];
         $backURL = null;
         foreach ($backURLs as $backURL) {

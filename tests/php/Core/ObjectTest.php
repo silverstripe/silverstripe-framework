@@ -19,6 +19,7 @@ use SilverStripe\Core\Tests\ObjectTest\ExtensionTest3;
 use SilverStripe\Core\Tests\ObjectTest\MyObject;
 use SilverStripe\Core\Tests\ObjectTest\MySubObject;
 use SilverStripe\Core\Tests\ObjectTest\TestExtension;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Versioned\Versioned;
 
@@ -110,6 +111,9 @@ class ObjectTest extends SapphireTest
 
     public function testStaticGetterMethod()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $obj = singleton(MyObject::class);
         $this->assertEquals(
             'MyObject',
@@ -120,6 +124,9 @@ class ObjectTest extends SapphireTest
 
     public function testStaticInheritanceGetters()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $subObj = singleton(MyObject::class);
         $this->assertEquals(
             $subObj->stat('mystaticProperty'),
@@ -130,6 +137,9 @@ class ObjectTest extends SapphireTest
 
     public function testStaticSettingOnSingletons()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $singleton1 = singleton(MyObject::class);
         $singleton2 = singleton(MyObject::class);
         $singleton1->set_stat('mystaticProperty', 'changed');
@@ -142,6 +152,9 @@ class ObjectTest extends SapphireTest
 
     public function testStaticSettingOnInstances()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $instance1 = new ObjectTest\MyObject();
         $instance2 = new ObjectTest\MyObject();
         $instance1->set_stat('mystaticProperty', 'changed');

@@ -329,7 +329,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             }
 
             if (class_exists(Cookie::class)) {
-                Cookie::config()->update('report_errors', false);
+                Cookie::config()->set('report_errors', false);
             }
 
             if (class_exists(RootURLController::class)) {
@@ -347,16 +347,12 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
             if ($this->shouldSetupDatabaseForCurrentTest($fixtureFiles)) {
                 // Assign fixture factory to deprecated prop in case old tests use it over the getter
-                /** @var FixtureTestState $fixtureState */
-                $fixtureState = static::$state->getStateByName('fixtures');
-                $this->fixtureFactory = $fixtureState->getFixtureFactory(static::class);
-
                 $this->logInWithPermission('ADMIN');
             }
 
             // turn off template debugging
             if (class_exists(SSViewer::class)) {
-                SSViewer::config()->update('source_file_comments', false);
+                SSViewer::config()->set('source_file_comments', false);
             }
 
             // Set up the test mailer
@@ -1206,7 +1202,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             if (strpos($themeBaseDir ?? '', BASE_PATH) === 0) {
                 $themeBaseDir = substr($themeBaseDir ?? '', strlen(BASE_PATH));
             }
-            SSViewer::config()->update('theme_enabled', true);
+            SSViewer::config()->set('theme_enabled', true);
             SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
 
             try {
@@ -1649,7 +1645,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         }
 
         if (class_exists(Cookie::class)) {
-            Cookie::config()->update('report_errors', false);
+            Cookie::config()->set('report_errors', false);
         }
 
         if (class_exists(RootURLController::class)) {
@@ -1676,7 +1672,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
 
         // turn off template debugging
         if (class_exists(SSViewer::class)) {
-            SSViewer::config()->update('source_file_comments', false);
+            SSViewer::config()->set('source_file_comments', false);
         }
 
         // Set up the test mailer
@@ -2556,7 +2552,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase implements TestOnly
         if (strpos($themeBaseDir ?? '', BASE_PATH) === 0) {
             $themeBaseDir = substr($themeBaseDir ?? '', strlen(BASE_PATH));
         }
-        SSViewer::config()->update('theme_enabled', true);
+        SSViewer::config()->set('theme_enabled', true);
         SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
 
         try {

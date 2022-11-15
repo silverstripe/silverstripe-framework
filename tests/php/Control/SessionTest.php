@@ -107,7 +107,7 @@ class SessionTest extends SapphireTest
             ->setScheme('https');
         Cookie::set(session_name(), '1234');
         $session = new Session(null); // unstarted session
-        $session->config()->update('cookie_secure', true);
+        $session->config()->set('cookie_secure', true);
         $session->start($req);
         $this->assertEquals(session_name(), $session->config()->get('cookie_name_secure'));
     }
@@ -270,7 +270,7 @@ class SessionTest extends SapphireTest
             ->setScheme('https');
         $session = new Session(null); // unstarted session
         Cookie::set($session->config()->get('cookie_name_secure'), '1234');
-        $session->config()->update('cookie_secure', true);
+        $session->config()->set('cookie_secure', true);
         $this->assertTrue($session->requestContainsSessionId($req));
     }
 

@@ -2,14 +2,14 @@
 Name: basei18n
 Before: '#defaulti18n'
 ---
-SilverStripe\i18n\Data\Sources:
+SilverStripe\Core\Manifest\ModuleManifest:
   module_priority:
     - silverstripe\admin
     - silverstripe\framework
 ---
 Name: defaulti18n
 ---
-SilverStripe\i18n\Data\Sources:
+SilverStripe\Core\Manifest\ModuleManifest:
   module_priority:
     - other_modules
 ---

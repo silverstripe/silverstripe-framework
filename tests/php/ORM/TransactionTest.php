@@ -5,7 +5,6 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Tests\TransactionTest\TestObject;
 
 class TransactionTest extends SapphireTest
@@ -19,18 +18,6 @@ class TransactionTest extends SapphireTest
     ];
 
     private static $originalVersionInfo;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        self::$originalVersionInfo = Deprecation::dump_settings();
-    }
-
-    protected function tearDown(): void
-    {
-        Deprecation::restore_settings(self::$originalVersionInfo);
-        parent::tearDown();
-    }
 
     public static function setUpBeforeClass(): void
     {
@@ -165,9 +152,6 @@ class TransactionTest extends SapphireTest
             $this->markTestSkipped('Current database doesn\'t support READ ONLY transactions');
             return;
         }
-
-        // This feature is deprecated in 4.4, but we're still testing it.
-        Deprecation::notification_version('4.3.0');
 
         $page = new TestObject();
         $page->Title = 'Read only success';

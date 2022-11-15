@@ -10,6 +10,7 @@ use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Tests\MySQLPDOConnectorTest\PDOConnector;
 use SilverStripe\ORM\DB;
 use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * @requires extension PDO
@@ -22,6 +23,9 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
      */
     public function testConnectionCharsetControl($charset, $defaultCollation)
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $config = DB::getConfig();
         $config['driver'] = 'mysql';
         $config['charset'] = $charset;
@@ -51,6 +55,9 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
      */
     public function testConnectionCollationControl($charset, $defaultCollation, $customCollation)
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $config = DB::getConfig();
         $config['charset'] = $charset;
         $config['driver'] = 'mysql';
@@ -86,6 +93,9 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
 
     public function testUtf8mb4GeneralCollation()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $charset = 'utf8mb4';
         $collation = 'utf8mb4_general_ci';
 
@@ -113,6 +123,9 @@ class MySQLPDOConnectorTest extends SapphireTest implements TestOnly
 
     public function testUtf8mb4UnicodeCollation()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $charset = 'utf8mb4';
         $collation = 'utf8mb4_unicode_ci';
 

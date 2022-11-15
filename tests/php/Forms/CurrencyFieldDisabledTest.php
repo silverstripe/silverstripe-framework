@@ -23,7 +23,7 @@ class CurrencyFieldDisabledTest extends SapphireTest
      */
     public function testFieldWithCustomisedCurrencySymbol()
     {
-        DBCurrency::config()->update('currency_symbol', '€');
+        DBCurrency::config()->set('currency_symbol', '€');
         $field = new CurrencyField_Disabled('Test', '', '€5.00');
         $result = $field->Field();
 

@@ -4,9 +4,22 @@ namespace SilverStripe\Dev\Tests\DeprecationTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\Deprecation;
 
 class DeprecationTestObject extends DataObject implements TestOnly
 {
+    public function __construct()
+    {
+        parent::__construct();
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '1.2.3',
+                'Some class message',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
+
     private static $db = [
         "Name" => "Varchar"
     ];

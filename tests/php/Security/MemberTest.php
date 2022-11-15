@@ -219,7 +219,7 @@ class MemberTest extends FunctionalTest
      */
     public function testChangedPasswordEmaling()
     {
-        Member::config()->update('notify_password_change', true);
+        Member::config()->set('notify_password_change', true);
 
         $this->clearEmails();
 
@@ -1187,7 +1187,7 @@ class MemberTest extends FunctionalTest
         $this->assertStringContainsString($message, $response->getBody());
 
         // Logging out from the second device - only one device being logged out
-        RememberLoginHash::config()->update('logout_across_devices', false);
+        RememberLoginHash::config()->set('logout_across_devices', false);
         $this->get(
             'Security/logout',
             $this->session(),
@@ -1205,7 +1205,7 @@ class MemberTest extends FunctionalTest
         // If session-manager module is installed then logout_across_devices is modified so skip
         if (!class_exists(LoginSession::class)) {
             // Logging out from any device when all login hashes should be removed
-            RememberLoginHash::config()->update('logout_across_devices', true);
+            RememberLoginHash::config()->set('logout_across_devices', true);
             Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
             $this->get('Security/logout', $this->session());
             $this->assertEquals(
@@ -1248,7 +1248,7 @@ class MemberTest extends FunctionalTest
     {
         $maxFailedLoginsAllowed = 3;
         //set up the config variables to enable login lockouts
-        Member::config()->update('lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
+        Member::config()->set('lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
 
         /** @var Member $member */
         $member = $this->objFromFixture(Member::class, 'test');
@@ -1282,7 +1282,7 @@ class MemberTest extends FunctionalTest
     public function testMemberValidator()
     {
         // clear custom requirements for this test
-        Member_Validator::config()->update('customRequired', null);
+        Member_Validator::config()->set('customRequired', null);
         /** @var Member $memberA */
         $memberA = $this->objFromFixture(Member::class, 'admin');
         /** @var Member $memberB */
@@ -1358,7 +1358,7 @@ class MemberTest extends FunctionalTest
     public function testMemberValidatorWithExtensions()
     {
         // clear custom requirements for this test
-        Member_Validator::config()->update('customRequired', null);
+        Member_Validator::config()->set('customRequired', null);
 
         // create a blank form
         $form = new MemberTest\ValidatorForm();
@@ -1422,7 +1422,7 @@ class MemberTest extends FunctionalTest
     public function testCustomMemberValidator()
     {
         // clear custom requirements for this test
-        Member_Validator::config()->update('customRequired', null);
+        Member_Validator::config()->set('customRequired', null);
 
         $member = $this->objFromFixture(Member::class, 'admin');
 

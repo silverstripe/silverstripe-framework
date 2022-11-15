@@ -11,7 +11,9 @@ class SwiftPlugin implements \Swift_Events_SendListener
 {
     public function __construct()
     {
-        Deprecation::notice('4.12.0', 'Will be replaced with symfony/mailer', Deprecation::SCOPE_CLASS);
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.12.0', 'Will be replaced with symfony/mailer', Deprecation::SCOPE_CLASS);
+        });
     }
 
     /**

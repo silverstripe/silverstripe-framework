@@ -20,13 +20,6 @@ class MySQLTransactionManager implements TransactionManager
 
     public function transactionStart($transactionMode = false, $sessionCharacteristics = false)
     {
-        if ($transactionMode || $sessionCharacteristics) {
-            Deprecation::notice(
-                '4.4',
-                '$transactionMode and $sessionCharacteristics are deprecated and will be removed in SS5'
-            );
-        }
-
         if ($this->inTransaction) {
             throw new DatabaseException(
                 "Already in transaction, can't start another. Consider decorating with NestedTransactionManager."

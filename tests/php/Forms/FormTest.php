@@ -792,7 +792,7 @@ class FormTest extends FunctionalTest
 
     public function testDefaultClasses()
     {
-        Form::config()->update(
+        Form::config()->merge(
             'default_classes',
             [
             'class1',
@@ -803,7 +803,7 @@ class FormTest extends FunctionalTest
 
         $this->assertStringContainsString('class1', $form->extraClass(), 'Class list does not contain expected class');
 
-        Form::config()->update(
+        Form::config()->merge(
             'default_classes',
             [
             'class1',
@@ -815,7 +815,7 @@ class FormTest extends FunctionalTest
 
         $this->assertStringContainsString('class1 class2', $form->extraClass(), 'Class list does not contain expected class');
 
-        Form::config()->update(
+        Form::config()->merge(
             'default_classes',
             [
             'class3',

@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Tests\Manifest;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Deprecation;
 
 class ModuleTest extends SapphireTest
 {
@@ -29,6 +30,9 @@ class ModuleTest extends SapphireTest
      */
     public function testGetCIConfig($fixture, $expectedPhpConfig)
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $path = __DIR__ . '/fixtures/phpunit-detection/' . $fixture;
         $module = new Module($path, $path);
         $this->assertEquals(

@@ -5,6 +5,7 @@ namespace SilverStripe\Dev;
 use BadMethodCallException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Injector\InjectionCreator;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\Module;
 
@@ -21,19 +22,7 @@ use SilverStripe\Core\Manifest\Module;
  *
  * This class abstracts the above pattern and adds a way to do that.
  *
- * Each call to notice passes a version that the notice will be valid from. Additionally this class has a notion of the
- * version it should use when deciding whether to raise the notice. If that version is equal to or greater than the
- * notices version (and SilverStripe is in dev mode) a deprecation message will be raised.
- *
- * Normally the checking version will be the release version of SilverStripe, but a developer can choose to set it to a
- * future version, to see how their code will behave in future versions.
- *
- * Modules can also set the version for calls they make - either setting it to a future version in order to ensure
- * forwards compatibility or setting it backwards if a module has not yet removed references to deprecated methods.
- *
- * When set per-module, only direct calls to deprecated methods from those modules are considered - if the module
- * calls a non-module method which then calls a deprecated method, that call will use the global check version, not
- * the module specific check version.
+ * Each call to notice passes a version that the notice will be valid from.
  */
 class Deprecation
 {
@@ -58,9 +47,21 @@ class Deprecation
      * must be available before this to avoid infinite loops.
      *
      * @var boolean|null
-     * @deprecated 4.12.0 Use $is_enabled instead
+     * @deprecated 4.12.0 Use $currentlyEnabled instead
      */
     protected static $enabled = null;
+
+    /**
+     * @var array
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     */
+    protected static $module_version_overrides = [];
+
+    /**
+     * @var array
+     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     */
+    public static $notice_level = E_USER_DEPRECATED;
 
     /**
      * Must be configured outside of the config API, as deprecation API
@@ -70,48 +71,64 @@ class Deprecation
      *
      * @internal - Marked as internal so this and other private static's are not treated as config
      */
-    private static bool $is_enabled = false;
-
-    /**
-     * @var array
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    protected static $module_version_overrides = [];
+    private static bool $currentlyEnabled = false;
 
     /**
      * @internal
      */
-    private static bool $inside_notice = false;
+    private static bool $insideNotice = false;
 
     /**
-     * @var array
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
+     * @internal
      */
-    public static $notice_level = E_USER_DEPRECATED;
+    private static bool $insideWithNoReplacement = false;
 
     /**
-     * Buffer of user_errors to be raised when enabled() is called
-     *
-     * This is used when setting deprecated config via yaml, before Deprecation::enable() has been called in _config.php
-     * Deprecated config set via yaml will only be shown in the browser when using ?flush=1
-     * It will not show in CLI when running dev/build flush=1
+     * Buffer of user_errors to be raised
      *
      * @internal
      */
-    private static array $user_error_message_buffer = [];
+    private static array $userErrorMessageBuffer = [];
 
-    public static function enable(): void
+    /**
+     * @internal
+     */
+    private static bool $haveSetShutdownFunction = false;
+
+    /**
+     * @internal
+     */
+    private static bool $showNoReplacementNotices = false;
+
+    public static function enable(bool $showNoReplacementNotices = false): void
     {
-        static::$is_enabled = true;
-        foreach (self::$user_error_message_buffer as $message) {
-            user_error($message, E_USER_DEPRECATED);
-        }
-        self::$user_error_message_buffer = [];
+        static::$currentlyEnabled = true;
+        static::$showNoReplacementNotices = $showNoReplacementNotices;
     }
 
     public static function disable(): void
     {
-        static::$is_enabled = false;
+        static::$currentlyEnabled = false;
+    }
+
+    /**
+     * Used to wrap deprecated methods and deprecated config get()/set() that will be removed
+     * in the next major version with no replacement. This is done to surpress deprecation notices
+     * by for calls from the vendor dir to deprecated code that projects have no ability to change
+     *
+     * @return mixed
+     */
+    public static function withNoReplacement(callable $func)
+    {
+        if (self::$insideWithNoReplacement) {
+            return $func();
+        }
+        self::$insideWithNoReplacement = true;
+        try {
+            return $func();
+        } finally {
+            self::$insideWithNoReplacement = false;
+        }
     }
 
     /**
@@ -159,12 +176,19 @@ class Deprecation
         if (!$level) {
             $level = 1;
         }
-        $called = $backtrace ? $backtrace[$level] : [];
-
-        if (isset($called['class'])) {
-            return $called['class'] . $called['type'] . $called['function'];
+        $newLevel = $level;
+        // handle call_user_func
+        if ($level === 4 && strpos($backtrace[2]['function'] ?? '', 'call_user_func') !== false) {
+            $newLevel = 5;
+        } elseif (strpos($backtrace[$level]['function'] ?? '', 'call_user_func') !== false) {
+            $newLevel = $level + 1;
         }
-        return $called['function'] ?? '';
+        // handle InjectionCreator
+        if ($level == 4 && ($backtrace[$newLevel]['class'] ?? '') === InjectionCreator::class) {
+            $newLevel = $newLevel + 4;
+        }
+        $called = $backtrace[$newLevel] ?? [];
+        return ($called['class'] ?? '') . ($called['type'] ?? '') . ($called['function'] ?? '');
     }
 
     /**
@@ -179,12 +203,12 @@ class Deprecation
         // noop
     }
 
-    private static function get_is_enabled(): bool
+    public static function isEnabled(): bool
     {
         if (!Director::isDev()) {
             return false;
         }
-        return static::$is_enabled || Environment::getEnv('SS_DEPRECATION_ENABLED');
+        return static::$currentlyEnabled || Environment::getEnv('SS_DEPRECATION_ENABLED');
     }
 
     /**
@@ -199,6 +223,24 @@ class Deprecation
         // noop
     }
 
+    public static function outputNotices(): void
+    {
+        if (!self::isEnabled()) {
+            return;
+        }
+        // using a while loop with array_shift() to ensure that self::$userErrorMessageBuffer will have
+        // have values removed from it before calling user_error()
+        while (count(self::$userErrorMessageBuffer)) {
+            $arr = array_shift(self::$userErrorMessageBuffer);
+            $message = $arr['message'];
+            $calledInsideWithNoReplacement = $arr['calledInsideWithNoReplacement'];
+            if ($calledInsideWithNoReplacement && !self::$showNoReplacementNotices) {
+                continue;
+            }
+            user_error($message, E_USER_DEPRECATED);
+        }
+    }
+
     /**
      * Raise a notice indicating the method is deprecated if the version passed as the second argument is greater
      * than or equal to the check version set via ::notification_version
@@ -209,22 +251,23 @@ class Deprecation
      */
     public static function notice($atVersion, $string = '', $scope = Deprecation::SCOPE_METHOD)
     {
-        if (static::$inside_notice) {
+        if (static::$insideNotice) {
             return;
         }
-        static::$inside_notice = true;
+        static::$insideNotice = true;
         // try block needs to wrap all code in case anything inside the try block
         // calls something else that calls Deprecation::notice()
         try {
             if ($scope === self::SCOPE_CONFIG) {
-                if (self::get_is_enabled()) {
-                    user_error($string, E_USER_DEPRECATED);
-                } else {
-                    self::$user_error_message_buffer[] = $string;
-                }
+                // Deprecated config set via yaml will only be shown in the browser when using ?flush=1
+                // It will not show in CLI when running dev/build flush=1
+                self::$userErrorMessageBuffer[] = [
+                    'message' => $string,
+                    'calledInsideWithNoReplacement' => self::$insideWithNoReplacement
+                ];
             } else {
-                if (!self::get_is_enabled()) {
-                    // Do not add to self::$user_error_message_buffer, as the backtrace is too expensive
+                if (!self::isEnabled()) {
+                    // Do not add to self::$userErrorMessageBuffer, as the backtrace is too expensive
                     return;
                 }
     
@@ -234,7 +277,7 @@ class Deprecation
                 // Get the calling scope
                 if ($scope == Deprecation::SCOPE_METHOD) {
                     $backtrace = debug_backtrace(0);
-                    $caller = self::get_called_method_from_trace($backtrace);
+                    $caller = self::get_called_method_from_trace($backtrace, 1);
                 } elseif ($scope == Deprecation::SCOPE_CLASS) {
                     $backtrace = debug_backtrace(0);
                     $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
@@ -242,18 +285,30 @@ class Deprecation
                     $caller = false;
                 }
     
-                // Then raise the notice
                 if (substr($string, -1) != '.') {
                     $string .= ".";
                 }
 
-                $string .= " Called from " . self::get_called_method_from_trace($backtrace, 2) . '.';
+                $level = self::$insideWithNoReplacement ? 4 : 2;
+                $string .= " Called from " . self::get_called_method_from_trace($backtrace, $level) . '.';
 
                 if ($caller) {
-                    user_error($caller . ' is deprecated.' . ($string ? ' ' . $string : ''), E_USER_DEPRECATED);
-                } else {
-                    user_error($string, E_USER_DEPRECATED);
+                    $string = $caller . ' is deprecated.' . ($string ? ' ' . $string : '');
                 }
+                self::$userErrorMessageBuffer[] = [
+                    'message' => $string,
+                    'calledInsideWithNoReplacement' => self::$insideWithNoReplacement
+                ];
+            }
+            if (!self::$haveSetShutdownFunction && self::isEnabled()) {
+                // Use a shutdown function rather than immediately calling user_error() so that notices
+                // do not interfere with setting session varibles i.e. headers already sent error
+                // it also means the deprecation notices appear below all phpunit output in CI
+                // which is far nicer than having it spliced between phpunit output
+                register_shutdown_function(function () {
+                    self::outputNotices();
+                });
+                self::$haveSetShutdownFunction = true;
             }
         } catch (BadMethodCallException $e) {
             if ($e->getMessage() === InjectorLoader::NO_MANIFESTS_AVAILABLE) {
@@ -264,7 +319,7 @@ class Deprecation
                 throw $e;
             }
         } finally {
-            static::$inside_notice = false;
+            static::$insideNotice = false;
         }
     }
 
