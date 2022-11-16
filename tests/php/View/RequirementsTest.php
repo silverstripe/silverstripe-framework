@@ -516,7 +516,7 @@ class RequirementsTest extends SapphireTest
         $combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
         $combinedFilePath = TestAssetStore::base_path() . $combinedFileName;
 
-        $html = $backend->includeInHTML(false, self::$html_template);
+        $html = $backend->includeInHTML(self::$html_template);
 
         /* ASYNC IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(

@@ -275,7 +275,7 @@ class Convert
     /**
      * Convert a JSON string into an array.
      *
-     * @deprecated 4.4.0 Use json_decode() instead
+     * @deprecated 4.4.0 Use json_decode($val, true) instead
      * @param string $val JSON string to convert
      * @return array|boolean
      */

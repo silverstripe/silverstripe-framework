@@ -28,7 +28,7 @@ class CurrencyFieldReadonlyTest extends SapphireTest
 
     public function testFieldWithOutValue()
     {
-        DBCurrency::config()->update('currency_symbol', 'AUD');
+        DBCurrency::config()->set('currency_symbol', 'AUD');
         $field = new CurrencyField_Readonly('Test', '', null);
         $result = $field->Field();
 
@@ -42,7 +42,7 @@ class CurrencyFieldReadonlyTest extends SapphireTest
      */
     public function testFieldWithCustomisedCurrencySymbol()
     {
-        DBCurrency::config()->update('currency_symbol', '€');
+        DBCurrency::config()->set('currency_symbol', '€');
         $field = new CurrencyField_Readonly('Test', '', '€5.00');
         $result = $field->Field();
 

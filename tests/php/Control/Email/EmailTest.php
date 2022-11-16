@@ -271,7 +271,7 @@ class EmailTest extends SapphireTest
 
     public function testSetSwiftMessage()
     {
-        Email::config()->update('admin_email', 'admin@example.com');
+        Email::config()->set('admin_email', 'admin@example.com');
         DBDatetime::set_mock_now('2017-01-01 07:00:00');
         $email = new Email();
         $swiftMessage = new Swift_Message();
@@ -294,7 +294,7 @@ class EmailTest extends SapphireTest
 
     public function testAdminEmailApplied()
     {
-        Email::config()->update('admin_email', 'admin@example.com');
+        Email::config()->set('admin_email', 'admin@example.com');
         $email = new Email();
 
         $this->assertCount(1, $email->getFrom());

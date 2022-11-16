@@ -133,6 +133,21 @@ class ArrayListTest extends SapphireTest
         );
     }
 
+    public function testLimitNull()
+    {
+        $list = new ArrayList(
+            [
+                ['Key' => 1], ['Key' => 2], ['Key' => 3]
+            ]
+        );
+        $this->assertEquals(
+            $list->limit(null, 0)->toArray(),
+            [
+                ['Key' => 1], ['Key' => 2], ['Key' => 3]
+            ]
+        );
+    }
+
     public function testAddRemove()
     {
         $list = new ArrayList(

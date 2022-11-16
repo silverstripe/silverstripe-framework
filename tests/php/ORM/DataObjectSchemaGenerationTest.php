@@ -101,7 +101,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Table will have been initially created by the $extraDataObjects setting
 
         // Let's insert a new field here
-        TestObject::config()->update(
+        TestObject::config()->merge(
             'db',
             [
             'SecretField' => 'Varchar(100)'
@@ -170,7 +170,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Table will have been initially created by the $extraDataObjects setting
 
         // Update the SearchFields index here
-        TestIndexObject::config()->update(
+        TestIndexObject::config()->merge(
             'indexes',
             [
                 'SearchFields' => [
@@ -265,35 +265,35 @@ class DataObjectSchemaGenerationTest extends SapphireTest
             'columns' => ['Sort'],
         ], $indexes);
         DataObject::getSchema()->reset();
-        Config::inst()->update(SortedObject::class, 'default_sort', 'Sort ASC');
+        Config::inst()->set(SortedObject::class, 'default_sort', 'Sort ASC');
         $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
         $this->assertContains([
             'type' => 'index',
             'columns' => ['Sort'],
         ], $indexes);
         DataObject::getSchema()->reset();
-        Config::inst()->update(SortedObject::class, 'default_sort', 'Sort DESC');
+        Config::inst()->set(SortedObject::class, 'default_sort', 'Sort DESC');
         $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
         $this->assertContains([
             'type' => 'index',
             'columns' => ['Sort'],
         ], $indexes);
         DataObject::getSchema()->reset();
-        Config::inst()->update(SortedObject::class, 'default_sort', '"Sort" DESC');
+        Config::inst()->set(SortedObject::class, 'default_sort', '"Sort" DESC');
         $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
         $this->assertContains([
             'type' => 'index',
             'columns' => ['Sort'],
         ], $indexes);
         DataObject::getSchema()->reset();
-        Config::inst()->update(SortedObject::class, 'default_sort', '"DataObjectSchemaGenerationTest_SortedObject"."Sort" ASC');
+        Config::inst()->set(SortedObject::class, 'default_sort', '"DataObjectSchemaGenerationTest_SortedObject"."Sort" ASC');
         $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
         $this->assertContains([
             'type' => 'index',
             'columns' => ['Sort'],
         ], $indexes);
         DataObject::getSchema()->reset();
-        Config::inst()->update(SortedObject::class, 'default_sort', '"Sort" DESC, "Title" ASC');
+        Config::inst()->set(SortedObject::class, 'default_sort', '"Sort" DESC, "Title" ASC');
         $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
         $this->assertContains([
             'type' => 'index',
@@ -305,7 +305,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         ], $indexes);
         DataObject::getSchema()->reset();
         // make sure that specific indexes aren't overwritten
-        Config::inst()->update(SortedObject::class, 'indexes', [
+        Config::inst()->merge(SortedObject::class, 'indexes', [
             'Sort' => [
                 'type' => 'unique',
                 'columns' => ['Sort'],

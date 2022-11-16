@@ -14,6 +14,7 @@ use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 use SimpleXMLElement;
+use SilverStripe\Dev\Deprecation;
 
 /* -------------------------------------------------
  *
@@ -115,7 +116,7 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
             // Disable theme, if necessary
             if (static::get_disable_themes()) {
-                SSViewer::config()->update('theme_enabled', false);
+                SSViewer::config()->set('theme_enabled', false);
             }
 
             // Flush user
@@ -123,9 +124,11 @@ if (class_exists(IsEqualCanonicalizing::class)) {
 
             // Switch to draft site, if necessary
             // If you rely on this you should be crafting stage-specific urls instead though.
-            if (static::get_use_draft_site()) {
-                $this->useDraftSite();
-            }
+            Deprecation::withNoReplacement(function () {
+                if (static::get_use_draft_site()) {
+                    $this->useDraftSite();
+                }
+            });
 
             // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
             // basis.
@@ -560,7 +563,7 @@ class FunctionalTest extends SapphireTest implements TestOnly
 
         // Disable theme, if necessary
         if (static::get_disable_themes()) {
-            SSViewer::config()->update('theme_enabled', false);
+            SSViewer::config()->set('theme_enabled', false);
         }
 
         // Flush user
@@ -568,9 +571,11 @@ class FunctionalTest extends SapphireTest implements TestOnly
 
         // Switch to draft site, if necessary
         // If you rely on this you should be crafting stage-specific urls instead though.
-        if (static::get_use_draft_site()) {
-            $this->useDraftSite();
-        }
+        Deprecation::withNoReplacement(function () {
+            if (static::get_use_draft_site()) {
+                $this->useDraftSite();
+            }
+        });
 
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.

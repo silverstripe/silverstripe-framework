@@ -6,6 +6,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Upload;
 use SilverStripe\Assets\Upload_Validator;
+use SilverStripe\Core\Convert;
 
 /**
  * Represents a form field which has an Upload() instance and can upload to a folder
@@ -47,8 +48,8 @@ trait UploadReceiver
         );
 
         // get the lower max size
-        $maxUpload = File::ini2bytes(ini_get('upload_max_filesize'));
-        $maxPost = File::ini2bytes(ini_get('post_max_size'));
+        $maxUpload = Convert::memstring2bytes(ini_get('upload_max_filesize'));
+        $maxPost = Convert::memstring2bytes(ini_get('post_max_size'));
         $this->getValidator()->setAllowedMaxFileSize(min($maxUpload, $maxPost));
     }
 

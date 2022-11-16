@@ -16,6 +16,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Kernel;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -856,6 +857,9 @@ class DirectorTest extends SapphireTest
 
     public function testRequestFilterInDirectorTest()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $filter = new DirectorTest\TestRequestFilter;
 
         $processor = new RequestProcessor([$filter]);

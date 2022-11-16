@@ -222,7 +222,7 @@ class RSSFeed extends ViewableData
     public function outputToBrowser()
     {
         $prevState = SSViewer::config()->uninherited('source_file_comments');
-        SSViewer::config()->update('source_file_comments', false);
+        SSViewer::config()->set('source_file_comments', false);
 
         $response = Controller::curr()->getResponse();
 
@@ -236,7 +236,7 @@ class RSSFeed extends ViewableData
 
         $response->addHeader("Content-Type", "application/rss+xml; charset=utf-8");
 
-        SSViewer::config()->update('source_file_comments', $prevState);
+        SSViewer::config()->set('source_file_comments', $prevState);
         return $this->renderWith($this->getTemplates());
     }
 

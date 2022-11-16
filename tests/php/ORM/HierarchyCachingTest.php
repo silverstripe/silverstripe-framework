@@ -37,7 +37,7 @@ class HierachyCacheTest extends SapphireTest
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        HideTestObject::config()->update(
+        HideTestObject::config()->merge(
             'hide_from_hierarchy',
             [ HideTestSubObject::class ]
         );

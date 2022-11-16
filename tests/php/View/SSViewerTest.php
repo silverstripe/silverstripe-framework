@@ -32,6 +32,7 @@ use SilverStripe\View\SSViewer_FromString;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\ViewableData;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * @skipUpgrade
@@ -53,8 +54,8 @@ class SSViewerTest extends SapphireTest
     protected function setUp(): void
     {
         parent::setUp();
-        SSViewer::config()->update('source_file_comments', false);
-        SSViewer_FromString::config()->update('cache_template', false);
+        SSViewer::config()->set('source_file_comments', false);
+        SSViewer_FromString::config()->set('cache_template', false);
         TestAssetStore::activate('SSViewerTest');
         $this->oldServer = $_SERVER;
     }
@@ -73,7 +74,10 @@ class SSViewerTest extends SapphireTest
      */
     public function testCurrentTheme()
     {
-        SSViewer::config()->update('theme', 'mytheme');
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
+        SSViewer::config()->set('theme', 'mytheme');
         $this->assertEquals(
             'mytheme',
             SSViewer::config()->uninherited('theme'),
@@ -1269,39 +1273,39 @@ after'
         $this->assertEquals("12345678910", $result, "Numbers rendered in order");
 
         //test First
-        $result = $this->render('<% loop Set %><% if First %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $IsFirst %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("1", $result, "Only the first number is rendered");
 
         //test Last
-        $result = $this->render('<% loop Set %><% if Last %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $IsLast %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("10", $result, "Only the last number is rendered");
 
         //test Even
-        $result = $this->render('<% loop Set %><% if Even() %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $Even() %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("246810", $result, "Even numbers rendered in order");
 
         //test Even with quotes
-        $result = $this->render('<% loop Set %><% if Even("1") %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $Even("1") %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("246810", $result, "Even numbers rendered in order");
 
         //test Even without quotes
-        $result = $this->render('<% loop Set %><% if Even(1) %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $Even(1) %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("246810", $result, "Even numbers rendered in order");
 
         //test Even with zero-based start index
-        $result = $this->render('<% loop Set %><% if Even("0") %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $Even("0") %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("13579", $result, "Even (with zero-based index) numbers rendered in order");
 
         //test Odd
-        $result = $this->render('<% loop Set %><% if Odd %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $Odd %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("13579", $result, "Odd numbers rendered in order");
 
         //test FirstLast
-        $result = $this->render('<% loop Set %><% if FirstLast %>$Number$FirstLast<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $FirstLast %>$Number$FirstLast<% end_if %><% end_loop %>', $data);
         $this->assertEquals("1first10last", $result, "First and last numbers rendered in order");
 
         //test Middle
-        $result = $this->render('<% loop Set %><% if Middle %>$Number<% end_if %><% end_loop %>', $data);
+        $result = $this->render('<% loop Set %><% if $Middle %>$Number<% end_if %><% end_loop %>', $data);
         $this->assertEquals("23456789", $result, "Middle numbers rendered in order");
 
         //test MiddleString
@@ -1611,7 +1615,7 @@ after'
         $this->assertEqualIgnoringWhitespace(
             '1ab23last',
             $this->render(
-                '<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if Last %>last<% end_if %>'
+                '<% loop $Foo %>$Name<% loop Children %>$Name<% end_loop %><% if $IsLast %>last<% end_if %>'
                 . '<% end_loop %>',
                 $data
             )
@@ -1819,7 +1823,7 @@ EOC;
 
     public function testRenderWithSourceFileComments()
     {
-        SSViewer::config()->update('source_file_comments', true);
+        SSViewer::config()->set('source_file_comments', true);
         $i = __DIR__ . '/SSViewerTest/templates/Includes';
         $f = __DIR__ . '/SSViewerTest/templates/SSViewerTestComments';
         $templates = [
@@ -2099,7 +2103,7 @@ EOC;
         $this->render($content, null, null);
         $this->assertFalse(file_exists($cacheFile ?? ''), 'Cache file was created when caching was off');
 
-        SSViewer_FromString::config()->update('cache_template', true);
+        SSViewer_FromString::config()->set('cache_template', true);
         $this->render($content, null, null);
         $this->assertTrue(file_exists($cacheFile ?? ''), 'Cache file wasn\'t created when it was meant to');
         unlink($cacheFile ?? '');

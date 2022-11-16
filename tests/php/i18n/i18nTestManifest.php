@@ -82,7 +82,7 @@ trait i18nTestManifest
         // Switch to test manifest
         $s = DIRECTORY_SEPARATOR;
         $this->alternateBasePath = __DIR__ . $s . 'i18nTest' . $s . "_fakewebroot";
-        Director::config()->update('alternate_base_folder', $this->alternateBasePath);
+        Director::config()->set('alternate_base_folder', $this->alternateBasePath);
 
         // New module manifest
         $moduleManifest = new ModuleManifest($this->alternateBasePath);

@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Security\RandomGenerator;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -13,6 +14,9 @@ class RandomGeneratorTest extends SapphireTest
 
     public function testGenerateEntropy()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $r = new RandomGenerator();
         $this->assertNotNull($r->generateEntropy());
         $this->assertNotEquals($r->generateEntropy(), $r->generateEntropy());

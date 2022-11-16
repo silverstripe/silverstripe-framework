@@ -67,7 +67,7 @@ class CurrencyFieldTest extends SapphireTest
         );
 
         //tests with updated currency symbol setting
-        DBCurrency::config()->update('currency_symbol', '€');
+        DBCurrency::config()->set('currency_symbol', '€');
 
         $f->setValue('123.45');
         $this->assertTrue(
@@ -180,7 +180,7 @@ class CurrencyFieldTest extends SapphireTest
         );
 
         //update currency symbol via config
-        DBCurrency::config()->update('currency_symbol', '€');
+        DBCurrency::config()->set('currency_symbol', '€');
 
         $f->setValue('123.45');
         $this->assertEquals(
@@ -263,7 +263,7 @@ class CurrencyFieldTest extends SapphireTest
         );
 
         //tests with updated currency symbol setting
-        DBCurrency::config()->update('currency_symbol', '€');
+        DBCurrency::config()->set('currency_symbol', '€');
 
         $f->setValue('€123.45');
         $this->assertEquals(
@@ -302,11 +302,14 @@ class CurrencyFieldTest extends SapphireTest
         $field = new CurrencyField('Test', '', '$5.00');
         $validator = new RequiredFields();
 
-        DBCurrency::config()->update('currency_symbol', '€');
+        DBCurrency::config()->set('currency_symbol', '€');
         $result = $field->validate($validator);
 
         $this->assertFalse($result, 'Validation should fail since wrong currency was used');
         $this->assertFalse($validator->getResult()->isValid(), 'Validator should receive failed state');
-        $this->assertStringContainsString('Please enter a valid currency', $validator->getResult()->serialize());
+        $this->assertStringContainsString(
+            'Please enter a valid currency',
+            json_encode($validator->getResult()->__serialize())
+        );
     }
 }

@@ -21,7 +21,7 @@ class SwiftMailerTest extends SapphireTest
         $this->assertEquals($swift, $mailer->getSwiftMailer());
 
         SwiftMailer::config()->remove('swift_plugins');
-        SwiftMailer::config()->update('swift_plugins', [Swift_Plugins_AntiFloodPlugin::class]);
+        SwiftMailer::config()->merge('swift_plugins', [Swift_Plugins_AntiFloodPlugin::class]);
 
         /** @var Swift_MailTransport $transport */
         $transport = $this->getMockBuilder(Swift_MailTransport::class)->getMock();

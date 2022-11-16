@@ -200,7 +200,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertSame($expectValid, $result, 'Validate method should return its result');
         $this->assertSame($expectValid, $validator->getResult()->isValid());
         if ($expectedMessage) {
-            $this->assertStringContainsString($expectedMessage, $validator->getResult()->serialize());
+            $this->assertStringContainsString($expectedMessage, json_encode($validator->getResult()->__serialize()));
         }
     }
 
@@ -235,7 +235,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertFalse($validator->getResult()->isValid());
         $this->assertStringContainsString(
             'Passwords must have at least one digit and one alphanumeric character',
-            $validator->getResult()->serialize()
+            json_encode($validator->getResult()->__serialize())
         );
     }
 
@@ -254,7 +254,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertFalse($validator->getResult()->isValid());
         $this->assertStringContainsString(
             'You must enter your current password',
-            $validator->getResult()->serialize()
+            json_encode($validator->getResult()->__serialize())
         );
     }
 
@@ -276,7 +276,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertFalse($validator->getResult()->isValid());
         $this->assertStringContainsString(
             'You must be logged in to change your password',
-            $validator->getResult()->serialize()
+            json_encode($validator->getResult()->__serialize())
         );
     }
 
@@ -302,7 +302,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertFalse($validator->getResult()->isValid());
         $this->assertStringContainsString(
             'The current password you have entered is not correct',
-            $validator->getResult()->serialize()
+            json_encode($validator->getResult()->__serialize())
         );
     }
 

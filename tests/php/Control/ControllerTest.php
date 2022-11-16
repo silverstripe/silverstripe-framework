@@ -45,7 +45,7 @@ class ControllerTest extends FunctionalTest
     protected function setUp(): void
     {
         parent::setUp();
-        Director::config()->update('alternate_base_url', '/');
+        Director::config()->set('alternate_base_url', '/');
 
         // Add test theme
         $themeDir = substr(__DIR__, strlen(FRAMEWORK_DIR)) . '/ControllerTest/';

@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use RuntimeException;
 use SilverStripe\Assets\FileFinder;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * An extension to the default file finder with some extra filters to facilitate
@@ -285,7 +286,9 @@ class ManifestFileFinder extends FileFinder
         if ($this->isDirectoryModule($newBasename, $newPathname, $newDepth)) {
             // We've reached the root of the module folder, we can read the PHP CI config now
             $module = new Module($newPathname, $this->upLevels($newPathname, $newDepth));
-            $config = $module->getCIConfig();
+            $config = Deprecation::withNoReplacement(function () use ($module) {
+                return $module->getCIConfig();
+            });
 
             if (empty($config['PHP'])) {
                 // This should never happen

@@ -268,7 +268,9 @@ class Email extends ViewableData
             $message = new Swift_Message(null, null, 'text/html', 'utf-8');
             // Set priority to fix PHP 8.1 SimpleMessage::getPriority() sscanf() null parameter
             $message->setPriority(Swift_Mime_SimpleMessage::PRIORITY_NORMAL);
-            $this->setSwiftMessage($message);
+            Deprecation::withNoReplacement(function () use ($message) {
+                $this->setSwiftMessage($message);
+            });
         }
 
         return $this->swiftMessage;
@@ -328,7 +330,9 @@ class Email extends ViewableData
      */
     public function getFrom()
     {
-        return $this->getSwiftMessage()->getFrom();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getFrom();
+        });
     }
 
     /**
@@ -351,8 +355,9 @@ class Email extends ViewableData
     public function setFrom($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setFrom($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->setFrom($address, $name);
+        });
         return $this;
     }
 
@@ -364,8 +369,9 @@ class Email extends ViewableData
     public function addFrom($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addFrom($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->addFrom($address, $name);
+        });
         return $this;
     }
 
@@ -374,7 +380,9 @@ class Email extends ViewableData
      */
     public function getSender()
     {
-        return $this->getSwiftMessage()->getSender();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getSender();
+        });
     }
 
     /**
@@ -385,8 +393,9 @@ class Email extends ViewableData
     public function setSender($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setSender($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->setSender($address, $name);
+        });
         return $this;
     }
 
@@ -395,7 +404,9 @@ class Email extends ViewableData
      */
     public function getReturnPath()
     {
-        return $this->getSwiftMessage()->getReturnPath();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getReturnPath();
+        });
     }
 
     /**
@@ -407,7 +418,9 @@ class Email extends ViewableData
     public function setReturnPath($address)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setReturnPath($address);
+        Deprecation::withNoReplacement(function () use ($address) {
+            $this->getSwiftMessage()->setReturnPath($address);
+        });
         return $this;
     }
 
@@ -416,7 +429,9 @@ class Email extends ViewableData
      */
     public function getTo()
     {
-        return $this->getSwiftMessage()->getTo();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getTo();
+        });
     }
 
     /**
@@ -432,8 +447,9 @@ class Email extends ViewableData
     public function setTo($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setTo($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->setTo($address, $name);
+        });
         return $this;
     }
 
@@ -445,8 +461,9 @@ class Email extends ViewableData
     public function addTo($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addTo($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->addTo($address, $name);
+        });
         return $this;
     }
 
@@ -455,7 +472,9 @@ class Email extends ViewableData
      */
     public function getCC()
     {
-        return $this->getSwiftMessage()->getCc();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getCc();
+        });
     }
 
     /**
@@ -466,8 +485,9 @@ class Email extends ViewableData
     public function setCC($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setCc($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->setCc($address, $name);
+        });
         return $this;
     }
 
@@ -479,8 +499,9 @@ class Email extends ViewableData
     public function addCC($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addCc($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->addCc($address, $name);
+        });
         return $this;
     }
 
@@ -489,7 +510,9 @@ class Email extends ViewableData
      */
     public function getBCC()
     {
-        return $this->getSwiftMessage()->getBcc();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getBcc();
+        });
     }
 
     /**
@@ -500,8 +523,9 @@ class Email extends ViewableData
     public function setBCC($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setBcc($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->setBcc($address, $name);
+        });
         return $this;
     }
 
@@ -513,8 +537,9 @@ class Email extends ViewableData
     public function addBCC($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addBcc($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->addBcc($address, $name);
+        });
         return $this;
     }
 
@@ -523,7 +548,9 @@ class Email extends ViewableData
      */
     public function getReplyTo()
     {
-        return $this->getSwiftMessage()->getReplyTo();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getReplyTo();
+        });
     }
 
     /**
@@ -534,8 +561,9 @@ class Email extends ViewableData
     public function setReplyTo($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->setReplyTo($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->setReplyTo($address, $name);
+        });
         return $this;
     }
 
@@ -547,8 +575,9 @@ class Email extends ViewableData
     public function addReplyTo($address, $name = null)
     {
         $address = $this->sanitiseAddress($address);
-        $this->getSwiftMessage()->addReplyTo($address, $name);
-
+        Deprecation::withNoReplacement(function () use ($address, $name) {
+            $this->getSwiftMessage()->addReplyTo($address, $name);
+        });
         return $this;
     }
 
@@ -557,7 +586,9 @@ class Email extends ViewableData
      */
     public function getSubject()
     {
-        return $this->getSwiftMessage()->getSubject();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getSubject();
+        });
     }
 
     /**
@@ -566,8 +597,9 @@ class Email extends ViewableData
      */
     public function setSubject($subject)
     {
-        $this->getSwiftMessage()->setSubject($subject);
-
+        Deprecation::withNoReplacement(function () use ($subject) {
+            $this->getSwiftMessage()->setSubject($subject);
+        });
         return $this;
     }
 
@@ -576,7 +608,9 @@ class Email extends ViewableData
      */
     public function getPriority()
     {
-        return $this->getSwiftMessage()->getPriority();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getPriority();
+        });
     }
 
     /**
@@ -585,8 +619,9 @@ class Email extends ViewableData
      */
     public function setPriority($priority)
     {
-        $this->getSwiftMessage()->setPriority($priority);
-
+        Deprecation::withNoReplacement(function () use ($priority) {
+            $this->getSwiftMessage()->setPriority($priority);
+        });
         return $this;
     }
 
@@ -622,8 +657,9 @@ class Email extends ViewableData
         if ($mime) {
             $attachment->setContentType($mime);
         }
-        $this->getSwiftMessage()->attach($attachment);
-
+        Deprecation::withNoReplacement(function () use ($attachment) {
+            $this->getSwiftMessage()->attach($attachment);
+        });
         return $this;
     }
 
@@ -642,8 +678,9 @@ class Email extends ViewableData
     public function setData($data)
     {
         $this->data = $data;
-        $this->invalidateBody();
-
+        Deprecation::withNoReplacement(function () {
+            $this->invalidateBody();
+        });
         return $this;
     }
 
@@ -661,9 +698,9 @@ class Email extends ViewableData
         } else {
             $this->data->$name = $value;
         }
-
-        $this->invalidateBody();
-
+        Deprecation::withNoReplacement(function () {
+            $this->invalidateBody();
+        });
         return $this;
     }
 
@@ -680,9 +717,9 @@ class Email extends ViewableData
         } else {
             $this->data->$name = null;
         }
-
-        $this->invalidateBody();
-
+        Deprecation::withNoReplacement(function () {
+            $this->invalidateBody();
+        });
         return $this;
     }
 
@@ -691,7 +728,9 @@ class Email extends ViewableData
      */
     public function getBody()
     {
-        return $this->getSwiftMessage()->getBody();
+        return Deprecation::withNoReplacement(function () {
+            return $this->getSwiftMessage()->getBody();
+        });
     }
 
     /**
@@ -700,15 +739,16 @@ class Email extends ViewableData
      */
     public function setBody($body)
     {
-        $plainPart = $this->findPlainPart();
-        if ($plainPart) {
-            $this->getSwiftMessage()->detach($plainPart);
-        }
-        unset($plainPart);
-
-        $body = HTTP::absoluteURLs($body);
-        $this->getSwiftMessage()->setBody($body);
-
+        Deprecation::withNoReplacement(function () use ($body) {
+            $plainPart = $this->findPlainPart();
+            if ($plainPart) {
+                $this->getSwiftMessage()->detach($plainPart);
+            }
+            unset($plainPart);
+    
+            $body = HTTP::absoluteURLs($body);
+            $this->getSwiftMessage()->setBody($body);
+        });
         return $this;
     }
 
@@ -746,10 +786,11 @@ class Email extends ViewableData
     public function debug()
     {
         Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $this->render();
-
-        $class = static::class;
-        return "<h2>Email template {$class}:</h2>\n" . '<pre>' . $this->getSwiftMessage()->toString() . '</pre>';
+        return Deprecation::withNoReplacement(function () {
+            $this->render();
+            $class = static::class;
+            return "<h2>Email template {$class}:</h2>\n" . '<pre>' . $this->getSwiftMessage()->toString() . '</pre>';
+        });
     }
 
     /**
@@ -854,13 +895,15 @@ class Email extends ViewableData
      */
     public function send()
     {
-        if (!$this->getBody()) {
-            $this->render();
-        }
-        if (!$this->hasPlainPart()) {
-            $this->generatePlainPartFromBody();
-        }
-        return Injector::inst()->get(Mailer::class)->send($this);
+        return Deprecation::withNoReplacement(function () {
+            if (!$this->getBody()) {
+                $this->render();
+            }
+            if (!$this->hasPlainPart()) {
+                $this->generatePlainPartFromBody();
+            }
+            return Injector::inst()->get(Mailer::class)->send($this);
+        });
     }
 
     /**
@@ -868,10 +911,12 @@ class Email extends ViewableData
      */
     public function sendPlain()
     {
-        if (!$this->hasPlainPart()) {
-            $this->render(true);
-        }
-        return Injector::inst()->get(Mailer::class)->send($this);
+        return Deprecation::withNoReplacement(function () {
+            if (!$this->hasPlainPart()) {
+                $this->render(true);
+            }
+            return Injector::inst()->get(Mailer::class)->send($this);
+        });
     }
 
     /**
@@ -884,68 +929,71 @@ class Email extends ViewableData
     public function render($plainOnly = false)
     {
         Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-
-        if ($existingPlainPart = $this->findPlainPart()) {
-            $this->getSwiftMessage()->detach($existingPlainPart);
-        }
-        unset($existingPlainPart);
-
-        // Respect explicitly set body
-        $htmlPart = $plainOnly ? null : $this->getBody();
-        $plainPart = $plainOnly ? $this->getBody() : null;
-
-        // Ensure we can at least render something
-        $htmlTemplate = $this->getHTMLTemplate();
-        $plainTemplate = $this->getPlainTemplate();
-        if (!$htmlTemplate && !$plainTemplate && !$plainPart && !$htmlPart) {
-            return $this;
-        }
-
-        // Do not interfere with emails styles
-        Requirements::clear();
-
-        // Render plain part
-        if ($plainTemplate && !$plainPart) {
-            $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
-        }
-
-        // Render HTML part, either if sending html email, or a plain part is lacking
-        if (!$htmlPart && $htmlTemplate && (!$plainOnly || empty($plainPart))) {
-            $htmlPart = $this->renderWith($htmlTemplate, $this->getData());
-        }
-
-        // Plain part fails over to generated from html
-        if (!$plainPart && $htmlPart) {
-            /** @var DBHTMLText $htmlPartObject */
-            $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
-            $plainPart = $htmlPartObject->Plain();
-        }
-
-        // Rendering is finished
-        Requirements::restore();
-
-        // Fail if no email to send
-        if (!$plainPart && !$htmlPart) {
-            return $this;
-        }
-
-        // Build HTML / Plain components
-        if ($htmlPart && !$plainOnly) {
-            $this->setBody($htmlPart);
-            $this->getSwiftMessage()->setContentType('text/html');
-            $this->getSwiftMessage()->setCharset('utf-8');
-            if ($plainPart) {
-                $this->getSwiftMessage()->addPart($plainPart, 'text/plain', 'utf-8');
+        return Deprecation::withNoReplacement(function () use ($plainOnly) {
+            $existingPlainPart = Deprecation::withNoReplacement(function () {
+                return $this->findPlainPart();
+            });
+            if ($existingPlainPart) {
+                $this->getSwiftMessage()->detach($existingPlainPart);
             }
-        } else {
-            if ($plainPart) {
-                $this->setBody($plainPart);
-            }
-            $this->getSwiftMessage()->setContentType('text/plain');
-            $this->getSwiftMessage()->setCharset('utf-8');
-        }
+            unset($existingPlainPart);
 
-        return $this;
+            // Respect explicitly set body
+            $htmlPart = $plainOnly ? null : $this->getBody();
+            $plainPart = $plainOnly ? $this->getBody() : null;
+
+            // Ensure we can at least render something
+            $htmlTemplate = $this->getHTMLTemplate();
+            $plainTemplate = $this->getPlainTemplate();
+            if (!$htmlTemplate && !$plainTemplate && !$plainPart && !$htmlPart) {
+                return $this;
+            }
+
+            // Do not interfere with emails styles
+            Requirements::clear();
+
+            // Render plain part
+            if ($plainTemplate && !$plainPart) {
+                $plainPart = $this->renderWith($plainTemplate, $this->getData())->Plain();
+            }
+
+            // Render HTML part, either if sending html email, or a plain part is lacking
+            if (!$htmlPart && $htmlTemplate && (!$plainOnly || empty($plainPart))) {
+                $htmlPart = $this->renderWith($htmlTemplate, $this->getData());
+            }
+
+            // Plain part fails over to generated from html
+            if (!$plainPart && $htmlPart) {
+                /** @var DBHTMLText $htmlPartObject */
+                $htmlPartObject = DBField::create_field('HTMLFragment', $htmlPart);
+                $plainPart = $htmlPartObject->Plain();
+            }
+
+            // Rendering is finished
+            Requirements::restore();
+
+            // Fail if no email to send
+            if (!$plainPart && !$htmlPart) {
+                return $this;
+            }
+
+            // Build HTML / Plain components
+            if ($htmlPart && !$plainOnly) {
+                $this->setBody($htmlPart);
+                $this->getSwiftMessage()->setContentType('text/html');
+                $this->getSwiftMessage()->setCharset('utf-8');
+                if ($plainPart) {
+                    $this->getSwiftMessage()->addPart($plainPart, 'text/plain', 'utf-8');
+                }
+            } else {
+                if ($plainPart) {
+                    $this->setBody($plainPart);
+                }
+                $this->getSwiftMessage()->setContentType('text/plain');
+                $this->getSwiftMessage()->setCharset('utf-8');
+            }
+            return $this;
+        });
     }
 
     /**
@@ -956,12 +1004,14 @@ class Email extends ViewableData
     public function findPlainPart()
     {
         Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        foreach ($this->getSwiftMessage()->getChildren() as $child) {
-            if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
-                return $child;
+        return Deprecation::withNoReplacement(function () {
+            foreach ($this->getSwiftMessage()->getChildren() as $child) {
+                if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
+                    return $child;
+                }
             }
-        }
-        return false;
+            return false;
+        });
     }
 
     /**
@@ -972,10 +1022,12 @@ class Email extends ViewableData
     public function hasPlainPart()
     {
         Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        if ($this->getSwiftMessage()->getContentType() === 'text/plain') {
-            return true;
-        }
-        return (bool) $this->findPlainPart();
+        return Deprecation::withNoReplacement(function () {
+            if ($this->getSwiftMessage()->getContentType() === 'text/plain') {
+                return true;
+            }
+            return (bool) $this->findPlainPart();
+        });
     }
 
     /**
@@ -988,18 +1040,19 @@ class Email extends ViewableData
     public function generatePlainPartFromBody()
     {
         Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $plainPart = $this->findPlainPart();
-        if ($plainPart) {
-            $this->getSwiftMessage()->detach($plainPart);
-        }
-        unset($plainPart);
+        return Deprecation::withNoReplacement(function () {
+            $plainPart = $this->findPlainPart();
+            if ($plainPart) {
+                $this->getSwiftMessage()->detach($plainPart);
+            }
+            unset($plainPart);
 
-        $this->getSwiftMessage()->addPart(
-            Convert::xml2raw($this->getBody()),
-            'text/plain',
-            'utf-8'
-        );
-
-        return $this;
+            $this->getSwiftMessage()->addPart(
+                Convert::xml2raw($this->getBody()),
+                'text/plain',
+                'utf-8'
+            );
+            return $this;
+        });
     }
 }

@@ -29,7 +29,9 @@ class RequestProcessor implements HTTPMiddleware
      */
     public function __construct($filters = [])
     {
-        Deprecation::notice('4.0.1', 'Use HTTPMiddleware directly instead.', Deprecation::SCOPE_CLASS);
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.0.1', 'Use HTTPMiddleware directly instead.', Deprecation::SCOPE_CLASS);
+        });
         $this->filters = $filters;
     }
 

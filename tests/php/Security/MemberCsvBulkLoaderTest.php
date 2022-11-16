@@ -9,6 +9,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 
 class MemberCsvBulkLoaderTest extends SapphireTest
 {
@@ -105,7 +106,8 @@ class MemberCsvBulkLoaderTest extends SapphireTest
 
         // TODO Direct getter doesn't work, wtf!
         $this->assertEquals(Security::config()->password_encryption_algorithm, $member->getField('PasswordEncryption'));
-        $result = $member->checkPassword('mypassword');
+        $auth = new MemberAuthenticator();
+        $result = $auth->checkPassword($member, 'mypassword');
         $this->assertTrue($result->isValid());
     }
 }

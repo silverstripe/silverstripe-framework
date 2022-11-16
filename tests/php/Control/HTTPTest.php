@@ -11,6 +11,7 @@ use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Tests the {@link HTTP} class
@@ -115,6 +116,9 @@ class HTTPTest extends FunctionalTest
 
     public function testDeprecatedVaryHandling()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         /** @var Config */
         Config::modify()->set(
             HTTP::class,
@@ -129,6 +133,9 @@ class HTTPTest extends FunctionalTest
 
     public function testDeprecatedCacheControlHandling()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         HTTPCacheControlMiddleware::singleton()->publicCache();
 
         /** @var Config */
@@ -149,6 +156,9 @@ class HTTPTest extends FunctionalTest
 
     public function testDeprecatedCacheControlHandlingOnMaxAge()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         HTTPCacheControlMiddleware::singleton()->publicCache();
 
         /** @var Config */
@@ -169,6 +179,9 @@ class HTTPTest extends FunctionalTest
 
     public function testDeprecatedCacheControlHandlingThrowsWithUnknownDirectives()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessageMatches('/Found unsupported legacy directives in HTTP\.cache_control: unknown/');
         /** @var Config */

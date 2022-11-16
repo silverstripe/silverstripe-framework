@@ -178,7 +178,6 @@ class i18n implements TemplateGlobalProvider
         // inject the variables from injectionArray (if present)
         $sprintfArgs = [];
         if ($default && !preg_match('/\{[\w\d]*\}/i', $default ?? '') && preg_match('/%[s,d]/', $default ?? '')) {
-            Deprecation::notice('5.0', 'sprintf style localisation variables are deprecated');
             $sprintfArgs = array_values($injection ?? []);
             $injection = [];
         }

@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Dev\Deprecation;
 
 class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 {
@@ -51,7 +52,9 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
         $this->augmentState($request, $response);
 
         // Update state based on deprecated HTTP settings
-        HTTP::augmentState($request, $response);
+        Deprecation::withNoReplacement(function () use ($request, $response) {
+            HTTP::augmentState($request, $response);
+        });
 
         // Add all headers to this response object
         $this->applyToResponse($response);

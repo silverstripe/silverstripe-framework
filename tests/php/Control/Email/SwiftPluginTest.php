@@ -39,7 +39,7 @@ class SwiftPluginTest extends SapphireTest
 
     public function testSendAllEmailsTo()
     {
-        Email::config()->update('send_all_emails_to', 'to@example.com');
+        Email::config()->set('send_all_emails_to', 'to@example.com');
         $email = $this->getEmail();
         $this->getMailer()->send($email->getSwiftMessage());
         $headers = $email->getSwiftMessage()->getHeaders();
@@ -68,7 +68,7 @@ class SwiftPluginTest extends SapphireTest
 
     public function testSendAllEmailsFrom()
     {
-        Email::config()->update('send_all_emails_from', 'from@example.com');
+        Email::config()->set('send_all_emails_from', 'from@example.com');
         $email = $this->getEmail();
         $this->getMailer()->send($email->getSwiftMessage());
 
@@ -88,7 +88,7 @@ class SwiftPluginTest extends SapphireTest
 
     public function testCCAllEmailsTo()
     {
-        Email::config()->update('cc_all_emails_to', 'cc@example.com');
+        Email::config()->set('cc_all_emails_to', 'cc@example.com');
         $email = $this->getEmail();
         $this->getMailer()->send($email->getSwiftMessage());
 
@@ -99,7 +99,7 @@ class SwiftPluginTest extends SapphireTest
 
     public function testBCCAllEmailsTo()
     {
-        Email::config()->update('bcc_all_emails_to', 'bcc@example.com');
+        Email::config()->set('bcc_all_emails_to', 'bcc@example.com');
         $email = $this->getEmail();
         $this->getMailer()->send($email->getSwiftMessage());
 

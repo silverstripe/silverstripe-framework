@@ -287,8 +287,11 @@ class SSViewer implements Flushable
             return $themes;
         }
 
-        // Support legacy behaviour
-        if ($theme = SSViewer::config()->uninherited('theme')) {
+        // Support @deprecated legacy behaviour
+        $theme = Deprecation::withNoReplacement(function () {
+            return SSViewer::config()->uninherited('theme');
+        });
+        if ($theme) {
             return [self::PUBLIC_THEME, $theme, self::DEFAULT_THEME];
         }
 

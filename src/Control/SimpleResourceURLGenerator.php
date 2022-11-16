@@ -82,7 +82,10 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             // Determine lookup mechanism based on existence of public/ folder.
             // From 5.0 onwards only resolvePublicResource() will be used.
             if (!Director::publicDir()) {
-                list($exists, $absolutePath, $relativePath) = $this->resolveUnsecuredResource($relativePath);
+                $ret = Deprecation::withNoReplacement(function () use ($relativePath) {
+                    return $this->resolveUnsecuredResource($relativePath);
+                });
+                list($exists, $absolutePath, $relativePath) = $ret;
             } else {
                 list($exists, $absolutePath, $relativePath) = $this->resolvePublicResource($relativePath);
             }

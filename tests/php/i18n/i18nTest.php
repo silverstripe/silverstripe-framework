@@ -149,7 +149,7 @@ class i18nTest extends SapphireTest
     public function testTemplateTranslation()
     {
         $oldLocale = i18n::get_locale();
-        i18n::config()->update('missing_default_warning', false);
+        i18n::config()->set('missing_default_warning', false);
 
         /** @var SymfonyMessageProvider $provider */
         $provider = Injector::inst()->get(MessageProvider::class);
@@ -311,7 +311,7 @@ class i18nTest extends SapphireTest
      * */
     public function testNewTemplateTranslation()
     {
-        i18n::config()->update('missing_default_warning', false);
+        i18n::config()->set('missing_default_warning', false);
 
         /** @var SymfonyMessageProvider $provider */
         $provider = Injector::inst()->get(MessageProvider::class);
@@ -468,7 +468,7 @@ class i18nTest extends SapphireTest
 
     public function testGetLanguageName()
     {
-        i18n::config()->update(
+        i18n::config()->merge(
             'common_languages',
             ['de_CGN' => ['name' => 'German (Cologne)', 'native' => 'K&ouml;lsch']]
         );
