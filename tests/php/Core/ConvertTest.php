@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Tests;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use stdClass;
@@ -217,6 +218,9 @@ PHP
      */
     public function testArray2JSON()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $val = [
          'Joe' => 'Bloggs',
          'Tom' => 'Jones',
@@ -237,6 +241,9 @@ PHP
      */
     public function testJSON2Array()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
         $decoded = Convert::json2array($val);
         $this->assertEquals(3, count($decoded ?? []), '3 items in the decoded array');
@@ -250,6 +257,9 @@ PHP
      */
     public function testJSON2Obj()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $val = '{"Joe":"Bloggs","Tom":"Jones","My":{"Complicated":"Structure"}}';
         $obj = Convert::json2obj($val);
         $this->assertEquals('Bloggs', $obj->Joe);
@@ -264,7 +274,7 @@ PHP
      */
     public function testRaw2URL()
     {
-        URLSegmentFilter::config()->update('default_allow_multibyte', false);
+        URLSegmentFilter::config()->set('default_allow_multibyte', false);
         $this->assertEquals('foo', Convert::raw2url('foo'));
         $this->assertEquals('foo-and-bar', Convert::raw2url('foo & bar'));
         $this->assertEquals('foo-and-bar', Convert::raw2url('foo &amp; bar!'));
@@ -359,6 +369,9 @@ PHP
      */
     public function testRaw2JSON()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
 
         // Test object
         $input = new stdClass();
@@ -390,6 +403,9 @@ PHP
      */
     public function testRaw2JsonWithContext()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $data = ['foo' => 'b"ar'];
         $expected = '{"foo":"b\u0022ar"}';
         $result = Convert::raw2json($data, JSON_HEX_QUOT);

@@ -18,7 +18,7 @@ class DevAdminControllerTest extends FunctionalTest
     {
         parent::setUp();
 
-        DevelopmentAdmin::config()->update(
+        DevelopmentAdmin::config()->merge(
             'registered_controllers',
             [
             'x1' => [

@@ -8,7 +8,6 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\PostgreSQL\PostgreSQLDatabase;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 class SQLSelectTest extends SapphireTest
@@ -23,18 +22,6 @@ class SQLSelectTest extends SapphireTest
     ];
 
     protected $oldDeprecation = null;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->oldDeprecation = Deprecation::dump_settings();
-    }
-
-    protected function tearDown(): void
-    {
-        Deprecation::restore_settings($this->oldDeprecation);
-        parent::tearDown();
-    }
 
     public function testCount()
     {

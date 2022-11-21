@@ -228,7 +228,7 @@ class Director implements TemplateGlobalProvider
             ? $cookies
             : Injector::inst()->createWithArgs(Cookie_Backend::class, [$cookies ?: []]);
         $newVars['_COOKIE'] = $cookieJar->getAll(false);
-        Cookie::config()->update('report_errors', false);
+        Cookie::config()->set('report_errors', false);
         Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
 
         // Backup requirements

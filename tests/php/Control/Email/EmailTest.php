@@ -334,7 +334,7 @@ class EmailTest extends SapphireTest
 
     public function testAdminEmailApplied()
     {
-        Email::config()->update('admin_email', 'admin@example.com');
+        Email::config()->set('admin_email', 'admin@example.com');
         $email = new Email();
         $this->assertCount(1, $email->getFrom());
         $this->assertSame('admin@example.com', $email->getFrom()[0]->getAddress());

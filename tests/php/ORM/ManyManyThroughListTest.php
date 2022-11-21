@@ -268,7 +268,7 @@ class ManyManyThroughListTest extends SapphireTest
     {
         $this->expectException(\InvalidArgumentException::class);
         DataObject::reset();
-        ManyManyThroughListTest\Item::config()->update(
+        ManyManyThroughListTest\Item::config()->merge(
             'db',
             [
             ManyManyThroughListTest\JoinObject::class => 'Text'
@@ -416,7 +416,7 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertSame('International', $second->Title);
 
         // Ensure that we're respecting the default sort by reversing it
-        Config::inst()->update(FallbackLocale::class, 'default_sort', '"ManyManyThroughTest_FallbackLocale"."Sort" DESC');
+        Config::inst()->set(FallbackLocale::class, 'default_sort', '"ManyManyThroughTest_FallbackLocale"."Sort" DESC');
 
         $reverse = $mexico->Fallbacks();
         list($firstReverse, $secondReverse) = $reverse;

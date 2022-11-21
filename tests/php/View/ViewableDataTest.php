@@ -7,6 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
@@ -208,6 +209,9 @@ class ViewableDataTest extends SapphireTest
 
     public function testThemeDir()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $themes = [
             "silverstripe/framework:/tests/php/View/ViewableDataTest/testtheme",
             SSViewer::DEFAULT_THEME

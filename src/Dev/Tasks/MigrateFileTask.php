@@ -21,9 +21,12 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\Assets\Dev\Tasks\SecureAssetsMigrationHelper;
 use SilverStripe\UserForms\Task\RecoverUploadLocationsHelper;
 use \Bramus\Monolog\Formatter\ColoredLineFormatter;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Migrates all 3.x file dataobjects to use the new DBFile field.
+ *
+ * @deprected 4.12.0 Will be removed without equivalent functionality to replace it
  */
 class MigrateFileTask extends BuildTask
 {
@@ -51,6 +54,12 @@ class MigrateFileTask extends BuildTask
 
     /** @var Logger */
     private $logger;
+
+    public function __construct()
+    {
+        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it', Deprecation::SCOPE_CLASS);
+        parent::__construct();
+    }
 
     public function run($request)
     {

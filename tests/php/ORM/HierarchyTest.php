@@ -273,7 +273,7 @@ class HierarchyTest extends SapphireTest
 
     public function testHideFromHierarchy()
     {
-        HierarchyTest\HideTestObject::config()->update(
+        HierarchyTest\HideTestObject::config()->merge(
             'hide_from_hierarchy',
             [ HierarchyTest\HideTestSubObject::class ]
         );

@@ -533,8 +533,8 @@ PHP;
     public function testCollectFromFilesystemAndWriteMasterTables()
     {
         i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
-        i18n::config()->update('default_locale', 'en_US');
-        i18n::config()->update('missing_default_warning', false);
+        i18n::config()->set('default_locale', 'en_US');
+        i18n::config()->set('missing_default_warning', false);
 
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false);

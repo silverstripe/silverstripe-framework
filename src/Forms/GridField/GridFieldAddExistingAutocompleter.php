@@ -262,7 +262,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
 
         $json = [];
         Config::nest();
-        SSViewer::config()->update('source_file_comments', false);
+        SSViewer::config()->set('source_file_comments', false);
         $viewer = SSViewer::fromString($this->resultsFormat);
         foreach ($results as $result) {
             $title = Convert::html2raw($viewer->process($result));

@@ -423,7 +423,7 @@ class ManyManyListTest extends SapphireTest
         $obj->Clients()->add($obj2, ['Worth' => $money, 'Reference' => 'B']);
 
         // Set the default sort for this relation
-        Config::inst()->update('ManyManyListTest_ExtraFields_Clients', 'default_sort', 'Reference ASC');
+        Config::inst()->set('ManyManyListTest_ExtraFields_Clients', 'default_sort', 'Reference ASC');
         $clients = $obj->Clients();
         $this->assertCount(2, $clients);
 
@@ -432,7 +432,7 @@ class ManyManyListTest extends SapphireTest
         $this->assertEquals('B', $second->Reference);
 
         // Now we ensure the default sort is being respected by reversing its order
-        Config::inst()->update('ManyManyListTest_ExtraFields_Clients', 'default_sort', 'Reference DESC');
+        Config::inst()->set('ManyManyListTest_ExtraFields_Clients', 'default_sort', 'Reference DESC');
         $reverseClients = $obj->Clients();
         $this->assertCount(2, $reverseClients);
 

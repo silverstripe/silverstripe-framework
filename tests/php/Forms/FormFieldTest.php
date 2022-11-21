@@ -31,7 +31,7 @@ class FormFieldTest extends SapphireTest
     {
         Config::nest();
 
-        FormField::config()->update(
+        FormField::config()->merge(
             'default_classes',
             [
                 'class1',
@@ -42,7 +42,7 @@ class FormFieldTest extends SapphireTest
 
         $this->assertStringContainsString('class1', $field->extraClass(), 'Class list does not contain expected class');
 
-        FormField::config()->update(
+        FormField::config()->merge(
             'default_classes',
             [
                 'class1',
@@ -54,7 +54,7 @@ class FormFieldTest extends SapphireTest
 
         $this->assertStringContainsString('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
 
-        FormField::config()->update(
+        FormField::config()->merge(
             'default_classes',
             [
                 'class3',
@@ -69,7 +69,7 @@ class FormFieldTest extends SapphireTest
 
         $this->assertStringNotContainsString('class3', $field->extraClass(), 'Class list contains unexpected class');
 
-        TextField::config()->update(
+        TextField::config()->merge(
             'default_classes',
             [
                 'textfield-class',

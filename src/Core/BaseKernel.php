@@ -180,10 +180,24 @@ abstract class BaseKernel implements Kernel
     protected function bootManifests($flush)
     {
         // Setup autoloader
-        $this->getClassLoader()->init($this->getIncludeTests(), $flush);
+        $ignoredCIConfigs = Deprecation::withNoReplacement(function () {
+            return $this->getIgnoredCIConfigs();
+        });
 
-        // Find modules
-        $this->getModuleLoader()->init($this->getIncludeTests(), $flush);
+        Deprecation::withNoReplacement(function () use ($flush, $ignoredCIConfigs) {
+            $this->getClassLoader()->init(
+                $this->getIncludeTests(),
+                $flush,
+                $ignoredCIConfigs
+            );
+
+            // Find modules
+            $this->getModuleLoader()->init(
+                $this->getIncludeTests(),
+                $flush,
+                $ignoredCIConfigs
+            );
+        });
 
         // Flush config
         if ($flush) {
@@ -201,7 +215,13 @@ abstract class BaseKernel implements Kernel
             $defaultSet->setProject(
                 ModuleManifest::config()->get('project')
             );
-            $defaultSet->init($this->getIncludeTests(), $flush);
+            Deprecation::withNoReplacement(function () use ($defaultSet, $flush, $ignoredCIConfigs) {
+                $defaultSet->init(
+                    $this->getIncludeTests(),
+                    $flush,
+                    $ignoredCIConfigs
+                );
+            });
         }
     }
 
@@ -247,12 +267,9 @@ abstract class BaseKernel implements Kernel
      * Get the environment type
      *
      * @return string
-     *
-     * @deprecated 4.12.0 Use Director::get_environment_type() instead
      */
     public function getEnvironment()
     {
-        Deprecation::notice('4.12.0', 'Use Director::get_environment_type() instead');
         // Check set
         if ($this->enviroment) {
             return $this->enviroment;

@@ -41,7 +41,6 @@ use SilverStripe\View\SSViewer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\NullTransport;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Test case class for the Silverstripe framework.
@@ -290,7 +289,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         }
 
         if (class_exists(Cookie::class)) {
-            Cookie::config()->update('report_errors', false);
+            Cookie::config()->set('report_errors', false);
         }
 
         if (class_exists(RootURLController::class)) {
@@ -317,7 +316,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
         // turn off template debugging
         if (class_exists(SSViewer::class)) {
-            SSViewer::config()->update('source_file_comments', false);
+            SSViewer::config()->set('source_file_comments', false);
         }
 
         // Set up the test mailer and register it as a service
@@ -1162,7 +1161,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         if (strpos($themeBaseDir ?? '', BASE_PATH) === 0) {
             $themeBaseDir = substr($themeBaseDir ?? '', strlen(BASE_PATH));
         }
-        SSViewer::config()->update('theme_enabled', true);
+        SSViewer::config()->set('theme_enabled', true);
         SSViewer::set_themes([$themeBaseDir . '/themes/' . $theme, '$default']);
 
         try {

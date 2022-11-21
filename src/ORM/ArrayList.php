@@ -178,18 +178,20 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Get a sub-range of this dataobjectset as an array
+     * Pass null to "remove the limit" - this is for consistency with DataList::limit(null) which itself will
+     * call SQLSelect::setLimit(null)
      *
-     * @param int $length
+     * @param int|null $length
      * @param int $offset
      * @return static
      */
     public function limit($length, $offset = 0)
     {
         // Type checking: designed for consistency with DataList::limit()
-        if (!is_numeric($length) || !is_numeric($offset)) {
+        if ((!is_numeric($length) || !is_numeric($offset)) && !is_null($length)) {
             Deprecation::notice(
                 '4.3',
-                'Arguments to ArrayList::limit() should be numeric'
+                'Arguments to ArrayList::limit() should be numeric or null'
             );
         }
 

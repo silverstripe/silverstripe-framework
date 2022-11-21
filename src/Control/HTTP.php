@@ -126,7 +126,7 @@ class HTTP
             if (preg_match('/^\w+:/', $url ?? '')) {
                 return $url;
             }
-            return Director::absoluteURL($url, true);
+            return Director::absoluteURL($url);
         });
     }
 
@@ -474,6 +474,8 @@ class HTTP
      * Ensure that all deprecated HTTP cache settings are respected
      *
      * @deprecated 4.2.0 Use HTTPCacheControlMiddleware instead
+     * Simply delete this method in CMS 5 and the calls to it from HTTPCacheControlMiddleware
+     *
      * @throws \LogicException
      * @param HTTPRequest $request
      * @param HTTPResponse $response
@@ -491,32 +493,32 @@ class HTTP
 
         // if http caching is disabled by config, disable it - used on dev environments due to frequently changing
         // templates and other data. will be overridden by forced publicCache(true) or privateCache(true) calls
-        if ($config->get('disable_http_cache')) {
-            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware.defaultState/.defaultForcingLevel instead');
-            $cacheControlMiddleware->disableCache();
-        }
+        Deprecation::withNoReplacement(function () use ($config, $cacheControlMiddleware) {
+            if ($config->get('disable_http_cache')) {
+                $cacheControlMiddleware->disableCache();
+            }
+        });
 
         // if no caching ajax requests, disable ajax if is ajax request
-        if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
-            Deprecation::notice(
-                '5.0',
-                'HTTP.cache_ajax_requests config is deprecated. Use HTTPCacheControlMiddleware::disableCache() instead'
-            );
-            $cacheControlMiddleware->disableCache();
-        }
+        Deprecation::withNoReplacement(function () use ($config, $cacheControlMiddleware) {
+            if (!$config->get('cache_ajax_requests') && Director::is_ajax()) {
+                $cacheControlMiddleware->disableCache();
+            }
+        });
 
         // Pass vary to middleware
-        $configVary = $config->get('vary');
+        $configVary = Deprecation::withNoReplacement(function () use ($config) {
+            return $config->get('vary');
+        });
         if ($configVary) {
-            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware.defaultVary instead');
             $cacheControlMiddleware->addVary($configVary);
         }
 
         // Pass cache_control to middleware
-        $configCacheControl = $config->get('cache_control');
+        $configCacheControl = Deprecation::withNoReplacement(function () use ($config) {
+            return $config->get('cache_control');
+        });
         if ($configCacheControl) {
-            Deprecation::notice('5.0', 'Use HTTPCacheControlMiddleware API instead');
-
             $supportedDirectives = ['max-age', 'no-cache', 'no-store', 'must-revalidate'];
             if ($foundUnsupported = array_diff(array_keys($configCacheControl ?? []), $supportedDirectives)) {
                 throw new \LogicException(

@@ -126,7 +126,9 @@ class ClassLoader
         foreach ($this->manifests as $manifest) {
             /** @var ClassManifest $instance */
             $instance = $manifest['instance'];
-            $instance->init($includeTests, $forceRegen);
+            Deprecation::withNoReplacement(function () use ($instance, $includeTests, $forceRegen, $ignoredCIConfigs) {
+                $instance->init($includeTests, $forceRegen, $ignoredCIConfigs);
+            });
         }
 
         $this->registerAutoloader();

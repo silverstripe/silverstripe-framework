@@ -59,7 +59,7 @@ class BacktraceTest extends SapphireTest
                 'args' => ['myarg' => 'myval']
             ]
         ];
-        Backtrace::config()->update(
+        Backtrace::config()->merge(
             'ignore_function_args',
             [
                 ['MyClass', 'myIgnoredClassFunction'],
@@ -101,7 +101,7 @@ class BacktraceTest extends SapphireTest
                 'args' => ['myarg' => 'myval']
             ]
         ];
-        Backtrace::config()->update(
+        Backtrace::config()->merge(
             'ignore_function_args',
             [
                 ['*', 'myIgnoredClassFunction'],

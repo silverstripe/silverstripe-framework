@@ -102,7 +102,10 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         callable $updateSearchContext = null,
         callable $updateSearchForm = null
     ) {
-        $this->useLegacyFilterHeader = Config::inst()->get(self::class, 'force_legacy') || $useLegacy;
+        $forceLegacy = Deprecation::withNoReplacement(function () {
+            return Config::inst()->get(self::class, 'force_legacy');
+        });
+        $this->useLegacyFilterHeader = $forceLegacy || $useLegacy;
         $this->updateSearchContextCallback = $updateSearchContext;
         $this->updateSearchFormCallback = $updateSearchForm;
     }
@@ -523,7 +526,9 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         }
 
         if ($this->useLegacyFilterHeader) {
-            $fieldsList = $this->getLegacyFilterHeader($gridField);
+            $fieldsList = Deprecation::withNoReplacement(function () use ($gridField) {
+                return $this->getLegacyFilterHeader($gridField);
+            });
             $forTemplate->Fields = $fieldsList;
             $filterTemplates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
             return ['header' => $forTemplate->renderWith($filterTemplates)];
