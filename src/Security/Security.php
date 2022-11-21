@@ -88,6 +88,8 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @config
      * @var string
+     *
+     * @deprecated 4.12 Will be removed without equivalent functionality to replace it
      */
     private static $word_list = './wordlist.txt';
 

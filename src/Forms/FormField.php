@@ -927,7 +927,7 @@ class FormField extends RequestHandler
             $context = $context->customise($properties);
         }
 
-        $result = $context->renderWith($this->getTemplates());
+        $result = $context->renderWith($context->getTemplates());
 
         // Trim whitespace from the result, so that trailing newlines are suppressed. Works for strings and HTMLText values
         if (is_string($result)) {
@@ -959,10 +959,10 @@ class FormField extends RequestHandler
         $this->extend('onBeforeRenderHolder', $context, $properties);
 
         if (count($properties ?? [])) {
-            $context = $this->customise($properties);
+            $context = $context->customise($properties);
         }
 
-        return $context->renderWith($this->getFieldHolderTemplates());
+        return $context->renderWith($context->getFieldHolderTemplates());
     }
 
     /**
