@@ -267,7 +267,7 @@ class HTTPResponse
     public function addHeader($header, $value)
     {
         $header = strtolower($header ?? '');
-        $this->headers[$header] = $value;
+        $this->headers[$header] = $this->sanitiseHeader($value);
         return $this;
     }
 
@@ -308,6 +308,14 @@ class HTTPResponse
         $header = strtolower($header ?? '');
         unset($this->headers[$header]);
         return $this;
+    }
+
+    /**
+     * Sanitise header values to avoid possible XSS vectors
+     */
+    private function sanitiseHeader(string $value): string
+    {
+        return preg_replace('/\v/', '', $value);
     }
 
     /**
