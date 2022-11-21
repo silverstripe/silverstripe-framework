@@ -11,6 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * GridFieldSortableHeader adds column headers to a {@link GridField} that can
@@ -269,6 +270,16 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
         $state = $this->getState($gridField);
         if ($state->SortColumn == "") {
             return $dataList;
+        }
+
+        // Prevent SQL Injection by validating that SortColumn exists
+        /** @var GridFieldDataColumns $columns */
+        $columns = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $fields = $columns->getDisplayFields($gridField);
+        if (!array_key_exists($state->SortColumn, $fields) &&
+            !in_array($state->SortColumn, $this->getFieldSorting())
+        ) {
+            throw new LogicException('Invalid SortColumn: ' . $state->SortColumn);
         }
 
         return $dataList->sort($state->SortColumn, $state->SortDirection('asc'));
