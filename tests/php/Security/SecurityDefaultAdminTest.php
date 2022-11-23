@@ -7,6 +7,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\DefaultAdminService;
+use SilverStripe\Security\Security;
 
 class SecurityDefaultAdminTest extends SapphireTest
 {
@@ -35,6 +36,7 @@ class SecurityDefaultAdminTest extends SapphireTest
             $this->defaultUsername = null;
             $this->defaultPassword = null;
         }
+        Security::config()->set('password_encryption_algorithm', 'blowfish');
         DefaultAdminService::setDefaultAdmin('admin', 'password');
         Permission::reset();
     }

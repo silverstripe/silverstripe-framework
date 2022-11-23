@@ -162,7 +162,7 @@ class StandardRelatedDataService implements RelatedDataService
                 $tableName = $this->dataObjectSchema->tableName($candidateClass);
                 break;
             }
-            $candidateClass = get_parent_class($class ?? '');
+            $candidateClass = get_parent_class($candidateClass ?? '');
         }
         return $tableName;
     }
