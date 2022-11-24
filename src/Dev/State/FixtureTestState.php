@@ -215,9 +215,10 @@ class FixtureTestState implements TestState
      */
     protected function getTestAbsolutePath(SapphireTest $test)
     {
-        $filename = ClassLoader::inst()->getItemPath(get_class($test));
+        $class = get_class($test);
+        $filename = ClassLoader::inst()->getItemPath($class);
         if (!$filename) {
-            throw new LogicException('getItemPath returned null for ' . static::class
+            throw new LogicException('getItemPath returned null for ' . $class
                 . '. Try adding flush=1 to the test run.');
         }
         return dirname($filename ?? '');
