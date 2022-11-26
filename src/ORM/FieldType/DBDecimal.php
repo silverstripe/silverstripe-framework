@@ -126,7 +126,7 @@ class DBDecimal extends DBField
             return 0;
         }
 
-        if (ctype_digit((string) $value)) {
+        if (abs((float) $value - (int) $value) < PHP_FLOAT_EPSILON) {
             return (int)$value;
         }
 
