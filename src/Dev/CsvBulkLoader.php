@@ -183,7 +183,9 @@ class CsvBulkLoader extends BulkLoader
             $lines = $this->config()->get("lines");
         }
 
-        $new = $this->getNewSplitFileName();
+        $new = Deprecation::withNoReplacement(function () {
+            return $this->getNewSplitFileName();
+        });
 
         $to = fopen($new ?? '', 'w+');
         $from = fopen($path ?? '', 'r');
@@ -209,7 +211,9 @@ class CsvBulkLoader extends BulkLoader
                 fclose($to);
 
                 // get a new temporary file name, to write the next lines to
-                $new = $this->getNewSplitFileName();
+                $new = Deprecation::withNoReplacement(function () {
+                    return $this->getNewSplitFileName();
+                });
 
                 $to = fopen($new ?? '', 'w+');
 

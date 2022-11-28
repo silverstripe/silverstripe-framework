@@ -419,7 +419,9 @@ PHP
      */
     public function testXML2Array()
     {
-
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $inputXML = <<<XML
 <?xml version="1.0"?>
 <!DOCTYPE results [
@@ -449,6 +451,9 @@ XML
      */
     public function testXML2ArrayEntityException()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $inputXML = <<<XML
         <?xml version="1.0"?>
         <!DOCTYPE results [
@@ -469,6 +474,9 @@ XML
      */
     public function testXML2ArrayMultipleEntitiesException()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         $inputXML = <<<XML
         <?xml version="1.0"?>
         <!DOCTYPE results [<!ENTITY long "SOME_SUPER_LONG_STRING"><!ENTITY short "SHORT_STRING">]>

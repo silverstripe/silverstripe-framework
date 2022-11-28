@@ -49,6 +49,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
+use SilverStripe\Dev\Deprecation;
 
 /* -------------------------------------------------
  *
@@ -568,7 +569,9 @@ if (class_exists(IsEqualCanonicalizing::class)) {
         {
             Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
             $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
-            $fixture->writeInto($this->getFixtureFactory());
+            Deprecation::withNoReplacement(function () use ($fixture) {
+                $fixture->writeInto($this->getFixtureFactory());
+            });
         }
 
         /**
@@ -1008,7 +1011,9 @@ if (class_exists(IsEqualCanonicalizing::class)) {
             $kernel = new TestKernel(BASE_PATH);
 
             // PHPUnit 9 only logic to exclude old test still targeting PHPUNit 5.7
-            $kernel->setIgnoredCIConfigs([Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
+            Deprecation::withNoReplacement(function () use ($kernel) {
+                $kernel->setIgnoredCIConfigs([Module::CI_PHPUNIT_FIVE, Module::CI_UNKNOWN]);
+            });
 
             if (class_exists(HTTPApplication::class)) {
                 // Mock request

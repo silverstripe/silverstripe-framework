@@ -228,16 +228,23 @@ class Deprecation
         if (!self::isEnabled()) {
             return;
         }
+        $outputMessages = [];
         // using a while loop with array_shift() to ensure that self::$userErrorMessageBuffer will have
         // have values removed from it before calling user_error()
         while (count(self::$userErrorMessageBuffer)) {
             $arr = array_shift(self::$userErrorMessageBuffer);
             $message = $arr['message'];
+            // often the same deprecation message appears dozens of times, which isn't helpful
+            // only need to show a single instance of each message
+            if (in_array($message, $outputMessages)) {
+                continue;
+            }
             $calledInsideWithNoReplacement = $arr['calledInsideWithNoReplacement'];
             if ($calledInsideWithNoReplacement && !self::$showNoReplacementNotices) {
                 continue;
             }
             user_error($message, E_USER_DEPRECATED);
+            $outputMessages[] = $message;
         }
     }
 

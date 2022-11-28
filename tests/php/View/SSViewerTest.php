@@ -277,6 +277,9 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirementsMinification()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
         /** @var Requirements_Backend $testBackend */
         $testBackend = Injector::inst()->create(Requirements_Backend::class);
         $testBackend->setSuffixRequirements(false);
