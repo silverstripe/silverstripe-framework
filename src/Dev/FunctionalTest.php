@@ -11,7 +11,6 @@ use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 use SimpleXMLElement;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * SilverStripe-specific testing object designed to support functional testing of your web app.  It simulates get/post
@@ -42,14 +41,6 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * @var bool
      */
     protected static $disable_themes = false;
-
-    /**
-     * Set this to true on your sub-class to use the draft site by default for every test in this class.
-     *
-     * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
-     * @var bool
-     */
-    protected static $use_draft_site = false;
 
     /**
      * @var TestSession
@@ -100,14 +91,6 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
 
         // Flush user
         $this->logOut();
-
-        // Switch to draft site, if necessary
-        // If you rely on this you should be crafting stage-specific urls instead though.
-        Deprecation::withNoReplacement(function () {
-            if (static::get_use_draft_site()) {
-                $this->useDraftSite();
-            }
-        });
 
         // Unprotect the site, tests are running with the assumption it's off. They will enable it on a case-by-case
         // basis.
@@ -403,40 +386,10 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
     }
 
     /**
-     * Use the draft (stage) site for testing.
-     * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
-     * your test.
-     *
-     * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
-     * @param bool $enabled toggle the use of the draft site
-     */
-    public function useDraftSite($enabled = true)
-    {
-        Deprecation::notice('4.2.0', 'Use ?stage=Stage in your request\'s querystring instead');
-        if ($enabled) {
-            $this->session()->set('readingMode', 'Stage.Stage');
-            $this->session()->set('unsecuredDraftSite', true);
-        } else {
-            $this->session()->clear('readingMode');
-            $this->session()->clear('unsecuredDraftSite');
-        }
-    }
-
-    /**
      * @return bool
      */
     public static function get_disable_themes()
     {
         return static::$disable_themes;
-    }
-
-    /**
-     * @deprecated 4.2.0 Use ?stage=Stage in your request's querystring instead
-     * @return bool
-     */
-    public static function get_use_draft_site()
-    {
-        Deprecation::notice('4.2.0', 'Use ?stage=Stage in your request\'s querystring instead');
-        return static::$use_draft_site;
     }
 }

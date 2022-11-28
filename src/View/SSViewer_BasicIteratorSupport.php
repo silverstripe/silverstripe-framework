@@ -2,8 +2,6 @@
 
 namespace SilverStripe\View;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * Defines an extra set of basic methods that can be used in templates
  * that are not defined on sub-classes of {@link ViewableData}.
@@ -67,16 +65,6 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     }
 
     /**
-     * @deprecated 4.12.0 Use IsFirst() instead
-     * @return bool
-     */
-    public function First()
-    {
-        Deprecation::notice('4.12.0', 'Use IsFirst() instead');
-        return $this->IsFirst();
-    }
-
-    /**
      * Returns true if this object is the last in a set.
      *
      * @return bool
@@ -84,16 +72,6 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     public function IsLast()
     {
         return $this->iteratorPos == $this->iteratorTotalItems - 1;
-    }
-
-    /**
-     * @deprecated 4.12.0 Use IsLast() instead
-     * @return bool
-     */
-    public function Last()
-    {
-        Deprecation::notice('4.12.0', 'Use IsLast() instead');
-        return $this->IsLast();
     }
 
     /**

@@ -190,7 +190,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
                 if ($currentColumn == count($columns ?? [])) {
                     $filter = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
 
-                    if ($filter && $filter->useLegacyFilterHeader && $filter->canFilterAnyColumns($gridField)) {
+                    if ($filter && $filter->canFilterAnyColumns($gridField)) {
                         $field = new LiteralField(
                             $fieldName,
                             sprintf(

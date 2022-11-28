@@ -8,11 +8,9 @@ use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionMethod;
 use ReflectionObject;
-use ReflectionProperty;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -851,18 +849,6 @@ class Injector implements ContainerInterface
         } else {
             $object->$name = $value;
         }
-    }
-
-    /**
-     * @deprecated 4.0.1 Use Injector::has() instead
-     * @param $name
-     * @return string
-     */
-    public function hasService($name)
-    {
-        Deprecation::notice('4.0.1', 'Use Injector::has() instead');
-
-        return $this->has($name);
     }
 
     /**

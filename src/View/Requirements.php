@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Requirements tracker for JavaScript and CSS.
@@ -303,14 +302,6 @@ class Requirements implements Flushable
      */
     public static function includeInHTML($content)
     {
-        if (func_num_args() > 1) {
-            Deprecation::notice(
-                '5.0',
-                '$templateFile argument is deprecated. includeInHTML takes a sole $content parameter now.'
-            );
-            $content = func_get_arg(1);
-        }
-
         return self::backend()->includeInHTML($content);
     }
 
@@ -334,11 +325,10 @@ class Requirements implements Flushable
      *                         'framework/javascript/lang'
      * @param bool   $return   Return all relative file paths rather than including them in
      *                         requirements
-     * @param bool $langOnly @deprecated 4.1.0:5.0.0 as i18n.js should be included manually in your project
-     *
+     * 
      * @return array
      */
-    public static function add_i18n_javascript($langDir, $return = false, $langOnly = false)
+    public static function add_i18n_javascript($langDir, $return = false)
     {
         return self::backend()->add_i18n_javascript($langDir, $return);
     }

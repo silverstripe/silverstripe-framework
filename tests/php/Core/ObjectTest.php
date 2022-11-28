@@ -19,7 +19,6 @@ use SilverStripe\Core\Tests\ObjectTest\ExtensionTest3;
 use SilverStripe\Core\Tests\ObjectTest\MyObject;
 use SilverStripe\Core\Tests\ObjectTest\MySubObject;
 use SilverStripe\Core\Tests\ObjectTest\TestExtension;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Versioned\Versioned;
 
@@ -106,62 +105,6 @@ class ObjectTest extends SapphireTest
         $this->assertTrue(
             $myFirstObject === $mySecondObject,
             'singletons are using the same object on subsequent calls'
-        );
-    }
-
-    public function testStaticGetterMethod()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $obj = singleton(MyObject::class);
-        $this->assertEquals(
-            'MyObject',
-            $obj->stat('mystaticProperty'),
-            'Uninherited statics through stat() on a singleton behave the same as built-in PHP statics'
-        );
-    }
-
-    public function testStaticInheritanceGetters()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $subObj = singleton(MyObject::class);
-        $this->assertEquals(
-            $subObj->stat('mystaticProperty'),
-            'MyObject',
-            'Statics defined on a parent class are available through stat() on a subclass'
-        );
-    }
-
-    public function testStaticSettingOnSingletons()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $singleton1 = singleton(MyObject::class);
-        $singleton2 = singleton(MyObject::class);
-        $singleton1->set_stat('mystaticProperty', 'changed');
-        $this->assertEquals(
-            $singleton2->stat('mystaticProperty'),
-            'changed',
-            'Statics setting is populated throughout singletons without explicitly clearing cache'
-        );
-    }
-
-    public function testStaticSettingOnInstances()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $instance1 = new ObjectTest\MyObject();
-        $instance2 = new ObjectTest\MyObject();
-        $instance1->set_stat('mystaticProperty', 'changed');
-        $this->assertEquals(
-            $instance2->stat('mystaticProperty'),
-            'changed',
-            'Statics setting through set_stat() is populated throughout instances without explicitly clearing cache'
         );
     }
 

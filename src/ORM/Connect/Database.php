@@ -752,12 +752,11 @@ abstract class Database
 
     /**
      * Commit everything inside this transaction so far
-     *
-     * @param bool $chain
-     * @return bool|null Boolean is returned if success state is known, or null if
+     * 
+     * Boolean is returned if success state is known, or null if
      * unknown. Note: For error checking purposes null should not be treated as error.
      */
-    abstract public function transactionEnd($chain = false);
+    abstract public function transactionEnd(): bool|null;
 
     /**
      * Return depth of current transaction

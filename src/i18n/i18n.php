@@ -2,9 +2,9 @@
 
 namespace SilverStripe\i18n;
 
+use Exception;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\Data\Locales;
 use SilverStripe\i18n\Data\Sources;
 use SilverStripe\i18n\Messages\MessageProvider;
@@ -205,21 +205,14 @@ class i18n implements TemplateGlobalProvider
             $result = static::getMessageProvider()->translate($entity, $default, $injection);
         }
 
-        // Sometimes default is omitted, so we don't know we have %s injection format until after translation
         if (!$default && !preg_match('/\{[\w\d]*\}/i', $result ?? '') && preg_match('/%[s,d]/', $result ?? '')) {
-            Deprecation::notice('5.0', 'sprintf style localisation is deprecated');
-            if ($injection) {
-                $sprintfArgs = array_values($injection ?? []);
-            }
-        } elseif ($failUnlessSprintf) {
+            throw new Exception('sprintf style localisation cannot be used in translations - detected in $result');
+        }
+
+        if ($failUnlessSprintf) {
             // Note: After removing deprecated code, you can move this error up into the is-associative check
             // Neither default nor translated strings were %s substituted, and our array isn't associative
             throw new InvalidArgumentException('Injection must be an associative array');
-        }
-
-        // @deprecated (see above)
-        if ($sprintfArgs) {
-            return vsprintf($result ?? '', $sprintfArgs ?? []);
         }
 
         return $result;

@@ -4,7 +4,6 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 
@@ -31,17 +30,6 @@ class DBClassName extends DBEnum
     protected $record = null;
 
     private static $index = true;
-
-    /**
-     * Clear all cached classname specs. It's necessary to clear all cached subclassed names
-     * for any classes if a new class manifest is generated.
-     * @deprecated 4.3.0 Use DBEnum::flushCache() instead
-     */
-    public static function clear_classname_cache()
-    {
-        Deprecation::notice('4.3.0', 'Use DBEnum::flushCache() instead');
-        DBEnum::flushCache();
-    }
 
     /**
      * Create a new DBClassName field

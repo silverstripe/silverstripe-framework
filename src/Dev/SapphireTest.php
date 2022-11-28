@@ -63,12 +63,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
     protected static $fixture_file = null;
 
     /**
-     * @deprecated 4.0.1 Use FixtureTestState instead
-     * @var FixtureFactory
-     */
-    protected $fixtureFactory;
-
-    /**
      * @var Boolean If set to TRUE, this will force a test database to be generated
      * in {@link setUp()}. Note that this flag is overruled by the presence of a
      * {@link $fixture_file}, which always forces a database build.
@@ -428,34 +422,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
-     * @return FixtureFactory|false
-     * @deprecated 4.0.1 Use FixtureTestState instead
-     */
-    public function getFixtureFactory()
-    {
-        Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
-        /** @var FixtureTestState $state */
-        $state = static::$state->getStateByName('fixtures');
-        return $state->getFixtureFactory(static::class);
-    }
-
-    /**
-     * Sets a new fixture factory
-     * @param FixtureFactory $factory
-     * @return $this
-     * @deprecated 4.0.1 Use FixtureTestState instead
-     */
-    public function setFixtureFactory(FixtureFactory $factory)
-    {
-        Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
-        /** @var FixtureTestState $state */
-        $state = static::$state->getStateByName('fixtures');
-        $state->setFixtureFactory($factory, static::class);
-        $this->fixtureFactory = $factory;
-        return $this;
-    }
-
-    /**
      * Get the ID of an object from the fixture.
      *
      * @param string $className The data class or table name, as specified in your fixture file.  Parent classes won't work
@@ -516,21 +482,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
         }
 
         return $obj;
-    }
-
-    /**
-     * Load a YAML fixture file into the database.
-     * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
-     * Doesn't clear existing fixtures.
-     * @param string $fixtureFile The location of the .yml fixture file, relative to the site base dir
-     * @deprecated 4.0.1 Use FixtureTestState instead
-     *
-     */
-    public function loadFixture($fixtureFile)
-    {
-        Deprecation::notice('4.0.1', 'Use FixtureTestState instead');
-        $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
-        $fixture->writeInto($this->getFixtureFactory());
     }
 
     /**
@@ -717,18 +668,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
-     * @param $matches
-     * @param $dataObjectSet
-     * @deprecated 4.0.1 Use assertListContains() instead
-     *
-     */
-    public function assertDOSContains($matches, $dataObjectSet)
-    {
-        Deprecation::notice('4.0.1', 'Use assertListContains() instead');
-        static::assertListContains($matches, $dataObjectSet);
-    }
-
-    /**
      * Asserts that no items in a given list appear in the given dataobject list
      *
      * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
@@ -771,18 +710,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
-     * @param $matches
-     * @param $dataObjectSet
-     * @deprecated 4.0.1 Use assertListNotContains() instead
-     *
-     */
-    public static function assertNotDOSContains($matches, $dataObjectSet)
-    {
-        Deprecation::notice('4.0.1', 'Use assertListNotContains() instead');
-        static::assertListNotContains($matches, $dataObjectSet);
-    }
-
-    /**
      * Assert that the given {@link SS_List} includes only DataObjects matching the given
      * key-value pairs.  Each match must correspond to 1 distinct record.
      *
@@ -819,19 +746,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
-     * @param $matches
-     * @param SS_List $dataObjectSet
-     * @deprecated 4.0.1 Use assertListEquals() instead
-     *
-     */
-    public function assertDOSEquals($matches, $dataObjectSet)
-    {
-        Deprecation::notice('4.0.1', 'Use assertListEquals() instead');
-        static::assertListEquals($matches, $dataObjectSet);
-    }
-
-
-    /**
      * Assert that the every record in the given {@link SS_List} matches the given key-value
      * pairs.
      *
@@ -860,18 +774,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
             ),
             $message
         );
-    }
-
-    /**
-     * @param $match
-     * @param SS_List $dataObjectSet
-     * @deprecated 4.0.1 Use assertListAllMatch() instead
-     *
-     */
-    public function assertDOSAllMatch($match, SS_List $dataObjectSet)
-    {
-        Deprecation::notice('4.0.1', 'Use assertListAllMatch() instead');
-        static::assertListAllMatch($match, $dataObjectSet);
     }
 
     /**

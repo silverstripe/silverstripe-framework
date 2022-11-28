@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * Text input field.
  */
@@ -117,21 +115,6 @@ class TextField extends FormField implements TippableFieldInterface
         }
 
         return $data;
-    }
-
-    /**
-     * @return string
-     * @deprecated 4.0.1 Use setValue() instead
-     */
-    public function InternallyLabelledField()
-    {
-        Deprecation::notice('4.0.1', 'Use setValue() instead');
-
-        if (!$this->value) {
-            $this->value = $this->Title();
-        }
-
-        return $this->Field();
     }
 
     /**

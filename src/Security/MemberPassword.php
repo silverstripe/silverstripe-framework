@@ -45,7 +45,6 @@ class MemberPassword extends DataObject
 
     /**
      * Check if the given password is the same as the one stored in this record.
-     * See {@link Member->checkPassword()}.
      *
      * @param string $password Cleartext password
      * @return bool

@@ -6,7 +6,6 @@ use ReflectionMethod;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Control\Session;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 class HTTPRequestTest extends SapphireTest
@@ -149,27 +148,6 @@ class HTTPRequestTest extends SapphireTest
 
             'Request with mixed case method override' => ['POST', ['_method' => 'gEt'], 'GET']
         ];
-    }
-
-    /**
-     * @dataProvider detectMethodDataProvider
-     */
-    public function testDetectMethod($realMethod, $post, $expected)
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $actual = HTTPRequest::detect_method($realMethod, $post);
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testBadDetectMethod()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $this->expectException(\InvalidArgumentException::class);
-        HTTPRequest::detect_method('POST', ['_method' => 'Boom']);
     }
 
     public function setHttpMethodDataProvider()

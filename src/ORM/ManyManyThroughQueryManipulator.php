@@ -5,7 +5,6 @@ namespace SilverStripe\ORM;
 
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
@@ -54,27 +53,17 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * Build query manipulator for a given join table. Additional parameters (foreign key, etc)
      * will be inferred at evaluation from query parameters set via the ManyManyThroughList
-     *
-     * @param string $joinClass Class name of the joined dataobject record
-     * @param string $localKey The key in the join table that maps to the dataClass' PK.
-     * @param string $foreignKey The key in the join table that maps to joined class' PK.
-     * @param string $foreignClass the 'from' class name
-     * @param string $parentClass Name of parent class. Subclass of $foreignClass
      */
-    public function __construct($joinClass, $localKey, $foreignKey, $foreignClass = null, $parentClass = null)
+    public function __construct(string $joinClass, string $localKey, string $foreignKey, string $foreignClass, string $parentClass)
     {
         $this->setJoinClass($joinClass);
         $this->setLocalKey($localKey);
         $this->setForeignKey($foreignKey);
         if ($foreignClass) {
             $this->setForeignClass($foreignClass);
-        } else {
-            Deprecation::notice('5.0', 'Arg $foreignClass will be mandatory in 5.x');
         }
         if ($parentClass) {
             $this->setParentClass($parentClass);
-        } else {
-            Deprecation::notice('5.0', 'Arg $parentClass will be mandatory in 5.x');
         }
     }
 

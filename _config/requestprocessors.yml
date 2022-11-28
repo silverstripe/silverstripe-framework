@@ -3,13 +3,12 @@ Name: requestprocessors
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Control\Director:
-    # Note: Don't add 'class' config here, as it will affect ErrorDirector as well
+    # Note: Don't add 'class' config here
     properties:
       Middlewares:
         TrustedProxyMiddleware: '%$SilverStripe\Control\Middleware\TrustedProxyMiddleware'
         AllowedHostsMiddleware: '%$SilverStripe\Control\Middleware\AllowedHostsMiddleware'
         SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
-        RequestProcessorMiddleware: '%$SilverStripe\Control\RequestProcessor'
         FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
         ChangeDetectionMiddleware: '%$SilverStripe\Control\Middleware\ChangeDetectionMiddleware'
         HTTPCacheControleMiddleware: '%$SilverStripe\Control\Middleware\HTTPCacheControlMiddleware'
@@ -32,16 +31,6 @@ SilverStripe\Core\Injector\Injector:
       RequestHandler: '%$SilverStripe\Security\Security'
       Middlewares:
         - '%$SecurityRateLimitMiddleware'
-
----
-Name: errorrequestprocessors
-After:
-  - '#requestprocessors'
----
-SilverStripe\Core\Injector\Injector:
-  # Note: If Director config changes, take note it will affect this config too
-  SilverStripe\Core\Startup\ErrorDirector: '%$SilverStripe\Control\Director'
-
 
 ---
 Name: canonicalurls

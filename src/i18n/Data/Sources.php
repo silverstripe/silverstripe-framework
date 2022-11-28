@@ -5,12 +5,10 @@ namespace SilverStripe\i18n\Data;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Data sources for localisation strings. I.e. yml files stored
@@ -36,16 +34,8 @@ class Sources implements Resettable
      */
     public function getSortedModules()
     {
-        $i18nOrder = Sources::config()->uninherited('module_priority');
         $sortedModules = [];
-        if ($i18nOrder) {
-            Deprecation::notice('5.0', sprintf(
-                '%s.module_priority is deprecated. Use %s.module_priority instead.',
-                __CLASS__,
-                ModuleManifest::class
-            ));
-        }
-
+        
         foreach (ModuleLoader::inst()->getManifest()->getModules() as $module) {
             $sortedModules[$module->getName()] = $module->getPath();
         };

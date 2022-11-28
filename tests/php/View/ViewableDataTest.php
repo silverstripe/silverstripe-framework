@@ -7,7 +7,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
@@ -205,23 +204,5 @@ class ViewableDataTest extends SapphireTest
         $container->setFailover($failover);
         $this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
         $this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
-    }
-
-    public function testThemeDir()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $themes = [
-            "silverstripe/framework:/tests/php/View/ViewableDataTest/testtheme",
-            SSViewer::DEFAULT_THEME
-        ];
-        SSViewer::set_themes($themes);
-
-        $data = new ViewableData();
-        $this->assertStringContainsString(
-            'tests/php/View/ViewableDataTest/testtheme',
-            $data->ThemeDir()
-        );
     }
 }

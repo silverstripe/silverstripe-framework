@@ -4,10 +4,9 @@ namespace SilverStripe\Control\Tests\DirectorTest;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\RequestFilter;
 use SilverStripe\Dev\TestOnly;
 
-class TestRequestFilter implements RequestFilter, TestOnly
+class TestRequestFilter implements TestOnly
 {
     public $preCalls = 0;
     public $postCalls = 0;

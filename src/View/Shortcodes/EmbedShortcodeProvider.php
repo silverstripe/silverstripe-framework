@@ -16,7 +16,6 @@ use SilverStripe\View\HTML;
 use SilverStripe\View\Parsers\ShortcodeHandler;
 use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\Control\Director;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\Embed\EmbedContainer;
 
 /**
@@ -154,32 +153,6 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             return static::linkEmbed($arguments, (string) $extractor->url, $extractor->title);
         }
         return '';
-    }
-
-    /**
-     * @param Adapter $embed
-     * @param array $arguments Additional shortcode params
-     * @return string
-     * @deprecated 4.11.0 Use embeddableToHtml() instead
-     */
-    public static function embedForTemplate($embed, $arguments)
-    {
-        Deprecation::notice('4.11.0', 'Use embeddableToHtml() instead');
-        switch ($embed->getType()) {
-            case 'video':
-            case 'rich':
-                // Attempt to inherit width (but leave height auto)
-                if (empty($arguments['width']) && $embed->getWidth()) {
-                    $arguments['width'] = $embed->getWidth();
-                }
-                return static::videoEmbed($arguments, $embed->getCode());
-            case 'link':
-                return static::linkEmbed($arguments, $embed->getUrl(), $embed->getTitle());
-            case 'photo':
-                return static::photoEmbed($arguments, $embed->getUrl());
-            default:
-                return null;
-        }
     }
 
     /**

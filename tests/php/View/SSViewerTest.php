@@ -25,7 +25,6 @@ use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
-use SilverStripe\View\Requirements_Minifier;
 use SilverStripe\View\SSTemplateParseException;
 use SilverStripe\View\SSTemplateParser;
 use SilverStripe\View\SSViewer;
@@ -34,7 +33,6 @@ use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\Tests\SSViewerTest\TestViewableData;
 use SilverStripe\View\ViewableData;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * @skipUpgrade
@@ -67,24 +65,6 @@ class SSViewerTest extends SapphireTest
         $_SERVER = $this->oldServer;
         TestAssetStore::reset();
         parent::tearDown();
-    }
-
-    /**
-     * Tests for {@link Config::inst()->get('SSViewer', 'theme')} for different behaviour
-     * of user defined themes via {@link SiteConfig} and default theme
-     * when no user themes are defined.
-     */
-    public function testCurrentTheme()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        SSViewer::config()->set('theme', 'mytheme');
-        $this->assertEquals(
-            'mytheme',
-            SSViewer::config()->uninherited('theme'),
-            'Current theme is the default - user has not defined one'
-        );
     }
 
     /**
@@ -276,47 +256,6 @@ class SSViewerTest extends SapphireTest
         $combinedTestFileContents = file_get_contents($combinedTestFilePath ?? '');
         $this->assertStringContainsString($jsFileContents, $combinedTestFileContents);
     }
-
-    public function testRequirementsMinification()
-    {
-        /** @var Requirements_Backend $testBackend */
-        $testBackend = Injector::inst()->create(Requirements_Backend::class);
-        $testBackend->setSuffixRequirements(false);
-        $testBackend->setMinifyCombinedFiles(true);
-        $testBackend->setCombinedFilesEnabled(true);
-
-        $testFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/RequirementsTest_a.js';
-        $testFileContent = file_get_contents($testFile ?? '');
-
-        $mockMinifier = $this->getMockBuilder(Requirements_Minifier::class)
-        ->setMethods(['minify'])
-        ->getMock();
-
-        $mockMinifier->expects($this->once())
-        ->method('minify')
-        ->with(
-            $testFileContent,
-            'js',
-            $testFile
-        );
-        $testBackend->setMinifier($mockMinifier);
-        $testBackend->combineFiles('testRequirementsMinified.js', [$testFile]);
-        $testBackend->processCombinedFiles();
-
-        $testBackend->setMinifyCombinedFiles(false);
-        $mockMinifier->expects($this->never())
-        ->method('minify');
-        $testBackend->processCombinedFiles();
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessageMatches('/^Cannot minify files without a minification service defined./');
-
-        $testBackend->setMinifyCombinedFiles(true);
-        $testBackend->setMinifier(null);
-        $testBackend->processCombinedFiles();
-    }
-
-
 
     public function testComments()
     {

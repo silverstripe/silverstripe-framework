@@ -11,7 +11,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
@@ -30,7 +29,6 @@ use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\RelatedData\RelatedDataService;
 use SilverStripe\ORM\UniqueKey\UniqueKeyInterface;
-use SilverStripe\ORM\UniqueKey\UniqueKeyService;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -142,12 +140,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var string
      */
     private static $default_classname = null;
-
-    /**
-     * @deprecated 4.0.0:5.0.0
-     * @var bool
-     */
-    public $destroyed = false;
 
     /**
      * Data stored in this objects database record. An array indexed by fieldname.
@@ -504,26 +496,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Create a duplicate of this node. Can duplicate many_many relations
      *
-     * @param bool $doWrite Perform a write() operation before returning the object.
-     * If this is true, it will create the duplicate in the database.
-     * @param array|null|false $relations List of relations to duplicate.
      * Will default to `cascade_duplicates` if null.
      * Set to 'false' to force none.
      * Set to specific array of names to duplicate to override these.
      * Note: If using versioned, this will additionally failover to `owns` config.
-     * @return static A duplicate of this node. The exact type will be the type of this node.
      */
-    public function duplicate($doWrite = true, $relations = null)
+    public function duplicate(bool $doWrite = true, array|null $relations = null): static
     {
-        // Handle legacy behaviour
-        if (is_string($relations) || $relations === true) {
-            if ($relations === true) {
-                $relations = 'many_many';
-            }
-            Deprecation::notice('5.0', 'Use cascade_duplicates config instead of providing a string to duplicate()');
-            $relations = array_keys($this->config()->get($relations) ?? []) ?: [];
-        }
-
         // Get duplicates
         if ($relations === null) {
             $relations = $this->config()->get('cascade_duplicates');
@@ -594,31 +573,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     );
                 }
             }
-        }
-    }
-
-    /**
-     * Copies the many_many and belongs_many_many relations from one object to another instance of the name of object.
-     *
-     * @deprecated 4.1.0 Use duplicateRelations() instead
-     * @param DataObject $sourceObject the source object to duplicate from
-     * @param DataObject $destinationObject the destination object to populate with the duplicated relations
-     * @param bool|string $filter
-     */
-    protected function duplicateManyManyRelations($sourceObject, $destinationObject, $filter)
-    {
-        Deprecation::notice('4.1.0', 'Use duplicateRelations() instead');
-
-        // Get list of relations to duplicate
-        if ($filter === 'many_many' || $filter === 'belongs_many_many') {
-            $relations = $sourceObject->config()->get($filter);
-        } elseif ($filter === true) {
-            $relations = $sourceObject->manyMany();
-        } else {
-            throw new InvalidArgumentException("Invalid many_many duplication filter");
-        }
-        foreach ($relations as $manyManyName => $type) {
-            $this->duplicateManyManyRelation($sourceObject, $destinationObject, $manyManyName);
         }
     }
 
@@ -1260,18 +1214,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $result = ValidationResult::create();
         $this->extend('validate', $result);
         return $result;
-    }
-
-    /**
-     * Public accessor for {@see DataObject::validate()}
-     *
-     * @return ValidationResult
-     * @deprecated 4.12.0 Use validate() instead
-     */
-    public function doValidate()
-    {
-        Deprecation::notice('4.12.0', 'Use validate() instead');
-        return $this->validate();
     }
 
     /**

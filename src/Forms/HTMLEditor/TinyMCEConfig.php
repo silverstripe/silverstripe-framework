@@ -7,11 +7,8 @@ use SilverStripe\Assets\Folder;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\Module;
-use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\View\Requirements;
@@ -922,25 +919,6 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             'If the silverstripe/admin module is not installed you must set the TinyMCE path in %s.base_dir',
             __CLASS__
         ));
-    }
-
-    /**
-     * @deprecated 4.0.1 Use getTinyMCEResourcePath() instead
-     */
-    public function getTinyMCEPath()
-    {
-        Deprecation::notice('4.0.1', 'Use getTinyMCEResourcePath() instead');
-        return $this->getTinyMCEResourcePath();
-    }
-
-    /**
-     * @return Module
-     * @deprecated 4.0.1 Set base_dir or editor_css config instead
-     */
-    protected function getAdminModule()
-    {
-        Deprecation::notice('4.0.1', 'Set base_dir or editor_css config instead');
-        return ModuleLoader::getModule('silverstripe/admin');
     }
 
     /**

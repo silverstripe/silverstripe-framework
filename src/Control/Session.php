@@ -4,7 +4,6 @@ namespace SilverStripe\Control;
 
 use BadMethodCallException;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Handles all manipulation of the session.

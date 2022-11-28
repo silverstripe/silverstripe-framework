@@ -15,13 +15,12 @@ use SilverStripe\ORM\DataObject;
  * complies with your privacy standards. We're logging
  * username and IP.
  *
- * @property string $Email Email address used for login attempt. @deprecated 3.0.0:5.0.0
  * @property string $EmailHashed sha1 hashed Email address used for login attempt
  * @property string $Status Status of the login attempt, either 'Success' or 'Failure'
  * @property string $IP IP address of user attempting to login
- * @property int $MemberID ID of the Member, only if Member with Email exists
+ * @property int $MemberID ID of the Member
  *
- * @method Member Member() Member object of the user trying to log in, only if Member with Email exists
+ * @method Member Member() Member object of the user trying to log in
  */
 class LoginAttempt extends DataObject
 {
@@ -36,7 +35,6 @@ class LoginAttempt extends DataObject
     const FAILURE = 'Failure';
 
     private static $db = [
-        'Email' => 'Varchar(255)', // Remove in 5.0
         'EmailHashed' => 'Varchar(255)',
         'Status' => "Enum('Success,Failure')",
         'IP' => 'Varchar(255)',
@@ -60,7 +58,6 @@ class LoginAttempt extends DataObject
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['Email'] = _t(__CLASS__ . '.Email', 'Email Address');
         $labels['EmailHashed'] = _t(__CLASS__ . '.EmailHashed', 'Email Address (hashed)');
         $labels['Status'] = _t(__CLASS__ . '.Status', 'Status');
         $labels['IP'] = _t(__CLASS__ . '.IP', 'IP Address');

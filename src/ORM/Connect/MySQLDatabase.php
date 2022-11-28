@@ -6,7 +6,6 @@ use SilverStripe\Assets\File;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
@@ -353,14 +352,9 @@ class MySQLDatabase extends Database implements TransactionManager
         return $this->getTransactionManager()->transactionDepth();
     }
 
-    public function transactionEnd($chain = false)
+    public function transactionEnd():bool|null
     {
         $result = $this->getTransactionManager()->transactionEnd();
-
-        if ($chain) {
-            Deprecation::notice('4.4', '$chain argument is deprecated');
-            return $this->getTransactionManager()->transactionStart();
-        }
 
         return $result;
     }

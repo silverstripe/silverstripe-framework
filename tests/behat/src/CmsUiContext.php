@@ -77,15 +77,6 @@ class CmsUiContext implements Context
     }
 
     /**
-     * @Then /^I should see a "([^"]*)" notice$/
-     * @deprecated 4.7.0 Use `iShouldSeeAToast` instead
-     */
-    public function iShouldSeeANotice($notice)
-    {
-        $this->getMainContext()->assertElementContains('.toast, .notice-wrap', $notice);
-    }
-
-    /**
      * @Then /^I should see a "(.+)" (\w+) toast$/
      */
     public function iShouldSeeAToast($notice, $type)

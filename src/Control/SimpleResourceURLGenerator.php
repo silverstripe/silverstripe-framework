@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Dev\Deprecation;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -78,17 +77,8 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             if (strpos($relativePath ?? '', '?') !== false) {
                 list($relativePath, $query) = explode('?', $relativePath ?? '');
             }
-
-            // Determine lookup mechanism based on existence of public/ folder.
-            // From 5.0 onwards only resolvePublicResource() will be used.
-            if (!Director::publicDir()) {
-                $ret = Deprecation::withNoReplacement(function () use ($relativePath) {
-                    return $this->resolveUnsecuredResource($relativePath);
-                });
-                list($exists, $absolutePath, $relativePath) = $ret;
-            } else {
-                list($exists, $absolutePath, $relativePath) = $this->resolvePublicResource($relativePath);
-            }
+            
+            list($exists, $absolutePath, $relativePath) = $this->resolvePublicResource($relativePath);
         }
         if (!$exists) {
             trigger_error("File {$relativePath} does not exist", E_USER_NOTICE);
@@ -152,36 +142,6 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         } elseif (stripos($relativePath ?? '', ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
             // @todo Non-public dir support will be removed in 5.0, so remove this block there
             // If there is no public folder, map to _resources/ but trim leading vendor/ too (4.0 compat)
-            $relativePath = Path::join(
-                RESOURCES_DIR,
-                substr($relativePath ?? '', strlen(ManifestFileFinder::VENDOR_DIR ?? ''))
-            );
-        }
-        return [$exists, $absolutePath, $relativePath];
-    }
-
-    /**
-     * Resolve resource in the absence of a public/ folder
-     *
-     * @deprecated 4.1.0 Will be removed without equivalent functionality when public/ folder becomes mandatory
-     * @param string $relativePath
-     * @return array List of [$exists, $absolutePath, $relativePath]
-     */
-    protected function resolveUnsecuredResource($relativePath)
-    {
-        Deprecation::notice('4.1.0', 'Will be removed without equivalent functionality when public/ folder becomes mandatory');
-        // Check if the path requested is public-only, but we have no public folder
-        $publicOnly = $this->inferPublicResourceRequired($relativePath);
-        if ($publicOnly) {
-            trigger_error('Requesting a public resource without a public folder has no effect', E_USER_WARNING);
-        }
-
-        // Resolve path to base
-        $absolutePath = Path::join(Director::baseFolder(), $relativePath);
-        $exists = file_exists($absolutePath ?? '');
-
-        // Rewrite vendor/ to _resources/ folder
-        if (stripos($relativePath ?? '', ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
             $relativePath = Path::join(
                 RESOURCES_DIR,
                 substr($relativePath ?? '', strlen(ManifestFileFinder::VENDOR_DIR ?? ''))

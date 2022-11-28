@@ -16,7 +16,6 @@ use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBField;
 use Symfony\Component\Filesystem\Path as FilesystemPath;
@@ -140,13 +139,6 @@ class Requirements_Backend
     protected $combinedFiles = [];
 
     /**
-     * Use the injected minification service to minify any javascript file passed to {@link combine_files()}.
-     *
-     * @var bool
-     */
-    protected $minifyCombinedFiles = false;
-
-    /**
      * Whether or not file headers should be written when combining files
      *
      * @var boolean
@@ -211,11 +203,6 @@ class Requirements_Backend
     protected $assetHandler = null;
 
     /**
-     * @var Requirements_Minifier
-     */
-    protected $minifier = null;
-
-    /**
      * Gets the backend storage for generated files
      *
      * @return GeneratedAssetHandler
@@ -233,28 +220,6 @@ class Requirements_Backend
     public function setAssetHandler(GeneratedAssetHandler $handler)
     {
         $this->assetHandler = $handler;
-    }
-
-    /**
-     * Gets the minification service for this backend
-     *
-     * @return Requirements_Minifier
-     * @deprecated 4.0.1 Will be removed without equivalent functionality
-     */
-    public function getMinifier()
-    {
-        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality');
-        return $this->minifier;
-    }
-
-    /**
-     * Set a new minification service for this backend
-     *
-     * @param Requirements_Minifier $minifier
-     */
-    public function setMinifier(Requirements_Minifier $minifier = null)
-    {
-        $this->minifier = $minifier;
     }
 
     /**
@@ -383,28 +348,6 @@ class Requirements_Backend
     public function getForceJSToBottom()
     {
         return $this->forceJSToBottom;
-    }
-
-    /**
-     * Check if minify files should be combined
-     *
-     * @return bool
-     */
-    public function getMinifyCombinedFiles()
-    {
-        return $this->minifyCombinedFiles;
-    }
-
-    /**
-     * Set if combined files should be minified
-     *
-     * @param bool $minify
-     * @return $this
-     */
-    public function setMinifyCombinedFiles($minify)
-    {
-        $this->minifyCombinedFiles = $minify;
-        return $this;
     }
 
     /**
@@ -812,14 +755,6 @@ class Requirements_Backend
      */
     public function includeInHTML($content)
     {
-        if (func_num_args() > 1) {
-            Deprecation::notice(
-                '5.0',
-                '$templateFile argument is deprecated. includeInHTML takes a sole $content parameter now.'
-            );
-            $content = func_get_arg(1);
-        }
-
         // Skip if content isn't injectable, or there is nothing to inject
         $tagsAvailable = preg_match('#</head\b#', $content ?? '');
         $hasFiles = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
@@ -1154,10 +1089,6 @@ class Requirements_Backend
      */
     public function combineFiles($combinedFileName, $files, $options = [])
     {
-        if (is_string($options)) {
-            Deprecation::notice('4.0', 'Parameter media is deprecated. Use options array instead.');
-            $options = ['media' => $options];
-        }
         // Skip this combined files if already included
         if (isset($this->combinedFiles[$combinedFileName])) {
             return;
@@ -1381,28 +1312,11 @@ class Requirements_Backend
         $combinedFileID = File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
 
         // Send file combination request to the backend, with an optional callback to perform regeneration
-        $minify = $this->getMinifyCombinedFiles();
-        if ($minify && !$this->minifier) {
-            throw new Exception(
-                sprintf(
-                    <<<MESSAGE
-Cannot minify files without a minification service defined.
-Set %s::minifyCombinedFiles to false, or inject a %s service on
-%s.properties.minifier
-MESSAGE
-                    ,
-                    __CLASS__,
-                    Requirements_Minifier::class,
-                    __CLASS__
-                )
-            );
-        }
-
         $combinedURL = $this
             ->getAssetHandler()
             ->getContentURL(
                 $combinedFileID,
-                function () use ($fileList, $minify, $type) {
+                function () use ($fileList, $type) {
                     // Physically combine all file content
                     $combinedData = '';
                     foreach ($fileList as $file) {
@@ -1415,11 +1329,6 @@ MESSAGE
                             // resolve relative paths for css files
                             $fileContent = $this->resolveCSSReferences($fileContent, $file);
                         }
-                        // Use configured minifier
-                        if ($minify) {
-                            $fileContent = $this->minifier->minify($fileContent, $type, $file);
-                        }
-
                         if ($this->writeHeaderComment) {
                             // Write a header comment for each file for easier identification and debugging.
                             $combinedData .= "/****** FILE: $file *****/\n";

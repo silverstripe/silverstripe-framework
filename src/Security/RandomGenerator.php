@@ -2,37 +2,12 @@
 
 namespace SilverStripe\Security;
 
-use Error;
 use Exception;
-use SilverStripe\Dev\Deprecation;
-
 /**
  * Convenience class for generating cryptographically secure pseudo-random strings/tokens
  */
 class RandomGenerator
 {
-    /**
-     * @return string A 128-character, randomly generated ASCII string
-     * @throws Exception If no suitable CSPRNG is installed
-     * @deprecated 4.4.0 Use native php function random_bytes() instead
-     */
-    public function generateEntropy()
-    {
-        Deprecation::notice('4.4.0', 'Use native php function random_bytes() instead');
-
-        try {
-            return bin2hex(random_bytes(64));
-        } catch (Error $e) {
-            throw $e; // This is required so that Error exceptions in PHP 5 aren't caught below
-        } catch (Exception $e) {
-            throw new Exception(
-                'It appears there is no suitable CSPRNG (random number generator) installed. '
-                . 'Please review the server requirements documentation: '
-                . 'https://docs.silverstripe.org/en/getting_started/server_requirements/'
-            );
-        }
-    }
-
     /**
      * Generates a random token that can be used for session IDs, CSRF tokens etc., based on
      * hash algorithms.

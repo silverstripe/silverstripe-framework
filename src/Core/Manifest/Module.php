@@ -4,21 +4,14 @@ namespace SilverStripe\Core\Manifest;
 
 use Exception;
 use InvalidArgumentException;
-use Serializable;
 use SilverStripe\Core\Path;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Abstraction of a PHP Package. Can be used to retrieve information about Silverstripe CMS modules, and other packages
  * managed via composer, by reading their `composer.json` file.
  */
-class Module implements Serializable
+class Module
 {
-    /**
-     * @deprecated 4.1.0:5.0.0 Use Path::normalise() instead
-     */
-    const TRIM_CHARS = ' /\\';
-
     /**
      * Full directory path to this module with no trailing slash
      *
@@ -182,34 +175,7 @@ class Module implements Serializable
             $this->composerData = $data['composerData'];
             $this->resources = [];
     }
-
-    /**
-     * The __serialize() magic method will be automatically used instead of this
-     *
-     * @return string
-     * @deprecated 4.12.0 Use __serialize() instead
-     */
-    public function serialize()
-    {
-        Deprecation::notice('4.12.0', 'Use __serialize() instead');
-        return json_encode([$this->path, $this->basePath, $this->composerData]);
-    }
-
-    /**
-     * The __unserialize() magic method will be automatically used instead of this almost all the time
-     * This method will be automatically used if existing serialized data was not saved as an associative array
-     * and the PHP version used in less than PHP 9.0
-     *
-     * @param string $serialized
-     * @deprecated 4.12.0 Use __unserialize() instead
-     */
-    public function unserialize($serialized)
-    {
-        Deprecation::notice('4.12.0', 'Use __unserialize() instead');
-        list($this->path, $this->basePath, $this->composerData) = json_decode($serialized ?? '', true);
-        $this->resources = [];
-    }
-
+    
     /**
      * Activate _config.php for this module, if one exists
      */
@@ -255,58 +221,6 @@ class Module implements Serializable
             return $this->resources[$path];
         }
         return $this->resources[$path] = new ModuleResource($this, $path);
-    }
-
-    /**
-     * @deprecated 4.0.1 Use getResource($path)->getRelativePath() instead
-     * @param string $path
-     * @return string
-     */
-    public function getRelativeResourcePath($path)
-    {
-        Deprecation::notice('4.0.1', 'Use getResource($path)->getRelativePath() instead');
-        return $this
-            ->getResource($path)
-            ->getRelativePath();
-    }
-
-    /**
-     * @deprecated 4.0.1 Use getResource($path)->getPath() instead
-     * @param string $path
-     * @return string
-     */
-    public function getResourcePath($path)
-    {
-        Deprecation::notice('4.0.1', 'Use getResource($path)->getPath() instead');
-        return $this
-            ->getResource($path)
-            ->getPath();
-    }
-
-    /**
-     * @deprecated 4.0.1 Use getResource($path)->getURL() instead
-     * @param string $path
-     * @return string
-     */
-    public function getResourceURL($path)
-    {
-        Deprecation::notice('4.0.1', 'Use getResource($path)->getURL() instead');
-        return $this
-            ->getResource($path)
-            ->getURL();
-    }
-
-    /**
-     * @deprecated 4.0.1 Use getResource($path)->exists() instead
-     * @param string $path
-     * @return string
-     */
-    public function hasResource($path)
-    {
-        Deprecation::notice('4.0.1', 'Use getResource($path)->exists() instead');
-        return $this
-            ->getResource($path)
-            ->exists();
     }
 }
 

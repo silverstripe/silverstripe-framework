@@ -5,7 +5,6 @@ namespace SilverStripe\Security;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ValidationResult;
 
 /**
@@ -13,9 +12,10 @@ use SilverStripe\ORM\ValidationResult;
  *
  * <code>
  * $pwdVal = new PasswordValidator();
- * $pwdValidator->minLength(7);
+ * $pwdValidator->setMinLength(7);
  * $pwdValidator->checkHistoricalPasswords(6);
- * $pwdValidator->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"));
+ * $pwdValidator->setMinTestScore(3);
+ * $pwdValidator->setTestNames(array("lowercase", "uppercase", "digits", "punctuation"));
  *
  * Member::set_password_validator($pwdValidator);
  * </code>
@@ -74,52 +74,6 @@ class PasswordValidator
      * @var int
      */
     protected $historicalPasswordCount = null;
-
-    /**
-     * Minimum password length
-     *
-     * @param int $minLength
-     * @return $this
-     * @deprecated 4.5.0 Use setMinLength() instead
-     */
-    public function minLength($minLength)
-    {
-        Deprecation::notice('4.5.0', 'Use setMinLength() instead');
-        return $this->setMinLength($minLength);
-    }
-
-    /**
-     * Check the character strength of the password.
-     *
-     * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
-     *
-     * @param int $minScore The minimum number of character tests that must pass
-     * @param string[] $testNames The names of the tests to perform
-     * @return $this
-     * @deprecated 4.5.0 Use setMinTestScore($score) and setTestNames($names) instead
-     */
-    public function characterStrength($minScore, $testNames = null)
-    {
-        Deprecation::notice('4.5.0', 'Use setMinTestScore($score) and setTestNames($names) instead');
-        $this->setMinTestScore($minScore);
-        if ($testNames) {
-            $this->setTestNames($testNames);
-        }
-        return $this;
-    }
-
-    /**
-     * Check a number of previous passwords that the user has used, and don't let them change to that.
-     *
-     * @param int $count
-     * @return $this
-     * @deprecated 4.5.0 Use setHistoricCount($value) instead
-     */
-    public function checkHistoricalPasswords($count)
-    {
-        Deprecation::notice('4.5.0', 'Use setHistoricCount($value) instead');
-        return $this->setHistoricCount($count);
-    }
 
     /**
      * @return int

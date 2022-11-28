@@ -2,9 +2,7 @@
 
 namespace SilverStripe\i18n\Messages\Symfony;
 
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\Flushable;
-use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 
 /**
@@ -14,7 +12,7 @@ use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
  * @link https://media.giphy.com/media/fRRD3T37DeY6Y/giphy.gif for use case
  * @see DirectoryResource
  */
-class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serializable, Flushable
+class FlushInvalidatedResource implements SelfCheckingResourceInterface, Flushable
 {
 
     public function __toString()
@@ -48,32 +46,6 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, \Serial
 
     public function __unserialize(array $data): void
     {
-        // no-op
-    }
-
-    /**
-     * The __serialize() magic method will be automatically used instead of this
-     *
-     * @return string
-     * @deprecated 4.12.0 Use __serialize() instead
-     */
-    public function serialize()
-    {
-        Deprecation::notice('4.12.0', 'Use __serialize() instead');
-        return '';
-    }
-
-    /**
-     * The __unserialize() magic method will be automatically used instead of this almost all the time
-     * This method will be automatically used if existing serialized data was not saved as an associative array
-     * and the PHP version used in less than PHP 9.0
-     *
-     * @param string $serialized
-     * @deprecated 4.12.0 Use __unserialize() instead
-     */
-    public function unserialize($serialized)
-    {
-        Deprecation::notice('4.12.0', 'Use __unserialize() instead');
         // no-op
     }
 

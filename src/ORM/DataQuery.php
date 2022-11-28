@@ -485,7 +485,7 @@ class DataQuery
         // Wrap the whole thing in an "EXISTS"
         $sql = 'SELECT CASE WHEN EXISTS(' . $statement->sql($params) . ') THEN 1 ELSE 0 END';
         $result = DB::prepared_query($sql, $params);
-        $row = $result->first();
+        $row = $result->record();
         $result = reset($row);
 
         // Checking for 't' supports PostgreSQL before silverstripe/postgresql@2.2

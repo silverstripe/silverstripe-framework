@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Dev\Deprecation;
 use ArrayAccess;
 use BadMethodCallException;
 use InvalidArgumentException;
@@ -901,28 +900,6 @@ class HTTPRequest implements ArrayAccess
     private static function isValidHttpMethod($method)
     {
         return in_array(strtoupper($method ?? ''), ['GET','POST','PUT','DELETE','HEAD']);
-    }
-
-    /**
-     * Gets the "real" HTTP method for a request. This method is no longer used to mitigate the risk of web cache
-     * poisoning.
-     *
-     * @see https://www.silverstripe.org/download/security-releases/CVE-2019-19326
-     * @param string $origMethod Original HTTP method from the browser request
-     * @param array $postVars
-     * @return string HTTP method (all uppercase)
-     * @deprecated 4.4.7 Will be removed without equivalent functionality
-     */
-    public static function detect_method($origMethod, $postVars)
-    {
-        Deprecation::notice('4.4.7', 'Will be removed without equivalent functionality');
-        if (isset($postVars['_method'])) {
-            if (!self::isValidHttpMethod($postVars['_method'])) {
-                throw new InvalidArgumentException('HTTPRequest::detect_method(): Invalid "_method" parameter');
-            }
-            return strtoupper($postVars['_method'] ?? '');
-        }
-        return $origMethod;
     }
 
     /**

@@ -76,13 +76,6 @@ class SearchContext
     protected $searchParams = [];
 
     /**
-     * The logical connective used to join WHERE clauses. Must be "AND".
-     * @deprecated 5.0
-     * @var string
-     */
-    public $connective = 'AND';
-
-    /**
      * A key value pair of values that should be searched for.
      * The keys should match the field names specified in {@link self::$fields}.
      * Usually these values come from a submitted searchform
@@ -147,9 +140,6 @@ class SearchContext
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
-        if ($this->connective != "AND") {
-            throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
-        }
         $this->setSearchParams($searchParams);
         $query = $this->prepareQuery($sort, $limit, $existingQuery);
         return $this->search($query);

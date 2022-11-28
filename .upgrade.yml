@@ -176,8 +176,6 @@ mappings:
   SS_ClassManifest: SilverStripe\Core\Manifest\ClassManifest
   SilverStripe\Core\Manifest\SS_ClassManifest: SilverStripe\Core\Manifest\ClassManifest
   ManifestFileFinder: SilverStripe\Core\Manifest\ManifestFileFinder
-  ErrorControlChain: SilverStripe\Core\Startup\ErrorControlChain
-  ParameterConfirmationToken: SilverStripe\Core\Startup\ParameterConfirmationToken
   DatabaseAdapterRegistry: SilverStripe\Dev\Install\DatabaseAdapterRegistry
   DatabaseConfigurationHelper: SilverStripe\Dev\Install\DatabaseConfigurationHelper
   MySQLDatabaseConfigurationHelper: SilverStripe\Dev\Install\MySQLDatabaseConfigurationHelper
@@ -192,7 +190,6 @@ mappings:
   CliDebugView: SilverStripe\Dev\CliDebugView
   CSSContentParser: SilverStripe\Dev\CSSContentParser
   CsvBulkLoader: SilverStripe\Dev\CsvBulkLoader
-  CSVParser: SilverStripe\Dev\CSVParser
   Debug: SilverStripe\Dev\Debug
   DebugView: SilverStripe\Dev\DebugView
   Deprecation: SilverStripe\Dev\Deprecation
@@ -201,7 +198,6 @@ mappings:
   FixtureBlueprint: SilverStripe\Dev\FixtureBlueprint
   FixtureFactory: SilverStripe\Dev\FixtureFactory
   FunctionalTest: SilverStripe\Dev\FunctionalTest
-  InstallerTest: SilverStripe\Dev\InstallerTest
   MigrationTask: SilverStripe\Dev\MigrationTask
   SapphireTest: SilverStripe\Dev\SapphireTest
   TaskRunner: SilverStripe\Dev\TaskRunner
@@ -229,17 +225,13 @@ mappings:
   NestedController: SilverStripe\Control\NestedController
   NullHTTPRequest: SilverStripe\Control\NullHTTPRequest
   PjaxResponseNegotiator: SilverStripe\Control\PjaxResponseNegotiator
-  RequestFilter: SilverStripe\Control\RequestFilter
   RequestHandler: SilverStripe\Control\RequestHandler
-  RequestProcessor: SilverStripe\Control\RequestProcessor
   Session: SilverStripe\Control\Session
   Email: SilverStripe\Control\Email\Email
-  Mailer: SilverStripe\Control\Email\Mailer
   RSSFeed: SilverStripe\Control\RSS\RSSFeed
   RSSFeed_Entry: SilverStripe\Control\RSS\RSSFeed_Entry
   CleanupTestDatabasesTask: SilverStripe\Dev\Tasks\CleanupTestDatabasesTask
   i18nTextCollectorTask: SilverStripe\Dev\Tasks\i18nTextCollectorTask
-  MigrateFileTask: SilverStripe\Dev\Tasks\MigrateFileTask
   CheckboxField: SilverStripe\Forms\CheckboxField
   CheckboxField_Readonly: SilverStripe\Forms\CheckboxField_Readonly
   CheckboxSetField: SilverStripe\Forms\CheckboxSetField
@@ -372,7 +364,6 @@ mappings:
   GenericTemplateGlobalProvider: SilverStripe\View\GenericTemplateGlobalProvider
   Requirements: SilverStripe\View\Requirements
   Requirements_Backend: SilverStripe\View\Requirements_Backend
-  Requirements_Minifier: SilverStripe\View\Requirements_Minifier
   SSTemplateParseException: SilverStripe\View\SSTemplateParseException
   SSTemplateParser: SilverStripe\View\SSTemplateParser
   SSViewer_Scope: SilverStripe\View\SSViewer_Scope
@@ -487,7 +478,6 @@ mappings:
   CsvBulkLoaderTest_Team: SilverStripe\Dev\Tests\CsvBulkLoaderTest\Team
   CsvBulkLoaderTest_Player: SilverStripe\Dev\Tests\CsvBulkLoaderTest\Player
   CsvBulkLoaderTest_PlayerContract: SilverStripe\Dev\Tests\CsvBulkLoaderTest\PlayerContract
-  CSVParserTest: SilverStripe\Dev\Tests\CSVParserTest
   DeprecationTest_Deprecation: SilverStripe\Dev\Tests\DeprecationTest\TestDeprecation
   DeprecationTest: SilverStripe\Dev\Tests\DeprecationTest
   DevAdminControllerTest: SilverStripe\Dev\Tests\DevAdminControllerTest
@@ -847,11 +837,6 @@ mappings:
   ThemeResourceLoaderTest: SilverStripe\Core\Tests\Manifest\ThemeResourceLoaderTest
   EmailTest: SilverStripe\Control\Tests\Email\EmailTest
   MailerTest: SilverStripe\Control\Tests\Email\SwiftMailerTest
-  ErrorControlChainTest_Chain: SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTest_Chain
-  ErrorControlChainTest: SilverStripe\Core\Tests\Startup\ErrorControlChainTest
-  ParameterConfirmationTokenTest_Token: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token
-  ParameterConfirmationTokenTest_ValidToken: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_ValidToken
-  ParameterConfirmationTokenTest: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest
   ConfigTest_DefinesFoo: SilverStripe\Core\Tests\Config\ConfigTest\DefinesFoo
   ConfigTest_DefinesBar: SilverStripe\Core\Tests\Config\ConfigTest\DefinesBar
   ConfigTest_DefinesFooAndBar: SilverStripe\Core\Tests\Config\ConfigTest\DefinesFooAndBar
@@ -981,8 +966,6 @@ warnings:
       message: 'Renamed to CMSMain_TreeNode'
     'HTMLEditorField_Toolbar':
       message: 'replaced With SilverStripe\Admin\ModalController'
-    'HTMLEditorField_Embed':
-      message: 'replaced with SilverStripe\View\Embed\EmbedResource'
     'HTMLEditorField_File':
       message: 'Removed'
     'HTMLEditorField_Flash':
@@ -1009,14 +992,8 @@ warnings:
       message: 'Use SilverStripe\CMS\BatchActions\CMSBatchAction_Archive instead'
     'EncryptAllPasswordsTask':
       message: 'Removed'
-    'SapphireInfo':
-      message: 'Removed'
     'SilverStripe\Dev\SapphireREPL':
       message: 'Removed'
-    'SilverStripe\Dev\SapphireInfo':
-      message: 'Deprecated'
-    'SilverStripe\Dev\InstallerTest':
-      message: 'Deprecated'
   methods:
     'SilverStripe\Security\Authenticator::register()':
       message: 'Custom authenticators work differently now'
@@ -1309,12 +1286,6 @@ warnings:
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->day_before()'
     'days_between()':
       message: 'Removed SilverStripe\ORM\FieldType\DBDate->days_between()'
-    'SilverStripe\Security\Permission::get_declared_permissions_list()':
-      message: 'Deprecated'
-    'SilverStripe\Security\Permission::get_label_for_permission()':
-      message: 'Deprecated'
-    'SilverStripe\Security\Permission::traverse_declared_permissions()':
-      message: 'Deprecated'
     'SilverStripe\Control\Session::get_all()':
       message: 'Session can not be accessed statically and `get_all()` is now called `getAll()'
     'SilverStripe\Control\Session::clear_all()':
@@ -1336,10 +1307,6 @@ warnings:
       message: 'Renamed to combineFiles'
       replacement: 'combineFiles'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
-    'SilverStripe\View\Requirements_Backend->combine_js_with_min':
-      message: 'Renamed to $minifyCombinedFiles'
-      url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
-      replacement: 'minifyCombinedFiles'
     'SilverStripe\View\Requirements_Backend->write_header_comments':
       message: 'Renamed to writeHeaderComment'
       url: 'https://docs.silverstripe.org/en/4/changelogs/4.0.0#requirements'
@@ -1350,12 +1317,6 @@ warnings:
       replacement: 'writeJavascriptToBody'
     'SilverStripe\Forms\Formfield->dontEscape':
       message: 'FormField::$dontEscape has been removed. Escaping is now managed on a class by class basis.'
-    'SilverStripe\Security\LoginForm->authenticator_class':
-      message: 'authenticator_class is deprecated. Use getAuthenticatorClass/setAuthenticatorClass.'
-    'SilverStripe\Security\Permission->declared_permissions':
-      message: 'Deprecated'
-    'SilverStripe\Security\Permission->declared_permissions_list':
-      message: 'Deprecated'
   functions:
     'file_get_contents()':
       message: 'Use new asset abstraction'
@@ -1428,8 +1389,6 @@ visibilities:
     visibility: private
   'SilverStripe\ORM\DataObject::default_classname':
     visibility: private
-  'SilverStripe\ORM\DataObject->destroyed':
-    visibility: public
   'SilverStripe\ORM\DataObject->record':
     visibility: protected
   'SilverStripe\ORM\DataObject->joinRecord':
