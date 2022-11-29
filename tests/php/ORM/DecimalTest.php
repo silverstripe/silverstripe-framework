@@ -61,6 +61,35 @@ class DecimalTest extends SapphireTest
         );
     }
 
+    public function testLongValueStoredCorrectly()
+    {
+        $this->assertEquals(
+            $this->testDataObject->MyDecimal5,
+            1.0,
+            'Long default long decimal value is rounded correctly'
+        );
+
+        $this->assertEqualsWithDelta(
+            $this->testDataObject->MyDecimal5,
+            0.99999999999999999999,
+            PHP_FLOAT_EPSILON,
+            'Long default long decimal value is correct within float epsilon'
+        );
+
+        $this->assertEquals(
+            $this->testDataObject->MyDecimal6,
+            8.0,
+            'Long decimal value with a default value is rounded correctly'
+        );
+
+        $this->assertEqualsWithDelta(
+            $this->testDataObject->MyDecimal6,
+            7.99999999999999999999,
+            PHP_FLOAT_EPSILON,
+            'Long decimal value is within epsilon if longer than allowed number of float digits'
+        );
+    }
+
     public function testScaffoldFormField()
     {
         /** @var DBDecimal $decimal */
