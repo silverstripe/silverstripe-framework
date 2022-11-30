@@ -21,7 +21,6 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\DebugView;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\View\PublicThemes;
 use SilverStripe\View\SSViewer;
@@ -179,26 +178,17 @@ abstract class BaseKernel implements Kernel
      */
     protected function bootManifests($flush)
     {
-        // Setup autoloader
-        $ignoredCIConfigs = Deprecation::withNoReplacement(function () {
-            return $this->getIgnoredCIConfigs();
-        });
+        $this->getClassLoader()->init(
+            $this->getIncludeTests(),
+            $flush
+        );
 
-        Deprecation::withNoReplacement(function () use ($flush, $ignoredCIConfigs) {
-            $this->getClassLoader()->init(
-                $this->getIncludeTests(),
-                $flush,
-                $ignoredCIConfigs
-            );
-
-            // Find modules
-            $this->getModuleLoader()->init(
-                $this->getIncludeTests(),
-                $flush,
-                $ignoredCIConfigs
-            );
-        });
-
+        // Find modules
+        $this->getModuleLoader()->init(
+            $this->getIncludeTests(),
+            $flush
+        );
+        
         // Flush config
         if ($flush) {
             $config = $this->getConfigLoader()->getManifest();
@@ -215,13 +205,10 @@ abstract class BaseKernel implements Kernel
             $defaultSet->setProject(
                 ModuleManifest::config()->get('project')
             );
-            Deprecation::withNoReplacement(function () use ($defaultSet, $flush, $ignoredCIConfigs) {
-                $defaultSet->init(
-                    $this->getIncludeTests(),
-                    $flush,
-                    $ignoredCIConfigs
-                );
-            });
+            $defaultSet->init(
+                $this->getIncludeTests(),
+                $flush
+            );
         }
     }
 
@@ -230,15 +217,8 @@ abstract class BaseKernel implements Kernel
      */
     protected function bootConfigs()
     {
-        global $project;
-        $projectBefore = $project;
-        $config = ModuleManifest::config();
         // After loading all other app manifests, include _config.php files
         $this->getModuleLoader()->getManifest()->activateConfig();
-        if ($project && $project !== $projectBefore) {
-            Deprecation::notice('5.0', '$project global is deprecated');
-            $config->set('project', $project);
-        }
     }
 
     /**

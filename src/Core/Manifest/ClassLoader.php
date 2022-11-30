@@ -2,9 +2,6 @@
 
 namespace SilverStripe\Core\Manifest;
 
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Dev\Deprecation;
-
 /**
  * A class that handles loading classes and interfaces from a class manifest
  * instance.
@@ -126,24 +123,9 @@ class ClassLoader
         foreach ($this->manifests as $manifest) {
             /** @var ClassManifest $instance */
             $instance = $manifest['instance'];
-            Deprecation::withNoReplacement(function () use ($instance, $includeTests, $forceRegen, $ignoredCIConfigs) {
-                $instance->init($includeTests, $forceRegen, $ignoredCIConfigs);
-            });
+            $instance->init($includeTests, $forceRegen);
         }
 
         $this->registerAutoloader();
-    }
-
-    /**
-     * Returns true if a class or interface name exists in the manifest.
-     *
-     * @param  string $class
-     * @return bool
-     * @deprecated 4.0.1 Use ClassInfo::exists() instead
-     */
-    public function classExists($class)
-    {
-        Deprecation::notice('4.0.1', 'Use ClassInfo::exists() instead');
-        return ClassInfo::exists($class);
     }
 }
