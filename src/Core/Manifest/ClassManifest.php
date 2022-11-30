@@ -291,9 +291,7 @@ class ClassManifest
         }
 
         // Build
-        Deprecation::withNoReplacement(function () use ($includeTests, $ignoredCIConfigs) {
-            $this->regenerate($includeTests, $ignoredCIConfigs);
-        });
+        $this->regenerate($includeTests);
     }
 
     /**
