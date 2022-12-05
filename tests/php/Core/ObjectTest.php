@@ -117,7 +117,7 @@ class ObjectTest extends SapphireTest
         $obj = singleton(MyObject::class);
         $this->assertEquals(
             'MyObject',
-            $obj->stat('mystaticProperty'),
+            $obj::config()->get('mystaticProperty'),
             'Uninherited statics through stat() on a singleton behave the same as built-in PHP statics'
         );
     }
@@ -129,7 +129,7 @@ class ObjectTest extends SapphireTest
         }
         $subObj = singleton(MyObject::class);
         $this->assertEquals(
-            $subObj->stat('mystaticProperty'),
+            $subObj::config()->get('mystaticProperty'),
             'MyObject',
             'Statics defined on a parent class are available through stat() on a subclass'
         );
@@ -144,7 +144,7 @@ class ObjectTest extends SapphireTest
         $singleton2 = singleton(MyObject::class);
         $singleton1->set_stat('mystaticProperty', 'changed');
         $this->assertEquals(
-            $singleton2->stat('mystaticProperty'),
+            $singleton2::config()->get('mystaticProperty'),
             'changed',
             'Statics setting is populated throughout singletons without explicitly clearing cache'
         );
@@ -159,7 +159,7 @@ class ObjectTest extends SapphireTest
         $instance2 = new ObjectTest\MyObject();
         $instance1->set_stat('mystaticProperty', 'changed');
         $this->assertEquals(
-            $instance2->stat('mystaticProperty'),
+            $instance2::config()->get('mystaticProperty'),
             'changed',
             'Statics setting through set_stat() is populated throughout instances without explicitly clearing cache'
         );

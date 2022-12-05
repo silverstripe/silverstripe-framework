@@ -143,6 +143,7 @@ class Requirements_Backend
      * Use the injected minification service to minify any javascript file passed to {@link combine_files()}.
      *
      * @var bool
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     protected $minifyCombinedFiles = false;
 
@@ -212,6 +213,7 @@ class Requirements_Backend
 
     /**
      * @var Requirements_Minifier
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     protected $minifier = null;
 
@@ -251,9 +253,11 @@ class Requirements_Backend
      * Set a new minification service for this backend
      *
      * @param Requirements_Minifier $minifier
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     public function setMinifier(Requirements_Minifier $minifier = null)
     {
+        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality');
         $this->minifier = $minifier;
     }
 
@@ -389,9 +393,11 @@ class Requirements_Backend
      * Check if minify files should be combined
      *
      * @return bool
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     public function getMinifyCombinedFiles()
     {
+        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality');
         return $this->minifyCombinedFiles;
     }
 
@@ -400,9 +406,11 @@ class Requirements_Backend
      *
      * @param bool $minify
      * @return $this
+     * @deprecated 4.0.1 Will be removed without equivalent functionality
      */
     public function setMinifyCombinedFiles($minify)
     {
+        Deprecation::notice('4.0.1', 'Will be removed without equivalent functionality');
         $this->minifyCombinedFiles = $minify;
         return $this;
     }
@@ -1381,22 +1389,25 @@ class Requirements_Backend
         $combinedFileID = File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
 
         // Send file combination request to the backend, with an optional callback to perform regeneration
-        $minify = $this->getMinifyCombinedFiles();
-        if ($minify && !$this->minifier) {
-            throw new Exception(
-                sprintf(
-                    <<<MESSAGE
-Cannot minify files without a minification service defined.
-Set %s::minifyCombinedFiles to false, or inject a %s service on
-%s.properties.minifier
-MESSAGE
-                    ,
-                    __CLASS__,
-                    Requirements_Minifier::class,
-                    __CLASS__
-                )
-            );
-        }
+        $minify = Deprecation::withNoReplacement(function () {
+            $minify = $this->getMinifyCombinedFiles();
+            if ($minify && !$this->minifier) {
+                throw new Exception(
+                    sprintf(
+                        <<<MESSAGE
+    Cannot minify files without a minification service defined.
+    Set %s::minifyCombinedFiles to false, or inject a %s service on
+    %s.properties.minifier
+    MESSAGE
+                        ,
+                        __CLASS__,
+                        Requirements_Minifier::class,
+                        __CLASS__
+                    )
+                );
+            }
+            return $minify;
+        });
 
         $combinedURL = $this
             ->getAssetHandler()
@@ -1416,6 +1427,7 @@ MESSAGE
                             $fileContent = $this->resolveCSSReferences($fileContent, $file);
                         }
                         // Use configured minifier
+                        // @deprecated
                         if ($minify) {
                             $fileContent = $this->minifier->minify($fileContent, $type, $file);
                         }

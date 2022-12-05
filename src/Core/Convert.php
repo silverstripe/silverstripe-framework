@@ -281,7 +281,7 @@ class Convert
      */
     public static function json2array($val)
     {
-        Deprecation::notice('4.4.0', 'Use json_decode() instead');
+        Deprecation::notice('4.4.0', 'Use json_decode($val, true) instead');
 
         return json_decode($val ?? '', true);
     }
@@ -331,9 +331,11 @@ class Convert
      * @param SimpleXMLElement $xml
      *
      * @return mixed
+     * @deprecated 4.11.0 Will be removed without equivalent functionality
      */
     protected static function recursiveXMLToArray($xml)
     {
+        Deprecation::notice('4.11.0', 'Will be removed without equivalent functionality');
         $x = null;
         if ($xml instanceof SimpleXMLElement) {
             $attributes = $xml->attributes();

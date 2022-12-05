@@ -834,7 +834,9 @@ class Member extends DataObject
     public static function create_new_password()
     {
         Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $words = Security::config()->uninherited('word_list');
+        $words = Deprecation::withNoReplacement(function () {
+            return Security::config()->uninherited('word_list');
+        });
 
         if ($words && file_exists($words ?? '')) {
             $words = file($words ?? '');
