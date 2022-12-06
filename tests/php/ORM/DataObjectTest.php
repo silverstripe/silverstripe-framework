@@ -1034,10 +1034,10 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($obj->isChanged());
 
         /* If we perform the same random query twice, it shouldn't return the same results */
-        $itemsA = DataObject::get(DataObjectTest\TeamComment::class, "", DB::get_conn()->random());
-        $itemsB = DataObject::get(DataObjectTest\TeamComment::class, "", DB::get_conn()->random());
-        $itemsC = DataObject::get(DataObjectTest\TeamComment::class, "", DB::get_conn()->random());
-        $itemsD = DataObject::get(DataObjectTest\TeamComment::class, "", DB::get_conn()->random());
+        $itemsA = DataObject::get(DataObjectTest\TeamComment::class, "")->orderBy(DB::get_conn()->random());
+        $itemsB = DataObject::get(DataObjectTest\TeamComment::class)->orderBy(DB::get_conn()->random());
+        $itemsC = DataObject::get(DataObjectTest\TeamComment::class)->orderBy(DB::get_conn()->random());
+        $itemsD = DataObject::get(DataObjectTest\TeamComment::class)->orderBy(DB::get_conn()->random());
         foreach ($itemsA as $item) {
             $keysA[] = $item->ID;
         }
@@ -1914,7 +1914,7 @@ class DataObjectTest extends SapphireTest
 
         // Check that ordering a many-many relation by an aggregate column doesn't fail
         $player = $this->objFromFixture(DataObjectTest\Player::class, 'player2');
-        $player->Teams()->sort("count(DISTINCT \"DataObjectTest_Team_Players\".\"DataObjectTest_PlayerID\") DESC");
+        $player->Teams()->orderBy("count(DISTINCT \"DataObjectTest_Team_Players\".\"DataObjectTest_PlayerID\") DESC");
     }
 
     /**

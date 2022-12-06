@@ -102,7 +102,7 @@ class ManyManyThroughListTest extends SapphireTest
 
         $items = $parent->Items();
         if ($sort) {
-            $items = $items->sort($sort);
+            $items = $items->orderBy($sort);
         }
         $this->assertSame($expected, $items->column('Title'));
     }

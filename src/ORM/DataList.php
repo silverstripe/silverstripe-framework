@@ -203,9 +203,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return a new DataList instance with a WHERE clause added to this list's query.
      *
+     * This method accepts raw SQL so could be vulnerable to SQL injection attacks if used incorrectly,
+     * it's preferable to use filter() instead which does not allow raw SQL.
+     *
      * Supports parameterised queries.
      * See SQLSelect::addWhere() for syntax examples, although DataList
      * won't expand multiple method arguments as SQLSelect does.
+     *
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
      * paramaterised queries
@@ -222,6 +226,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return a new DataList instance with a WHERE clause added to this list's query.
      * All conditions provided in the filter will be joined with an OR
      *
+     * This method accepts raw SQL so could be vulnerable to SQL injection attacks if used incorrectly,
+     * it's preferable to use filterAny() instead which does not allow raw SQL
+     *
      * Supports parameterised queries.
      * See SQLSelect::addWhere() for syntax examples, although DataList
      * won't expand multiple method arguments as SQLSelect does.
@@ -236,8 +243,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             $query->whereAny($filter);
         });
     }
-
-
 
     /**
      * Returns true if this DataList can be sorted by the given field.
@@ -308,71 +313,117 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Return a new DataList instance as a copy of this data list with the sort
-     * order set.
+     * Return a new DataList instance as a copy of this data list with the sort order set
      *
-     * @see SS_List::sort()
-     * @see SQLSelect::orderby
+     * Raw SQL is not accepted, only actual field names can be passed
+     *
+     * @param string|array $args
      * @example $list = $list->sort('Name'); // default ASC sorting
-     * @example $list = $list->sort('Name DESC'); // DESC sorting
+     * @example $list = $list->sort('Name ASC, Age DESC');
      * @example $list = $list->sort('Name', 'ASC');
-     * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
-     *
-     * @param string|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
-     * @return static
+     * @example $list = $list->sort(['Name' => 'ASC', 'Age' => 'DESC']);
+     * @example $list = $list->sort('MyRelation.MyColumn ASC')
+     * @example $list->sort(null); // wipe any existing sort
      */
-    public function sort()
+    public function sort(...$args): static
     {
-        $count = func_num_args();
-
+        $count = count($args);
         if ($count == 0) {
             return $this;
         }
-
         if ($count > 2) {
             throw new InvalidArgumentException('This method takes zero, one or two arguments');
         }
-
         if ($count == 2) {
-            $col = null;
-            $dir = null;
-            list($col, $dir) = func_get_args();
-
-            // Validate direction
-            if (!in_array(strtolower($dir ?? ''), ['desc', 'asc'])) {
-                user_error('Second argument to sort must be either ASC or DESC');
-            }
-
-            $sort = [$col => $dir];
+            list($column, $direction) = $args;
+            $sort = [$column => $direction];
         } else {
-            $sort = func_get_arg(0);
-        }
-
-        return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
-
-            if (is_string($sort) && $sort) {
-                if (false !== stripos($sort ?? '', ' asc') || false !== stripos($sort ?? '', ' desc')) {
-                    $query->sort($sort);
-                } else {
-                    $list->applyRelation($sort, $column, true);
-                    $query->sort($column, 'ASC');
-                }
-            } elseif (is_array($sort)) {
-                // sort(array('Name'=>'desc'));
-                $query->sort(null, null); // wipe the sort
-
-                foreach ($sort as $column => $direction) {
-                    // Convert column expressions to SQL fragment, while still allowing the passing of raw SQL
-                    // fragments.
-                    $list->applyRelation($column, $relationColumn, true);
-                    $query->sort($relationColumn, $direction, false);
-                }
+            $sort = $args[0];
+            if (!is_string($sort) && !is_array($sort) && !is_null($sort)) {
+                throw new InvalidArgumentException('sort() arguments must either be a string, an array, or null');
             }
+            if (is_null($sort)) {
+                // Set an an empty array here to cause any existing sort on the DataLists to be wiped
+                // later on in this method
+                $sort = [];
+            } elseif (empty($sort)) {
+                throw new InvalidArgumentException('Invalid sort parameter');
+            }
+            // If $sort is string then convert string to array to allow for validation
+            if (is_string($sort)) {
+                $newSort = [];
+                // Making the assumption here there are no commas in column names
+                // Other parts of silverstripe will break if there are commas in column names
+                foreach (explode(',', $sort) as $colDir) {
+                    // Using regex instead of explode(' ') in case column name includes spaces
+                    if (preg_match('/^(.+) ([^"]+)$/i', trim($colDir), $matches)) {
+                        list($column, $direction) = [$matches[1], $matches[2]];
+                    } else {
+                        list($column, $direction) = [$colDir, 'ASC'];
+                    }
+                    $newSort[$column] = $direction;
+                }
+                $sort = $newSort;
+            }
+        }
+        foreach ($sort as $column => $direction) {
+            $this->validateSortColumn($column);
+            $this->validateSortDirection($direction);
+        }
+        return $this->alterDataQuery(function (DataQuery $query, DataList $list) use ($sort) {
+            // Wipe the sort
+            $query->sort(null, null);
+            foreach ($sort as $column => $direction) {
+                $list->applyRelation($column, $relationColumn, true);
+                $query->sort($relationColumn, $direction, false);
+            }
+        });
+    }
+
+    private function validateSortColumn(string $column): void
+    {
+        $col = trim($column);
+        // Strip double quotes from single field names e.g. '"Title"'
+        if (preg_match('#^"[^"]+"$#', $col)) {
+            $col = str_replace('"', '', $col);
+        }
+        // $columnName is a param that is passed by reference so is essentially as a return type
+        // it will be returned in quoted SQL "TableName"."ColumnName" notation
+        // if it's equal to $col however it means that it WAS orginally raw sql, which is disallowed for sort()
+        //
+        // applyRelation() will also throw an InvalidArgumentException if $column is not raw sql but
+        // the Relation.FieldName is not a valid model relationship
+        $this->applyRelation($col, $columnName, true);
+        if ($col === $columnName) {
+            throw new InvalidArgumentException("Invalid sort column $column");
+        }
+    }
+
+    private function validateSortDirection(string $direction): void
+    {
+        $dir = strtolower($direction);
+        if ($dir !== 'asc' && $dir !== 'desc') {
+            throw new InvalidArgumentException("Invalid sort direction $direction");
+        }
+    }
+
+    /**
+     * Set an explicit ORDER BY statement using raw SQL
+     *
+     * This method accepts raw SQL so could be vulnerable to SQL injection attacks if used incorrectly,
+     * it's preferable to use sort() instead which does not allow raw SQL
+     */
+    public function orderBy(string $orderBy): static
+    {
+        return $this->alterDataQuery(function (DataQuery $query) use ($orderBy) {
+            $query->sort($orderBy, null, true);
         });
     }
 
     /**
      * Return a copy of this list which only includes items with these characteristics
+     *
+     * Raw SQL is not accepted, only actual field names can be passed
      *
      * @see Filterable::filter()
      *
@@ -432,6 +483,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Return a copy of this list which contains items matching any of these characteristics.
+     *
+     * Raw SQL is not accepted, only actual field names can be passed
      *
      * @example // only bob in the list
      *          $list = $list->filterAny('Name', 'bob');
@@ -564,7 +617,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     protected function isValidRelationName($field)
     {
-        return preg_match('/^[A-Z0-9._]+$/i', $field ?? '');
+        return preg_match('/^[A-Z0-9\._]+$/i', $field ?? '');
     }
 
     /**
@@ -608,6 +661,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return a copy of this list which does not contain any items that match all params
      *
+     * Raw SQL is not accepted, only actual field names can be passed
+     *
      * @example $list = $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list = $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
      * @example $list = $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
@@ -647,6 +702,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Return a copy of this list which does not contain any items with any of these params
+     *
+     * Raw SQL is not accepted, only actual field names can be passed
      *
      * @example $list = $list->excludeAny('Name', 'bob'); // exclude bob from list
      * @example $list = $list->excludeAny('Name', array('aziz', 'bob'); // exclude aziz and bob from list
@@ -1190,7 +1247,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function shuffle()
     {
-        return $this->sort(DB::get_conn()->random());
+        return $this->orderBy(DB::get_conn()->random());
     }
 
     /**
