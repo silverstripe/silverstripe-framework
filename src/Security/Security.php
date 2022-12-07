@@ -16,7 +16,6 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
@@ -82,16 +81,6 @@ class Security extends Controller implements TemplateGlobalProvider
      * @var bool
      */
     private static $remember_username = true;
-
-    /**
-     * Location of word list to use for generating passwords
-     *
-     * @config
-     * @var string
-     *
-     * @deprecated 4.12 Will be removed without equivalent functionality to replace it
-     */
-    private static $word_list = './wordlist.txt';
 
     /**
      * @config
@@ -461,30 +450,6 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         return self::$currentUser;
     }
-
-    /**
-     * Get the login forms for all available authentication methods
-     *
-     * @deprecated 4.12.0 Use delegateToMultipleHandlers() instead
-     *
-     * @return array Returns an array of available login forms (array of Form
-     *               objects).
-     *
-     */
-    public function getLoginForms()
-    {
-        Deprecation::notice('4.12.0', 'Use delegateToMultipleHandlers() instead');
-
-        return array_map(
-            function (Authenticator $authenticator) {
-                return [
-                    $authenticator->getLoginHandler($this->Link())->loginForm()
-                ];
-            },
-            $this->getApplicableAuthenticators() ?? []
-        );
-    }
-
 
     /**
      * Get a link to a security action
@@ -1059,119 +1024,6 @@ class Security extends Controller implements TemplateGlobalProvider
                 "BlankPage"
             ]
         );
-    }
-
-    /**
-     * Return an existing member with administrator privileges, or create one of necessary.
-     *
-     * Will create a default 'Administrators' group if no group is found
-     * with an ADMIN permission. Will create a new 'Admin' member with administrative permissions
-     * if no existing Member with these permissions is found.
-     *
-     * Important: Any newly created administrator accounts will NOT have valid
-     * login credentials (Email/Password properties), which means they can't be used for login
-     * purposes outside of any default credentials set through {@link Security::setDefaultAdmin()}.
-     *
-     * @return Member
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::findOrCreateDefaultAdmin()
-     */
-    public static function findAnAdministrator()
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::findOrCreateDefaultAdmin()');
-
-        $service = DefaultAdminService::singleton();
-        return $service->findOrCreateDefaultAdmin();
-    }
-
-    /**
-     * Flush the default admin credentials
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::clearDefaultAdmin()
-     */
-    public static function clear_default_admin()
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::clearDefaultAdmin()');
-
-        DefaultAdminService::clearDefaultAdmin();
-    }
-
-    /**
-     * Set a default admin in dev-mode
-     *
-     * This will set a static default-admin which is not existing
-     * as a database-record. By this workaround we can test pages in dev-mode
-     * with a unified login. Submitted login-credentials are first checked
-     * against this static information in {@link Security::authenticate()}.
-     *
-     * @param string $username The user name
-     * @param string $password The password (in cleartext)
-     * @return bool True if successfully set
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::setDefaultAdmin($username, $password)
-     */
-    public static function setDefaultAdmin($username, $password)
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::setDefaultAdmin($username, $password)');
-
-        DefaultAdminService::setDefaultAdmin($username, $password);
-        return true;
-    }
-
-    /**
-     * Checks if the passed credentials are matching the default-admin.
-     * Compares cleartext-password set through Security::setDefaultAdmin().
-     *
-     * @param string $username
-     * @param string $password
-     * @return bool
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::isDefaultAdminCredentials() instead
-     */
-    public static function check_default_admin($username, $password)
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::isDefaultAdminCredentials() instead');
-
-        /** @var DefaultAdminService $service */
-        return DefaultAdminService::isDefaultAdminCredentials($username, $password);
-    }
-
-    /**
-     * Check that the default admin account has been set.
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::hasDefaultAdmin() instead
-     */
-    public static function has_default_admin()
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::hasDefaultAdmin() instead');
-
-        return DefaultAdminService::hasDefaultAdmin();
-    }
-
-    /**
-     * Get default admin username
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::getDefaultAdminUsername() instead
-     * @return string
-     */
-    public static function default_admin_username()
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::getDefaultAdminUsername() instead');
-
-        return DefaultAdminService::getDefaultAdminUsername();
-    }
-
-    /**
-     * Get default admin password
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::getDefaultAdminPassword() instead
-     * @return string
-     */
-    public static function default_admin_password()
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::getDefaultAdminPassword() instead');
-
-        return DefaultAdminService::getDefaultAdminPassword();
     }
 
     /**

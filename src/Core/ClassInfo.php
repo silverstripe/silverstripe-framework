@@ -7,7 +7,6 @@ use ReflectionClass;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ViewableData;
@@ -153,17 +152,6 @@ class ClassInfo
         return array_filter($classes ?? [], function ($next) {
             return DataObject::getSchema()->classHasTable($next);
         });
-    }
-
-    /**
-     * @deprecated 4.0.1 Use DataObject::getSchema()->baseDataClass()
-     * @param string $class
-     * @return string
-     */
-    public static function baseDataClass($class)
-    {
-        Deprecation::notice('4.0.1', 'Use DataObject::getSchema()->baseDataClass()');
-        return DataObject::getSchema()->baseDataClass($class);
     }
 
     /**
@@ -368,15 +356,6 @@ class ClassInfo
         }
 
         return strtolower(self::$_cache_methods[$lClass][$lMethod] ?? '') === $lCompclass;
-    }
-
-    /**
-     * @deprecated 4.0.1 Use DataObject::getSchema()->tableForField()
-     */
-    public static function table_for_object_field($candidateClass, $fieldName)
-    {
-        Deprecation::notice('4.0.1', 'Use DataObject::getSchema()->tableForField()');
-        return DataObject::getSchema()->tableForField($candidateClass, $fieldName);
     }
 
     /**

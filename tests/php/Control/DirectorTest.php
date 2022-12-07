@@ -10,13 +10,11 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter;
 use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
-use SilverStripe\Control\RequestProcessor;
 use SilverStripe\Control\Tests\DirectorTest\TestController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Kernel;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -853,46 +851,6 @@ class DirectorTest extends SapphireTest
         $this->assertFalse($response->isError());
         $this->assertEquals('test#key', $response->getBody());
         $this->assertEquals($request->getURL(true), $url);
-    }
-
-    public function testRequestFilterInDirectorTest()
-    {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
-        $filter = new DirectorTest\TestRequestFilter;
-
-        $processor = new RequestProcessor([$filter]);
-
-        $middlewares = Director::singleton()->getMiddlewares();
-        $middlewares['RequestProcessorMiddleware'] = $processor;
-        Director::singleton()->setMiddlewares($middlewares);
-
-        $response = Director::test('some-dummy-url');
-        $this->assertEquals(404, $response->getStatusCode());
-
-        $this->assertEquals(1, $filter->preCalls);
-        $this->assertEquals(1, $filter->postCalls);
-
-        $filter->failPost = true;
-
-        $response = Director::test('some-dummy-url');
-        $this->assertEquals(500, $response->getStatusCode());
-        $this->assertEquals(_t(Director::class . '.REQUEST_ABORTED', 'Request aborted'), $response->getBody());
-
-        $this->assertEquals(2, $filter->preCalls);
-        $this->assertEquals(2, $filter->postCalls);
-
-        $filter->failPre = true;
-
-        $response = Director::test('some-dummy-url');
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertEquals(_t(Director::class . '.INVALID_REQUEST', 'Invalid request'), $response->getBody());
-
-        $this->assertEquals(3, $filter->preCalls);
-
-        // preCall 'true' will trigger an exception and prevent post call execution
-        $this->assertEquals(2, $filter->postCalls);
     }
 
     public function testGlobalMiddleware()

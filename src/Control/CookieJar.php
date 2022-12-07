@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control;
 
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use LogicException;
 

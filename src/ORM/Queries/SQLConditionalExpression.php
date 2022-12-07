@@ -2,8 +2,6 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * Represents a SQL query for an expression which interacts with existing rows
  * (SELECT / DELETE / UPDATE) with a WHERE clause
@@ -265,14 +263,6 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function getJoins(&$parameters = [])
     {
-        if (func_num_args() == 0) {
-            Deprecation::notice(
-                '4.0',
-                'SQLConditionalExpression::getJoins() now may produce parameters which are necessary to
-				execute this query'
-            );
-        }
-
         // Sort the joins
         $parameters = [];
         $joins = $this->getOrderedJoins($this->from);

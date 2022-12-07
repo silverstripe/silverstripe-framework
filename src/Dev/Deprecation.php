@@ -32,38 +32,6 @@ class Deprecation
     const SCOPE_CONFIG = 8;
 
     /**
-     * @var string
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    protected static $version;
-
-    /**
-     * Override whether deprecation is enabled. If null, then fallback to
-     * SS_DEPRECATION_ENABLED, and then true if not defined.
-     *
-     * Deprecation is only available on dev.
-     *
-     * Must be configured outside of the config API, as deprecation API
-     * must be available before this to avoid infinite loops.
-     *
-     * @var boolean|null
-     * @deprecated 4.12.0 Use $currentlyEnabled instead
-     */
-    protected static $enabled = null;
-
-    /**
-     * @var array
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    protected static $module_version_overrides = [];
-
-    /**
-     * @var array
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    public static $notice_level = E_USER_DEPRECATED;
-
-    /**
      * Must be configured outside of the config API, as deprecation API
      * must be available before this to avoid infinite loops.
      *
@@ -132,37 +100,6 @@ class Deprecation
     }
 
     /**
-     * This method is no longer used
-     *
-     * @static
-     * @param $ver string -
-     *     A php standard version string, see http://php.net/manual/en/function.version-compare.php for details.
-     * @param null $forModule string -
-     *    The name of a module. The passed version will be used as the check value for
-     *    calls directly from this module rather than the global value
-     * @return void
-     * @deprecated 4.12.0 Use enable() instead
-     */
-    public static function notification_version($ver, $forModule = null)
-    {
-        static::notice('4.12.0', 'Use enable() instead');
-        // noop
-    }
-
-    /**
-     * This method is no longer used
-     *
-     * @param array $backtrace A backtrace as returned from debug_backtrace
-     * @return Module The module being called
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    protected static function get_calling_module_from_trace($backtrace)
-    {
-        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        // noop
-    }
-
-    /**
      * Given a backtrace, get the method name from the immediate parent caller (the caller of #notice)
      *
      * @static
@@ -191,36 +128,12 @@ class Deprecation
         return ($called['class'] ?? '') . ($called['type'] ?? '') . ($called['function'] ?? '');
     }
 
-    /**
-     * This method is no longer used
-     *
-     * @return bool
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    public static function get_enabled()
-    {
-        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        // noop
-    }
-
     public static function isEnabled(): bool
     {
         if (!Director::isDev()) {
             return false;
         }
         return static::$currentlyEnabled || Environment::getEnv('SS_DEPRECATION_ENABLED');
-    }
-
-    /**
-     * This method is no longer used
-     *
-     * @param bool $enabled
-     * @deprecated 4.12.0 Use enable() instead
-     */
-    public static function set_enabled($enabled)
-    {
-        static::notice('4.12.0', 'Use enable() instead');
-        // noop
     }
 
     public static function outputNotices(): void
@@ -321,29 +234,5 @@ class Deprecation
         } finally {
             static::$insideNotice = false;
         }
-    }
-
-    /**
-     * This method is no longer used
-     *
-     * @return array Opaque array that should only be used to pass to {@see Deprecation::restore_settings()}
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    public static function dump_settings()
-    {
-        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        // noop
-    }
-
-    /**
-     * This method is no longer used
-     *
-     * @param $settings array An array as returned by {@see Deprecation::dump_settings()}
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    public static function restore_settings($settings)
-    {
-        static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        // noop
     }
 }

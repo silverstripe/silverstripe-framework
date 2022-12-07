@@ -5,7 +5,6 @@ namespace SilverStripe\Core;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\ViewableData;
 
 /**

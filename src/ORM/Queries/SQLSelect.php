@@ -3,7 +3,6 @@
 namespace SilverStripe\ORM\Queries;
 
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
 use InvalidArgumentException;
 
@@ -248,14 +247,6 @@ class SQLSelect extends SQLConditionalExpression
     {
         if ((is_numeric($limit) && $limit < 0) || (is_numeric($offset) && $offset < 0)) {
             throw new InvalidArgumentException("SQLSelect::setLimit() only takes positive values");
-        }
-
-        if ($limit === 0) {
-            Deprecation::notice(
-                '4.3',
-                "setLimit(0) is deprecated in SS4. To clear limit, call setLimit(null). " .
-                    "In SS5 a limit of 0 will instead return no records."
-            );
         }
 
         if (is_numeric($limit) && ($limit || $offset)) {

@@ -68,7 +68,7 @@ class MemberAuthenticator implements Authenticator
         $email = !empty($data['Email']) ? $data['Email'] : null;
         $result = $result ?: ValidationResult::create();
 
-        // Check default login (see Security::setDefaultAdmin())
+        // Check default login
         $asDefaultAdmin = DefaultAdminService::isDefaultAdmin($email);
         if ($asDefaultAdmin) {
             // If logging is as default admin, ensure record is setup correctly

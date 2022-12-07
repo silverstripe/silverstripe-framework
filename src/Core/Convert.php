@@ -2,9 +2,7 @@
 
 namespace SilverStripe\Core;
 
-use InvalidArgumentException;
 use SimpleXMLElement;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 
@@ -158,37 +156,6 @@ class Convert
     }
 
     /**
-     * Encode a value as a JSON encoded string. You can optionally pass a bitmask of
-     * JSON constants as options through to the encode function.
-     *
-     * @deprecated 4.4.0 Use json_encode() instead
-     * @param  mixed $val     Value to be encoded
-     * @param  int   $options Optional bitmask of JSON constants
-     * @return string           JSON encoded string
-     */
-    public static function raw2json($val, $options = 0)
-    {
-        Deprecation::notice('4.4.0', 'Use json_encode() instead');
-
-        return json_encode($val, $options ?? 0);
-    }
-
-    /**
-     * Encode an array as a JSON encoded string.
-     *
-     * @deprecated 4.4.0 Use json_encode() instead
-     * @param  array  $val     Array to convert
-     * @param  int    $options Optional bitmask of JSON constants
-     * @return string          JSON encoded string
-     */
-    public static function array2json($val, $options = 0)
-    {
-        Deprecation::notice('4.4.0', 'Use json_encode() instead');
-
-        return json_encode($val, $options ?? 0);
-    }
-
-    /**
      * Safely encodes a value (or list of values) using the current database's
      * safe string encoding method
      *
@@ -259,74 +226,8 @@ class Convert
     }
 
     /**
-     * Convert a JSON encoded string into an object.
-     *
-     * @deprecated 4.4.0 Use json_decode() instead
-     * @param string $val
-     * @return object|boolean
-     */
-    public static function json2obj($val)
-    {
-        Deprecation::notice('4.4.0', 'Use json_decode() instead');
-
-        return json_decode($val ?? '');
-    }
-
-    /**
-     * Convert a JSON string into an array.
-     *
-     * @deprecated 4.4.0 Use json_decode($val, true) instead
-     * @param string $val JSON string to convert
-     * @return array|boolean
-     */
-    public static function json2array($val)
-    {
-        Deprecation::notice('4.4.0', 'Use json_decode() instead');
-
-        return json_decode($val ?? '', true);
-    }
-
-    /**
-     * Converts an XML string to a PHP array
-     * See http://phpsecurity.readthedocs.org/en/latest/Injection-Attacks.html#xml-external-entity-injection
-     *
-     * @uses recursiveXMLToArray()
-     * @param string $val
-     * @param boolean $disableDoctypes Disables the use of DOCTYPE, and will trigger an error if encountered.
-     * false by default.
-     * @param boolean $disableExternals Does nothing because xml entities are removed
-     * @deprecated 4.11.0 Use a dedicated XML library instead
-     * @return array
-     * @throws Exception
-     */
-    public static function xml2array($val, $disableDoctypes = false, $disableExternals = false)
-    {
-        Deprecation::notice('4.11.0', 'Use a dedicated XML library instead');
-
-        // Check doctype
-        if ($disableDoctypes && strpos($val ?? '', '<!DOCTYPE') !== false) {
-            throw new InvalidArgumentException('XML Doctype parsing disabled');
-        }
-
-        // CVE-2021-41559 Ensure entities are removed due to their inherent security risk via
-        // XXE attacks and quadratic blowup attacks, and also lack of consistent support
-        $val = preg_replace('/(?s)<!ENTITY.*?>/', '', $val ?? '');
-
-        // If there's still an <!ENTITY> present, then it would be the result of a maliciously
-        // crafted XML document e.g. <!ENTITY><!<!ENTITY>ENTITY ext SYSTEM "http://evil.com">
-        if (strpos($val ?? '', '<!ENTITY') !== false) {
-            throw new InvalidArgumentException('Malicious XML entity detected');
-        }
-
-        // This will throw an exception if the XML contains references to any internal entities
-        // that were defined in an <!ENTITY /> before it was removed
-        $xml = new SimpleXMLElement($val ?? '');
-        return self::recursiveXMLToArray($xml);
-    }
-
-    /**
      * Convert a XML string to a PHP array recursively. Do not
-     * call this function directly, Please use {@link Convert::xml2array()}
+     * call this function directly.
      *
      * @param SimpleXMLElement $xml
      *

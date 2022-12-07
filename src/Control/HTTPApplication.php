@@ -13,9 +13,6 @@ use SilverStripe\Core\Startup\RequestFlushDiscoverer;
 use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
 use SilverStripe\Core\Startup\DeployFlushDiscoverer;
 
-/**
- * Invokes the HTTP application within an ErrorControlChain
- */
 class HTTPApplication implements Application
 {
     use HTTPMiddlewareAware;

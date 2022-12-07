@@ -2,7 +2,6 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;

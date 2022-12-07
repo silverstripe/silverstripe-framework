@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayList;
 
 /**
@@ -17,7 +16,6 @@ class FieldList extends ArrayList
      * Cached flat representation of all fields in this set,
      * including fields nested in {@link CompositeFields}.
      *
-     * @uses self::collateDataFields()
      * @var FormField[]
      */
     protected $sequentialSet;
@@ -177,46 +175,6 @@ class FieldList extends ArrayList
     {
         $this->sequentialSet = null;
         $this->sequentialSaveableSet = null;
-    }
-
-    /**
-     * @deprecated 4.1.0 Please use dataFields or saveableFields instead
-     * @param $list
-     * @param bool $saveableOnly
-     */
-    protected function collateDataFields(&$list, $saveableOnly = false)
-    {
-        Deprecation::notice('4.1.0', 'Please use dataFields or saveableFields instead');
-        if (!isset($list)) {
-            $list = [];
-        }
-        /** @var FormField $field */
-        foreach ($this as $field) {
-            if ($field instanceof CompositeField) {
-                $field->collateDataFields($list, $saveableOnly);
-            }
-
-            if ($saveableOnly) {
-                $isIncluded =  $field->canSubmitValue();
-            } else {
-                $isIncluded =  $field->hasData();
-            }
-            if ($isIncluded) {
-                $name = $field->getName();
-                if (isset($list[$name])) {
-                    if ($this->form) {
-                        $formClass = get_class($this->form);
-                        $errSuffix = " in your '{$formClass}' form called '" . $this->form->Name() . "'";
-                    } else {
-                        $errSuffix = '';
-                    }
-                    throw new \RuntimeException(
-                        "collateDataFields() I noticed that a field called '$name' appears twice$errSuffix."
-                    );
-                }
-                $list[$name] = $field;
-            }
-        }
     }
 
     /**
@@ -563,19 +521,9 @@ class FieldList extends ArrayList
     /**
      * Inserts a field before a particular field in a FieldList.
      * Will traverse CompositeFields depth-first to find the matching $name, and insert before the first match
-     *
-     * @param string $name Name of the field to insert before
-     * @param FormField $item The form field to insert
-     * @param bool $appendIfMissing Append to the end of the list if $name isn't found
-     * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertBefore($name, $item, $appendIfMissing = true)
+    public function insertBefore(string $name, FormField $item, bool $appendIfMissing = true): FormField|bool
     {
-        // Backwards compatibility for order of arguments
-        if ($name instanceof FormField) {
-            Deprecation::notice('5.0', 'Incorrect order of arguments for insertBefore');
-            list($item, $name) = [$name, $item];
-        }
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
 
@@ -605,19 +553,9 @@ class FieldList extends ArrayList
     /**
      * Inserts a field after a particular field in a FieldList.
      * Will traverse CompositeFields depth-first to find the matching $name, and insert after the first match
-     *
-     * @param string $name Name of the field to insert after
-     * @param FormField $item The form field to insert
-     * @param bool $appendIfMissing Append to the end of the list if $name isn't found
-     * @return FormField|false Field if it was successfully inserted, false if not inserted
      */
-    public function insertAfter($name, $item, $appendIfMissing = true)
+    public function insertAfter(string $name, FormField $item, bool $appendIfMissing = true): FormField|bool
     {
-        // Backwards compatibility for order of arguments
-        if ($name instanceof FormField) {
-            Deprecation::notice('5.0', 'Incorrect order of arguments for insertAfter');
-            list($item, $name) = [$name, $item];
-        }
         $this->onBeforeInsert($item);
         $item->setContainerFieldList($this);
 

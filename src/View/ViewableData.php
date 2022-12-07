@@ -14,9 +14,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -607,35 +605,6 @@ class ViewableData implements IteratorAggregate
     public function Me()
     {
         return $this;
-    }
-
-    /**
-     * Return the directory if the current active theme (relative to the site root).
-     *
-     * This method is useful for things such as accessing theme images from your template without hardcoding the theme
-     * page - e.g. <img src="$ThemeDir/images/something.gif">.
-     *
-     * This method should only be used when a theme is currently active. However, it will fall over to the current
-     * project directory.
-     *
-     * @return string URL to the current theme
-     * @deprecated 4.0.1 Use ModuleResourceLoader::resourcePath() or ModuleResourceLoader::resourceURL() instead
-     */
-    public function ThemeDir()
-    {
-        Deprecation::notice('4.0.1', 'Use ModuleResourceLoader::resourcePath() or ModuleResourceLoader::resourceURL() instead');
-        $themes = SSViewer::get_themes();
-        foreach ($themes as $theme) {
-            // Skip theme sets
-            if (strpos($theme ?? '', '$') === 0) {
-                continue;
-            }
-            // Map theme path to url
-            $themePath = ThemeResourceLoader::inst()->getPath($theme);
-            return ModuleResourceLoader::resourceURL($themePath);
-        }
-
-        return project();
     }
 
     /**

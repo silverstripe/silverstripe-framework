@@ -3,7 +3,6 @@
 namespace SilverStripe\Control\Middleware;
 
 use InvalidArgumentException;
-use SilverStripe\Control\HTTP;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
@@ -12,7 +11,6 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Dev\Deprecation;
 
 class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 {
@@ -50,11 +48,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
 
         // Update state based on current request and response objects
         $this->augmentState($request, $response);
-
-        // Update state based on deprecated HTTP settings
-        Deprecation::withNoReplacement(function () use ($request, $response) {
-            HTTP::augmentState($request, $response);
-        });
 
         // Add all headers to this response object
         $this->applyToResponse($response);

@@ -143,69 +143,6 @@ class DebugView
     }
 
     /**
-     * @deprecated 4.0.1 Use renderHeader() instead
-     */
-    public function writeHeader()
-    {
-        Deprecation::notice('4.0.1', 'Use renderHeader() instead');
-        echo $this->renderHeader();
-    }
-
-    /**
-     * @deprecated 4.0.1 Use renderInfo() instead
-     */
-    public function writeInfo($title, $subtitle, $description = false)
-    {
-        Deprecation::notice('4.0.1', 'Use renderInfo() instead');
-        echo $this->renderInfo($title, $subtitle, $description);
-    }
-
-    /**
-     * @deprecated 4.0.1 Use renderFooter() instead
-     */
-    public function writeFooter()
-    {
-        Deprecation::notice('4.0.1', 'Use renderFooter() instead');
-        echo $this->renderFooter();
-    }
-
-    /**
-     * @deprecated 4.0.1 Use renderError() instead
-     */
-    public function writeError($httpRequest, $errno, $errstr, $errfile, $errline)
-    {
-        Deprecation::notice('4.0.1', 'Use renderError() instead');
-        echo $this->renderError($httpRequest, $errno, $errstr, $errfile, $errline);
-    }
-
-    /**
-     * @deprecated 4.0.1 Use renderSourceFragment() instead
-     */
-    public function writeSourceFragment($lines, $errline)
-    {
-        Deprecation::notice('4.0.1', 'Use renderSourceFragment() instead');
-        echo $this->renderSourceFragment($lines, $errline);
-    }
-
-    /**
-     * @deprecated 4.0.1 Use renderTrace() instead
-     */
-    public function writeTrace($trace)
-    {
-        Deprecation::notice('4.0.1', 'Use renderTrace() instead');
-        echo $this->renderTrace($trace);
-    }
-
-    /**
-     * @deprecated 4.0.1 Use renderVariable() instead
-     */
-    public function writeVariable($val, $caller)
-    {
-        Deprecation::notice('4.0.1', 'Use renderVariable() instead');
-        echo $this->renderVariable($val, $caller);
-    }
-
-    /**
      * Render HTML header for development views
      *
      * @param HTTPRequest $httpRequest

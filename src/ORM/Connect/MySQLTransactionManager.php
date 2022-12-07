@@ -2,8 +2,6 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * TransactionManager that executes MySQL-compatible transaction control queries
  */

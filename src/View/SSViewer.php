@@ -11,7 +11,6 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Director;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
@@ -69,16 +68,6 @@ class SSViewer implements Flushable
      * @var array
      */
     protected static $current_themes = null;
-
-    /**
-     * The used "theme", which usually consists of templates, images and stylesheets.
-     * Only used when {@link $theme_enabled} is set to TRUE, and $themes is empty
-     *
-     * @deprecated 4.0.0:5.0.0
-     * @config
-     * @var string
-     */
-    private static $theme = null;
 
     /**
      * Use the theme. Set to FALSE in order to disable themes,
@@ -287,25 +276,7 @@ class SSViewer implements Flushable
             return $themes;
         }
 
-        // Support @deprecated legacy behaviour
-        $theme = Deprecation::withNoReplacement(function () {
-            return SSViewer::config()->uninherited('theme');
-        });
-        if ($theme) {
-            return [self::PUBLIC_THEME, $theme, self::DEFAULT_THEME];
-        }
-
         return $default;
-    }
-
-    /**
-     * @param string $theme The "base theme" name (without underscores).
-     * @deprecated 4.0.1 Use SSViewer::set_themes() instead
-     */
-    public static function set_theme($theme)
-    {
-        Deprecation::notice('4.0.1', 'Use SSViewer::set_themes() instead');
-        self::set_themes([$theme, self::DEFAULT_THEME]);
     }
 
     /**

@@ -264,9 +264,9 @@ class NullDatabase extends Database
         // no-op
     }
 
-    public function transactionEnd($chain = false)
+    public function transactionEnd(): bool|null
     {
-        // no-op
+        return false;
     }
 
     public function transactionDepth()

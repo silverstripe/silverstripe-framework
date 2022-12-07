@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Core\Config;
 
-use SilverStripe\Dev\Deprecation;
-
 class Config_ForClass
 {
     /**
@@ -35,20 +33,6 @@ class Config_ForClass
     public function __set($name, $val)
     {
         $this->set($name, $val);
-    }
-
-    /**
-     * Explicit pass-through to Config::update()
-     *
-     * @param string $name
-     * @param mixed $value
-     * @return $this
-     * @deprecated 4.12.0 Use merge() instead
-     */
-    public function update($name, $value)
-    {
-        Deprecation::notice('4.12.0', 'Use merge() instead');
-        return $this->merge($name, $value);
     }
 
     /**

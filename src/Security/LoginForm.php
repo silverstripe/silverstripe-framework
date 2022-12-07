@@ -16,12 +16,6 @@ use SilverStripe\Forms\Form;
 abstract class LoginForm extends Form
 {
     /**
-     * @deprecated 4.4.0:5.0.0 Use getAuthenticatorClass() or setAuthenticatorClass() instead
-     * @var string
-     */
-    protected $authenticator_class;
-
-    /**
      * Authenticator class to use with this login form
      *
      * Set this variable to the authenticator class to use with this login form.
@@ -61,8 +55,7 @@ abstract class LoginForm extends Form
      */
     public function getAuthenticatorClass()
     {
-        // B/C for deprecated authenticator_class property
-        return $this->authenticator_class ?: $this->authenticatorClass;
+        return $this->authenticatorClass;
     }
 
     /**

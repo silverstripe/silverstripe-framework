@@ -302,7 +302,6 @@ class RequirementsTest extends SapphireTest
         $backend->clear();
         $backend->clearCombinedFiles();
         $backend->setCombinedFilesFolder('_combinedfiles');
-        $backend->setMinifyCombinedFiles(false);
         $backend->setCombinedFilesEnabled(true);
         Requirements::flush();
     }

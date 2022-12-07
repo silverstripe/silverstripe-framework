@@ -12,7 +12,6 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Path;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
@@ -376,34 +375,6 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Returns indication whether the manifest cache has been flushed
-     * in the beginning of the current request.
-     *
-     * That could mean the current active request has `?flush` parameter.
-     * Another possibility is a race condition when the current request
-     * hits the server in between another request `?flush` authorisation
-     * and a redirect to the actual flush.
-     *
-     * @return bool
-     *
-     * @deprecated 4.12.0 Use Kernel::isFlushed instead
-     */
-    public static function isManifestFlushed()
-    {
-        Deprecation::notice('4.12.0', 'Use Kernel::isFlushed instead');
-        $kernel = Injector::inst()->get(Kernel::class);
-
-        // Only CoreKernel implements this method at the moment
-        // Introducing it to the Kernel interface is a breaking change
-        if (method_exists($kernel, 'isFlushed')) {
-            return $kernel->isFlushed();
-        }
-
-        $classManifest = $kernel->getClassLoader()->getManifest();
-        return $classManifest->isFlushed();
-    }
-
-    /**
      * Return the {@link SiteTree} object that is currently being viewed. If there is no SiteTree
      * object to return, then this will return the current controller.
      *
@@ -433,19 +404,9 @@ class Director implements TemplateGlobalProvider
      *     - BASE - Append this path to the base url (i.e. behaves as though `<base>` tag is provided in a html document). This is the default.
      *     - REQUEST - Resolve this path to the current url (i.e. behaves as though no `<base>` tag is provided in a html document)
      *     - ROOT - Treat this as though it was an absolute path, and append it to the protocol and hostname.
-     *
-     * @param string $url The url or path to resolve to absolute url.
-     * @param string $relativeParent Disambiguation method to use for evaluating relative paths
-     * @return string The absolute url
      */
-    public static function absoluteURL($url, $relativeParent = self::BASE)
+    public static function absoluteURL(string $url, string $relativeParent = self::BASE): string|bool
     {
-        if (is_bool($relativeParent)) {
-            // Deprecate old boolean second parameter
-            Deprecation::notice('5.0', 'Director::absoluteURL takes an explicit parent for relative url');
-            $relativeParent = $relativeParent ? self::BASE : self::REQUEST;
-        }
-
         // Check if there is already a protocol given
         if (preg_match('/^http(s?):\/\//', $url ?? '')) {
             return $url;
@@ -1151,7 +1112,7 @@ class Director implements TemplateGlobalProvider
             'isLive',
             'is_ajax',
             'isAjax' => 'is_ajax',
-            'BaseHref' => 'absoluteBaseURL',    //@deprecated 3.0
+            'BaseHref' => 'absoluteBaseURL',
         ];
     }
 

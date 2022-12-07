@@ -1058,7 +1058,6 @@ class FormField extends RequestHandler
      * make sense for data-focused methods to look at them. By overloading hasData() to return
      * false, you can prevent any data-focused methods from looking at it.
      *
-     * @see FieldList::collateDataFields()
      *
      * @return bool
      */

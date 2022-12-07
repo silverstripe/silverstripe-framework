@@ -2,6 +2,7 @@
 
 namespace SilverStripe\i18n\TextCollection;
 
+use Exception;
 use LogicException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
@@ -11,7 +12,6 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\i18n\Messages\Reader;
@@ -828,23 +828,10 @@ class i18nTextCollector
             /** @var i18nEntityProvider $obj */
             $obj = singleton($class);
             $provided = $obj->provideI18nEntities();
-            // Handle deprecated return syntax
             foreach ($provided as $key => $value) {
                 // Detect non-associative result for any key
-                if (is_array($value) && $value === array_values($value ?? [])) {
-                    Deprecation::notice('5.0', 'Non-associative translations from providei18nEntities is deprecated');
-                    $entity = array_filter([
-                        'default' => $value[0],
-                        'comment' => isset($value[1]) ? $value[1] : null,
-                        'module' => isset($value[2]) ? $value[2] : null,
-                    ]);
-                    if (count($entity ?? []) === 1) {
-                        $provided[$key] = $value[0];
-                    } elseif ($entity) {
-                        $provided[$key] = $entity;
-                    } else {
-                        unset($provided[$key]);
-                    }
+                if (is_array($value) && $value === array_values($value)) {
+                    throw new Exception('Translations from provideI18nEntities() must be an associative array for key $key');
                 }
             }
             $entities = array_merge($entities, $provided);

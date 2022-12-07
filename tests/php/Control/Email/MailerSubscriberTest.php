@@ -44,7 +44,7 @@ class MailerSubscriberTest extends SapphireTest
 
     public function testSendAllEmailsTo(): void
     {
-        Email::config()->update('send_all_emails_to', 'to@example.com');
+        Email::config()->merge('send_all_emails_to', ['to@example.com']);
         $email = $this->getEmail();
         $email->send();
 
@@ -61,7 +61,7 @@ class MailerSubscriberTest extends SapphireTest
 
     public function testSendAllEmailsFrom(): void
     {
-        Email::config()->update('send_all_emails_from', 'from@example.com');
+        Email::config()->merge('send_all_emails_from', ['from@example.com']);
         $email = $this->getEmail();
         $email->send();
 
@@ -78,7 +78,7 @@ class MailerSubscriberTest extends SapphireTest
 
     public function testCCAllEmailsTo(): void
     {
-        Email::config()->update('cc_all_emails_to', 'cc@example.com');
+        Email::config()->merge('cc_all_emails_to', ['cc@example.com']);
         $email = $this->getEmail();
         $email->send();
 
@@ -89,7 +89,7 @@ class MailerSubscriberTest extends SapphireTest
 
     public function testBCCAllEmailsTo(): void
     {
-        Email::config()->update('bcc_all_emails_to', 'bcc@example.com');
+        Email::config()->merge('bcc_all_emails_to', ['bcc@example.com']);
         $email = $this->getEmail();
         $email->send();
 

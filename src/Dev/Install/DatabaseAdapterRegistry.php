@@ -5,7 +5,6 @@ namespace SilverStripe\Dev\Install;
 use InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\Flushable;
 
 /**
@@ -141,12 +140,8 @@ class DatabaseAdapterRegistry implements Flushable
      */
     public static function autoconfigure(&$config = null)
     {
-        if (!isset($config)) {
-            Deprecation::notice('5.0', 'Configuration via global is deprecated');
-            global $databaseConfig;
-        } else {
-            $databaseConfig = $config;
-        }
+        $databaseConfig = $config;
+
         foreach (static::getConfigureDatabasePaths() as $configureDatabasePath) {
             include_once $configureDatabasePath;
         }

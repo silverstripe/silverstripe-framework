@@ -10,7 +10,6 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Connect\TableBuilder;
@@ -366,22 +365,6 @@ class DatabaseAdmin extends Controller
         ClassInfo::reset_db_cache();
 
         $this->extend('onAfterBuild', $quiet, $populate, $testMode);
-    }
-
-    /**
-     * Given a base data class, a field name and an old and new class name (value), look for obsolete ($oldClassName)
-     * values in the $dataClass's $fieldName column and replace it with $newClassName.
-     *
-     * @param string $dataClass    The data class to look up
-     * @param string $fieldName    The field name to look in for obsolete class names
-     * @param string $oldClassName The old class name
-     * @param string $newClassName The new class name
-     * @deprecated 4.12.0 Use updateLegacyClassNameField() instead
-     */
-    protected function updateLegacyClassNames($dataClass, $fieldName, $oldClassName, $newClassName)
-    {
-        Deprecation::notice('4.12.0', 'Use updateLegacyClassNameField() instead');
-        $this->updateLegacyClassNameField($dataClass, $fieldName, [$oldClassName => $newClassName]);
     }
 
     /**

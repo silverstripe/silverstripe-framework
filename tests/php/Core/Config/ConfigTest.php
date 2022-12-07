@@ -22,8 +22,8 @@ class ConfigTest extends SapphireTest
         $this->assertEquals(5, Config::inst()->get(ConfigTest\TestNest::class, 'bar'));
 
         // Test nested data can be updated
-        Config::modify()->merge(ConfigTest\TestNest::class, 'foo', 4);
-        $this->assertEquals(4, Config::inst()->get(ConfigTest\TestNest::class, 'foo'));
+        Config::modify()->merge(ConfigTest\TestNest::class, 'foo', [4]);
+        $this->assertEquals(4, Config::inst()->get(ConfigTest\TestNest::class, 'foo')[0]);
         $this->assertEquals(5, Config::inst()->get(ConfigTest\TestNest::class, 'bar'));
 
         // Test unnest restores data
@@ -171,31 +171,31 @@ class ConfigTest extends SapphireTest
     {
         // Booleans
         $this->assertTrue(Config::inst()->get(ConfigTest\First::class, 'bool'));
-        Config::modify()->merge(ConfigTest\First::class, 'bool', false);
-        $this->assertFalse(Config::inst()->get(ConfigTest\First::class, 'bool'));
-        Config::modify()->merge(ConfigTest\First::class, 'bool', true);
-        $this->assertTrue(Config::inst()->get(ConfigTest\First::class, 'bool'));
+        Config::modify()->merge(ConfigTest\First::class, 'bool', [false]);
+        $this->assertFalse(Config::inst()->get(ConfigTest\First::class, 'bool')[0]);
+        Config::modify()->merge(ConfigTest\First::class, 'bool', [true]);
+        $this->assertTrue(Config::inst()->get(ConfigTest\First::class, 'bool')[1]);
 
         // Integers
         $this->assertEquals(42, Config::inst()->get(ConfigTest\First::class, 'int'));
-        Config::modify()->merge(ConfigTest\First::class, 'int', 0);
-        $this->assertEquals(0, Config::inst()->get(ConfigTest\First::class, 'int'));
-        Config::modify()->merge(ConfigTest\First::class, 'int', 42);
-        $this->assertEquals(42, Config::inst()->get(ConfigTest\First::class, 'int'));
+        Config::modify()->merge(ConfigTest\First::class, 'int', [0]);
+        $this->assertEquals(0, Config::inst()->get(ConfigTest\First::class, 'int')[0]);
+        Config::modify()->merge(ConfigTest\First::class, 'int', [42]);
+        $this->assertEquals(42, Config::inst()->get(ConfigTest\First::class, 'int')[1]);
 
         // Strings
         $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'string'));
-        Config::modify()->merge(ConfigTest\First::class, 'string', '');
-        $this->assertEquals('', Config::inst()->get(ConfigTest\First::class, 'string'));
-        Config::modify()->merge(ConfigTest\First::class, 'string', 'value');
-        $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'string'));
+        Config::modify()->merge(ConfigTest\First::class, 'string', ['']);
+        $this->assertEquals('', Config::inst()->get(ConfigTest\First::class, 'string')[0]);
+        Config::modify()->merge(ConfigTest\First::class, 'string', ['value']);
+        $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'string')[1]);
 
         // Nulls
         $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'nullable'));
-        Config::modify()->merge(ConfigTest\First::class, 'nullable', null);
-        $this->assertNull(Config::inst()->get(ConfigTest\First::class, 'nullable'));
-        Config::modify()->merge(ConfigTest\First::class, 'nullable', 'value');
-        $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'nullable'));
+        Config::modify()->merge(ConfigTest\First::class, 'nullable', [null]);
+        $this->assertNull(Config::inst()->get(ConfigTest\First::class, 'nullable')[0]);
+        Config::modify()->merge(ConfigTest\First::class, 'nullable', ['value']);
+        $this->assertEquals('value', Config::inst()->get(ConfigTest\First::class, 'nullable')[1]);
     }
 
     public function testSetsFalsyDefaults()

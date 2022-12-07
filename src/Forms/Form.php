@@ -11,9 +11,7 @@ use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -85,7 +83,7 @@ class Form extends ViewableData implements HasRequestHandler
     const ENC_TYPE_MULTIPART  = 'multipart/form-data';
 
     /**
-     * Accessed by Form.ss; modified by {@link formHtmlContent()}.
+     * Accessed by Form.ss.
      * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
      *
      * @var bool
@@ -1581,32 +1579,6 @@ class Form extends ViewableData implements HasRequestHandler
         $this->clearMessage();
 
         return $return;
-    }
-
-    /**
-     * Returns an HTML rendition of this form, without the <form> tag itself.
-     *
-     * Attaches 3 extra hidden files, _form_action, _form_name, _form_method,
-     * and _form_enctype.  These are the attributes of the form.  These fields
-     * can be used to send the form to Ajax.
-     *
-     * @deprecated 4.12.0 Will be removed without equivalent functionality
-     * @return string
-     */
-    public function formHtmlContent()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality');
-        $this->IncludeFormTag = false;
-        $content = $this->forTemplate();
-        $this->IncludeFormTag = true;
-
-        $content .= "<input type=\"hidden\" name=\"_form_action\" id=\"" . $this->FormName() . "_form_action\""
-            . " value=\"" . $this->FormAction() . "\" />\n";
-        $content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
-        $content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
-        $content .= "<input type=\"hidden\" name=\"_form_enctype\" value=\"" . $this->getEncType() . "\" />\n";
-
-        return $content;
     }
 
     /**

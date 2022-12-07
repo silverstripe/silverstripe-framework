@@ -3,10 +3,7 @@
 namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
-use Serializable;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * A class that combined as a boolean result with an optional list of error messages.
@@ -15,7 +12,7 @@ use SilverStripe\Dev\Deprecation;
  * Each message can have a code or field which will uniquely identify that message. However,
  * messages can be stored without a field or message as an "overall" message.
  */
-class ValidationResult implements Serializable
+class ValidationResult
 {
     use Injectable;
 
@@ -63,22 +60,6 @@ class ValidationResult implements Serializable
      * @var array
      */
     protected $messages = [];
-
-    /**
-     * Create a new ValidationResult.
-     * By default, it is a successful result.   Call $this->error() to record errors.
-     */
-    public function __construct()
-    {
-        if (func_num_args() > 0) {
-            Deprecation::notice('3.2', '$valid parameter is deprecated please addError to mark the result as invalid', false);
-            $this->isValid = func_get_arg(0);
-        }
-        if (func_num_args() > 1) {
-            Deprecation::notice('3.2', '$message parameter is deprecated please use addMessage or addError instead', false);
-            $this->addError(func_get_arg(1));
-        }
-    }
 
     /**
      * Record an error against this validation result,
@@ -226,31 +207,5 @@ class ValidationResult implements Serializable
     {
         $this->messages = $data['messages'];
         $this->isValid = $data['isValid'];
-    }
-
-    /**
-     * The __serialize() magic method will be automatically used instead of this
-     *
-     * @return string
-     * @deprecated 4.12.0 Use __serialize() instead
-     */
-    public function serialize()
-    {
-        Deprecation::notice('4.12.0', 'Use __serialize() instead');
-        return json_encode([$this->messages, $this->isValid]);
-    }
-
-    /**
-     * The __unserialize() magic method will be automatically used instead of this almost all the time
-     * This method will be automatically used if existing serialized data was not saved as an associative array
-     * and the PHP version used in less than PHP 9.0
-     *
-     * @param string $serialized
-     * @deprecated 4.12.0 Use __unserialize() instead
-     */
-    public function unserialize($serialized)
-    {
-        Deprecation::notice('4.12.0', 'Use __unserialize() instead');
-        list($this->messages, $this->isValid) = json_decode($serialized ?? '', true);
     }
 }

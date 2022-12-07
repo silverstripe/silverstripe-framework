@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
@@ -65,23 +64,6 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     const INHERIT_PERMISSION = 0;
 
-
-    /**
-     * Method to globally disable "strict" checking, which means a permission
-     * will be granted if the key does not exist at all.
-     *
-     * @deprecated 4.4.0
-     * @var array
-     */
-    private static $declared_permissions = null;
-
-    /**
-     * Linear list of declared permissions in the system.
-     *
-     * @deprecated 4.4.0
-     * @var array
-     */
-    private static $declared_permissions_list = null;
 
     /**
      * @config
@@ -654,73 +636,6 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         } else {
             // Just numeric.
             return $a['sort'] < $b['sort'] ? -1 : 1;
-        }
-    }
-
-    /**
-     * Get a linear list of the permissions in the system.
-     *
-     * @return array Linear list of declared permissions in the system.
-     * @deprecated 4.4.0 Will be removed without equivalent functionality
-     */
-    public static function get_declared_permissions_list()
-    {
-        Deprecation::notice('4.4.0', 'Will be removed without equivalent functionality');
-        if (!self::$declared_permissions) {
-            return null;
-        }
-
-        if (self::$declared_permissions_list) {
-            return self::$declared_permissions_list;
-        }
-
-        self::$declared_permissions_list = [];
-
-        self::traverse_declared_permissions(self::$declared_permissions, self::$declared_permissions_list);
-
-        return self::$declared_permissions_list;
-    }
-
-    /**
-     * Look up the human-readable title for the permission as defined by <code>Permission::declare_permissions</code>
-     *
-     * @param string $perm Permission code
-     * @return string Label for the given permission, or the permission itself if the label doesn't exist
-     * @deprecated 4.4.0 Will be removed without equivalent functionality
-     */
-    public static function get_label_for_permission($perm)
-    {
-        Deprecation::notice('4.4.0', 'Will be removed without equivalent functionality');
-        $list = self::get_declared_permissions_list();
-        if (array_key_exists($perm, $list ?? [])) {
-            return $list[$perm];
-        }
-        return $perm;
-    }
-
-    /**
-     * Recursively traverse the nested list of declared permissions and create
-     * a linear list.
-     *
-     * @param array $declared Nested structure of permissions.
-     * @param array $list List of permissions in the structure. The result will be
-     *              written to this array.
-     * @deprecated 4.4.0 Will be removed without equivalent functionality
-     */
-    protected static function traverse_declared_permissions($declared, &$list)
-    {
-        Deprecation::notice('4.4.0', 'Will be removed without equivalent functionality');
-        if (!is_array($declared)) {
-            return;
-        }
-
-        foreach ($declared as $perm => $value) {
-            if ($value instanceof Permission_Group) {
-                $list[] = $value->getName();
-                self::traverse_declared_permissions($value->getPermissions(), $list);
-            } else {
-                $list[$perm] = $value;
-            }
         }
     }
 

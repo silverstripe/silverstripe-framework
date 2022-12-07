@@ -6,7 +6,6 @@ use ArrayIterator;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\ViewableData;
 
@@ -187,29 +186,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function limit($length, $offset = 0)
     {
-        // Type checking: designed for consistency with DataList::limit()
-        if ((!is_numeric($length) || !is_numeric($offset)) && !is_null($length)) {
-            Deprecation::notice(
-                '4.3',
-                'Arguments to ArrayList::limit() should be numeric or null'
-            );
-        }
-
-        if ($length < 0 || $offset < 0) {
-            Deprecation::notice(
-                '4.3',
-                'Arguments to ArrayList::limit() should be positive'
-            );
-        }
-
         if (!$length) {
-            if ($length === 0) {
-                Deprecation::notice(
-                    '4.3',
-                    "limit(0) is deprecated in SS4. In SS5 a limit of 0 will instead return no records."
-                );
-            }
-
             $length = count($this->items ?? []);
         }
 

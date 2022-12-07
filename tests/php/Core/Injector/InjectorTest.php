@@ -759,7 +759,7 @@ class InjectorTest extends SapphireTest
             'locator' => SilverStripeServiceConfigurationLocator::class
             ]
         );
-        Config::modify()->merge(
+        Config::modify()->set(
             Injector::class,
             MyChildClass::class,
             '%$' . MyParentClass::class

@@ -6,14 +6,12 @@ use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
-use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
@@ -162,7 +160,7 @@ class Member extends DataObject
 
     /**
      * @config
-     * @var array See {@link set_title_columns()}
+     * @var array
      */
     private static $title_format = null;
 
@@ -277,42 +275,6 @@ class Member extends DataObject
         // Default groups should've been built by Group->requireDefaultRecords() already
         $service = DefaultAdminService::singleton();
         $service->findOrCreateDefaultAdmin();
-    }
-
-    /**
-     * Get the default admin record if it exists, or creates it otherwise if enabled
-     *
-     * @deprecated 4.0.1 Use DefaultAdminService::findOrCreateDefaultAdmin() instead
-     * @return Member
-     */
-    public static function default_admin()
-    {
-        Deprecation::notice('4.0.1', 'Use DefaultAdminService::findOrCreateDefaultAdmin() instead');
-        return DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
-    }
-
-    /**
-     * Check if the passed password matches the stored one (if the member is not locked out).
-     *
-     * @deprecated 4.0.1 Use Authenticator::checkPassword() instead
-     *
-     * @param  string $password
-     * @return ValidationResult
-     */
-    public function checkPassword($password)
-    {
-        Deprecation::notice('4.0.1', 'Use Authenticator::checkPassword() instead');
-
-        // With a valid user and password, check the password is correct
-        $result = ValidationResult::create();
-        $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
-        foreach ($authenticators as $authenticator) {
-            $authenticator->checkPassword($this, $password, $result);
-            if (!$result->isValid()) {
-                break;
-            }
-        }
-        return $result;
     }
 
     /**
@@ -448,16 +410,6 @@ class Member extends DataObject
     }
 
     /**
-     * @deprecated 4.12.0 Use Security::setCurrentUser() or IdentityStore::logIn() instead
-     *
-     */
-    public function logIn()
-    {
-        Deprecation::notice('4.12.0', 'Use Security::setCurrentUser() or IdentityStore::logIn() instead');
-        Security::setCurrentUser($this);
-    }
-
-    /**
      * Called before a member is logged in via session/cookie/etc
      */
     public function beforeMemberLoggedIn()
@@ -499,39 +451,6 @@ class Member extends DataObject
             ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + $lifetime)
             : null;
         $this->write();
-    }
-
-    /**
-     * Check if the member ID logged in session actually
-     * has a database record of the same ID. If there is
-     * no logged in user, FALSE is returned anyway.
-     *
-     * @deprecated 4.12.0 Use Security::getCurrentUser() instead
-     *
-     * @return boolean TRUE record found FALSE no record found
-     */
-    public static function logged_in_session_exists()
-    {
-        Deprecation::notice('4.12.0', 'Use Security::getCurrentUser() instead');
-
-        $member = Security::getCurrentUser();
-        if ($member && $member->exists()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Logs this member out.
-     *
-     * @deprecated 4.12.0 Use Security::setCurrentUser(null) or an IdentityStore instead
-     */
-    public function logOut()
-    {
-        Deprecation::notice('4.12.0', 'Use Security::setCurrentUser(null) or an IdentityStore instead');
-
-        Injector::inst()->get(IdentityStore::class)->logOut(Controller::curr()->getRequest());
     }
 
     /**
@@ -582,24 +501,12 @@ class Member extends DataObject
     /**
      * Generate an auto login token which can be used to reset the password,
      * at the same time hashing it and storing in the database.
-     *
-     * @param int|null $lifetime DEPRECATED: The lifetime of the auto login hash in days. Overrides
-     *                           the Member.auto_login_token_lifetime config value
+     * 
      * @return string Token that should be passed to the client (but NOT persisted).
      */
-    public function generateAutologinTokenAndStoreHash($lifetime = null)
+    public function generateAutologinTokenAndStoreHash()
     {
-        if ($lifetime !== null) {
-            Deprecation::notice(
-                '5.0',
-                'Passing a $lifetime to Member::generateAutologinTokenAndStoreHash() is deprecated,
-                    use the Member.auto_login_token_lifetime config setting instead',
-                Deprecation::SCOPE_GLOBAL
-            );
-            $lifetime = (86400 * $lifetime); // Method argument is days, convert to seconds
-        } else {
-            $lifetime = $this->config()->auto_login_token_lifetime;
-        }
+        $lifetime = $this->config()->auto_login_token_lifetime;
 
         do {
             $generator = new RandomGenerator();
@@ -759,26 +666,12 @@ class Member extends DataObject
 
 
     /**
-     * Returns the current logged in user
-     *
-     * @deprecated 4.12.0 Use Security::getCurrentUser() instead
-     *
-     * @return Member
-     */
-    public static function currentUser()
-    {
-        Deprecation::notice('4.12.0', 'Use Security::getCurrentUser() instead');
-
-        return Security::getCurrentUser();
-    }
-
-    /**
      * Temporarily act as the specified user, limited to a $callback, but
      * without logging in as that user.
      *
      * E.g.
      * <code>
-     * Member::actAs(Security::findAnAdministrator(), function() {
+     * Member::actAs(DefaultAdminService::findOrCreateDefaultAdmin(), function() {
      *     $record->write();
      * });
      * </code>
@@ -802,56 +695,6 @@ class Member extends DataObject
             return $callback();
         } finally {
             Security::setCurrentUser($previousUser);
-        }
-    }
-
-    /**
-     * Get the ID of the current logged in user
-     *
-     * @deprecated 4.12.0 Use Security::getCurrentUser() instead
-     *
-     * @return int Returns the ID of the current logged in user or 0.
-     */
-    public static function currentUserID()
-    {
-        Deprecation::notice('4.12.0', 'Use Security::getCurrentUser() instead');
-
-        $member = Security::getCurrentUser();
-        if ($member) {
-            return $member->ID;
-        }
-        return 0;
-    }
-
-    /**
-     * Generate a random password, with randomiser to kick in if there's no words file on the
-     * filesystem.
-     *
-     * @return string Returns a random password.
-     *
-     * @deprecated 4.12.0 Will be removed without equivalent functionality to replace it
-     */
-    public static function create_new_password()
-    {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
-        $words = Security::config()->uninherited('word_list');
-
-        if ($words && file_exists($words ?? '')) {
-            $words = file($words ?? '');
-
-            list($usec, $sec) = explode(' ', microtime() ?? '');
-            mt_srand($sec + ((float)$usec * 100000));
-
-            $word = trim($words[random_int(0, count($words) - 1)] ?? '');
-            $number = random_int(10, 999);
-
-            return $word . $number;
-        } else {
-            $random = mt_rand();
-            $string = md5($random ?? '');
-            $output = substr($string ?? '', 0, 8);
-
-            return $output;
         }
     }
 
@@ -1101,26 +944,6 @@ class Member extends DataObject
         if ($group) {
             $this->Groups()->remove($group);
         }
-    }
-
-    /**
-     * @param array $columns Column names on the Member record to show in {@link getTitle()}.
-     * @param string $sep Separator
-     * @deprecated 4.12.0 Use Member.title_format config instead
-     */
-    public static function set_title_columns($columns, $sep = ' ')
-    {
-        Deprecation::notice('4.12.0', 'Use Member.title_format config instead');
-        if (!is_array($columns)) {
-            $columns = [$columns];
-        }
-        self::config()->set(
-            'title_format',
-            [
-                'columns' => $columns,
-                'sep' => $sep
-            ]
-        );
     }
 
     //------------------- HELPER METHODS -----------------------------------//
