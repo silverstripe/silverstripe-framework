@@ -204,8 +204,10 @@ class SearchContext
         } else {
             $query = $query->limit($limit);
         }
-
-        return $query->sort($sort);
+        if (!empty($sort) || is_null($sort)) {
+            $query = $query->sort($sort);
+        }
+        return $query;
     }
 
     /**

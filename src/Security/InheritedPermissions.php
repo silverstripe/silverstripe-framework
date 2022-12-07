@@ -393,7 +393,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         // of whether the user has permission to edit this object.
         $groupedByParent = [];
         $potentiallyInherited = $stageRecords->filter($typeField, self::INHERIT)
-            ->sort("\"{$baseTable}\".\"ID\"")
+            ->orderBy("\"{$baseTable}\".\"ID\"")
             ->dataQuery()
             ->query()
             ->setSelect([

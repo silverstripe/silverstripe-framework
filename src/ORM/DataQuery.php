@@ -716,12 +716,17 @@ class DataQuery
     /**
      * Set the ORDER BY clause of this query
      *
+     * Note: while the similarly named DataList::sort() does not allow raw SQL, DataQuery::sort() does allow it
+     *
+     * Raw SQL can be vulnerable to SQL injection attacks if used incorrectly, so it's preferable not to use it
+     *
      * @see SQLSelect::orderby()
      *
      * @param string $sort Column to sort on (escaped SQL statement)
      * @param string $direction Direction ("ASC" or "DESC", escaped SQL statement)
      * @param bool $clear Clear existing values
      * @return $this
+     *
      */
     public function sort($sort = null, $direction = null, $clear = true)
     {

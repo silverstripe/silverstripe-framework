@@ -2254,7 +2254,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // If we have a default sort set for our "join" then we should overwrite any default already set.
         $joinSort = Config::inst()->get($manyManyComponent['join'], 'default_sort');
         if (!empty($joinSort)) {
-            $result = $result->sort($joinSort);
+            $result = $result->orderBy($joinSort);
         }
 
         $this->extend('updateManyManyComponents', $result);
@@ -3327,7 +3327,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string $callerClass The class of objects to be returned
      * @param string|array $filter A filter to be inserted into the WHERE clause.
      * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
-     * @param string|array $sort A sort expression to be inserted into the ORDER
+     * @param string|array|null $sort Passed to DataList::sort()
      * BY clause.  If omitted, self::$default_sort will be used.
      * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
      * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
@@ -3369,7 +3369,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($filter) {
             $result = $result->where($filter);
         }
-        if ($sort) {
+        if ($sort || is_null($sort)) {
             $result = $result->sort($sort);
         }
         if ($limit && strpos($limit ?? '', ',') !== false) {
@@ -3399,11 +3399,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * e.g. MyObject::get_one() will return a MyObject
      * @param string|array $filter A filter to be inserted into the WHERE clause.
      * @param boolean $cache Use caching
-     * @param string $orderBy A sort expression to be inserted into the ORDER BY clause.
+     * @param string|array|null $sort Passed to DataList::sort() so that DataList::first() returns the desired item
      *
      * @return DataObject|null The first item matching the query
      */
-    public static function get_one($callerClass = null, $filter = "", $cache = true, $orderBy = "")
+    public static function get_one($callerClass = null, $filter = "", $cache = true, $sort = "")
     {
         if ($callerClass === null) {
             $callerClass = static::class;
@@ -3417,12 +3417,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         /** @var DataObject $singleton */
         $singleton = singleton($callerClass);
 
-        $cacheComponents = [$filter, $orderBy, $singleton->getUniqueKeyComponents()];
+        $cacheComponents = [$filter, $sort, $singleton->getUniqueKeyComponents()];
         $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
-            $dl = DataObject::get($callerClass)->where($filter)->sort($orderBy);
+            $dl = DataObject::get($callerClass);
+            if (!empty($filter)) {
+                $dl = $dl->where($filter);
+            }
+            if (!empty($sort) || is_null($sort)) {
+                $dl = $dl->sort($sort);
+            }
             $item = $dl->first();
 
             if ($cache) {

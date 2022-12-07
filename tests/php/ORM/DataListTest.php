@@ -2,10 +2,12 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\InjectorNotFoundException;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
@@ -1816,12 +1818,12 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Phil', $list->first()->Name, 'First comment should be from Phil');
     }
 
-    public function testSortByComplexExpression()
+    public function testOrderByComplexExpression()
     {
         // Test an expression with both spaces and commas. This test also tests that column() can be called
         // with a complex sort expression, so keep using column() below
         $teamClass = Convert::raw2sql(SubTeam::class);
-        $list = Team::get()->sort(
+        $list = Team::get()->orderBy(
             'CASE WHEN "DataObjectTest_Team"."ClassName" = \'' . $teamClass . '\' THEN 0 ELSE 1 END, "Title" DESC'
         );
         $this->assertEquals(
@@ -1835,6 +1837,155 @@ class DataListTest extends SapphireTest
             ],
             $list->column("Title")
         );
+    }
+
+    /**
+     * @dataProvider provideRawSqlSortException
+     */
+    public function testRawSqlSort(string $sort, string $type): void
+    {
+        $type = explode('|', $type)[0];
+        if ($type === 'valid') {
+            $this->expectNotToPerformAssertions();
+        } elseif ($type === 'invalid-direction') {
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessageMatches('/Invalid sort direction/');
+        } elseif ($type === 'unknown-column') {
+            if (!(DB::get_conn()->getConnector() instanceof MySQLiConnector)) {
+                $this->markTestSkipped('Database connector is not MySQLiConnector');
+            }
+            $this->expectException(\mysqli_sql_exception::class);
+            $this->expectExceptionMessageMatches('/Unknown column/');
+        } elseif ($type === 'invalid-column') {
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessageMatches('/Invalid sort column/');
+        } elseif ($type === 'unknown-relation') {
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessageMatches('/is not a relation on model/');
+        } else {
+            throw new \Exception("Invalid type $type");
+        }
+        // column('ID') is required to get the database query be actually fired off
+        Team::get()->sort($sort)->column('ID');
+    }
+
+    /**
+     * @dataProvider provideRawSqlSortException
+     */
+    public function testRawSqlOrderBy(string $sort, string $type): void
+    {
+        $type = explode('|', $type)[1];
+        if ($type === 'valid') {
+            if (!str_contains($sort, '"') && !(DB::get_conn()->getConnector() instanceof MySQLiConnector)) {
+                // don't test unquoted things in non-mysql
+                $this->markTestSkipped('Database connector is not MySQLiConnector');
+            }
+            $this->expectNotToPerformAssertions();
+        } else {
+            if (!(DB::get_conn()->getConnector() instanceof MySQLiConnector)) {
+                $this->markTestSkipped('Database connector is not MySQLiConnector');
+            }
+            $this->expectException(\mysqli_sql_exception::class);
+            if ($type === 'error-in-sql-syntax') {
+                $this->expectExceptionMessageMatches('/You have an error in your SQL syntax/');
+            } else {
+                $this->expectExceptionMessageMatches('/Unknown column/');
+            }
+        }
+        // column('ID') is required to get the database query be actually fired off
+        Team::get()->orderBy($sort)->column('ID');
+    }
+
+    public function provideRawSqlSortException(): array
+    {
+        return [
+            ['Title', 'valid|valid'],
+            ['Title asc', 'valid|valid'],
+            ['"Title" ASC', 'valid|valid'],
+            ['Title ASC, "DatabaseField"', 'valid|valid'],
+            ['"Title", "DatabaseField" DESC', 'valid|valid'],
+            ['Title ASC, DatabaseField DESC', 'valid|valid'],
+            ['Title ASC, , DatabaseField DESC', 'invalid-column|unknown-column'],
+            ['Captain.ShirtNumber', 'valid|unknown-column'],
+            ['Captain.ShirtNumber ASC', 'valid|unknown-column'],
+            ['"Captain"."ShirtNumber"', 'invalid-column|unknown-column'],
+            ['"Captain"."ShirtNumber" DESC', 'invalid-column|unknown-column'],
+            ['Title BACKWARDS', 'invalid-direction|error-in-sql-syntax'],
+            ['"Strange non-existent column name"', 'invalid-column|unknown-column'],
+            ['NonExistentColumn', 'unknown-column|unknown-column'],
+            ['Team.NonExistentColumn', 'unknown-relation|unknown-column'],
+            ['"DataObjectTest_Team"."NonExistentColumn" ASC', 'invalid-column|unknown-column'],
+            ['"DataObjectTest_Team"."Title" ASC', 'invalid-column|valid'],
+            ['DataObjectTest_Team.Title', 'unknown-relation|valid'],
+            ['Title, 1 = 1', 'invalid-column|valid'],
+            ["Title,'abc' = 'abc'", 'invalid-column|valid'],
+            ['Title,Mod(ID,3)=1', 'invalid-column|valid'],
+            ['(CASE WHEN ID < 3 THEN 1 ELSE 0 END)', 'invalid-column|valid'],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSortDirectionValidationTwoArgs
+     */
+    public function testSortDirectionValidationTwoArgs(string $direction, string $type): void
+    {
+        if ($type === 'valid') {
+            $this->expectNotToPerformAssertions();
+        } else {
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessageMatches('/Invalid sort direction/');
+        }
+        Team::get()->sort('Title', $direction)->column('ID');
+    }
+
+    public function provideSortDirectionValidationTwoArgs(): array
+    {
+        return [
+            ['ASC', 'valid'],
+            ['asc', 'valid'],
+            ['DESC', 'valid'],
+            ['desc', 'valid'],
+            ['BACKWARDS', 'invalid'],
+        ];
+    }
+
+    /**
+     * Test passing scalar values to sort()
+     *
+     * Explicity tests that sort(null) will wipe any existing sort on a DataList
+     *
+     * @dataProvider provideSortScalarValues
+     */
+    public function testSortScalarValues(mixed $emtpyValue, string $type): void
+    {
+        $this->assertSame(['Subteam 1'], Team::get()->limit(1)->column('Title'));
+        $list = Team::get()->sort('Title DESC');
+        $this->assertSame(['Team 3'], $list->limit(1)->column('Title'));
+        if ($type !== 'wipes-existing') {
+            $this->expectException(InvalidArgumentException::class);
+        }
+        if ($type === 'invalid-scalar') {
+            $this->expectExceptionMessage('sort() arguments must either be a string, an array, or null');
+        }
+        if ($type === 'empty-scalar') {
+            $this->expectExceptionMessage('Invalid sort parameter');
+        }
+        // $type === 'wipes-existing' is valid
+        $list = $list->sort($emtpyValue);
+        $this->assertSame(['Subteam 1'], $list->limit(1)->column('Title'));
+    }
+
+    public function provideSortScalarValues(): array
+    {
+        return [
+            [null, 'wipes-existing'],
+            ['', 'empty-scalar'],
+            [[], 'empty-scalar'],
+            [false, 'invalid-scalar'],
+            [true, 'invalid-scalar'],
+            [0, 'invalid-scalar'],
+            [1, 'invalid-scalar'],
+        ];
     }
 
     public function testShuffle()
