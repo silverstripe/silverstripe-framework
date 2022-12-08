@@ -3,6 +3,7 @@
 namespace SilverStripe\Security;
 
 use Exception;
+
 /**
  * Convenience class for generating cryptographically secure pseudo-random strings/tokens
  */
