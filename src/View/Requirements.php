@@ -325,7 +325,7 @@ class Requirements implements Flushable
      *                         'framework/javascript/lang'
      * @param bool   $return   Return all relative file paths rather than including them in
      *                         requirements
-     * 
+     *
      * @return array
      */
     public static function add_i18n_javascript($langDir, $return = false)

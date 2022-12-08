@@ -501,7 +501,7 @@ class Member extends DataObject
     /**
      * Generate an auto login token which can be used to reset the password,
      * at the same time hashing it and storing in the database.
-     * 
+     *
      * @return string Token that should be passed to the client (but NOT persisted).
      */
     public function generateAutologinTokenAndStoreHash()

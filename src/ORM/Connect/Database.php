@@ -752,7 +752,7 @@ abstract class Database
 
     /**
      * Commit everything inside this transaction so far
-     * 
+     *
      * Boolean is returned if success state is known, or null if
      * unknown. Note: For error checking purposes null should not be treated as error.
      */
