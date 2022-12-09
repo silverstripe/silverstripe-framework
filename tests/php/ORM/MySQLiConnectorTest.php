@@ -15,13 +15,12 @@ use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
  */
 class MySQLiConnectorTest extends SapphireTest implements TestOnly
 {
+    /** @var array project database settings configuration */
+    private $config = [];
+
     private function getConnector(?string $charset = null, ?string $collation = null, bool $selectDb = false)
     {
-        $config = DB::getConfig();
-
-        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
-            return $this->markTestSkipped('The test only relevant for MySQL');
-        }
+        $config = $this->config;
 
         if ($charset) {
             $config['charset'] = $charset;
@@ -36,6 +35,19 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $connector->connect($config, $selectDb);
 
         return $connector;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $config = DB::getConfig();
+
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
+            $this->markTestSkipped("The test only relevant for MySQL - but $config[type] is in use");
+        }
+
+        $this->config = $config;
     }
 
     /**
