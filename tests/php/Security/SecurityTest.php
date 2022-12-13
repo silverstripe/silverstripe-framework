@@ -447,7 +447,7 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals(302, $expiredResponse->getStatusCode());
         $this->assertEquals(
             Director::absoluteURL('Security/changepassword') . '?BackURL=test%2Flink',
-            Director::absoluteURL($expiredResponse->getHeader('Location'))
+            Director::absoluteURL((string) $expiredResponse->getHeader('Location'))
         );
         $this->assertEquals(
             $this->idFromFixture(Member::class, 'expiredpassword'),
@@ -517,9 +517,8 @@ class SecurityTest extends FunctionalTest
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals(
             Director::absoluteURL('Security/changepassword'),
-            Director::absoluteURL($response->getHeader('Location'))
+            Director::absoluteURL((string) $response->getHeader('Location'))
         );
-
         // Follow redirection to form without hash in GET parameter
         $this->get('Security/changepassword');
         $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword#123');

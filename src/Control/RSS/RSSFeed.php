@@ -199,7 +199,7 @@ class RSSFeed extends ViewableData
      */
     public function Link($action = null)
     {
-        return Controller::join_links(Director::absoluteURL($this->link), $action);
+        return Controller::join_links(Director::absoluteURL((string) $this->link), $action);
     }
 
     /**

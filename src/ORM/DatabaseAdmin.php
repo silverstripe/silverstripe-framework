@@ -167,7 +167,7 @@ class DatabaseAdmin extends Controller
         }
 
         // Convert to absolute URL
-        return Director::absoluteURL($url, true);
+        return Director::absoluteURL((string) $url, true);
     }
 
     /**

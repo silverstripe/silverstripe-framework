@@ -125,7 +125,7 @@ class RSSFeed_Entry extends ViewableData
             return $this->failover->AbsoluteLink();
         } else {
             if ($this->failover->hasMethod('Link')) {
-                return Director::absoluteURL($this->failover->Link());
+                return Director::absoluteURL((string) $this->failover->Link());
             }
         }
 

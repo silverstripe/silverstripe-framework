@@ -675,7 +675,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
                 );
             } elseif (!Director::is_absolute_url($path)) {
                 // Non-absolute urls are made absolute
-                $path = Director::absoluteURL($path);
+                $path = Director::absoluteURL((string) $path);
             }
             $plugins[$plugin] = $path;
         }

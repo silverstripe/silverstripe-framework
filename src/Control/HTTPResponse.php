@@ -346,7 +346,7 @@ class HTTPResponse
     {
         $headersSent = headers_sent($file, $line);
         $location = $this->getHeader('location');
-        $url = Director::absoluteURL($location);
+        $url = Director::absoluteURL((string) $location);
         $urlATT = Convert::raw2htmlatt($url);
         $urlJS = Convert::raw2js($url);
         $title = (Director::isDev() && $headersSent)

@@ -345,7 +345,7 @@ class Director implements TemplateGlobalProvider
                 $handler = function () use ($arguments) {
                     // Redirection
                     $response = new HTTPResponse();
-                    $response->redirect(static::absoluteURL($arguments['Redirect']));
+                    $response->redirect(static::absoluteUrl((string) $arguments['Redirect']));
                     return $response;
                 };
                 break;

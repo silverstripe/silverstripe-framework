@@ -70,7 +70,7 @@ class HTTP
             if (preg_match('/^\w+:/', $url ?? '')) {
                 return $url;
             }
-            return Director::absoluteURL($url);
+            return Director::absoluteURL((string) $url);
         });
     }
 
@@ -87,8 +87,8 @@ class HTTP
      * As of 3.2 $code should be a callable which takes a single parameter and returns the rewritten,
      * for example:
      * <code>
-     * function($url) {
-     *      return Director::absoluteURL($url, true);
+     * function(string $url) {
+     *      return Director::absoluteURL((string) $url, true);
      * }
      * </code>
      *
