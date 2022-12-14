@@ -76,15 +76,6 @@ class Director implements TemplateGlobalProvider
     private static $alternate_base_folder;
 
     /**
-     * Override PUBLIC_DIR. Set to a non-null value to override.
-     * Setting to an empty string will disable public dir.
-     *
-     * @config
-     * @var bool|null
-     */
-    private static $alternate_public_dir = null;
-
-    /**
      * Base url to populate if cannot be determined otherwise.
      * Supports back-ticked vars; E.g. '`SS_BASE_URL`'
      *
@@ -654,19 +645,12 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Check if using a separate public dir, and if so return this directory
-     * name.
-     *
-     * This will be removed in 5.0 and fixed to 'public'
+     * The name of the public directory
      *
      * @return string
      */
     public static function publicDir()
     {
-        $alternate = self::config()->uninherited('alternate_public_dir');
-        if (isset($alternate)) {
-            return $alternate;
-        }
         return PUBLIC_DIR;
     }
 

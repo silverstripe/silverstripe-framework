@@ -24,7 +24,7 @@ use SilverStripe\Core\TempFolder;
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
  * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
  * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
- * - PUBLIC_DIR: Webroot path relative to project root, e.g. "public" or ""
+ * - PUBLIC_DIR: Webroot path relative to project root - always evaluates to "public"
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
@@ -70,10 +70,10 @@ if (!defined('BASE_PATH')) {
 
 // Set public webroot dir / path
 if (!defined('PUBLIC_DIR')) {
-    define('PUBLIC_DIR', is_dir(BASE_PATH . DIRECTORY_SEPARATOR . 'public') ? 'public' : '');
+    define('PUBLIC_DIR', 'public');
 }
 if (!defined('PUBLIC_PATH')) {
-    define('PUBLIC_PATH', PUBLIC_DIR ? BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR : BASE_PATH);
+    define('PUBLIC_PATH', BASE_PATH . DIRECTORY_SEPARATOR . PUBLIC_DIR);
 }
 
 // Allow a first class env var to be set that disables .env file loading
@@ -183,7 +183,7 @@ if (!defined('ASSETS_PATH')) {
     call_user_func(function () {
         $paths = [
             BASE_PATH,
-            (PUBLIC_DIR ? PUBLIC_DIR : null),
+            PUBLIC_DIR,
             ASSETS_DIR
         ];
         define('ASSETS_PATH', implode(DIRECTORY_SEPARATOR, array_filter($paths ?? [])));
