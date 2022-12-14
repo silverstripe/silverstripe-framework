@@ -232,9 +232,11 @@ class Convert
      * @param SimpleXMLElement $xml
      *
      * @return mixed
+     * @deprecated 4.11.0 Will be removed without equivalent functionality
      */
     protected static function recursiveXMLToArray($xml)
     {
+        Deprecation::notice('4.11.0', 'Will be removed without equivalent functionality');
         $x = null;
         if ($xml instanceof SimpleXMLElement) {
             $attributes = $xml->attributes();

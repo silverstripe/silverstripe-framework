@@ -14,6 +14,7 @@ use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Control\SimpleResourceURLGenerator;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 
