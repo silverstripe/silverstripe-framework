@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Logging\MonologErrorHandler;
+use SilverStripe\Dev\Deprecation;
 
 class MonologErrorHandlerTest extends SapphireTest
 {
