@@ -658,7 +658,7 @@ class RequestHandler extends ViewableData
             ?: Director::baseURL();
 
         // Only direct to absolute urls
-        $url = Director::absoluteURL($url);
+        $url = Director::absoluteURL((string) $url);
         return $this->redirect($url);
     }
 }

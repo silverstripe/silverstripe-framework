@@ -135,7 +135,7 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
         $defaultRedirectUrl = static::config()->get('default_redirect');
 
         if ($sessionRedirectUrl || $defaultRedirectUrl) {
-            $redirectUrl = $this->absoluteUrl($sessionRedirectUrl ?? $defaultRedirectUrl);
+            $redirectUrl = $this->absoluteUrl((string) ($sessionRedirectUrl ?? $defaultRedirectUrl));
         } else {
             $redirectUrl = null;
         }
@@ -153,7 +153,7 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
         $allowedStartswith = static::config()->get('whitelisted_url_startswith');
         if (is_array($allowedStartswith)) {
             foreach ($allowedStartswith as $pattern) {
-                $startswith = $this->absoluteUrl($pattern);
+                $startswith = $this->absoluteUrl((string) $pattern);
 
                 if (strncmp($currentUrl ?? '', $startswith ?? '', strlen($startswith ?? '')) === 0) {
                     return null;
@@ -178,7 +178,7 @@ class PasswordExpirationMiddleware implements HTTPMiddleware
             // add BASE_URL explicitly if not absolute
             $url = Controller::join_links(Director::absoluteBaseURL(), $url);
         } else {
-            $url = Director::absoluteURL($url) ?: Controller::join_links(Director::absoluteBaseURL(), $url);
+            $url = Director::absoluteURL((string) $url) ?: Controller::join_links(Director::absoluteBaseURL(), $url);
         }
 
         if (substr($url ?? '', -1) === '/') {
