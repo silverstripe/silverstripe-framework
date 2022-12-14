@@ -6,6 +6,6 @@ class PublicThemes implements ThemeList
 {
     public function getThemes()
     {
-        return PUBLIC_DIR ? ['/' . PUBLIC_DIR] : [];
+        return ['/' . PUBLIC_DIR];
     }
 }
