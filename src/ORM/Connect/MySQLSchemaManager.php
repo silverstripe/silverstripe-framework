@@ -344,7 +344,11 @@ class MySQLSchemaManager extends DBSchemaManager
         $indexList = [];
 
         foreach ($indexes as $index) {
-            $groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
+            $columnDeclaration = $index['Column_name'];
+            if ($index['Sub_part']) {
+                $columnDeclaration .= '(' . $index['Sub_part'] . ')';
+            }
+            $groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $columnDeclaration;
 
             if ($index['Index_type'] == 'FULLTEXT') {
                 $groupedIndexes[$index['Key_name']]['type'] = 'fulltext';

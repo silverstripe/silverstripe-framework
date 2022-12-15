@@ -551,7 +551,16 @@ MESSAGE
         if (empty($columns)) {
             return '';
         }
-        return '"' . implode('","', $columns) . '"';
+        $columns = array_map([$this, 'quoteIndexColumn'], $columns);
+        return implode(',', $columns);
+    }
+
+    public function quoteIndexColumn($column)
+    {
+        if (preg_match('/^(\w+)\((\d+)\)$/', $column, $matches)) {
+            return sprintf('"%s"(%d)', $matches[1], $matches[2]);
+        }
+        return sprintf('"%s"', $column);
     }
 
     /**
