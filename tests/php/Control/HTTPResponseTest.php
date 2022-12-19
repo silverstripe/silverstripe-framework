@@ -45,6 +45,26 @@ class HTTPResponseTest extends SapphireTest
         $this->assertEmpty($response->getHeader('X-Animal'));
     }
 
+    public function providerSanitiseHeaders()
+    {
+        return [
+            'plain text is retained' => ['some arbitrary value1', 'some arbitrary value1'],
+            'special chars are retained' => ['`~!@#$%^&*()_+-=,./<>?;\':"[]{}\\|', '`~!@#$%^&*()_+-=,./<>?;\':"[]{}\\|'],
+            'line breaks are removed' => ['no line breaks', "n\ro line \nbreaks\r\n"],
+        ];
+    }
+
+    /**
+     * @dataProvider providerSanitiseHeaders
+     */
+    public function testSanitiseHeaders(string $expected, string $value)
+    {
+        $response = new HTTPResponse();
+
+        $response->addHeader('X-Sanitised', $value);
+        $this->assertSame($expected, $response->getHeader('X-Sanitised'));
+    }
+
     public function providerTestValidStatusCodes()
     {
         return [
