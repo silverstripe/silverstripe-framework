@@ -98,6 +98,36 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 '<iframe></iframe>',
                 'Javascript in the src attribute of an iframe is completely removed'
             ],
+            [
+                'iframe[src]',
+                '<iframe src="jAvAsCrIpT:alert(0);"></iframe>',
+                '<iframe></iframe>',
+                'Mixed case javascript in the src attribute of an iframe is completely removed'
+            ],
+            [
+                'iframe[src]',
+                "<iframe src=\"java\tscript:alert(0);\"></iframe>",
+                '<iframe></iframe>',
+                'Javascript with tab elements the src attribute of an iframe is completely removed'
+            ],
+            [
+                'object[data]',
+                '<object data="OK"></object>',
+                '<object data="OK"></object>',
+                'Object with OK content in the data attribute is retained'
+            ],
+            [
+                'object[data]',
+                '<object data=javascript:alert()>',
+                '<object></object>',
+                'Object with dangerous content in data attribute is completely removed'
+            ],
+            [
+                'img[src]',
+                '<img src="https://owasp.org/myimage.jpg" style="url:xss" onerror="alert(1)">',
+                '<img src="https://owasp.org/myimage.jpg">',
+                'XSS vulnerable attributes starting with on or style are removed via configuration'
+            ],
         ];
 
         $config = HTMLEditorConfig::get('htmleditorsanitisertest');

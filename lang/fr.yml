@@ -113,6 +113,7 @@ fr:
     PLURALS:
       one: 'Un modèle de donnée'
       other: '{count} modèles de donnée'
+      many: '{count} modèles de donnée'
     SINGULARNAME: 'Modèle de donnée'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Tout
@@ -122,24 +123,30 @@ fr:
     DAYS_SHORT_PLURALS:
       one: '{count} jour'
       other: '{count} jours'
+      many: '{count} jours'
     HOURS_SHORT_PLURALS:
       one: '{count} heure'
       other: '{count} heures'
+      many: '{count} heures'
     LessThanMinuteAgo: 'moins d''une minute'
     MINUTES_SHORT_PLURALS:
       one: '{count} min.'
       other: '{count} min.'
+      many: '{count} min.'
     MONTHS_SHORT_PLURALS:
       one: '{count} mois'
       other: '{count} mois'
+      many: '{count} mois'
     SECONDS_SHORT_PLURALS:
       one: '{count} sec.'
       other: '{count} sec.'
+      many: '{count} sec.'
     TIMEDIFFAGO: 'Il y a {difference}'
     TIMEDIFFIN: 'Dans {difference}'
     YEARS_SHORT_PLURALS:
       one: '{count} année'
       other: '{count} années'
+      many: '{count} années'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Tout
   SilverStripe\ORM\Hierarchy:
@@ -182,6 +189,7 @@ fr:
     PLURALS:
       one: 'Un groupe'
       other: '{count} groupes'
+      many: '{count} groupes'
     Parent: 'Groupe parent'
     ROLES: Rôles
     ROLESDESCRIPTION: 'Les rôles sont des ensembles de permissions prédéfinies, et ils peuvent être attribués à des groupes. <br />Si nécessaire, ils peuvent hériter de groupes parents.'
@@ -198,6 +206,7 @@ fr:
     PLURALS:
       one: 'Une tentative de connexion'
       other: '{count} tentatives de connexion'
+      many: '{count} tentatives de connexion'
     SINGULARNAME: 'Tentative de connexion'
     Status: Statut
   SilverStripe\Security\Member:
@@ -228,6 +237,7 @@ fr:
     PLURALS:
       one: 'Un membre'
       other: '{count} membres'
+      many: '{count} membres'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
@@ -255,6 +265,7 @@ fr:
     PLURALS:
       one: 'Un mot de passe utilisateur'
       other: '{count} mots de passe utilisateur'
+      many: '{count} mots de passe utilisateur'
     SINGULARNAME: 'Mot de passe utilisateur'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Veuillez renforcer votre mot de passe en ajoutant certains des caractères suivants : {chars}'
@@ -271,6 +282,7 @@ fr:
     PLURALS:
       one: 'Une autorisation'
       other: '{count} autorisations'
+      many: '{count} autorisations'
     SINGULARNAME: Permission
     UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -284,6 +296,7 @@ fr:
     PLURALS:
       one: 'Un rôle'
       other: '{count} rôles'
+      many: '{count} rôles'
     SINGULARNAME: Rôle
     Title: Titre
   SilverStripe\Security\PermissionRoleCode:
@@ -291,6 +304,7 @@ fr:
     PLURALS:
       one: 'Un code d''autorisation lié au rôle'
       other: '{count} codes d''autorisation liés au rôle'
+      many: '{count} codes d''autorisation liés au rôle'
     PermsError: 'Impossible d''attribuer le code "{code}" (requiert un accès en tant qu''administrateur)'
     SINGULARNAME: 'Code d''autorisation lié au rôle'
   SilverStripe\Security\RememberLoginHash:
@@ -298,6 +312,7 @@ fr:
     PLURALS:
       one: 'Une signature de mot de passe'
       other: '{count} signatures de mot de passe'
+      many: '{count} signatures de mot de passe'
     SINGULARNAME: 'Signature de mot de passe'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Vous n''avez pas accès à cette page. Si un autre de vos identifiants vous permet d''accéder à cette page, merci de vous reconnecter ci-dessous en l''utilisant.'

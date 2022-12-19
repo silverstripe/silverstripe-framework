@@ -236,6 +236,7 @@ eo:
     Sort: 'Ordiga Ordo'
     has_many_Permissions: Permesoj
     many_many_Members: Membroj
+    ValidationIdentifierAlreadyExists: 'Jam ekzistas grupo  ({group}) kun la sama {identifier}'
   SilverStripe\Security\LoginAttempt:
     Email: 'Retpoŝta adreso'
     EmailHashed: 'Retpoŝta adreso (haketa)'
