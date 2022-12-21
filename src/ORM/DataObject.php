@@ -3309,7 +3309,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Build and decorate with args
         $result = DataList::create($callerClass);
         if ($filter) {
-            $result = $result->where($filter);
+            $result = $result->filter($filter);
         }
         if ($sort || is_null($sort)) {
             $result = $result->sort($sort);
@@ -3366,7 +3366,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
             $dl = DataObject::get($callerClass);
             if (!empty($filter)) {
-                $dl = $dl->where($filter);
+                $dl = $dl->filter($filter);
             }
             if (!empty($sort) || is_null($sort)) {
                 $dl = $dl->sort($sort);
