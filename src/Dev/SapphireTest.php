@@ -161,6 +161,8 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     protected static $tempDB = null;
 
+    protected FixtureFactory|bool $fixtureFactory;
+
     /**
      * @return TempDatabase
      */

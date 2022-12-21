@@ -66,6 +66,11 @@ class ViewableData implements IteratorAggregate
      */
     private static $casting_cache = [];
 
+    /**
+     * Acts as a PHP 8.2+ compliant replacement for dynamic properties
+     */
+    private array $data = [];
+
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
@@ -191,7 +196,7 @@ class ViewableData implements IteratorAggregate
      */
     public function hasField($field)
     {
-        return property_exists($this, $field ?? '');
+        return property_exists($this, $field) || isset($this->data[$field]);
     }
 
     /**
@@ -202,7 +207,10 @@ class ViewableData implements IteratorAggregate
      */
     public function getField($field)
     {
-        return $this->$field;
+        if (property_exists($this, $field)) {
+            return $this->$field;
+        }
+        return $this->data[$field];
     }
 
     /**
@@ -215,7 +223,13 @@ class ViewableData implements IteratorAggregate
     public function setField($field, $value)
     {
         $this->objCacheClear();
-        $this->$field = $value;
+        // prior to PHP 8.2 support ViewableData::setField() simply used `$this->field = $value;`
+        // so the following logic essentially mimics this behaviour, though without the use
+        // of now deprecated dynamic properties
+        if (property_exists($this, $field)) {
+            $this->$field = $value;
+        }
+        $this->data[$field] = $value;
         return $this;
     }
 
@@ -509,14 +523,14 @@ class ViewableData implements IteratorAggregate
      * A simple wrapper around {@link ViewableData::obj()} that automatically caches the result so it can be used again
      * without re-running the method.
      *
-     * @param string $field
+     * @param string $fieldName
      * @param array $arguments
      * @param string $identifier an optional custom cache identifier
      * @return Object|DBField
      */
-    public function cachedCall($field, $arguments = [], $identifier = null)
+    public function cachedCall($fieldName, $arguments = [], $identifier = null)
     {
-        return $this->obj($field, $arguments, true, $identifier);
+        return $this->obj($fieldName, $arguments, true, $identifier);
     }
 
     /**

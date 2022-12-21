@@ -9,6 +9,13 @@
  *  the bracket if a failed match + restore has moved the current position backwards - so we have to check that too.
  */
 class ParserRegexp {
+
+	public $parser;
+	public $rx;
+	public $matches;
+	public $match_pos;
+	public $check_pos;
+
 	function __construct( $parser, $rx ) {
 		$this->parser = $parser ;
 		$this->rx = $rx . 'Sx' ;

@@ -6,8 +6,9 @@ use SilverStripe\Dev\TestOnly;
 
 class NonEmptyObject implements TestOnly
 {
-
-    static $c = "Cucumber";
+    public $a;
+    public $b;
+    public static $c = "Cucumber";
 
     public function __construct()
     {

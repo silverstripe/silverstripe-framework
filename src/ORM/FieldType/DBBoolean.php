@@ -46,7 +46,7 @@ class DBBoolean extends DBField
     {
         $fieldName = $this->name;
         if ($fieldName) {
-            $dataObject->$fieldName = ($this->value) ? 1 : 0;
+            $dataObject->setField($fieldName, $this->value ? 1 : 0);
         } else {
             $class = static::class;
             throw new \RuntimeException("DBField::saveInto() Called on a nameless '$class' object");

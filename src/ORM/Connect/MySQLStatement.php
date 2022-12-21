@@ -73,7 +73,6 @@ class MySQLStatement extends Query
     public function __destruct()
     {
         $this->statement->close();
-        $this->currentRecord = false;
     }
 
     /**

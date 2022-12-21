@@ -6,6 +6,7 @@ use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -2841,49 +2842,55 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // later referenced to update the parent dataobject
             if ($val instanceof DBComposite) {
                 $val->bindTo($this);
-                $this->record[$fieldName] = $val;
+                $this->setFieldValue($fieldName, $val);
             }
         // Situation 2: Passing a literal or non-DBField object
         } else {
-            // If this is a proper database field, we shouldn't be getting non-DBField objects
-            if (is_object($val) && $schema->fieldSpec(static::class, $fieldName)) {
-                throw new InvalidArgumentException('DataObject::setField: passed an object that is not a DBField');
-            }
-
-            if (!empty($val) && !is_scalar($val)) {
-                $dbField = $this->dbObject($fieldName);
-                if ($dbField && $dbField->scalarValueOnly()) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'DataObject::setField: %s only accepts scalars',
-                            $fieldName
-                        )
-                    );
-                }
-            }
-
-            // if a field is not existing or has strictly changed
-            if (!array_key_exists($fieldName, $this->original ?? []) || $this->original[$fieldName] !== $val) {
-                // TODO Add check for php-level defaults which are not set in the db
-                // TODO Add check for hidden input-fields (readonly) which are not set in the db
-                // At the very least, the type has changed
-                $this->changed[$fieldName] = self::CHANGE_STRICT;
-
-                if ((!array_key_exists($fieldName, $this->original ?? []) && $val)
-                    || (array_key_exists($fieldName, $this->original ?? []) && $this->original[$fieldName] != $val)
-                ) {
-                    // Value has changed as well, not just the type
-                    $this->changed[$fieldName] = self::CHANGE_VALUE;
-                }
-            // Value has been restored to its original, remove any record of the change
-            } elseif (isset($this->changed[$fieldName])) {
-                unset($this->changed[$fieldName]);
-            }
-
-            // Value is saved regardless, since the change detection relates to the last write
-            $this->record[$fieldName] = $val;
+            $this->setFieldValue($fieldName, $val);
         }
         return $this;
+    }
+
+    private function setFieldValue(string $fieldName, mixed $val): void
+    {
+        $schema = static::getSchema();
+        // If this is a proper database field, we shouldn't be getting non-DBField objects
+        if (is_object($val) && !($val instanceof DBField) && $schema->fieldSpec(static::class, $fieldName)) {
+            throw new InvalidArgumentException('DataObject::setFieldValue: passed an object that is not a DBField');
+        }
+
+        if (!empty($val) && !is_scalar($val)) {
+            $dbField = $this->dbObject($fieldName);
+            if ($dbField && $dbField->scalarValueOnly()) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'DataObject::setFieldValue: %s only accepts scalars',
+                        $fieldName
+                    )
+                );
+            }
+        }
+
+        // if a field is not existing or has strictly changed
+        if (!array_key_exists($fieldName, $this->original ?? []) || $this->original[$fieldName] !== $val) {
+            // TODO Add check for php-level defaults which are not set in the db
+            // TODO Add check for hidden input-fields (readonly) which are not set in the db
+            // At the very least, the type has changed
+            $this->changed[$fieldName] = self::CHANGE_STRICT;
+
+            if ((!array_key_exists($fieldName, $this->original ?? []) && $val)
+                || (array_key_exists($fieldName, $this->original ?? []) && $this->original[$fieldName] != $val)
+            ) {
+                // Value has changed as well, not just the type
+                $this->changed[$fieldName] = self::CHANGE_VALUE;
+            }
+        // Value has been restored to its original, remove any record of the change
+        } elseif (isset($this->changed[$fieldName])) {
+            unset($this->changed[$fieldName]);
+        }
+
+        // Value is saved regardless, since the change detection relates to the last write
+        $this->record[$fieldName] = $val;
     }
 
     /**

@@ -19,6 +19,8 @@ class SSListContainsOnlyMatchingItems extends Constraint implements TestOnly
      */
     private $match;
 
+    protected SSListExporter $exporter;
+
     /**
      * @var ViewableDataContains
      */

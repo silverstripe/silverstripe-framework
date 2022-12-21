@@ -17,6 +17,8 @@ class FixtureBlueprintTest extends SapphireTest
 
     protected $usesDatabase = true;
 
+    private int $_called = 0;
+
     protected static $extra_dataobjects = [
         TestDataObject::class,
         DataObjectRelation::class,
