@@ -8,7 +8,7 @@ use Psr\Http\Message\StreamInterface;
 class MockResponse implements ResponseInterface
 {
     private EmbedUnitTest $unitTest;
-    private string $firstReponse;
+    private string $firstResponse;
     private string $secondResponse;
 
     public function __construct(EmbedUnitTest $unitTest, string $firstResponse, string $secondResponse)

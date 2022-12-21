@@ -65,6 +65,8 @@ class MySQLDatabase extends Database implements TransactionManager
      */
     private $transactionManager = null;
 
+    private int $transactionNesting = 0;
+
     /**
      * Default collation
      *

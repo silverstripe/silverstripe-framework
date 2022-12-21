@@ -826,10 +826,6 @@ class DataObjectTest extends SapphireTest
         $team1->Captain = $captain2;
         $team1->write();
         $this->assertEquals($captain2->ID, $team1->Captain->ID);
-
-        // Setter: Custom data (required by DataDifferencer)
-        $team1->Captain = DBField::create_field('HTMLFragment', '<p>No captain</p>');
-        $this->assertEquals('<p>No captain</p>', $team1->Captain);
     }
 
     /**

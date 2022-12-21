@@ -6,6 +6,7 @@ use SilverStripe\Dev\TestOnly;
 
 class TestObject implements TestOnly
 {
+    public $auto;
 
     public $sampleService;
 

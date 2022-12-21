@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Tests\Injector\AopProxyServiceTest;
 
 class SampleService
 {
+    public $auto;
     public $constructorVarOne;
     public $constructorVarTwo;
 

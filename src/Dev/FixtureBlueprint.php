@@ -34,6 +34,8 @@ class FixtureBlueprint
      */
     protected $class;
 
+    private FixtureFactory $factory;
+
     /**
      * @var array
      */
@@ -68,6 +70,17 @@ class FixtureBlueprint
         $this->name = $name;
         $this->class = $class;
         $this->defaults = $defaults;
+    }
+
+    public function getFactory(): FixtureFactory
+    {
+        return $this->factory;
+    }
+
+    public function setFactory(FixtureFactory $factory): static
+    {
+        $this->factory = $factory;
+        return $this;
     }
 
     /**

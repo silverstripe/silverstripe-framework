@@ -45,7 +45,7 @@ class DBPercentage extends DBDecimal
 
         $fieldName = $this->name;
         if ($fieldName && $dataObject->$fieldName > 1.0) {
-            $dataObject->$fieldName = 1.0;
+            $dataObject->setField($fieldName, 1.0);
         }
     }
 }

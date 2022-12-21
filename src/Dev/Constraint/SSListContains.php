@@ -20,6 +20,8 @@ class SSListContains extends Constraint implements TestOnly
      */
     protected $matches = [];
 
+    protected SSListExporter $exporter;
+
     /**
      * Check if the list has left over items that don't match
      *

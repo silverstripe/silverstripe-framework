@@ -59,19 +59,26 @@ class ViewableData_Customised extends ViewableData
         return $this->customised->hasMethod($method) || $this->original->hasMethod($method);
     }
 
-    public function cachedCall($field, $arguments = null, $identifier = null)
+    public function cachedCall($fieldName, $arguments = null, $identifier = null)
     {
-        if ($this->customised->hasMethod($field) || $this->customised->hasField($field)) {
-            return $this->customised->cachedCall($field, $arguments, $identifier);
+        if ($this->customisedHas($fieldName)) {
+            return $this->customised->cachedCall($fieldName, $arguments, $identifier);
         }
-        return $this->original->cachedCall($field, $arguments, $identifier);
+        return $this->original->cachedCall($fieldName, $arguments, $identifier);
     }
 
     public function obj($fieldName, $arguments = null, $cache = false, $cacheName = null)
     {
-        if ($this->customised->hasField($fieldName) || $this->customised->hasMethod($fieldName)) {
+        if ($this->customisedHas($fieldName)) {
             return $this->customised->obj($fieldName, $arguments, $cache, $cacheName);
         }
         return $this->original->obj($fieldName, $arguments, $cache, $cacheName);
+    }
+
+    private function customisedHas(string $fieldName): bool
+    {
+        return property_exists($this->customised, $fieldName) ||
+            $this->customised->hasField($fieldName) ||
+            $this->customised->hasMethod($fieldName);
     }
 }

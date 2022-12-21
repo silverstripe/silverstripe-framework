@@ -579,7 +579,7 @@ class HTTPRequest implements ArrayAccess
                         $shiftCount = sizeof($patternParts ?? []);
                         $remaining = count($this->dirParts ?? []) - $i;
                         for ($j = 1; $j <= $remaining; $j++) {
-                            $arguments["$${j}"] = $this->dirParts[$j + $i - 1];
+                            $arguments['$' . $j] = $this->dirParts[$j + $i - 1];
                         }
                         $patternParts = array_merge($patternParts, array_keys($arguments ?? []));
                         break;

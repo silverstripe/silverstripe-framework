@@ -138,18 +138,17 @@ class GridFieldFilterHeaderTest extends SapphireTest
     public function testGetSearchForm()
     {
         $searchForm = $this->component->getSearchForm($this->gridField);
-
         $this->assertTrue($searchForm instanceof Form);
-        $this->assertEquals('Search__q', $searchForm->fields[0]->Name);
-        $this->assertEquals('Search__Name', $searchForm->fields[1]->Name);
-        $this->assertEquals('Search__City', $searchForm->fields[2]->Name);
-        $this->assertEquals('Search__Cheerleader__Hat__Colour', $searchForm->fields[3]->Name);
+        $fields = $searchForm->Fields()->toArray();
+        $this->assertEquals('Search__q', $fields[0]->Name);
+        $this->assertEquals('Search__Name', $fields[1]->Name);
+        $this->assertEquals('Search__City', $fields[2]->Name);
+        $this->assertEquals('Search__Cheerleader__Hat__Colour', $fields[3]->Name);
         $this->assertEquals('TeamsSearchForm', $searchForm->Name);
-        $this->assertEquals('cms-search-form', $searchForm->extraClasses['cms-search-form']);
-
-        foreach ($searchForm->fields as $field) {
-            $this->assertEquals('stacked', $field->extraClasses['stacked']);
-            $this->assertEquals('no-change-track', $field->extraClasses['no-change-track']);
+        $this->assertTrue($searchForm->hasExtraClass('cms-search-form'));
+        foreach ($fields as $field) {
+            $this->assertTrue($field->hasExtraClass('stacked'));
+            $this->assertTrue($field->hasExtraClass('no-change-track'));
         }
     }
 
