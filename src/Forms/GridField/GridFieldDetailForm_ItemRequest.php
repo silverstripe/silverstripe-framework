@@ -587,7 +587,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * Get the current paginator state
      */
-    private function getGridFieldPaginatorState(): GridState_Data
+    private function getGridFieldPaginatorState(): ?GridState_Data
     {
         $state = $this->getGridField()->getState(false);
         $gridStateStr = $this->getStateManager()->getStateFromRequest($this->gridField, $this->getRequest());
