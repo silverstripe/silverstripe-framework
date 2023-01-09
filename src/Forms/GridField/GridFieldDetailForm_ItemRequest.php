@@ -753,9 +753,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         // Save form and any extra saved data into this dataobject.
         // Set writeComponents = true to write has-one relations / join records
-        $this->extend('onBeforeSaveInto', $this->record, $data, $form);
         $form->saveInto($this->record);
-        $this->extend('onAfterSaveInto', $this->record, $data, $form);
         // https://github.com/silverstripe/silverstripe-assets/issues/365
         $this->record->write();
         $this->extend('onAfterSave', $this->record);
