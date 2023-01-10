@@ -304,13 +304,13 @@ JS;
         });
 
         $this->retryThrowable(function () use ($parentElement, $selector) {
-            $dropdown = $parentElement->find('css', '.Select-arrow');
+            $dropdown = $parentElement->find('css', '.treedropdownfield__dropdown-indicator');
             Assert::assertNotNull($dropdown, sprintf('Unable to find the dropdown in "%s"', $selector));
             $dropdown->click();
         });
 
         $this->retryThrowable(function () use ($text, $parentElement, $selector) {
-            $element = $parentElement->find('xpath', sprintf('//*[count(*)=0 and contains(.,"%s")]', $text));
+            $element = $parentElement->find('xpath', sprintf('//*[count(*)=0 and .="%s"]', $text));
             Assert::assertNotNull($element, sprintf('"%s" not found in "%s"', $text, $selector));
             $element->click();
         });
@@ -326,14 +326,14 @@ JS;
     {
         $locator = $this->fixStepArgument($locator);
         $page = $this->getSession()->getPage();
-        
+
         // Searching by name is usually good...
         $element = $page->find('css', 'textarea.htmleditor[name=\'' . $locator . '\']');
-        
+
         if ($element === null) {
             $element = $this->findInputByLabelContent($locator);
         }
-        
+
         Assert::assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
         return $element;
     }
