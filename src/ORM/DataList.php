@@ -6,12 +6,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
-use SilverStripe\View\TemplateIterator;
 use SilverStripe\View\ViewableData;
-use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use BadMethodCallException;
+use Traversable;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -915,11 +915,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns an Iterator for this DataList.
      * This function allows you to use DataLists in foreach loops
-     *
-     * @return Generator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         foreach ($this->getFinalisedQuery() as $row) {
             yield $this->createDataObject($row);
@@ -948,11 +945,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Return the number of items in this DataList
-     *
-     * @return int
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         if ($this->finalisedQuery) {
             return $this->finalisedQuery->numRecords();
@@ -1329,12 +1323,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Returns whether an item with $key exists
-     *
-     * @param mixed $key
-     * @return bool
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists(mixed $key): bool
     {
         return ($this->limit(1, $key)->first() != null);
     }
@@ -1343,37 +1333,29 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns item stored in list with index $key
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
-     *
-     * @param mixed $key
-     * @return DataObject
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet(mixed $key): ?DataObject
     {
         return $this->limit(1, $key)->first();
     }
 
     /**
      * Set an item with the key in $key
-     *
-     * @param mixed $key
-     * @param mixed $value
+     * @throws BadMethodCallException
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($key, $value)
+    public function offsetSet(mixed $key, mixed $value): void
     {
-        throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
+        throw new BadMethodCallException("Can't alter items in a DataList using array-access");
     }
 
     /**
      * Unset an item with the key in $key
      *
-     * @param mixed $key
+     * @throws BadMethodCallException
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset(mixed $key): void
     {
-        throw new \BadMethodCallException("Can't alter items in a DataList using array-access");
+        throw new BadMethodCallException("Can't alter items in a DataList using array-access");
     }
 
     /**

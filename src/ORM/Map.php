@@ -3,8 +3,10 @@
 namespace SilverStripe\ORM;
 
 use ArrayAccess;
+use BadMethodCallException;
 use Countable;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
@@ -143,15 +145,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
         return $this;
     }
 
-    // ArrayAccess
-
-    /**
-     * @var string $key
-     *
-     * @return boolean
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists(mixed $key): bool
     {
         if (isset($this->firstItems[$key])) {
             return true;
@@ -166,13 +160,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
         return $record != null;
     }
 
-    /**
-     * @var string $key
-     *
-     * @return mixed
-     */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet(mixed $key): mixed
     {
         if (isset($this->firstItems[$key])) {
             return $this->firstItems[$key];
@@ -201,11 +189,9 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * {@link DataQuery} instance. In this case, use {@link Map::toArray()}
      * and manipulate the resulting array.
      *
-     * @var string $key
-     * @var mixed $value
+     * @throws BadMethodCallException
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($key, $value)
+    public function offsetSet(mixed $key, mixed $value): void
     {
         if (isset($this->firstItems[$key])) {
             $this->firstItems[$key] = $value;
@@ -215,7 +201,7 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
             $this->lastItems[$key] = $value;
         }
 
-        throw new \BadMethodCallException('Map is read-only. Please use $map->push($key, $value) to append values');
+        throw new BadMethodCallException('Map is read-only. Please use $map->push($key, $value) to append values');
     }
 
     /**
@@ -226,39 +212,30 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      * {@link DataQuery} instance. In this case, use {@link Map::toArray()}
      * and manipulate the resulting array.
      *
-     * @var string $key
-     * @var mixed $value
+     * @throws BadMethodCallException
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset(mixed $key): void
     {
         if (isset($this->firstItems[$key])) {
             unset($this->firstItems[$key]);
-
             return;
         }
 
         if (isset($this->lastItems[$key])) {
             unset($this->lastItems[$key]);
-
             return;
         }
 
-        throw new \BadMethodCallException(
-            'Map is read-only. Unset cannot be called on keys derived from the DataQuery'
+        throw new BadMethodCallException(
+            'Map is read-only. Unset cannot be called on keys derived from the DataQuery.'
         );
     }
 
     /**
      * Returns an Map_Iterator instance for iterating over the complete set
      * of items in the map.
-     *
-     * Satisfies the IteratorAggreagte interface.
-     *
-     * @return Map_Iterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         $keyField = $this->keyField;
         $valueField = $this->valueField;
@@ -307,11 +284,8 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Returns the count of items in the list including the additional items set
      * through {@link Map::push()} and {@link Map::unshift}.
-     *
-     * @return int
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return $this->list->count() +
             count($this->firstItems ?? []) +

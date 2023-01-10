@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use mysqli_result;
 use mysqli_stmt;
+use Traversable;
 
 /**
  * Provides a record-view for mysqli prepared statements
@@ -101,8 +102,7 @@ class MySQLStatement extends Query
         call_user_func_array([$this->statement, 'bind_result'], $variables ?? []);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         while ($this->statement->fetch()) {
             // Dereferenced row

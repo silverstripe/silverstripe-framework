@@ -166,8 +166,8 @@ class ListDecoratorTest extends SapphireTest
 
     public function testOffsetExists()
     {
-        $this->list->expects($this->once())->method('offsetExists')->with('foo')->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->offsetExists('foo'));
+        $this->list->expects($this->once())->method('offsetExists')->with('foo')->willReturn(true);
+        $this->assertSame(true, $this->decorator->offsetExists('foo'));
     }
 
     public function testGetList()

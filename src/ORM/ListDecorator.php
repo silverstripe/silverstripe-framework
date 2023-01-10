@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use SilverStripe\View\ViewableData;
 use LogicException;
+use Traversable;
 
 /**
  * A base class for decorators that wrap around a list to provide additional
@@ -50,28 +51,22 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this;
     }
 
-    // PROXIED METHODS ---------------------------------------------------------
-
-    #[\ReturnTypeWillChange]
-    public function offsetExists($key)
+    public function offsetExists(mixed $key): bool
     {
         return $this->list->offsetExists($key);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetGet($key)
+    public function offsetGet(mixed $key): mixed
     {
         return $this->list->offsetGet($key);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetSet($key, $value)
+    public function offsetSet(mixed $key, mixed $value): void
     {
         $this->list->offsetSet($key, $value);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($key)
+    public function offsetUnset(mixed $key): void
     {
         $this->list->offsetUnset($key);
     }
@@ -96,8 +91,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         $this->list->remove($itemObject);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return $this->list->getIterator();
     }
@@ -122,8 +116,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->count();
     }
 
-    #[\ReturnTypeWillChange]
-    public function Count()
+    public function Count(): int
     {
         return $this->list->count();
     }
