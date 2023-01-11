@@ -33,8 +33,6 @@ define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
 /**
  * Tests for the dependency injector
  *
- * Note that these are SS conversions of the existing Simpletest unit tests
- *
  * @author      marcus@silverstripe.com.au
  * @license     BSD License http://silverstripe.org/bsd-license/
  */

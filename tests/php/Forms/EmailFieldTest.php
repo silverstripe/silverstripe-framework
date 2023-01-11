@@ -60,9 +60,7 @@ class EmailFieldTest extends FunctionalTest
     }
 
     /**
-     * Check that input type='email' fields are submitted by SimpleTest
-     *
-     * @see SimpleTagBuilder::_createInputTag()
+     * Check that input type='email' fields are submitted
      */
     public function testEmailFieldPopulation()
     {

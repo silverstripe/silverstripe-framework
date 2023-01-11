@@ -646,14 +646,13 @@ class FormTest extends FunctionalTest
             count($tokenEls ?? []),
             'Token form field added for controller without disableSecurityToken()'
         );
-        $token = (string)$tokenEls[0];
         $response = $this->submitForm(
             'Form_Form',
             null,
             [
                 'Email' => 'test@test.com',
-                'SecurityID' => $token
-            ]
+            ],
+            withSecurityToken: true
         );
         $this->assertEquals(200, $response->getStatusCode(), 'Submission succeeds with security token');
     }

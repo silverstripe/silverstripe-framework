@@ -39,6 +39,7 @@
         "sminnee/callbacklist": "^0.1.1",
         "symfony/cache": "^6.1",
         "symfony/config": "^6.1",
+        "symfony/dom-crawler": "^6.1",
         "symfony/filesystem": "^6.1",
         "symfony/mailer": "^6.1",
         "symfony/mime": "^6.1",
