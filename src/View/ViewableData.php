@@ -7,6 +7,7 @@ use Exception;
 use InvalidArgumentException;
 use IteratorAggregate;
 use LogicException;
+use ReflectionObject;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
@@ -155,11 +156,20 @@ class ViewableData implements IteratorAggregate
     public function __set($property, $value)
     {
         $this->objCacheClear();
-        if ($this->hasMethod($method = "set$property")) {
+        $method = "set$property";
+
+        if ($this->hasMethod($method) && !$this->isPrivate($this, $method)) {
             $this->$method($value);
         } else {
             $this->setField($property, $value);
         }
+    }
+
+    private function isPrivate(object $class, string $method): bool
+    {
+        $class = new ReflectionObject($class);
+        
+        return $class->getMethod($method)->isPrivate();
     }
 
     /**

@@ -2,11 +2,13 @@
 
 namespace SilverStripe\View\Tests;
 
+use ReflectionMethod;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
+use SilverStripe\View\Tests\ViewableDataTestObject;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
@@ -204,5 +206,18 @@ class ViewableDataTest extends SapphireTest
         $container->setFailover($failover);
         $this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
         $this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
+    }
+
+    public function testIsPrivate()
+    {
+        $reflectionMethod = new ReflectionMethod(ViewableData::class, 'isPrivate');
+        $reflectionMethod->setAccessible(true);
+        $object = new ViewableDataTestObject();
+        
+        $output = $reflectionMethod->invokeArgs($object, [$object, 'privateMethod']);
+        $this->assertTrue($output, 'Method is not private');
+        
+        $output = $reflectionMethod->invokeArgs($object, [$object, 'publicMethod']);
+        $this->assertFalse($output, 'Method is private');
     }
 }
