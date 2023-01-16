@@ -2,11 +2,20 @@
 
 namespace SilverStripe\View\Tests\Parsers;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\HTML4Value;
 
 class HTML4ValueTest extends SapphireTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
+    }
+
     public function testInvalidHTMLSaving()
     {
         $value = new HTML4Value();
