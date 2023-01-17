@@ -2,8 +2,24 @@
 
 namespace SilverStripe\View\Parsers;
 
+use SilverStripe\Dev\Deprecation;
+
+/*
+ * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
+ */
 class HTML4Value extends HTMLValue
 {
+    public function __construct($fragment = null)
+    {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+        parent::__construct($fragment);
+    }
 
     /**
      * @param string $content
