@@ -331,7 +331,7 @@ class DataQuery
             "RecordClassName"
         );
 
-        // TODO: Versioned, Translatable, SiteTreeSubsites, etc, could probably be better implemented as subclasses
+        // TODO: Versioned, SiteTreeSubsites, etc, could probably be better implemented as subclasses
         // of DataQuery
 
         $obj = Injector::inst()->get($this->dataClass);

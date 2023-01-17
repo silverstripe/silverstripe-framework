@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\i18n\i18n;
 
 /**
- * Locale database field, mainly used in {@link Translatable} extension.
+ * Locale database field
  *
  * @todo Allowing showing locale values in different languages through Nice()
  */
