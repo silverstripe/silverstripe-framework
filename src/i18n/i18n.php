@@ -14,8 +14,6 @@ use InvalidArgumentException;
 /**
  * Base-class for storage and retrieval of translated entities.
  *
- * Please see the 'translatable' module for managing translations of database-content.
- *
  * <b>Usage</b>
  *
  * PHP:
@@ -37,8 +35,6 @@ use InvalidArgumentException;
  * </code>
  *
  * File-based i18n-translations always have a "locale" (e.g. 'en_US').
- * Common language names (e.g. 'en') are mainly used in the 'translatable' module
- * database-entities.
  *
  * <b>Text Collection</b>
  *
