@@ -4,22 +4,20 @@ namespace SilverStripe\View\Parsers;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\View\ViewableData;
+use Masterminds\HTML5;
 use DOMNodeList;
 use DOMXPath;
 use DOMDocument;
+use SilverStripe\View\HTML;
 
 /**
  * This class handles the converting of HTML fragments between a string and a DOMDocument based
  * representation.
  *
- * It's designed to allow dependency injection to replace the standard HTML4 version with one that
- * handles XHTML or HTML5 instead
- *
  * @mixin DOMDocument
  */
-abstract class HTMLValue extends ViewableData
+class HTMLValue extends ViewableData
 {
-
     public function __construct($fragment = null)
     {
         if ($fragment) {
@@ -28,7 +26,25 @@ abstract class HTMLValue extends ViewableData
         parent::__construct();
     }
 
-    abstract public function setContent($fragment);
+    /**
+     * @param string $content
+     * @return bool
+     */
+    public function setContent($content)
+    {
+        $content = preg_replace('#</?(html|head|body)[^>]*>#si', '', $content);
+        $html5 = new HTML5(['disable_html_ns' => true]);
+        $document = $html5->loadHTML(
+            '<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>' .
+            "<body>$content</body></html>"
+        );
+        if ($document) {
+            $this->setDocument($document);
+            return true;
+        }
+        $this->valid = false;
+        return false;
+    }
 
     /**
      * @return string

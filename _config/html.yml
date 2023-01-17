@@ -2,10 +2,6 @@
 Name: corehtml
 ---
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\View\Parsers\HTMLValue:
-    class: SilverStripe\View\Parsers\HTML4Value
-  # Shorthand
-  HTMLValue: '%$SilverStripe\View\Parsers\HTMLValue'
   SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
     class: SilverStripe\Forms\HTMLEditor\TinyMCEConfig
   SilverStripe\Forms\HTMLEditor\TinyMCEScriptGenerator: '%$SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator'

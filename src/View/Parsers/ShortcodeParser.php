@@ -658,8 +658,8 @@ class ShortcodeParser
             // use a proper DOM
             list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
-        /** @var HTMLValue $htmlvalue */
-            $htmlvalue = Injector::inst()->create('HTMLValue', $content);
+            /** @var HTMLValue $htmlvalue */
+            $htmlvalue = Injector::inst()->create(HTMLValue::class, $content);
 
             // Now parse the result into a DOM
             if (!$htmlvalue->isValid()) {

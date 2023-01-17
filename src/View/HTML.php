@@ -82,7 +82,7 @@ class HTML
             if ($content) {
                 throw new InvalidArgumentException("Void element \"{$tag}\" cannot have content");
             }
-            return "<{$tag}{$preparedAttributes} />";
+            return "<{$tag}{$preparedAttributes}>";
         }
 
         // Closed tag type

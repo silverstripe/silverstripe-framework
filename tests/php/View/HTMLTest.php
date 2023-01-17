@@ -14,7 +14,7 @@ class HTMLTest extends SapphireTest
             'name' => 'description',
             'content' => 'test tag',
         ]);
-        $this->assertEquals('<meta name="description" content="test tag" />', $tag);
+        $this->assertEquals('<meta name="description" content="test tag">', $tag);
     }
 
     public function testEmptyAttributes()
@@ -27,7 +27,7 @@ class HTMLTest extends SapphireTest
             'disabled' => false,
             'readonly' => true,
         ]);
-        $this->assertEquals('<meta value="0" max="3" readonly="1" />', $tag);
+        $this->assertEquals('<meta value="0" max="3" readonly="1">', $tag);
     }
 
     public function testNormalTag()
@@ -52,7 +52,7 @@ class HTMLTest extends SapphireTest
             'alt' => '',
         ]);
 
-        $this->assertEquals('<img src="example.png" alt="" />', $tag);
+        $this->assertEquals('<img src="example.png" alt="">', $tag);
     }
 
     public function testVoidContentError()
