@@ -1485,16 +1485,21 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function saveInto(DataObjectInterface $dataObject, $fieldList = null)
     {
+        $form = $this;
+        $dataObject->invokeWithExtensions('onBeforeFormSaveInto', $form, $fieldList);
+
         $dataFields = $this->fields->saveableFields();
         $lastField = null;
+
         if ($dataFields) {
             foreach ($dataFields as $field) {
-            // Skip fields that have been excluded
+                // Skip fields that have been excluded
                 if ($fieldList && is_array($fieldList) && !in_array($field->getName(), $fieldList ?? [])) {
                     continue;
                 }
 
                 $saveMethod = "save{$field->getName()}";
+
                 if ($field->getName() == "ClassName") {
                     $lastField = $field;
                 } elseif ($dataObject->hasMethod($saveMethod)) {
@@ -1504,9 +1509,12 @@ class Form extends ViewableData implements HasRequestHandler
                 }
             }
         }
+
         if ($lastField) {
             $lastField->saveInto($dataObject);
         }
+
+        $dataObject->invokeWithExtensions('onAfterFormSaveInto', $form, $fieldList);
     }
 
     /**
