@@ -117,34 +117,69 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($list->Count(), $count);
     }
 
-    public function testLimit()
+    public function limitDataProvider(): array
     {
-        $list = new ArrayList(
-            [
+        $all = [ ['Key' => 1], ['Key' => 2], ['Key' => 3] ];
+        list($one, $two, $three) = $all;
+
+        return [
+            'smaller limit' => [2, 0, [$one, $two]],
+            'limit equal to array' => [3, 0, $all],
+            'limit bigger than array' => [4, 0, $all],
+            'zero limit' => [0, 0, []],
+            'false limit' => [0, 0, []],
+            'null limit' => [null, 0, $all],
+
+            'smaller limit with offset' => [1, 1, [$two]],
+            'limit to end with offset' => [2, 1, [$two, $three]],
+            'bigger limit with offset' => [3, 1, [$two, $three]],
+            'offset beyond end of list' => [4, 3, []],
+            'zero limit with offset' => [0, 1, []],
+            'null limit with offset' => [null, 2, [$three]],
+
+        ];
+    }
+
+    /**
+     * @dataProvider limitDataProvider
+     */
+    public function testLimit($length, $offset, array $expected)
+    {
+        $data = [
             ['Key' => 1], ['Key' => 2], ['Key' => 3]
-            ]
+        ];
+        $list = new ArrayList($data);
+        $this->assertEquals(
+            $list->limit($length, $offset)->toArray(),
+            $expected
         );
         $this->assertEquals(
-            $list->limit(2, 1)->toArray(),
-            [
-            ['Key' => 2], ['Key' => 3]
-            ]
+            $list->toArray(),
+            $data,
+            'limit is immutable and does not affect the original list'
         );
     }
 
-    public function testLimitNull()
+    public function testLimitNegative()
     {
+        $this->expectException(\InvalidArgumentException::class, 'Calling limit with a negative length throws exception');
         $list = new ArrayList(
             [
                 ['Key' => 1], ['Key' => 2], ['Key' => 3]
             ]
         );
-        $this->assertEquals(
-            $list->limit(null, 0)->toArray(),
+        $list->limit(-1);
+    }
+
+    public function testLimitNegativeOffset()
+    {
+        $this->expectException(\InvalidArgumentException::class, 'Calling limit with a negative offset throws exception');
+        $list = new ArrayList(
             [
                 ['Key' => 1], ['Key' => 2], ['Key' => 3]
             ]
         );
+        $list->limit(1, -1);
     }
 
     public function testAddRemove()

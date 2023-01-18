@@ -752,12 +752,8 @@ class DataQuery
 
     /**
      * Set the limit of this query.
-     *
-     * @param int $limit
-     * @param int $offset
-     * @return $this
      */
-    public function limit($limit, $offset = 0)
+    public function limit(?int $limit, int $offset = 0): static
     {
         $this->query->setLimit($limit, $offset);
         return $this;

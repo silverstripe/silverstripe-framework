@@ -17,21 +17,16 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
     /**
      * @var SS_List
      */
-    protected $list;
+    protected SS_List&Sortable&Filterable&Limitable $list;
 
-    public function __construct(SS_List $list)
+    public function __construct(SS_List&Sortable&Filterable&Limitable $list)
     {
         $this->setList($list);
 
         parent::__construct();
     }
 
-    /**
-     * Returns the list this decorator wraps around.
-     *
-     * @return SS_List
-     */
-    public function getList()
+    public function getList(): SS_List&Sortable&Filterable&Limitable
     {
         return $this->list;
     }
@@ -44,7 +39,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      *
      * @return SS_List
      */
-    public function setList($list)
+    public function setList(SS_List&Sortable&Filterable&Limitable $list): self
     {
         $this->list = $list;
         $this->failover = $this->list;
@@ -246,9 +241,9 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $output;
     }
 
-    public function limit($limit, $offset = 0)
+    public function limit(?int $length, int $offset = 0): SS_List&Sortable&Filterable&Limitable
     {
-        return $this->list->limit($limit, $offset);
+        return $this->list->limit($length, $offset);
     }
 
     /**

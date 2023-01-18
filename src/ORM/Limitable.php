@@ -20,9 +20,9 @@ interface Limitable extends SS_List
      * If $offset is specified, then that many records at the beginning of the list will be skipped.
      * This matches the behaviour of the SQL LIMIT clause.
      *
-     * @param int $limit
-     * @param int $offset
-     * @return static
+     * If `$length` is null, then no limit is applied. If `$length` is 0, then an empty list is returned.
+     *
+     * @throws InvalidArgumentException if $length or offset are negative
      */
-    public function limit($limit, $offset = 0);
+    public function limit(?int $length, int $offset = 0): Limitable;
 }

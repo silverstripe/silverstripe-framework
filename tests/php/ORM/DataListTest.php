@@ -134,8 +134,11 @@ class DataListTest extends SapphireTest
         $check = $list->limit(1, 1);
         $this->assertEquals(1, $check->count());
 
+        $check = $list->limit(0);
+        $this->assertEquals(0, $check->count());
+
         $check = $list->limit(false);
-        $this->assertEquals(3, $check->count());
+        $this->assertEquals(0, $check->count());
 
         $check = $list->limit(null);
         $this->assertEquals(3, $check->count());

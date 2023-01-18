@@ -243,8 +243,9 @@ class ListDecoratorTest extends SapphireTest
 
     public function testLimit()
     {
-        $this->list->expects($this->once())->method('limit')->with(5, 3)->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->limit(5, 3));
+        $mockLimitedList = $this->list;
+        $this->list->expects($this->once())->method('limit')->with(5, 3)->willReturn($mockLimitedList);
+        $this->assertSame($mockLimitedList, $this->decorator->limit(5, 3));
     }
 
     public function testTotalItems()
