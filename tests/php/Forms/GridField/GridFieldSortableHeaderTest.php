@@ -71,13 +71,14 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $list = Team::get()->filter([ 'ClassName' => Team::class ]);
         $config = new GridFieldConfig_RecordEditor();
         $gridField = new GridField('testfield', 'testfield', $list, $config);
+        $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
 
         // Test normal sorting
+        $component->setFieldSorting(['Name' => 'City']);
         $state = $gridField->State->GridFieldSortableHeader;
         $state->SortColumn = 'City';
         $state->SortDirection = 'asc';
 
-        $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
         $listA = $component->getManipulatedData($gridField, $list);
 
         $state->SortDirection = 'desc';
@@ -93,6 +94,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         );
 
         // Test one relation 'deep'
+        $component->setFieldSorting(['Name' => 'Cheerleader.Name']);
         $state->SortColumn = 'Cheerleader.Name';
         $state->SortDirection = 'asc';
         $relationListA = $component->getManipulatedData($gridField, $list);
@@ -110,6 +112,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         );
 
         // Test two relations 'deep'
+        $component->setFieldSorting(['Name' => 'Cheerleader.Hat.Colour']);
         $state->SortColumn = 'Cheerleader.Hat.Colour';
         $state->SortDirection = 'asc';
         $relationListC = $component->getManipulatedData($gridField, $list);
@@ -139,6 +142,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
 
         // Test that inherited dataobjects will work correctly
+        $component->setFieldSorting(['Name' => 'Cheerleader.Hat.Colour']);
         $state->SortColumn = 'Cheerleader.Hat.Colour';
         $state->SortDirection = 'asc';
         $relationListA = $component->getManipulatedData($gridField, $list);
@@ -179,6 +183,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         );
 
         // Test subclasses of tables
+        $component->setFieldSorting(['Name' => 'CheerleadersMom.Hat.Colour']);
         $state->SortColumn = 'CheerleadersMom.Hat.Colour';
         $state->SortDirection = 'asc';
         $relationListB = $component->getManipulatedData($gridField, $list);
@@ -228,5 +233,22 @@ class GridFieldSortableHeaderTest extends SapphireTest
             ['Melbourne', 'Wellington', 'Auckland', 'Cologne'],
             $relationListBdesc->column('City')
         );
+    }
+
+    public function testSortColumnValidation()
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Invalid SortColumn: INVALID');
+
+        $list = Team::get()->filter([ 'ClassName' => Team::class ]);
+        $config = new GridFieldConfig_RecordEditor();
+        $gridField = new GridField('testfield', 'testfield', $list, $config);
+        $component = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
+
+        $state = $gridField->State->GridFieldSortableHeader;
+        $state->SortColumn = 'INVALID';
+        $state->SortDirection = 'asc';
+
+        $component->getManipulatedData($gridField, $list);
     }
 }

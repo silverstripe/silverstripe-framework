@@ -78,6 +78,7 @@ es:
     PLURALS:
       one: 'Un Objeto de Dato'
       other: '{count} Objetos de Datos'
+      many: '{count} Objetos de Datos'
     SINGULARNAME: 'Objeto de Dato'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
@@ -87,24 +88,30 @@ es:
     DAYS_SHORT_PLURALS:
       one: '{count} día'
       other: '{count} días'
+      many: '{count} días'
     HOURS_SHORT_PLURALS:
       one: '{count} hora'
       other: '{count} horas'
+      many: '{count} horas'
     LessThanMinuteAgo: 'Hace menos de un minuto'
     MINUTES_SHORT_PLURALS:
       one: '{count} minuto'
       other: '{count} minutos'
+      many: '{count} minutos'
     MONTHS_SHORT_PLURALS:
       one: '{count} mes'
       other: '{count} meses'
+      many: '{count} meses'
     SECONDS_SHORT_PLURALS:
       one: '{count} segundo'
       other: '{count} segundos'
+      many: '{count} segundos'
     TIMEDIFFAGO: 'hace {difference}'
     TIMEDIFFIN: 'en {difference}'
     YEARS_SHORT_PLURALS:
       one: '{count} año'
       other: '{count} años'
+      many: '{count} años'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Cualquiera
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -135,6 +142,7 @@ es:
     PLURALS:
       one: 'Un Grupo'
       other: '{count} Grupos'
+      many: '{count} Grupos'
     Parent: 'Grupo Padre'
     RolesAddEditLink: 'Gestionar Roles'
     SINGULARNAME: Grupo
@@ -147,6 +155,7 @@ es:
     PLURALS:
       one: 'Un intento de inicio de sesión'
       other: '{count} Intentos de inicios de sesión'
+      many: '{count} Intentos de inicios de sesión'
     SINGULARNAME: 'Intento de ingreso'
     Status: Estado
   SilverStripe\Security\Member:
@@ -176,6 +185,7 @@ es:
     PLURALS:
       one: 'Un Miembro'
       other: '{count} Miembros'
+      many: '{count} Miembros'
     SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Su contraseña ha sido cambiada'
     SUBJECTPASSWORDRESET: 'Enlace para restaurar su contraseña'
@@ -192,6 +202,7 @@ es:
     PLURALS:
       one: 'Una Contraseña de Miembro'
       other: '{count} Contraseñas de Miembros'
+      many: '{count} Contraseñas de Miembros'
     SINGULARNAME: 'Contraseña del Miembro'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: {chars}'
@@ -206,6 +217,7 @@ es:
     PLURALS:
       one: 'Un Permiso'
       other: '{count} Permisos'
+      many: '{count} Permisos'
     SINGULARNAME: Permiso
     UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -219,6 +231,7 @@ es:
     PLURALS:
       one: 'Un Rol'
       other: '{count} Roles'
+      many: '{count} Roles'
     SINGULARNAME: Rol
     Title: Título
   SilverStripe\Security\PermissionRoleCode:
@@ -226,6 +239,7 @@ es:
     PLURALS:
       one: 'Un Código de Rol de Permiso'
       other: '{count} Códigos de Roles de Permiso'
+      many: '{count} Códigos de Roles de Permiso'
     PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
     SINGULARNAME: 'Código del Rol de Permiso'
   SilverStripe\Security\RememberLoginHash:
@@ -233,6 +247,7 @@ es:
     PLURALS:
       one: 'Un Hash de inicio de sesión'
       other: '{count} Hashes de inicio de sesión'
+      many: '{count} Hashes de inicio de sesión'
     SINGULARNAME: 'Hash de inicio de sesión'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'

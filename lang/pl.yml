@@ -62,6 +62,7 @@ pl:
     VALIDATIONSTRONGPASSWORD: 'Hasła muszą mieć przynajmniej jedną cyfrę oraz jeden znak alfanumeryczny.'
     VALIDATOR: Walidator
     VALIDCURRENCY: 'Proszę podaj prawidłową walutę'
+    FIELDISREQUIRED: 'Pole {name} jest wymagane'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'na przykład {format}'
     NONE: brak
@@ -97,10 +98,13 @@ pl:
     DeletePermissionsFailure: 'Brak uprawnień do usuwania'
     Deleted: 'Usunięto {type} {name}'
     Save: Zapisz
+    Saved: 'Zapisane {name} {link}'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
     NEW: Dodaj
     NEXT: 'Przejdź do następnego rekordu'
     PREVIOUS: 'Przejdź do poprzedniego rekordu'
+    EditPermissionsFailure: 'Wygląda na to, że nie masz wystarczających uprawnień, aby zmienić {ObjectTitle}'
+    ViewPermissionsFailure: 'Wygląda na to, że nie masz wystarczających uprawnień, aby zobaczyć {ObjectTitle}'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Zmień
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
@@ -232,6 +236,7 @@ pl:
     Sort: 'Kolejność Sortowania'
     has_many_Permissions: Zezwolenia
     many_many_Members: Użytkownicy
+    ValidationIdentifierAlreadyExists: 'Grupa ({group}) już istnieje z tym samym {identifier}'
   SilverStripe\Security\LoginAttempt:
     Email: 'Adres e-mail'
     EmailHashed: 'Adres e-mail (hashed)'
@@ -286,6 +291,10 @@ pl:
     db_LockedOutUntil: 'Zablokowany do'
     db_Password: Hasło
     db_PasswordExpiry: 'Data wygaśnięcia hasła'
+    KEEP_ME_SIGNED_IN: 'Zapamiętaj mnie / Nie wylogowuj mnie przez {count} dni'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Pozostaniesz uwierzytelniony na tym urządzeniu przez {count} dni. Używaj tej funkcji tylko wtedy, gdy ufasz urządzeniu, z którego korzystasz.'
+    VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje {identifier}'
+    WELCOMEBACK: 'Witaj ponownie, {firstname}'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Formularz logowania użytkownika CMS'
     BUTTONFORGOTPASSWORD: 'Zapomniałeś hasła?'
@@ -370,3 +379,22 @@ pl:
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
     PASSWORDRESETSENTHEADER: 'Link resetowania hasła wysłany'
     PASSWORDRESETSENTTEXT: 'Dziękujemy! Link resetujący hasło został wysłany do ''{email}'', o ile konto użytkownika dla takiego e-maila istnieje.'
+    NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: 'Parametr GET „{key}”'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'Adres URL to: „{url}”'
+    CONFIRMATION_NAME: 'Adres URL jest chroniony'
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
+    CONFIRMATION_DESCRIPTION: 'Pełny adres URL to: „{url}”'
+    CONFIRMATION_NAME: 'URL zaczyna się od „{path}”'
+  SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
+    BEST_FIT: 'Dopasuj optymalnie'
+    ORIGINAL: Oryginał
+    PIXEL_WIDTH: '{width} pikseli'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Wartość {name} nie może przekraczać {maxLength} znaków długości'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: ...
+  SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
+    INVALID_URL: 'Podczas ładowania pliku wystąpił problem.'
