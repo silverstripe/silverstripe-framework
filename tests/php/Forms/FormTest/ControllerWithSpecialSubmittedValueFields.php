@@ -18,9 +18,6 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\SSViewer;
 
-/**
- * @skipUpgrade
- */
 class ControllerWithSpecialSubmittedValueFields extends Controller implements TestOnly
 {
     public function __construct()

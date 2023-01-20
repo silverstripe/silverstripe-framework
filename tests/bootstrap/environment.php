@@ -4,7 +4,6 @@
 
 use SilverStripe\Core\Environment;
 
-/** @skipUpgrade */
 if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABASE_USERNAME')) {
     // The default settings let us define the database config via environment vars
     // Database connection, including PDO and legacy ORM support

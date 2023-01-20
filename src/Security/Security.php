@@ -459,7 +459,6 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function Link($action = null)
     {
-        /** @skipUpgrade */
         $link = Controller::join_links(Director::baseURL(), "Security", $action);
         $this->extend('updateLink', $link, $action);
         return $link;
@@ -549,7 +548,6 @@ class Security extends Controller implements TemplateGlobalProvider
         /** @var Page $holderPage */
         $holderPage = Injector::inst()->create($pageClass);
         $holderPage->Title = $title;
-        /** @skipUpgrade */
         $holderPage->URLSegment = 'Security';
         // Disable ID-based caching  of the log-in page by making it a random number
         $holderPage->ID = -1 * random_int(1, 10000000);
@@ -770,7 +768,6 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Aggregate tabbed forms from each handler to fragments ready to be rendered.
      *
-     * @skipUpgrade
      * @param array $results
      * @return array
      */
@@ -1007,7 +1004,6 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Determine the list of templates to use for rendering the given action.
      *
-     * @skipUpgrade
      * @param string $action
      * @return array Template list
      */

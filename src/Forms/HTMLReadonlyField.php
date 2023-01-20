@@ -17,7 +17,6 @@ class HTMLReadonlyField extends ReadonlyField
     protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
 
     /**
-     * @skipUpgrade
      * @var string
      */
     protected $schemaComponent = 'HtmlReadonlyField';

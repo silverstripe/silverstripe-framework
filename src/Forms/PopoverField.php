@@ -18,7 +18,6 @@ class PopoverField extends FieldGroup
     /**
      * Use custom react component
      *
-     * @skipUpgrade
      * @var string
      */
     protected $schemaComponent = 'PopoverField';

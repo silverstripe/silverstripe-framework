@@ -53,7 +53,6 @@ class CMSSecurity extends Security
 
     public function Link($action = null)
     {
-        /** @skipUpgrade */
         return Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
     }
 

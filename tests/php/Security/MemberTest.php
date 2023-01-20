@@ -60,9 +60,6 @@ class MemberTest extends FunctionalTest
         ]);
     }
 
-    /**
-     * @skipUpgrade
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -859,9 +856,6 @@ class MemberTest extends FunctionalTest
         $member = Member::singleton();
         $fields = $member->getCMSFields();
 
-        /**
-         * @skipUpgrade
-         */
         $this->assertNotNull($fields->dataFieldByName('Email'), 'Scaffolded fields are retained');
         $this->assertNull($fields->dataFieldByName('Salt'), 'Field modifications run correctly');
         $this->assertNotNull($fields->dataFieldByName('TestMemberField'), 'Extension is applied correctly');

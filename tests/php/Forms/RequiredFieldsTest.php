@@ -7,7 +7,6 @@ use SilverStripe\Forms\RequiredFields;
 
 /**
  * @todo Test the validation method php()
- * @skipUpgrade
  */
 class RequiredFieldsTest extends SapphireTest
 {

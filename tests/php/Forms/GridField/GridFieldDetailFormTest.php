@@ -18,9 +18,6 @@ use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PolymorphicPeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 
-/**
- * @skipUpgrade
- */
 class GridFieldDetailFormTest extends FunctionalTest
 {
     protected static $fixture_file = 'GridFieldDetailFormTest.yml';
@@ -396,7 +393,6 @@ class GridFieldDetailFormTest extends FunctionalTest
         );
         // Note: A lot of scaffolding to execute the tested logic,
         // due to the coupling of form creation with itemRequest handling (and its context)
-        /** @skipUpgrade */
         $itemRequest = new GridFieldDetailForm_ItemRequest(
             GridField::create('Categories', 'Categories'),
             $component,

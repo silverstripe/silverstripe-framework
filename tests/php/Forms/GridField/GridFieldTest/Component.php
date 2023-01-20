@@ -37,7 +37,6 @@ class Component implements GridField_ColumnProvider, GridField_ActionProvider, T
     }
 
     /**
-     * @skipUpgrade
      * @param GridField $gridField
      * @return array
      */

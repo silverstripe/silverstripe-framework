@@ -50,7 +50,6 @@ class CompositeField extends FormField
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
-    /** @skipUpgrade */
     protected $schemaComponent = 'CompositeField';
 
     public function __construct($children = null)
@@ -142,7 +141,6 @@ class CompositeField extends FormField
                 $count++;
             }
         }
-        /** @skipUpgrade */
         if ($count === 1) {
             $compositeTitle .= 'Group';
         }
@@ -199,7 +197,6 @@ class CompositeField extends FormField
 
     public function extraClass()
     {
-        /** @skipUpgrade */
         $classes = ['field', 'CompositeField', parent::extraClass()];
         if ($this->columnCount) {
             $classes[] = 'multicolumn';

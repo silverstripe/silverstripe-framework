@@ -83,9 +83,6 @@ class RSSFeedTest extends SapphireTest
         );
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testRenderWithTemplate()
     {
         $rssFeed = new RSSFeed(new ArrayList(), "", "", "");

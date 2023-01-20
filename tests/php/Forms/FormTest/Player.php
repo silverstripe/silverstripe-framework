@@ -5,9 +5,6 @@ namespace SilverStripe\Forms\Tests\FormTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
 
-/**
- * @skipUpgrade
- */
 class Player extends DataObject implements TestOnly
 {
 

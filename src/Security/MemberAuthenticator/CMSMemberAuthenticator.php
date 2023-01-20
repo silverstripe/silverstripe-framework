@@ -18,7 +18,6 @@ class CMSMemberAuthenticator extends MemberAuthenticator
     }
 
     /**
-     * @skipUpgrade
      * @param array $data
      * @param ValidationResult|null $result
      * @param Member|null $member

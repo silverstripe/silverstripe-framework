@@ -3764,7 +3764,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     ? $labels[$identifier] : FormField::name_to_label($identifier);
             }
             if (!isset($rewrite[$identifier]['filter'])) {
-                /** @skipUpgrade */
                 $rewrite[$identifier]['filter'] = 'PartialMatchFilter';
             }
         }
@@ -3943,7 +3942,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         foreach ($this->searchableFields() as $name => $spec) {
             if (empty($spec['filter'])) {
-                /** @skipUpgrade */
                 $filters[$name] = 'PartialMatchFilter';
             } elseif ($spec['filter'] instanceof SearchFilter) {
                 $filters[$name] = $spec['filter'];

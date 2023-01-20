@@ -10,9 +10,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 
-/**
- * @skipUpgrade
- */
 class ControllerWithSecurityToken extends Controller implements TestOnly
 {
 

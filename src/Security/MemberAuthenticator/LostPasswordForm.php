@@ -19,7 +19,6 @@ class LostPasswordForm extends MemberLoginForm
      * Create a single EmailField form that has the capability
      * of using the MemberLoginForm Authenticator
      *
-     * @skipUpgrade
      * @return FieldList
      */
     public function getFormFields()

@@ -950,9 +950,6 @@ class DataObjectTest extends SapphireTest
         $this->assertFalse($obj->isChanged('FirstName'));
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testIsChanged()
     {
         $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
@@ -1707,9 +1704,6 @@ class DataObjectTest extends SapphireTest
         // Test invalid classes fail
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Controller is not a valid subclass of DataObject');
-        /**
-         * @skipUpgrade
-         */
         $dataObject->newClassInstance('Controller');
     }
 

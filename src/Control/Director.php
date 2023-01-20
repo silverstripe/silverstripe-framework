@@ -25,7 +25,6 @@ use SilverStripe\View\TemplateGlobalProvider;
  *
  * @see Director::handleRequest()
  * @see Director::$rules
- * @skipUpgrade
  */
 class Director implements TemplateGlobalProvider
 {

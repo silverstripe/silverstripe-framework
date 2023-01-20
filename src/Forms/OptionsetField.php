@@ -56,7 +56,6 @@ use SilverStripe\View\ArrayData;
  */
 class OptionsetField extends SingleSelectField
 {
-    /** @skipUpgrade */
     protected $schemaComponent = 'OptionsetField';
 
     /**

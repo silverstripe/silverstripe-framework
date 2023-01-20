@@ -16,7 +16,6 @@ class MySQLSchemaManager extends DBSchemaManager
      * Identifier for this schema, used for configuring schema-specific table
      * creation options
      *
-     * @skipUpgrade
      */
     const ID = 'MySQLDatabase';
 

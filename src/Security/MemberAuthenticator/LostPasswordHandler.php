@@ -119,7 +119,6 @@ class LostPasswordHandler extends RequestHandler
     /**
      * Factory method for the lost password form
      *
-     * @skipUpgrade
      * @return Form Returns the lost password form
      */
     public function lostPasswordForm()

@@ -8,9 +8,6 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionCheckboxSetField;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @skipUpgrade
- */
 class PermissionCheckboxSetFieldTest extends SapphireTest
 {
     protected static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';

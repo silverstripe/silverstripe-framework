@@ -52,7 +52,6 @@ class MemberLoginForm extends BaseLoginForm
     /**
      * Constructor
      *
-     * @skipUpgrade
      * @param RequestHandler $controller The parent controller, necessary to
      *                               create the appropriate form action tag.
      * @param string $authenticatorClass Authenticator for this LoginForm
@@ -119,7 +118,6 @@ class MemberLoginForm extends BaseLoginForm
     /**
      * Build the FieldList for the login form
      *
-     * @skipUpgrade
      * @return FieldList
      */
     protected function getFormFields()

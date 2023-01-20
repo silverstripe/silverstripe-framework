@@ -34,9 +34,6 @@ use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
-/**
- * @skipUpgrade
- */
 class FormTest extends FunctionalTest
 {
 
@@ -841,9 +838,6 @@ class FormTest extends FunctionalTest
         $this->assertEquals('bar', $attrs['foo']);
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testButtonClicked()
     {
         $form = $this->getStubForm();

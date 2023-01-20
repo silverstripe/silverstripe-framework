@@ -10,9 +10,6 @@ use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 
-/**
- * @skipUpgrade
- */
 class DBDateTest extends SapphireTest
 {
     protected $oldError = null;

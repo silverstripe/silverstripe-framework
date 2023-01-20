@@ -7,7 +7,6 @@ use SilverStripe\Dev\Install\MySQLDatabaseConfigurationHelper;
 // Register MySQLi as a database adapter (listed as second option in Dev/Install/config-form.html)
 DatabaseAdapterRegistry::register(
     [
-        /** @skipUpgrade */
         'class' => 'MySQLDatabase',
         'module' => 'framework',
         'title' => 'MySQL 5.0+ (using MySQLi)',

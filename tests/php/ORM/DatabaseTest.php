@@ -10,9 +10,6 @@ use Exception;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Tests\DatabaseTest\MyObject;
 
-/**
- * @skipUpgrade
-*/
 class DatabaseTest extends SapphireTest
 {
 

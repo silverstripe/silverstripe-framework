@@ -53,7 +53,6 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $member->Password = "valueB";
         $member->write();
 
-        /** @skipUpgrade */
         $form = new Form(Controller::curr(), 'Form', new FieldList($field), new FieldList());
         $form->loadDataFrom($member);
 
@@ -137,7 +136,6 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
     public function testFormValidation()
     {
-        /** @skipUpgrade */
         $form = new Form(
             Controller::curr(),
             'Form',

@@ -33,9 +33,6 @@ class FormActionController extends Controller implements TestOnly
         return 'disallowedcontrollermethod';
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function Form()
     {
         return new Form(

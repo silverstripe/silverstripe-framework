@@ -17,9 +17,6 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\SSViewer;
 
-/**
- * @skipUpgrade
- */
 class TestController extends Controller implements TestOnly
 {
     public function __construct()

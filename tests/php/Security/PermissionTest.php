@@ -9,9 +9,6 @@ use SilverStripe\Security\PermissionCheckboxSetField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @skipUpgrade
- */
 class PermissionTest extends SapphireTest
 {
 

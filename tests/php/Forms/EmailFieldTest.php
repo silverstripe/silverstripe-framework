@@ -8,9 +8,6 @@ use Exception;
 use PHPUnit\Framework\AssertionFailedError;
 use SilverStripe\Forms\Tests\EmailFieldTest\TestValidator;
 
-/**
- * @skipUpgrade
- */
 class EmailFieldTest extends FunctionalTest
 {
 

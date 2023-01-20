@@ -27,9 +27,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         parent::setUpBeforeClass();
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testTableCaseFixed()
     {
         DB::quiet();
@@ -194,7 +191,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest
     /**
      * Tests the generation of the ClassName spec and ensure it's not unnecessarily influenced
      * by the order of classnames of existing records
-     * @skipUpgrade
      */
     public function testClassNameSpecGeneration()
     {

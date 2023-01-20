@@ -7,7 +7,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyList;
 
 /**
- * @skipUpgrade
  *
  * @method ManyManyList Players()
  */

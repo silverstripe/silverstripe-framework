@@ -15,7 +15,6 @@ use SilverStripe\Dev\FunctionalTest;
 /**
  * Tests the {@link HTTP} class
  *
- * @skipUpgrade
  */
 class HTTPTest extends FunctionalTest
 {

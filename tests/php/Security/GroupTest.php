@@ -45,9 +45,6 @@ class GroupTest extends FunctionalTest
         $this->assertNull($g3->Code, 'Default title doesnt trigger attribute setting');
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testMemberGroupRelationForm()
     {
         $this->logInAs($this->idFromFixture(TestMember::class, 'admin'));

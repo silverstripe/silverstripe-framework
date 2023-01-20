@@ -563,7 +563,6 @@ class HTTPRequest implements ArrayAccess
                     return false;
                 }
 
-                /** @skipUpgrade */
                 $key = "Controller";
                 if ($varName === '*' || $varName === '@') {
                     if (isset($patternParts[$i + 1])) {

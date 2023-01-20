@@ -6,9 +6,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\TestOnly;
 
-/**
- * @skipUpgrade
- */
 class NullController extends Controller implements TestOnly
 {
 

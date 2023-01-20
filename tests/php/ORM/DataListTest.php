@@ -27,9 +27,6 @@ use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
 use SilverStripe\ORM\Tests\ManyManyListTest\Category;
 
-/**
- * @skipUpgrade
- */
 class DataListTest extends SapphireTest
 {
 
@@ -1122,9 +1119,6 @@ class DataListTest extends SapphireTest
         $this->assertEquals(2, count($list->exclude('ID', $id) ?? []));
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testFilterByNull()
     {
         $list = Fan::get();
