@@ -651,7 +651,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         $settings = $this->getSettings();
 
         // https://www.tiny.cloud/docs/tinymce/6/url-handling/#document_base_url
-        $settings['document_base_url'] = Director::absoluteBaseURL();
+        $settings['document_base_url'] = rtrim(Director::absoluteBaseURL(), '/') . '/';
 
         // https://www.tiny.cloud/docs/tinymce/6/apis/tinymce.root/#properties
         $baseResource = $this->getTinyMCEResource();

@@ -123,14 +123,14 @@ class SecurityTokenTest extends SapphireTest
     {
         $t = new SecurityToken();
 
-        $url = 'http://absolute.tld/action/';
+        $url = 'http://absolute.tld/action';
         $this->assertEquals(
             sprintf('%s?%s=%s', $url, $t->getName(), $t->getValue()),
             $t->addToUrl($url),
             'Urls without existing GET parameters'
         );
 
-        $url = 'http://absolute.tld/?getparam=1';
+        $url = 'http://absolute.tld?getparam=1';
         $this->assertEquals(
             sprintf('%s&%s=%s', $url, $t->getName(), $t->getValue()),
             $t->addToUrl($url),

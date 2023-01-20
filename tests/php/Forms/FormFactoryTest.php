@@ -56,7 +56,7 @@ class FormFactoryTest extends SapphireTest
         $previewLink = $form->Fields()->fieldByName('PreviewLink');
         $this->assertInstanceOf(LiteralField::class, $previewLink);
         $this->assertEquals(
-            '<a href="FormFactoryTest_TestController/preview/" rel="external" target="_blank">Preview</a>',
+            '<a href="FormFactoryTest_TestController/preview" rel="external" target="_blank">Preview</a>',
             $previewLink->getContent()
         );
 

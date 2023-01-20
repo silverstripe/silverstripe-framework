@@ -76,7 +76,7 @@ class TaskRunner extends Controller
 
         foreach ($tasks as $task) {
             $list->push(ArrayData::create([
-                'TaskLink' => $baseUrl . 'dev/tasks/' . $task['segment'],
+                'TaskLink' => Controller::join_links($baseUrl, 'dev/tasks/', $task['segment']),
                 'Title' => $task['title'],
                 'Description' => $task['description'],
             ]));

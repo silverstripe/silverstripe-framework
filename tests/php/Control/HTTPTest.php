@@ -244,36 +244,41 @@ class HTTPTest extends FunctionalTest
      */
     public function testAbsoluteURLsCSS()
     {
-        $this->withBaseURL(
-            'http://www.silverstripe.org/',
-            function () {
+        foreach ([true, false] as $withTrailingSlash) {
+            // The results should be the same with both settings, since files should never have trailing slashes.
+            Controller::config()->set('add_trailing_slash', $withTrailingSlash);
 
-                // background-image
-                // Note that using /./ in urls is absolutely acceptable
-                $this->assertEquals(
-                    '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">' . 'Content</div>',
-                    HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
-                );
+            $this->withBaseURL(
+                'http://www.silverstripe.org/',
+                function () {
 
-                // background
-                $this->assertEquals(
-                    '<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">Content</div>',
-                    HTTP::absoluteURLs('<div style="background: url(\'images/mybackground.gif\');">Content</div>')
-                );
+                    // background-image
+                    // Note that using /./ in urls is absolutely acceptable
+                    $this->assertEquals(
+                        '<div style="background-image: url(\'http://www.silverstripe.org/./images/mybackground.gif\');">' . 'Content</div>',
+                        HTTP::absoluteURLs('<div style="background-image: url(\'./images/mybackground.gif\');">Content</div>')
+                    );
 
-                // list-style-image
-                $this->assertEquals(
-                    '<div style=\'background: url(http://www.silverstripe.org/list.png);\'>Content</div>',
-                    HTTP::absoluteURLs('<div style=\'background: url(list.png);\'>Content</div>')
-                );
+                    // background
+                    $this->assertEquals(
+                        '<div style="background: url(\'http://www.silverstripe.org/images/mybackground.gif\');">Content</div>',
+                        HTTP::absoluteURLs('<div style="background: url(\'images/mybackground.gif\');">Content</div>')
+                    );
 
-                // list-style
-                $this->assertEquals(
-                    '<div style=\'background: url("http://www.silverstripe.org/./assets/list.png");\'>Content</div>',
-                    HTTP::absoluteURLs('<div style=\'background: url("./assets/list.png");\'>Content</div>')
-                );
-            }
-        );
+                    // list-style-image
+                    $this->assertEquals(
+                        '<div style=\'background: url(http://www.silverstripe.org/list.png);\'>Content</div>',
+                        HTTP::absoluteURLs('<div style=\'background: url(list.png);\'>Content</div>')
+                    );
+
+                    // list-style
+                    $this->assertEquals(
+                        '<div style=\'background: url("http://www.silverstripe.org/./assets/list.png");\'>Content</div>',
+                        HTTP::absoluteURLs('<div style=\'background: url("./assets/list.png");\'>Content</div>')
+                    );
+                }
+            );
+        }
     }
 
     /**
@@ -281,70 +286,75 @@ class HTTPTest extends FunctionalTest
      */
     public function testAbsoluteURLsAttributes()
     {
-        $this->withBaseURL(
-            'http://www.silverstripe.org/',
-            function () {
-                //empty links
-                $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/">test</a>',
-                    HTTP::absoluteURLs('<a href="">test</a>')
-                );
+        foreach ([true, false] as $withTrailingSlash) {
+            Controller::config()->set('add_trailing_slash', $withTrailingSlash);
+            $slash = $withTrailingSlash ? '/' : '';
 
-                $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/">test</a>',
-                    HTTP::absoluteURLs('<a href="/">test</a>')
-                );
+            $this->withBaseURL(
+                'http://www.silverstripe.org/',
+                function () use ($slash) {
+                    //empty links
+                    $this->assertEquals(
+                        "<a href=\"http://www.silverstripe.org{$slash}\">test</a>",
+                        HTTP::absoluteURLs('<a href="">test</a>')
+                    );
 
-                //relative
-                $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/">test</a>',
-                    HTTP::absoluteURLs('<a href="./">test</a>')
-                );
-                $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/">test</a>',
-                    HTTP::absoluteURLs('<a href=".">test</a>')
-                );
+                    $this->assertEquals(
+                        "<a href=\"http://www.silverstripe.org{$slash}\">test</a>",
+                        HTTP::absoluteURLs('<a href="/">test</a>')
+                    );
 
-                // links
-                $this->assertEquals(
-                    '<a href=\'http://www.silverstripe.org/blog/\'>SS Blog</a>',
-                    HTTP::absoluteURLs('<a href=\'/blog/\'>SS Blog</a>')
-                );
+                    //relative
+                    $this->assertEquals(
+                        "<a href=\"http://www.silverstripe.org{$slash}\">test</a>",
+                        HTTP::absoluteURLs('<a href="./">test</a>')
+                    );
+                    $this->assertEquals(
+                        "<a href=\"http://www.silverstripe.org{$slash}\">test</a>",
+                        HTTP::absoluteURLs('<a href=".">test</a>')
+                    );
 
-                // background
-                // Note that using /./ in urls is absolutely acceptable
-                $this->assertEquals(
-                    '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">' . 'SS Blog</div>',
-                    HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
-                );
+                    // links
+                    $this->assertEquals(
+                        "<a href='http://www.silverstripe.org/blog{$slash}'>SS Blog</a>",
+                        HTTP::absoluteURLs('<a href=\'/blog/\'>SS Blog</a>')
+                    );
 
-                //check dot segments
-                // Assumption: dots are not removed
-                //if they were, the url should be: http://www.silverstripe.org/abc
-                $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/test/page/../../abc">Test</a>',
-                    HTTP::absoluteURLs('<a href="test/page/../../abc">Test</a>')
-                );
+                    // background
+                    // Note that using /./ in urls is absolutely acceptable
+                    $this->assertEquals(
+                        '<div background="http://www.silverstripe.org/./themes/silverstripe/images/nav-bg-repeat-2.png">' . 'SS Blog</div>',
+                        HTTP::absoluteURLs('<div background="./themes/silverstripe/images/nav-bg-repeat-2.png">SS Blog</div>')
+                    );
 
-                // image
-                $this->assertEquals(
-                    '<img src=\'http://www.silverstripe.org/themes/silverstripe/images/logo-org.png\' />',
-                    HTTP::absoluteURLs('<img src=\'themes/silverstripe/images/logo-org.png\' />')
-                );
+                    //check dot segments
+                    // Assumption: dots are not removed
+                    //if they were, the url should be: http://www.silverstripe.org/abc
+                    $this->assertEquals(
+                        "<a href=\"http://www.silverstripe.org/test/page/../../abc{$slash}\">Test</a>",
+                        HTTP::absoluteURLs('<a href="test/page/../../abc">Test</a>')
+                    );
 
-                // link
-                $this->assertEquals(
-                    '<link href=http://www.silverstripe.org/base.css />',
-                    HTTP::absoluteURLs('<link href=base.css />')
-                );
+                    // image
+                    $this->assertEquals(
+                        '<img src=\'http://www.silverstripe.org/themes/silverstripe/images/logo-org.png\' />',
+                        HTTP::absoluteURLs('<img src=\'themes/silverstripe/images/logo-org.png\' />')
+                    );
 
-                // Test special characters are retained
-                $this->assertEquals(
-                    '<a href="http://www.silverstripe.org/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>',
-                    HTTP::absoluteURLs('<a href="/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>')
-                );
-            }
-        );
+                    // link
+                    $this->assertEquals(
+                        '<link href=http://www.silverstripe.org/base.css />',
+                        HTTP::absoluteURLs('<link href=base.css />')
+                    );
+
+                    // Test special characters are retained
+                    $this->assertEquals(
+                        "<a href=\"http://www.silverstripe.org/Security/changepassword{$slash}?m=3&amp;t=7214fdfde\">password reset link</a>",
+                        HTTP::absoluteURLs('<a href="/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>')
+                    );
+                }
+            );
+        }
     }
 
     /**

@@ -135,8 +135,9 @@ class DebugView
         $pathLinks = [];
         foreach ($parts as $part) {
             if ($part != '') {
-                $pathPart .= "$part/";
-                $pathLinks[] = "<a href=\"$base$pathPart\">$part</a>";
+                $pathPart = Controller::join_links($pathPart, $part);
+                $href = Controller::join_links($base, $pathPart);
+                $pathLinks[] = "<a href=\"$href\">$part</a>";
             }
         }
         return implode('&nbsp;&rarr;&nbsp;', $pathLinks);

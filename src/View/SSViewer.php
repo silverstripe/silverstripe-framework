@@ -825,7 +825,8 @@ PHP;
      */
     public static function get_base_tag($contentGeneratedSoFar)
     {
-        $base = Director::absoluteBaseURL();
+        // Base href should always have a trailing slash
+        $base = rtrim(Director::absoluteBaseURL(), '/') . '/';
 
         // Is the document XHTML?
         if (preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar ?? '')) {

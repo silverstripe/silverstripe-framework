@@ -344,7 +344,8 @@ class PaginatedListTest extends SapphireTest
     public function testFirstLink()
     {
         $list = new PaginatedList(new ArrayList());
-        $this->assertStringContainsString('start=0', $list->FirstLink());
+        $link = $list->FirstLink();
+        $this->assertStringContainsString('start=0', $link);
     }
 
     public function testFirstLinkContainsCurrentGetParameters()

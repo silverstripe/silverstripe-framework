@@ -62,7 +62,7 @@ class TinyMCECombinedGeneratorTest extends SapphireTest
         $this->assertMatchesRegularExpression('#_tinymce/tinymce-testconfig-[0-9a-z]{10,10}#', $generator->generateFilename($c));
         $content = $generator->generateContent($c);
         $this->assertStringContainsString(
-            "var baseURL = baseTag.length ? baseTag[0].baseURI : 'http://www.mysite.com/basedir/';\n",
+            "var baseURL = baseTag.length ? baseTag[0].baseURI : 'http://www.mysite.com/basedir';\n",
             $content
         );
         // Main script file
