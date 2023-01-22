@@ -11,7 +11,6 @@ class LabelField extends DatalessField
 {
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
-    /** @skipUpgrade */
     protected $schemaComponent = 'LabelField';
 
     /**
@@ -32,7 +31,6 @@ class LabelField extends DatalessField
             }
 
             // Prefix name to avoid collisions.
-            /** @skipUpgrade */
             $name = 'LabelField' . $title;
         }
 

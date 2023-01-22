@@ -180,7 +180,6 @@ class ChangePasswordHandler extends RequestHandler
     /**
      * Factory method for the lost password form
      *
-     * @skipUpgrade
      * @return ChangePasswordForm Returns the lost password form
      */
     public function changePasswordForm()

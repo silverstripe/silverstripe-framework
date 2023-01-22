@@ -28,7 +28,6 @@ class Member_Validator extends RequiredFields
      * Fields that are required by this validator
      * @config
      * @var array
-     * @skipUpgrade
      */
     protected $customRequired = [
         'FirstName',

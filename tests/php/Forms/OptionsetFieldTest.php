@@ -35,9 +35,6 @@ class OptionsetFieldTest extends SapphireTest
         );
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testValidation()
     {
         $field = OptionsetField::create(

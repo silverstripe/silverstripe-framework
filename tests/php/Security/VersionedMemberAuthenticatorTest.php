@@ -22,9 +22,6 @@ use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
 
-/**
- * @skipUpgrade
- */
 class VersionedMemberAuthenticatorTest extends SapphireTest
 {
 

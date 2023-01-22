@@ -25,7 +25,6 @@ use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
 /**
  * Tests schema inspection of DataObjects
  *
- * @skipUpgrade
  */
 class DataObjectSchemaTest extends SapphireTest
 {

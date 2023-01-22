@@ -171,7 +171,6 @@ class Member extends DataObject
      *
      * @config
      * @var string
-     * @skipUpgrade
      */
     private static $unique_identifier_field = 'Email';
 
@@ -328,7 +327,6 @@ class Member extends DataObject
     /**
      * Returns true if this user is locked out
      *
-     * @skipUpgrade
      * @return bool
      */
     public function isLockedOut()
@@ -1221,7 +1219,6 @@ class Member extends DataObject
             }
 
             $permsClause = DB::placeholders($perms);
-            /** @skipUpgrade */
             $groups = Group::get()
                 ->innerJoin("Permission", '"Permission"."GroupID" = "Group"."ID"')
                 ->where([
@@ -1239,7 +1236,6 @@ class Member extends DataObject
             $groupIDList = $groups;
         }
 
-        /** @skipUpgrade */
         $members = static::get()
             ->innerJoin("Group_Members", '"Group_Members"."MemberID" = "Member"."ID"')
             ->innerJoin("Group", '"Group"."ID" = "Group_Members"."GroupID"');
@@ -1286,7 +1282,6 @@ class Member extends DataObject
      * Return a {@link FieldList} of fields that would appropriate for editing
      * this member.
      *
-     * @skipUpgrade
      * @return FieldList Return a FieldList of fields that would appropriate for
      *                   editing this member.
      */
@@ -1383,7 +1378,6 @@ class Member extends DataObject
 
         $labels['FirstName'] = _t(__CLASS__ . '.FIRSTNAME', 'First Name');
         $labels['Surname'] = _t(__CLASS__ . '.SURNAME', 'Surname');
-        /** @skipUpgrade */
         $labels['Email'] = _t(__CLASS__ . '.EMAIL', 'Email');
         $labels['Password'] = _t(__CLASS__ . '.db_Password', 'Password');
         $labels['PasswordExpiry'] = _t(

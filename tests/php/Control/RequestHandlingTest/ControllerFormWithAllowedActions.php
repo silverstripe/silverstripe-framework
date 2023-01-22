@@ -13,9 +13,6 @@ class ControllerFormWithAllowedActions extends Controller implements TestOnly
 
     private static $allowed_actions = ['Form'];
 
-    /**
-     * @skipUpgrade
-     */
     public function Form()
     {
         return new FormWithAllowedActions(

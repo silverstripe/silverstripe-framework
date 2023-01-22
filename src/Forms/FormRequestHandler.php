@@ -393,7 +393,6 @@ class FormRequestHandler extends RequestHandler
     protected function checkFieldsForAction($fields, $funcName)
     {
         foreach ($fields as $field) {
-            /** @skipUpgrade */
             if (ClassInfo::hasMethod($field, 'FieldList')) {
                 if ($field = $this->checkFieldsForAction($field->FieldList(), $funcName)) {
                     return $field;

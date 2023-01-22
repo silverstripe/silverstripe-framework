@@ -5,9 +5,6 @@ namespace SilverStripe\Security\Tests\BasicAuthTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\TestOnly;
 
-/**
- * @skipUpgrade
- */
 class ControllerSecuredWithPermission extends Controller implements TestOnly
 {
     protected $template = 'BlankPage';

@@ -21,7 +21,6 @@ use SilverStripe\Forms\HiddenField;
 /**
  * Tests for FieldList
  *
- * @skipUpgrade
  * @todo        test for {@link FieldList->setValues()}. Need to check
  *  that the values that were set are the correct ones given back.
  * @todo        test for {@link FieldList->transform()} and {@link FieldList->makeReadonly()}.

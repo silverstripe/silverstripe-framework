@@ -143,7 +143,6 @@ class DefaultAdminService
     /**
      * Find or create a Member with admin permissions
      *
-     * @skipUpgrade
      * @param string $email
      * @param string $name
      * @return Member

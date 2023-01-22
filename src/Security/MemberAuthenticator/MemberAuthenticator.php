@@ -57,7 +57,6 @@ class MemberAuthenticator implements Authenticator
     /**
      * Attempt to find and authenticate member if possible from the given data
      *
-     * @skipUpgrade
      * @param array $data Form submitted data
      * @param ValidationResult $result
      * @param Member $member This third parameter is used in the CMSAuthenticator(s)
@@ -186,7 +185,6 @@ class MemberAuthenticator implements Authenticator
         }
 
         // Check email is valid
-        /** @skipUpgrade */
         $email = isset($data['Email']) ? $data['Email'] : null;
         if (is_array($email)) {
             throw new InvalidArgumentException("Bad email passed to MemberAuthenticator::authenticate(): $email");

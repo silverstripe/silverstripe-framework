@@ -1109,7 +1109,6 @@ class GridField extends FormField
 
         $state = $this->getState(false);
 
-        /** @skipUpgrade */
         if (isset($fieldData['GridState'])) {
             $state->setValue($fieldData['GridState']);
         }
@@ -1205,7 +1204,6 @@ class GridField extends FormField
 
         $fieldData = $this->getRequest()->requestVar($this->getName());
 
-        /** @skipUpgrade */
         if ($fieldData && isset($fieldData['GridState'])) {
             $this->getState(false)->setValue($fieldData['GridState']);
         }

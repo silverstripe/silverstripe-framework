@@ -41,7 +41,6 @@ class TestComponent_ItemRequest extends RequestHandler
 
     public function Form()
     {
-        /** @skipUpgrade */
         return new Form(
             $this,
             Form::DEFAULT_NAME,

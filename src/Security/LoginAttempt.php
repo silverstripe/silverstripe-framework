@@ -51,7 +51,6 @@ class LoginAttempt extends DataObject
     private static $table_name = "LoginAttempt";
 
     /**
-     * @skipUpgrade
      * @param bool $includerelations Indicate if the labels returned include relation fields
      * @return array
      */

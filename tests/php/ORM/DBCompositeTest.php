@@ -6,9 +6,6 @@ use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @skipUpgrade
- */
 class DBCompositeTest extends SapphireTest
 {
 

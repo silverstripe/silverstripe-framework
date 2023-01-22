@@ -9,7 +9,6 @@ use SilverStripe\Versioned\Versioned;
 
 /**
  * Edit controller for this form
- * @skipUpgrade
  */
 class TestController extends Controller
 {

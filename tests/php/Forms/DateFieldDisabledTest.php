@@ -7,9 +7,6 @@ use SilverStripe\Forms\DateField_Disabled;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
-/**
- * @skipUpgrade
- */
 class DateFieldDisabledTest extends SapphireTest
 {
     protected function setUp(): void

@@ -29,7 +29,6 @@ class MemberCsvBulkLoader extends CsvBulkLoader
     }
 
     /**
-     * @skipUpgrade
      * @var array
      */
     public $duplicateChecks = [

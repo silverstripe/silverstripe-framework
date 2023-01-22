@@ -20,7 +20,6 @@ class CMSLoginHandler extends LoginHandler
     /**
      * Return the CMSMemberLoginForm form
      *
-     * @skipUpgrade
      * @return CMSMemberLoginForm
      */
     public function loginForm()
@@ -55,7 +54,6 @@ class CMSLoginHandler extends LoginHandler
     /**
      * Redirect the user to the change password form.
      *
-     * @skipUpgrade
      * @return HTTPResponse
      */
     protected function redirectToChangePassword()

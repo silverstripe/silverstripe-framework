@@ -37,7 +37,6 @@ define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
  *
  * @author      marcus@silverstripe.com.au
  * @license     BSD License http://silverstripe.org/bsd-license/
- * @skipUpgrade
  */
 class InjectorTest extends SapphireTest
 {

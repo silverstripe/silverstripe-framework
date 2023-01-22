@@ -7,9 +7,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBField;
 
-/**
- * @skipUpgrade
- */
 class DBClassNameTest extends SapphireTest
 {
 

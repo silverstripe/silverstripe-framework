@@ -14,9 +14,6 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\TextField;
 
-/**
- * @skipUpgrade
- */
 class CategoryController extends Controller implements TestOnly
 {
     private static $allowed_actions = ['Form'];
@@ -53,14 +50,12 @@ class CategoryController extends Controller implements TestOnly
         $categoriesField->getConfig()->addComponent(new GridFieldEditButton());
 
         $favGroupsField = new GridField('testgroupsfield', 'testgroupsfield', $person->FavouriteGroups());
-        /** @skipUpgrade */
         $favGroupsField->getConfig()->addComponent(new GridFieldDetailForm($this, 'Form'));
         $favGroupsField->getConfig()->addComponent(new GridFieldToolbarHeader());
         $favGroupsField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
         $favGroupsField->getConfig()->addComponent(new GridFieldEditButton());
 
         $fields = new FieldList($categoriesField, $favGroupsField);
-        /** @skipUpgrade */
         return new Form($this, 'Form', $fields, new FieldList());
     }
 }

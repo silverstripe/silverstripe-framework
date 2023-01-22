@@ -9,9 +9,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\TextField;
 
-/**
- * @skipUpgrade
- */
 class ValidatorForm extends Form implements TestOnly
 {
 

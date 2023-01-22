@@ -6,9 +6,6 @@ use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\Form;
 
-/**
- * @skipUpgrade
- */
 class ExtraFieldsForm extends Form implements TestOnly
 {
     public function getExtraFields()

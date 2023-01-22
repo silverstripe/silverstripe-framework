@@ -12,9 +12,6 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 
-/**
- * @skipUpgrade
- */
 class TestController extends Controller implements TestOnly
 {
     public function __construct()

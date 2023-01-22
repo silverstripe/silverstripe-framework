@@ -27,9 +27,6 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
      */
     protected $gridField;
 
-    /**
-     * @skipUpgrade
-     */
     public function getURLHandlers($gridField)
     {
         return [
@@ -63,7 +60,6 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
     }
 
     /**
-     * @skipUpgrade
      * @param GridField $gridField
      * @param HTTPRequest $request
      * @return Form

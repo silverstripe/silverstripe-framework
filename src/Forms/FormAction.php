@@ -43,7 +43,6 @@ class FormAction extends FormField
     protected $icon = null;
 
     /**
-     * @skipUpgrade
      * @var string
      */
     protected $schemaComponent = 'FormAction';

@@ -88,7 +88,6 @@ class LoginHandler extends RequestHandler
     /**
      * Return the MemberLoginForm form
      *
-     * @skipUpgrade
      * @return MemberLoginForm
      */
     public function loginForm()
@@ -138,7 +137,6 @@ class LoginHandler extends RequestHandler
 
         // Failed login
 
-        /** @skipUpgrade */
         if (array_key_exists('Email', $data ?? [])) {
             $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled') === true);
             $this
@@ -253,7 +251,6 @@ class LoginHandler extends RequestHandler
     /**
      * Invoked if password is expired and must be changed
      *
-     * @skipUpgrade
      * @return HTTPResponse
      */
     protected function redirectToChangePassword()

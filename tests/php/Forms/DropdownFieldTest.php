@@ -530,9 +530,6 @@ class DropdownFieldTest extends SapphireTest
         return $foundDisabled;
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testValidation()
     {
         $field = DropdownField::create(

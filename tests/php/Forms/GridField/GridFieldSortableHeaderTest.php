@@ -32,7 +32,6 @@ class GridFieldSortableHeaderTest extends SapphireTest
     /**
      * Tests that the appropriate sortable headers are generated
      *
-     * @skipUpgrade
      */
     public function testRenderHeaders()
     {

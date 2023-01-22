@@ -15,9 +15,6 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\PopoverField;
 
-/**
- * @skipUpgrade
- */
 class FormSchemaTest extends SapphireTest
 {
     protected function setUp(): void
@@ -140,9 +137,6 @@ class FormSchemaTest extends SapphireTest
         $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testGetNestedSchema()
     {
         $form = new Form(

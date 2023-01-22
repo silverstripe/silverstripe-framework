@@ -15,7 +15,6 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 class LookupField extends MultiSelectField
 {
-    /** @skipUpgrade */
     protected $schemaComponent = 'LookupField';
 
     /**

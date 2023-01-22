@@ -16,7 +16,6 @@ class FileFieldTest extends FunctionalTest
     /**
      * Test a valid upload of a required file in a form. Error is set to 0, as the upload went well
      *
-     * @skipUpgrade
      */
     public function testUploadRequiredFile()
     {
@@ -101,9 +100,6 @@ class FileFieldTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @skipUpgrade
-     */
     public function testGetAcceptFileTypes()
     {
         $field = new FileField('image', 'Image');
@@ -121,7 +117,6 @@ class FileFieldTest extends FunctionalTest
 
     /**
      * Test different scenarii for a failed upload : an error occurred, no files where provided
-     * @skipUpgrade
      */
     public function testUploadMissingRequiredFile()
     {

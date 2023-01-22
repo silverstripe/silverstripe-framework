@@ -225,7 +225,6 @@ class GridFieldTest extends SapphireTest
     }
 
     /**
-     * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumns
      */
     public function testGetColumns()
@@ -249,7 +248,6 @@ class GridFieldTest extends SapphireTest
     }
 
     /**
-     * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
      */
     public function testGetColumnContent()
@@ -264,7 +262,6 @@ class GridFieldTest extends SapphireTest
     }
 
     /**
-     * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
      */
     public function testGetColumnContentBadArguments()
@@ -280,7 +277,6 @@ class GridFieldTest extends SapphireTest
     }
 
     /**
-     * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
      */
     public function testGetColumnAttributesEmptyArray()
@@ -295,7 +291,6 @@ class GridFieldTest extends SapphireTest
     }
 
     /**
-     * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
      */
     public function testGetColumnAttributes()
@@ -340,7 +335,6 @@ class GridFieldTest extends SapphireTest
     }
 
     /**
-     * @skipUpgrade
      * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
      */
     public function testGetColumnMetadata()

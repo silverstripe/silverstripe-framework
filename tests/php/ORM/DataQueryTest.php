@@ -9,9 +9,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataQueryTest\ObjectE;
 use SilverStripe\Security\Member;
 
-/**
- * @skipUpgrade
- */
 class DataQueryTest extends SapphireTest
 {
 

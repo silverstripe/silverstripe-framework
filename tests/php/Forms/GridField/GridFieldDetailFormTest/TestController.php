@@ -13,9 +13,6 @@ use SilverStripe\Forms\GridField\GridFieldEditButton;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 
-/**
- * @skipUpgrade
- */
 class TestController extends Controller implements TestOnly
 {
     public function __construct()
@@ -47,12 +44,10 @@ class TestController extends Controller implements TestOnly
         $field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
         $field->getConfig()->addComponent(new GridFieldViewButton());
         $field->getConfig()->addComponent(new GridFieldEditButton());
-        /** @skipUpgrade */
         $gridFieldForm = new GridFieldDetailForm($this, 'Form');
         $gridFieldForm->setRedirectMissingRecords(true);
         $field->getConfig()->addComponent($gridFieldForm);
         $field->getConfig()->addComponent(new GridFieldEditButton());
-        /** @skipUpgrade */
         return new Form($this, 'Form', new FieldList($field), new FieldList());
     }
 }

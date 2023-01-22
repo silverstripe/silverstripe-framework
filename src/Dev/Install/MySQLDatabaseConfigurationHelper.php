@@ -20,7 +20,6 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
     /**
      * Create a connection of the appropriate type
      *
-     * @skipUpgrade
      * @param array $databaseConfig
      * @param string $error Error message passed by value
      * @return mixed|null Either the connection object, or null if error

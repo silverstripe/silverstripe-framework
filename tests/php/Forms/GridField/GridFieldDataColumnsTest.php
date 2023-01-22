@@ -30,9 +30,6 @@ class GridFieldDataColumnsTest extends SapphireTest
     public function testGridFieldCustomDisplayFields()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
-        /**
- * @skipUpgrade
-*/
         $expected = ['Email' => 'Email'];
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columns->setDisplayFields($expected);

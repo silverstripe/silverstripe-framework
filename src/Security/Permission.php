@@ -475,7 +475,6 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
 
         $groupClause = DB::placeholders($groupIDs);
-        /** @skipUpgrade */
         $members = Member::get()
             ->where(["\"Group\".\"ID\" IN ($groupClause)" => $groupIDs])
             ->leftJoin("Group_Members", '"Member"."ID" = "Group_Members"."MemberID"')
@@ -495,7 +494,6 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         $codeClause = DB::placeholders($codeParams);
 
         // Via Roles are groups that have the permission via a role
-        /** @skipUpgrade */
         return Group::get()
             ->where([
                 "\"PermissionRoleCode\".\"Code\" IN ($codeClause) OR \"Permission\".\"Code\" IN ($codeClause)"

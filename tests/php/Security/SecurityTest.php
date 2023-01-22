@@ -29,7 +29,6 @@ use SilverStripe\Security\SecurityToken;
 /**
  * Test the security class, including log-in form, change password form, etc
  *
- * @skipUpgrade
  */
 class SecurityTest extends FunctionalTest
 {
@@ -59,9 +58,6 @@ class SecurityTest extends FunctionalTest
             ],
         ]);
 
-        /**
-         * @skipUpgrade
-         */
         Member::config()->set('unique_identifier_field', 'Email');
 
         PasswordValidator::config()
@@ -695,9 +691,6 @@ class SecurityTest extends FunctionalTest
 
         // Assumption: The database has been built correctly by the test runner,
         // and has all columns present in the ORM
-        /**
-         * @skipUpgrade
-         */
         DB::get_schema()->renameField('Member', 'Email', 'Email_renamed');
 
         // Email column is now missing, which means we're not ready to do permission checks

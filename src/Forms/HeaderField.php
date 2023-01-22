@@ -20,7 +20,6 @@ class HeaderField extends DatalessField
     protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
 
     /**
-     * @skipUpgrade
      * @var string
      */
     protected $schemaComponent = 'HeaderField';

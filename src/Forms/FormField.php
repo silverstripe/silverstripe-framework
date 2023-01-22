@@ -249,7 +249,6 @@ class FormField extends RequestHandler
     /**
      * The type of front-end component to render the FormField as.
      *
-     * @skipUpgrade
      * @var string
      */
     protected $schemaComponent;

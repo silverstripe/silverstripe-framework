@@ -12,9 +12,6 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\View\SSViewer;
 
-/**
- * @skipUpgrade
- */
 class TestController extends Controller implements TestOnly
 {
     public function __construct()
@@ -35,7 +32,6 @@ class TestController extends Controller implements TestOnly
 
     public function Link($action = null)
     {
-        /** @skipUpgrade */
         return Controller::join_links(
             'EmailFieldTest_Controller',
             $this->getRequest()->latestParam('Action'),

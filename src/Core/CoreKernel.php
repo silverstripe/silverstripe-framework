@@ -108,7 +108,6 @@ class CoreKernel extends BaseKernel
      */
     protected function getDatabaseConfig()
     {
-        /** @skipUpgrade */
         $databaseConfig = [
             "type" => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
             "server" => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',

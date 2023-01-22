@@ -10,9 +10,6 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\ORM\ArrayList;
 
-/**
- * @skipUpgrade
- */
 class TestController extends Controller implements TestOnly
 {
     public function __construct()
@@ -31,7 +28,6 @@ class TestController extends Controller implements TestOnly
     private static $allowed_actions = ['Form'];
 
     /**
-     * @skipUpgrade
      * @return Form
      */
     public function Form()

@@ -520,7 +520,6 @@ class DatetimeFieldTest extends SapphireTest
 
     protected function getMockForm()
     {
-        /** @skipUpgrade */
         return new Form(
             Controller::curr(),
             'Form',

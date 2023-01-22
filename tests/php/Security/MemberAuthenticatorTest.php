@@ -21,9 +21,6 @@ use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
 use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 
-/**
- * @skipUpgrade
- */
 class MemberAuthenticatorTest extends SapphireTest
 {
 

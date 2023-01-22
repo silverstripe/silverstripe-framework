@@ -13,9 +13,6 @@ use SilverStripe\Security\Tests\BasicAuthTest\ControllerNotSecured;
 use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithoutPermission;
 use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission;
 
-/**
- * @skipUpgrade
- */
 class BasicAuthTest extends FunctionalTest
 {
     protected static $fixture_file = 'BasicAuthTest.yml';
