@@ -121,7 +121,8 @@ class DataListTest extends SapphireTest
         $this->assertEquals(['Joe', 'Phil'], $list->limit(2, 1)->column('Name'));
     }
 
-    public function limitDataProvider(): array {
+    public function limitDataProvider(): array
+    {
         return [
             'no limit' => [null, 0, 3],
             'smaller limit' => [2, 0, 2],
@@ -151,7 +152,7 @@ class DataListTest extends SapphireTest
         $this->assertCount($expectedCount, $list->limit($length, $offset));
         $this->assertCount(
             $expectedCount,
-            $list->limit(0,9999)->limit($length, $offset),
+            $list->limit(0, 9999)->limit($length, $offset),
             'Follow up limit calls unset previous ones'
         );
 
