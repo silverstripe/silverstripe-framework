@@ -121,31 +121,43 @@ class DataListTest extends SapphireTest
         $this->assertEquals(['Joe', 'Phil'], $list->limit(2, 1)->column('Name'));
     }
 
-    public function testLimitAndOffset()
+    public function limitDataProvider(): array
+    {
+        return [
+            'no limit' => [null, 0, 3],
+            'smaller limit' => [2, 0, 2],
+            'greater limit' => [4, 0, 3],
+            'one limit' => [1, 0, 1],
+            'zero limit' => [0, 0, 0],
+            'limit and offset' => [1, 1, 1],
+            'false limit equivalent to 0' => [false, 0, 0],
+            'offset only' => [null, 2, 1],
+            'offset greater than list length' => [null, 3, 0],
+            'negative length' => [-1, 0, 0, true],
+            'negative offset' => [0, -1, 0, true],
+        ];
+    }
+
+    /**
+     * @dataProvider limitDataProvider
+     */
+    public function testLimitAndOffset($length, $offset, $expectedCount, $expectException = false)
     {
         $list = TeamComment::get();
-        $check = $list->limit(3);
 
-        $this->assertEquals(3, $check->count());
+        if ($expectException) {
+            $this->expectException(\InvalidArgumentException::class);
+        }
 
-        $check = $list->limit(1);
-        $this->assertEquals(1, $check->count());
-
-        $check = $list->limit(1, 1);
-        $this->assertEquals(1, $check->count());
-
-        $check = $list->limit(false);
-        $this->assertEquals(3, $check->count());
-
-        $check = $list->limit(null);
-        $this->assertEquals(3, $check->count());
-
-        $check = $list->limit(null, 2);
-        $this->assertEquals(1, $check->count());
+        $this->assertCount($expectedCount, $list->limit($length, $offset));
+        $this->assertCount(
+            $expectedCount,
+            $list->limit(0, 9999)->limit($length, $offset),
+            'Follow up limit calls unset previous ones'
+        );
 
         // count()/first()/last() methods may alter limit/offset, so run the query and manually check the count
-        $check = $list->limit(null, 1)->toArray();
-        $this->assertEquals(2, count($check ?? []));
+        $this->assertCount($expectedCount, $list->limit($length, $offset)->toArray());
     }
 
     public function testDistinct()

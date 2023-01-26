@@ -173,6 +173,7 @@ class SQLSelectTest extends SapphireTest
         $this->assertSQLEquals("SELECT * FROM MyTable LIMIT 99 OFFSET 97", $query->sql($parameters));
     }
 
+
     public function testSelectWithOrderbyClause()
     {
         $query = new SQLSelect();
@@ -251,6 +252,18 @@ class SQLSelectTest extends SapphireTest
 
         $this->assertSQLEquals(
             'SELECT * FROM MyTable',
+            $query->sql($parameters)
+        );
+    }
+
+    public function testZeroLimit()
+    {
+        $query = new SQLSelect();
+        $query->setFrom("MyTable");
+        $query->setLimit(0);
+
+        $this->assertSQLEquals(
+            'SELECT * FROM MyTable LIMIT 0',
             $query->sql($parameters)
         );
     }

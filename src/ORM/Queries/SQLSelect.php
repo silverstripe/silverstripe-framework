@@ -249,7 +249,7 @@ class SQLSelect extends SQLConditionalExpression
             throw new InvalidArgumentException("SQLSelect::setLimit() only takes positive values");
         }
 
-        if (is_numeric($limit) && ($limit || $offset)) {
+        if (is_numeric($limit)) {
             $this->limit = [
                 'start' => (int)$offset,
                 'limit' => (int)$limit,

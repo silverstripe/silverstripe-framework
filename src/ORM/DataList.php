@@ -287,15 +287,19 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return a new DataList instance with the records returned in this query
      * restricted by a limit clause.
-     *
-     * @param int $limit
-     * @param int $offset
-     * @return static
      */
-    public function limit($limit, $offset = 0)
+    public function limit(?int $length, int $offset = 0): static
     {
-        return $this->alterDataQuery(function (DataQuery $query) use ($limit, $offset) {
-            $query->limit($limit, $offset);
+        if ($length !== null && $length < 0) {
+            throw new InvalidArgumentException("\$length can not be negative. $length was provided.");
+        }
+
+        if ($offset < 0) {
+            throw new InvalidArgumentException("\$offset can not be negative. $offset was provided.");
+        }
+
+        return $this->alterDataQuery(function (DataQuery $query) use ($length, $offset) {
+            $query->limit($length, $offset);
         });
     }
 

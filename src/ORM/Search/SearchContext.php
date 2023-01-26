@@ -133,7 +133,7 @@ class SearchContext
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
      * @param array|bool|string $sort Database column to sort on.
      *  Falls back to {@link DataObject::$default_sort} if not provided.
-     * @param array|bool|string $limit
+     * @param array|null|string $limit
      * @param DataList $existingQuery
      * @return DataList
      * @throws Exception
@@ -168,7 +168,7 @@ class SearchContext
      * Prepare the query to begin searching
      *
      * @param array|bool|string $sort Database column to sort on.
-     * @param array|bool|string $limit
+     * @param array|null|string $limit
      */
     private function prepareQuery($sort, $limit, ?DataList $existingQuery): DataList
     {
@@ -320,11 +320,11 @@ class SearchContext
      *
      * @param array $searchParams
      * @param array|bool|string $sort
-     * @param array|bool|string $limit
+     * @param array|null|string $limit
      * @return DataList
      * @throws Exception
      */
-    public function getResults($searchParams, $sort = false, $limit = false)
+    public function getResults($searchParams, $sort = false, $limit = null)
     {
         $searchParams = array_filter((array)$searchParams, [$this, 'clearEmptySearchFields']);
 

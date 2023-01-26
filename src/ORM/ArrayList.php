@@ -171,23 +171,29 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         return $result;
     }
 
-    /**
-     * Get a sub-range of this dataobjectset as an array
-     * Pass null to "remove the limit" - this is for consistency with DataList::limit(null) which itself will
-     * call SQLSelect::setLimit(null)
-     *
-     * @param int|null $length
-     * @param int $offset
-     * @return static
-     */
-    public function limit($length, $offset = 0)
+    public function limit(?int $length, int $offset = 0): static
     {
-        if (!$length) {
-            $length = count($this->items ?? []);
+        if ($length === null) {
+            // If we unset the limit, we set the length to the size of the list. We still want the offset to be picked up
+            $length = count($this->items);
+        }
+
+        if ($length < 0) {
+            throw new InvalidArgumentException("\$length can not be negative. $length was provided.");
+        }
+
+        if ($offset < 0) {
+            throw new InvalidArgumentException("\$offset can not be negative. $offset was provided.");
         }
 
         $list = clone $this;
-        $list->items = array_slice($this->items ?? [], $offset ?? 0, $length);
+
+        if ($length === 0) {
+            // If we set the limit to 0, we return an empty list.
+            $list->items = [];
+        } else {
+            $list->items = array_slice($this->items ?? [], $offset ?? 0, $length);
+        }
 
         return $list;
     }
