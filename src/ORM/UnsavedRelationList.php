@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use InvalidArgumentException;
 use ArrayIterator;
 use SilverStripe\ORM\FieldType\DBField;
+use Traversable;
 
 /**
  * An {@link ArrayList} that represents an unsaved relation.
@@ -120,11 +121,8 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * Returns an Iterator for this relation.
-     *
-     * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->toArray());
     }

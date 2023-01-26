@@ -59,11 +59,8 @@ class BulkLoader_Result implements \Countable
     /**
      * Returns the count of all objects which were
      * created or updated.
-     *
-     * @return int
      */
-    #[\ReturnTypeWillChange]
-    public function Count()
+    public function Count(): int
     {
         return count($this->created ?? []) + count($this->updated ?? []);
     }

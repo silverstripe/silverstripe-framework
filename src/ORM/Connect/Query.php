@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Core\Convert;
 use Iterator;
+use Traversable;
 
 /**
  * Abstract query-result class. A query result provides an iterator that returns a map for each record of a query
@@ -147,8 +148,7 @@ abstract class Query implements \IteratorAggregate
     /**
      * Return the next record in the query result.
      */
-    #[\ReturnTypeWillChange]
-    abstract public function getIterator();
+    abstract public function getIterator(): Traversable;
 
     /**
      * Return the total number of items in the query result.

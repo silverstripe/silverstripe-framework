@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use Traversable;
+
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
  * Note that this class is only used for the results of non-prepared statements
@@ -45,8 +47,7 @@ class MySQLQuery extends Query
         }
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
         if (is_object($this->handle)) {

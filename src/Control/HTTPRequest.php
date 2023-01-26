@@ -430,36 +430,26 @@ class HTTPRequest implements ArrayAccess
     /**
      * Enables the existence of a key-value pair in the request to be checked using
      * array syntax, so isset($request['title']) will check for $_POST['title'] and $_GET['title']
-     *
-     * @param string $offset
-     * @return bool
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->postVars[$offset]) || isset($this->getVars[$offset]);
     }
 
     /**
      * Access a request variable using array syntax. eg: $request['title'] instead of $request->postVar('title')
-     *
-     * @param string $offset
-     * @return mixed
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->requestVar($offset);
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->getVars[$offset] = $value;
     }
 
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->getVars[$offset]);
         unset($this->postVars[$offset]);

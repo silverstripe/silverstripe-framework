@@ -8,6 +8,7 @@ use LogicException;
 use SilverStripe\Dev\Debug;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\ViewableData;
+use Traversable;
 
 /**
  * A list object that wraps around an array of objects or arrays.
@@ -81,10 +82,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Return the number of items in this list
      *
-     * @return int
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         return count($this->items ?? []);
     }
@@ -102,11 +101,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Returns an Iterator for this ArrayList.
      * This function allows you to use ArrayList in foreach loops
-     *
-     * @return ArrayIterator
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         foreach ($this->items as $i => $item) {
             if (is_array($item)) {
@@ -794,24 +790,16 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Returns whether an item with $key exists
-     *
-     * @param mixed $offset
-     * @return bool
      */
-    #[\ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->items ?? []);
     }
 
     /**
      * Returns item stored in list with index $key
-     *
-     * @param mixed $offset
-     * @return DataObject
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         if ($this->offsetExists($offset)) {
             return $this->items[$offset];
@@ -821,12 +809,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Set an item with the key in $key
-     *
-     * @param mixed $offset
-     * @param mixed $value
      */
-    #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset === null) {
             $this->items[] = $value;
@@ -837,11 +821,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Unset an item with the key in $key
-     *
-     * @param mixed $offset
      */
-    #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->items[$offset]);
     }

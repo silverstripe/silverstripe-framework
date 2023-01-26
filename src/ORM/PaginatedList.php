@@ -9,6 +9,7 @@ use SilverStripe\View\ArrayData;
 use ArrayAccess;
 use Exception;
 use IteratorIterator;
+use Traversable;
 
 /**
  * A decorator that wraps around a data list in order to provide pagination.
@@ -208,11 +209,7 @@ class PaginatedList extends ListDecorator
         return $this;
     }
 
-    /**
-     * @return IteratorIterator
-     */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         $pageLength = $this->getPageLength();
         if ($this->limitItems && $pageLength) {
