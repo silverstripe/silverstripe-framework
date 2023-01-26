@@ -57,6 +57,20 @@
     Surname: User
     Email: noexpiry@silverstripe.com
     Password: 1nitialPassword
+  someone:
+    FirstName: 'Someone'
+    Email: 'someone@example.com'
+  anyone:
+    FirstName: 'Anyone'
+    Email: 'anyone@example.com'
+  expired:
+    Firstname: 'Expired'
+    Email: 'expired@example.com'
+    PasswordExpiry: '2018-01-01'
+  willexpire:
+    Firstname: 'William'
+    Email: 'william@example.com'
+    PasswordExpiry: '3018-01-01'
   staffmember:
     Email: staffmember@test.com
     Groups: '=>SilverStripe\Security\Group.staffgroup'

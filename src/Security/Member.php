@@ -13,6 +13,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestMailer;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -398,7 +399,40 @@ class Member extends DataObject
         return null;
     }
 
-    public function isPasswordExpired()
+    /**
+     * Used to get the value for the reset password on next login checkbox
+     */
+    public function getRequiresPasswordChangeOnNextLogin(): bool
+    {
+        return $this->isPasswordExpired();
+    }
+
+    /**
+     * Set password expiry to "now" to require a change of password next log in
+     *
+     * @param int|null $dataValue 1 is checked, 0/null is not checked {@see CheckboxField::dataValue}
+     */
+    public function saveRequiresPasswordChangeOnNextLogin(?int $dataValue): static
+    {
+        if (!$this->canEdit()) {
+            return $this;
+        }
+
+        $currentValue = $this->PasswordExpiry;
+        $currentDate = $this->dbObject('PasswordExpiry');
+
+        if ($dataValue && (!$currentValue || $currentDate->inFuture())) {
+            // Only alter future expiries - this way an admin could see how long ago a password expired still
+            $this->PasswordExpiry = DBDatetime::now()->Rfc2822();
+        } elseif (!$dataValue && $this->isPasswordExpired()) {
+            // Only unset if the expiry date is in the past
+            $this->PasswordExpiry = null;
+        }
+
+        return $this;
+    }
+
+    public function isPasswordExpired(): bool
     {
         if (!$this->PasswordExpiry) {
             return false;
@@ -1362,6 +1396,19 @@ class Member extends DataObject
             $permissionsTab = $rootTabSet->fieldByName('Permissions');
             if ($permissionsTab) {
                 $permissionsTab->addExtraClass('readonly');
+            }
+
+            $currentUser = Security::getCurrentUser();
+            // We can allow an admin to require a user to change their password. But:
+            // - Don't show a read only field if the user cannot edit this record
+            // - Don't show if a user views their own profile (just let them reset their own password)
+            if ($currentUser && ($currentUser->ID !== $this->ID) && $this->canEdit()) {
+                $requireNewPassword = CheckboxField::create(
+                    'RequiresPasswordChangeOnNextLogin',
+                    _t(__CLASS__ . '.RequiresPasswordChangeOnNextLogin', 'Requires password change on next log in')
+                );
+                $fields->insertAfter('Password', $requireNewPassword);
+                $fields->dataFieldByName('Password')->addExtraClass('form-field--no-divider mb-0 pb-0');
             }
         });
 
