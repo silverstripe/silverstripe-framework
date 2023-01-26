@@ -162,12 +162,12 @@ class Email extends SymfonyEmail
     }
 
     public function __construct(
-        string $from = '',
-        string $to = '',
+        string|array $from = '',
+        string|array $to = '',
         string $subject = '',
         string $body = '',
-        string $cc = '',
-        string $bcc = '',
+        string|array $cc = '',
+        string|array $bcc = '',
         string $returnPath = ''
     ) {
         parent::__construct();
@@ -197,13 +197,14 @@ class Email extends SymfonyEmail
         $this->data = ViewableData::create();
     }
 
-    private function getDefaultFrom(): string
+    private function getDefaultFrom(): string|array
     {
         // admin_email can have a string or an array config
         // https://docs.silverstripe.org/en/4/developer_guides/email/#administrator-emails
         $adminEmail = $this->config()->get('admin_email');
         if (is_array($adminEmail) && count($adminEmail ?? []) > 0) {
-            $defaultFrom = array_keys($adminEmail)[0];
+            $email = array_keys($adminEmail)[0];
+            $defaultFrom = [$email => $adminEmail[$email]];
         } else {
             if (is_string($adminEmail)) {
                 $defaultFrom = $adminEmail;
@@ -238,8 +239,9 @@ class Email extends SymfonyEmail
     /**
      * The following arguments combinations are valid
      * a) $address = 'my@email.com', $name = 'My name'
-     * b) $address = ['my@email.com' => 'My name', 'other@email.com' => 'My other name']
-     * c) $address = ['my@email.com' => 'My name', 'other@email.com']
+     * b) $address = ['my@email.com' => 'My name']
+     * c) $address = ['my@email.com' => 'My name', 'other@email.com' => 'My other name']
+     * d) $address = ['my@email.com' => 'My name', 'other@email.com']
      */
     private function createAddressArray(string|array $address, $name = ''): array
     {
@@ -266,7 +268,7 @@ class Email extends SymfonyEmail
     /**
      * @see createAddressArray()
      */
-    public function setTo(string|array $address, $name = ''): static
+    public function setTo(string|array $address, string $name = ''): static
     {
         return $this->to(...$this->createAddressArray($address, $name));
     }

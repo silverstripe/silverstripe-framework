@@ -272,6 +272,47 @@ class EmailTest extends SapphireTest
         $this->assertEquals('bounce@example.com', $email->getReturnPath()->getAddress());
     }
 
+    public function testConstructorArray(): void
+    {
+        $email = new Email(
+            ['from@example.com' => 'From name'],
+            ['a@example.com' => "A", 'b@example.com' => "B", 'c@example.com', 'd@example.com'],
+            'subject',
+            '<p>body</p>',
+            ['cca@example.com' => 'CCA', 'ccb@example.com' => "CCB", 'ccc@example.com', 'ccd@example.com'],
+            ['bcca@example.com' => 'BCCA', 'bccb@example.com' => "BCCB", 'bccc@example.com', 'bccd@example.com'],
+            'bounce@example.com'
+        );
+        $this->assertCount(1, $email->getFrom());
+        $this->assertSame('from@example.com', $email->getFrom()[0]->getAddress());
+        $this->assertSame('From name', $email->getFrom()[0]->getName());
+        $this->assertCount(4, $email->getTo());
+        $this->assertSame('a@example.com', $email->getTo()[0]->getAddress());
+        $this->assertSame('A', $email->getTo()[0]->getName());
+        $this->assertSame('b@example.com', $email->getTo()[1]->getAddress());
+        $this->assertSame('B', $email->getTo()[1]->getName());
+        $this->assertSame('c@example.com', $email->getTo()[2]->getAddress());
+        $this->assertSame('', $email->getTo()[2]->getName());
+        $this->assertCount(4, $email->getCC());
+        $this->assertEquals('cca@example.com', $email->getCC()[0]->getAddress());
+        $this->assertEquals('CCA', $email->getCC()[0]->getName());
+        $this->assertEquals('ccb@example.com', $email->getCC()[1]->getAddress());
+        $this->assertEquals('CCB', $email->getCC()[1]->getName());
+        $this->assertEquals('ccc@example.com', $email->getCC()[2]->getAddress());
+        $this->assertEquals('', $email->getCC()[2]->getName());
+        $this->assertEquals('ccd@example.com', $email->getCC()[3]->getAddress());
+        $this->assertEquals('', $email->getCC()[2]->getName());
+        $this->assertCount(4, $email->getBCC());
+        $this->assertEquals('bcca@example.com', $email->getBCC()[0]->getAddress());
+        $this->assertEquals('BCCA', $email->getBCC()[0]->getName());
+        $this->assertEquals('bccb@example.com', $email->getBCC()[1]->getAddress());
+        $this->assertEquals('BCCB', $email->getBCC()[1]->getName());
+        $this->assertEquals('bccc@example.com', $email->getBCC()[2]->getAddress());
+        $this->assertEquals('', $email->getBCC()[2]->getName());
+        $this->assertEquals('bccd@example.com', $email->getBCC()[3]->getAddress());
+        $this->assertEquals('', $email->getBCC()[2]->getName());
+    }
+
     public function testSetBody(): void
     {
         $email = new Email();
@@ -490,7 +531,10 @@ class EmailTest extends SapphireTest
 
         // use admin_email config array syntax
         Email::config()->set('admin_email', ['anotheradmin@somewhere.com' => 'Admin-email']);
-        $this->assertSame('anotheradmin@somewhere.com', $method->invokeArgs($email, []));
+        $this->assertSame(
+            ['anotheradmin@somewhere.com' => 'Admin-email'],
+            $method->invokeArgs($email, [])
+        );
         $this->assertTrue(true);
     }
 
