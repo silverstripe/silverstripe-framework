@@ -77,6 +77,21 @@ class CmsUiContext implements Context
     }
 
     /**
+     * @Then /^I dismiss all toasts$/
+     */
+    public function iDismissAllToasts()
+    {
+        $page = $this->getSession()->getPage();
+        $container = $page->find('css', '.toasts');
+        if (!$container) {
+            return;
+        }
+        foreach ($container->findAll('css', 'button.toast__close') as $button) {
+            $button->click();
+        }
+    }
+
+    /**
      * @Then /^I should see a "(.+)" (\w+) toast$/
      */
     public function iShouldSeeAToast($notice, $type)
