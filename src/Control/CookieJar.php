@@ -148,7 +148,7 @@ class CookieJar implements Cookie_Backend
     /**
      * The function that actually sets the cookie using PHP
      *
-     * @see http://uk3.php.net/manual/en/function.setcookie.php
+     * @see https://php.net/manual/en/function.setcookie.php
      *
      * @param string $name The name of the cookie
      * @param string|array $value The value for the cookie to hold
@@ -193,7 +193,7 @@ class CookieJar implements Cookie_Backend
     /**
      * Cookies must be secure if samesite is "None"
      */
-    private function cookieIsSecure(string $sameSite, bool $secure): bool
+    protected function cookieIsSecure(string $sameSite, bool $secure): bool
     {
         return $sameSite === 'None' ? true : $secure;
     }
@@ -201,7 +201,7 @@ class CookieJar implements Cookie_Backend
     /**
      * Get the correct samesite value - Session cookies use a different configuration variable.
      */
-    private function getSameSite(string $name): string
+    protected function getSameSite(string $name): string
     {
         if ($name === session_name()) {
             return Session::config()->get('cookie_samesite');
