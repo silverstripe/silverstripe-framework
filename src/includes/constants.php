@@ -80,10 +80,13 @@ if (!defined('PUBLIC_PATH')) {
 if (!Environment::getEnv('SS_IGNORE_DOT_ENV')) {
     call_user_func(function () {
         $loader = new EnvironmentLoader();
+
+        $allowDotenvOverride = !!Environment::getEnv('SS_ALLOW_DOT_ENV_OVERRIDE');
+
         foreach ([BASE_PATH, dirname(BASE_PATH)] as $path) {
             // Stop searching after first `.env` file is loaded
             $dotEnvFile = $path . DIRECTORY_SEPARATOR . '.env';
-            if ($loader->loadFile($dotEnvFile)) {
+            if ($loader->loadFile($dotEnvFile, $allowDotenvOverride)) {
                 break;
             }
         }
