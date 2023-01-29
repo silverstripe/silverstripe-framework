@@ -6,8 +6,11 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\SudoMode\SudoModeServiceInterface;
 
 /**
  * Authenticate a member passed on a session cookie
@@ -72,13 +75,20 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     {
         static::regenerateSessionId();
         $request = $request ?: Controller::curr()->getRequest();
-        $request->getSession()->set($this->getSessionVariable(), $member->ID);
+        $session = $request->getSession();
+        $session->set($this->getSessionVariable(), $member->ID);
 
         // This lets apache rules detect whether the user has logged in
         // @todo make this a setting on the authentication handler
         if (Member::config()->get('login_marker_cookie')) {
             Cookie::set(Member::config()->get('login_marker_cookie'), 1, 0);
         }
+
+        // Activate sudo mode on login so the user doesn't have to reauthenticate for sudo
+        // actions until the sudo mode timeout expires
+        /** @var SudoModeServiceInterface $service */
+        $service = Injector::inst()->get(SudoModeServiceInterface::class);
+        $service->activate($session);
     }
 
     /**
