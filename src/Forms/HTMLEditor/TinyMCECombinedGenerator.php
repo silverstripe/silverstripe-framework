@@ -136,7 +136,6 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
 (function() {
   var baseTag = window.document.getElementsByTagName('base');
   var baseURL = baseTag.length ? baseTag[0].baseURI : '$baseDirJS';
-  var editorIdentifier = '$name';
 SCRIPT;
         $buffer[] = <<<SCRIPT
 (function() {
