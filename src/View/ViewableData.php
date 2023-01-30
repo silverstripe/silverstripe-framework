@@ -7,7 +7,9 @@ use Exception;
 use InvalidArgumentException;
 use IteratorAggregate;
 use LogicException;
+use ReflectionMethod;
 use ReflectionObject;
+use ReflectionProperty;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
@@ -111,7 +113,7 @@ class ViewableData implements IteratorAggregate
     public function __isset($property)
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
-        if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method = "get$property")) {
+        if (strtolower($property ?? '') !== 'field' && $this->hasMethod("get$property")) {
             return true;
         }
         if ($this->hasField($property)) {
@@ -134,7 +136,8 @@ class ViewableData implements IteratorAggregate
     public function __get($property)
     {
         // getField() isn't a field-specific getter and shouldn't be treated as such
-        if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method = "get$property")) {
+        $method = "get$property";
+        if (strtolower($property ?? '') !== 'field' && $this->hasMethod($method) && $this->isAccessibleMethod($method)) {
             return $this->$method();
         }
         if ($this->hasField($property)) {
@@ -159,18 +162,11 @@ class ViewableData implements IteratorAggregate
         $this->objCacheClear();
         $method = "set$property";
 
-        if ($this->hasMethod($method) && !$this->isPrivate($this, $method)) {
+        if ($this->hasMethod($method) && $this->isAccessibleMethod($method)) {
             $this->$method($value);
         } else {
             $this->setField($property, $value);
         }
-    }
-
-    private function isPrivate(object $class, string $method): bool
-    {
-        $class = new ReflectionObject($class);
-        
-        return $class->getMethod($method)->isPrivate();
     }
 
     /**
@@ -218,7 +214,7 @@ class ViewableData implements IteratorAggregate
      */
     public function getField($field)
     {
-        if (property_exists($this, $field)) {
+        if ($this->isAccessibleProperty($field)) {
             return $this->$field;
         }
         return $this->data[$field];
@@ -237,11 +233,43 @@ class ViewableData implements IteratorAggregate
         // prior to PHP 8.2 support ViewableData::setField() simply used `$this->field = $value;`
         // so the following logic essentially mimics this behaviour, though without the use
         // of now deprecated dynamic properties
-        if (property_exists($this, $field)) {
+        if ($this->isAccessibleProperty($field)) {
             $this->$field = $value;
         }
         $this->data[$field] = $value;
         return $this;
+    }
+
+    /**
+     * Returns true if a method exists for the current class which isn't private.
+     * Also returns true for private methods if $this is ViewableData (not a subclass)
+     */
+    private function isAccessibleMethod(string $method): bool
+    {
+        if (!method_exists($this, $method)) {
+            return false;
+        }
+        if (static::class === self::class) {
+            return true;
+        }
+        $reflectionMethod = new ReflectionMethod($this, $method);
+        return !$reflectionMethod->isPrivate();
+    }
+
+    /**
+     * Returns true if a property exists for the current class which isn't private.
+     * Also returns true for private properties if $this is ViewableData (not a subclass)
+     */
+    private function isAccessibleProperty(string $property): bool
+    {
+        if (!property_exists($this, $property)) {
+            return false;
+        }
+        if (static::class === self::class) {
+            return true;
+        }
+        $reflectionProperty = new ReflectionProperty($this, $property);
+        return !$reflectionProperty->isPrivate();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -208,16 +208,47 @@ class ViewableDataTest extends SapphireTest
         $this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
     }
 
-    public function testIsPrivate()
+    public function testIsAccessibleMethod()
     {
-        $reflectionMethod = new ReflectionMethod(ViewableData::class, 'isPrivate');
+        $reflectionMethod = new ReflectionMethod(ViewableData::class, 'isAccessibleMethod');
         $reflectionMethod->setAccessible(true);
         $object = new ViewableDataTestObject();
-        
-        $output = $reflectionMethod->invokeArgs($object, [$object, 'privateMethod']);
-        $this->assertTrue($output, 'Method is not private');
-        
-        $output = $reflectionMethod->invokeArgs($object, [$object, 'publicMethod']);
-        $this->assertFalse($output, 'Method is private');
+
+        $output = $reflectionMethod->invokeArgs($object, ['privateMethod']);
+        $this->assertFalse($output, 'Method should not be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['protectedMethod']);
+        $this->assertTrue($output, 'Method should be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['publicMethod']);
+        $this->assertTrue($output, 'Method should be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['missingMethod']);
+        $this->assertFalse($output, 'Method should not be accessible');
+
+        $output = $reflectionMethod->invokeArgs(new ViewableData(), ['isAccessibleProperty']);
+        $this->assertTrue($output, 'Method should be accessible');
+    }
+
+    public function testIsAccessibleProperty()
+    {
+        $reflectionMethod = new ReflectionMethod(ViewableData::class, 'isAccessibleProperty');
+        $reflectionMethod->setAccessible(true);
+        $object = new ViewableDataTestObject();
+
+        $output = $reflectionMethod->invokeArgs($object, ['privateProperty']);
+        $this->assertFalse($output, 'Property should not be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['protectedProperty']);
+        $this->assertTrue($output, 'Property should be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['publicProperty']);
+        $this->assertTrue($output, 'Property should be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['missingProperty']);
+        $this->assertFalse($output, 'Property should not be accessible');
+
+        $output = $reflectionMethod->invokeArgs(new ViewableData(), ['objCache']);
+        $this->assertTrue($output, 'Property should be accessible');
     }
 }
