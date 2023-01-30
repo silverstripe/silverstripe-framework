@@ -277,6 +277,7 @@ eo:
     PLURALS:
       one: 'Unu membro'
       other: '{count} membroj'
+    RequiresPasswordChangeOnNextLogin: 'Bezonas ŝanĝi pasvorton je sekva elsaluto'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'

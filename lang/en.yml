@@ -276,6 +276,7 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
+    RequiresPasswordChangeOnNextLogin: 'Requires password change on next log in'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'

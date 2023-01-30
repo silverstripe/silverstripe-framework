@@ -275,6 +275,7 @@ nl:
     PLURALS:
       one: 'Een lid'
       other: '{count} leden'
+    RequiresPasswordChangeOnNextLogin: 'Wachtwoord veranderen is verplicht bij volgende aanmelding'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'Je wachtwoord is aangepast'
     SUBJECTPASSWORDRESET: 'Je wachtwoord opnieuw instellen'

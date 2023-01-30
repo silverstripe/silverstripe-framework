@@ -135,6 +135,7 @@ de_DE:
     PLURALS:
       one: 'Ein Mitglied'
       other: '{count} Mitglieder'
+    RequiresPasswordChangeOnNextLogin: 'Beim nächsten Login muss das Passwort geändert werden.'
     SINGULARNAME: Mitglied
     SURNAME: Nachname
     YOUROLDPASSWORD: 'Ihr altes Passwort'
