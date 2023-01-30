@@ -42,7 +42,6 @@ class Security extends Controller implements TemplateGlobalProvider
         'login',
         'logout',
         'lostpassword',
-        'passwordsent',
         'ping',
     ];
 
