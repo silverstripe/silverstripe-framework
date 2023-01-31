@@ -323,6 +323,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string|array $args
      * @example $list = $list->sort('Name'); // default ASC sorting
+     * @example $list = $list->sort('"Name"'); // field names can have double quotes around them
      * @example $list = $list->sort('Name ASC, Age DESC');
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(['Name' => 'ASC', 'Age' => 'DESC']);

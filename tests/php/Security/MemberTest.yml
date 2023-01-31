@@ -58,6 +58,8 @@
     Email: noexpiry@silverstripe.com
     Password: 1nitialPassword
   staffmember:
+    FirstName: Staff
+    Surname: User
     Email: staffmember@test.com
     Groups: '=>SilverStripe\Security\Group.staffgroup'
   managementmember:
