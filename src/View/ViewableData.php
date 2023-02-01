@@ -247,11 +247,14 @@ class ViewableData implements IteratorAggregate
     private function isAccessibleMethod(string $method): bool
     {
         if (!method_exists($this, $method)) {
-            return false;
+            // Methods added via extensions are accessible
+            return $this->hasCustomMethod($method);
         }
+        // All methods defined on ViewableData are accessible to ViewableData
         if (static::class === self::class) {
             return true;
         }
+        // Private methods defined on subclasses are not accessible to ViewableData
         $reflectionMethod = new ReflectionMethod($this, $method);
         return !$reflectionMethod->isPrivate();
     }

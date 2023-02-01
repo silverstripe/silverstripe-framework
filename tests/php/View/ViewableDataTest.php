@@ -7,8 +7,9 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestExtension;
+use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestObject;
 use SilverStripe\View\ViewableData;
-use SilverStripe\View\Tests\ViewableDataTestObject;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
@@ -16,6 +17,11 @@ use SilverStripe\View\Tests\ViewableDataTestObject;
  */
 class ViewableDataTest extends SapphireTest
 {
+    protected static $required_extensions = [
+        ViewableDataTestObject::class => [
+            ViewableDataTestExtension::class,
+        ],
+    ];
 
     public function testCasting()
     {
@@ -213,6 +219,7 @@ class ViewableDataTest extends SapphireTest
         $reflectionMethod = new ReflectionMethod(ViewableData::class, 'isAccessibleMethod');
         $reflectionMethod->setAccessible(true);
         $object = new ViewableDataTestObject();
+        $viewableData = new ViewableData();
 
         $output = $reflectionMethod->invokeArgs($object, ['privateMethod']);
         $this->assertFalse($output, 'Method should not be accessible');
@@ -226,8 +233,17 @@ class ViewableDataTest extends SapphireTest
         $output = $reflectionMethod->invokeArgs($object, ['missingMethod']);
         $this->assertFalse($output, 'Method should not be accessible');
 
-        $output = $reflectionMethod->invokeArgs(new ViewableData(), ['isAccessibleProperty']);
+        $output = $reflectionMethod->invokeArgs($viewableData, ['isAccessibleProperty']);
         $this->assertTrue($output, 'Method should be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['publicMethodFromExtension']);
+        $this->assertTrue($output, 'Method should be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['protectedMethodFromExtension']);
+        $this->assertFalse($output, 'Method should not be accessible');
+
+        $output = $reflectionMethod->invokeArgs($object, ['privateMethodFromExtension']);
+        $this->assertFalse($output, 'Method should not be accessible');
     }
 
     public function testIsAccessibleProperty()
