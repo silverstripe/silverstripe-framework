@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\View\Tests;
+namespace SilverStripe\View\Tests\ViewableDataTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
