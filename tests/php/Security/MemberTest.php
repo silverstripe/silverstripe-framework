@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Security\Tests;
 
+use InvalidArgumentException;
+use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -12,6 +14,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\Map;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Group;
@@ -1617,5 +1620,122 @@ class MemberTest extends FunctionalTest
         $member = $this->objFromFixture(Member::class, 'test');
         $result = $member->changePassword('');
         $this->assertFalse($result->isValid());
+    }
+
+    public function testMapInCMSGroupsNoLeftAndMain()
+    {
+        if (class_exists(LeftAndMain::class)) {
+            $this->markTestSkipped('LeftAndMain must not exist for this test.');
+        }
+        $result = Member::mapInCMSGroups();
+        $this->assertInstanceOf(Map::class, $result);
+
+        $this->assertEmpty($result, 'Without LeftAndMain, no groups are CMS groups.');
+    }
+
+    /**
+     * @dataProvider provideMapInCMSGroups
+     */
+    public function testMapInCMSGroups(array $groupFixtures, array $groupCodes, array $expectedUsers)
+    {
+        if (!empty($groupFixtures) && !empty($groupCodes)) {
+            throw new InvalidArgumentException('Data provider is misconfigured for this test.');
+        }
+
+        if (!class_exists(LeftAndMain::class)) {
+            $this->markTestSkipped('LeftAndMain must exist for this test.');
+        }
+
+        $groups = [];
+
+        // Convert fixture names to IDs
+        if (!empty($groupFixtures)) {
+            foreach ($groupFixtures as $index => $groupFixtureName) {
+                $groups[$index] = $this->objFromFixture(Group::class, $groupFixtureName)->ID;
+            }
+        }
+
+        // Convert codes to DataList
+        if (!empty($groupCodes)) {
+            $groups = Group::get()->filter(['Code' => $groupCodes]);
+        }
+
+        // Convert user fixtures to IDs
+        foreach ($expectedUsers as $index => $userFixtureName) {
+            // This is not an actual fixture - it was created by $this->logInWithPermission('ADMIN')
+            if ($userFixtureName === 'ADMIN User') {
+                $expectedUsers[$index] = Member::get()->filter(['Email' => 'ADMIN@example.org'])->first()->ID;
+            } else {
+                $expectedUsers[$index] = $this->objFromFixture(Member::class, $userFixtureName)->ID;
+            }
+        }
+
+        $result = Member::mapInCMSGroups($groups);
+        $this->assertInstanceOf(Map::class, $result);
+
+        $this->assertSame($expectedUsers, $result->keys());
+    }
+
+    public function provideMapInCMSGroups()
+    {
+        // Note: "ADMIN User" is not from the fixtures, that user is created by $this->logInWithPermission('ADMIN')
+        return [
+            'defaults' => [
+                'groupFixtures' => [],
+                'groupCodes' => [],
+                'expectedUsers' => [
+                    'admin',
+                    'other-admin',
+                    'ADMIN User',
+                ],
+            ],
+            'single group in a list' => [
+                'groupFixtures' => [],
+                'groupCodes' => [
+                    'staffgroup'
+                ],
+                'expectedUsers' => [
+                    'staffmember',
+                ],
+            ],
+            'single group in IDs array' => [
+                'groups' => [
+                    'staffgroup',
+                ],
+                'groupCodes' => [],
+                'expectedUsers' => [
+                    'staffmember',
+                ],
+            ],
+            'multiple groups in a list' => [
+                'groupFixtures' => [],
+                'groupCodes' => [
+                    'staffgroup',
+                    'securityadminsgroup',
+                ],
+                'expectedUsers' => [
+                    'staffmember',
+                    'test',
+                ],
+            ],
+            'multiple groups in IDs array' => [
+                'groupFixtures' => [
+                    'staffgroup',
+                    'securityadminsgroup',
+                ],
+                'groupCodes' => [],
+                'expectedUsers' => [
+                    'staffmember',
+                    'test',
+                ],
+            ],
+            'group with no members' => [
+                'groupFixtures' => [],
+                'groupCodes' => [
+                    'memberless',
+                ],
+                'expectedUsers' => [],
+            ],
+        ];
     }
 }

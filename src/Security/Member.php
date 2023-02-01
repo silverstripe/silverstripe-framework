@@ -1188,15 +1188,15 @@ class Member extends DataObject
      *
      * If no groups are passed, all groups with CMS permissions will be used.
      *
-     * @param array $groups Groups to consider or NULL to use all groups with
+     * @param SS_List|array|null $groups Groups to consider or NULL to use all groups with
      *                      CMS permissions.
      * @return Map Returns a map of all members in the groups given that
      *                have CMS permissions.
      */
-    public static function mapInCMSGroups($groups = null)
+    public static function mapInCMSGroups(SS_List|array|null $groups = null): Map
     {
         // non-countable $groups will issue a warning when using count() in PHP 7.2+
-        if (!$groups) {
+        if ($groups === null) {
             $groups = [];
         }
 
@@ -1205,7 +1205,7 @@ class Member extends DataObject
             return ArrayList::create()->map();
         }
 
-        if (count($groups ?? []) == 0) {
+        if (count($groups) === 0) {
             $perms = ['ADMIN', 'CMS_ACCESS_AssetAdmin'];
 
             if (class_exists(CMSMain::class)) {
@@ -1246,7 +1246,7 @@ class Member extends DataObject
             ]);
         }
 
-        return $members->sort('"Member"."Surname", "Member"."FirstName"')->map();
+        return $members->sort('"Surname", "FirstName"')->map();
     }
 
 
