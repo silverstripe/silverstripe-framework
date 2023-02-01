@@ -3,9 +3,9 @@
 namespace SilverStripe\View\Tests\Parsers;
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\View\Parsers\Diff;
+use SilverStripe\View\Parsers\HtmlDiff;
 
-class DiffTest extends SapphireTest
+class HtmlDiffTest extends SapphireTest
 {
 
     /**
@@ -19,14 +19,14 @@ class DiffTest extends SapphireTest
     {
         $from = '<span>Some text</span> <span>more text</span>';
         $to = '<span>Other text</span> <span>more text</span>';
-        $diff = Diff::compareHtml($from, $to);
+        $diff = HtmlDiff::compareHtml($from, $to);
         $this->assertEquals('<span><del>Some</del> <ins>Other</ins> text</span> <span>more text</span>', $diff, false);
 
         // Note that the end result here isn't perfect (there are new spaces where there weren't before)...
         // If we make improvements later on that keep only the original spaces, that would be preferred.
         // This test is more here to protect against any unexpected changes to the spacing, so that we can make an intentional
         // decision as to whether those changes are desirable.
-        $diff = Diff::compareHtml($from, $to, true);
+        $diff = HtmlDiff::compareHtml($from, $to, true);
         $this->assertEquals('&lt;span&gt; <del>Some</del> <ins>Other</ins> text &lt;/span&gt; &lt;span&gt; more text &lt;/span&gt;', $diff, true);
     }
 
@@ -116,7 +116,7 @@ class DiffTest extends SapphireTest
      */
     public function testCompareHTML(string|array $from, string|array $to, bool $escape, string $expected)
     {
-        $diff = Diff::compareHtml($from, $to, $escape);
+        $diff = HtmlDiff::compareHtml($from, $to, $escape);
         $this->assertEquals($this->removeWhiteSpace($expected), $this->removeWhiteSpace($diff));
     }
 
@@ -159,7 +159,7 @@ class DiffTest extends SapphireTest
 		</table>';
 
         $expected = '<del>' . $from . '</del>' . '<ins>' . $to . '</ins>';
-        $compare = Diff::compareHtml($from, $to);
+        $compare = HtmlDiff::compareHtml($from, $to);
 
         $this->assertEquals($this->removeWhiteSpace($expected), $this->removeWhiteSpace($compare));
     }
@@ -182,7 +182,7 @@ class DiffTest extends SapphireTest
         $quotedOne = preg_quote($sentenceOne, '/');
         $quotedTwo = preg_quote($sentenceTwo, '/');
         $expected = '/^ *<del>' . $quotedOne . '<\/del> *' . $quotedTwo . ' *<ins>' . $quotedOne . '<\/ins> *$/';
-        $actual = Diff::compareHtml($from, $to);
+        $actual = HtmlDiff::compareHtml($from, $to);
 
         $this->assertMatchesRegularExpression($expected, $actual);
     }
@@ -192,7 +192,7 @@ class DiffTest extends SapphireTest
         $from = ['Lorem', ['array here please ignore'], 'ipsum dolor'];
         $to = 'Lorem,ipsum';
         $expected = '/^Lorem,ipsum *<del>dolor<\/del> *$/';
-        $actual = Diff::compareHtml($from, $to);
+        $actual = HtmlDiff::compareHtml($from, $to);
 
         $this->assertMatchesRegularExpression($expected, $actual);
     }

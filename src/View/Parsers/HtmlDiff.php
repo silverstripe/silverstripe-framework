@@ -10,7 +10,7 @@ use SilverStripe\Core\Injector\Injector;
 /**
  * Class representing a 'diff' between two sequences of HTML strings.
  */
-class Diff
+class HtmlDiff
 {
     private const OLD_VAL = 'old';
     private const NEW_VAL = 'new';
