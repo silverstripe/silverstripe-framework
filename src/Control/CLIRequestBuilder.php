@@ -64,6 +64,13 @@ class CLIRequestBuilder extends HTTPRequestBuilder
             $variables['_GET']['url'] = $variables['_SERVER']['argv'][1];
             $variables['_SERVER']['REQUEST_URI'] = $variables['_SERVER']['argv'][1];
         }
+        
+        // Set 'HTTPS' and 'SSL' flag for CLI depending on SS_BASE_URL scheme value.
+        $scheme = parse_url(Environment::getEnv('SS_BASE_URL') ?? '', PHP_URL_SCHEME);
+        if ($scheme == 'https') {
+            $variables['_SERVER']['HTTPS'] = 'on';
+            $variables['_SERVER']['SSL'] = true;
+        }
 
         // Parse rest of variables as standard
         return parent::cleanEnvironment($variables);
