@@ -593,7 +593,7 @@ class FormTest extends FunctionalTest
         );
     }
 
-    public function testDisableSecurityTokenAcceptsSubmissionWithoutToken()
+    public function testDisableSecurityTokenAcceptsSubmissionWithoutToken(): void
     {
         SecurityToken::enable();
         $expectedToken = SecurityToken::inst()->getValue();
@@ -646,15 +646,55 @@ class FormTest extends FunctionalTest
             count($tokenEls ?? []),
             'Token form field added for controller without disableSecurityToken()'
         );
-        $response = $this->submitForm(
-            'Form_Form',
-            null,
-            [
-                'Email' => 'test@test.com',
-            ],
-            withSecurityToken: true
-        );
-        $this->assertEquals(200, $response->getStatusCode(), 'Submission succeeds with security token');
+    }
+
+    public function provideFormsSet()
+    {
+        return [
+            'with security token' =>
+                [
+                    ['Form_Form', null, [ 'Email' => 'test@test.com' ], true],
+                    200,
+                    'Submission succeeds with security token',
+                ],
+            'without security token' =>
+                [
+                    ['Form_Form', null, [ 'Email' => 'test@test.com' ], false],
+                    200,
+                    'Cannot submit form without security token',
+                ],
+            'button with wrong name' =>
+                [
+                    ['Form_Form', 'undefined', [ 'Email' => 'test@test.com' ], true],
+                    null,
+                    "Can't find button 'undefined' to submit as part of test.",
+                ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFormsSet
+     */
+    public function testSubmitFormWithSpecifiedParameters(
+        array $formData,
+        ?int $statusCode,
+        string $testMessage
+    ): void {
+
+        $this->get('FormTest_ControllerWithSecurityToken');
+        
+        [ $form, $button, $data, $withSecurityToken ] = [ ...$formData ];
+        
+        if (is_null($button)) {
+            $response = $this->submitForm($form, $button, $data, $withSecurityToken);
+            $this->assertEquals($statusCode, $response->getStatusCode(), $testMessage);
+        } else {
+            // Test nonexistent button Exceptions
+            $this->expectException(\Exception::class);
+            $this->expectExceptionMessage($testMessage);
+
+            $this->submitForm($form, $button, $data, $withSecurityToken);
+        }
     }
 
     public function testStrictFormMethodChecking()

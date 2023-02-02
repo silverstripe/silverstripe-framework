@@ -205,10 +205,8 @@ class TestSession
      * @param string $button HTML 'name' attribute of the button (NOT the 'id' attribute)
      * @param array $data Map of GET/POST data.
      * @param bool $withSecurityToken Submit with the form's security token if there is one.
-     * @return HTTPResponse
-     * @throws Exception
      */
-    public function submitForm($formID, $button = null, $data = [], $withSecurityToken = true)
+    public function submitForm(string $formID, string $button = null, array $data = [], bool $withSecurityToken = true): HTTPResponse
     {
         /** @var Crawler $page */
         $page = $this->lastPage();
@@ -217,13 +215,12 @@ class TestSession
                 $formCrawler = $page->filterXPath("//form[@id='$formID']");
                 $form = $formCrawler->form();
             } catch (InvalidArgumentException $e) {
-                // throw $e;
                 user_error("TestSession::submitForm failed to find the form {$formID}");
             }
 
-            foreach ($data as $k => $v) {
-                if ($form->has($k)) {
-                    $form->get($k)->setValue($v);
+            foreach ($data as $fieldName => $value) {
+                if ($form->has($fieldName)) {
+                    $form->get($fieldName)->setValue($value);
                 }
             }
 
@@ -251,7 +248,7 @@ class TestSession
             );
         } else {
             user_error("TestSession::submitForm called when there is no form loaded."
-                . " Visit the page with the form first", E_USER_WARNING);
+                        . " Visit the page with the form first", E_USER_WARNING);
         }
     }
 
@@ -326,10 +323,8 @@ class TestSession
 
     /**
      * Get a DOM Crawler for the last response
-     *
-     * @return Crawler A DOM Crawler for the given response
      */
-    public function lastPage()
+    public function lastPage(): Crawler
     {
         return new Crawler($this->lastContent(), Director::absoluteURL($this->lastUrl()));
     }
