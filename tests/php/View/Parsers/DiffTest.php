@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Tests\Parsers;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\Diff;
 
@@ -13,6 +14,10 @@ class DiffTest extends SapphireTest
      */
     public function testTableDiff()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
+
         if (!class_exists('DOMDocument')) {
             $this->markTestSkipped('"DOMDocument" required');
             return;
@@ -47,7 +52,9 @@ class DiffTest extends SapphireTest
 		</table>";
 
         $expected = "<ins>" . $to . "</ins>" . "<del>" . $from . "</del>";
-        $compare = Diff::compareHTML($from, $to);
+        $compare = Deprecation::withNoReplacement(function () use ($from, $to) {
+            return Diff::compareHTML($from, $to);
+        });
 
         // Very hard to debug this way, wouldn't need to do this if PHP had an *actual* DOM parsing lib,
         // and not just the poor excuse that is DOMDocument
@@ -62,6 +69,10 @@ class DiffTest extends SapphireTest
      */
     public function testLegacyEachStatement()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
+
         $sentenceOne =
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
         $sentenceTwo =
@@ -73,17 +84,25 @@ class DiffTest extends SapphireTest
         // We're cheating our test a little bit here, because depending on what HTML cleaner you have, you'll get
         // spaces added or not added around the tags.
         $expected = "/^ *<del>$sentenceOne<\/del> *$sentenceTwo *<ins>$sentenceOne<\/ins> *$/";
-        $actual = Diff::compareHTML($from, $to);
+        $actual = Deprecation::withNoReplacement(function () use ($from, $to) {
+            return Diff::compareHTML($from, $to);
+        });
 
         $this->assertMatchesRegularExpression($expected, $actual);
     }
 
     public function testDiffArray()
     {
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
+
         $from = ['Lorem', ['array here please ignore'], 'ipsum dolor'];
         $to = 'Lorem,ipsum';
         $expected = "/^Lorem,ipsum *<del>dolor<\/del> *$/";
-        $actual = Diff::compareHTML($from, $to);
+        $actual = Deprecation::withNoReplacement(function () use ($from, $to) {
+            return Diff::compareHTML($from, $to);
+        });
 
         $this->assertMatchesRegularExpression($expected, $actual);
     }

@@ -5,15 +5,27 @@ namespace SilverStripe\View\Parsers;
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 require_once 'difflib/difflib.php';
 
 /**
  * Class representing a 'diff' between two sequences of strings.
+ *
+ * @deprecated 4.13.0 Will be replaced with SilverStripe\View\Parsers\HtmlDiff
  */
 class Diff extends \Diff
 {
     public static $html_cleaner_class = null;
+
+    /**
+     * @inheritDoc
+     */
+    public function __construct($from_lines, $to_lines)
+    {
+        Deprecation::notice('4.13.0', 'Will be replaced with SilverStripe\View\Parsers\HtmlDiff', Deprecation::SCOPE_CLASS);
+        parent::__construct($from_lines, $to_lines);
+    }
 
     /**
      *  Attempt to clean invalid HTML, which messes up diffs.
@@ -26,9 +38,12 @@ class Diff extends \Diff
      * @param HTMLCleaner $cleaner Optional instance of a HTMLCleaner class to
      *    use, overriding self::$html_cleaner_class
      * @return mixed|string
+     *
+     * @deprecated 4.13.0 Will be removed without equivalent functionality
      */
     public static function cleanHTML($content, $cleaner = null)
     {
+        Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality');
         if (!$cleaner) {
             if (self::$html_cleaner_class && class_exists(self::$html_cleaner_class)) {
                 $cleaner = Injector::inst()->create(self::$html_cleaner_class);
@@ -57,9 +72,13 @@ class Diff extends \Diff
      * @param string $to
      * @param bool $escape
      * @return string
+     *
+     * @deprecated 4.13.0 Will be replaced with SilverStripe\View\Parsers\HtmlDiff::compareHTML()
      */
     public static function compareHTML($from, $to, $escape = false)
     {
+        Deprecation::notice('4.13.0', 'Will be replaced with SilverStripe\View\Parsers\HtmlDiff::compareHTML()');
+
         // First split up the content into words and tags
         $set1 = self::getHTMLChunks($from);
         $set2 = self::getHTMLChunks($to);
@@ -163,9 +182,13 @@ class Diff extends \Diff
     /**
      * @param string|bool|array $content If passed as an array, values will be concatenated with a comma.
      * @return array
+     *
+     * @deprecated 4.13.0 Will be removed without equivalent functionality
      */
     public static function getHTMLChunks($content)
     {
+        Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality');
+
         if ($content && !is_string($content) && !is_array($content) && !is_numeric($content) && !is_bool($content)) {
             throw new InvalidArgumentException('$content parameter needs to be a string or array');
         }
