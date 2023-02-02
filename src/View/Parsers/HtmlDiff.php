@@ -170,8 +170,7 @@ class HtmlDiff
         string $oldOrNew,
         bool $lookForTag,
         string $value
-    ): void
-    {
+    ): void {
         $alreadyMidBlock = $openTagsInBlock[$oldOrNew] > 0;
         $canAddTagsToBlock = $lookForTag || $alreadyMidBlock;
 

@@ -131,32 +131,32 @@ class HtmlDiffTest extends SapphireTest
         }
 
         $from = '<table>
-		<tbody>
-			<tr class="blah">
-				<td colspan="2">Row 1</td>
-			</tr>
-			<tr class="foo">
-				<td>Row 2</td>
-				<td>Row 2</td>
-			</tr>
-			<tr>
-				<td>Row 3</td>
-				<td>Row 3</td>
-			</tr>
-			</tbody>
-		</table>';
+        <tbody>
+            <tr class="blah">
+                <td colspan="2">Row 1</td>
+            </tr>
+            <tr class="foo">
+                <td>Row 2</td>
+                <td>Row 2</td>
+            </tr>
+            <tr>
+                <td>Row 3</td>
+                <td>Row 3</td>
+            </tr>
+            </tbody>
+        </table>';
 
         $to = '<table class="new-class">
-		<tbody>
-			<tr class="blah">
-				<td colspan="2">Row 1</td>
-			</tr>
-			<tr class="foo">
-				<td>Row 2</td>
-				<td>Row 2</td>
-			</tr>
-		</tbody>
-		</table>';
+        <tbody>
+            <tr class="blah">
+                <td colspan="2">Row 1</td>
+            </tr>
+            <tr class="foo">
+                <td>Row 2</td>
+                <td>Row 2</td>
+            </tr>
+        </tbody>
+        </table>';
 
         $expected = '<del>' . $from . '</del>' . '<ins>' . $to . '</ins>';
         $compare = HtmlDiff::compareHtml($from, $to);
