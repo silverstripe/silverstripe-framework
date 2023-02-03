@@ -63,6 +63,7 @@ class Team extends DataObject implements TestOnly
 
     private static $summary_fields = [
         'Title', // Overridden by Team_Extension
+        'MyTitle', // We can use customMethods. It should NOT break scaffolded searchable_fields
         'Title.UpperCase' => 'Title',
         'Captain.ShirtNumber' => 'Captain\'s shirt number',
         'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team'
