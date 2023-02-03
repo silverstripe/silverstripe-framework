@@ -1427,6 +1427,7 @@ class DataObjectTest extends SapphireTest
                 'Title.UpperCase' => 'Title',
                 'Captain.ShirtNumber' => 'Captain\'s shirt number',
                 'Captain.FavouriteTeam.Title' => 'Captain\'s favourite team',
+                'MyTitle' => 'MyTitle'
             ],
             $summaryFields
         );
