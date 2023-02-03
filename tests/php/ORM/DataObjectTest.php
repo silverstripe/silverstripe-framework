@@ -1394,6 +1394,11 @@ class DataObjectTest extends SapphireTest
             $fields,
             'Fields on related objects can be inherited from the $summary_fields static'
         );
+        $this->assertArrayNotHasKey(
+            'Captain.FavouriteTeam.MyTitle',
+            $fields,
+            'Fields from custom methods on related objects should not be inherited from the $summary_fields static'
+        );
 
         $testObj = new DataObjectTest\Fixture();
         $fields = $testObj->searchableFields();
