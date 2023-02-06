@@ -11,6 +11,7 @@ use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -785,9 +786,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns a generator for this DataList
      *
      * @return \Generator&DataObject[]
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     public function getGenerator()
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality to replace it');
+        });
         $query = $this->dataQuery->query()->execute();
 
         while ($row = $query->record()) {

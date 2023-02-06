@@ -576,9 +576,11 @@ class HTTP
      * Return static variable cache_age in second
      *
      * @return int
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     public static function get_cache_age()
     {
+        Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality to replace it');
         return self::$cache_age;
     }
 }

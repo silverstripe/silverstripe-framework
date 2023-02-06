@@ -11,6 +11,8 @@ use PDOException;
 
 /**
  * PDO driver database connector
+ *
+ * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
  */
 class PDOConnector extends DBConnector implements TransactionManager
 {
@@ -86,6 +88,17 @@ class PDOConnector extends DBConnector implements TransactionManager
      * @var bool
      */
     protected $inTransaction = false;
+
+    public function __construct()
+    {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
 
     /**
      * Flush all prepared statements

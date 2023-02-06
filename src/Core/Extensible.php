@@ -131,7 +131,10 @@ trait Extensible
     {
         $extensions = $this->getExtensionInstances();
         foreach ($extensions as $extensionClass => $extensionInstance) {
-            foreach ($this->findMethodsFromExtension($extensionInstance) as $method) {
+            $methods = Deprecation::withNoReplacement(function () use ($extensionInstance) {
+                return $this->findMethodsFromExtension($extensionInstance);
+            });
+            foreach ($methods as $method) {
                 $this->addCallbackMethod($method, function ($inst, $args) use ($method, $extensionClass) {
                     /** @var Extensible $inst */
                     $extension = $inst->getExtensionInstance($extensionClass);

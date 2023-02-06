@@ -57,7 +57,13 @@ class MigrateFileTask extends BuildTask
 
     public function __construct()
     {
-        Deprecation::notice('4.12.0', 'Will be removed without equivalent functionality to replace it', Deprecation::SCOPE_CLASS);
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
         parent::__construct();
     }
 

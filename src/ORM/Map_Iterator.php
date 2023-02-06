@@ -3,9 +3,12 @@
 namespace SilverStripe\ORM;
 
 use Iterator;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Builds a map iterator around an Iterator.  Called by Map
+ *
+ * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
  */
 class Map_Iterator implements Iterator
 {
@@ -35,6 +38,13 @@ class Map_Iterator implements Iterator
      */
     public function __construct(Iterator $items, $keyField, $titleField, $firstItems = null, $lastItems = null)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
         $this->items = $items;
         $this->keyField = $keyField;
         $this->titleField = $titleField;

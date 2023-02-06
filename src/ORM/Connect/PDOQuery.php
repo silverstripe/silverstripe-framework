@@ -2,8 +2,12 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * A result-set from a PDO database.
+ *
+ * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
  */
 class PDOQuery extends Query
 {
@@ -18,10 +22,16 @@ class PDOQuery extends Query
      */
     public function __construct(PDOStatementHandle $statement)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
         // Since no more than one PDOStatement for any one connection can be safely
         // traversed, each statement simply requests all rows at once for safety.
         // This could be re-engineered to call fetchAll on an as-needed basis
-
         $this->results = $statement->typeCorrectedFetchAll();
         $statement->closeCursor();
     }
