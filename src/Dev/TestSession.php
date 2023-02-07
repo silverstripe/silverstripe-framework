@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev;
 
 use Exception;
+use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie_Backend;
 use SilverStripe\Control\Director;
@@ -12,9 +13,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
-use SimpleByName;
-use SimplePage;
-use SimplePageBuilder;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Represents a test usage session of a web-app
@@ -202,44 +201,54 @@ class TestSession
      * Wrong: array('mycheckboxvalues' => array(1 => 'one', 2 => 'two'))
      * Right: array('mycheckboxvalues[1]' => 'one', 'mycheckboxvalues[2]' => 'two')
      *
-     * @see http://www.simpletest.org/en/form_testing_documentation.html
-     *
      * @param string $formID HTML 'id' attribute of a form (loaded through a previous response)
      * @param string $button HTML 'name' attribute of the button (NOT the 'id' attribute)
      * @param array $data Map of GET/POST data.
-     * @return HTTPResponse
-     * @throws Exception
+     * @param bool $withSecurityToken Submit with the form's security token if there is one.
      */
-    public function submitForm($formID, $button = null, $data = [])
+    public function submitForm(string $formID, string $button = null, array $data = [], bool $withSecurityToken = true): HTTPResponse
     {
+        /** @var Crawler $page */
         $page = $this->lastPage();
         if ($page) {
-            $form = $page->getFormById($formID);
-            if (!$form) {
+            try {
+                $formCrawler = $page->filterXPath("//form[@id='$formID']");
+                $form = $formCrawler->form();
+            } catch (InvalidArgumentException $e) {
                 user_error("TestSession::submitForm failed to find the form {$formID}");
             }
 
-            foreach ($data as $k => $v) {
-                $form->setField(new SimpleByName($k), $v);
+            foreach ($data as $fieldName => $value) {
+                if ($form->has($fieldName)) {
+                    $form->get($fieldName)->setValue($value);
+                }
             }
 
+            // Add security token to submitted values
+            if ($withSecurityToken && $form->has('SecurityID')) {
+                $securityField = $page->filterXPath("//input[@id='{$formID}_SecurityID']");
+                $form->get('SecurityID')->setValue($securityField->attr('value'));
+            }
+
+            $values = $form->getPhpValues();
+
+            // Add button to submitted values
             if ($button) {
-                $submission = $form->submitButton(new SimpleByName($button));
-                if (!$submission) {
+                $btnXpath = "//button[@name='$button'] | //input[@name='$button'][@type='button' or @type='submit']";
+                if (!$formCrawler->children()->filterXPath($btnXpath)->count()) {
                     throw new Exception("Can't find button '$button' to submit as part of test.");
                 }
-            } else {
-                $submission = $form->submit();
+                $values[$button] = true;
             }
 
-            $url = Director::makeRelative($form->getAction()->asString());
-
-            $postVars = [];
-            parse_str($submission->_encode() ?? '', $postVars);
-            return $this->post($url, $postVars);
+            return $this->sendRequest(
+                $form->getMethod(),
+                Director::makeRelative($form->getUri()),
+                $values
+            );
         } else {
             user_error("TestSession::submitForm called when there is no form loaded."
-                . " Visit the page with the form first", E_USER_WARNING);
+                        . " Visit the page with the form first", E_USER_WARNING);
         }
     }
 
@@ -313,24 +322,11 @@ class TestSession
     }
 
     /**
-     * Get the last response as a SimplePage object
-     *
-     * @return SimplePage The response if available
+     * Get a DOM Crawler for the last response
      */
-    public function lastPage()
+    public function lastPage(): Crawler
     {
-        require_once("simpletest/http.php");
-        require_once("simpletest/page.php");
-        require_once("simpletest/form.php");
-
-        $builder = new SimplePageBuilder();
-        if ($this->lastResponse) {
-            $page = &$builder->parse(new TestSession_STResponseWrapper($this->lastResponse));
-            $builder->free();
-            unset($builder);
-
-            return $page;
-        }
+        return new Crawler($this->lastContent(), Director::absoluteURL($this->lastUrl()));
     }
 
     /**

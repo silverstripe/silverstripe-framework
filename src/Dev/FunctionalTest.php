@@ -191,12 +191,12 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
      * @param string $formID HTML 'id' attribute of a form (loaded through a previous response)
      * @param string $button HTML 'name' attribute of the button (NOT the 'id' attribute)
      * @param array $data Map of GET/POST data.
-     * @return HTTPResponse
+     * @param bool $withSecurityToken Submit with the form's security token if there is one.
      */
-    public function submitForm($formID, $button = null, $data = [])
+    public function submitForm(string $formID, string $button = null, array $data = [], bool $withSecurityToken = true): HTTPResponse
     {
         $this->cssParser = null;
-        $response = $this->mainSession->submitForm($formID, $button, $data);
+        $response = $this->mainSession->submitForm($formID, $button, $data, $withSecurityToken);
         if ($this->autoFollowRedirection && is_object($response) && $response->getHeader('Location')) {
             $response = $this->mainSession->followRedirection();
         }
