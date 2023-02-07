@@ -228,6 +228,7 @@ da:
     PLURALS:
       one: 'En bruger'
       other: '{count} brugere'
+    RequiresPasswordChangeOnNextLogin: 'Kræver ændring af kodeord næste gang der logges ind'
     SINGULARNAME: Bruger
     SUBJECTPASSWORDCHANGED: 'Dit kodeord er blevet ændret'
     SUBJECTPASSWORDRESET: 'Link til at nulstille dit kodeord'

@@ -294,6 +294,7 @@ sl:
       two: '{count} uporabnika'
       few: '{count} uporabnikov'
       other: '{count} uporabnikov'
+    RequiresPasswordChangeOnNextLogin: 'Ob naslednji prijavi zahtevaj spremembo gesla'
     SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'

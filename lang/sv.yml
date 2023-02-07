@@ -224,6 +224,7 @@ sv:
     PLURALS:
       one: 'En medlem'
       other: '{count} medlemmar'
+    RequiresPasswordChangeOnNextLogin: 'Kräver ändring av lösenord vid nästa inloggning'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'
