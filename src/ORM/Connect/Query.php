@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Core\Convert;
 use Iterator;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Abstract query-result class. A query result provides an iterator that returns a map for each record of a query
@@ -34,6 +35,7 @@ abstract class Query implements Iterator
      * The current record in the iterator.
      *
      * @var array
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     protected $currentRecord = null;
 
@@ -41,6 +43,7 @@ abstract class Query implements Iterator
      * The number of the current row in the iterator.
      *
      * @var int
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     protected $rowNum = -1;
 
@@ -48,6 +51,7 @@ abstract class Query implements Iterator
      * Flag to keep track of whether iteration has begun, to prevent unnecessary seeks
      *
      * @var bool
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     protected $queryHasBegun = false;
 
@@ -169,52 +173,68 @@ abstract class Query implements Iterator
      * Makes use of {@link seek()} and {@link numRecords()}, takes care of the plumbing.
      *
      * @return void
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     #[\ReturnTypeWillChange]
     public function rewind()
     {
-        if ($this->queryHasBegun && $this->numRecords() > 0) {
-            $this->queryHasBegun = false;
-            $this->currentRecord = null;
-            $this->seek(0);
-        }
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+            if ($this->queryHasBegun && $this->numRecords() > 0) {
+                $this->queryHasBegun = false;
+                $this->currentRecord = null;
+                $this->seek(0);
+            }
+        });
     }
 
     /**
      * Iterator function implementation. Return the current item of the iterator.
      *
      * @return array
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     #[\ReturnTypeWillChange]
     public function current()
     {
-        if (!$this->currentRecord) {
-            return $this->next();
-        } else {
-            return $this->currentRecord;
-        }
+        return Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+            if (!$this->currentRecord) {
+                return $this->next();
+            } else {
+                return $this->currentRecord;
+            }
+        });
     }
 
     /**
      * Iterator function implementation. Return the first item of this iterator.
      *
      * @return array
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     public function first()
     {
-        $this->rewind();
-        return $this->current();
+        return Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+            $this->rewind();
+            return $this->current();
+        });
     }
 
     /**
      * Iterator function implementation. Return the row number of the current item.
      *
      * @return int
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     #[\ReturnTypeWillChange]
     public function key()
     {
-        return $this->rowNum;
+        return Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+            return $this->rowNum;
+        });
     }
 
     /**
@@ -222,34 +242,43 @@ abstract class Query implements Iterator
      * Makes use of {@link nextRecord()}, takes care of the plumbing.
      *
      * @return array
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     #[\ReturnTypeWillChange]
     public function next()
     {
-        $this->queryHasBegun = true;
-        $this->currentRecord = $this->nextRecord();
-        $this->rowNum++;
-        return $this->currentRecord;
+        return Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+            $this->queryHasBegun = true;
+            $this->currentRecord = $this->nextRecord();
+            $this->rowNum++;
+            return $this->currentRecord;
+        });
     }
 
     /**
      * Iterator function implementation. Check if the iterator is pointing to a valid item.
      *
      * @return bool
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     #[\ReturnTypeWillChange]
     public function valid()
     {
-        if (!$this->queryHasBegun) {
-            $this->next();
-        }
-        return $this->currentRecord !== false;
+        return Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality to replace it.');
+            if (!$this->queryHasBegun) {
+                $this->next();
+            }
+            return $this->currentRecord !== false;
+        });
     }
 
     /**
      * Return the next record in the query result.
      *
      * @return array
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     abstract public function nextRecord();
 
@@ -265,6 +294,7 @@ abstract class Query implements Iterator
      *
      * @param int $rowNum Row number to go to.
      * @return array
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
      */
     abstract public function seek($rowNum);
 }

@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use mysqli_result;
 use mysqli_stmt;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Provides a record-view for mysqli prepared statements
@@ -102,15 +103,21 @@ class MySQLStatement extends Query
         $this->currentRecord = false;
     }
 
+    /**
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
+     */
     public function seek($row)
     {
-        $this->rowNum = $row - 1;
+        return Deprecation::withNoReplacement(function () use ($row) {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+            $this->rowNum = $row - 1;
 
-        // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
-        $this->statement->data_seek($row);
-        $result = $this->next();
-        $this->statement->data_seek($row);
-        return $result;
+            // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
+            $this->statement->data_seek($row);
+            $result = $this->next();
+            $this->statement->data_seek($row);
+            return $result;
+        });
     }
 
     public function numRecords()
@@ -118,8 +125,14 @@ class MySQLStatement extends Query
         return $this->statement->num_rows();
     }
 
+    /**
+     * @deprecated 4.13.0 Will be replaced by getIterator() in CMS 5
+     */
     public function nextRecord()
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.13.0', 'Will be replaced by getIterator() in CMS 5');
+        });
         // Skip data if out of data
         if (!$this->statement->fetch()) {
             return false;

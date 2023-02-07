@@ -73,6 +73,7 @@ class Director implements TemplateGlobalProvider
     /**
      * @config
      * @var string
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     private static $alternate_base_folder;
 
@@ -82,6 +83,7 @@ class Director implements TemplateGlobalProvider
      *
      * @config
      * @var bool|null
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     private static $alternate_public_dir = null;
 

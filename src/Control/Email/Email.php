@@ -115,7 +115,9 @@ class Email extends ViewableData
      */
     public static function getSendAllEmailsTo()
     {
-        return static::mergeConfiguredEmails('send_all_emails_to', 'SS_SEND_ALL_EMAILS_TO');
+        return Deprecation::withNoReplacement(function () {
+            return static::mergeConfiguredEmails('send_all_emails_to', 'SS_SEND_ALL_EMAILS_TO');
+        });
     }
 
     /**
@@ -125,7 +127,9 @@ class Email extends ViewableData
      */
     public static function getCCAllEmailsTo()
     {
-        return static::mergeConfiguredEmails('cc_all_emails_to', 'SS_CC_ALL_EMAILS_TO');
+        return Deprecation::withNoReplacement(function () {
+            return static::mergeConfiguredEmails('cc_all_emails_to', 'SS_CC_ALL_EMAILS_TO');
+        });
     }
 
     /**
@@ -135,7 +139,9 @@ class Email extends ViewableData
      */
     public static function getBCCAllEmailsTo()
     {
-        return static::mergeConfiguredEmails('bcc_all_emails_to', 'SS_BCC_ALL_EMAILS_TO');
+        return Deprecation::withNoReplacement(function () {
+            return static::mergeConfiguredEmails('bcc_all_emails_to', 'SS_BCC_ALL_EMAILS_TO');
+        });
     }
 
     /**
@@ -145,7 +151,9 @@ class Email extends ViewableData
      */
     public static function getSendAllEmailsFrom()
     {
-        return static::mergeConfiguredEmails('send_all_emails_from', 'SS_SEND_ALL_EMAILS_FROM');
+        return Deprecation::withNoReplacement(function () {
+            return static::mergeConfiguredEmails('send_all_emails_from', 'SS_SEND_ALL_EMAILS_FROM');
+        });
     }
 
     /**
@@ -154,9 +162,11 @@ class Email extends ViewableData
      * @param string $config Config key
      * @param string $env Env variable key
      * @return array Array of email addresses
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     protected static function mergeConfiguredEmails($config, $env)
     {
+        Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality to replace it');
         // Normalise config list
         $normalised = [];
         $source = (array)static::config()->get($config);

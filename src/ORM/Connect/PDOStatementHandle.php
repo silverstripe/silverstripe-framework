@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use PDO;
 use PDOStatement;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A handle to a PDOStatement, with cached column metadata, and type conversion
@@ -11,6 +12,8 @@ use PDOStatement;
  * Column metadata can't be fetched from a native PDOStatement after multiple calls in some DB backends,
  * so we wrap in this handle object, which also takes care of tidying up content types to keep in line
  * with the SilverStripe 4.4+ type expectations.
+ *
+ * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
  */
 class PDOStatementHandle
 {
@@ -36,6 +39,13 @@ class PDOStatementHandle
      */
     public function __construct(PDOStatement $statement)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
         $this->statement = $statement;
     }
 

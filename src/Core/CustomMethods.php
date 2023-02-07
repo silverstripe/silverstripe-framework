@@ -193,9 +193,11 @@ trait CustomMethods
     /**
      * @param object $extension
      * @return array
+     * @deprecated 4.13.0 Will be replaced by findMethodsFrom() in CMS 5
      */
     protected function findMethodsFromExtension($extension)
     {
+        Deprecation::notice('4.13.0', 'Will be replaced by findMethodsFrom() in CMS 5');
         if (method_exists($extension, 'allMethodNames')) {
             if ($extension instanceof Extension) {
                 try {
@@ -236,7 +238,9 @@ trait CustomMethods
             );
         }
 
-        $methods = $this->findMethodsFromExtension($extension);
+        $methods = Deprecation::withNoReplacement(function () use ($extension) {
+            return $this->findMethodsFromExtension($extension);
+        });
         if ($methods) {
             if ($extension instanceof Extension) {
                 Deprecation::notice(
@@ -279,7 +283,9 @@ trait CustomMethods
             );
         }
 
-        $methods = $this->findMethodsFromExtension($extension);
+        $methods = Deprecation::withNoReplacement(function () use ($extension) {
+            return $this->findMethodsFromExtension($extension);
+        });
         if ($methods) {
             foreach ($methods as $method) {
                 if (!isset(self::$extra_methods[$class][$method])) {

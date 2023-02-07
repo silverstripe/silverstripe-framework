@@ -276,7 +276,9 @@ abstract class BaseKernel implements Kernel
         }
 
         // Check saved session
-        $env = $this->sessionEnvironment();
+        $env = Deprecation::withNoReplacement(function () {
+            return $this->sessionEnvironment();
+        });
         if ($env) {
             return $env;
         }
@@ -293,9 +295,11 @@ abstract class BaseKernel implements Kernel
      * Check or update any temporary environment specified in the session.
      *
      * @return null|string
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     protected function sessionEnvironment()
     {
+        Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality to replace it.');
         if (!$this->booted) {
             // session is not initialyzed yet, neither is manifest
             return null;

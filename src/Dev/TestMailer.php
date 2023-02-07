@@ -4,11 +4,13 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Email\Mailer;
 use Swift_Attachment;
+use SilverStripe\Dev\Deprecation;
 
 class TestMailer implements Mailer
 {
     /**
      * @var array
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     protected $emailsSent = [];
 
@@ -58,7 +60,9 @@ class TestMailer implements Mailer
             $serialised['HtmlContent'] = $htmlContent;
         }
 
-        $this->saveEmail($serialised);
+        Deprecation::withNoReplacement(function () use ($serialised) {
+            $this->saveEmail($serialised);
+        });
 
         return true;
     }
@@ -67,9 +71,11 @@ class TestMailer implements Mailer
      * Save a single email to the log
      *
      * @param array $data A map of information about the email
+     * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
      */
     protected function saveEmail($data)
     {
+        Deprecation::notice('4.13.0', 'Will be removed without equivalent functionality to replace it');
         $this->emailsSent[] = $data;
     }
 
