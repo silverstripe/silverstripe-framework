@@ -33,6 +33,7 @@
         "monolog/monolog": "^3.2.0",
         "nikic/php-parser": "^4.15.0",
         "psr/container": "^1.1 || ^2.0",
+        "sebastian/diff": "^4.0",
         "silverstripe/config": "^2",
         "silverstripe/assets": "^2",
         "silverstripe/vendor-plugin": "^2",
