@@ -180,7 +180,7 @@ class HtmlDiffTest extends SapphireTest
                 <td>Row 3</td>
                 <td>Row 3</td>
             </tr>
-            </tbody>
+        </tbody>
         </table>';
 
         $to = '<table class="new-class">
