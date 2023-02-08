@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Tests\Parsers;
 
+use SebastianBergmann\Diff\Differ;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\HtmlDiff;
 
@@ -28,6 +29,42 @@ class HtmlDiffTest extends SapphireTest
         // decision as to whether those changes are desirable.
         $diff = HtmlDiff::compareHtml($from, $to, true);
         $this->assertEquals('&lt;span&gt; <del>Some</del> <ins>Other</ins> text &lt;/span&gt; &lt;span&gt; more text &lt;/span&gt;', $diff, true);
+    }
+
+    /**
+     * The underlying SebastianBergmann\Diff\Differ class has a special constant for end of line differences
+     * but we shouldn't ever encounter that because of the way we're modifying the values before passing them
+     * in to that class.
+     */
+    public function testEndOfLineDoesntNeedHandling()
+    {
+        $from = 'some change' . "\r";
+        $to = 'some change' . "\n";
+
+        // If we encounter an end-of-line difference, these should throw exceptions
+        $this->assertSame('some change', HtmlDiff::compareHtml($from, $to, true));
+        $this->assertSame('some change', HtmlDiff::compareHtml($from, $to));
+        $this->assertSame('some change', HtmlDiff::compareHtml($to, $from, true));
+        $this->assertSame('some change', HtmlDiff::compareHtml($to, $from));
+
+        // Ensure that this test is valid and that those changes would include an end-of-line warning
+        // in a direct call to the underlying differ
+        $differ = new Differ();
+        $expected = [
+            [
+                '#Warning: Strings contain different line endings!' . "\n",
+                Differ::DIFF_LINE_END_WARNING,
+            ],
+            [
+                $from,
+                Differ::REMOVED,
+            ],
+            [
+                $to,
+                Differ::ADDED,
+            ],
+        ];
+        $this->assertSame($expected, $differ->diffToArray($from, $to));
     }
 
     public function provideCompareHtml(): array

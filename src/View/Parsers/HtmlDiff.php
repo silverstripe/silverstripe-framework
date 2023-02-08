@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Parsers;
 
+use LogicException;
 use Masterminds\HTML5\Elements;
 use SebastianBergmann\Diff\Differ;
 use SilverStripe\Core\Convert;
@@ -69,6 +70,9 @@ class HtmlDiff
                 case Differ::REMOVED:
                     $content .= ' <del>' . $value . '</del> ';
                     break;
+
+                default:
+                    throw new LogicException('Unexpected type encountered: "' . (string)$type . '"');
             }
         }
 
