@@ -524,7 +524,7 @@ class i18nTextCollector
         if (is_dir($modulePath . DIRECTORY_SEPARATOR . 'src')) {
             $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'src', null, 'php');
         } else {
-            $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'src', null, 'php');
+            $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'code', null, 'php');
         }
 
         // Search for templates in this module
