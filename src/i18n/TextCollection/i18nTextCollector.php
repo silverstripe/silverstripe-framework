@@ -859,8 +859,8 @@ class i18nTextCollector
         ksort($entities);
         return $entities;
     }
-	
-	/**
+
+    /**
      * Extracts translations for ORM fields
      *
      * @param string $filePath
