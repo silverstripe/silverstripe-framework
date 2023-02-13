@@ -301,14 +301,14 @@ class ClassInfo
      */
     public static function classes_for_file($filePath)
     {
-        $absFilePath = Director::getAbsFile($filePath);
+        $absFilePath = Director::getAbsFile(realpath($filePath));
         $classManifest = ClassLoader::inst()->getManifest();
         $classes = $classManifest->getClasses();
         $classNames = $classManifest->getClassNames();
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (strcasecmp($absFilePath ?? '', $compareFilePath ?? '') === 0) {
+            if (strcasecmp($absFilePath ?? '', realpath($compareFilePath) ?? '') === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
