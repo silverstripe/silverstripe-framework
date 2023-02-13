@@ -3,15 +3,14 @@
 namespace SilverStripe\i18n\Tests;
 
 use SilverStripe\Assets\Filesystem;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\YamlWriter;
-use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
 use SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
-use SilverStripe\Security\Member;
 
 class i18nTextCollectorTest extends SapphireTest
 {
@@ -731,6 +730,34 @@ PHP;
                 'SilverStripe\i18n\Tests\i18nTest\TestDataObject.many_many_ManyManyRelation' => 'Many many relation',
             ],
             $matches
+        );
+    }
+
+    public function testCollectFromTheme()
+    {
+        // create new module manifest only containing the test theme
+        $moduleManifest = new ModuleManifest($this->alternateBasePath);
+        $moduleManifest->addModule(Path::join($this->alternateBasePath, 'themes', 'testtheme1'));
+        $this->pushModuleManifest($moduleManifest);
+
+        $c = i18nTextCollector::create();
+        $entities = $c->collect();
+
+        $this->assertArrayHasKey('testtheme1', $entities);
+
+        $this->assertEquals(
+            [
+                'i18nTestTheme1.LAYOUTTEMPLATE' => 'Theme1 Layout Template',
+                'i18nTestTheme1.MAINTEMPLATE' => 'Theme1 Main Template',
+                'i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE' => 'Theme1 Layout Template no namespace',
+                'i18nTestTheme1.ss.REPLACEMENTNONAMESPACE' => 'Theme1 My replacement no namespace: {replacement}',
+                'i18nTestTheme1Include.REPLACEMENTINCLUDENAMESPACE' => 'Theme1 My include replacement: {replacement}',
+                'i18nTestTheme1Include.WITHNAMESPACE' => 'Theme1 Include Entity with Namespace',
+                'i18nTestTheme1Include.ss.NONAMESPACE' => 'Theme1 Include Entity without Namespace',
+                'i18nTestTheme1Include.ss.REPLACEMENTINCLUDENONAMESPACE' => 'Theme1 My include replacement no namespace: {replacement}',
+                'i18nTestTheme1.REPLACEMENTNAMESPACE' => 'Theme1 My replacement: {replacement}',
+            ],
+            $entities['testtheme1']
         );
     }
 
