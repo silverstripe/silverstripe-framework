@@ -5,6 +5,9 @@ namespace SilverStripe\i18n\TextCollection;
 use Exception;
 use LogicException;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
@@ -12,10 +15,12 @@ use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
+use SilverStripe\Forms\FormField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\i18n\Messages\Reader;
 use SilverStripe\i18n\Messages\Writer;
+use SilverStripe\ORM\DataObject;
 
 /**
  * SilverStripe-variant of the "gettext" tool:
@@ -482,6 +487,7 @@ class i18nTextCollector
             if ($extension === 'php') {
                 $entities = array_merge(
                     $entities,
+                    $this->collectFromORM($filePath),
                     $this->collectFromCode($content, $filePath, $module),
                     $this->collectFromEntityProviders($filePath, $module)
                 );
@@ -881,7 +887,7 @@ class i18nTextCollector
         $classes = ClassInfo::classes_for_file($filePath);
         foreach ($classes as $class) {
             // Skip non-implementing classes
-            if (!class_exists($class ?? '') || !is_a($class, i18nEntityProvider::class, true)) {
+            if (!class_exists($class) || !is_a($class, i18nEntityProvider::class, true)) {
                 continue;
             }
 
@@ -898,6 +904,47 @@ class i18nTextCollector
                 // Detect non-associative result for any key
                 if (is_array($value) && $value === array_values($value)) {
                     throw new Exception('Translations from provideI18nEntities() must be an associative array for key $key');
+                }
+            }
+            $entities = array_merge($entities, $provided);
+        }
+
+        ksort($entities);
+        return $entities;
+    }
+
+    /**
+     * Extracts translations for ORM fields
+     *
+     * @param string $filePath
+     * @return array
+     */
+    public function collectFromORM($filePath)
+    {
+        $entities = [];
+        $classes = ClassInfo::classes_for_file($filePath);
+        foreach ($classes as $class) {
+            // Skip non-implementing classes
+            if (!class_exists($class)) {
+                continue;
+            }
+
+            // Skip abstract classes
+            $reflectionClass = new ReflectionClass($class);
+            if ($reflectionClass->isAbstract()) {
+                continue;
+            }
+
+            $provided = [];
+            // add labels for ORM fields
+            if (is_a($class, DataObject::class, true) || is_a($class, Extension::class, true)) {
+                foreach (['db', 'has_one', 'has_many', 'belongs_to', 'many_many', 'belongs_many_many'] as $type) {
+                    if ($config = Config::inst()->get($class, $type, Config::UNINHERITED)) {
+                        foreach ($config as $name => $spec) {
+                            // add type in translation identifier as used in DataObject::fieldLabels()
+                            $provided["{$class}.{$type}_{$name}"] = FormField::name_to_label($name);
+                        }
+                    }
                 }
             }
             $entities = array_merge($entities, $provided);
