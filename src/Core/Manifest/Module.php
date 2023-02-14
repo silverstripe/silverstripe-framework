@@ -23,16 +23,19 @@ class Module implements Serializable
 
     /**
      * Return value of getCIConfig() when module uses PHPUNit 9
+     * @deprecated 4.13.0 Will be removed without equivalent functionality
      */
     const CI_PHPUNIT_NINE = 'CI_PHPUNIT_NINE';
 
     /**
      * Return value of getCIConfig() when module uses PHPUNit 5
+     * @deprecated 4.13.0 Will be removed without equivalent functionality
      */
     const CI_PHPUNIT_FIVE = 'CI_PHPUNIT_FIVE';
 
     /**
      * Return value of getCIConfig() when module does not use any CI
+     * @deprecated 4.13.0 Will be removed without equivalent functionality
      */
     const CI_UNKNOWN = 'CI_UNKNOWN';
 

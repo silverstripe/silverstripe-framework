@@ -6,6 +6,7 @@ use SilverStripe\Control\HTTPResponse;
 
 /**
  * Wrapper around HTTPResponse to make it look like a SimpleHTTPResposne
+ * @deprecated 4.13.0 Will be removed without equivalent functionality to replace it
  */
 class TestSession_STResponseWrapper
 {
@@ -17,6 +18,13 @@ class TestSession_STResponseWrapper
 
     public function __construct(HTTPResponse $response)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '4.13.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
         $this->response = $response;
     }
 

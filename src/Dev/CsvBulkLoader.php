@@ -254,11 +254,11 @@ class CsvBulkLoader extends BulkLoader
         Deprecation::notice('4.12.0', 'Process rows individually instead');
         $results = BulkLoader_Result::create();
 
-        $csv = new CSVParser(
-            $filepath,
-            $this->delimiter,
-            $this->enclosure
-        );
+        $delimiter = $this->delimiter;
+        $enclosure = $this->enclosure;
+        $csv = Deprecation::withNoReplacement(function () use ($filepath, $delimiter, $enclosure) {
+            return new CSVParser($filepath, $delimiter, $enclosure);
+        });
 
         // ColumnMap has two uses, depending on whether hasHeaderRow is set
         if ($this->columnMap) {
