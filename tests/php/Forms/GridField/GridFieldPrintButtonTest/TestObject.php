@@ -12,4 +12,9 @@ class TestObject extends DataObject implements TestOnly
     private static $db = [
         'Name' => 'Varchar'
     ];
+
+    public function canView($member = null)
+    {
+        return true;
+    }
 }

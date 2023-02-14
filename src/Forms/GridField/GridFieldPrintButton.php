@@ -220,7 +220,10 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
             }
         }
 
-        $items = $gridField->getManipulatedList();
+        //Remove GridFieldPaginator as we're going to export the entire list.
+        $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
+
+        $items = $gridField->getListForDisplay();
         $itemRows = new ArrayList();
 
         /** @var GridFieldDataColumns $gridFieldColumnsComponent */

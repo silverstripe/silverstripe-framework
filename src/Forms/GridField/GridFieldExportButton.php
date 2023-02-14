@@ -207,7 +207,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
         //Remove GridFieldPaginator as we're going to export the entire list.
         $gridField->getConfig()->removeComponentsByType(GridFieldPaginator::class);
 
-        $items = $gridField->getManipulatedList();
+        $items = $gridField->getListForDisplay();
 
         // @todo should GridFieldComponents change behaviour based on whether others are available in the config?
         foreach ($gridField->getConfig()->getComponents() as $component) {
@@ -232,35 +232,33 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
 
         /** @var DataObject $item */
         foreach ($items as $item) {
-            if (!$item->hasMethod('canView') || $item->canView()) {
-                $columnData = [];
+            $columnData = [];
 
-                foreach ($csvColumns as $columnSource => $columnHeader) {
-                    if (!is_string($columnHeader) && is_callable($columnHeader)) {
-                        if ($item->hasMethod($columnSource)) {
-                            $relObj = $item->{$columnSource}();
-                        } else {
-                            $relObj = $item->relObject($columnSource);
-                        }
-
-                        $value = $columnHeader($relObj);
-                    } elseif ($gridFieldColumnsComponent && in_array($columnSource, $columnsHandled ?? [])) {
-                        $value = strip_tags(
-                            $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource) ?? ''
-                        );
+            foreach ($csvColumns as $columnSource => $columnHeader) {
+                if (!is_string($columnHeader) && is_callable($columnHeader)) {
+                    if ($item->hasMethod($columnSource)) {
+                        $relObj = $item->{$columnSource}();
                     } else {
-                        $value = $gridField->getDataFieldValue($item, $columnSource);
-
-                        if ($value === null) {
-                            $value = $gridField->getDataFieldValue($item, $columnHeader);
-                        }
+                        $relObj = $item->relObject($columnSource);
                     }
 
-                    $columnData[] = $value;
+                    $value = $columnHeader($relObj);
+                } elseif ($gridFieldColumnsComponent && in_array($columnSource, $columnsHandled ?? [])) {
+                    $value = strip_tags(
+                        $gridFieldColumnsComponent->getColumnContent($gridField, $item, $columnSource) ?? ''
+                    );
+                } else {
+                    $value = $gridField->getDataFieldValue($item, $columnSource);
+
+                    if ($value === null) {
+                        $value = $gridField->getDataFieldValue($item, $columnHeader);
+                    }
                 }
 
-                $csvWriter->insertOne($columnData);
+                $columnData[] = $value;
             }
+
+            $csvWriter->insertOne($columnData);
 
             if ($item->hasMethod('destroy')) {
                 $item->destroy();

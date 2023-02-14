@@ -570,7 +570,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     private function getGridFieldItemAdjacencies(): array
     {
-        $list = $this->getGridField()->getManipulatedList();
+        $list = $this->getGridField()->getListForDisplay();
         $paginator = $this->getGridFieldPaginatorState();
         if (!$paginator) {
             return [];

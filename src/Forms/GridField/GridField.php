@@ -416,6 +416,39 @@ class GridField extends FormField
     }
 
     /**
+     * Get the data source after applying every {@link GridField_DataManipulator} and canView
+     * permission checks to it. Unlike getManipulatedList() this gives you the exact records
+     * which will be displayed.
+     */
+    public function getListForDisplay(): SS_List
+    {
+        $list = $this->getManipulatedList();
+
+        if (method_exists($list, 'filterByCallback')) {
+            // Use filterByCallback if possible
+            $list = $list->filterByCallback(function ($item) {
+                return !$item->hasMethod('canView') || $item->canView();
+            });
+        } else {
+            // Fall back on spitting out an ArrayList
+            $list = ArrayList::create();
+            foreach ($list as $item) {
+                if (!$item->hasMethod('canView') || $item->canView()) {
+                    $list->add($item);
+                }
+            }
+        }
+
+        foreach ($this->getComponents() as $item) {
+            if ($item instanceof GridField_PostFilterDataManipulator) {
+                $list = $item->getManipulatedDataPostFilter($this, $list);
+            }
+        }
+
+        return $list;
+    }
+
+    /**
      * Get the current GridState_Data or the GridState.
      *
      * @param bool $getData
@@ -463,7 +496,7 @@ class GridField extends FormField
         if (($request instanceof NullHTTPRequest) && Controller::has_curr()) {
             $request = Controller::curr()->getRequest();
         }
-        
+
         $stateStr = $this->getStateManager()->getStateFromRequest($this, $request);
         if ($stateStr) {
             $oldState = $this->getState(false);
@@ -513,7 +546,7 @@ class GridField extends FormField
 
         $columns = $this->getColumns();
 
-        $list = $this->getManipulatedList();
+        $list = $this->getListForDisplay();
 
         $content = [
             'before' => '',
@@ -628,10 +661,6 @@ class GridField extends FormField
             $rows = [];
 
             foreach ($list as $index => $record) {
-                if ($record->hasMethod('canView') && !$record->canView()) {
-                    continue;
-                }
-
                 $rowContent = '';
 
                 foreach ($this->getColumns() as $column) {

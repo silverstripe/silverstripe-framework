@@ -14,7 +14,7 @@ use LogicException;
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
  * to the bottom of the {@link GridField}.
  */
-class GridFieldPaginator extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider, GridField_StateProvider
+class GridFieldPaginator extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_DataManipulator, GridField_PostFilterDataManipulator, GridField_ActionProvider, GridField_StateProvider
 {
     use Configurable;
 
@@ -25,6 +25,15 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * @var int
      */
     private static $default_items_per_page = 15;
+
+    /**
+     * Specifies whether all gridfield paginators filter after the canview check.
+     * If false, the pagination filter occurs before the canview check which is more efficient
+     * but can lead to incorrect pagination if the user can't view all records in the GridField.
+     */
+    private static $default_paginate_after_canview = false;
+
+    protected $filterAfterCanview;
 
     /**
      * @var int
@@ -44,6 +53,8 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
     {
         $this->itemsPerPage = $itemsPerPage
             ?: GridFieldPaginator::config()->uninherited('default_items_per_page');
+
+        $this->filterAfterCanview = static::config()->get('default_paginate_after_canview');
     }
 
     /**
@@ -151,13 +162,23 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
         ]);
     }
 
-    /**
-     *
-     * @param GridField $gridField
-     * @param SS_List $dataList
-     * @return SS_List
-     */
+    public function getManipulatedDataPostFilter(GridField $gridField, SS_List $dataList): SS_List
+    {
+        if ($this->getFilterAfterCanview()) {
+            return $this->manipulateData($gridField, $dataList);
+        }
+        return $dataList;
+    }
+
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
+    {
+        if (!$this->getFilterAfterCanview()) {
+            return $this->manipulateData($gridField, $dataList);
+        }
+        return $dataList;
+    }
+
+    protected function manipulateData(GridField $gridField, SS_List $dataList): SS_List
     {
         if (!$this->checkDataType($dataList)) {
             return $dataList;
@@ -340,5 +361,16 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
     public function getItemsPerPage()
     {
         return $this->itemsPerPage;
+    }
+
+    public function setFilterAfterCanview(bool $filterAfterCanview): self
+    {
+        $this->filterAfterCanview = $filterAfterCanview;
+        return $this;
+    }
+
+    public function getFilterAfterCanview(): bool
+    {
+        return $this->filterAfterCanview;
     }
 }
