@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\CSVParser;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 class CSVParserTest extends SapphireTest
@@ -19,6 +20,9 @@ class CSVParserTest extends SapphireTest
     {
         parent::setUp();
         $this->csvPath = __DIR__ . '/CsvBulkLoaderTest/csv/';
+        if (Deprecation::isEnabled()) {
+            $this->markTestSkipped('Test calls deprecated code');
+        }
     }
 
     public function testParsingWithHeaders()

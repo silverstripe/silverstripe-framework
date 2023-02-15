@@ -31,6 +31,7 @@ use SilverStripe\Control\Director;
  *   $obj->write();
  * }
  * </code>
+ * @deprecated 4.13.0 Use League\Csv\Reader instead
  */
 class CSVParser implements Iterator
 {
@@ -115,7 +116,7 @@ class CSVParser implements Iterator
      */
     public function __construct($filename, $delimiter = ",", $enclosure = '"')
     {
-        Deprecation::notice('5.0', __CLASS__ . ' is deprecated, use ' . Reader::class . ' instead');
+        Deprecation::notice('4.13.0', 'Use ' . Reader::class . ' instead', Deprecation::SCOPE_CLASS);
         $filename = Director::getAbsFile($filename);
         $this->filename = $filename;
         $this->delimiter = $delimiter;
