@@ -1958,8 +1958,6 @@ class DataListTest extends SapphireTest
     /**
      * Test passing scalar values to sort()
      *
-     * Explicity tests that sort(null) will wipe any existing sort on a DataList
-     *
      * @dataProvider provideSortScalarValues
      */
     public function testSortScalarValues(mixed $emtpyValue, string $type): void
@@ -1992,10 +1990,7 @@ class DataListTest extends SapphireTest
     }
 
     /**
-     * Test passing scalar values to sort()
-     *
      * Explicity tests that sort(null) will wipe any existing sort on a DataList
-     *
      */
     public function testSortNull(): void
     {
