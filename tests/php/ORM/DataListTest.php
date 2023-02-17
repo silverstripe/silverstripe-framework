@@ -1967,16 +1967,14 @@ class DataListTest extends SapphireTest
         $this->assertSame(['Subteam 1'], Team::get()->limit(1)->column('Title'));
         $list = Team::get()->sort('Title DESC');
         $this->assertSame(['Team 3'], $list->limit(1)->column('Title'));
-        if ($type !== 'wipes-existing') {
-            $this->expectException(InvalidArgumentException::class);
-        }
+        $this->expectException(InvalidArgumentException::class);
         if ($type === 'invalid-scalar') {
             $this->expectExceptionMessage('sort() arguments must either be a string, an array, or null');
         }
         if ($type === 'empty-scalar') {
             $this->expectExceptionMessage('Invalid sort parameter');
         }
-        // $type === 'wipes-existing' is valid
+
         $list = $list->sort($emtpyValue);
         $this->assertSame(['Subteam 1'], $list->limit(1)->column('Title'));
     }
@@ -1984,7 +1982,6 @@ class DataListTest extends SapphireTest
     public function provideSortScalarValues(): array
     {
         return [
-            [null, 'wipes-existing'],
             ['', 'empty-scalar'],
             [[], 'empty-scalar'],
             [false, 'invalid-scalar'],
@@ -1992,6 +1989,30 @@ class DataListTest extends SapphireTest
             [0, 'invalid-scalar'],
             [1, 'invalid-scalar'],
         ];
+    }
+
+    /**
+     * Test passing scalar values to sort()
+     *
+     * Explicity tests that sort(null) will wipe any existing sort on a DataList
+     *
+     */
+    public function testSortNull(): void
+    {
+        $list = Team::get()->sort('Title DESC');
+        $query = $list->dataQuery()->getFinalisedQuery();
+        $this->assertSame(
+            ['"DataObjectTest_Team"."Title"' => 'DESC'],
+            $query->getOrderBy(),
+            'Calling sort on a DataList sets an Orderby on the underlying query.'
+        );
+
+        $list = $list->sort(null);
+        $query = $list->dataQuery()->getFinalisedQuery();
+        $this->assertEmpty(
+            $query->getOrderBy(),
+            'Calling sort with null on a DataList unsets the orderby on the underlying query.'
+        );
     }
 
     public function testShuffle()
