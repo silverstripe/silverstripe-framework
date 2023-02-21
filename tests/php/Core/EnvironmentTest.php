@@ -124,13 +124,7 @@ class EnvironmentTest extends SapphireTest
                 $_SERVER[$name] = $value;
                 break;
             case 'putenv':
-                if ($value === null) {
-                    $val = 'null';
-                } elseif (is_bool($value)) {
-                    $val = $value ? 'true' : 'false';
-                } else {
-                    $val = (string)$value;
-                }
+                $val = is_string($value) ? $value : json_encode($value);
                 putenv("$name=$val");
                 break;
             default:

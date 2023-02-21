@@ -3,7 +3,9 @@
 namespace SilverStripe\Dev\Tests;
 
 use PHPUnit\Framework\Error\Deprecated;
+use ReflectionMethod;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject;
@@ -22,7 +24,7 @@ class DeprecationTest extends SapphireTest
     protected function setup(): void
     {
         // Use custom error handler for two reasons:
-        // - Filter out errors for deprecated class properities unrelated to this unit test
+        // - Filter out errors for deprecated class properties unrelated to this unit test
         // - Allow the use of expectDeprecation(), which doesn't work with E_USER_DEPRECATION by default
         //   https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
         parent::setup();
@@ -32,7 +34,7 @@ class DeprecationTest extends SapphireTest
                 if (str_contains($errstr, 'SilverStripe\\Dev\\Tests\\DeprecationTest')) {
                     throw new Deprecated($errstr, $errno, '', 1);
                 } else {
-                    // Surpress any E_USER_DEPRECATED unrelated to this unit-test
+                    // Suppress any E_USER_DEPRECATED unrelated to this unit-test
                     return true;
                 }
             }
@@ -46,7 +48,9 @@ class DeprecationTest extends SapphireTest
 
     protected function tearDown(): void
     {
-        if (!$this->noticesWereEnabled) {
+        if ($this->noticesWereEnabled) {
+            Deprecation::enable();
+        } else {
             Deprecation::disable();
         }
         restore_error_handler();
@@ -277,5 +281,168 @@ class DeprecationTest extends SapphireTest
         Deprecation::enable();
         Config::modify()->merge(DeprecationTestObject::class, 'array_config', ['abc']);
         Deprecation::outputNotices();
+    }
+
+    public function provideConfigVsEnv()
+    {
+        return [
+            // env var not set - config setting is respected
+            [
+                // false is returned when the env isn't set, so this simulates simply not having
+                // set the variable in the first place
+                'envVal' => 'notset',
+                'configVal' => false,
+                'expected' => false,
+            ],
+            [
+                'envVal' => 'notset',
+                'configVal' => true,
+                'expected' => true,
+            ],
+            // env var is set and truthy, config setting is ignored
+            [
+                'envVal' => true,
+                'configVal' => false,
+                'expected' => true,
+            ],
+            [
+                'envVal' => true,
+                'configVal' => true,
+                'expected' => true,
+            ],
+            // env var is set and falsy, config setting is ignored
+            [
+                'envVal' => false,
+                'configVal' => false,
+                'expected' => false,
+            ],
+            [
+                'envVal' => false,
+                'configVal' => true,
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideConfigVsEnv
+     */
+    public function testEnabledConfigVsEnv($envVal, bool $configVal, bool $expected)
+    {
+        $this->runConfigVsEnvTest('SS_DEPRECATION_ENABLED', $envVal, $configVal, $expected);
+    }
+
+    /**
+     * @dataProvider provideConfigVsEnv
+     */
+    public function testShowHttpConfigVsEnv($envVal, bool $configVal, bool $expected)
+    {
+        $this->runConfigVsEnvTest('SS_DEPRECATION_SHOW_HTTP', $envVal, $configVal, $expected);
+    }
+
+    /**
+     * @dataProvider provideConfigVsEnv
+     */
+    public function testShowCliConfigVsEnv($envVal, bool $configVal, bool $expected)
+    {
+        $this->runConfigVsEnvTest('SS_DEPRECATION_SHOW_CLI', $envVal, $configVal, $expected);
+    }
+
+    private function runConfigVsEnvTest(string $varName, $envVal, bool $configVal, bool $expected)
+    {
+        $oldVars = Environment::getVariables();
+
+        if ($envVal === 'notset') {
+            if (Environment::hasEnv($varName)) {
+                $this->markTestSkipped("$varName is set, so we can't test behaviour when it's not");
+                return;
+            }
+        } else {
+            Environment::setEnv($varName, $envVal);
+        }
+
+        switch ($varName) {
+            case 'SS_DEPRECATION_ENABLED':
+                if ($configVal) {
+                    Deprecation::enable();
+                } else {
+                    Deprecation::disable();
+                }
+                $result = Deprecation::isEnabled();
+                break;
+            case 'SS_DEPRECATION_SHOW_HTTP':
+                $oldShouldShow = Deprecation::shouldShowForHttp();
+                Deprecation::setShouldShowForHttp($configVal);
+                $result = Deprecation::shouldShowForHttp();
+                Deprecation::setShouldShowForHttp($oldShouldShow);
+                break;
+            case 'SS_DEPRECATION_SHOW_CLI':
+                $oldShouldShow = Deprecation::shouldShowForCli();
+                Deprecation::setShouldShowForCli($configVal);
+                $result = Deprecation::shouldShowForCli();
+                Deprecation::setShouldShowForCli($oldShouldShow);
+                break;
+        }
+
+        Environment::setVariables($oldVars);
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function provideVarAsBoolean()
+    {
+        return [
+            [
+                'rawValue' => true,
+                'expected' => true,
+            ],
+            [
+                'rawValue' => 'true',
+                'expected' => true,
+            ],
+            [
+                'rawValue' => 1,
+                'expected' => true,
+            ],
+            [
+                'rawValue' => '1',
+                'expected' => true,
+            ],
+            [
+                'rawValue' => 'on',
+                'expected' => true,
+            ],
+            [
+                'rawValue' => false,
+                'expected' => false,
+            ],
+            [
+                'rawValue' => 'false',
+                'expected' => false,
+            ],
+            [
+                'rawValue' => 0,
+                'expected' => false,
+            ],
+            [
+                'rawValue' => '0',
+                'expected' => false,
+            ],
+            [
+                'rawValue' => 'off',
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideVarAsBoolean
+     */
+    public function testVarAsBoolean($rawValue, bool $expected)
+    {
+        $reflectionVarAsBoolean = new ReflectionMethod(Deprecation::class, 'varAsBoolean');
+        $reflectionVarAsBoolean->setAccessible(true);
+
+        $this->assertSame($expected, $reflectionVarAsBoolean->invoke(null, $rawValue));
     }
 }
