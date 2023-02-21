@@ -267,4 +267,15 @@ class ViewableDataTest extends SapphireTest
         $output = $reflectionMethod->invokeArgs(new ViewableData(), ['objCache']);
         $this->assertTrue($output, 'Property should be accessible');
     }
+
+    public function testDynamicData()
+    {
+        $obj = (object) ['SomeField' => [1, 2, 3]];
+        $viewableData = new ViewableData();
+        $this->assertFalse($viewableData->hasDynamicData('abc'));
+        $viewableData->setDynamicData('abc', $obj);
+        $this->assertTrue($viewableData->hasDynamicData('abc'));
+        $this->assertSame($obj, $viewableData->getDynamicData('abc'));
+        $this->assertSame($obj, $viewableData->abc);
+    }
 }

@@ -73,7 +73,7 @@ class ViewableData implements IteratorAggregate
     /**
      * Acts as a PHP 8.2+ compliant replacement for dynamic properties
      */
-    private array $data = [];
+    private array $dynamicData = [];
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -203,7 +203,7 @@ class ViewableData implements IteratorAggregate
      */
     public function hasField($field)
     {
-        return property_exists($this, $field) || isset($this->data[$field]);
+        return property_exists($this, $field) || $this->hasDynamicData($field);
     }
 
     /**
@@ -217,7 +217,7 @@ class ViewableData implements IteratorAggregate
         if ($this->isAccessibleProperty($field)) {
             return $this->$field;
         }
-        return $this->data[$field];
+        return $this->getDynamicData($field);
     }
 
     /**
@@ -236,8 +236,23 @@ class ViewableData implements IteratorAggregate
         if ($this->isAccessibleProperty($field)) {
             $this->$field = $value;
         }
-        $this->data[$field] = $value;
+        return $this->setDynamicData($field, $value);
+    }
+
+    public function getDynamicData(string $field): mixed
+    {
+        return $this->hasDynamicData($field) ? $this->dynamicData[$field] : null;
+    }
+
+    public function setDynamicData(string $field, mixed $value): static
+    {
+        $this->dynamicData[$field] = $value;
         return $this;
+    }
+
+    public function hasDynamicData(string $field): bool
+    {
+        return array_key_exists($field, $this->dynamicData);
     }
 
     /**

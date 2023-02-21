@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
+use InvalidArgumentException;
 
 class DBCompositeTest extends SapphireTest
 {
@@ -107,5 +108,16 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals('DBCompositeTest_DataObject', $object2->dbObject('MyMoney')->getTable());
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OtherMoney')->getTable());
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OverriddenMoney')->getTable());
+    }
+
+    public function testSetFieldDynamicPropertyException()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(implode(' ', [
+            'Field abc does not exist.',
+            'If this was accessed via a dynamic property then call setDynamicData() instead.'
+        ]));
+        $object = new DBCompositeTest\TestObject();
+        $object->MyMoney->abc = 'def';
     }
 }

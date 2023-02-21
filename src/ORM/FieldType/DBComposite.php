@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -270,11 +271,11 @@ abstract class DBComposite extends DBField
     {
         $this->objCacheClear();
 
-        // Non-db fields get assigned as normal properties
         if (!$this->hasField($field)) {
-            parent::setField($field, $value);
-
-            return $this;
+            throw new InvalidArgumentException(implode(' ', [
+                "Field $field does not exist.",
+                'If this was accessed via a dynamic property then call setDynamicData() instead.'
+            ]));
         }
 
         // Set changed
