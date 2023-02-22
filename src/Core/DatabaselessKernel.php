@@ -16,11 +16,9 @@ class DatabaselessKernel extends BaseKernel
 {
     /**
      * Indicates whether the Kernel has been flushed on boot
-     * Uninitialised before boot
-     *
-     * @var bool
+     * Null before boot
      */
-    private $flush;
+    private ?bool $flush = null;
 
     /**
      * Allows disabling of the configured error handling.
@@ -53,10 +51,7 @@ class DatabaselessKernel extends BaseKernel
         $this->setBooted(true);
     }
 
-    /**
-     * @return bool
-     */
-    public function isFlushed()
+    public function isFlushed(): ?bool
     {
         return $this->flush;
     }
