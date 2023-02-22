@@ -516,7 +516,12 @@ class FormFieldTest extends SapphireTest
                 continue;
             }
 
+            // Create appropriate constructor arguments for the form field class. These don't have to be offer realistic
+            // data, they just need to ensure we can construct the field and call ->validate() on it
             switch ($formFieldClass) {
+                //
+                // Fields in framework with specific argument requirements
+                //
                 case NullableField::class:
                 case CompositeField::class:
                 case FieldGroup::class:
@@ -549,6 +554,41 @@ class FormFieldTest extends SapphireTest
                 case GridState::class:
                     $args = [GridField::create('GF')];
                     break;
+                //
+                // Fields from other modules included in the kitchensink recipe
+                //
+                case \SilverStripe\Blog\Admin\GridFieldFormAction::class:
+                    $args = [GridField::create('GF'), 'Test', 'Test label', 'Test action name', []];
+                    break;
+                case \SilverStripe\Blog\Forms\BlogAdminSidebar::class:
+                    $args = [TextField::create('Test2')];
+                    break;
+                case \SilverStripe\CKANRegistry\Forms\PresentedOptionsField::class:
+                    $args = ['Test', \SilverStripe\CKANRegistry\Model\Resource::create()];
+                    break;
+                case \SilverStripe\DocumentConverter\SettingsField::class:
+                    $args = [];
+                    break;
+                case \DNADesign\Elemental\Forms\ElementalAreaField::class:
+                    $args = ['Test', \DNADesign\Elemental\Models\ElementalArea::create(), []];
+                    break;
+                case \SilverStripe\MFA\FormField\RegisteredMFAMethodListField::class:
+                    $args = ['Test', 'Test label', 1];
+                    break;
+                case \SilverStripe\Subsites\Forms\SubsitesTreeDropdownField::class:
+                    $args = ['Test', 'Test', Group::class];
+                    break;
+                case \SilverStripe\UserForms\FormField\UserFormsCompositeField::class:
+                case \SilverStripe\UserForms\FormField\UserFormsGroupField::class:
+                case \SilverStripe\UserForms\FormField\UserFormsStepField::class:
+                    $args = [TextField::create('Test2')];
+                    break;
+                case \Symbiote\AdvancedWorkflow\FormFields\WorkflowField::class:
+                    $args = ['Test', 'Test label', \Symbiote\AdvancedWorkflow\DataObjects\WorkflowDefinition::create()];
+                    break;
+                //
+                // Default arguments, this covers most simple form fields
+                //
                 default:
                     $args = ['Test', 'Test label'];
             }
