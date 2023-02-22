@@ -137,13 +137,13 @@ abstract class SingleSelectField extends SelectField
             // Use selection rules to check which are valid
             foreach ($validValues as $formValue) {
                 if ($this->isSelectedValue($formValue, $selected)) {
-                    return true;
+                    return $this->extendValidationResult(true, $validator);
                 }
             }
         } else {
             if ($this->getHasEmptyDefault() || !$validValues || in_array('', $validValues ?? [])) {
                 // Check empty value
-                return true;
+                return $this->extendValidationResult(true, $validator);
             }
             $selected = '(none)';
         }
@@ -158,7 +158,7 @@ abstract class SingleSelectField extends SelectField
             ),
             "validation"
         );
-        return false;
+        return $this->extendValidationResult(false, $validator);
     }
 
     public function castedCopy($classOrCopy)

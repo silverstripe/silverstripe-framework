@@ -2,21 +2,40 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use Exception;
 use LogicException;
 use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridField_FormAction;
+use SilverStripe\Forms\GridField\GridState;
 use SilverStripe\Forms\NullableField;
+use SilverStripe\Forms\PopoverField;
+use SilverStripe\Forms\PrintableTransformation_TabSet;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\SelectionGroup;
+use SilverStripe\Forms\SelectionGroup_Item;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\Tests\FormFieldTest\FieldValidationExtension;
 use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\Tip;
+use SilverStripe\Forms\ToggleCompositeField;
+use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\Forms\TreeDropdownField_Readonly;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionCheckboxSetField;
+use SilverStripe\Security\PermissionCheckboxSetField_Readonly;
 
 class FormFieldTest extends SapphireTest
 {
@@ -24,6 +43,7 @@ class FormFieldTest extends SapphireTest
     protected static $required_extensions = [
         FormField::class => [
             TestExtension::class,
+            FieldValidationExtension::class,
         ],
     ];
 
@@ -453,6 +473,146 @@ class FormFieldTest extends SapphireTest
             '"My Field" is required',
             $schema['message']['value']
         );
+    }
+
+    public function testValidationExtensionHooks()
+    {
+        /** @var TextField|FieldValidationExtension $field */
+        $field = new TextField('Test');
+        $field->setMaxLength(5);
+        $field->setValue('IAmLongerThan5Characters');
+        $result = $field->validate(new RequiredFields('Test'));
+        $this->assertFalse($result);
+
+        // Call extension method in FieldValidationExtension
+        $field->setExcludeFromValidation(true);
+        $result = $field->validate(new RequiredFields('Test'));
+        $this->assertTrue($result);
+
+        // Call extension methods in FieldValidationExtension
+        $field->setValue('1234');
+        $field->setExcludeFromValidation(false);
+        $field->setTriggerTestValidationError(true);
+
+        // Ensure messages set via updateValidationResult() propagate through to form fields after validation
+        $form = new Form(null, 'TestForm', new FieldList($field), new FieldList(), new RequiredFields());
+        $form->validationResult();
+        $schema = $field->getSchemaState();
+        $this->assertEquals(
+            'A test error message',
+            $schema['message']['value']
+        );
+    }
+
+    public function testValidationExtensionHooksAreCalledOnFormFieldSubclasses()
+    {
+        // Can't use a dataProvider for this as dataProviders are fetched very early by phpunit,
+        // and the ClassManifest isn't ready then
+        $formFieldClasses = ClassInfo::subclassesFor(FormField::class, false);
+        foreach ($formFieldClasses as $formFieldClass) {
+            $reflection = new ReflectionClass($formFieldClass);
+            // Skip abstract classes, like MultiSelectField, and fields that only exist for unit tests
+            if ($reflection->isAbstract() || is_a($formFieldClass, TestOnly::class, true)) {
+                continue;
+            }
+
+            // Create appropriate constructor arguments for the form field class. These don't have to be offer realistic
+            // data, they just need to ensure we can construct the field and call ->validate() on it
+            switch ($formFieldClass) {
+                //
+                // Fields in framework with specific argument requirements
+                //
+                case NullableField::class:
+                case CompositeField::class:
+                case FieldGroup::class:
+                case PopoverField::class:
+                    $args = [TextField::create('Test2')];
+                    break;
+                case SelectionGroup_Item::class:
+                    $args = ['Test', [TextField::create('Test2')]];
+                    break;
+                case ToggleCompositeField::class:
+                    $args = ['Test', 'Test', TextField::create('Test2')];
+                    break;
+                case PrintableTransformation_TabSet::class:
+                    $args = [Tab::create('TestTab', 'Testtab', TextField::create('Test2'))];
+                    break;
+                case TreeDropdownField::class:
+                case TreeDropdownField_Readonly::class:
+                    $args = ['Test', 'Test', Group::class];
+                    break;
+                case PermissionCheckboxSetField::class:
+                case PermissionCheckboxSetField_Readonly::class:
+                    $args = ['Test', 'Test', Permission::class, 'Test'];
+                    break;
+                case SelectionGroup::class:
+                    $args = ['Test', []];
+                    break;
+                case GridField_FormAction::class:
+                    $args = [GridField::create('GF'), 'Test', 'Test label', 'Test action name', []];
+                    break;
+                case GridState::class:
+                    $args = [GridField::create('GF')];
+                    break;
+                //
+                // Fields from other modules included in the kitchensink recipe
+                //
+                case \SilverStripe\Blog\Admin\GridFieldFormAction::class:
+                    $args = [GridField::create('GF'), 'Test', 'Test label', 'Test action name', []];
+                    break;
+                case \SilverStripe\Blog\Forms\BlogAdminSidebar::class:
+                    $args = [TextField::create('Test2')];
+                    break;
+                case \SilverStripe\CKANRegistry\Forms\PresentedOptionsField::class:
+                    $args = ['Test', \SilverStripe\CKANRegistry\Model\Resource::create()];
+                    break;
+                case \SilverStripe\DocumentConverter\SettingsField::class:
+                    $args = [];
+                    break;
+                case \DNADesign\Elemental\Forms\ElementalAreaField::class:
+                    $args = ['Test', \DNADesign\Elemental\Models\ElementalArea::create(), []];
+                    break;
+                case \SilverStripe\MFA\FormField\RegisteredMFAMethodListField::class:
+                    $args = ['Test', 'Test label', 1];
+                    break;
+                case \SilverStripe\Subsites\Forms\SubsitesTreeDropdownField::class:
+                    $args = ['Test', 'Test', Group::class];
+                    break;
+                case \SilverStripe\UserForms\FormField\UserFormsCompositeField::class:
+                case \SilverStripe\UserForms\FormField\UserFormsGroupField::class:
+                case \SilverStripe\UserForms\FormField\UserFormsStepField::class:
+                    $args = [TextField::create('Test2')];
+                    break;
+                case \Symbiote\AdvancedWorkflow\FormFields\WorkflowField::class:
+                    $args = ['Test', 'Test label', \Symbiote\AdvancedWorkflow\DataObjects\WorkflowDefinition::create()];
+                    break;
+                //
+                // Default arguments, this covers most simple form fields
+                //
+                default:
+                    $args = ['Test', 'Test label'];
+            }
+
+            // Assert that extendValidationResult is called once each time ->validate() is called
+            $mock = $this->getMockBuilder($formFieldClass)
+                ->setConstructorArgs($args)
+                ->onlyMethods(['extendValidationResult'])
+                ->getMock();
+            $mock->expects($invocationRule = $this->once())
+                ->method('extendValidationResult')
+                ->will($this->returnValue(true));
+
+            $isValid = $mock->validate(new RequiredFields());
+            $this->assertTrue($isValid, "$formFieldClass should be valid");
+
+            // This block is not essential and only exists to make test debugging easier - without this,
+            // the error message on failure is generic and doesn't include the class name that failed
+            try {
+                $invocationRule->verify();
+            } catch (Exception $e) {
+                $this->fail("Expectation failed for '$formFieldClass' class: {$e->getMessage()}");
+            }
+        }
     }
 
     public function testHasClass()

@@ -125,6 +125,7 @@ class TextField extends FormField implements TippableFieldInterface
      */
     public function validate($validator)
     {
+        $result = true;
         if (!is_null($this->maxLength) && mb_strlen($this->value ?? '') > $this->maxLength) {
             $name = strip_tags($this->Title() ? $this->Title() : $this->getName());
             $validator->validationError(
@@ -136,9 +137,9 @@ class TextField extends FormField implements TippableFieldInterface
                 ),
                 "validation"
             );
-            return false;
+            $result = false;
         }
-        return true;
+        return $this->extendValidationResult($result, $validator);
     }
 
     public function getSchemaValidation()

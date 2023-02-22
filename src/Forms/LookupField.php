@@ -73,7 +73,7 @@ class LookupField extends MultiSelectField
      */
     public function validate($validator)
     {
-        return true;
+        return $this->extendValidationResult(true, $validator);
     }
 
     /**
