@@ -17,6 +17,7 @@
  * This interface intercepts calls to the mail() function.
  *
  * @author     Chris Corbyn
+ * @deprecated 4.12.0 Will be replaced with symfony/mailer
  */
 // @codingStandardsIgnoreStart
 // ignore missing namespace

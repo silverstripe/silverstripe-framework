@@ -5,6 +5,8 @@
  * It has been slightly modified to meet phpcs standards
  */
 
+use SilverStripe\Dev\Deprecation;
+
 /*
  * This file is part of SwiftMailer.
  * (c) 2004-2009 Chris Corbyn
@@ -17,12 +19,20 @@
  * This is the implementation class for {@link Swift_Transport_MailInvoker}.
  *
  * @author     Chris Corbyn
+ * @deprecated 4.12.0 Sending email using the mail() function is deprecated. Use sendmail or SMTP instead
  */
 // @codingStandardsIgnoreStart
 // ignore missing namespace
 class Swift_Transport_SimpleMailInvoker implements Swift_Transport_MailInvoker
 // @codingStandardsIgnoreEnd* It has been slightly modified to meet phpcs standards
 {
+    public function __construct()
+    {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.12.0', 'Sending email using the mail() function is deprecated. Use sendmail or SMTP instead', Deprecation::SCOPE_CLASS);
+        });
+    }
+
     /**
      * Send mail via the mail() function.
      *
