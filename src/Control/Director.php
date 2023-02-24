@@ -704,7 +704,9 @@ class Director implements TemplateGlobalProvider
      */
     public static function publicDir()
     {
-        $alternate = self::config()->uninherited('alternate_public_dir');
+        $alternate = Deprecation::withNoReplacement(function () {
+            return self::config()->uninherited('alternate_public_dir');
+        });
         if (isset($alternate)) {
             return $alternate;
         }
