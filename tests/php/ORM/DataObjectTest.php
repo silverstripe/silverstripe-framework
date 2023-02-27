@@ -66,6 +66,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\TreeNode::class,
         DataObjectTest\OverriddenDataObject::class,
         DataObjectTest\InjectedDataObject::class,
+        DataObjectTest\SettersAndGetters::class,
     ];
 
     protected function setUp(): void
@@ -2666,5 +2667,15 @@ class DataObjectTest extends SapphireTest
         // enum with dots in their values are also parsed correctly
         $vals = ['25.25', '50.00', '75.00', '100.50'];
         $this->assertSame(array_combine($vals ?? [], $vals ?? []), $obj->dbObject('MyEnumWithDots')->enumValues());
+    }
+
+    public function testSettersAndGettersAreRespected()
+    {
+        $obj = new DataObjectTest\SettersAndGetters();
+        $obj->MyTestField = 'Some Value';
+        // Setter overrides it with all lower case
+        $this->assertSame('some value', $obj->getField('MyTestField'));
+        // Getter overrides it with all upper case
+        $this->assertSame('SOME VALUE', $obj->MyTestField);
     }
 }
