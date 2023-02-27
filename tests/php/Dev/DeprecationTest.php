@@ -151,6 +151,22 @@ class DeprecationTest extends SapphireTest
         Deprecation::outputNotices();
     }
 
+    public function testNoticeWithNoReplacementTrue()
+    {
+        $message = implode(' ', [
+            'SilverStripe\Dev\Tests\DeprecationTest->testNoticeWithNoReplacementTrue is deprecated.',
+            'My message.',
+            'Called from PHPUnit\Framework\TestCase->runTest.'
+        ]);
+        $this->expectDeprecation();
+        $this->expectDeprecationMessage($message);
+        Deprecation::enable(true);
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('123', 'My message.');
+        });
+        Deprecation::outputNotices();
+    }
+
     public function testClassWithNoReplacement()
     {
         $message = implode(' ', [

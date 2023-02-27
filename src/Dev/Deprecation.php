@@ -177,6 +177,12 @@ class Deprecation
             $level = 1;
         }
         $newLevel = $level;
+        // handle closures inside withNoReplacement()
+        if (self::$insideWithNoReplacement
+            && substr($backtrace[$newLevel]['function'], -strlen('{closure}')) === '{closure}'
+        ) {
+            $newLevel = $newLevel + 2;
+        }
         // handle call_user_func
         if ($level === 4 && strpos($backtrace[2]['function'] ?? '', 'call_user_func') !== false) {
             $newLevel = 5;
@@ -277,10 +283,10 @@ class Deprecation
                     // Do not add to self::$userErrorMessageBuffer, as the backtrace is too expensive
                     return;
                 }
-    
+
                 // Getting a backtrace is slow, so we only do it if we need it
                 $backtrace = null;
-    
+
                 // Get the calling scope
                 if ($scope == Deprecation::SCOPE_METHOD) {
                     $backtrace = debug_backtrace(0);
@@ -291,7 +297,7 @@ class Deprecation
                 } else {
                     $caller = false;
                 }
-    
+
                 if (substr($string, -1) != '.') {
                     $string .= ".";
                 }
