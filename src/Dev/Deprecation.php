@@ -10,19 +10,13 @@ use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Manifest\Module;
 
 /**
- * Handles raising an notice when accessing a deprecated method
+ * Handles raising an notice when accessing a deprecated method, class, configuration, or behaviour.
  *
- * A pattern used in SilverStripe when deprecating a method is to add something like
- *   user_error('This method is deprecated', E_USER_NOTICE);
- * to the method
- *
- * However sometimes we want to mark that a method will be deprecated in some future version and shouldn't be used in
+ * Sometimes we want to mark that a method will be deprecated in some future version and shouldn't be used in
  * new code, but not forbid in the current version - for instance when that method is still heavily used in framework
  * or cms.
  *
- * This class abstracts the above pattern and adds a way to do that.
- *
- * Each call to notice passes a version that the notice will be valid from.
+ * See https://docs.silverstripe.org/en/contributing/release_process/#deprecation
  */
 class Deprecation
 {

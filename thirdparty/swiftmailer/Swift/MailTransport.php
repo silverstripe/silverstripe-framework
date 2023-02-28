@@ -5,6 +5,8 @@
  * It has been slightly modified to meet phpcs standards and initialise Swift_DependencyContainer
  */
 
+use SilverStripe\Dev\Deprecation;
+
 /*
  * This file is part of SwiftMailer.
  * (c) 2004-2009 Chris Corbyn
@@ -19,6 +21,7 @@
  * @author Chris Corbyn
  *
  * at deprecated since 5.4.5 (to be removed in 6.0)
+ * @deprecated 4.12.0 Sending email using the mail() function is deprecated. Use sendmail or SMTP instead
  */
 // @codingStandardsIgnoreStart
 // ignore missing namespace
@@ -32,6 +35,10 @@ class Swift_MailTransport extends Swift_Transport_MailTransport
      */
     public function __construct($extraParams = '-f%s')
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.12.0', 'Sending email using the mail() function is deprecated. Use sendmail or SMTP instead', Deprecation::SCOPE_CLASS);
+        });
+
         call_user_func_array(
             [$this, 'Swift_Transport_MailTransport::__construct'],
             $this->getDependencies() ?? []

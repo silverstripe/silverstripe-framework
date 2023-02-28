@@ -5,6 +5,8 @@
  * It has been slightly modified to meet phpcs standards and to update method signatures to match the swiftmailer v6
  */
 
+use SilverStripe\Dev\Deprecation;
+
 /*
  * This file is part of SwiftMailer.
  * (c) 2004-2009 Chris Corbyn
@@ -26,7 +28,7 @@
  *
  * @author Chris Corbyn
  *
- * at deprecated since 5.4.5 (to be removed in 6.0)
+ * @deprecated 4.12.0 Sending email using the mail() function is deprecated. Use sendmail or SMTP instead
  */
 // @codingStandardsIgnoreStart
 // ignore missing namespace
@@ -50,6 +52,9 @@ class Swift_Transport_MailTransport implements Swift_Transport
      */
     public function __construct(Swift_Transport_MailInvoker $invoker, Swift_Events_EventDispatcher $eventDispatcher)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('4.12.0', 'Sending email using the mail() function is deprecated. Use sendmail or SMTP instead', Deprecation::SCOPE_CLASS);
+        });
         // @trigger_error(sprintf('The %s class is deprecated since version 5.4.5 and will be removed in 6.0. Use the Sendmail or SMTP transport instead.', __CLASS__), E_USER_DEPRECATED);
 
         $this->_invoker = $invoker;
