@@ -221,8 +221,12 @@ abstract class DBComposite extends DBField
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Save into record
-            $key = $this->getName() . $field;
-            $dataObject->setField($key, $this->getField($field));
+            if ($this->value instanceof DBField) {
+                $this->value->saveInto($dataObject);
+            } else {
+                $key = $this->getName() . $field;
+                $dataObject->__set($key, $this->getField($field));
+            }
         }
     }
 

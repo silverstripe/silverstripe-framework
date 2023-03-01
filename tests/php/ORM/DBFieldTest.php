@@ -27,6 +27,7 @@ use SilverStripe\ORM\FieldType\DBTime;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBYear;
 
 /**
@@ -34,6 +35,9 @@ use SilverStripe\ORM\FieldType\DBYear;
  */
 class DBFieldTest extends SapphireTest
 {
+    protected static $extra_dataobjects = [
+        DBFieldTest\TestDataObject::class,
+    ];
 
     /**
      * Test the nullValue() method on DBField.
@@ -321,5 +325,74 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals('åäö', DBText::create_field('Text', 'ÅÄÖ')->LowerCase());
         $this->assertEquals('<P>ÅÄÖ</P>', DBHTMLText::create_field('HTMLFragment', '<p>åäö</p>')->UpperCase());
         $this->assertEquals('<p>åäö</p>', DBHTMLText::create_field('HTMLFragment', '<p>ÅÄÖ</p>')->LowerCase());
+    }
+
+    public function testSaveInto()
+    {
+        $obj = new DBFieldTest\TestDataObject();
+        /** @var DBField $field */
+        $field = $obj->dbObject('Title');
+        $field->setValue('New Value');
+        $field->saveInto($obj);
+
+        $this->assertEquals('New Value', $obj->getField('Title'));
+        $this->assertEquals(1, $field->saveIntoCalledCount);
+        $this->assertEquals(1, $obj->setFieldCalledCount);
+    }
+
+    public function testSaveIntoNoRecursion()
+    {
+        $obj = new DBFieldTest\TestDataObject();
+        /** @var DBField $field */
+        $field = $obj->dbObject('Title');
+        $value = new DBFieldTest\TestDbField('Title');
+        $value->setValue('New Value');
+        $field->setValue($value);
+        $field->saveInto($obj);
+
+        $this->assertEquals('New Value', $obj->getField('Title'));
+        $this->assertEquals(1, $field->saveIntoCalledCount);
+        $this->assertEquals(1, $obj->setFieldCalledCount);
+    }
+
+    public function testSaveIntoAsProperty()
+    {
+        $obj = new DBFieldTest\TestDataObject();
+        /** @var DBField $field */
+        $field = $obj->dbObject('Title');
+        $field->setValue('New Value');
+        $obj->Title = $field;
+
+        $this->assertEquals('New Value', $obj->getField('Title'));
+        $this->assertEquals(1, $field->saveIntoCalledCount);
+        // Called twice because $obj->setField($field) => $field->saveInto() => $obj->setField('New Value')
+        $this->assertEquals(2, $obj->setFieldCalledCount);
+    }
+
+    public function testSaveIntoNoRecursionAsProperty()
+    {
+        $obj = new DBFieldTest\TestDataObject();
+        /** @var DBField $field */
+        $field = $obj->dbObject('Title');
+        $value = new DBFieldTest\TestDbField('Title');
+        $value->setValue('New Value');
+        $field->setValue($value);
+        $obj->Title = $field;
+
+        $this->assertEquals('New Value', $obj->getField('Title'));
+        $this->assertEquals(1, $field->saveIntoCalledCount);
+        // Called twice because $obj->setField($field) => $field->saveInto() => $obj->setField('New Value')
+        $this->assertEquals(2, $obj->setFieldCalledCount);
+    }
+
+    public function testSaveIntoRespectsSetters()
+    {
+        $obj = new DBFieldTest\TestDataObject();
+        /** @var DBField $field */
+        $field = $obj->dbObject('MyTestField');
+        $field->setValue('New Value');
+        $obj->MyTestField = $field;
+
+        $this->assertEquals('new value', $obj->getField('MyTestField'));
     }
 }
