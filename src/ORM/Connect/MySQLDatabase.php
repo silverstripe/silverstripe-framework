@@ -367,14 +367,16 @@ class MySQLDatabase extends Database implements TransactionManager
 
     public function transactionEnd($chain = false)
     {
-        $result = $this->getTransactionManager()->transactionEnd();
-
         if ($chain) {
-            Deprecation::notice('4.4', '$chain argument is deprecated');
+            Deprecation::notice(
+                '4.4.0',
+                '$chain argument in ' . __METHOD__ . ' is deprecated',
+                Deprecation::SCOPE_GLOBAL
+            );
             return $this->getTransactionManager()->transactionStart();
         }
 
-        return $result;
+        return $this->getTransactionManager()->transactionEnd();
     }
 
     /**
