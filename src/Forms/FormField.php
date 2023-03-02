@@ -1220,17 +1220,28 @@ class FormField extends RequestHandler
     }
 
     /**
+     * Utility method to call an extension hook which allows the result of validate() calls to be adjusted
+     *
+     * @param bool $result
+     * @param Validator $validator
+     * @return bool
+     */
+    protected function extendValidationResult(bool $result, Validator $validator): bool
+    {
+        $this->extend('updateValidationResult', $result, $validator);
+        return $result;
+    }
+
+    /**
      * Abstract method each {@link FormField} subclass must implement, determines whether the field
      * is valid or not based on the value.
-     *
-     * @todo Make this abstract.
      *
      * @param Validator $validator
      * @return bool
      */
     public function validate($validator)
     {
-        return true;
+        return $this->extendValidationResult(true, $validator);
     }
 
     /**

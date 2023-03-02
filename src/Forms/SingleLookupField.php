@@ -44,7 +44,7 @@ class SingleLookupField extends SingleSelectField
      */
     public function validate($validator)
     {
-        return true;
+        return $this->extendValidationResult(true, $validator);
     }
 
     /**

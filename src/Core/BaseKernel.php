@@ -188,7 +188,7 @@ abstract class BaseKernel implements Kernel
             $this->getIncludeTests(),
             $flush
         );
-        
+
         // Flush config
         if ($flush) {
             $config = $this->getConfigLoader()->getManifest();
@@ -265,7 +265,7 @@ abstract class BaseKernel implements Kernel
 
     abstract public function boot($flush = false);
 
-    abstract public function isFlushed();
+    abstract public function isFlushed(): ?bool;
 
     /**
      * Check if there's a legacy _ss_environment.php file

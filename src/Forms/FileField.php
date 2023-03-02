@@ -187,7 +187,7 @@ class FileField extends FormField implements FileHandleField
         $fieldName = preg_replace('#\[(.*?)\]$#', '', $this->name ?? '');
 
         if (!isset($_FILES[$fieldName])) {
-            return true;
+            return $this->extendValidationResult(true, $validator);
         }
 
         if ($isMultiFileUpload) {
@@ -204,11 +204,12 @@ class FileField extends FormField implements FileHandleField
                     $isValid = false;
                 }
             }
-            return $isValid;
+            return $this->extendValidationResult($isValid, $validator);
         }
 
         // regular single-file upload
-        return $this->validateFileData($validator, $_FILES[$this->name]);
+        $result = $this->validateFileData($validator, $_FILES[$this->name]);
+        return $this->extendValidationResult($result, $validator);
     }
 
     /**

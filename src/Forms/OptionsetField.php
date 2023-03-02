@@ -140,7 +140,7 @@ class OptionsetField extends SingleSelectField
     public function validate($validator)
     {
         if (!$this->Value()) {
-            return true;
+            return $this->extendValidationResult(true, $validator);
         }
 
         return parent::validate($validator);

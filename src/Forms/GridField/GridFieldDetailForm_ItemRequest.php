@@ -668,8 +668,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         return $gridField
                 ->getConfig()
                 ->getComponentByType(GridFieldPaginator::class)
-                ->getTemplateParameters($gridField)
-                ->toMap()['NumPages'];
+                ?->getTemplateParameters($gridField)
+                ?->toMap()['NumPages'] ?? 1;
     }
 
     /**

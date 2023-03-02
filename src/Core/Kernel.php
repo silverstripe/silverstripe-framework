@@ -132,4 +132,11 @@ interface Kernel
      * @return $this
      */
     public function setEnvironment($environment);
+
+    /**
+     * Returns whether the Kernel has been flushed on boot
+     *
+     * @return bool|null null if the kernel hasn't been booted yet
+     */
+    public function isFlushed(): ?bool;
 }

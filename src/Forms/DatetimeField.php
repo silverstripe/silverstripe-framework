@@ -565,7 +565,7 @@ class DatetimeField extends TextField
     {
         // Don't validate empty fields
         if (empty($this->rawValue)) {
-            return true;
+            return $this->extendValidationResult(true, $validator);
         }
 
         // We submitted a value, but it couldn't be parsed
@@ -578,7 +578,7 @@ class DatetimeField extends TextField
                     ['format' => $this->getDatetimeFormat()]
                 )
             );
-            return false;
+            return $this->extendValidationResult(false, $validator);
         }
 
         // Check min date (in server timezone)
@@ -602,7 +602,7 @@ class DatetimeField extends TextField
                     ValidationResult::TYPE_ERROR,
                     ValidationResult::CAST_HTML
                 );
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
@@ -627,11 +627,11 @@ class DatetimeField extends TextField
                     ValidationResult::TYPE_ERROR,
                     ValidationResult::CAST_HTML
                 );
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
-        return true;
+        return $this->extendValidationResult(true, $validator);
     }
 
     public function performReadonlyTransformation()

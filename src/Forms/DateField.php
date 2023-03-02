@@ -369,7 +369,7 @@ class DateField extends TextField
     {
         // Don't validate empty fields
         if (empty($this->rawValue)) {
-            return true;
+            return $this->extendValidationResult(true, $validator);
         }
 
         // We submitted a value, but it couldn't be parsed
@@ -382,7 +382,7 @@ class DateField extends TextField
                     ['format' => $this->getDateFormat()]
                 )
             );
-            return false;
+            return $this->extendValidationResult(false, $validator);
         }
 
         // Check min date
@@ -406,7 +406,7 @@ class DateField extends TextField
                     ValidationResult::TYPE_ERROR,
                     ValidationResult::CAST_HTML
                 );
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
@@ -431,11 +431,11 @@ class DateField extends TextField
                     ValidationResult::TYPE_ERROR,
                     ValidationResult::CAST_HTML
                 );
-                return false;
+                return $this->extendValidationResult(false, $validator);
             }
         }
 
-        return true;
+        return $this->extendValidationResult(true, $validator);
     }
 
     /**

@@ -15,11 +15,8 @@ class CoreKernel extends BaseKernel
 
     /**
      * Indicates whether the Kernel has been flushed on boot
-     * Uninitialised before boot
-     *
-     * @var bool
      */
-    private $flush;
+    private ?bool $flush = null;
 
     /**
      * @param false $flush
@@ -217,12 +214,7 @@ class CoreKernel extends BaseKernel
         return null;
     }
 
-    /**
-     * Returns whether the Kernel has been flushed on boot
-     *
-     * @return bool|null null if the kernel hasn't been booted yet
-     */
-    public function isFlushed()
+    public function isFlushed(): ?bool
     {
         return $this->flush;
     }

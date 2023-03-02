@@ -58,6 +58,7 @@ class CurrencyField extends TextField
 
     public function validate($validator)
     {
+        $result = true;
         $currencySymbol = preg_quote(DBCurrency::config()->uninherited('currency_symbol') ?? '');
         $regex = '/^\s*(\-?' . $currencySymbol . '?|' . $currencySymbol . '\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
         if (!empty($this->value) && !preg_match($regex ?? '', $this->value ?? '')) {
@@ -66,9 +67,10 @@ class CurrencyField extends TextField
                 _t('SilverStripe\\Forms\\Form.VALIDCURRENCY', "Please enter a valid currency"),
                 "validation"
             );
-            return false;
+            $result = false;
         }
-        return true;
+
+        return $this->extendValidationResult($result, $validator);
     }
 
     public function getSchemaValidation()

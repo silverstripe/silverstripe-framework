@@ -457,7 +457,7 @@ class i18nTextCollector
         $this->getWriter()->write(
             $entities,
             $this->defaultLocale,
-            $this->baseSavePath . '/' . $module->getRelativePath()
+            $this->baseSavePath . DIRECTORY_SEPARATOR . $module->getRelativePath()
         );
         return $this;
     }
@@ -511,25 +511,25 @@ class i18nTextCollector
         $modulePath = $module->getPath();
 
         // Search all .ss files in themes
-        if (stripos($module->getRelativePath() ?? '', 'themes/') === 0) {
+        if (stripos($module->getRelativePath() ?? '', 'themes' . DIRECTORY_SEPARATOR) === 0) {
             return $this->getFilesRecursive($modulePath, null, 'ss');
         }
 
         // If non-standard module structure, search all root files
-        if (!is_dir("{$modulePath}/code") && !is_dir("{$modulePath}/src")) {
+        if (!is_dir($modulePath . DIRECTORY_SEPARATOR . 'code') && !is_dir($modulePath . DIRECTORY_SEPARATOR . 'src')) {
             return $this->getFilesRecursive($modulePath);
         }
 
         // Get code files
-        if (is_dir("{$modulePath}/src")) {
-            $files = $this->getFilesRecursive("{$modulePath}/src", null, 'php');
+        if (is_dir($modulePath . DIRECTORY_SEPARATOR . 'src')) {
+            $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'src', null, 'php');
         } else {
-            $files = $this->getFilesRecursive("{$modulePath}/code", null, 'php');
+            $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'code', null, 'php');
         }
 
         // Search for templates in this module
-        if (is_dir("{$modulePath}/templates")) {
-            $templateFiles = $this->getFilesRecursive("{$modulePath}/templates", null, 'ss');
+        if (is_dir($modulePath . DIRECTORY_SEPARATOR . 'templates')) {
+            $templateFiles = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'templates', null, 'ss');
         } else {
             $templateFiles = $this->getFilesRecursive($modulePath, null, 'ss');
         }
@@ -957,7 +957,7 @@ class i18nTextCollector
             $fileList = [];
         }
         // Skip ignored folders
-        if (is_file("{$folder}/_manifest_exclude") || preg_match($folderExclude ?? '', $folder ?? '')) {
+        if (is_file($folder . DIRECTORY_SEPARATOR . '_manifest_exclude') || preg_match($folderExclude ?? '', $folder ?? '')) {
             return $fileList;
         }
 

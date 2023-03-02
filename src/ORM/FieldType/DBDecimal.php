@@ -88,8 +88,12 @@ class DBDecimal extends DBField
         $fieldName = $this->name;
 
         if ($fieldName) {
-            $value = (float) preg_replace('/[^0-9.\-\+]/', '', $this->value ?? '');
-            $dataObject->setField($fieldName, $value);
+            if ($this->value instanceof DBField) {
+                $this->value->saveInto($dataObject);
+            } else {
+                $value = (float) preg_replace('/[^0-9.\-\+]/', '', $this->value ?? '');
+                $dataObject->__set($fieldName, $value);
+            }
         } else {
             throw new \UnexpectedValueException(
                 "DBField::saveInto() Called on a nameless '" . static::class . "' object"

@@ -324,9 +324,10 @@ class TimeField extends TextField
     {
         // Don't validate empty fields
         if (empty($this->rawValue)) {
-            return true;
+            return $this->extendValidationResult(true, $validator);
         }
 
+        $result = true;
         // We submitted a value, but it couldn't be parsed
         if (empty($this->value)) {
             $validator->validationError(
@@ -337,9 +338,11 @@ class TimeField extends TextField
                     ['format' => $this->getTimeFormat()]
                 )
             );
-            return false;
+            $result = false;
         }
-        return true;
+
+        $this->extendValidationResult($result, $validator);
+        return $result;
     }
 
     /**

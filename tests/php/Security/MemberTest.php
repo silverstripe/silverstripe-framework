@@ -1831,7 +1831,7 @@ class MemberTest extends FunctionalTest
         $result = Member::mapInCMSGroups($groups);
         $this->assertInstanceOf(Map::class, $result);
 
-        $this->assertSame($expectedUsers, $result->keys());
+        $this->assertEqualsCanonicalizing($expectedUsers, $result->keys());
     }
 
     public function provideMapInCMSGroups()

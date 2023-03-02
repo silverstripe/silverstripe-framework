@@ -29,6 +29,7 @@ class EmailField extends TextField
      */
     public function validate($validator)
     {
+        $result = true;
         $this->value = trim($this->value ?? '');
 
         $pattern = '^[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$';
@@ -43,10 +44,10 @@ class EmailField extends TextField
                 'validation'
             );
 
-            return false;
+            $result = false;
         }
 
-        return true;
+        return $this->extendValidationResult($result, $validator);
     }
 
     public function getSchemaValidation()

@@ -24,6 +24,7 @@ class Sources implements Resettable
      *
      * @config
      * @var array
+     * @deprecated 4.0.0 Use SilverStripe\Core\Manifest\ModuleManifest.module_priority instead
      */
     private static $module_priority = [];
 
@@ -35,7 +36,6 @@ class Sources implements Resettable
     public function getSortedModules()
     {
         $sortedModules = [];
-        
         foreach (ModuleLoader::inst()->getManifest()->getModules() as $module) {
             $sortedModules[$module->getName()] = $module->getPath();
         };

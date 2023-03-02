@@ -247,21 +247,23 @@ abstract class MultiSelectField extends SelectField
                 return true;
             }
         );
-        if (empty($invalidValues)) {
-            return true;
+
+        $result = true;
+        if (!empty($invalidValues)) {
+            $result = false;
+            // List invalid items
+            $validator->validationError(
+                $this->getName(),
+                _t(
+                    'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
+                    "Please select values within the list provided. Invalid option(s) {value} given",
+                    ['value' => implode(',', $invalidValues)]
+                ),
+                "validation"
+            );
         }
 
-        // List invalid items
-        $validator->validationError(
-            $this->getName(),
-            _t(
-                'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
-                "Please select values within the list provided. Invalid option(s) {value} given",
-                ['value' => implode(',', $invalidValues)]
-            ),
-            "validation"
-        );
-        return false;
+        return $this->extendValidationResult($result, $validator);
     }
 
     /**

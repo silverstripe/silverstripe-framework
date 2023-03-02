@@ -542,7 +542,11 @@ abstract class DBField extends ViewableData implements DBIndexable
                 "DBField::saveInto() Called on a nameless '" . static::class . "' object"
             );
         }
-        $dataObject->setField($fieldName, $this->value);
+        if ($this->value instanceof self) {
+            $this->value->saveInto($dataObject);
+        } else {
+            $dataObject->__set($fieldName, $this->value);
+        }
     }
 
     /**

@@ -191,20 +191,21 @@ class NumericField extends TextField
      */
     public function validate($validator)
     {
+        $result = true;
         // false signifies invalid value due to failed parse()
-        if ($this->value !== false) {
-            return true;
+        if ($this->value === false) {
+            $validator->validationError(
+                $this->name,
+                _t(
+                    'SilverStripe\\Forms\\NumericField.VALIDATION',
+                    "'{value}' is not a number, only numbers can be accepted for this field",
+                    ['value' => $this->originalValue]
+                )
+            );
+            $result = false;
         }
 
-        $validator->validationError(
-            $this->name,
-            _t(
-                'SilverStripe\\Forms\\NumericField.VALIDATION',
-                "'{value}' is not a number, only numbers can be accepted for this field",
-                ['value' => $this->originalValue]
-            )
-        );
-        return false;
+        return $this->extendValidationResult($result, $validator);
     }
 
     public function getSchemaValidation()
