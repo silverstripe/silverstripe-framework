@@ -394,14 +394,7 @@ class StandardRelatedDataService implements RelatedDataService
      */
     private function prepareClassNameLiteral(string $value): string
     {
-        $c = chr(92);
-        $escaped = str_replace($c ?? '', "{$c}{$c}", $value ?? '');
-        // postgres
-        if (stripos(get_class(DB::get_conn()), 'postgres') !== false) {
-            return "E'{$escaped}'";
-        }
-        // mysql
-        return "'{$escaped}'";
+        return DB::get_conn()->quoteString($value);
     }
 
     /**

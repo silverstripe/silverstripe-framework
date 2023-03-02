@@ -289,14 +289,14 @@ class ClassInfo
      */
     public static function classes_for_file($filePath)
     {
-        $absFilePath = Director::getAbsFile($filePath);
+        $absFilePath = Convert::slashes(Director::getAbsFile($filePath));
         $classManifest = ClassLoader::inst()->getManifest();
         $classes = $classManifest->getClasses();
         $classNames = $classManifest->getClassNames();
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (strcasecmp($absFilePath ?? '', $compareFilePath ?? '') === 0) {
+            if (strcasecmp($absFilePath, Convert::slashes($compareFilePath ?? '')) === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
@@ -312,14 +312,14 @@ class ClassInfo
      */
     public static function classes_for_folder($folderPath)
     {
-        $absFolderPath = Director::getAbsFile($folderPath);
+        $absFolderPath = Convert::slashes(Director::getAbsFile($folderPath));
         $classManifest = ClassLoader::inst()->getManifest();
         $classes = $classManifest->getClasses();
         $classNames = $classManifest->getClassNames();
 
         $matchedClasses = [];
         foreach ($classes as $lowerClass => $compareFilePath) {
-            if (stripos($compareFilePath ?? '', $absFolderPath ?? '') === 0) {
+            if (stripos(Convert::slashes($compareFilePath ?? ''), $absFolderPath) === 0) {
                 $matchedClasses[$lowerClass] = $classNames[$lowerClass];
             }
         }
