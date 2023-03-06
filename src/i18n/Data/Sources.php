@@ -20,15 +20,6 @@ class Sources implements Resettable
     use Configurable;
 
     /**
-     * List of prioritised modules, in lowest to highest priority.
-     *
-     * @config
-     * @var array
-     * @deprecated 4.0.0 Use SilverStripe\Core\Manifest\ModuleManifest.module_priority instead
-     */
-    private static $module_priority = [];
-
-    /**
      * Get sorted modules
      *
      * @return array Array of module names -> path
