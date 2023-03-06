@@ -226,47 +226,6 @@ class Convert
     }
 
     /**
-     * Convert a XML string to a PHP array recursively. Do not
-     * call this function directly.
-     *
-     * @param SimpleXMLElement $xml
-     *
-     * @return mixed
-     * @deprecated 4.11.0 Will be removed without equivalent functionality
-     */
-    protected static function recursiveXMLToArray($xml)
-    {
-        Deprecation::notice('4.11.0', 'Will be removed without equivalent functionality');
-        $x = null;
-        if ($xml instanceof SimpleXMLElement) {
-            $attributes = $xml->attributes();
-            foreach ($attributes as $k => $v) {
-                if ($v) {
-                    $a[$k] = (string) $v;
-                }
-            }
-            $x = $xml;
-            $xml = get_object_vars($xml);
-        }
-        if (is_array($xml)) {
-            if (count($xml ?? []) === 0) {
-                return (string)$x;
-            } // for CDATA
-            $r = [];
-            foreach ($xml as $key => $value) {
-                $r[$key] = self::recursiveXMLToArray($value);
-            }
-            // Attributes
-            if (isset($a)) {
-                $r['@'] = $a;
-            }
-            return $r;
-        }
-
-        return (string) $xml;
-    }
-
-    /**
      * Create a link if the string is a valid URL
      *
      * @param string $string The string to linkify
