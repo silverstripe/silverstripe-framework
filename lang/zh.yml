@@ -11,6 +11,8 @@ zh:
     VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
     VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
     VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
+    NOTSET: 未设置
+    TODAY: 今天
   SilverStripe\Forms\DropdownField:
     CHOOSE: （选择）
     SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
@@ -23,6 +25,7 @@ zh:
     VALIDATIONSTRONGPASSWORD: 密码必须至少有一个数字和一个字母数字字符
     VALIDATOR: 验证器
     VALIDCURRENCY: 请输入一个有效的货币
+    FIELDISREQUIRED: '{name} 是必须的'
   SilverStripe\Forms\FormField:
     NONE: 无
   SilverStripe\Forms\GridField\GridField:
@@ -53,6 +56,7 @@ zh:
     DeletePermissionsFailure: 没有删除权限
     Deleted: '已删除的 {type} {name}'
     Save: 保存
+    Saved: '已保存 {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 金额
     FIELDLABELCURRENCY: 货币
@@ -99,9 +103,20 @@ zh:
     Sort: 排序
     has_many_Permissions: 权限
     many_many_Members: 成员
+    GROUPNAME: 小组名称
+    MEMBERS: 成员
+    NEWGROUP: 新的小组
+    PERMISSIONS: 权限
+    PLURALNAME: 群组
+    ROLES: 角色
+    ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
+    SINGULARNAME: 小组
   SilverStripe\Security\LoginAttempt:
     IP: 'IP 地址'
     Status: 状态
+    Email: 电子邮件地址
+    PLURALNAME: 登录尝试
+    SINGULARNAME: 登录尝试
   SilverStripe\Security\Member:
     ADDGROUP: 添加组别
     BUTTONCHANGEPASSWORD: 更改密码
@@ -133,6 +148,10 @@ zh:
     db_LockedOutUntil: 保持锁定直到
     db_Password: 密码
     db_PasswordExpiry: 密码失效日期
+    BUTTONLOGOUT: 登出
+    EDIT_PASSWORD: 新密码
+    PLURALNAME: 成员
+    SINGULARNAME: 成员
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
     PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
@@ -143,6 +162,10 @@ zh:
     FULLADMINRIGHTS: 完全管理权
     FULLADMINRIGHTS_HELP: 包含并支配其它所有已分配权限
     UserPermissionsIntro: 把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。
+    CMS_ACCESS_CATEGORY: 'CMS 访问'
+    PERMISSIONS_CATEGORY: 角色及访问权限
+    PLURALNAME: 权限
+    SINGULARNAME: 权限
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'
@@ -151,8 +174,12 @@ zh:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 只有管理员可以应用
     Title: 标题
+    PLURALNAME: 角色
+    SINGULARNAME: 角色
   SilverStripe\Security\PermissionRoleCode:
     PermsError: '无法为代码 "{code}"分配特权权限（要求具备 ADMIN 访问）'
+    PLURALNAME: 权限角色代码
+    SINGULARNAME: 权限角色代码
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。
     BUTTONSEND: 将密码重设链接发送给我
@@ -164,3 +191,52 @@ zh:
     LOSTPASSWORDHEADER: 忘记密码
     NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
     NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码
+    LOGOUT: 登出
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 尺寸
+    EDIT: 编辑
+    EDITINFO: 编辑该文件
+    REMOVE: 移除
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 您的密码已更改为：
+    HELLO: 您好
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 您好
+    TEXT1: 这是您的
+    TEXT2: 密码重设链接
+    TEXT3: 为
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 无效请求
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 无可用选项
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 没有找到文件信息
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: 主要的
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: 编辑
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: 的
+    Page: 页面
+    View: 查看
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: 查看
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: '{name} 的长度必须至多{maxLength} 个字符。'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 数据对象
+    SINGULARNAME: 数据对象
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 验证错误
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: 取消
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 默认管理员
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: 登出
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 所提供的资料似乎是不正确的。请再试一次。
+    NoPassword: 该成员无密码
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 成员密码
+    SINGULARNAME: 成员密码

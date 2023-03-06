@@ -15,11 +15,14 @@ uk:
     Filter: Фільтр
     FilterBy: 'Фільтр по'
     Find: Пошук
+    Print: Друкувати
+    ResetFilter: Відновити
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Відмінити
     Create: Створити
     Delete: Видалити
     Save: Зберегти
+    Saved: 'Збережено {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
@@ -37,6 +40,11 @@ uk:
     RolesAddEditLink: 'Керувати ролями'
     has_many_Permissions: Права
     many_many_Members: Члени
+    MEMBERS: Члени
+    NEWGROUP: 'Нова Група'
+    PERMISSIONS: Права
+    PLURALNAME: Групи
+    ROLES: Ролі
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Змінити пароль'
     BUTTONLOGIN: Увійти
@@ -61,12 +69,22 @@ uk:
     db_LockedOutUntil: 'Заблоковано поки'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
+    BUTTONLOGOUT: Вилогуватися
+    EDIT_PASSWORD: 'Новий пароль'
+    PLURALNAME: Члени
+    SINGULARNAME: Член
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Дозволи вмісту'
+    CMS_ACCESS_CATEGORY: 'Доступ до CMS'
+    PERMISSIONS_CATEGORY: 'Ролі та дозволи доступу'
+    PLURALNAME: Права
+    SINGULARNAME: 'Право доступу'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'Успадкований з ролі "{roletitle}" на групу "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     Title: Назва
+    PLURALNAME: Ролі
+    SINGULARNAME: Роль
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
     BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
@@ -77,3 +95,39 @@ uk:
     LOGIN: Увійти
     NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
     NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
+    LOGOUT: Вилогуватися
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Розміри
+    EDIT: Edit
+    EDITINFO: 'Редагувати цей файл'
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
+    HELLO: Привіт
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Привіт
+  SilverStripe\Forms\DateField:
+    NOTSET: 'не встановлено'
+    TODAY: сьогодні
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Головна
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Видалити
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Сторінка
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Об’єкти даних'
+    SINGULARNAME: 'Об’єкт даних'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Будь-який
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Відмінити
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Вилогуватися
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Паролі користувача'
+    SINGULARNAME: 'Пароль користувача'

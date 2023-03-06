@@ -1,0 +1,51 @@
+pl_PL:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Edytuj
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Nie
+    YESANSWER: Tak
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Informacji o pliku nie znaleziono'
+  SilverStripe\Forms\Form:
+    FIELDISREQUIRED: 'Pole {name} jest wymagane'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Główny
+  SilverStripe\Forms\GridField\GridField:
+    Filter: Filtr
+    ResetFilter: Resetuj
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Usuń
+    UnlinkRelation: Odczep
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Anuluj
+    Create: Utwórz
+    Delete: Usuń
+    Save: Zapisz
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edytuj
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Strona
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Jakikolwiek
+    NOANSWER: Nie
+    YESANSWER: Tak
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Jakikolwiek
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Anuluj
+  SilverStripe\Security\Group:
+    SINGULARNAME: Grupa
+  SilverStripe\Security\Member:
+    BUTTONLOGOUT: 'Wyloguj się'
+    EMAIL: E-mail
+    PASSWORD: Hasło
+    db_Password: Hasło
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: 'Wyloguj się'
+  SilverStripe\Security\PermissionRole:
+    Title: Tytuł
+  SilverStripe\Security\Security:
+    LOGOUT: 'Wyloguj się'

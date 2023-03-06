@@ -36,6 +36,8 @@ fr:
     VALIDDATEFORMAT2: 'Saisissez une date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({date})'
+    NOTSET: 'non renseigné'
+    TODAY: 'aujourd''hui'
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'La date doit être antérieure ou égale à celle autorisée ({datetime})'
     VALIDDATETIMEFORMAT: 'Saisissez un format de date et d''heure valide ({format})'
@@ -56,6 +58,7 @@ fr:
     VALIDATIONSTRONGPASSWORD: 'Le mot de passe doit comporter au moins un chiffre et un caractère alphanumérique'
     VALIDATOR: Validateur
     VALIDCURRENCY: 'Saisissez une monnaie valide'
+    FIELDISREQUIRED: '{name} requis'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'Par ex. {format}'
     NONE: aucun
@@ -90,6 +93,7 @@ fr:
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
     Deleted: '{type} {name} supprimés'
     Save: Enregistrer
+    Saved: '{name} {link} sauvegardé'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -327,3 +331,9 @@ fr:
     LOSTPASSWORDHEADER: 'Mot de passe oublié'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrez vos identifiants ci-dessous et vous pourrez y avoir accès.'
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Éditer
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Vue
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Annuler

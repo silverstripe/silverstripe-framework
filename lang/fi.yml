@@ -58,6 +58,7 @@ fi:
     VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
     VALIDATOR: Tarkistin
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
+    FIELDISREQUIRED: '{name} on pakollinen'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'esim. {format}'
     NONE: 'Ei yhtään'
@@ -93,6 +94,7 @@ fi:
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
     Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
+    Saved: 'Tallennettu: {name} {link}'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Muokkaa
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
@@ -252,6 +254,7 @@ fi:
     db_LockedOutUntil: 'Lukittuna tähän asti:'
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
+    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä {identifier}.'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS-järjestelmän käyttäjän kirjautuminen'
     BUTTONFORGOTPASSWORD: 'Unohdin salasanan'
@@ -327,3 +330,7 @@ fi:
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
     PASSWORDRESETSENTHEADER: 'Salasanan palautuslinkki lähetetty'
     PASSWORDRESETSENTTEXT: 'Kiitos, palautuslinkki on lähetetty käyttäjätilille asetettuun sähköpostiosoitteeseen.'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: '{name}-arvo ei voi ylittää {maxLength} merkin määrää.'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Peruuta

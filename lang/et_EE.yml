@@ -11,6 +11,8 @@ et_EE:
     VALIDDATEFORMAT2: 'Sisestage sobivas vormingus kuupäev ({format})'
     VALIDDATEMAXDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) varasem või ühtima sellega.'
     VALIDDATEMINDATE: 'Teie kuupäev peab oleme lubatud kuupäevast ({date}) hilisem või ühtima sellega.'
+    NOTSET: 'Pole seadistatud'
+    TODAY: Täna
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Vali)
   SilverStripe\Forms\EmailField:
@@ -49,6 +51,7 @@ et_EE:
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
     Deleted: '{type} {name} on kustutatud'
     Save: Salvesta
+    Saved: 'Salvestatud {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Hulk
     FIELDLABELCURRENCY: Valuuta
@@ -85,9 +88,20 @@ et_EE:
     Sort: Järjesta
     has_many_Permissions: Õigused
     many_many_Members: Liikmed
+    GROUPNAME: 'Rühma nimi'
+    MEMBERS: Liikmed
+    NEWGROUP: 'Uus rühm'
+    PERMISSIONS: Õigused
+    PLURALNAME: Grupid
+    ROLES: Rollid
+    ROLESDESCRIPTION: 'Rollid on eelmäratud õiguste kogumid, mida on võimalik määrara gruppidele.<br />Need päritakse vajaduse korral vanemgruppidest.'
+    SINGULARNAME: Grupp
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Aadress'
     Status: Staatus
+    Email: 'E-posti aadress'
+    PLURALNAME: Sisselogimiskatsed
+    SINGULARNAME: Sisselogimiskatse
   SilverStripe\Security\Member:
     ADDGROUP: 'Lisa grupp'
     BUTTONCHANGEPASSWORD: 'Muuda parool'
@@ -116,11 +130,19 @@ et_EE:
     db_LockedOutUntil: 'Suletud kuni'
     db_Password: Parool
     db_PasswordExpiry: 'Parool aegumise kuupäev'
+    BUTTONLOGOUT: 'Logi välja'
+    EDIT_PASSWORD: 'Uus parool'
+    PLURALNAME: Liikmed
+    SINGULARNAME: Kasutaja
   SilverStripe\Security\Permission:
     AdminGroup: Administraator
     CONTENT_CATEGORY: 'Sisu õigused'
     FULLADMINRIGHTS: 'Täielikud administraatoriõigused'
     UserPermissionsIntro: 'Sellele kasutajale gruppide määramine kohandab tema õiguseid. Vaadake gruppide jaotist, et näha üksikasju iga grupi õiguste kohta.'
+    CMS_ACCESS_CATEGORY: CMS-juurdepääs
+    PERMISSIONS_CATEGORY: 'Rollid ja juurdepääsuõigused'
+    PLURALNAME: Õigused
+    SINGULARNAME: Õigus
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'määratud grupile "{title}"'
     FromGroup: 'päritud grupilt "{title}"'
@@ -129,6 +151,8 @@ et_EE:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Ainult administraator saab rakendada'
     Title: Pealkiri
+    PLURALNAME: Rollid
+    SINGULARNAME: Roll
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sul puudub õigus sellele lehele pääsemiseks. Kui sul on teine konto, millega siia sisse logida, võid uuesti sisse logida.'
     BUTTONSEND: 'Saada parooli tühistamise link'
@@ -139,3 +163,43 @@ et_EE:
     LOGIN: 'Logi sisse'
     NOTEPAGESECURED: 'See leht on turvatud. Sisesta enda andmed allpool ja me saadame sind otse edasi'
     NOTERESETPASSWORD: 'Sisesta oma email ja me saadame sulle lingi kus saad oma parooli tühistada.'
+    LOGOUT: 'Logi välja'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Mõõtmed
+    EDIT: Redigeeri
+    EDITINFO: 'Muuda seda faili'
+    REMOVE: Eemalda
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Vahetasid oma parooli lehel'
+    HELLO: Tere
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Tere
+    TEXT1: 'Siin on sinu'
+    TEXT2: 'Parooli tühistus link'
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Sobimatu taotlus'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Failiteavet ei leitud'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Avaleht
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Redigeeri
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: /
+    Page: Leht
+    View: Kuva
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Kuva
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Andme objektid'
+    SINGULARNAME: 'Andme objekt'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Loobu
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: Vaikeadministraator
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Unustasid parooli'
+    BUTTONLOGOUT: 'Logi välja'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Liikme paroolid'
+    SINGULARNAME: 'Liikme parool'

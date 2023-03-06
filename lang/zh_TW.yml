@@ -26,6 +26,8 @@ zh_TW:
     SUBJECTPASSWORDRESET: 密碼重設
     SURNAME: 姓
     YOUROLDPASSWORD: 舊密碼
+    EDIT_PASSWORD: 新密碼
+    db_Password: 密碼
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 你不能瀏覽此頁。請用別的帳戶登入。
     BUTTONSEND: 寄給我密碼重設網址。
@@ -35,3 +37,29 @@ zh_TW:
     ERRORPASSWORDPERMISSION: 你必須先登入才能改密碼！
     NOTEPAGESECURED: 那的網頁是被保護的。請先登入。
     NOTERESETPASSWORD: 請輸入您的電子郵件。我們將寄給你重設密媽的網址。
+    LOGIN: 登入
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 大小
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
+    HELLO: 您好
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 您好
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 更改密碼
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: 主要
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Save: 儲存
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: 網頁
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\Security\Group:
+    NEWGROUP: 新增群組
+  SilverStripe\Security\PermissionRole:
+    Title: 標題

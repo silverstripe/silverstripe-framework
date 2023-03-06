@@ -19,11 +19,16 @@ pt:
     PRINTEDBY: 'Impresso por'
     RelationSearch: 'Pesquisa relacionada'
     ResetFilter: Redefinir
+    Print: Imprimir
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Apagar
     DeletePermissionsFailure: 'Não tem permissões para apagar'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancelar
+    Create: Criar
+    Delete: Apagar
+    DeletePermissionsFailure: 'Não tem permissões para apagar'
+    Save: Guardar
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Quantidade
     FIELDLABELCURRENCY: Moeda
@@ -48,9 +53,16 @@ pt:
     Sort: 'Ordem de ordenação'
     has_many_Permissions: Permissões
     many_many_Members: Membros
+    GROUPNAME: 'Nome do Grupo'
+    MEMBERS: Membros
+    NEWGROUP: 'Novo grupo'
+    PERMISSIONS: Permissões
+    PLURALNAME: Grupos
+    ROLES: Regras
   SilverStripe\Security\LoginAttempt:
     IP: 'Endereço IP'
     Status: Estado
+    Email: 'Endereço de Email'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Password'
     BUTTONLOGIN: Entrar
@@ -73,14 +85,23 @@ pt:
     db_LockedOutUntil: 'Bloqueado até'
     db_Password: Palavra-chave
     db_PasswordExpiry: 'Data de expiração da password'
+    BUTTONLOGOUT: Sair
+    EDIT_PASSWORD: 'Nova Password'
+    PASSWORD: Palavra-chave
+    PLURALNAME: Membros
+    SINGULARNAME: Membro
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permissões de conteúdo'
     FULLADMINRIGHTS: 'Direitos de Administrador'
+    CMS_ACCESS_CATEGORY: 'Acesso ao CMS'
+    PERMISSIONS_CATEGORY: 'Regras e permissões de acesso'
+    PLURALNAME: Permissões
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'herdada da regra "{roletitle}" no grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     Title: Título
+    PLURALNAME: Regras
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Não tem acesso a esta página. Se tem outras credenciais que lhe permitem aceder a esta página, pode-se autenticar abaixo.'
     BUTTONSEND: 'Enviar o link para recuperar a password'
@@ -90,3 +111,41 @@ pt:
     ERRORPASSWORDPERMISSION: 'Tem de estar autenticado para poder alterar a sua password!'
     NOTEPAGESECURED: 'Esta página é privada. Insira as suas credenciais abaixo para a visualizar.'
     NOTERESETPASSWORD: 'Insira o seu endereço de email, e será enviado um link que poderá utilizar para recuperar a sua password'
+    LOGIN: Entrar
+    LOGOUT: Sair
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensões
+    EDIT: Edit
+    EDITINFO: 'Editar este ficheiro'
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Modificou a sua password para'
+    HELLO: Olá
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Olá
+    TEXT1: 'Este é o seu'
+    TEXT2: 'link para alterar password'
+    TEXT3: para
+  SilverStripe\Forms\DateField:
+    NOTSET: 'Não inserido'
+    TODAY: Hoje
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Informação do ficheiro não encontrada'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: de
+    Page: Página
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Objectos de Dados'
+    SINGULARNAME: 'Objecto de Dados'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Cancelar
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Administrador por Omissão'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Sair

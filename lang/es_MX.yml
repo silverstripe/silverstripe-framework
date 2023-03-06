@@ -5,6 +5,8 @@ es_MX:
     VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
     VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
     VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
+    NOTSET: 'no especificada'
+    TODAY: ahora
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Seleccione)
   SilverStripe\Forms\Form:
@@ -28,6 +30,7 @@ es_MX:
     PlaceHolderWithLabels: 'Buscar {type} por {name}'
     RelationSearch: 'Buscar relación'
     ResetFilter: Resetear
+    Print: Imprimir
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Eliminar
     DeletePermissionsFailure: 'No borrar permisos'
@@ -64,9 +67,16 @@ es_MX:
     Sort: 'Orden de Clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
+    GROUPNAME: 'Nombre de grupo'
+    MEMBERS: Miembros
+    NEWGROUP: 'Nuevo grupo'
+    PERMISSIONS: Permisos
+    PLURALNAME: Grupos
+    SINGULARNAME: Group
   SilverStripe\Security\LoginAttempt:
     IP: 'Dirección IP'
     Status: Estado
+    Email: 'Dirección de Correo Electrónico'
   SilverStripe\Security\Member:
     ADDGROUP: 'Agregar grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
@@ -95,11 +105,18 @@ es_MX:
     db_LockedOutUntil: 'Bloqueado hasta'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha en que expira la contraseña'
+    BUTTONLOGOUT: 'Cerrar sesión'
+    EDIT_PASSWORD: 'Nueva contraseña'
+    PLURALNAME: Miembros
+    SINGULARNAME: Miembro
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permisos de contenido'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
+    CMS_ACCESS_CATEGORY: 'Acceder al CMS'
+    PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
+    PLURALNAME: Permisos
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado del rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\Security:
@@ -112,3 +129,48 @@ es_MX:
     LOGIN: Ingresar
     NOTEPAGESECURED: 'Se ha asegurado la página. Ingresa tus credenciales abajo y en seguida enviaremos tu autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección de correo-e y te enviaremos un enlace con el cual podrás restablecer la contraseña'
+    LOGOUT: 'Cerrar sesión'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensiones
+    EDIT: Editar
+    EDITINFO: 'Editar este archivo'
+    REMOVE: Remover
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Usted ha cambiado su contraseña'
+    HELLO: Hey
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hey
+    TEXT1: 'Estás aquí'
+    TEXT2: 'vínculo para restablecer la contraseña'
+    TEXT3: para
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Solicitud no válida'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Información acerca del archivo no encontrada'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Cancelar
+    Create: Crear
+    Delete: Eliminar
+    DeletePermissionsFailure: 'No borrar permisos'
+    Save: Guardar
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Editar
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Página
+    View: Ver
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Ver
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Datos de objetos'
+    SINGULARNAME: 'Datos del objeto'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Cancelar
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Administrador Predeterminado'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Olvidé la contraseña'
+    BUTTONLOGOUT: 'Cerrar sesión'
+  SilverStripe\Security\PermissionRole:
+    Title: Título

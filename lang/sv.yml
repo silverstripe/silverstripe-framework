@@ -36,6 +36,8 @@ sv:
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
+    NOTSET: 'inte angivet'
+    TODAY: 'i dag'
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'Angivet datum måste vara tidigare eller samma som det senast godkända datumet ({datetime})'
     VALIDDATETIMEFORMAT: 'Vänligen ange datum och tid i ett giltigt format ({format})'
@@ -56,6 +58,7 @@ sv:
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
+    FIELDISREQUIRED: '{name} är obligatoriskt'
   SilverStripe\Forms\FormField:
     EXAMPLE: 't.ex. {format}'
     NONE: ingen
@@ -88,6 +91,7 @@ sv:
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
     Deleted: 'Raderade {type} {name}'
     Save: Spara
+    Saved: 'Sparade {name} {link}'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Du kan inte radera dig själv från den här gruppen, då du då kommer att förlora dina admin-rättigheter'
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -278,6 +282,8 @@ sv:
     Title: Rollnamn
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Koden "{code}" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
+    PLURALNAME: 'Kod för rollrättigheter'
+    SINGULARNAME: 'Kodför rollrättigheter'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'
@@ -291,3 +297,22 @@ sv:
     LOSTPASSWORDHEADER: 'Bortglömt lösenord'
     NOTEPAGESECURED: 'Den här sidan är låst. Fyll i dina uppgifter nedan så skickar vi dig vidare.'
     NOTERESETPASSWORD: 'Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord'
+    PASSWORDRESETSENTHEADER: 'Återställningslänk för lösenord skickad'
+    PASSWORDRESETSENTTEXT: 'Tack. En återställningslänk har skickats, förutsatt att ett konto med denna adress existerar.'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Allmän
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Ändra
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Visa
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Värdet för {name} får inte överstiga {MaxLength} tecken'
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'För många relaterade objekt; använder fallback-fält'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Avbryt
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: standard
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Användares lösenord'
+    SINGULARNAME: 'Användares lösenord'

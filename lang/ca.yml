@@ -11,6 +11,7 @@ ca:
     NONE: cap
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exporta a CSV'
+    Print: Imprimeix
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
     ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
@@ -23,9 +24,15 @@ ca:
     Sort: Ordre
     has_many_Permissions: Permisos
     many_many_Members: Membres
+    GROUPNAME: 'Nom de grup'
+    MEMBERS: Membres
+    NEWGROUP: 'Nou grup'
+    PERMISSIONS: Permisos
+    PLURALNAME: Grups
   SilverStripe\Security\LoginAttempt:
     IP: 'Adreça IP'
     Status: Estat
+    Email: 'Adreça de correu'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
     BUTTONLOGIN: Entrar
@@ -50,8 +57,13 @@ ca:
     db_LockedOutUntil: 'Bloquejat fins a'
     db_Password: Contrasenya
     db_PasswordExpiry: 'Data d''expiració de la contrasenya'
+    EDIT_PASSWORD: 'Nova contrasenya'
+    PLURALNAME: Membres
+    SINGULARNAME: Membre
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Drets administratius totals'
+    AdminGroup: Administrador
+    PLURALNAME: Permisos
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
     BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
@@ -62,3 +74,37 @@ ca:
     LOGIN: Entrar
     NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
     NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
+    HELLO: Hola
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hola
+    TEXT1: 'Aquí teniu el vostre'
+    TEXT2: 'enllaç de reinici de la contrasenya'
+    TEXT3: per
+  SilverStripe\Forms\DateField:
+    NOTSET: 'no definit'
+    TODAY: avui
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Suprimeix
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: Suprimeix
+    Save: Desa
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Pàgina
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Objectes de dades'
+    SINGULARNAME: 'Objecte de dades'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'He oblidat la contrasenya'
+  SilverStripe\Security\PermissionRole:
+    Title: Títol

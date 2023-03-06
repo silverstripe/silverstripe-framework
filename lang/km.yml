@@ -11,6 +11,9 @@ km:
     Parent: ចំណាត់ក្រុមដើម
     has_many_Permissions: ការអនុញ្ញាតិ្ត
     many_many_Members: សមាជិក
+    MEMBERS: សមាជិក
+    PERMISSIONS: ការអនុញ្ញាតិ្ត
+    PLURALNAME: ចំណាត់ក្រុម
   SilverStripe\Security\Member:
     EMAIL: អ៊ីម៉េល
     INTERFACELANG: ភាសាប្រើសំរាប់ទំព័រមុខ
@@ -19,5 +22,22 @@ km:
     belongs_many_many_Groups: ចំណាត់ក្រុម
     db_LockedOutUntil: ដោះចេញរហូតដល់
     db_PasswordExpiry: កាលបរិច្ឆេទផុតកំណត់ពាក្យសំងាត់
+    BUTTONCHANGEPASSWORD: ផ្លាស់ប្តូរពាក្យសំងាត់
+    PLURALNAME: សមាជិក
+    SINGULARNAME: សមាជិក
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'អ្នកមិនអាចមើលទំព័រនេះបានទេ។ សូមប្រើប្រាស់ព័ត៌មានសំរាប់ថ្មី មួយទៀតសំរាប់ចូលមើល។ សូមចូលតាម'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: អ្នកបានផ្លាស់ប្តូរពាក្យសំងាត់សំរាប់
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    SINGULARNAME: 'Data Objects'
+  SilverStripe\Security\Permission:
+    PLURALNAME: ការអនុញ្ញាតិ្ត

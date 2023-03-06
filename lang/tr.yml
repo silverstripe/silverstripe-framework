@@ -14,6 +14,9 @@ tr:
     NONE: hiç
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'CSV olarak kaydet'
+    Filter: Filtre
+    Print: Yazdır
+    ResetFilter: Sıfırla
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Sil
   SilverStripe\Forms\NullableField:
@@ -34,9 +37,16 @@ tr:
     Sort: Sırala
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
+    GROUPNAME: 'Grup adı'
+    MEMBERS: Üyeler
+    NEWGROUP: 'Yeni Grup'
+    PERMISSIONS: İzinler
+    PLURALNAME: Gruplar
+    ROLES: Roller
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Adresi'
     Status: Durum
+    Email: 'E-posta Adresi'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
     BUTTONLOGIN: Giriş
@@ -61,8 +71,16 @@ tr:
     db_LockedOutUntil: 'Şu tarihe kadar kapalı:'
     db_Password: Parola
     db_PasswordExpiry: 'Parola için Son Geçerlilik Tarihi'
+    BUTTONLOGOUT: 'Çıkış Yap'
+    EDIT_PASSWORD: 'Yeni Şifre'
+    PLURALNAME: Üyeler
+    SINGULARNAME: Üye
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
+    AdminGroup: Yönetici
+    CMS_ACCESS_CATEGORY: 'CMS Erişimi'
+    PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
+    PLURALNAME: İzinler
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
     BUTTONSEND: Gönder
@@ -73,3 +91,47 @@ tr:
     LOGIN: 'Oturum aç'
     NOTEPAGESECURED: 'O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz.'
     NOTERESETPASSWORD: 'E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz'
+    LOGOUT: 'Çıkış Yap'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Boyutlar
+    EDIT: Edit
+    EDITINFO: 'Dosyayı düzenle'
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
+    HELLO: Merhaba
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Merhaba
+    TEXT1: 'Profilinize ait'
+    TEXT2: 'şifre sıfırlama linki'
+    TEXT3: için
+  SilverStripe\Forms\DateField:
+    NOTSET: ayarlanmamış
+    TODAY: bugün
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Dosya bilgisi bulunamadı'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: 'Ana (Esas)'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Create: Oluştur
+    Delete: Sil
+    Save: Kaydet
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Sayfa
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Data Nesneleri'
+    SINGULARNAME: 'Data Nesnesi'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Herhangi
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Varsayılan Yönetici'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Şifremi Unuttum'
+    BUTTONLOGOUT: 'Çıkış Yap'
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Roller
+    Title: Başlık

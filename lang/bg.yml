@@ -36,6 +36,8 @@ bg:
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
+    NOTSET: 'не е зададена'
+    TODAY: днес
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'Датата и времето трябва да бъдат същите или преди ({date})'
     VALIDDATETIMEFORMAT: 'Моля, въведете валиден формат за дата и време ({format})'
@@ -306,3 +308,9 @@ bg:
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Редактиране
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Преглед
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Отказ

@@ -11,6 +11,8 @@ id:
     VALIDDATEFORMAT2: 'Mohon isikan format tanggal yang valid ({format})'
     VALIDDATEMAXDATE: 'Tanggal Anda harus lebih lama atau sama dengan tanggal maksimum ({date})'
     VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
+    NOTSET: 'tidak diatur'
+    TODAY: 'hari ini'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Pilih)
     SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
@@ -24,6 +26,7 @@ id:
     VALIDATIONSTRONGPASSWORD: 'Kata kunci harus setidaknya terdiri dari satu angka dan satu karakter alfanumerik'
     VALIDATOR: Validasi
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
+    FIELDISREQUIRED: '{name} wajib diisi'
   SilverStripe\Forms\FormField:
     NONE: 'tidak ada'
   SilverStripe\Forms\GridField\GridField:
@@ -54,6 +57,7 @@ id:
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     Deleted: '{type} {name} dihapus'
     Save: Simpan
+    Saved: 'Simpan {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Jumlah
     FIELDLABELCURRENCY: 'Mata Uang'
@@ -100,9 +104,20 @@ id:
     Sort: Urutkan
     has_many_Permissions: Perijinan
     many_many_Members: Pengguna
+    GROUPNAME: 'Nama kelompok'
+    MEMBERS: Pengguna
+    NEWGROUP: 'Kelompok Baru'
+    PERMISSIONS: Perijinan
+    PLURALNAME: Kelompok
+    ROLES: Peran
+    ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
+    SINGULARNAME: Grup
   SilverStripe\Security\LoginAttempt:
     IP: 'Alamat IP'
     Status: Status
+    Email: 'Alamat Email'
+    PLURALNAME: 'Upaya Masuk'
+    SINGULARNAME: 'Upaya Masuk'
   SilverStripe\Security\Member:
     ADDGROUP: 'Tambah kelompok'
     BUTTONCHANGEPASSWORD: 'Ganti Kata Kunci'
@@ -134,6 +149,10 @@ id:
     db_LockedOutUntil: 'Kunci sampai'
     db_Password: 'Kata kunci'
     db_PasswordExpiry: 'Tanggal Kadaluarsa'
+    BUTTONLOGOUT: Keluar
+    EDIT_PASSWORD: 'Kata Kunci Baru'
+    PLURALNAME: Pengguna
+    SINGULARNAME: Pengguna
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: {chars}'
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
@@ -144,6 +163,10 @@ id:
     FULLADMINRIGHTS: 'Hak pengelolaan penuh'
     FULLADMINRIGHTS_HELP: 'Abaikan dan kesampingkan semua perijinan yang terhubung lainnya.'
     UserPermissionsIntro: 'Menghubungkan kelompok ke pengguna ini akan menyesuaikan perijinannya. Lihat bagian Kelompok untuk rincian perijinan pada kelompok individu.'
+    CMS_ACCESS_CATEGORY: 'Akses CMS'
+    PERMISSIONS_CATEGORY: 'Peran dan akses perijinan'
+    PLURALNAME: Perijinan
+    SINGULARNAME: Perijinan
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'
@@ -152,8 +175,12 @@ id:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Hanya untuk pengelola'
     Title: Judul
+    PLURALNAME: Peran
+    SINGULARNAME: Peran
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Tidak dapat menghubungkan kode "{code}" dengan perijinan khusus (memerlukan akses PENGELOLA)'
+    PLURALNAME: 'Kode Perijinan Peran'
+    SINGULARNAME: 'Kode Perijinan Peran'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Anda tidak punya akses ke laman ini. Jika Anda punya akun lain dengan akses ke laman ini, silakan masuk kembali.'
     BUTTONSEND: 'Kirimkan tautan penggantian kata kunci'
@@ -165,3 +192,50 @@ id:
     LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
     NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
     NOTERESETPASSWORD: 'Isikan alamat email Anda untuk mendapatkan tautan penggantian kata kunci'
+    LOGOUT: Keluar
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensi
+    EDIT: Edit
+    EDITINFO: 'Edit berkas ini'
+    REMOVE: Buang
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Anda mengganti kata kunci menjadi'
+    HELLO: Hai
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hai
+    TEXT1: 'Berikut ini '
+    TEXT2: 'tautan ganti kata kunci'
+    TEXT3: untuk
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Permintaan tidak valid'
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Tidak ada pilihan yang tersedia'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Informasi berkas tidak ada'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Utama
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: dari
+    Page: Laman
+    View: Tampilkan
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Tampilkan
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Obyek Data'
+    SINGULARNAME: 'Obyek Data'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Kesalahan validasi'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Batal
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Pengelola Utama'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Keluar
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Rincian yang diisikan tidak benar. Mohon coba lagi.'
+    NoPassword: 'Tidak ada kata kunci untuk pengguna ini.'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Kata Kunci'
+    SINGULARNAME: 'Kata Kunci'

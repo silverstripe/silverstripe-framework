@@ -17,6 +17,9 @@ ms:
     Parent: 'Kumpulan Induk'
     has_many_Permissions: Keizinan
     many_many_Members: Ahli-ahli
+    MEMBERS: Ahli-ahli
+    PERMISSIONS: Keizinan
+    PLURALNAME: Kumpulan-kumpulan
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Ubah Kata Lalaun'
     BUTTONLOGIN: 'Daftar masuk'
@@ -40,8 +43,12 @@ ms:
     db_LockedOutUntil: 'Dikuncikan keluar sehingga'
     db_Password: 'Kata Laluan'
     db_PasswordExpiry: 'Tempoh Tamat Kata Lalaun'
+    EDIT_PASSWORD: 'Katalaluan Baru'
+    PLURALNAME: Ahli-ahli
+    SINGULARNAME: Ahli
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Hak mutlah pentadbiran'
+    PLURALNAME: Keizinan
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Anda tidak mempunyai kebenaran untuk mencapai mukasurat ini. Jika anda mempunyai akaun lain dengan kebenaran yang deperlukan, sila daftar masuk di bawah.'
     BUTTONSEND: 'Hantar pautan penukaran katalaluan kepada saya'
@@ -51,3 +58,23 @@ ms:
     ERRORPASSWORDPERMISSION: 'Anda perlu didaftarkan masuk untuk menukar katalaluan.'
     NOTEPAGESECURED: 'Halaman ini adalah halaman berkeselamatan tinggi. Masukkan maklumat yang deperlukan sebelum meneruskan capaian. '
     NOTERESETPASSWORD: 'Masukkan alamat emel dan kami akan hantar pautan untuk menukar kata laluan anda.'
+    LOGIN: 'Daftar masuk'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensi-dimensi
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Anda telah mengubah kata lalaun untuk'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Utama
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Halaman
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Objek-objek Data'
+    SINGULARNAME: 'Objek Data'
+  SilverStripe\Security\LoginAttempt:
+    Email: 'Alamat Emel'
