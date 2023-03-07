@@ -15,6 +15,10 @@ hu:
     Parent: 'Szülő csoport'
     has_many_Permissions: Jogosultságok
     many_many_Members: Tagok
+    MEMBERS: Tagok
+    NEWGROUP: 'Új csoport'
+    PERMISSIONS: Jogosultságok
+    PLURALNAME: Csoportok
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Jelszó megváltoztatása'
     BUTTONLOGIN: Bejelentkezés
@@ -36,8 +40,16 @@ hu:
     belongs_many_many_Groups: Csoportok
     db_LockedOutUntil: 'Kizárva eddig'
     db_PasswordExpiry: 'Jelszó érvényességi idejének lejárta'
+    BUTTONLOGOUT: Kijelentkezés
+    EDIT_PASSWORD: 'Új jelszó'
+    PLURALNAME: Tagok
+    SINGULARNAME: Tag
+    db_Password: Jelszó
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Tartalommal kapcsolatos jogosultságok'
+    CMS_ACCESS_CATEGORY: 'CMS hozzáférés'
+    PERMISSIONS_CATEGORY: 'Szerepkörök kés jogosultságok'
+    PLURALNAME: Jogosultságok
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nincs hozzáférésed ehhez az oldalhoz. Ha van egy másik azonosítód, mellyel hozzá tudsz férni ehhez az oldalhoz, alább bejelentkezhetsz.'
     BUTTONSEND: 'Új jelszót kérő link elküldése'
@@ -47,3 +59,41 @@ hu:
     ERRORPASSWORDPERMISSION: 'Hogy meg tudd változtatni a jelszavad, bejelentkezve kell lenned.'
     NOTEPAGESECURED: 'Ez az oldal védett. Add meg alább az azonosítási adataidat, és továbbirányítunk.'
     NOTERESETPASSWORD: 'Add meg az e-mail címed, és küldünk egy linket, mellyel új jelszót kérhetsz.'
+    LOGIN: Bejelentkezés
+    LOGOUT: Kijelentkezés
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Képméret
+    EDIT: Szerkeszt
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Megváltoztattad a jelszavad erre: '
+    HELLO: Szia
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Szia
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Fő
+  SilverStripe\Forms\GridField\GridField:
+    Filter: Szűrő
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Törlés
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Mégsem
+    Create: Létrehozni
+    Delete: Törlés
+    Save: Mentés
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Szerkeszt
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Oldal
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Bármely
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Bármely
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Mégsem
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Kijelentkezés
+  SilverStripe\Security\PermissionRole:
+    Title: Cím

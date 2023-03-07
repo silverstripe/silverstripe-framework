@@ -11,6 +11,7 @@ is:
     NONE: ekkert
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Flytja út í CSV'
+    Print: Prenta
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Reikningur
     FIELDLABELCURRENCY: Gjaldmiðill
@@ -32,9 +33,15 @@ is:
     Sort: Röðun
     has_many_Permissions: Leyfi
     many_many_Members: Félagar
+    GROUPNAME: 'Nafn hóps'
+    MEMBERS: Félagar
+    PERMISSIONS: Leyfi
+    PLURALNAME: Hópar
+    ROLES: Hlutverk
   SilverStripe\Security\LoginAttempt:
     IP: 'IP tala'
     Status: Staða
+    Email: Tölvupóstfang
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
     BUTTONLOGIN: Innskrá
@@ -59,8 +66,13 @@ is:
     db_LockedOutUntil: 'Læst úti þar til'
     db_Password: Lykilorð
     db_PasswordExpiry: 'Lykilorð rennur út'
+    BUTTONLOGOUT: Útskrá
+    EDIT_PASSWORD: 'Nýtt lykilorð'
+    PLURALNAME: Félagar
+    SINGULARNAME: Félagar
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Full stjórnanda réttindi'
+    PLURALNAME: Leyfi
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
     BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
@@ -71,3 +83,43 @@ is:
     LOGIN: Innskrá
     NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
     NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'
+    LOGOUT: Útskrá
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Stærð
+    EDIT: Breyta
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Þú breyttir þínu lykilorði vegna'
+    HELLO: Hæ
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hæ
+    TEXT1: 'Hérna er þitt'
+    TEXT2: 'endursetja lykilorð'
+    TEXT3: fyrir
+  SilverStripe\Forms\DateField:
+    NOTSET: 'ekki valið'
+    TODAY: 'í dag'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Aðal
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: 'Eyða úr birtum síðum'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: 'Hætta við'
+    Delete: 'Eyða úr birtum síðum'
+    Save: Vista
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Breyta
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Síða
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Gagna hlutir'
+    SINGULARNAME: 'Gagna hlutir'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: 'Hætta við'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Útskrá
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Hlutverk
+    Title: Titill

@@ -6,6 +6,8 @@ sl_SI:
     SHOWONCLICKTITLE: 'Zamenjaj geslo'
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Vnesite veljavno obliko datuma ({format})'
+    NOTSET: 'ni nastavljeno'
+    TODAY: danes
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Izberite)
   SilverStripe\Forms\EmailField:
@@ -22,6 +24,7 @@ sl_SI:
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Izbriši
     UnlinkRelation: 'Odstrani povezavo'
+    DeletePermissionsFailure: 'Nimate pravic za brisanje'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
@@ -29,6 +32,7 @@ sl_SI:
     DeletePermissionsFailure: 'Nimate pravic za brisanje'
     Deleted: 'Izbrisano {type} {name}'
     Save: Shrani
+    Saved: 'Shranjeno {name} {link}'
   SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da
@@ -49,6 +53,11 @@ sl_SI:
     Sort: 'Vrstni red sortiranja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Člani
+    MEMBERS: Člani
+    PERMISSIONS: Dovoljenja
+    PLURALNAME: Grupe
+    ROLES: Vloge
+    SINGULARNAME: Skupina
   SilverStripe\Security\Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
@@ -62,13 +71,56 @@ sl_SI:
     belongs_many_many_Groups: Grupe
     db_Password: Geslo
     db_PasswordExpiry: 'Datum poteka gesla'
+    BUTTONCHANGEPASSWORD: 'Zamenjaj geslo'
+    BUTTONLOGIN: Prijava
+    BUTTONLOGOUT: Odjava
+    PLURALNAME: Člani
+    SINGULARNAME: Uporabnik
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Polne administratorske pravice'
+    CMS_ACCESS_CATEGORY: 'Dostop do CMS'
+    PLURALNAME: Dovoljenja
+    SINGULARNAME: Dovoljenje
   SilverStripe\Security\PermissionRole:
     Title: Naslov
+    PLURALNAME: Vloge
+    SINGULARNAME: Vloga
   SilverStripe\Security\Security:
     CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
     ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
     LOGIN: Prijava
     LOSTPASSWORDHEADER: 'Pozabljeno geslo'
+    LOGOUT: Odjava
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimenzije
+    EDIT: Uredi
+    EDITINFO: 'Uredi datoteko'
+    REMOVE: Odstrani
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Zamenjali ste geslo za'
+    CHANGEPASSWORDTEXT3: 'Zamenjaj geslo'
+    HELLO: Živjo
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Živjo
+    TEXT1: 'Tukaj je vaša'
+    TEXT2: 'povezava za resetiranje gesla'
+    TEXT3: za
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Neveljavna zahteva'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Ni informacij o datoteki'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Uredi
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: od
+    Page: Stran
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Prekliči
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Odjava
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    NoPassword: 'Uporabnik nima nastavljenega gesla.'

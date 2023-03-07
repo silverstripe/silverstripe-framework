@@ -14,6 +14,8 @@ cs:
     VALIDDATEFORMAT2: 'Prosím zadejte platný formát datumu ({format})'
     VALIDDATEMAXDATE: 'Váš datum musí být starší nebo odpovídající maximu povoleného datumu ({date})'
     VALIDDATEMINDATE: 'Váš datum musí být novější nebo odpovídající minimu povoleného datumu ({date})'
+    NOTSET: nenastaveno
+    TODAY: dnes
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Vyberte)
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v seznamu. {value} není platná volba'
@@ -27,6 +29,7 @@ cs:
     VALIDATIONSTRONGPASSWORD: 'Hesla musí obsahovat alespoň jednu číslici a jedno písmeno.'
     VALIDATOR: Validátor
     VALIDCURRENCY: 'Prosím zadejte platnou měnu'
+    FIELDISREQUIRED: '{name} je požadováno'
   SilverStripe\Forms\FormField:
     NONE: žádný
   SilverStripe\Forms\GridField\GridField:
@@ -57,6 +60,7 @@ cs:
     DeletePermissionsFailure: 'Žádná oprávnění mazat'
     Deleted: 'Smazáno {type} {name}'
     Save: Uložit
+    Saved: 'Uloženo {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Částka
     FIELDLABELCURRENCY: Měna
@@ -110,11 +114,18 @@ cs:
     Sort: Řazení
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
+    GROUPNAME: 'Jméno skupiny'
+    MEMBERS: Členové
+    NEWGROUP: 'Nová skupina'
+    PERMISSIONS: Oprávnění
+    ROLES: Role
+    ROLESDESCRIPTION: 'Role jsou předdefinované seskupení oprávnění, které mohou být přidělené k skupinám. Jsou dědené z nadřazených skupin, když je požadováno.'
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adresy'
     PLURALNAME: 'Pokusy přihlášení'
     SINGULARNAME: 'Pokus přihlášení'
     Status: Stav
+    Email: 'Emailové adresy'
   SilverStripe\Security\Member:
     ADDGROUP: 'Přidat skupinu'
     BUTTONCHANGEPASSWORD: 'Změnit heslo'
@@ -150,6 +161,8 @@ cs:
     db_LockedOutUntil: 'Zamčeno dokud'
     db_Password: Heslo
     db_PasswordExpiry: 'Datum vypršení hesla'
+    BUTTONLOGOUT: 'Odhlásit se'
+    VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejným {identifier}'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Členská hesla'
     SINGULARNAME: 'Členské heslo'
@@ -165,6 +178,8 @@ cs:
     PLURALNAME: Oprávnění
     SINGULARNAME: Oprávnění
     UserPermissionsIntro: 'Přiřazení skupin tomuto uživatelovi upraví oprávnění, které má. Podívejte se sekcie skupiny pro podrobnosti o oprávněních k jednotlivým skupinám.'
+    CMS_ACCESS_CATEGORY: 'Přístup CMS'
+    PERMISSIONS_CATEGORY: 'Role a přístupová práva'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'přiděleno k "{title}"'
     FromGroup: 'zdědeno ze skupiny "{title}"'
@@ -190,3 +205,49 @@ cs:
     LOSTPASSWORDHEADER: 'Zapomenuté heslo'
     NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
     NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'
+    LOGOUT: 'Odhlásit se'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Rozměry
+    EDIT: Editovat
+    EDITINFO: 'Editovat tento soubor'
+    REMOVE: Odstranit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Heslo pro účet s email adresou {email} byl změnen. Jestli jste vaše heslo neměnili, prosím změňte si vaše heslo použitím odkazu dole'
+    CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
+    CHANGEPASSWORDTEXT3: 'Změnit heslo'
+    HELLO: 'Dobrý den'
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 'Dobrý den'
+    TEXT1: 'Zde je Váš'
+    TEXT2: 'odkaz na reset hesla'
+    TEXT3: pro
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Neplatný požadavek'
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Není k dispozici žádná možnost'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Žádná informace o souboru'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Hlavní
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Editovat
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: z
+    Page: Stránka
+    View: Zobrazit
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Zobrazit
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Hodnota pro {name} nesmí překročit {maxLength} v délce znaků'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Chyba platnosti'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Storno
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Implicitní Admin'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Zapomenuté heslo'
+    BUTTONLOGOUT: 'Odhlásit se'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Poskytnuté detaily vypadají být nesprávné. Prosím zkuste to znovu.'
+    NoPassword: 'Neni zde heslo pro tohoto člena'

@@ -16,6 +16,10 @@ si:
     Parent: 'මවු කාන්ඩය'
     has_many_Permissions: අවසර
     many_many_Members: සාමාජිකයින්
+    MEMBERS: සාමාජිකයින්
+    NEWGROUP: 'අලුත් කන්ඩාමක්'
+    PERMISSIONS: අවසර
+    PLURALNAME: කාන්ඩ
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'
     BUTTONLOGIN: ඇතුල්වන්න
@@ -37,6 +41,10 @@ si:
     belongs_many_many_Groups: කාන්ඩ
     db_LockedOutUntil: 'අගුලුලා ඇත්තේ'
     db_PasswordExpiry: 'මුර පදය කල් ඉකුත් වීමේ දිනය'
+    EDIT_PASSWORD: 'අලුත් මුර පදයක්'
+    PLURALNAME: සාමාජිකයින්
+    SINGULARNAME: සාමාජිකයා
+    db_Password: 'මුර පදය'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
     BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'
@@ -45,3 +53,34 @@ si:
     ENTERNEWPASSWORD: 'අලුත් මුර පදය ඇතුල් කරන්න'
     ERRORPASSWORDPERMISSION: 'ඹබගේ මුරපදය වෙනස් කිරීමට ප්රවිශ්ට වන්න'
     NOTERESETPASSWORD: 'ඹබට ප්රතිස්තාපනය කල හැකි ලිංක් ඵක ඵවීමට ඹබගේ ඊමේල් ලිපිනය යොදන්න'
+    LOGIN: ඇතුල්වන්න
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: මාන
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
+    HELLO: කොහොමද
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: කොහොමද
+    TEXT1: 'මෙය ඔබගේ'
+    TEXT3: සඳහා
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: ප්‍රදාන
+  SilverStripe\Forms\GridField\GridField:
+    Print: 'මුද්රණය කරන්න'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Save: 'සේවි කරන්න'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: පිටුව
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'දත්ත වස්තු'
+    SINGULARNAME: 'දත්ත වස්තුව'
+  SilverStripe\Security\Permission:
+    PLURALNAME: අවසර
+  SilverStripe\Security\PermissionRole:
+    Title: මතකව

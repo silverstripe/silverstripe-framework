@@ -1,8 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[silverstripe-framework.master]
+[o:silverstripe:p:silverstripe-framework:r:master]
 file_filter = lang/<lang>.yml
 source_file = lang/en.yml
 source_lang = en
-type = YML
+type        = YML
+
