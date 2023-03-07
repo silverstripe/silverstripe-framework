@@ -17,6 +17,9 @@ ast:
     Sort: 'Orde de clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
+    MEMBERS: Miembros
+    PERMISSIONS: Permisos
+    PLURALNAME: Grupos
   SilverStripe\Security\Member:
     EMAIL: Corréu
     INTERFACELANG: 'Llingua de la interfaz'
@@ -25,7 +28,27 @@ ast:
     belongs_many_many_Groups: Grupos
     db_LockedOutUntil: 'Bloquiáu fasta'
     db_PasswordExpiry: 'Data d''espiración de la contraseña'
+    BUTTONCHANGEPASSWORD: 'Camudar contraseña'
+    PASSWORD: Contraseña
+    PLURALNAME: Miembros
+    SINGULARNAME: Miembru
+    db_Password: Contraseña
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredáu del rol "{roletitle}" nel grupu "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Oxetos de datos'
+    SINGULARNAME: 'Oxetu de datos'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Permisos

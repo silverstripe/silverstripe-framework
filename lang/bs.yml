@@ -12,11 +12,15 @@ bs:
     NONE: ništa
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Izvezi u CSV'
+    Filter: Filter
+    Print: Štampaj
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Kreiraj
+    Save: Snimi
   SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da
+    ANY: 'Bilo koji'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
     ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
@@ -39,8 +43,12 @@ bs:
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime
     YOUROLDPASSWORD: 'Vaša stara šifra'
+    EDIT_PASSWORD: 'Nova šifra'
+    PLURALNAME: Članovi
+    db_Password: Šifra
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Puna administrativna ovlaštenja'
+    PLURALNAME: Ovlaštenja
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Ne možete pristupiti ovoj stranici. Ukoliko imate drugi korisnički račun koji može pristupiti ovoj stranici, prijavite si ispod.'
     BUTTONSEND: 'Pošalji mi link za ponovno podešavanje šifre'
@@ -51,3 +59,39 @@ bs:
     LOGIN: Prijava
     NOTEPAGESECURED: 'Ova stranica je osigurana. Unesite Vaše podatke i poslat ćemo Vam sadržaj.'
     NOTERESETPASSWORD: 'Unesite Vašu e-mail adresu na koju ćemo Vam poslati link za ponovno podešavanje Vaše šifre.'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimenzije
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
+    HELLO: Pozdrav
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Pozdrav
+    TEXT1: 'Ovo je Vaš'
+    TEXT2: 'link za ponovno podešavanje šifre'
+    TEXT3: za
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Promijeni šifru'
+  SilverStripe\Forms\DateField:
+    NOTSET: 'nije postavljeno'
+    TODAY: danas
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Glavno
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Stranica
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: 'Bilo koji'
+  SilverStripe\Security\Group:
+    GROUPNAME: 'Ime grupe'
+    MEMBERS: Članovi
+    NEWGROUP: 'Nova grupa'
+    PERMISSIONS: Ovlaštenja
+    has_many_Permissions: Ovlaštenja
+    many_many_Members: Članovi
+  SilverStripe\Security\PermissionRole:
+    Title: Naslov

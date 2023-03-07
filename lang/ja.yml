@@ -8,6 +8,8 @@ ja:
     VALIDDATEFORMAT2: '{{format}}日付フォーマットの正しい日付を入力してください。'
     VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
     VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
+    NOTSET: セットされていません
+    TODAY: 今日
   SilverStripe\Forms\DropdownField:
     CHOOSE: (選択)
   SilverStripe\Forms\EmailField:
@@ -18,6 +20,8 @@ ja:
     VALIDATIONSTRONGPASSWORD: パスワードは少なくとも1桁の数字と1つの英字を含んでいる必要があります
     VALIDATOR: 検証
     VALIDCURRENCY: 有効な通貨を入力してください
+    CSRF_FAILED_MESSAGE: '技術的な問題が生じた可能性があります。 戻るボタンをクリックしてブラウザを更新し、もう一度試してください。'
+    FIELDISREQUIRED: '{name} が必要'
   SilverStripe\Forms\FormField:
     NONE: 何もありません
   SilverStripe\Forms\GridField\GridField:
@@ -48,6 +52,7 @@ ja:
     DeletePermissionsFailure: 削除権限がありません
     Deleted: '削除済み {type} {name}'
     Save: 保存
+    Saved: '保存 {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨
@@ -85,9 +90,20 @@ ja:
     Sort: 並び順
     has_many_Permissions: 承認
     many_many_Members: メンバー
+    GROUPNAME: グループ名
+    MEMBERS: メンバー
+    NEWGROUP: 新しいグループ
+    PERMISSIONS: 承認
+    PLURALNAME: グループ
+    ROLES: 役割
+    ROLESDESCRIPTION: '役割は、事前定義された権限の設定であり、グループに割り当てることができます。<br /> 必要であれば、それらは親グループから継承されます。'
+    SINGULARNAME: グループ
   SilverStripe\Security\LoginAttempt:
     IP: IPアドレス
     Status: ステータス
+    Email: メールアドレス
+    PLURALNAME: ログインの試み
+    SINGULARNAME: ログインの試み
   SilverStripe\Security\Member:
     ADDGROUP: グループを追加
     BUTTONCHANGEPASSWORD: パスワードの変更
@@ -118,6 +134,10 @@ ja:
     db_LockedOutUntil: DBロックがされています。
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
+    BUTTONLOGOUT: ログアウト
+    EDIT_PASSWORD: 新しいパスワード
+    PLURALNAME: メンバー
+    SINGULARNAME: メンバー
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: {chars}'
     PREVPASSWORD: このパスワードは過去に使用されています、新しいパスワードを選択してください
@@ -128,6 +148,10 @@ ja:
     FULLADMINRIGHTS: 完全な管理権
     FULLADMINRIGHTS_HELP: 暗黙的に定義または他のすべての割り当てられた権限を無効にする。
     UserPermissionsIntro: このユーザーにグループを割り当てると、彼らが持っている権限を調整します。個々のグループの権限の詳細については、グループセクションを参照してください。
+    CMS_ACCESS_CATEGORY: CMSアクセス
+    PERMISSIONS_CATEGORY: 役割とアクセス権限
+    PLURALNAME: 承認
+    SINGULARNAME: 権限
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
@@ -136,6 +160,8 @@ ja:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 管理者のみ適用可能
     Title: タイトル
+    PLURALNAME: 役割
+    SINGULARNAME: 役割
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら 再ログインを行ってください。'
     BUTTONSEND: パスワードリセットのリンクを送信してください
@@ -146,3 +172,51 @@ ja:
     LOGIN: ログイン
     NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
     NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
+    LOGOUT: ログアウト
+    LOSTPASSWORDHEADER: パスワードの損失
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 大きさ
+    EDIT: 編集
+    EDITINFO: このファイルを編集
+    REMOVE: 削除
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
+    HELLO: こんにちわ！
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: こんにちわ！
+    TEXT1: 'ここ''貴方の'
+    TEXT2: パスワードリセットのリンク
+    TEXT3: は
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 不正なリクエスト
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: ファイル情報が見つかりませんでした
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: メイン
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: 編集
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: の
+    Page: ページ
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: データオブジェクト
+    SINGULARNAME: データオブジェクト
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 確認エラー
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: キャンセル
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 初期管理者
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: ログアウト
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: メールアドレスまたはパスワードが正しくありません、もう一度入力し直してください
+    NoPassword: このメンバーにはパスワードはありません。
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: メンバーパスワード
+    SINGULARNAME: メンバーパスワード
+  SilverStripe\Security\PermissionRoleCode:
+    SINGULARNAME: 許可の役割のコード

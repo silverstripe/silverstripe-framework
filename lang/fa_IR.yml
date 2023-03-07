@@ -14,6 +14,8 @@ fa_IR:
     VALIDDATEFORMAT2: 'لطفاً یک قالب تاریخ معتبر وارد نمایید ({format})'
     VALIDDATEMAXDATE: 'تاریخ شما باید قدیمی‌تر یا برابر با حداکثر تاریخ مجاز ({date}) باشد'
     VALIDDATEMINDATE: 'تاریخ شما باید جدیدتر یا برابر با حداقل تاریخ مجاز ({date}) باشد'
+    NOTSET: نامشخص
+    TODAY: امروز
   SilverStripe\Forms\DropdownField:
     CHOOSE: (گزینش)
     SOURCE_VALIDATION: 'لطفاً یک ارزش از لیست فراهم‌شده برگزینید. {value} یک گزینه معتبر نیست'
@@ -27,6 +29,7 @@ fa_IR:
     VALIDATIONSTRONGPASSWORD: 'گذرواژه‌ها باید حداقل شامل یک شماره و یک کاراکتر الفبایی باشند'
     VALIDATOR: اعتبارسنج
     VALIDCURRENCY: 'لطفاً یک واحد پول معتبر وارد نمایید'
+    FIELDISREQUIRED: '{name} مورد نیاز است'
   SilverStripe\Forms\FormField:
     NONE: هیچ‌کدام
   SilverStripe\Forms\GridField\GridField:
@@ -57,6 +60,7 @@ fa_IR:
     DeletePermissionsFailure: 'دسترسی‌های حذف وجود ندارد'
     Deleted: 'حذف شده {type} {name}'
     Save: ذخیره
+    Saved: 'ذخیره‌شده {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: مقدار
     FIELDLABELCURRENCY: 'واحد پول'
@@ -101,11 +105,16 @@ fa_IR:
     Sort: 'ترتیب مرتب‌سازی'
     has_many_Permissions: دسترسی‌ها
     many_many_Members: اعضاء
+    GROUPNAME: 'نام گروه'
+    MEMBERS: اعضاء
+    NEWGROUP: 'گروه تازه'
+    ROLES: وظایف
   SilverStripe\Security\LoginAttempt:
     IP: 'نشانی IP'
     PLURALNAME: 'مبادرت‌ به ورود'
     SINGULARNAME: 'مبادرت‌ به ورود'
     Status: وضعیت
+    Email: 'نشانی ای‌میل'
   SilverStripe\Security\Member:
     ADDGROUP: 'افزودن گروه'
     BUTTONCHANGEPASSWORD: 'تغییر گذرواژه'
@@ -137,6 +146,7 @@ fa_IR:
     db_LockedOutUntil: 'بسته شده تا '
     db_Password: گذرواژه
     db_PasswordExpiry: 'تاریخ انقضاء گذرواژه'
+    BUTTONLOGOUT: خروج
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'گذرواژه‌های کاربر'
     SINGULARNAME: 'گذرواژه کاربر'
@@ -148,6 +158,8 @@ fa_IR:
     FULLADMINRIGHTS: 'توانایی‌های کامل مدیریتی:'
     PLURALNAME: مجوز‌ها
     SINGULARNAME: مجوز
+    CMS_ACCESS_CATEGORY: 'دسترسی CMS'
+    PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'اختصاص داده‌شده به "{title}"'
     FromGroup: 'از گروه "{title}" ارث برده است'
@@ -155,6 +167,8 @@ fa_IR:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'تنها مدیر ارشد می‌تواند اعمال کند'
     Title: عنوان
+    PLURALNAME: وظایف
+    SINGULARNAME: وظیفه
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید دوباره وارد شوید..'
     BUTTONSEND: 'برایم لینک ازنوسازی گذرواژه ارسال کن'
@@ -164,3 +178,49 @@ fa_IR:
     ERRORPASSWORDPERMISSION: 'جهت تغییر گذرواژه خود باید وارد شده باشید!'
     LOGIN: ورود
     LOSTPASSWORDHEADER: 'فراموشی گذرواژه'
+    LOGOUT: خروج
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: ابعاد
+    EDIT: ویرایش
+    EDITINFO: 'ویرایش این فایل'
+    REMOVE: حذف
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'شما گذرواژه‌تان را تغییر دادید برای'
+    CHANGEPASSWORDTEXT3: 'تغییر گذرواژه'
+    HELLO: درود
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: درود
+    TEXT1: 'شما اینجاست'
+    TEXT2: 'لینک ازنوسازی گذرواژه'
+    TEXT3: برای
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'درخواست نامعتبر'
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'هیچ گزینه‌ای موجود نیست'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'اطلاعات فایل پیدا نشد'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: اصلی
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: ویرایش
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: از
+    Page: صفحه
+    View: نمایش
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: نمایش
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'داده‌های اشیاء'
+    SINGULARNAME: 'داده اشیاء'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'خطای اعتبارسنجی'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: لغو
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'مدیر پیشفرض'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: خروج
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    NoPassword: 'گذرواژه‌ای برای این کاربر وجود ندارد'
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'کدهای دسترسی‌ وظایف'

@@ -10,6 +10,7 @@ fo:
     NONE: einki
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Útles til CSV'
+    Print: Prenta
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
     ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
@@ -22,9 +23,15 @@ fo:
     Sort: 'Raða eftir'
     has_many_Permissions: Loyvir
     many_many_Members: Limir
+    GROUPNAME: Bólkaheiti
+    MEMBERS: Limir
+    NEWGROUP: 'Nýggjur bólkur'
+    PERMISSIONS: Loyvir
+    PLURALNAME: Bólkur
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adressa'
     Status: Støða
+    Email: Teldupostur
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
     BUTTONLOGIN: Innrita
@@ -46,6 +53,9 @@ fo:
     db_LockedOutUntil: 'Útihýstur inn til'
     db_Password: Loyniorð
     db_PasswordExpiry: 'Loyniorð gongur út'
+    EDIT_PASSWORD: 'Nýtt loyniorð'
+    PLURALNAME: Limir
+    SINGULARNAME: Limur
   SilverStripe\Security\Security:
     BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
     CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
@@ -53,3 +63,35 @@ fo:
     ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
     ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
     LOGIN: Innrita
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Tú broytti loyniorðið hjá'
+    HELLO: Hey
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hey
+    TEXT1: 'Her er títt'
+  SilverStripe\Forms\DateField:
+    NOTSET: 'ikki ásett'
+    TODAY: 'í dag'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Alment
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Strika
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: Strika
+    Save: Goym
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Síða
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Dáta eindir'
+    SINGULARNAME: 'Dáta eind'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Loyvir
+  SilverStripe\Security\PermissionRole:
+    Title: Heiti

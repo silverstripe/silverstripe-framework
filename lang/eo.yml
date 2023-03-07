@@ -150,6 +150,7 @@ eo:
       one: 'Unu datuma objekto'
       other: '{count} datumaj objektoj'
     SINGULARNAME: 'Datuma Objekto'
+    GENERALSEARCH: 'Ĝenerala serĉo'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ajna
     NOANSWER: Ne

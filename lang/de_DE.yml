@@ -40,8 +40,10 @@ de_DE:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Abbrechen
     Save: Speichern
+    Delete: Löschen
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Seite
+    View: Anzeigen
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung
@@ -103,6 +105,7 @@ de_DE:
     Sort: Sortierreihenfolge
     has_many_Permissions: Rechte
     many_many_Members: Mitglieder
+    PERMISSIONS: Rechte
   SilverStripe\Security\LoginAttempt:
     Email: 'E-Mail Adresse'
     EmailHashed: 'E-Mail Adresse (gehasht)'
@@ -143,8 +146,24 @@ de_DE:
     db_Password: Passwort
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'
+    BUTTONLOGOUT: Ausloggen
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
+    PLURALNAME: Rechte
   SilverStripe\Security\Security:
     LOGIN: Einloggen
     LOGOUT: Ausloggen
+  SilverStripe\Forms\DateField:
+    TODAY: heute
+  SilverStripe\Forms\Form:
+    FIELDISREQUIRED: '{name} ist ein Pflichtfeld'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Bearbeiten
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Suche "{name}"'
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Anzeigen
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Abbrechen
+  SilverStripe\Security\PermissionRole:
+    Title: Titel

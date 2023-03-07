@@ -150,6 +150,7 @@ nl:
       one: 'Data object'
       other: '{count} Data objecten'
     SINGULARNAME: 'Data object'
+    GENERALSEARCH: 'Alles doorzoeken'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Elke
     NOANSWER: Nee

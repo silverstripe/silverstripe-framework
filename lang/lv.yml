@@ -11,6 +11,7 @@ lv:
     NONE: neviens
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Eksportēt uz CSV'
+    Print: Drukāt
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Skaits
     FIELDLABELCURRENCY: Valūta
@@ -34,9 +35,16 @@ lv:
     Sort: 'Kārtošanas secība'
     has_many_Permissions: Atļaujas
     many_many_Members: Dalībnieki
+    GROUPNAME: 'Grupas nosaukums'
+    MEMBERS: Dalībnieki
+    PERMISSIONS: Atļaujas
+    PLURALNAME: Grupas
+    ROLES: Lomas
+    ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Adrese'
     Status: Statuss
+    Email: 'E-pasta adrese'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Mainīt paroli'
     BUTTONLOGIN: PIeslēgties
@@ -62,11 +70,17 @@ lv:
     db_LockedOutUntil: 'Izslēgts līdz'
     db_Password: Parole
     db_PasswordExpiry: 'Paroles Termiņa Izbeigšanās Datums'
+    BUTTONLOGOUT: Atslēgties
+    EDIT_PASSWORD: 'Jaunā parole'
+    PLURALNAME: Dalībnieki
+    SINGULARNAME: Dalībnieks
   SilverStripe\Security\Permission:
     AdminGroup: Administrators
     CONTENT_CATEGORY: 'Satura atļaujas'
     FULLADMINRIGHTS: 'Pilnas administratora tiesības'
     FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
+    PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
+    PLURALNAME: Atļaujas
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'mantots no lomas "{roletitle}" grupā "{grouptitle}"'
   SilverStripe\Security\Security:
@@ -79,3 +93,42 @@ lv:
     LOGIN: Pieslēgties
     NOTEPAGESECURED: 'Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates'
     NOTERESETPASSWORD: 'Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli.'
+    LOGOUT: Atslēgties
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Izmēri
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Jūs nomainījāt savu paroli '
+    HELLO: Sveiki
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Sveiki
+    TEXT1: 'Šeit ir Jūsu'
+    TEXT2: 'paroles atiestatīšanas saite'
+    TEXT3: ' '
+  SilverStripe\Forms\DateField:
+    NOTSET: 'nav uzstādīts'
+    TODAY: šodien
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Sākums
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: 'Dzēst no publicētās vietnes'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: 'Dzēst no publicētās vietnes'
+    Save: Saglabāt
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Lapa
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Datu Objekti'
+    SINGULARNAME: 'Datu Objekts'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Noklusējuma administrators'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Atslēgties
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Lomas
+    Title: Virsraksts

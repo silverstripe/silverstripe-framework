@@ -8,6 +8,8 @@ mi:
     VALIDDATEFORMAT2: 'Tāurua he hōputu rā tika ({format})'
     VALIDDATEMAXDATE: 'Me tawhito ake tō rā, kia ōrite rānei ki te rā mōrahi ({date}) kua whakaaetia'
     VALIDDATEMINDATE: 'Me hōu ake tō rā, kia ōrite rānei ki te rā moroiti ({date}) kua whakaaetia'
+    NOTSET: 'kāore i tautuhia'
+    TODAY: 'tēnei rā'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Kōwhiri)
   SilverStripe\Forms\EmailField:
@@ -18,6 +20,8 @@ mi:
     VALIDATIONSTRONGPASSWORD: 'Kia kotahi tonu te mati, kia tahi hoki te pūāhua retawhika i te iti rawa o ngā kupuhipa'
     VALIDATOR: Pūwhakamana
     VALIDCURRENCY: 'Tāurua he moni tika'
+    CSRF_FAILED_MESSAGE: 'Te āhua nei kua puta he raru hangarau. Pāwhiria te pātene hoki, ka tāmata anō i tō pūtirotiro, ka ngana anō.'
+    FIELDISREQUIRED: 'Kei te hiahiatia te {name}'
   SilverStripe\Forms\FormField:
     NONE: Kore
   SilverStripe\Forms\GridField\GridField:
@@ -48,6 +52,7 @@ mi:
     DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
     Deleted: 'Kua mukua {type} {name}'
     Save: Tiaki
+    Saved: 'I tiakina te {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Rahinga
     FIELDLABELCURRENCY: Moni
@@ -85,9 +90,20 @@ mi:
     Sort: 'Raupapa Kōmaka'
     has_many_Permissions: 'Ngā Whakaaetanga'
     many_many_Members: 'Ngā Mema'
+    GROUPNAME: 'Ingoa rōpū'
+    MEMBERS: 'Ngā Mema'
+    NEWGROUP: 'Rōpū Hōu'
+    PERMISSIONS: 'Ngā Whakaaetanga'
+    PLURALNAME: 'Ngā Rōpū'
+    ROLES: 'Ngā Tūnga'
+    ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
+    SINGULARNAME: Rōpū
   SilverStripe\Security\LoginAttempt:
     IP: 'Wāhitau KI'
     Status: Tūnga
+    Email: 'Wāhitau Īmēra'
+    PLURALNAME: 'Ngā Whakamātau Takiuru'
+    SINGULARNAME: 'Whakamātau Takiuru'
   SilverStripe\Security\Member:
     ADDGROUP: 'Tāpiri rōpū'
     BUTTONCHANGEPASSWORD: 'Huri Kupuhipa'
@@ -118,6 +134,10 @@ mi:
     db_LockedOutUntil: 'Ka maukatia tae atu ki te'
     db_Password: Kupuhipa
     db_PasswordExpiry: 'Rā Mōnehu Kupuhipa'
+    BUTTONLOGOUT: Takiputa
+    EDIT_PASSWORD: 'Kupuhipa Hōu'
+    PLURALNAME: 'Ngā Mema'
+    SINGULARNAME: Mema
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Whakakahatia tō kupuhipa mā te tāpiri i ētahi o ēnei pūāhua: {chars}'
     PREVPASSWORD: 'Kua whakamahi kētia tēnā kupuhipa i mua, kōwhiria he kupuhipa hou'
@@ -128,6 +148,10 @@ mi:
     FULLADMINRIGHTS: 'Ngā motika kaiwhakahaere katoa'
     FULLADMINRIGHTS_HELP: 'Ka whakapae me te takahi i ērā atu whakaaetanga katoa kua tautapatia.'
     UserPermissionsIntro: 'Mā te tautapa rōpū ki tēnei kaiwhakamahi e whakarite āna whakaaetanga. Tirohia te wāhanga rōpū mō ngā taipitopito o ngā whakaaetanga o ngā rōpū takitahi.'
+    CMS_ACCESS_CATEGORY: 'Uru CMS'
+    PERMISSIONS_CATEGORY: 'Ngā tūranga me ngā whakaaetanga uru'
+    PLURALNAME: 'Ngā Whakaaetanga'
+    SINGULARNAME: Whakaaetanga
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -136,6 +160,8 @@ mi:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Ka taea anake te tono e ngā kaiwhakahaere'
     Title: Taitara
+    PLURALNAME: 'Ngā Tūnga'
+    SINGULARNAME: Tūranga
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Kāore i te whakaaetia kia uru koe ki tēnei whārangi. Mēnā he pūkete anō tōu e taea ai te uru ki tēnā whārangi, ka taea te takiuru anō i raro.'
     BUTTONSEND: 'Tukuna mai te hono tautuhi kupuhipa anō'
@@ -147,3 +173,52 @@ mi:
     LOSTPASSWORDHEADER: 'Kupuhipa Ngaro'
     NOTEPAGESECURED: 'Kua ngita tēnā whārangi. Tāurua ō taipitoptio tuakiri ki raro, ā, mā mātou koe e tuku kia haere tonu.'
     NOTERESETPASSWORD: 'Tāurua tō wāhitau īmēra, mā mātou e tuku tētahi hono ki a koe e taea ai te tautuhi anō i tō kupuhipa'
+    LOGOUT: Takiputa
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 'Ngā Rahinga'
+    EDIT: Whakatika
+    EDITINFO: 'Whakatikatia tēnei kōnae'
+    REMOVE: Tango
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Kua hurihia tō kupuhipa mō'
+    HELLO: 'Kia ora'
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 'Kia ora'
+    TEXT1: 'Anei tō'
+    TEXT2: 'hono tautuhi kupuhipa anō'
+    TEXT3: mā
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Tono muhu'
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Kāore he kōwhiringa e wātea ana'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Kāore i kitea te mōhiohio kōnae'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Matua
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Whakatika
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: o
+    Page: Whārangi
+    View: Tiro
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Tiro
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Ngā Ahanoa Raraunga'
+    SINGULARNAME: 'Ahanoa Raraunga'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Hapa manatoko'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Whakakore
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Kaiwhakahaere Taunoa'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Takiputa
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Te āhua nei ehara i te wāhitau īmerā tika, i te kuphipa tika rānei. Ngana anō'
+    NoPassword: 'Kāore he kupuhipa i tēnei mema.'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Ngā Kupuhipa Mema'
+    SINGULARNAME: 'Kupuhipa Mema'
+  SilverStripe\Security\PermissionRoleCode:
+    SINGULARNAME: 'Waehere Tūnga Whakaaetanga'

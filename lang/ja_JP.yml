@@ -1,0 +1,163 @@
+ja_JP:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: サイズ
+    EDIT: Edit
+    EDITINFO: このファイルを編集
+    REMOVE: 削除
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: このサイトのパスワードが変更されました。
+    HELLO: こんにちわ！
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: こんにちわ！
+    TEXT1: 'ここ''貴方の'
+    TEXT2: パスワードリセットのリンク
+    TEXT3: は
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 不正なリクエスト
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: パスワードの変更
+  SilverStripe\Forms\DateField:
+    NOTSET: セットされていません
+    TODAY: 今日
+    VALIDDATEFORMAT2: '{{format}}日付フォーマットの正しい日付を入力してください。'
+    VALIDDATEMAXDATE: '許可されている最も新しい日付{{date}}より古い日付か同じ日付である必要があります。'
+    VALIDDATEMINDATE: '許可されている最も古い日付{{date}}より新しい日付か同じ日付である必要があります'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (選択)
+  SilverStripe\Forms\EmailField:
+    VALIDATION: メールアドレスを入力してください
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: ファイル情報が見つかりませんでした
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: パスワードが一致しません
+    VALIDATIONPASSWORDSNOTEMPTY: パスワードが空欄です
+    VALIDATOR: 検証
+  SilverStripe\Forms\FormField:
+    NONE: 何もありません
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: メイン
+  SilverStripe\Forms\GridField\GridField:
+    Add: '{name}を追加'
+    CSVEXPORT: CSVにエクスポート
+    Filter: フィルタ
+    Find: 探す
+    NoItemsFound: 項目が見つかりませんでした
+    PlaceHolder: '{type}を探す'
+    Print: 印刷
+    ResetFilter: リセット
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: 削除
+    DeletePermissionsFailure: 削除権限がありません
+    UnlinkRelation: リンク解除
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Create: 作成
+    Delete: 削除
+    DeletePermissionsFailure: 削除権限がありません
+    Save: 保存
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: ページ
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: 総計
+    FIELDLABELCURRENCY: 通貨
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: NULLである
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: データオブジェクト
+    SINGULARNAME: データオブジェクト
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: 何でも
+  SilverStripe\ORM\FieldType\DBDate:
+    TIMEDIFFAGO: '{difference}前'
+    TIMEDIFFIN: '{difference}以内'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: 何でも
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: ユーザー名とパスワードを入力してください
+    ERRORNOTADMIN: このユーザーは管理者（アドミニストレーター）ではありません
+    ERRORNOTREC: 'ユーザー名 / パスワードは認識されませんでした'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 初期管理者
+  SilverStripe\Security\Group:
+    Code: グループコード
+    DefaultGroupTitleAdministrators: 管理者
+    Description: 説明文
+    GROUPNAME: グループ名
+    Locked: ロックしますか？
+    MEMBERS: メンバー
+    PERMISSIONS: 承認
+    PLURALNAME: グループ
+    Parent: 元グループ
+    ROLES: 役割
+    Sort: 並び順
+    has_many_Permissions: 承認
+    many_many_Members: メンバー
+  SilverStripe\Security\LoginAttempt:
+    Email: メールアドレス
+    IP: IPアドレス
+    Status: ステータス
+  SilverStripe\Security\Member:
+    ADDGROUP: グループを追加
+    BUTTONCHANGEPASSWORD: パスワードの変更
+    BUTTONLOGIN: ログイン
+    BUTTONLOGINOTHER: 他の誰かとしてログイン
+    BUTTONLOGOUT: ログアウト
+    BUTTONLOSTPASSWORD: パスワードを紛失
+    CONFIRMNEWPASSWORD: 新しいパスワードを確認します
+    CONFIRMPASSWORD: パスワード（確認のためもう一度）
+    EDIT_PASSWORD: 新しいパスワード
+    EMAIL: メールアドレス
+    EMPTYNEWPASSWORD: パスワードが空です。もう一度入力して下さい。
+    ENTEREMAIL: パスワードをリセットするためにメールアドレスを入力してください。
+    ERRORNEWPASSWORD: 入力されたパスワードが一致しません。再度お試しください
+    ERRORPASSWORDNOTMATCH: 登録されているパスワードと一致しません、もう一度入力し直してください
+    FIRSTNAME: 名
+    INTERFACELANG: 画面言語
+    LOGGEDINAS: '{name}としてログインしています。'
+    NEWPASSWORD: 新しいパスワード
+    PASSWORD: パスワード
+    PLURALNAME: メンバー
+    SINGULARNAME: メンバー
+    SUBJECTPASSWORDCHANGED: パスワードが変わりました。
+    SUBJECTPASSWORDRESET: パスワード再発行
+    SURNAME: 姓
+    YOUROLDPASSWORD: 古いパスワード
+    belongs_many_many_Groups: グループ
+    db_Locale: インターフェースの言語地域
+    db_LockedOutUntil: DBロックがされています。
+    db_Password: パスワード
+    db_PasswordExpiry: パスワードの有効期限
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: ログアウト
+  SilverStripe\Security\Permission:
+    AdminGroup: 管理者
+    CMS_ACCESS_CATEGORY: CMSへのアクセス
+    CONTENT_CATEGORY: コンテンツに関する権限
+    FULLADMINRIGHTS: 完全な管理権
+    PERMISSIONS_CATEGORY: 役割とアクセス権限
+    PLURALNAME: 承認
+  SilverStripe\Security\PermissionCheckboxSetField:
+    FromGroup: 'グループ"{title}"から継承'
+    FromRole: '役割"{title}"から継承'
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: 役割
+    Title: タイトル
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
+    BUTTONSEND: パスワードリセットのリンクを送信してください
+    CHANGEPASSWORDBELOW: 以下のパスワードを変更できます
+    CHANGEPASSWORDHEADER: パスワードを変更しました
+    ENTERNEWPASSWORD: 新しいパスワードを入力してください
+    ERRORPASSWORDPERMISSION: パスワードを変更する為に、ログインしなければなりません！
+    LOGIN: ログイン
+    LOGOUT: ログアウト
+    NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
+    NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します

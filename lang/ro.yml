@@ -25,8 +25,13 @@ ro:
     Parent: 'Grup de Baza'
     has_many_Permissions: Permisiuni
     many_many_Members: Membri
+    GROUPNAME: 'Numele grupului'
+    MEMBERS: Membri
+    PERMISSIONS: Permisiuni
+    PLURALNAME: Grupuri
   SilverStripe\Security\LoginAttempt:
     IP: 'Adresa IP'
+    Status: Stare
   SilverStripe\Security\Member:
     BUTTONLOGIN: Autentificare
     BUTTONLOSTPASSWORD: 'Am uitat parola'
@@ -45,7 +50,60 @@ ro:
     db_LockedOutUntil: 'Blocat pana la'
     db_Password: Parola
     db_PasswordExpiry: 'Data de Expirare a Parolei'
+    BUTTONCHANGEPASSWORD: 'Schimbare Parola'
+    BUTTONLOGOUT: Logout
+    EDIT_PASSWORD: 'Noua parola'
+    EMAIL: E-mail
+    PLURALNAME: Membri
+    SINGULARNAME: Membru
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Permisiuni de conținut'
+    CMS_ACCESS_CATEGORY: 'Acces CMS'
+    PERMISSIONS_CATEGORY: 'Permisiuni de rol și acces'
+    PLURALNAME: Permisiuni
   SilverStripe\Security\Security:
     ERRORPASSWORDPERMISSION: 'Trebuie sa fii autentificat pentru a schimba parola.'
+    LOGIN: Autentificare
+    LOGOUT: Logout
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensiuni
+    EDIT: Editare
+    EDITINFO: 'Editeaza acest fisier'
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Ti-ai schimbat parola in'
+    HELLO: Salut
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Salut
+    TEXT2: 'link de resetare a parolei'
+    TEXT3: pentru
+  SilverStripe\Forms\DateField:
+    TODAY: astăzi
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Pincipal
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Ştergere
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Anulare
+    Create: Creaţi
+    Delete: Ştergere
+    Save: Salvează
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Editare
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Pagină
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Obiecte Data'
+    SINGULARNAME: 'Obiect Data'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Oricare
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Anulare
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Administrator implicit'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Logout
+  SilverStripe\Security\PermissionRole:
+    Title: Titlu

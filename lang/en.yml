@@ -1,4 +1,6 @@
 en:
+  DataObject:
+    php.SilverStripe\ORM\DataObjectGENERALSEARCH: 'General Search'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensions
     EDIT: Edit

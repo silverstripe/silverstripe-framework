@@ -6,6 +6,8 @@ hr:
     SHOWONCLICKTITLE: 'Promjenite lozinku'
   SilverStripe\Forms\DateField:
     VALIDDATEFORMAT2: 'Molimo unesite datum u ispravnom formatu ({format})'
+    NOTSET: 'nije postavljeno'
+    TODAY: danas
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Odaberite)
   SilverStripe\Forms\EmailField:
@@ -21,8 +23,10 @@ hr:
     FilterBy: 'Filtriraj po'
     Find: Pronađi
     Print: Ispiši
+    ResetFilter: Resetiraj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Obriši
+    DeletePermissionsFailure: 'Nema dozvole brisanja'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Odustani
     Create: Kreiraj
@@ -30,6 +34,7 @@ hr:
     DeletePermissionsFailure: 'Nema dozvole brisanja'
     Deleted: 'Obrisano {type} {name}'
     Save: Spremi
+    Saved: 'Spremljeno {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELCURRENCY: Valuta
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -57,9 +62,16 @@ hr:
     Parent: 'Roditeljska grupa'
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
+    MEMBERS: Članovi
+    NEWGROUP: 'Nova Grupa'
+    PERMISSIONS: Dozvole
+    PLURALNAME: Grupe
+    ROLES: Uloge
+    SINGULARNAME: Grupa
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adresa'
     Status: Status
+    Email: 'Email adresa'
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
@@ -85,12 +97,21 @@ hr:
     db_LockedOutUntil: 'Zaključano do'
     db_Password: Lozinka
     db_PasswordExpiry: 'Lozinka ističe'
+    BUTTONLOGOUT: Odjava
+    PLURALNAME: Članovi
+    SINGULARNAME: Član
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CONTENT_CATEGORY: 'Sadržajne dozvole'
     FULLADMINRIGHTS: 'Puna administrativna prava'
+    CMS_ACCESS_CATEGORY: 'CMS pristup'
+    PERMISSIONS_CATEGORY: 'Uloge i prava pristupa'
+    PLURALNAME: Dozvole
+    SINGULARNAME: Dozvola
   SilverStripe\Security\PermissionRole:
     Title: Naslov
+    PLURALNAME: Uloge
+    SINGULARNAME: Uloga
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nije Vam dozvoljen pristup ovoj stranici. Imate li drugi korisnički račun koji ima prava pristupa ovoj stranici možete se koristiti njime.'
     BUTTONSEND: 'Pošalji mi link za reset lozinke'
@@ -101,3 +122,45 @@ hr:
     LOGIN: 'Logiraj se'
     NOTEPAGESECURED: 'Ova stranica je zaštićena. Prijavite se na sustav sa svojim pristupnim podatcima i odmah ćemo vas preusmjeriti.'
     NOTERESETPASSWORD: 'Unesite svoju e-mail adresu, a mi ćemo Vam poslati link putem kojega možete resetirati Vašu lozinku.'
+    LOGOUT: Odjava
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimenzije
+    EDIT: Uredi
+    EDITINFO: 'Uredi ovu datoteku'
+    REMOVE: Ukloni
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
+    CHANGEPASSWORDTEXT3: 'Promjeni lozinku'
+    HELLO: Pozdrav
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Pozdrav
+    TEXT1: 'Ovdje je Vaš'
+    TEXT2: 'link za resetiranje lozinke'
+    TEXT3: za
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Neispravan zahtjev'
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Nema dostupnih opcija'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Nisu pronađeni podaci o datoteci'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Osnovno
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Uredi
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: od
+    Page: Stranica
+    View: Pregled
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Pregled
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Podatkovni objekti'
+    SINGULARNAME: 'Podatkovni objekt'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Greška validacije'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Odustani
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Zadani administrator'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Odjava

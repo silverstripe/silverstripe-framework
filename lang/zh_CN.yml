@@ -16,6 +16,10 @@ zh_CN:
     Parent: 主团队
     has_many_Permissions: 权限
     many_many_Members: 成员
+    MEMBERS: 成员
+    NEWGROUP: 新建会员组
+    PERMISSIONS: 权限
+    PLURALNAME: 团队
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 更改密码
     BUTTONLOGIN: 登录
@@ -37,6 +41,10 @@ zh_CN:
     belongs_many_many_Groups: 团队
     db_LockedOutUntil: 禁止直至
     db_PasswordExpiry: 密码过期日期
+    EDIT_PASSWORD: 新密码
+    PLURALNAME: 成员
+    SINGULARNAME: 成员
+    db_Password: 密码
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。
     BUTTONSEND: 给我发送密码重设链接
@@ -46,3 +54,36 @@ zh_CN:
     ERRORPASSWORDPERMISSION: 您必需登录以更改您的密码
     NOTEPAGESECURED: 此页是受安全保护的。输入您的登录信息，我们会将您送达。
     NOTERESETPASSWORD: 输入您的电邮地址，我们会给您发送一个您可重设密码的链接
+    LOGIN: 登录
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 尺寸
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
+    HELLO: 嗨
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 嗨
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: 主要部分
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: 删除
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: 删除
+    Save: 保存
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: 页面
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 数据对象
+    SINGULARNAME: 数据对象
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 忘记密码
+  SilverStripe\Security\Permission:
+    AdminGroup: 管理员
+    PLURALNAME: 权限
+  SilverStripe\Security\PermissionRole:
+    Title: 标题
