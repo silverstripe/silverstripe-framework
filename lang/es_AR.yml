@@ -11,6 +11,7 @@ es_AR:
     NONE: ninguna
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exportar a CSV'
+    Print: Imprimir
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda
@@ -35,9 +36,17 @@ es_AR:
     Sort: Ordenar
     has_many_Permissions: Permisos
     many_many_Members: Miembros
+    GROUPNAME: 'Nombre de grupo'
+    MEMBERS: Miembros
+    NEWGROUP: 'Nuevo Grupo'
+    PERMISSIONS: Permisos
+    PLURALNAME: Grupos
+    ROLES: roles
+    ROLESDESCRIPTION: 'Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles.'
   SilverStripe\Security\LoginAttempt:
     IP: 'Dirección IP'
     Status: Estado
+    Email: 'Dirección Email'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
     BUTTONLOGIN: Acceder
@@ -63,10 +72,17 @@ es_AR:
     db_LockedOutUntil: 'Bloqueado hasta'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha Vencimiento de Contraseña'
+    BUTTONLOGOUT: Desconectarse
+    EDIT_PASSWORD: 'Nueva contraseña'
+    PLURALNAME: Miembros
+    SINGULARNAME: Miembro
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permisos de contenido'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
+    CMS_ACCESS_CATEGORY: 'Acceso al CMS'
+    PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
+    PLURALNAME: Permisos
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado desde el rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\Security:
@@ -79,3 +95,43 @@ es_AR:
     LOGIN: Acceso
     NOTEPAGESECURED: 'Esta página está protegida. Ingresa tus credenciales abajo y en seguida te enviaremos una autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección email y te enviaremos un enlace con el cual podrás restablecer la contraseña'
+    LOGOUT: Desconectarse
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensiones
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
+    HELLO: Hola
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hola
+    TEXT1: 'Aquí esta tu'
+    TEXT2: 'vínculo para restablecer la contraseña'
+    TEXT3: para
+  SilverStripe\Forms\DateField:
+    NOTSET: 'no especificada'
+    TODAY: hoy
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Eliminar
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: Eliminar
+    Save: Guardar
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Página
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Objetos de Datos'
+    SINGULARNAME: 'Objeto de Datos'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Administrador por defecto'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Contraseña olvidada'
+    BUTTONLOGOUT: Desconectarse
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: roles
+    Title: Título

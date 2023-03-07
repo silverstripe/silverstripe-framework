@@ -16,6 +16,10 @@ he_IL:
     Parent: 'קבוצת אב'
     has_many_Permissions: הרשאות
     many_many_Members: 'חברים רשומים'
+    MEMBERS: 'חברים רשומים'
+    NEWGROUP: 'קבוצה חדשה'
+    PERMISSIONS: הרשאות
+    PLURALNAME: קבוצות
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'שנה סיסמא'
     BUTTONLOGIN: התחבר
@@ -37,8 +41,16 @@ he_IL:
     belongs_many_many_Groups: קבוצות
     db_LockedOutUntil: 'נעול עד '
     db_PasswordExpiry: 'תאריך תפוגת סיסמא'
+    BUTTONLOGOUT: יציאה
+    EDIT_PASSWORD: 'סיסמא חדשה'
+    PLURALNAME: 'חברים רשומים'
+    SINGULARNAME: 'חבר רשום'
+    db_Password: סיסמא
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'הרשאות התוכן'
+    CMS_ACCESS_CATEGORY: 'גישה ל־CMS'
+    PERMISSIONS_CATEGORY: 'תפקידים והרשאות גישה'
+    PLURALNAME: הרשאות
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
     BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
@@ -48,3 +60,44 @@ he_IL:
     ERRORPASSWORDPERMISSION: 'אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!'
     NOTEPAGESECURED: 'עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד.'
     NOTERESETPASSWORD: 'הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך'
+    LOGIN: התחבר
+    LOGOUT: יציאה
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: ממדים
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
+    HELLO: היי
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: היי
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: ראשי
+  SilverStripe\Forms\GridField\GridField:
+    Filter: מסנן
+    NoItemsFound: 'לא נמצאו פריטים'
+    ResetFilter: איפוס
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: מחק
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Create: יצירה
+    Delete: מחק
+    Save: שמור
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: מתוך
+    Page: עמוד
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'אובייקטי מידע'
+    SINGULARNAME: 'אובייקט מידע'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: כלשהם
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: כלשהם
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: יציאה
+  SilverStripe\Security\PermissionRole:
+    Title: כותרת

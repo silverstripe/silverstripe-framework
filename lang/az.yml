@@ -10,6 +10,7 @@ az:
     NONE: 'heç bir'
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'CSV-yə ixrac et'
+    Print: 'Çap et'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Miqdar
     FIELDLABELCURRENCY: Valyuta
@@ -33,8 +34,14 @@ az:
     Sort: Sıralama
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
+    GROUPNAME: 'Qrupun adı'
+    MEMBERS: Üzvlər
+    PERMISSIONS: Səlahiyyətlər
+    PLURALNAME: Qruplar
+    ROLES: Rollar
   SilverStripe\Security\LoginAttempt:
     IP: 'İP ünvan'
+    Email: E-poçt
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Parolu dəyiş'
     BUTTONLOGIN: 'Daxil ol'
@@ -60,10 +67,16 @@ az:
     db_LockedOutUntil: 'Bloklanıb, açılma vaxtı'
     db_Password: Parol
     db_PasswordExpiry: 'Parolun etibarlılığının bitmə vaxtı'
+    BUTTONLOGOUT: Çıxış
+    EDIT_PASSWORD: 'Yeni parol'
+    PLURALNAME: Üzvlər
+    SINGULARNAME: Üzv
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Məzmun səlahiyyətləri'
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
     FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'
+    PERMISSIONS_CATEGORY: İcazələr
+    PLURALNAME: Səlahiyyətlər
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: '"{roletitle}" rolundan "{grouptitle}" qrupunda törəyib'
   SilverStripe\Security\Security:
@@ -76,3 +89,42 @@ az:
     LOGIN: 'Daxil ol'
     NOTEPAGESECURED: 'Səhifə təhlükəsizdir. Məlumatları daxil edin və biz sizə göndərəcəyik. '
     NOTERESETPASSWORD: 'E-poçtunuzu daxil edin və parol sıfırlama linkini göndərəcəyik'
+    LOGOUT: Çıxış
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Ölçülər
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
+    HELLO: Salam
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Salam
+    TEXT1: 'Burada sizin'
+    TEXT2: 'parolu sıfırlma linki'
+    TEXT3: üçün
+  SilverStripe\Forms\DateField:
+    NOTSET: 'təyin edilməyib'
+    TODAY: 'bu gün'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Əsas
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: 'Dərc olunmuş saytdan sil'
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: 'Dərc olunmuş saytdan sil'
+    Save: 'Yadda saxla'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Səhifə
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Data Obyektlər'
+    SINGULARNAME: 'Data Obyekt'
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Əsas admin'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: Çıxış
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Rollar
+    Title: Başlıq

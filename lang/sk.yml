@@ -36,6 +36,8 @@ sk:
     VALIDDATEFORMAT2: 'Prosím zadajte platný formát dátumu ({format})'
     VALIDDATEMAXDATE: 'Váš dátum musí byť starší alebo odpovedajúci maximu povoleného dátumu ({date})'
     VALIDDATEMINDATE: 'Váš dátum musí byť novší alebo odpovedajúci minimu povoleného dátumu ({date})'
+    NOTSET: nezadané
+    TODAY: dnes
   SilverStripe\Forms\DropdownField:
     CHOOSE: '(Vyberte si)'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v zozname. {value} nie je platná voľba'
@@ -49,6 +51,7 @@ sk:
     VALIDATIONSTRONGPASSWORD: 'Heslá musia obsahovať aspoň jednu číslicu a jedno písmeno'
     VALIDATOR: Validácia
     VALIDCURRENCY: 'Prosím zadajte platnú menu'
+    FIELDISREQUIRED: '{name} je vyžadované'
   SilverStripe\Forms\FormField:
     NONE: žiadne
   SilverStripe\Forms\FormScaffolder:
@@ -82,8 +85,11 @@ sk:
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
     Deleted: 'Zmazané {type} {name}'
     Save: Uložiť
+    Saved: 'Uložené {name} {link}'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Stránka
+    OF: z
+    View: Zobraziť
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
@@ -142,11 +148,17 @@ sk:
     Sort: 'Poradie zoradenia'
     has_many_Permissions: Právomoci
     many_many_Members: Členovia
+    GROUPNAME: 'Názov skupiny'
+    NEWGROUP: 'Nová skupina'
+    PERMISSIONS: Právomoci
+    ROLES: Úlohy
+    ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adreasa'
     PLURALNAME: 'Pokusy o prihlásenie'
     SINGULARNAME: 'Pokus o prihlásenie'
     Status: Stav
+    Email: 'Emailová adresa'
   SilverStripe\Security\Member:
     ADDGROUP: 'Pridať skupinu'
     BUTTONCHANGEPASSWORD: 'Zmeniť heslo'
@@ -182,6 +194,8 @@ sk:
     db_LockedOutUntil: 'Zamknutý až do'
     db_Password: Heslo
     db_PasswordExpiry: 'Dátum expirácie hesla'
+    BUTTONLOGOUT: 'Odhlásiť sa'
+    VALIDATIONMEMBEREXISTS: 'Člen s rovnakým identifikátorom {identifier} už existuje'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Heslá člena'
     SINGULARNAME: 'Heslo člena'
@@ -197,6 +211,8 @@ sk:
     PLURALNAME: Oprávnenia
     SINGULARNAME: Oprávnenie
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
+    CMS_ACCESS_CATEGORY: 'Prístup do CMS'
+    PERMISSIONS_CATEGORY: 'Úlohy a prístupové práva'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
@@ -222,3 +238,19 @@ sk:
     LOSTPASSWORDHEADER: 'Zabudnuté heslo'
     NOTEPAGESECURED: 'Táto stránka je zabezpečená. Zadajte svoje prihlasovacie údaje a my Vám zároveň pošleme práva.'
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
+    LOGOUT: 'Odhlásiť sa'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Žiadna informácia o súbore'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Editovať
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Zobraziť
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Hodnota pre {name} nesmie prekročiť {maxLength} v dĺžke znakov'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Zrušiť
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONLOGOUT: 'Odhlásiť sa'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
+    NoPassword: 'Nie je tu heslo pre tohto člena.'

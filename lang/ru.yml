@@ -34,6 +34,8 @@ ru:
     VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Требуется значение даты, совпадающее с максимальным ({date}) или более старое'
     VALIDDATEMINDATE: 'Требуется значение даты, совпадающее с минимальным ({date}) или более новое'
+    NOTSET: 'не установлено'
+    TODAY: сегодня
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'Установите дату не позднее ({datetime})'
     VALIDDATETIMEFORMAT: 'Пожалуйста, задайте верный формат даты ({format})'
@@ -54,6 +56,7 @@ ru:
     VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-цифровой символ.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
+    FIELDISREQUIRED: 'Поле {name} является обязательным'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'Пример заполнения {format}'
     NONE: 'не выбрано'
@@ -88,6 +91,7 @@ ru:
     DeletePermissionsFailure: 'Нет прав на удаление'
     Deleted: 'Удалено {type} {name}'
     Save: Сохранить
+    Saved: 'Сохранено: {name} {link}'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: из
     Page: Страница
@@ -254,6 +258,7 @@ ru:
     db_LockedOutUntil: 'Заблокировано до'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата устаревания пароля'
+    VALIDATIONMEMBEREXISTS: 'Пользователь с таким же {identifier} уже существует'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Форма входа в систему'
     BUTTONFORGOTPASSWORD: 'Я забыл пароль'
@@ -334,3 +339,11 @@ ru:
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Редактировать
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Просмотр
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Отмена

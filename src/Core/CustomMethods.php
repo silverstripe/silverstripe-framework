@@ -227,7 +227,6 @@ trait CustomMethods
      *
      * @param object $object
      * @return array
-     * @deprecated 4.13.0 Will be replaced by findMethodsFrom() in CMS 5
      */
     protected function findMethodsFrom($object)
     {

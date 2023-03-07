@@ -16,6 +16,8 @@ es:
     VALIDDATEFORMAT2: 'Por favor, introduzca un formato de fecha válido ({format})'
     VALIDDATEMAXDATE: 'La fecha tiene que ser mayor o igual a la fecha máxima permitida ({date})'
     VALIDDATEMINDATE: 'La fecha tiene que ser posterior o coincidente a la fecha mínima permitida ({date})'
+    NOTSET: 'sin establecer'
+    TODAY: hoy
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Elegir)
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
@@ -29,6 +31,7 @@ es:
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
+    FIELDISREQUIRED: 'Se requiere {name} '
   SilverStripe\Forms\FormField:
     EXAMPLE: 'p.ej. {format}'
     NONE: ninguna
@@ -61,6 +64,7 @@ es:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado {type} {name}'
     Save: Guardar
+    Saved: 'Guardado {name} {link}'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda
@@ -149,6 +153,12 @@ es:
     Sort: 'Orden de Clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
+    GROUPNAME: 'Nombre del grupo'
+    MEMBERS: Miembros
+    NEWGROUP: 'Nuevo grupo'
+    PERMISSIONS: Permisos
+    ROLES: Roles
+    ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
   SilverStripe\Security\LoginAttempt:
     IP: 'Dirección IP'
     PLURALNAME: 'Intentos de ingreso'
@@ -158,6 +168,7 @@ es:
       many: '{count} Intentos de inicios de sesión'
     SINGULARNAME: 'Intento de ingreso'
     Status: Estado
+    Email: 'Correo electrónico'
   SilverStripe\Security\Member:
     ADDGROUP: 'Añadir grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
@@ -197,6 +208,8 @@ es:
     db_LockedOutUntil: 'Cerrado hasta'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
+    BUTTONLOGOUT: 'Cerrar Sesión'
+    VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo {identifier}'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Contraseñas de los Miembros'
     PLURALS:
@@ -220,6 +233,8 @@ es:
       many: '{count} Permisos'
     SINGULARNAME: Permiso
     UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
+    CMS_ACCESS_CATEGORY: 'Acceso CMS'
+    PERMISSIONS_CATEGORY: 'Permisos de roles y accesos'
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'
@@ -260,3 +275,45 @@ es:
     LOSTPASSWORDHEADER: '¿Contraseña Perdida?'
     NOTEPAGESECURED: 'Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento.'
     NOTERESETPASSWORD: 'Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña'
+    LOGOUT: 'Cerrar Sesión'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensiones
+    EDIT: Editar
+    EDITINFO: 'Editar este archivo'
+    REMOVE: Eliminar
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Se ha cambiado la contraseña de la cuenta con dirección de correo electrónico {email}. Si no cambió su contraseña, por favor cambie su contraseña usando el siguiente enlace'
+    CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
+    CHANGEPASSWORDTEXT3: 'Cambiar contraseña'
+    HELLO: Hola
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hola
+    TEXT1: 'Aquí tiene su'
+    TEXT2: 'enlace para restablecer contraseña'
+    TEXT3: para
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Solicitud no válida'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'No ha sido encontrada la información del archivo'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Editar
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: de
+    Page: Página
+    View: Vista
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Vista
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'El valor para {name} no puede exceder los {maxLength} caracteres de longitud'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Cancelar
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Administrador por defecto'
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Contraseña olvidada'
+    BUTTONLOGOUT: 'Cerrar Sesión'
+  SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
+    ERRORWRONGCRED: 'Los detalles provistos no parecen estar correctos. Por favor intentar nuevamente.'
+    NoPassword: 'No hay contraseña para este usuario'

@@ -11,6 +11,7 @@ pt_BR:
     NONE: nenhum
   SilverStripe\Forms\GridField\GridField:
     CSVEXPORT: 'Exportar para CSV'
+    Print: Imprimir
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Por favor entre nome de usuário e senha.'
     ERRORNOTADMIN: 'Este usuário não é um administrador'
@@ -23,8 +24,14 @@ pt_BR:
     Sort: Ordenação
     has_many_Permissions: Permissões
     many_many_Members: Membros
+    GROUPNAME: 'Nome do grupo'
+    MEMBERS: Membros
+    NEWGROUP: 'Novo Grupo'
+    PERMISSIONS: Permissões
+    PLURALNAME: Grupos
   SilverStripe\Security\LoginAttempt:
     IP: 'Endereço IP'
+    Email: 'Endereço de E-mail'
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Senha'
     BUTTONLOGIN: Entrar
@@ -49,8 +56,13 @@ pt_BR:
     db_LockedOutUntil: 'Bloqueado até'
     db_Password: Senha
     db_PasswordExpiry: 'Data de expiração da senha'
+    EDIT_PASSWORD: 'Nova Senha'
+    PLURALNAME: Membros
+    SINGULARNAME: Membro
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Todos os direitos administrativos'
+    AdminGroup: Administrador
+    PLURALNAME: Permissões
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo.'
     BUTTONSEND: 'Envie-me o link para resetar a senha'
@@ -61,3 +73,42 @@ pt_BR:
     LOGIN: Entrar
     NOTEPAGESECURED: 'Esta página é protegida. Digite suas credenciais abaixo para continuar.'
     NOTERESETPASSWORD: 'Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha'
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensões
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
+    HELLO: Olá
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Olá
+    TEXT1: 'Este é seu'
+    TEXT2: 'link para reiniciar sua senha'
+    TEXT3: para
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Não
+  SilverStripe\Forms\DateField:
+    NOTSET: 'não informado'
+    TODAY: hoje
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Excluir
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    Delete: Excluir
+    Save: Salvar
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: Página
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Dados dos objetos'
+    SINGULARNAME: 'Dado do objeto'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    NOANSWER: Não
+  SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Esqueceu a senha'
+  SilverStripe\Security\PermissionRole:
+    Title: Título
