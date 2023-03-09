@@ -177,7 +177,10 @@ class Environment
     }
 
     /**
-     * Get value of environment variable
+     * Get value of environment variable.
+     * If the value is false, you should check Environment::hasEnv() to see
+     * if the value is an actual environment variable value or if the variable
+     * simply hasn't been set.
      *
      * @param string $name
      * @return mixed Value of the environment variable, or false if not set
@@ -221,6 +224,17 @@ class Environment
     public static function setEnv($name, $value)
     {
         static::$env[$name] = $value;
+    }
+
+    /**
+     * Check if an environment variable is set
+     */
+    public static function hasEnv(string $name): bool
+    {
+        return array_key_exists($name, static::$env)
+            || is_array($_ENV) && array_key_exists($name, $_ENV)
+            || is_array($_SERVER) && array_key_exists($name, $_SERVER)
+            || getenv($name) !== false;
     }
 
     /**

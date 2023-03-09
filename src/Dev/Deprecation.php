@@ -61,11 +61,21 @@ class Deprecation
      * Must be configured outside of the config API, as deprecation API
      * must be available before this to avoid infinite loops.
      *
-     * This will be overriden by the SS_DEPRECATION_ENABLED environment if present
+     * This will be overriden by the SS_DEPRECATION_ENABLED environment variable if present
      *
      * @internal - Marked as internal so this and other private static's are not treated as config
      */
     private static bool $currentlyEnabled = false;
+
+    /**
+     * @internal
+     */
+    private static bool $shouldShowForHttp = false;
+
+    /**
+     * @internal
+     */
+    private static bool $shouldShowForCli = true;
 
     /**
      * @internal
@@ -76,6 +86,11 @@ class Deprecation
      * @internal
      */
     private static bool $insideWithNoReplacement = false;
+
+    /**
+     * @internal
+     */
+    private static bool $isTriggeringError = false;
 
     /**
      * Buffer of user_errors to be raised
@@ -94,12 +109,26 @@ class Deprecation
      */
     private static bool $showNoReplacementNotices = false;
 
+    /**
+     * Enable throwing deprecation warnings. By default, this excludes warnings for
+     * deprecated code which is called by core Silverstripe modules.
+     *
+     * This will be overriden by the SS_DEPRECATION_ENABLED environment variable if present.
+     *
+     * @param bool $showNoReplacementNotices If true, deprecation warnings will also be thrown
+     * for deprecated code which is called by core Silverstripe modules.
+     */
     public static function enable(bool $showNoReplacementNotices = false): void
     {
         static::$currentlyEnabled = true;
         static::$showNoReplacementNotices = $showNoReplacementNotices;
     }
 
+    /**
+     * Disable throwing deprecation warnings.
+     *
+     * This will be overriden by the SS_DEPRECATION_ENABLED environment variable if present.
+     */
     public static function disable(): void
     {
         static::$currentlyEnabled = false;
@@ -208,7 +237,11 @@ class Deprecation
         if (!Director::isDev()) {
             return false;
         }
-        return static::$currentlyEnabled || Environment::getEnv('SS_DEPRECATION_ENABLED');
+        $envVar = Environment::getEnv('SS_DEPRECATION_ENABLED');
+        if (Environment::hasEnv('SS_DEPRECATION_ENABLED')) {
+            return self::varAsBoolean($envVar);
+        }
+        return static::$currentlyEnabled;
     }
 
     /**
@@ -223,29 +256,86 @@ class Deprecation
         // noop
     }
 
+    /**
+     * If true, any E_USER_DEPRECATED errors should be treated as coming
+     * directly from this class.
+     */
+    public static function isTriggeringError(): bool
+    {
+        return self::$isTriggeringError;
+    }
+
+    /**
+     * Determine whether deprecation warnings should be included in HTTP responses.
+     * Does not affect logging.
+     *
+     * This will be overriden by the SS_DEPRECATION_SHOW_HTTP environment variable if present.
+     */
+    public static function setShouldShowForHttp(bool $value): void
+    {
+        self::$shouldShowForHttp = $value;
+    }
+
+    /**
+     * Determine whether deprecation warnings should be included in CLI responses.
+     * Does not affect logging.
+     *
+     * This will be overriden by the SS_DEPRECATION_SHOW_CLI environment variable if present.
+     */
+    public static function setShouldShowForCli(bool $value): void
+    {
+        self::$shouldShowForCli = $value;
+    }
+
+    /**
+     * If true, deprecation warnings should be included in HTTP responses.
+     * Does not affect logging.
+     */
+    public static function shouldShowForHttp(): bool
+    {
+        $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_HTTP');
+        if (Environment::hasEnv('SS_DEPRECATION_SHOW_HTTP')) {
+            return self::varAsBoolean($envVar);
+        }
+        return self::$shouldShowForHttp;
+    }
+
+    /**
+     * If true, deprecation warnings should be included in CLI responses.
+     * Does not affect logging.
+     */
+    public static function shouldShowForCli(): bool
+    {
+        $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_CLI');
+        if (Environment::hasEnv('SS_DEPRECATION_SHOW_CLI')) {
+            return self::varAsBoolean($envVar);
+        }
+        return self::$shouldShowForCli;
+    }
+
     public static function outputNotices(): void
     {
         if (!self::isEnabled()) {
             return;
         }
-        $outputMessages = [];
-        // using a while loop with array_shift() to ensure that self::$userErrorMessageBuffer will have
-        // have values removed from it before calling user_error()
-        while (count(self::$userErrorMessageBuffer)) {
+
+        $count = 0;
+        $origCount = count(self::$userErrorMessageBuffer);
+        while ($origCount > $count) {
+            $count++;
             $arr = array_shift(self::$userErrorMessageBuffer);
             $message = $arr['message'];
-            // often the same deprecation message appears dozens of times, which isn't helpful
-            // only need to show a single instance of each message
-            if (in_array($message, $outputMessages)) {
-                continue;
-            }
             $calledInsideWithNoReplacement = $arr['calledInsideWithNoReplacement'];
             if ($calledInsideWithNoReplacement && !self::$showNoReplacementNotices) {
                 continue;
             }
+            self::$isTriggeringError = true;
             user_error($message, E_USER_DEPRECATED);
-            $outputMessages[] = $message;
+            self::$isTriggeringError = false;
         }
+        // Make absolutely sure the buffer is empty - array_shift seems to leave an item in the array
+        // if we're not using numeric keys.
+        self::$userErrorMessageBuffer = [];
     }
 
     /**
@@ -265,10 +355,12 @@ class Deprecation
         // try block needs to wrap all code in case anything inside the try block
         // calls something else that calls Deprecation::notice()
         try {
+            $data = null;
             if ($scope === self::SCOPE_CONFIG) {
                 // Deprecated config set via yaml will only be shown in the browser when using ?flush=1
                 // It will not show in CLI when running dev/build flush=1
-                self::$userErrorMessageBuffer[] = [
+                $data = [
+                    'key' => sha1($string),
                     'message' => $string,
                     'calledInsideWithNoReplacement' => self::$insideWithNoReplacement
                 ];
@@ -302,20 +394,26 @@ class Deprecation
                 if ($caller) {
                     $string = $caller . ' is deprecated.' . ($string ? ' ' . $string : '');
                 }
-                self::$userErrorMessageBuffer[] = [
+                $data = [
+                    'key' => sha1($string),
                     'message' => $string,
                     'calledInsideWithNoReplacement' => self::$insideWithNoReplacement
                 ];
             }
-            if (!self::$haveSetShutdownFunction && self::isEnabled()) {
+            if ($data && !array_key_exists($data['key'], self::$userErrorMessageBuffer)) {
+                // Store de-duplicated data in a buffer to be outputted when outputNotices() is called
+                self::$userErrorMessageBuffer[$data['key']] = $data;
+
                 // Use a shutdown function rather than immediately calling user_error() so that notices
                 // do not interfere with setting session varibles i.e. headers already sent error
                 // it also means the deprecation notices appear below all phpunit output in CI
                 // which is far nicer than having it spliced between phpunit output
-                register_shutdown_function(function () {
-                    self::outputNotices();
-                });
-                self::$haveSetShutdownFunction = true;
+                if (!self::$haveSetShutdownFunction && self::isEnabled()) {
+                    register_shutdown_function(function () {
+                        self::outputNotices();
+                    });
+                    self::$haveSetShutdownFunction = true;
+                }
             }
         } catch (BadMethodCallException $e) {
             if ($e->getMessage() === InjectorLoader::NO_MANIFESTS_AVAILABLE) {
@@ -352,5 +450,32 @@ class Deprecation
     {
         static::notice('4.12.0', 'Will be removed without equivalent functionality to replace it');
         // noop
+    }
+
+    private static function varAsBoolean($val): bool
+    {
+        if (is_string($val)) {
+            $truthyStrings = [
+                'on',
+                'true',
+                '1',
+            ];
+
+            if (in_array(strtolower($val), $truthyStrings, true)) {
+                return true;
+            }
+
+            $falsyStrings = [
+                'off',
+                'false',
+                '0',
+            ];
+
+            if (in_array(strtolower($val), $falsyStrings, true)) {
+                return false;
+            }
+        }
+
+        return (bool) $val;
     }
 }

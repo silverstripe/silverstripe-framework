@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests;
 
+use ReflectionProperty;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 
@@ -65,5 +66,82 @@ class EnvironmentTest extends SapphireTest
         $vars['test'] = 'fail';
         $this->assertEquals('fail', $vars['test']);
         $this->assertEquals('global', $GLOBALS['test']);
+    }
+
+    public function provideHasEnv()
+    {
+        $setAsOptions = [
+            '.env',
+            '_ENV',
+            '_SERVER',
+            'putenv',
+        ];
+        $valueOptions = [
+            true,
+            false,
+            null,
+            0,
+            1,
+            1.75,
+            '',
+            '0',
+            'some-value',
+        ];
+        $scenarios = [];
+        foreach ($setAsOptions as $setAs) {
+            foreach ($valueOptions as $value) {
+                $scenarios[] = [
+                    'setAs' => $setAs,
+                    'value' => $value,
+                    'expected' => true,
+                ];
+            }
+        }
+        $scenarios[] = [
+            'setAs' => null,
+            'value' => null,
+            'expected' => false,
+        ];
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideHasEnv
+     */
+    public function testHasEnv(?string $setAs, $value, bool $expected)
+    {
+        $name = '_ENVTEST_HAS_ENV';
+
+        // Set the value
+        switch ($setAs) {
+            case '.env':
+                Environment::setEnv($name, $value);
+                break;
+            case '_ENV':
+                $_ENV[$name] = $value;
+                break;
+            case '_SERVER':
+                $_SERVER[$name] = $value;
+                break;
+            case 'putenv':
+                $val = is_string($value) ? $value : json_encode($value);
+                putenv("$name=$val");
+                break;
+            default:
+                // null is no-op, to validate not setting it works as expected.
+                if ($setAs !== null) {
+                    $this->fail("setAs value $setAs isn't taken into account correctly for this test.");
+                }
+        }
+
+        $this->assertSame($expected, Environment::hasEnv($name));
+
+        // unset the value
+        $reflectionEnv = new ReflectionProperty(Environment::class, 'env');
+        $reflectionEnv->setAccessible(true);
+        $reflectionEnv->setValue(array_diff($reflectionEnv->getValue(), [$name => $value]));
+        unset($_ENV[$name]);
+        unset($_SERVER[$name]);
+        putenv("$name");
     }
 }
