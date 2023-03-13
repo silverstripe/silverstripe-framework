@@ -20,6 +20,8 @@ class MarkedSetTest extends SapphireTest
         HierarchyTest\TestObject::class,
         HierarchyTest\HideTestObject::class,
         HierarchyTest\HideTestSubObject::class,
+        HierarchyTest\HierarchyOnSubclassTestObject::class,
+        HierarchyTest\HierarchyOnSubclassTestSubObject::class
     ];
 
     public static function getExtraDataObjects()

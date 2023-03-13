@@ -8,6 +8,9 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormTemplateHelper;
 use SilverStripe\Forms\TreeMultiselectField;
 use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HideTestSubObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject;
+use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject;
 use SilverStripe\View\SSViewer;
 
 class TreeMultiselectFieldTest extends SapphireTest
@@ -16,6 +19,9 @@ class TreeMultiselectFieldTest extends SapphireTest
 
     protected static $extra_dataobjects = [
         TestObject::class,
+        HideTestSubObject::class,
+        HierarchyOnSubclassTestObject::class,
+        HierarchyOnSubclassTestSubObject::class
     ];
 
     protected $formId = 'TheFormID';
