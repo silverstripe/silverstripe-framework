@@ -193,7 +193,7 @@ class DatabaseTest extends SapphireTest
         $obj->MyInt = 5;
         $obj->MyFloat = 6.0;
 
-        // Note: in non-PDO SQLite, whole numbers of a decimal field will be returned as integers rather than floats
+        // Note: in SQLite, whole numbers of a decimal field will be returned as integers rather than floats
         $obj->MyDecimal = 7.1;
         $obj->MyBoolean = true;
         $obj->write();
