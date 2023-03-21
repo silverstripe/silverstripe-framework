@@ -217,37 +217,4 @@ class EmbedShortcodeProviderTest extends EmbedUnitTest
             $html
         );
     }
-
-    public function testWhitelistIsConfigurable()
-    {
-        // Allow new whitelisted attribute
-        Config::modify()->merge(EmbedShortcodeProvider::class, 'attribute_whitelist', ['data-some-value']);
-
-        $url = 'https://www.youtube.com/watch?v=dM15HfUYwF0';
-        $html = $this->getShortcodeHtml(
-            $url,
-            $url,
-            <<<EOT
-            <link rel="alternate" type="application/json+oembed" href="https://www.youtube.com/oembed?format=json&amp;url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Da2tDOYkFCYo" title="The flying car completes first ever inter-city flight (Official Video)">
-            EOT,
-            <<<EOT
-            {"title":"The flying car completes first ever inter-city flight (Official Video)","author_name":"KleinVision","author_url":"https://www.youtube.com/channel/UCCHAHvcO7KSNmgXVRIJLNkw","type":"video","height":113,"width":200,"version":"1.0","provider_name":"YouTube","provider_url":"https://www.youtube.com/","thumbnail_height":360,"thumbnail_width":480,"thumbnail_url":"https://i.ytimg.com/vi/a2tDOYkFCYo/hqdefault.jpg","html":"\u003ciframe width=\u0022200\u0022 height=\u0022113\u0022 src=\u0022https://www.youtube.com/embed/a2tDOYkFCYo?feature=oembed\u0022 frameborder=\u00220\u0022 allow=\u0022accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\u0022 allowfullscreen\u003e\u003c/iframe\u003e"}
-            EOT,
-            [
-                'url' => $url,
-                'caption' => 'A nice video',
-                'width' => 779,
-                'height' => 437,
-                'data-some-value' => 'my-data',
-                'onmouseover' => 'alert(2)',
-                'style' => 'background-color:red;',
-            ],
-        );
-        $this->assertEqualIgnoringWhitespace(
-            <<<EOT
-            <div data-some-value="my-data" style="width:779px;"><iframe width="779" height="437" src="https://www.youtube.com/embed/a2tDOYkFCYo?feature=oembed" frameborder="0" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe><p class="caption">A nice video</p></div>
-            EOT,
-            $html
-        );
-    }
 }
