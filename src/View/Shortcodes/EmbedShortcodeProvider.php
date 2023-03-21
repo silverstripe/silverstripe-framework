@@ -29,22 +29,6 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     use Configurable;
 
     /**
-     * A whitelist of shortcode attributes which are allowed in the resultant markup.
-     * Note that the tinymce plugin restricts attributes on the client-side separately.
-     *
-     * @config
-     * @deprecated 4.12.0 Removed without equivalent functionality to replace it
-     */
-    private static array $attribute_whitelist = [
-        'url',
-        'thumbnail',
-        'class',
-        'width',
-        'height',
-        'caption',
-    ];
-
-    /**
      * Gets the list of shortcodes provided by this handler
      *
      * @return mixed
@@ -262,8 +246,17 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      */
     private static function buildAttributeListFromArguments(array $arguments, array $exclude = []): ArrayList
     {
+        // A whitelist of shortcode attributes which are allowed in the resultant markup.
+        // Note that the tinymce plugin restricts attributes on the client-side separately.
+        $whitelist = [
+            'url',
+            'thumbnail',
+            'class',
+            'width',
+            'height',
+            'caption'
+        ];
         // Clean out any empty arguments and anything not whitelisted
-        $whitelist = static::config()->get('attribute_whitelist');
         $arguments = array_filter($arguments, function ($value, $key) use ($whitelist) {
             return in_array($key, $whitelist) && strlen(trim($value ?? ''));
         }, ARRAY_FILTER_USE_BOTH);
