@@ -237,8 +237,8 @@ class Deprecation
         if (!Director::isDev()) {
             return false;
         }
-        $envVar = Environment::getEnv('SS_DEPRECATION_ENABLED');
         if (Environment::hasEnv('SS_DEPRECATION_ENABLED')) {
+            $envVar = Environment::getEnv('SS_DEPRECATION_ENABLED');
             return self::varAsBoolean($envVar);
         }
         return static::$currentlyEnabled;
@@ -293,8 +293,8 @@ class Deprecation
      */
     public static function shouldShowForHttp(): bool
     {
-        $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_HTTP');
         if (Environment::hasEnv('SS_DEPRECATION_SHOW_HTTP')) {
+            $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_HTTP');
             return self::varAsBoolean($envVar);
         }
         return self::$shouldShowForHttp;
@@ -306,8 +306,8 @@ class Deprecation
      */
     public static function shouldShowForCli(): bool
     {
-        $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_CLI');
         if (Environment::hasEnv('SS_DEPRECATION_SHOW_CLI')) {
+            $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_CLI');
             return self::varAsBoolean($envVar);
         }
         return self::$shouldShowForCli;

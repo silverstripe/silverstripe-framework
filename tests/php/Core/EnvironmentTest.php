@@ -79,7 +79,6 @@ class EnvironmentTest extends SapphireTest
         $valueOptions = [
             true,
             false,
-            null,
             0,
             1,
             1.75,
@@ -97,6 +96,12 @@ class EnvironmentTest extends SapphireTest
                 ];
             }
         }
+        // `null` isn't a supported value outside of using the `.env` option.
+        $scenarios[] = [
+            'setAs' => '.env',
+            'value' => null,
+            'expected' => true,
+        ];
         $scenarios[] = [
             'setAs' => null,
             'value' => null,
