@@ -182,4 +182,30 @@ class GridFieldFilterHeaderTest extends SapphireTest
 
         $this->assertEquals('ReallyCustomSearch', $this->component->getSearchField());
     }
+
+    public function testCanFilterAnyColumns()
+    {
+        $gridField = $this->gridField;
+        $filterHeader = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
+        
+        // test that you can filter by something if searchable_fields is not defined
+        // silverstripe will scaffold db columns that are in the gridfield to be
+        // searchable by default
+        Config::modify()->remove(Team::class, 'searchable_fields');
+        $this->assertTrue($filterHeader->canFilterAnyColumns($gridField));
+
+        // test that you can filterBy if searchable_fields is defined
+        Config::modify()->set(Team::class, 'searchable_fields', ['Name']);
+        $this->assertTrue($filterHeader->canFilterAnyColumns($gridField));
+
+        // test that you can filterBy if searchable_fields even if it is not a legit field
+        // this is because we're making a blind assumption it will be filterable later in a SearchContext
+        Config::modify()->set(Team::class, 'searchable_fields', ['WhatIsThis']);
+        $this->assertTrue($filterHeader->canFilterAnyColumns($gridField));
+
+        // test that you cannot filter by non-db field when it falls back to summary_fields
+        Config::modify()->remove(Team::class, 'searchable_fields');
+        Config::modify()->set(Team::class, 'summary_fields', ['MySummaryField']);
+        $this->assertFalse($filterHeader->canFilterAnyColumns($gridField));
+    }
 }
