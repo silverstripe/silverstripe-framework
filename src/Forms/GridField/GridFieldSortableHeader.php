@@ -188,25 +188,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
                     }
                 }
             } else {
-                if ($currentColumn == count($columns ?? [])) {
-                    $filter = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
-
-                    if ($filter && $filter->canFilterAnyColumns($gridField)) {
-                        $field = new LiteralField(
-                            $fieldName,
-                            sprintf(
-                                '<button type="button" name="showFilter" aria-label="%s" title="%s"' .
-                                ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
-                                _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter"),
-                                _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
-                            )
-                        );
-                    } else {
-                        $field = new LiteralField($fieldName, '<span class="non-sortable">' . $title . '</span>');
-                    }
-                } else {
-                    $field = new LiteralField($fieldName, '<span class="non-sortable">' . $title . '</span>');
-                }
+                $field = new LiteralField($fieldName, '<span class="non-sortable">' . $title . '</span>');
             }
             $forTemplate->Fields->push($field);
         }
