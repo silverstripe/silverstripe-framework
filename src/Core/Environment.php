@@ -187,16 +187,22 @@ class Environment
      */
     public static function getEnv($name)
     {
-        switch (true) {
-            case  is_array(static::$env) && array_key_exists($name, static::$env):
-                return static::$env[$name];
-            case  is_array($_ENV) && array_key_exists($name, $_ENV):
-                return $_ENV[$name];
-            case  is_array($_SERVER) && array_key_exists($name, $_SERVER):
-                return $_SERVER[$name];
-            default:
-                return getenv($name);
+        if (array_key_exists($name, static::$env)) {
+            return static::$env[$name];
         }
+        // isset() is used for $_ENV and $_SERVER instead of array_key_exists() to fix a very strange issue that
+        // occured in CI running silverstripe/recipe-kitchen-sink where PHP would timeout due apparently due to an
+        // excessively high number of array method calls. isset() is not used for static::$env above because
+        // values there may be null, and isset() will return false for null values
+        // Symfony also uses isset() for reading $_ENV and $_SERVER values
+        // https://github.com/symfony/dependency-injection/blob/6.2/EnvVarProcessor.php#L148
+        if (isset($_ENV[$name])) {
+            return $_ENV[$name];
+        }
+        if (isset($_SERVER[$name])) {
+            return $_SERVER[$name];
+        }
+        return getenv($name);
     }
 
     /**
@@ -231,9 +237,10 @@ class Environment
      */
     public static function hasEnv(string $name): bool
     {
+        // See getEnv() for an explanation of why isset() is used for $_ENV and $_SERVER
         return array_key_exists($name, static::$env)
-            || is_array($_ENV) && array_key_exists($name, $_ENV)
-            || is_array($_SERVER) && array_key_exists($name, $_SERVER)
+            || isset($_ENV[$name])
+            || isset($_SERVER[$name])
             || getenv($name) !== false;
     }
 
