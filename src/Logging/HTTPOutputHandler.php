@@ -8,6 +8,7 @@ use Monolog\LogRecord;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Output the error to the browser, with the given HTTP status code.
@@ -138,6 +139,16 @@ class HTTPOutputHandler extends AbstractProcessingHandler
         return $this;
     }
 
+    protected function shouldShowError(int $errorCode): bool
+    {
+        // show all non-E_USER_DEPRECATED errors
+        // or E_USER_DEPRECATED errors when not triggering from the Deprecation class
+        // or our deprecations when the relevant shouldShow method returns true
+        return $errorCode !== E_USER_DEPRECATED
+            || !Deprecation::isTriggeringError()
+            || ($this->isCli() ? Deprecation::shouldShowForCli() : Deprecation::shouldShowForHttp());
+    }
+
     /**
      * @param array $record
      * @return bool
@@ -145,6 +156,14 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     protected function write(LogRecord $record): void
     {
         ini_set('display_errors', 0);
+
+        // Suppress errors that should be suppressed
+        if (isset($record['context']['code'])) {
+            $errorCode = $record['context']['code'];
+            if (!$this->shouldShowError($errorCode)) {
+                return;
+            }
+        }
 
         // TODO: This coupling isn't ideal
         // See https://github.com/silverstripe/silverstripe-framework/issues/4484
@@ -165,5 +184,13 @@ class HTTPOutputHandler extends AbstractProcessingHandler
 
         $response->setBody($record['formatted']);
         $response->output();
+    }
+
+    /**
+     * This method is required and must be protected for unit testing, since we can't mock static or private methods
+     */
+    protected function isCli(): bool
+    {
+        return Director::is_cli();
     }
 }

@@ -5,6 +5,7 @@ namespace SilverStripe\Logging;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Monolog\ErrorHandler as MonologHandler;
+use Psr\Log\LogLevel;
 
 class MonologErrorHandler implements ErrorHandler
 {
@@ -62,7 +63,13 @@ class MonologErrorHandler implements ErrorHandler
         }
 
         foreach ($loggers as $logger) {
-            MonologHandler::register($logger);
+            // Log deprecation warnings as WARNING, not NOTICE
+            // see https://github.com/Seldaek/monolog/blob/1.x/doc/01-usage.md#log-levels
+            $errorLevelMap = [
+                E_DEPRECATED => LogLevel::WARNING,
+                E_USER_DEPRECATED => LogLevel::WARNING,
+            ];
+            MonologHandler::register($logger, $errorLevelMap);
         }
     }
 }

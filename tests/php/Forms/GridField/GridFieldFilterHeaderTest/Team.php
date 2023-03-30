@@ -24,4 +24,9 @@ class Team extends DataObject implements TestOnly
         'Cheerleader' => Cheerleader::class,
         'CheerleadersMom' => Mom::class
     ];
+
+    public function getMySummaryField()
+    {
+        return 'MY SUMMARY FIELD';
+    }
 }
