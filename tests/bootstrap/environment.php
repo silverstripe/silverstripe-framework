@@ -6,7 +6,7 @@ use SilverStripe\Core\Environment;
 
 if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABASE_USERNAME')) {
     // The default settings let us define the database config via environment vars
-    // Database connection, including PDO and legacy ORM support
+    // Database connection, including legacy ORM support
     switch (Environment::getEnv('DB')) {
         case "PGSQL";
             $pgDatabaseClass = 'PostgreSQLDatabase';
