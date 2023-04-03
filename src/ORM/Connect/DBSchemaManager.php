@@ -4,8 +4,10 @@ namespace SilverStripe\ORM\Connect;
 
 use Exception;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
@@ -27,6 +29,16 @@ abstract class DBSchemaManager
      * @var bool
      */
     private static $check_and_repair_on_build = true;
+
+    /**
+     * For large databases you can declare a list of DataObject classes which will be excluded from
+     * CHECK TABLE and REPAIR TABLE queries during dev/build. Note that the entire inheritance chain
+     * for that class will be excluded, including both ancestors and descendants.
+     *
+     * Only use this configuration if you know what you are doing and have identified specific models
+     * as being problematic during your dev/build process.
+     */
+    private static array $exclude_models_from_db_checks = [];
 
     /**
      * Check if tables should be renamed in a case-sensitive fashion.
@@ -366,7 +378,7 @@ abstract class DBSchemaManager
             if (Config::inst()->get(static::class, 'fix_table_case_on_build')) {
                 $this->fixTableCase($table);
             }
-            if (Config::inst()->get(static::class, 'check_and_repair_on_build')) {
+            if ($this->canCheckAndRepairTable($table)) {
                 $this->checkAndRepairTable($table);
             }
 
@@ -849,6 +861,29 @@ abstract class DBSchemaManager
      */
     abstract public function checkAndRepairTable($tableName);
 
+    /**
+     * Determines if we should be checking and repairing tables generally, and whether the passed in table
+     * is on the ignore list.
+     */
+    private function canCheckAndRepairTable(string $tableName): bool
+    {
+        if (!Config::inst()->get(static::class, 'check_and_repair_on_build')) {
+            return false;
+        }
+
+        // Return false if $tableName belongs to any model in the data hierarchy of any class in the ignore list
+        $ignoreModels = Config::inst()->get(static::class, 'exclude_models_from_db_checks');
+        if (!empty($ignoreModels)) {
+            $modelForTable = ClassInfo::class_name(DataObject::getSchema()->tableClass($tableName));
+            foreach ($ignoreModels as $ignoreModel) {
+                if (in_array($modelForTable, ClassInfo::dataClassesFor($ignoreModel))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     /**
      * Ensure the given table has the correct case
