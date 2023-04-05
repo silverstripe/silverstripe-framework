@@ -17,7 +17,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Security\SecurityToken;
 
 /**
- * Tests for RequestHandler and HTTPRequest.
+ * Tests for functionality related to handling requests - not unit tests for RequestHandler.
  * We've set up a simple URL handling model based on
  */
 class RequestHandlingTest extends FunctionalTest
