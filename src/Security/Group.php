@@ -583,12 +583,10 @@ class Group extends DataObject
             $member = Security::getCurrentUser();
         }
 
-        // extended access checks
-        $results = $this->extend('canEdit', $member);
-        if ($results && is_array($results)) {
-            if (!min($results)) {
-                return false;
-            }
+        // check for extensions, we do this first as they can overrule everything
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
         }
 
         if (// either we have an ADMIN
@@ -619,12 +617,10 @@ class Group extends DataObject
             $member = Security::getCurrentUser();
         }
 
-        // extended access checks
-        $results = $this->extend('canView', $member);
-        if ($results && is_array($results)) {
-            if (!min($results)) {
-                return false;
-            }
+        // check for extensions, we do this first as they can overrule everything
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
         }
 
         // user needs access to CMS_ACCESS_SecurityAdmin
@@ -641,12 +637,10 @@ class Group extends DataObject
             $member = Security::getCurrentUser();
         }
 
-        // extended access checks
-        $results = $this->extend('canDelete', $member);
-        if ($results && is_array($results)) {
-            if (!min($results)) {
-                return false;
-            }
+        // check for extensions, we do this first as they can overrule everything
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
         }
 
         return $this->canEdit($member);
