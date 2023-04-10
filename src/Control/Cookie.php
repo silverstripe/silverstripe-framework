@@ -14,6 +14,12 @@ class Cookie
 {
     use Configurable;
 
+    public const SAMESITE_LAX = 'Lax';
+
+    public const SAMESITE_STRICT = 'Strict';
+
+    public const SAMESITE_NONE = 'None';
+
     /**
      * @config
      *
@@ -25,7 +31,7 @@ class Cookie
      * Must be "Strict", "Lax", or "None"
      * @config
      */
-    private static string $default_samesite = 'Lax';
+    private static string $default_samesite = self::SAMESITE_LAX;
 
     /**
      * Fetch the current instance of the cookie backend.
@@ -110,14 +116,14 @@ class Cookie
     public static function validateSameSite(string $sameSite): void
     {
         $validValues = [
-            'Strict',
-            'Lax',
-            'None',
+            self::SAMESITE_STRICT,
+            self::SAMESITE_LAX,
+            self::SAMESITE_NONE,
         ];
         if (!in_array($sameSite, $validValues)) {
             throw new LogicException('Cookie samesite must be "Strict", "Lax", or "None"');
         }
-        if ($sameSite === 'None' && !Director::is_https(self::getRequest())) {
+        if ($sameSite === self::SAMESITE_NONE && !Director::is_https(self::getRequest())) {
             Injector::inst()->get(LoggerInterface::class)->warning('Cookie samesite cannot be "None" for non-https requests.');
         }
     }
