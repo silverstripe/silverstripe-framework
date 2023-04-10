@@ -404,6 +404,6 @@ class TreeDropdownFieldTest extends SapphireTest
         $tree = $response->getBody();
         $json = json_decode($tree);
         $children2After = count($json->children);
-        $this->assertEquals($children2After, 8, 'PartialMatch search for child has 8 results in fixture (excludes grandchild)');
+        $this->assertEquals($children2After, 8, 'StartsWith search for child has 8 results in fixture (excludes grandchild)');
     }
 }
