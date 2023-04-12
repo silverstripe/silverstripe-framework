@@ -15,7 +15,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
     use Injectable;
 
     /**
-     * Convert a file of the form "vendor/package:resource" into a BASE_PATH-relative file
+     * Convert a file of the form "vendor/package:resource" into a BASE_PATH-relative file or folder
      * For other files, return original value
      *
      * @param string $resource
@@ -91,7 +91,7 @@ class ModuleResourceLoader implements TemplateGlobalProvider
      * Returns the original resource otherwise.
      *
      * @param string $resource
-     * @return ModuleResource|string The resource, or input string if not a module resource
+     * @return ModuleResource|string The resource (or directory), or input string if not a module resource
      */
     public function resolveResource($resource)
     {
