@@ -717,21 +717,6 @@ PHP;
         // note: Disable _fakewebroot manifest for this test
         $this->popManifests();
 
-        // update config because test can't load config from actual class
-        Config::inst()->update(TestDataObject::class, 'db', [
-            'MyProperty' => 'Varchar',
-            'MyUntranslatedProperty' => 'Text'
-        ]);
-        Config::inst()->update(TestDataObject::class, 'has_one', [
-            'HasOneRelation' => Member::class
-        ]);
-        Config::inst()->update(TestDataObject::class, 'has_many', [
-            'HasManyRelation' => Member::class
-        ]);
-        Config::inst()->update(TestDataObject::class, 'many_many', [
-            'ManyManyRelation' => Member::class
-        ]);
-
         $c = i18nTextCollector::create();
 
         // Collect from MyObject.php
