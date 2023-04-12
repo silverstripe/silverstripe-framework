@@ -7,12 +7,13 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Path;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
  */
-class ThemeResourceLoader implements Flushable
+class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
 {
 
     /**
@@ -308,9 +309,9 @@ class ThemeResourceLoader implements Flushable
     }
 
     /**
-     * Resolve a themed resource
+     * Resolve a themed resource or directory
      *
-     * A themed resource and be any file that resides in a theme folder.
+     * A themed resource can be any file that resides in a theme folder.
      *
      * @param string $resource A file path relative to the root folder of a theme
      * @param array $themes An order listed of themes to search, Defaults to {@see SSViewer::get_themes()}
@@ -334,6 +335,28 @@ class ThemeResourceLoader implements Flushable
 
         // Resource exists in no context
         return null;
+    }
+
+    /**
+     * Return the URL for a given themed resource or directory within the project.
+     *
+     * A themed resource can be any file that resides in a theme folder.
+     */
+    public static function themedResourceURL(string $resource): ?string
+    {
+        $filePath = static::inst()->findThemedResource($resource);
+        if (!$filePath) {
+            return '';
+        }
+
+        return ModuleResourceLoader::singleton()->resolveURL($filePath);
+    }
+
+    public static function get_template_global_variables()
+    {
+        return [
+            'themedResourceURL',
+        ];
     }
 
     /**
