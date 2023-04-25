@@ -822,10 +822,11 @@ class Director implements TemplateGlobalProvider
         return (
             // Base check for existence of a host on a compliant URL
             parse_url($url ?? '', PHP_URL_HOST)
-            // Check for more than one leading slash without a protocol.
+            // Check for more than one leading slash (forward or backward) without a protocol.
             // While not a RFC compliant absolute URL, it is completed to a valid URL by some browsers,
             // and hence a potential security risk. Single leading slashes are not an issue though.
-            || preg_match('%^\s*/{2,}%', $url ?? '')
+            // Note: Need 4 backslashes to have a single non-escaped backslash for regex.
+            || preg_match('%^\s*(\\\\|/){2,}%', $url ?? '')
             || (
                 // If a colon is found, check if it's part of a valid scheme definition
                 // (meaning its not preceded by a slash).
