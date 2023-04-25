@@ -228,21 +228,23 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
 
         /** @var DataObject $item */
         foreach ($items->limit(null) as $item) {
-            $itemRow = new ArrayList();
+            if (!$item->hasMethod('canView') || $item->canView()) {
+                $itemRow = new ArrayList();
 
-            foreach ($printColumns as $field => $label) {
-                $value = $gridFieldColumnsComponent
-                    ? strip_tags($gridFieldColumnsComponent->getColumnContent($gridField, $item, $field))
-                    : $gridField->getDataFieldValue($item, $field);
+                foreach ($printColumns as $field => $label) {
+                    $value = $gridFieldColumnsComponent
+                        ? strip_tags($gridFieldColumnsComponent->getColumnContent($gridField, $item, $field))
+                        : $gridField->getDataFieldValue($item, $field);
 
-                $itemRow->push(new ArrayData([
-                    "CellString" => $value,
+                    $itemRow->push(new ArrayData([
+                        "CellString" => $value,
+                    ]));
+                }
+
+                $itemRows->push(new ArrayData([
+                    "ItemRow" => $itemRow
                 ]));
             }
-
-            $itemRows->push(new ArrayData([
-                "ItemRow" => $itemRow
-            ]));
             if ($item->hasMethod('destroy')) {
                 $item->destroy();
             }

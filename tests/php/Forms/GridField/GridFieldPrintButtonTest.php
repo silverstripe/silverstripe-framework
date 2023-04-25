@@ -33,6 +33,19 @@ class GridFieldPrintButtonTest extends SapphireTest
 
     public function testLimit()
     {
+        $this->assertEquals(42, $this->getTestableRows()->count());
+    }
+
+    public function testCanViewIsRespected()
+    {
+        $orig = TestObject::$canView;
+        TestObject::$canView = false;
+        $this->assertEquals(0, $this->getTestableRows()->count());
+        TestObject::$canView = $orig;
+    }
+
+    private function getTestableRows()
+    {
         $list = TestObject::get();
 
         $button = new GridFieldPrintButton();
@@ -48,7 +61,6 @@ class GridFieldPrintButtonTest extends SapphireTest
 
         // Printed data should ignore pagination limit
         $printData = $button->generatePrintData($gridField);
-        $rows = $printData->ItemRows;
-        $this->assertEquals(42, $rows->count());
+        return $printData->ItemRows;
     }
 }
