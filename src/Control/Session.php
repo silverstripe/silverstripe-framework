@@ -139,7 +139,7 @@ class Session
      * Must be "Strict", "Lax", or "None".
      * @config
      */
-    private static string $cookie_samesite = 'Lax';
+    private static string $cookie_samesite = Cookie::SAMESITE_LAX;
 
     /**
      * Name of session cache limiter to use.
@@ -374,7 +374,7 @@ class Session
             }
         }
 
-        $sameSite = static::config()->get('cookie_samesite');
+        $sameSite = static::config()->get('cookie_samesite') ?? Cookie::SAMESITE_LAX;
         Cookie::validateSameSite($sameSite);
         $secure = $this->isCookieSecure($sameSite, Director::is_https($request));
 
