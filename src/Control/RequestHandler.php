@@ -551,10 +551,13 @@ class RequestHandler extends ViewableData
     }
 
     /**
-     * Returns a link to this controller. Overload with your own Link rules if they exist.
+     * Returns a link to this controller.
+     * Returns null if no link could be generated.
+     *
+     * Overload with your own Link rules if they exist.
      *
      * @param string $action Optional action
-     * @return string
+     * @return ?string
      */
     public function Link($action = null)
     {
@@ -574,6 +577,22 @@ class RequestHandler extends ViewableData
             E_USER_WARNING
         );
         return null;
+    }
+
+    /**
+     * Get the absolute URL for this controller, including protocol and host.
+     * Returns null if no link could be generated.
+     *
+     * @param string $action See {@link Link()}
+     * @return ?string
+     */
+    public function AbsoluteLink($action = '')
+    {
+        $link = $this->Link($action);
+        if ($link === null) {
+            return null;
+        }
+        return Director::absoluteURL((string) $link);
     }
 
     /**
