@@ -203,8 +203,8 @@ class CookieJar implements Cookie_Backend
     private function getSameSite(string $name): string
     {
         if ($name === session_name()) {
-            return Session::config()->get('cookie_samesite');
+            return Session::config()->get('cookie_samesite') ?? Cookie::SAMESITE_LAX;
         }
-        return Cookie::config()->get('default_samesite');
+        return Cookie::config()->get('default_samesite') ?? Cookie::SAMESITE_LAX;
     }
 }
