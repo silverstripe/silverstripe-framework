@@ -64,7 +64,8 @@
     },
     "conflict": {
         "egulias/email-validator": "^2",
-        "oscarotero/html-parser": "<0.1.7"
+        "oscarotero/html-parser": "<0.1.7",
+        "symfony/process": "<5.3.7"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
