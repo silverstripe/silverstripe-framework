@@ -61,6 +61,8 @@ class TreeDropdownField extends FormField
 
     protected $schemaComponent = 'TreeDropdownField';
 
+    private static $search_filter = 'PartialMatch';
+
     private static $url_handlers = [
         '$Action!/$ID' => '$Action'
     ];
@@ -791,9 +793,11 @@ class TreeDropdownField extends FormField
             'Title',
             'Name'
         ]);
+
+        $searchFilter = $this->config()->get('search_filter') ?? 'PartialMatch';
         foreach ($candidates as $candidate) {
             if ($sourceObjectInstance->hasDatabaseField($candidate)) {
-                $filters["{$candidate}:PartialMatch"] = $this->search;
+                $filters["{$candidate}:{$searchFilter}"] = $this->search;
             }
         }
 

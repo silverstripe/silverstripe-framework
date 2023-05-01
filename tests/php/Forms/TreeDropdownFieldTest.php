@@ -363,4 +363,47 @@ class TreeDropdownFieldTest extends SapphireTest
             'TreeBaseId is included in the default schema data'
         );
     }
+
+    public function testSearchFilter()
+    {
+        $field = new TreeDropdownField('TestTree', 'Test tree', TestObject::class);
+
+        // case-insensitive search against keyword 'zero' for pages
+        $request = new HTTPRequest('GET', 'url', ['search' => 'zero', 'format' => 'json', 'flatList' => '1' ]);
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = $response->getBody();
+        $json = json_decode($tree);
+        $children1Before = count($json->children);
+        $this->assertEquals($children1Before, 4, 'PartialMatch search for zero has 4 results in fixture');
+
+        TreeDropdownField::config()->set('search_filter', 'StartsWith');
+        $request = new HTTPRequest('GET', 'url', ['search' => 'zero', 'format' => 'json', 'flatList' => '1' ]);
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = $response->getBody();
+        $json = json_decode($tree);
+        $children1After = count($json->children);
+        $this->assertEquals($children1After, 1, 'StartsWith search for zero has 1 result in fixture');
+
+        //change search_filter back and repeat the test
+        TreeDropdownField::config()->set('search_filter', 'PartialMatch');
+        // case-insensitive search against keyword 'child' for pages
+        $request = new HTTPRequest('GET', 'url', ['search' => 'child', 'format' => 'json', 'flatList' => '1' ]);
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = $response->getBody();
+        $json = json_decode($tree);
+        $children2Before = count($json->children);
+        $this->assertEquals($children2Before, 9, 'PartialMatch search for child has 9 results in fixture');
+
+        TreeDropdownField::config()->set('search_filter', 'StartsWith');
+        $request = new HTTPRequest('GET', 'url', ['search' => 'child', 'format' => 'json', 'flatList' => '1' ]);
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = $response->getBody();
+        $json = json_decode($tree);
+        $children2After = count($json->children);
+        $this->assertEquals($children2After, 8, 'StartsWith search for child has 8 results in fixture (excludes grandchild)');
+    }
 }
