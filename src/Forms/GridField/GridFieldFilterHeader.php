@@ -15,6 +15,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
@@ -258,6 +259,12 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             return false;
         }
         $modelClass = $gridField->getModelClass();
+
+        // Don't allow any model class if it's not a subclass of DataObject to avoid exceptions
+        if (!($modelClass::singleton() instanceof DataObject)) {
+            return false;
+        }
+
         // note: searchableFields() will return summary_fields if there are no searchable_fields on the model
         $searchableFields = array_keys($modelClass::singleton()->searchableFields());
         $summaryFields = array_keys($modelClass::singleton()->summaryFields());
