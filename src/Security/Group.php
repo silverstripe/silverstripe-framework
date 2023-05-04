@@ -632,6 +632,11 @@ class Group extends DataObject
             return true;
         }
 
+        // if user can grant access for specific groups, they need to be able to see the groups
+        if (Permission::checkMember($member, "SITETREE_GRANT_ACCESS")) {
+            return true;
+        }
+
         return false;
     }
 

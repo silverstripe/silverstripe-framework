@@ -242,6 +242,9 @@ class DirectorTest extends SapphireTest
     public function testIsAbsoluteUrl()
     {
         $this->assertTrue(Director::is_absolute_url('http://test.com/testpage'));
+        $this->assertTrue(Director::is_absolute_url('https:/\\test.com'));
+        $this->assertTrue(Director::is_absolute_url('https:\\/test.com'));
+        $this->assertTrue(Director::is_absolute_url('https:\\\\test.com'));
         $this->assertTrue(Director::is_absolute_url('ftp://test.com'));
         $this->assertFalse(Director::is_absolute_url('test.com/testpage'));
         $this->assertFalse(Director::is_absolute_url('/relative'));
@@ -251,6 +254,11 @@ class DirectorTest extends SapphireTest
         $this->assertTrue(Director::is_absolute_url("https://test.com/?url=http://foo.com"));
         $this->assertTrue(Director::is_absolute_url("trickparseurl:http://test.com"));
         $this->assertTrue(Director::is_absolute_url('//test.com'));
+        $this->assertTrue(Director::is_absolute_url('\\/\\/test.com'));
+        $this->assertTrue(Director::is_absolute_url('\/\/test.com'));
+        $this->assertTrue(Director::is_absolute_url('/\\test.com'));
+        $this->assertTrue(Director::is_absolute_url('\\\\test.com'));
+        $this->assertFalse(Director::is_absolute_url('\\test.com'));
         $this->assertTrue(Director::is_absolute_url('/////test.com'));
         $this->assertTrue(Director::is_absolute_url('  ///test.com'));
         $this->assertTrue(Director::is_absolute_url('http:test.com'));
@@ -268,8 +276,17 @@ class DirectorTest extends SapphireTest
     {
         $this->assertFalse(Director::is_relative_url('http://test.com'));
         $this->assertFalse(Director::is_relative_url('https://test.com'));
+        $this->assertFalse(Director::is_relative_url('https:/\\test.com'));
+        $this->assertFalse(Director::is_relative_url('https:\\/test.com'));
+        $this->assertFalse(Director::is_relative_url('https:\\\\test.com'));
         $this->assertFalse(Director::is_relative_url('   https://test.com/testpage   '));
         $this->assertTrue(Director::is_relative_url('test.com/testpage'));
+        $this->assertFalse(Director::is_relative_url('//test.com'));
+        $this->assertFalse(Director::is_relative_url('\\/\\/test.com'));
+        $this->assertFalse(Director::is_relative_url('\/\/test.com'));
+        $this->assertFalse(Director::is_relative_url('/\\test.com'));
+        $this->assertFalse(Director::is_relative_url('\\\\test.com'));
+        $this->assertTrue(Director::is_relative_url('\\test.com'));
         $this->assertFalse(Director::is_relative_url('ftp://test.com'));
         $this->assertTrue(Director::is_relative_url('/relative'));
         $this->assertTrue(Director::is_relative_url('relative'));
@@ -411,17 +428,34 @@ class DirectorTest extends SapphireTest
         );
     }
 
-    /**
-     * Mostly tested by {@link testIsRelativeUrl()},
-     * just adding the host name matching aspect here.
-     */
     public function testIsSiteUrl()
     {
-        $this->assertFalse(Director::is_site_url("http://test.com"));
+        $this->assertFalse(Director::is_site_url('http://test.com'));
+        $this->assertTrue(Director::is_site_url('/relative-path'));
+        $this->assertTrue(Director::is_site_url('relative-path'));
         $this->assertTrue(Director::is_site_url(Director::absoluteBaseURL()));
-        $this->assertFalse(Director::is_site_url("http://test.com?url=" . Director::absoluteBaseURL()));
-        $this->assertFalse(Director::is_site_url("http://test.com?url=" . urlencode(Director::absoluteBaseURL() ?? '')));
-        $this->assertFalse(Director::is_site_url("//test.com?url=" . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('http://test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('http://test.com?url=' . urlencode(Director::absoluteBaseURL() ?? '')));
+        $this->assertFalse(Director::is_site_url('http:\\\\test.com'));
+        $this->assertFalse(Director::is_site_url('http:\\\\test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('http:\\\\test.com?url=' . urlencode(Director::absoluteBaseURL() ?? '')));
+        $this->assertFalse(Director::is_site_url('http:\\/test.com'));
+        $this->assertFalse(Director::is_site_url('http:\\/test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('http:\\/test.com?url=' . urlencode(Director::absoluteBaseURL() ?? '')));
+        $this->assertFalse(Director::is_site_url('//test.com'));
+        $this->assertFalse(Director::is_site_url('//test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('\\/\\/test.com'));
+        $this->assertFalse(Director::is_site_url('\\/\\/test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('\/\/test.com'));
+        $this->assertFalse(Director::is_site_url('\/\/test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('\\/test.com'));
+        $this->assertFalse(Director::is_site_url('\\/test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('/\\test.com'));
+        $this->assertFalse(Director::is_site_url('/\\test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertFalse(Director::is_site_url('\\\\test.com'));
+        $this->assertFalse(Director::is_site_url('\\\\test.com?url=' . Director::absoluteBaseURL()));
+        $this->assertTrue(Director::is_site_url('\\test.com'));
+        $this->assertTrue(Director::is_site_url('\\test.com?url=' . Director::absoluteBaseURL()));
         $this->assertFalse(Director::is_site_url('http://google.com\@test.com'));
         $this->assertFalse(Director::is_site_url('http://google.com/@test.com'));
         $this->assertFalse(Director::is_site_url('http://google.com:pass\@test.com'));
