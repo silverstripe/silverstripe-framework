@@ -1617,7 +1617,11 @@ class Form extends ViewableData implements HasRequestHandler
     public function defaultAction()
     {
         if ($this->hasDefaultAction && $this->actions) {
-            return $this->actions->first();
+            $action = $this->actions->first();
+            if ($action instanceof CompositeField) {
+                return $action->getChildren()->first();
+            }
+            return $action;
         }
         return null;
     }
