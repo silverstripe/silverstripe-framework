@@ -924,15 +924,8 @@ class Member extends DataObject
         }
 
         $groupCandidateObjs = ($strict) ? $this->getManyManyComponents("Groups") : $this->Groups();
-        if ($groupCandidateObjs) {
-            foreach ($groupCandidateObjs as $groupCandidateObj) {
-                if ($groupCandidateObj->ID == $groupCheckObj->ID) {
-                    return true;
-                }
-            }
-        }
 
-        return false;
+        return $groupCandidateObjs->filter(['ID' => $groupCheckObj->ID])->exists();
     }
 
     /**
