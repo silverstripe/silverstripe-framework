@@ -3,12 +3,15 @@
 namespace SilverStripe\i18n\Tests;
 
 use SilverStripe\Assets\Filesystem;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\TextCollection\i18nTextCollector;
 use SilverStripe\i18n\Messages\YamlWriter;
+use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
 use SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector;
+use SilverStripe\i18n\TextCollection\i18nTextCollector;
+use SilverStripe\Security\Member;
 
 class i18nTextCollectorTest extends SapphireTest
 {
@@ -706,6 +709,28 @@ PHP;
                 'default' => 'i18ntestmodule string defined in i18nothermodule',
             ],
             $entitiesByModule['i18ntestmodule']['i18nProviderClass.OTHER_MODULE']
+        );
+    }
+
+    public function testCollectFromORM()
+    {
+        // note: Disable _fakewebroot manifest for this test
+        $this->popManifests();
+
+        $c = i18nTextCollector::create();
+
+        // Collect from MyObject.php
+        $filePath = __DIR__ . '/i18nTest/TestDataObject.php';
+        $matches = $c->collectFromORM($filePath);
+        $this->assertEquals(
+            [
+                'SilverStripe\i18n\Tests\i18nTest\TestDataObject.db_MyProperty' => 'My property',
+                'SilverStripe\i18n\Tests\i18nTest\TestDataObject.db_MyUntranslatedProperty' => 'My untranslated property',
+                'SilverStripe\i18n\Tests\i18nTest\TestDataObject.has_one_HasOneRelation' => 'Has one relation',
+                'SilverStripe\i18n\Tests\i18nTest\TestDataObject.has_many_HasManyRelation' => 'Has many relation',
+                'SilverStripe\i18n\Tests\i18nTest\TestDataObject.many_many_ManyManyRelation' => 'Many many relation',
+            ],
+            $matches
         );
     }
 
