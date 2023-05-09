@@ -8,13 +8,16 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\CheerleaderHat;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Mom;
+use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\NonDataObject;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Team;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TeamGroup;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 
@@ -187,7 +190,7 @@ class GridFieldFilterHeaderTest extends SapphireTest
     {
         $gridField = $this->gridField;
         $filterHeader = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
-        
+
         // test that you can filter by something if searchable_fields is not defined
         // silverstripe will scaffold db columns that are in the gridfield to be
         // searchable by default
@@ -207,5 +210,34 @@ class GridFieldFilterHeaderTest extends SapphireTest
         Config::modify()->remove(Team::class, 'searchable_fields');
         Config::modify()->set(Team::class, 'summary_fields', ['MySummaryField']);
         $this->assertFalse($filterHeader->canFilterAnyColumns($gridField));
+    }
+
+    public function testCanFilterAnyColumnsNonDataObject()
+    {
+        $list = new ArrayList([
+            new NonDataObject([]),
+        ]);
+        $config = GridFieldConfig::create()->addComponent(new GridFieldFilterHeader());
+        $gridField = new GridField('testfield', 'testfield', $list, $config);
+        $form = new Form(null, 'Form', new FieldList([$gridField]), new FieldList());
+        /** @var GridFieldFilterHeader $component */
+        $component = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
+
+        $this->assertFalse($component->canFilterAnyColumns($gridField));
+    }
+
+    public function testRenderHeadersNonDataObject()
+    {
+        $list = new ArrayList([
+            new NonDataObject([]),
+        ]);
+        $config = GridFieldConfig::create()->addComponent(new GridFieldFilterHeader());
+        $gridField = new GridField('testfield', 'testfield', $list, $config);
+        $form = new Form(null, 'Form', new FieldList([$gridField]), new FieldList());
+        /** @var GridFieldFilterHeader $component */
+        $component = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
+        $htmlFragment = $component->getHTMLFragments($gridField);
+
+        $this->assertNull($htmlFragment);
     }
 }

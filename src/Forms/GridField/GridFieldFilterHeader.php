@@ -6,6 +6,7 @@ use LogicException;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
@@ -258,19 +259,35 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             return false;
         }
         $modelClass = $gridField->getModelClass();
-        // note: searchableFields() will return summary_fields if there are no searchable_fields on the model
-        $searchableFields = array_keys($modelClass::singleton()->searchableFields());
-        $summaryFields = array_keys($modelClass::singleton()->summaryFields());
-        sort($searchableFields);
-        sort($summaryFields);
-        // searchable_fields has been explictily defined i.e. searchableFields() is not falling back to summary_fields
-        if ($searchableFields !== $summaryFields) {
-            return true;
-        }
-        // we have fallen back to summary_fields, check they are filterable
-        foreach ($searchableFields as $searchableField) {
-            if ($list->canFilterBy($searchableField)) {
+        $singleton = singleton($modelClass);
+        if (ClassInfo::hasMethod($singleton, 'summaryFields')
+            && ClassInfo::hasMethod($singleton, 'searchableFields')
+        ) {
+            // note: searchableFields() will return summary_fields if there are no searchable_fields on the model
+            $searchableFields = array_keys($singleton->searchableFields());
+            $summaryFields = array_keys($singleton->summaryFields());
+            sort($searchableFields);
+            sort($summaryFields);
+            // searchable_fields has been explictily defined i.e. searchableFields() is not falling back to summary_fields
+            if ($searchableFields !== $summaryFields) {
                 return true;
+            }
+            // we have fallen back to summary_fields, check they are filterable
+            foreach ($searchableFields as $searchableField) {
+                if ($list->canFilterBy($searchableField)) {
+                    return true;
+                }
+            }
+        } else {
+            // Allows non-DataObject classes to be used with this component
+            $columns = $gridField->getColumns();
+            foreach ($columns as $columnField) {
+                $metadata = $gridField->getColumnMetadata($columnField);
+                $title = $metadata['title'];
+
+                if ($title && $list->canFilterBy($columnField)) {
+                    return true;
+                }
             }
         }
         return false;
