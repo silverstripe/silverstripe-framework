@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
@@ -49,6 +50,8 @@ use SilverStripe\ORM\DataObject;
 class i18nTextCollector
 {
     use Injectable;
+
+    private const THEME_PREFIX = 'themes:';
 
     /**
      * Default (master) locale
@@ -99,6 +102,13 @@ class i18nTextCollector
      * @var array
      */
     protected $fileExtensions = ['php', 'ss'];
+
+    /**
+     * List all modules and themes
+     *
+     * @var array
+     */
+    private $modulesAndThemes;
 
     /**
      * @param $locale
@@ -179,6 +189,8 @@ class i18nTextCollector
             return;
         }
 
+        $modules = $this->getModulesAndThemes();
+
         // Write each module language file
         foreach ($entitiesByModule as $moduleName => $entities) {
             // Skip empty translations
@@ -188,7 +200,7 @@ class i18nTextCollector
 
             // Clean sorting prior to writing
             ksort($entities);
-            $module = ModuleLoader::inst()->getManifest()->getModule($moduleName);
+            $module = $modules[$moduleName];
             $this->write($module, $entities);
         }
     }
@@ -215,9 +227,9 @@ class i18nTextCollector
         // Restrict modules we update to just the specified ones (if any passed)
         if (!empty($restrictToModules)) {
             // Normalise module names
-            $modules = array_filter(array_map(function ($name) {
-                $module = ModuleLoader::inst()->getManifest()->getModule($name);
-                return $module ? $module->getName() : null;
+            $allModules = $this->getModulesAndThemes();
+            $modules = array_filter(array_map(function ($name) use ($allModules) {
+                return array_key_exists($name, $allModules) ? $this->getModuleName($name, $allModules[$name]) : null;
             }, $restrictToModules ?? []));
             // Remove modules
             foreach (array_diff(array_keys($entitiesByModule ?? []), $modules) as $module) {
@@ -375,10 +387,10 @@ class i18nTextCollector
     protected function mergeWithExisting($entitiesByModule)
     {
         // For each module do a simple merge of the default yml with these strings
+        $modules = $this->getModulesAndThemes();
         foreach ($entitiesByModule as $module => $messages) {
             // Load existing localisations
-            $masterFile = ModuleLoader::inst()->getManifest()->getModule($module)->getPath() .
-                DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $this->defaultLocale . '.yml';
+            $masterFile = Path::join($modules[$module]->getPath(), 'lang', $this->defaultLocale . '.yml');
             $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
             // Merge
@@ -401,11 +413,11 @@ class i18nTextCollector
     {
         // A master string tables array (one mst per module)
         $entitiesByModule = [];
-        $modules = ModuleLoader::inst()->getManifest()->getModules();
-        foreach ($modules as $module) {
+        $modules = $this->getModulesAndThemes();
+        foreach ($modules as $moduleName => $module) {
             // we store the master string tables
             $processedEntities = $this->processModule($module);
-            $moduleName = $module->getName();
+            $moduleName = $this->getModuleName($moduleName, $module);
             if (isset($entitiesByModule[$moduleName])) {
                 $entitiesByModule[$moduleName] = array_merge_recursive(
                     $entitiesByModule[$moduleName],
@@ -451,6 +463,37 @@ class i18nTextCollector
     }
 
     /**
+     * Loads all modules and themes installed, including app. Uses the format of
+     * the @link ModuleLoader manifest for themes as well.
+     * Themes can be references with "themes:{theme name}".
+     */
+    private function getModulesAndThemes(): array
+    {
+        if (!$this->modulesAndThemes) {
+            $modules = ModuleLoader::inst()->getManifest()->getModules();
+            // load themes as modules
+            $themes = array_diff(scandir(THEMES_PATH), ['..', '.']);
+            if ($themes) {
+                foreach ($themes as $theme) {
+                    if (is_dir(Path::join(THEMES_PATH, $theme))) {
+                        $modules[self::THEME_PREFIX . $theme] = new Module(Path::join(THEMES_PATH, $theme), BASE_PATH);
+                    }
+                }
+            }
+            $this->modulesAndThemes = $modules;
+        }
+        return $this->modulesAndThemes;
+    }
+
+    /**
+     * Returns the name of the module or theme
+     */
+    private function getModuleName(string $origName, Module $module): string
+    {
+        return strpos($origName, self::THEME_PREFIX) === 0 ? $origName : $module->getName();
+    }
+
+    /**
      * Write entities to a module
      *
      * @param Module $module
@@ -462,7 +505,7 @@ class i18nTextCollector
         $this->getWriter()->write(
             $entities,
             $this->defaultLocale,
-            $this->baseSavePath . DIRECTORY_SEPARATOR . $module->getRelativePath()
+            Path::join($this->baseSavePath, $module->getRelativePath())
         );
         return $this;
     }
@@ -517,25 +560,25 @@ class i18nTextCollector
         $modulePath = $module->getPath();
 
         // Search all .ss files in themes
-        if (stripos($module->getRelativePath() ?? '', 'themes' . DIRECTORY_SEPARATOR) === 0) {
+        if (stripos($module->getRelativePath() ?? '', self::THEME_PREFIX) === 0) {
             return $this->getFilesRecursive($modulePath, null, 'ss');
         }
 
         // If non-standard module structure, search all root files
-        if (!is_dir($modulePath . DIRECTORY_SEPARATOR . 'code') && !is_dir($modulePath . DIRECTORY_SEPARATOR . 'src')) {
+        if (!is_dir(Path::join($modulePath, 'code')) && !is_dir(Path::join($modulePath, 'src'))) {
             return $this->getFilesRecursive($modulePath);
         }
 
         // Get code files
-        if (is_dir($modulePath . DIRECTORY_SEPARATOR . 'src')) {
-            $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'src', null, 'php');
+        if (is_dir(Path::join($modulePath, 'src'))) {
+            $files = $this->getFilesRecursive(Path::join($modulePath, 'src'), null, 'php');
         } else {
-            $files = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'code', null, 'php');
+            $files = $this->getFilesRecursive(Path::join($modulePath, 'code'), null, 'php');
         }
 
         // Search for templates in this module
-        if (is_dir($modulePath . DIRECTORY_SEPARATOR . 'templates')) {
-            $templateFiles = $this->getFilesRecursive($modulePath . DIRECTORY_SEPARATOR . 'templates', null, 'ss');
+        if (is_dir(Path::join($modulePath, 'templates'))) {
+            $templateFiles = $this->getFilesRecursive(Path::join($modulePath, 'templates'), null, 'ss');
         } else {
             $templateFiles = $this->getFilesRecursive($modulePath, null, 'ss');
         }
@@ -987,8 +1030,6 @@ class i18nTextCollector
         return "{$namespace}.{$entity}";
     }
 
-
-
     /**
      * Helper function that searches for potential files (templates and code) to be parsed
      *
@@ -1004,7 +1045,7 @@ class i18nTextCollector
             $fileList = [];
         }
         // Skip ignored folders
-        if (is_file($folder . DIRECTORY_SEPARATOR . '_manifest_exclude') || preg_match($folderExclude ?? '', $folder ?? '')) {
+        if (is_file(Path::join($folder, '_manifest_exclude')) || preg_match($folderExclude ?? '', $folder ?? '')) {
             return $fileList;
         }
 
