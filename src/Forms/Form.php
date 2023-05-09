@@ -1645,7 +1645,9 @@ class Form extends ViewableData implements HasRequestHandler
     public function defaultAction()
     {
         if ($this->hasDefaultAction && $this->actions) {
-            return $this->actions->first();
+            return $this->actions->flattenFields()->filterByCallback(function ($field) {
+                return $field instanceof FormAction;
+            })->first();
         }
         return null;
     }
