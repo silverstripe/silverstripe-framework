@@ -412,7 +412,10 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         $paths = (array) $this->getEnforceTrailingSlashConfigIgnorePaths();
         if (!empty($paths)) {
             foreach ($paths as $path) {
-                if (str_starts_with(trim($path, '/'), trim($requestPath, '/'))) {
+                if (str_starts_with(
+                    $this->trailingSlashForComparison($requestPath),
+                    $this->trailingSlashForComparison($path)
+                )) {
                     return false;
                 }
             }
@@ -437,6 +440,15 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
 
         return true;
+    }
+
+    /**
+     * Ensure a string has a trailing slash to that we can use str_starts_with and compare
+     * paths like admin/ with administration/ and get a correct result.
+     */
+    private function trailingSlashForComparison(string $path): string
+    {
+        return trim($path, '/') . '/';
     }
 
     /**
