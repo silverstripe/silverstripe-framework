@@ -31,7 +31,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'ar_EG' => 'ar',
         'ca_AD' => 'ca',
         'ca_ES' => 'ca',
-        'cs_CZ' => 'cs',
+        'cs_CZ' => 'cs_CZ',
         'cy_GB' => 'cy',
         'da_DK' => 'da',
         'da_GL' => 'da',
