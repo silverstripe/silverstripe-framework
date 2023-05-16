@@ -26,8 +26,6 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
         return [
             'IsFirst',
             'IsLast',
-            'First',
-            'Last',
             'FirstLast',
             'Middle',
             'MiddleString',
