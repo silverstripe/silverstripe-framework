@@ -3,7 +3,8 @@
 namespace SilverStripe\Core\Cache;
 
 use SilverStripe\Core\Injector\Injector;
-use Symfony\Component\Cache\Simple\MemcachedCache;
+use Symfony\Component\Cache\Adapter\MemcachedAdapter;
+use Symfony\Component\Cache\Psr16Cache;
 use Memcached;
 
 class MemcachedCacheFactory implements CacheFactory
@@ -31,10 +32,11 @@ class MemcachedCacheFactory implements CacheFactory
             ? $params['namespace'] . '_' . md5(BASE_PATH)
             : md5(BASE_PATH);
         $defaultLifetime = isset($params['defaultLifetime']) ? $params['defaultLifetime'] : 0;
-        return Injector::inst()->createWithArgs(MemcachedCache::class, [
+        $psr6Cache = Injector::inst()->createWithArgs(MemcachedAdapter::class, [
             $this->memcachedClient,
             $namespace,
             $defaultLifetime
         ]);
+        return Injector::inst()->createWithArgs(Psr16Cache::class, [$psr6Cache]);
     }
 }
