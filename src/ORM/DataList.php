@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use LogicException;
 use BadMethodCallException;
 use Traversable;
+use SilverStripe\ORM\DataQuery;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -525,14 +526,27 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             throw new InvalidArgumentException('Incorrect number of arguments passed to filterAny()');
         }
 
-        return $this->alterDataQuery(function (DataQuery $query) use ($whereArguments) {
-            $subquery = $query->disjunctiveGroup();
-
+        $list = $this->alterDataQuery(function (DataQuery $query) use ($whereArguments) {
+            $subquery = $this->getFilterAnySubquery($query, $whereArguments);
             foreach ($whereArguments as $field => $value) {
                 $filter = $this->createSearchFilter($field, $value);
                 $filter->apply($subquery);
             }
         });
+
+        return $list;
+    }
+
+    private function getFilterAnySubquery(DataQuery $query, array $whereArguments): DataQuery_SubGroup
+    {
+        $clause = 'WHERE';
+        foreach (array_keys($whereArguments) as $field) {
+            if (preg_match('#\.(COUNT|SUM|AVG|MIN|MAX)\(#', strtoupper($field))) {
+                $clause = 'HAVING';
+                break;
+            }
+        }
+        return $query->disjunctiveGroup($clause);
     }
 
     /**

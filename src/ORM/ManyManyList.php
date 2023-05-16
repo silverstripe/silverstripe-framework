@@ -15,7 +15,6 @@ use Exception;
  */
 class ManyManyList extends RelationList
 {
-
     /**
      * @var string $joinTable
      */
