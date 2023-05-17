@@ -658,23 +658,41 @@ class DataQuery
      *
      * That is a subgroup joined by OR
      *
+     * @param string $clause
      * @return DataQuery_SubGroup
      */
     public function disjunctiveGroup()
     {
-        return new DataQuery_SubGroup($this, 'OR');
+        // using func_get_args to add a new param while retaining BC
+        // @deprecated - add a new param for CMS 6 - string $clause = 'WHERE'
+        $clause = 'WHERE';
+        $args = func_get_args();
+        if (count($args) > 0) {
+            $clause = $args[0];
+        }
+        return new DataQuery_SubGroup($this, 'OR', $clause);
     }
+
+
 
     /**
      * Create a conjunctive subgroup
      *
      * That is a subgroup joined by AND
      *
+     * @param string $clause
      * @return DataQuery_SubGroup
      */
     public function conjunctiveGroup()
     {
-        return new DataQuery_SubGroup($this, 'AND');
+        // using func_get_args to add a new param while retaining BC
+        // @deprecated - add a new param for CMS 6 - string $clause = 'WHERE'
+        $clause = 'WHERE';
+        $args = func_get_args();
+        if (count($args) > 0) {
+            $clause = $args[0];
+        }
+        return new DataQuery_SubGroup($this, 'AND', $clause);
     }
 
     /**

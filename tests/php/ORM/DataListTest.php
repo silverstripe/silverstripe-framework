@@ -1073,6 +1073,36 @@ class DataListTest extends SapphireTest
         );
     }
 
+    private function createTeam(int $playerCount)
+    {
+        $team = Team::create();
+        $team->write();
+        for ($i = 0; $i < $playerCount; $i++) {
+            $player = Player::create();
+            $player->write();
+            $team->Players()->add($player);
+        }
+        return $team;
+    }
+
+    public function testFilterAnyManyManyAggregate()
+    {
+        Team::get()->removeAll();
+        $team1 = $this->createTeam(1);
+        $team2 = $this->createTeam(2);
+        $team3 = $this->createTeam(3);
+        $list = Team::get()->filterAny([
+            'Players.Count():LessThan' => 2,
+            'Players.Count():GreaterThan' => 2,
+        ]);
+        $match = 'HAVING ((COUNT("players_Member"."ID") < ?) OR (COUNT("players_Member"."ID") > ?))';
+        $sql = str_replace("\n", '', $list->sql());
+        $this->assertTrue(str_contains($sql, $match));
+        $ids = $list->column('ID');
+        sort($ids);
+        $this->assertSame([$team1->ID, $team3->ID], $ids);
+    }
+
     public function testFilterOnJoin()
     {
         $list = TeamComment::get()
