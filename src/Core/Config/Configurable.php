@@ -31,7 +31,7 @@ trait Configurable
      */
     public function stat($name)
     {
-        Deprecation::notice('5.0', 'Use ->get');
+        Deprecation::notice('5.0', 'Use ->config()->get()');
         return $this->config()->get($name);
     }
 
