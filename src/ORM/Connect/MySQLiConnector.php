@@ -96,14 +96,15 @@ class MySQLiConnector extends DBConnector
             );
         }
 
-        // Set SSL parameters if they exist. All parameters are required.
-        if (array_key_exists('ssl_key', $parameters ?? []) &&
-            array_key_exists('ssl_cert', $parameters ?? []) &&
-            array_key_exists('ssl_ca', $parameters ?? [])) {
+        // Set SSL parameters if they exist.
+        // Must have both the SSL cert and key, or the common authority, or preferably all three.
+        if ((array_key_exists('ssl_key', $parameters ?? []) && array_key_exists('ssl_cert', $parameters ?? []))
+            || array_key_exists('ssl_ca', $parameters ?? [])
+        ) {
             $this->dbConn->ssl_set(
-                $parameters['ssl_key'],
-                $parameters['ssl_cert'],
-                $parameters['ssl_ca'],
+                $parameters['ssl_key'] ?? null,
+                $parameters['ssl_cert'] ?? null,
+                $parameters['ssl_ca'] ?? null,
                 dirname($parameters['ssl_ca'] ?? ''),
                 array_key_exists('ssl_cipher', $parameters ?? [])
                     ? $parameters['ssl_cipher']
