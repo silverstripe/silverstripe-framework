@@ -6,6 +6,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\ORM\DB;
 use Exception;
+use LogicException;
 
 /**
  * Simple Kernel container
@@ -111,6 +112,29 @@ class CoreKernel extends BaseKernel
             "username" => Environment::getEnv('SS_DATABASE_USERNAME') ?: null,
             "password" => Environment::getEnv('SS_DATABASE_PASSWORD') ?: null,
         ];
+
+        // Only add SSL keys in the array if there is an actual value associated with them
+        $sslConf = [
+            'ssl_key' => 'SS_DATABASE_SSL_KEY',
+            'ssl_cert' => 'SS_DATABASE_SSL_CERT',
+            'ssl_ca' => 'SS_DATABASE_SSL_CA',
+            'ssl_cipher' => 'SS_DATABASE_SSL_CIPHER',
+        ];
+        foreach ($sslConf as $key => $envVar) {
+            $envValue = Environment::getEnv($envVar);
+            if ($envValue) {
+                $databaseConfig[$key] = $envValue;
+            }
+        }
+
+        // Having only the key or cert without the other is bad configuration.
+        if ((isset($databaseConfig['ssl_key']) && !isset($databaseConfig['ssl_cert']))
+            || (!isset($databaseConfig['ssl_key']) && isset($databaseConfig['ssl_cert']))
+        ) {
+            user_error('Database SSL cert and key must both be defined to use SSL in the database.', E_USER_WARNING);
+            unset($databaseConfig['ssl_key']);
+            unset($databaseConfig['ssl_cert']);
+        }
 
         // Set the port if called for
         $dbPort = Environment::getEnv('SS_DATABASE_PORT');

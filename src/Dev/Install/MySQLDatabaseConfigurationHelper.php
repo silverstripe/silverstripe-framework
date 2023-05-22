@@ -32,15 +32,15 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
                 case 'MySQLDatabase':
                     $conn = mysqli_init();
 
-                    // Set SSL parameters if they exist. All parameters are required.
-                    if (array_key_exists('ssl_key', $databaseConfig) &&
-                        array_key_exists('ssl_cert', $databaseConfig) &&
-                        array_key_exists('ssl_ca', $databaseConfig)
+                    // Set SSL parameters if they exist.
+                    // Must have both the SSL cert and key, or the common authority, or preferably all three.
+                    if ((array_key_exists('ssl_key', $databaseConfig) && array_key_exists('ssl_cert', $databaseConfig))
+                        || array_key_exists('ssl_ca', $databaseConfig)
                     ) {
                         $conn->ssl_set(
-                            $databaseConfig['ssl_key'],
-                            $databaseConfig['ssl_cert'],
-                            $databaseConfig['ssl_ca'],
+                            $databaseConfig['ssl_key'] ?? null,
+                            $databaseConfig['ssl_cert'] ?? null,
+                            $databaseConfig['ssl_ca'] ?? null,
                             dirname($databaseConfig['ssl_ca']),
                             array_key_exists('ssl_cipher', $databaseConfig)
                                 ? $databaseConfig['ssl_cipher']

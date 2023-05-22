@@ -85,86 +85,114 @@ class CanonicalURLMiddlewareTest extends SapphireTest
         $this->assertFalse($middleware->getForceBasicAuthToSSL(), 'Explicitly set is returned');
     }
 
-    public function testRedirectTrailingSlash()
+    public function provideRedirectTrailingSlash()
     {
-        $testScenarios = [
+        $testScenarios = [];
+        foreach ([true, false] as $forceRedirect) {
+            foreach ([true, false] as $addTrailingSlash) {
+                foreach ([true, false] as $requestHasSlash) {
+                    $testScenarios[] = [
+                        $forceRedirect,
+                        $addTrailingSlash,
+                        $requestHasSlash,
+                    ];
+                }
+            }
+        }
+        return $testScenarios;
+    }
+
+    /**
+     * @dataProvider provideRedirectTrailingSlash
+     */
+    public function testRedirectTrailingSlash(bool $forceRedirect, bool $addTrailingSlash, bool $requestHasSlash)
+    {
+        Controller::config()->set('add_trailing_slash', $addTrailingSlash);
+
+        $noRedirect = !$forceRedirect || ($addTrailingSlash && $requestHasSlash) || (!$addTrailingSlash && !$requestHasSlash);
+        $middleware = $this->getMockedMiddleware(false);
+        $middleware->setEnforceTrailingSlashConfig($forceRedirect);
+
+        $requestSlash = $requestHasSlash ? '/' : '';
+        $requestURL = "/about-us{$requestSlash}";
+
+        $this->performRedirectTest($requestURL, $middleware, !$noRedirect, $addTrailingSlash);
+    }
+
+    private function performRedirectTest(string $requestURL, CanonicalURLMiddleware $middleware, bool $shouldRedirect, bool $addTrailingSlash)
+    {
+        Environment::setEnv('REQUEST_URI', $requestURL);
+        $request = new HTTPRequest('GET', $requestURL);
+        $request->setScheme('https');
+        $request->addHeader('host', 'www.example.com');
+        $mockResponse = (new HTTPResponse)
+            ->setStatusCode(200);
+
+        $result = $middleware->process($request, function () use ($mockResponse) {
+            return $mockResponse;
+        });
+
+        if (!$shouldRedirect) {
+            $this->assertNull($result->getHeader('Location'), 'No location header should be added');
+            $this->assertEquals(200, $result->getStatusCode(), 'No redirection should be made');
+        } else {
+            $this->assertEquals(301, $result->getStatusCode(), 'Responses should be redirected to include/omit trailing slash');
+            if ($addTrailingSlash) {
+                $this->assertStringEndsWith('/', $result->getHeader('Location'), 'Trailing slash should be added');
+            } else {
+                $this->assertStringEndsNotWith('/', $result->getHeader('Location'), 'Trailing slash should be removed');
+            }
+        }
+    }
+
+    public function provideRedirectTrailingSlashIgnorePaths()
+    {
+        return [
             [
-                'forceRedirect' => true,
-                'addTrailingSlash' => true,
-                'requestHasSlash' => true,
-            ],
-            [
-                'forceRedirect' => true,
-                'addTrailingSlash' => true,
+                'addTrailingSlash' => false,
                 'requestHasSlash' => false,
             ],
             [
-                'forceRedirect' => true,
                 'addTrailingSlash' => false,
                 'requestHasSlash' => true,
             ],
             [
-                'forceRedirect' => true,
-                'addTrailingSlash' => false,
-                'requestHasSlash' => false,
-            ],
-            [
-                'forceRedirect' => false,
                 'addTrailingSlash' => true,
                 'requestHasSlash' => true,
             ],
             [
-                'forceRedirect' => false,
                 'addTrailingSlash' => true,
-                'requestHasSlash' => false,
-            ],
-            [
-                'forceRedirect' => false,
-                'addTrailingSlash' => false,
-                'requestHasSlash' => true,
-            ],
-            [
-                'forceRedirect' => false,
-                'addTrailingSlash' => false,
                 'requestHasSlash' => false,
             ],
         ];
-        foreach ($testScenarios as $scenario) {
-            $forceRedirect = $scenario['forceRedirect'];
-            $addTrailingSlash = $scenario['addTrailingSlash'];
-            $requestHasSlash = $scenario['requestHasSlash'];
+    }
 
-            $middleware = $this->getMockedMiddleware(false);
+    /**
+     * @dataProvider provideRedirectTrailingSlashIgnorePaths
+     */
+    public function testRedirectTrailingSlashIgnorePaths(bool $addTrailingSlash, bool $requestHasSlash)
+    {
+        Controller::config()->set('add_trailing_slash', $addTrailingSlash);
 
-            $middleware->setEnforceTrailingSlashConfig($forceRedirect);
-            Controller::config()->set('add_trailing_slash', $addTrailingSlash);
+        $middleware = $this->getMockedMiddleware(false);
+        $middleware->setEnforceTrailingSlashConfig(true);
 
-            $requestSlash = $requestHasSlash ? '/' : '';
-            $requestURL = "/about-us{$requestSlash}";
+        $requestSlash = $requestHasSlash ? '/' : '';
+        $noRedirectPaths = [
+            "/admin{$requestSlash}",
+            "/admin/graphql{$requestSlash}",
+            "/dev/tasks/my-task{$requestSlash}",
+        ];
+        $allowRedirectPaths = [
+            "/administration{$requestSlash}",
+            "/administration/more-path{$requestSlash}",
+        ];
 
-            Environment::setEnv('REQUEST_URI', $requestURL);
-            $request = new HTTPRequest('GET', $requestURL);
-            $request->setScheme('https');
-            $request->addHeader('host', 'www.example.com');
-            $mockResponse = (new HTTPResponse)
-                ->setStatusCode(200);
-
-            $result = $middleware->process($request, function () use ($mockResponse) {
-                return $mockResponse;
-            });
-
-            $noRedirect = !$forceRedirect || ($addTrailingSlash && $requestHasSlash) || (!$addTrailingSlash && !$requestHasSlash);
-            if ($noRedirect) {
-                $this->assertNull($result->getHeader('Location'), 'No location header should be added');
-                $this->assertEquals(200, $result->getStatusCode(), 'No redirection should be made');
-            } else {
-                $this->assertEquals(301, $result->getStatusCode(), 'Responses should be redirected to include/omit trailing slash');
-                if ($addTrailingSlash) {
-                    $this->assertStringEndsWith('/', $result->getHeader('Location'), 'Trailing slash should be added');
-                } else {
-                    $this->assertStringEndsNotWith('/', $result->getHeader('Location'), 'Trailing slash should be removed');
-                }
-            }
+        foreach ($noRedirectPaths as $path) {
+            $this->performRedirectTest($path, $middleware, false, $addTrailingSlash);
+        }
+        foreach ($allowRedirectPaths as $path) {
+            $this->performRedirectTest($path, $middleware, $addTrailingSlash !== $requestHasSlash, $addTrailingSlash);
         }
     }
 
