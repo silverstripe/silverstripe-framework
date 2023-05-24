@@ -137,7 +137,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $form = $this->ItemEditForm();
         $form->makeReadonly();
 
-        $data = new ArrayData([
+        $data = ArrayData::create([
             'Backlink'     => $controller->Link(),
             'ItemEditForm' => $form
         ]);
@@ -235,7 +235,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             }
         }
 
-        $form = new Form(
+        $form = Form::create(
             $this,
             'ItemEditForm',
             $fields,
@@ -434,7 +434,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     $oneLevelUp->Link, // url
                     _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.CancelBtn', 'Cancel') // label
                 );
-                $actions->insertAfter('MajorActions', new LiteralField('cancelbutton', $text));
+                $actions->insertAfter('MajorActions', LiteralField::create('cancelbutton', $text));
             }
         }
 
@@ -879,17 +879,17 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $items = $this->popupController->Breadcrumbs($unlinked);
 
         if (!$items) {
-            $items = new ArrayList();
+            $items = ArrayList::create();
         }
 
         if ($this->record && $this->record->ID) {
             $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
-            $items->push(new ArrayData([
+            $items->push(ArrayData::create([
                 'Title' => $title,
                 'Link' => $this->Link()
             ]));
         } else {
-            $items->push(new ArrayData([
+            $items->push(ArrayData::create([
                 'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
                 'Link' => false
             ]));
