@@ -369,3 +369,6 @@ nl:
     PASSWORDRESETSENTTEXT: 'Bedankt! Er is een e-mail verstuurd om je wachtwoord opnieuw in te stellen - mits het e-mailadres reeds bekend is bij ons.'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Het inladen van de media-bestanden is mislukt.'
+  DataObject:
+    php:
+      SilverStripe\ORM\DataObjectGENERALSEARCH: 'Alles doorzoeken'
