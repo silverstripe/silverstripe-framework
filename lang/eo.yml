@@ -370,3 +370,6 @@ eo:
     PASSWORDRESETSENTTEXT: 'Dankon. Reagorda ligilo sendiĝis, kondiĉe ke konto ekzistas por ĉi tiu retadreso.'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Okazis problemo ŝargi la aŭdvidaĵon.'
+  DataObject:
+    php:
+      SilverStripe\ORM\DataObjectGENERALSEARCH: 'Ĝenerala serĉo'
