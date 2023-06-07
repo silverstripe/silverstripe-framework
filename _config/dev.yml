@@ -1,6 +1,9 @@
 ---
 Name: DevelopmentAdmin
 ---
+SilverStripe\Dev\BuildTask:
+  default_enabled: true
+
 SilverStripe\Dev\DevelopmentAdmin:
   registered_controllers:
     build:
