@@ -304,6 +304,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     protected $unsavedRelations;
 
+    private array $eagerLoadedData = [];
+
     /**
      * List of relations that should be cascade deleted, similar to `owns`
      * Note: This will trigger delete on many_many objects, not only the mapping table.
@@ -1802,6 +1804,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getComponent($componentName)
     {
+        if (isset($this->eagerLoadedData[$componentName])) {
+            return $this->eagerLoadedData[$componentName];
+        }
         if (isset($this->components[$componentName])) {
             return $this->components[$componentName];
         }
@@ -1924,6 +1929,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return $this;
     }
 
+    public function setEagerLoadedData(string $eagerLoadRelation, mixed $eagerLoadedData): void
+    {
+        $this->eagerLoadedData[$eagerLoadRelation] = $eagerLoadedData;
+    }
+
     /**
      * Returns a one-to-many relation as a HasManyList
      *
@@ -1933,6 +1943,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getComponents($componentName, $id = null)
     {
+        if (isset($this->eagerLoadedData[$componentName])) {
+            return $this->eagerLoadedData[$componentName];
+        }
         if (!isset($id)) {
             $id = $this->ID;
         }
@@ -2150,6 +2163,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getManyManyComponents($componentName, $id = null)
     {
+        if (isset($this->eagerLoadedData[$componentName])) {
+            return $this->eagerLoadedData[$componentName];
+        }
         if (!isset($id)) {
             $id = $this->ID;
         }
