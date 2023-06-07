@@ -34,7 +34,7 @@ abstract class BuildTask
     private static $segment = null;
 
     /**
-     * change this to `bool` in CMS6
+     * Make this non-nullable and change this to `bool` in CMS6 with a value of `true`
      * @var bool|null
      */
     private static ?bool $is_enabled = null;
@@ -42,7 +42,7 @@ abstract class BuildTask
     /**
      * @var bool $enabled If set to FALSE, keep it from showing in the list
      * and from being executable through URL or CLI.
-     * @deprecated - remove in CMS6
+     * @deprecated - remove in CMS 6 and rely on $is_enabled instead
      */
     protected $enabled = true;
 
@@ -70,15 +70,12 @@ abstract class BuildTask
     /**
      * @return bool
      */
-    public function isEnabled(): bool
+    public function isEnabled()
     {
-        $isEnabled = $this->config()->get('enabled');
-        $isDefaultEnabled = Config::inst()->get(__CLASS__, 'default_enabled');
+        $isEnabled = $this->config()->get('is_enabled');
 
         if ($isEnabled === null) {
-            Deprecation::notice('6.0', 'Null values not allowed in CMS6 ...');
-
-            return static::$enabled ?? $isDefaultEnabled;
+            return static::$enabled ?? true;
         }
         return $isEnabled;
     }
