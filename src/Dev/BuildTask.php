@@ -75,7 +75,7 @@ abstract class BuildTask
         $isEnabled = $this->config()->get('is_enabled');
 
         if ($isEnabled === null) {
-            return static::$enabled ?? true;
+            return $this->enabled;
         }
         return $isEnabled;
     }
