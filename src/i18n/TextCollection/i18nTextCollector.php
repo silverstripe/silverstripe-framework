@@ -472,8 +472,11 @@ class i18nTextCollector
         if (!$this->modulesAndThemes) {
             $modules = ModuleLoader::inst()->getManifest()->getModules();
             // load themes as modules
-            $themes = array_diff(scandir(THEMES_PATH), ['..', '.']);
-            if ($themes) {
+            $themes = [];
+            if (is_dir(THEMES_PATH)) {
+                $themes = array_diff(scandir(THEMES_PATH), ['..', '.']);
+            }
+            if (!empty($themes)) {
                 foreach ($themes as $theme) {
                     if (is_dir(Path::join(THEMES_PATH, $theme))) {
                         $modules[self::THEME_PREFIX . $theme] = new Module(Path::join(THEMES_PATH, $theme), BASE_PATH);
