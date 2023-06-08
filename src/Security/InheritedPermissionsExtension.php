@@ -15,18 +15,23 @@ use SilverStripe\ORM\ManyManyList;
  */
 class InheritedPermissionsExtension extends DataExtension
 {
-    private static $db = [
+    private static array $db = [
         'CanViewType' => "Enum('Anyone, LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
         'CanEditType' => "Enum('LoggedInUsers, OnlyTheseUsers, Inherit', 'Inherit')",
     ];
 
-    private static $many_many = [
+    private static array $many_many = [
         'ViewerGroups' => Group::class,
         'EditorGroups' => Group::class,
     ];
 
-    private static $defaults = [
+    private static array $defaults = [
         'CanViewType' => InheritedPermissions::INHERIT,
         'CanEditType' => InheritedPermissions::INHERIT,
+    ];
+
+    private static array $cascade_duplicates = [
+        'ViewerGroups',
+        'EditorGroups',
     ];
 }
