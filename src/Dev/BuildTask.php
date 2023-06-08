@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
@@ -33,8 +34,15 @@ abstract class BuildTask
     private static $segment = null;
 
     /**
+     * Make this non-nullable and change this to `bool` in CMS6 with a value of `true`
+     * @var bool|null
+     */
+    private static ?bool $is_enabled = null;
+
+    /**
      * @var bool $enabled If set to FALSE, keep it from showing in the list
      * and from being executable through URL or CLI.
+     * @deprecated - remove in CMS 6 and rely on $is_enabled instead
      */
     protected $enabled = true;
 
@@ -64,7 +72,12 @@ abstract class BuildTask
      */
     public function isEnabled()
     {
-        return $this->enabled;
+        $isEnabled = $this->config()->get('is_enabled');
+
+        if ($isEnabled === null) {
+            return $this->enabled;
+        }
+        return $isEnabled;
     }
 
     /**
