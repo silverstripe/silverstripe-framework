@@ -774,7 +774,7 @@ class Member extends DataObject
         if ((Director::isLive() || Injector::inst()->get(MailerInterface::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
-            && $this->Email
+            && Email::is_valid_address($this->Email ?? '')
             && static::config()->get('notify_password_change')
             && $this->isInDB()
         ) {
