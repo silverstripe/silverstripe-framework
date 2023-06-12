@@ -2474,7 +2474,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if ($fields->fieldByName($generalSearch) || $fields->dataFieldByName($generalSearch)) {
                 throw new LogicException('General search field name must be unique.');
             }
-            $fields->unshift(HiddenField::create($generalSearch, _t(self::class . 'GENERALSEARCH', 'General Search')));
+            $fields->unshift(HiddenField::create($generalSearch, _t(self::class . '.GENERALSEARCH', 'General Search')));
         }
 
         return $fields;
