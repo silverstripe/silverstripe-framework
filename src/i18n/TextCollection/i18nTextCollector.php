@@ -625,14 +625,14 @@ class i18nTextCollector
                     }
                 }
 
-                // Check class
-                if ($id === T_CLASS) {
+                // Check class and trait
+                if ($id === T_CLASS || $id === T_TRAIT) {
                     // Skip if previous token was '::'. E.g. 'Object::class'
                     if (is_array($previousToken) && $previousToken[0] === T_DOUBLE_COLON) {
                         if ($inSelf) {
                             // Handle self::class by allowing logic further down
-                            // for __CLASS__ to handle an array of class parts
-                            $id = T_CLASS_C;
+                            // for __CLASS__/__TRAIT__ to handle an array of class parts
+                            $id = $id === T_TRAIT ? T_TRAIT_C : T_CLASS_C;
                             $inSelf = false;
                         } elseif ($potentialClassName) {
                             $id = T_CONSTANT_ENCAPSED_STRING;
@@ -722,7 +722,7 @@ class i18nTextCollector
                     } else {
                         throw new LogicException("Invalid string escape: " . $text);
                     }
-                } elseif ($id === T_CLASS_C) {
+                } elseif ($id === T_CLASS_C || $id === T_TRAIT_C) {
                     // Evaluate __CLASS__ . '.KEY' and self::class concatenation
                     $text = implode('\\', $currentClass);
                 } else {
