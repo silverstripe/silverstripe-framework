@@ -27,7 +27,7 @@ class i18nTextCollectorTask extends BuildTask
 		- locale: Sets default locale
 		- writer: Custom writer class (defaults to i18nTextCollector_Writer_RailsYaml)
 		- module: One or more modules to limit collection (comma-separated)
-		- merge: Merge new strings with existing ones already defined in language files (default: FALSE)
+		- merge: Merge new strings with existing ones already defined in language files (default: TRUE)
 	";
 
     /**
