@@ -33,6 +33,10 @@ SilverStripe\Security\Member:
     Groups: =>SilverStripe\Security\Group.allsections
   securityadmin:
     Groups: =>SilverStripe\Security\Group.securityadmins
+  oneFileFreddie:
+    FirstName: Freddie
+    Surname: Fantastic
+    Groups: =>SilverStripe\Security\Group.editors
 
 SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode:
   about:
@@ -104,6 +108,12 @@ SilverStripe\Security\Tests\InheritedPermissionsTest\TestPermissionNode:
     Title: Restricted Page
     CanViewType: OnlyTheseUsers
     ViewerGroups: =>SilverStripe\Security\Group.allsections
+  freddies-file:
+    Title: Freddies File
+    CanViewType: OnlyTheseMembers
+    CanEditType: OnlyTheseMembers
+    ViewerMembers: =>SilverStripe\Security\Member.oneFileFreddie
+    EditorMembers: =>SilverStripe\Security\Member.oneFileFreddie
 
 SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode:
   about:
@@ -175,3 +185,9 @@ SilverStripe\Security\Tests\InheritedPermissionsTest\UnstagedNode:
     Title: Restricted Page
     CanViewType: OnlyTheseUsers
     ViewerGroups: =>SilverStripe\Security\Group.allsections
+  freddies-file:
+    Title: Freddies File
+    CanViewType: OnlyTheseMembers
+    CanEditType: OnlyTheseMembers
+    ViewerMembers: =>SilverStripe\Security\Member.oneFileFreddie
+    EditorMembers: =>SilverStripe\Security\Member.oneFileFreddie

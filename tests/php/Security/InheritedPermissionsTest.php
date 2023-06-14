@@ -68,6 +68,7 @@ class InheritedPermissionsTest extends SapphireTest
     public function testEditPermissions()
     {
         $editor = $this->objFromFixture(Member::class, 'editor');
+        $freddie = $this->objFromFixture(Member::class, 'oneFileFreddie');
 
         $about = $this->objFromFixture(TestPermissionNode::class, 'about');
         $aboutStaff = $this->objFromFixture(TestPermissionNode::class, 'about-staff');
@@ -75,10 +76,12 @@ class InheritedPermissionsTest extends SapphireTest
         $products = $this->objFromFixture(TestPermissionNode::class, 'products');
         $product1 = $this->objFromFixture(TestPermissionNode::class, 'products-product1');
         $product4 = $this->objFromFixture(TestPermissionNode::class, 'products-product4');
+        $freddiesFile = $this->objFromFixture(TestPermissionNode::class, 'freddies-file');
 
         // Test logged out users cannot edit
-        Member::actAs(null, function () use ($aboutStaff) {
+        Member::actAs(null, function () use ($aboutStaff, $freddiesFile) {
             $this->assertFalse($aboutStaff->canEdit());
+            $this->assertFalse($freddiesFile->canEdit());
         });
 
         // Can't edit a page that is locked to admins
@@ -96,6 +99,10 @@ class InheritedPermissionsTest extends SapphireTest
         // Test that root node respects root permissions
         $this->assertTrue($history->canEdit($editor));
 
+        // Test that only Freddie can edit Freddie's file
+        $this->assertFalse($freddiesFile->canEdit($editor));
+        $this->assertTrue($freddiesFile->canEdit($freddie));
+
         TestPermissionNode::getInheritedPermissions()->clearCache();
         $this->rootPermissions->setCanEdit(false);
 
@@ -106,6 +113,7 @@ class InheritedPermissionsTest extends SapphireTest
     public function testDeletePermissions()
     {
         $editor = $this->objFromFixture(Member::class, 'editor');
+        $freddie = $this->objFromFixture(Member::class, 'oneFileFreddie');
 
         $about = $this->objFromFixture(TestPermissionNode::class, 'about');
         $aboutStaff = $this->objFromFixture(TestPermissionNode::class, 'about-staff');
@@ -113,10 +121,12 @@ class InheritedPermissionsTest extends SapphireTest
         $products = $this->objFromFixture(TestPermissionNode::class, 'products');
         $product1 = $this->objFromFixture(TestPermissionNode::class, 'products-product1');
         $product4 = $this->objFromFixture(TestPermissionNode::class, 'products-product4');
+        $freddiesFile = $this->objFromFixture(TestPermissionNode::class, 'freddies-file');
 
         // Test logged out users cannot edit
-        Member::actAs(null, function () use ($aboutStaff) {
+        Member::actAs(null, function () use ($aboutStaff, $freddiesFile) {
             $this->assertFalse($aboutStaff->canDelete());
+            $this->assertFalse($freddiesFile->canDelete());
         });
 
         // Can't edit a page that is locked to admins
@@ -134,6 +144,10 @@ class InheritedPermissionsTest extends SapphireTest
         // Test that root node respects root permissions
         $this->assertTrue($history->canDelete($editor));
 
+        // Test that only Freddie can delete Freddie's file
+        $this->assertFalse($freddiesFile->canDelete($editor));
+        $this->assertTrue($freddiesFile->canDelete($freddie));
+
         TestPermissionNode::getInheritedPermissions()->clearCache();
         $this->rootPermissions->setCanEdit(false);
 
@@ -150,14 +164,17 @@ class InheritedPermissionsTest extends SapphireTest
         $secretNested = $this->objFromFixture(TestPermissionNode::class, 'secret-nested');
         $protected = $this->objFromFixture(TestPermissionNode::class, 'protected');
         $protectedChild = $this->objFromFixture(TestPermissionNode::class, 'protected-child');
-        $editor = $this->objFromFixture(Member::class, 'editor');
         $restricted = $this->objFromFixture(TestPermissionNode::class, 'restricted-page');
+        $freddiesFile = $this->objFromFixture(TestPermissionNode::class, 'freddies-file');
+
+        $editor = $this->objFromFixture(Member::class, 'editor');
         $admin = $this->objFromFixture(Member::class, 'admin');
+        $freddie = $this->objFromFixture(Member::class, 'oneFileFreddie');
 
         // Not logged in user can only access Inherit or Anyone pages
         Member::actAs(
             null,
-            function () use ($protectedChild, $secretNested, $protected, $secret, $history, $contact, $contactForm) {
+            function () use ($protectedChild, $secretNested, $protected, $secret, $history, $contact, $contactForm, $freddiesFile) {
                 $this->assertTrue($history->canView());
                 $this->assertTrue($contact->canView());
                 $this->assertTrue($contactForm->canView());
@@ -166,6 +183,7 @@ class InheritedPermissionsTest extends SapphireTest
                 $this->assertFalse($secretNested->canView());
                 $this->assertFalse($protected->canView());
                 $this->assertFalse($protectedChild->canView());
+                $this->assertFalse($freddiesFile->canView());
             }
         );
 
@@ -179,6 +197,10 @@ class InheritedPermissionsTest extends SapphireTest
 
         // Check root permissions
         $this->assertTrue($history->canView($editor));
+
+        // Test that only Freddie can view Freddie's file
+        $this->assertFalse($freddiesFile->canView($editor));
+        $this->assertTrue($freddiesFile->canView($freddie));
 
         TestPermissionNode::getInheritedPermissions()->clearCache();
         $this->rootPermissions->setCanView(false);
@@ -198,12 +220,16 @@ class InheritedPermissionsTest extends SapphireTest
         $secretNested = $this->objFromFixture(UnstagedNode::class, 'secret-nested');
         $protected = $this->objFromFixture(UnstagedNode::class, 'protected');
         $protectedChild = $this->objFromFixture(UnstagedNode::class, 'protected-child');
+        $freddiesFile = $this->objFromFixture(UnstagedNode::class, 'freddies-file');
+
         $editor = $this->objFromFixture(Member::class, 'editor');
+        $freddie = $this->objFromFixture(Member::class, 'oneFileFreddie');
+
 
         // Not logged in user can only access Inherit or Anyone pages
         Member::actAs(
             null,
-            function () use ($protectedChild, $secretNested, $protected, $secret, $history, $contact, $contactForm) {
+            function () use ($protectedChild, $secretNested, $protected, $secret, $history, $contact, $contactForm, $freddiesFile) {
                 $this->assertTrue($history->canView());
                 $this->assertTrue($contact->canView());
                 $this->assertTrue($contactForm->canView());
@@ -212,6 +238,7 @@ class InheritedPermissionsTest extends SapphireTest
                 $this->assertFalse($secretNested->canView());
                 $this->assertFalse($protected->canView());
                 $this->assertFalse($protectedChild->canView());
+                $this->assertFalse($freddiesFile->canView());
             }
         );
 
@@ -225,6 +252,10 @@ class InheritedPermissionsTest extends SapphireTest
 
         // Check root permissions
         $this->assertTrue($history->canView($editor));
+
+        // Test that only Freddie can view Freddie's file
+        $this->assertFalse($freddiesFile->canView($editor));
+        $this->assertTrue($freddiesFile->canView($freddie));
 
         UnstagedNode::getInheritedPermissions()->clearCache();
         $this->rootPermissions->setCanView(false);
