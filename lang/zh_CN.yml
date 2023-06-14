@@ -20,6 +20,8 @@ zh_CN:
     NEWGROUP: 新建会员组
     PERMISSIONS: 权限
     PLURALNAME: 团队
+    db_Title: 标题
+    has_many_Groups: 团队
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 更改密码
     BUTTONLOGIN: 登录
@@ -45,6 +47,9 @@ zh_CN:
     PLURALNAME: 成员
     SINGULARNAME: 成员
     db_Password: 密码
+    db_Email: 电子邮件
+    db_FirstName: 名字
+    db_Surname: 姓
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。
     BUTTONSEND: 给我发送密码重设链接
@@ -87,3 +92,12 @@ zh_CN:
     PLURALNAME: 权限
   SilverStripe\Security\PermissionRole:
     Title: 标题
+    belongs_many_many_Groups: 团队
+    db_Title: 标题
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: 成员
+  SilverStripe\Security\MemberPassword:
+    db_Password: 密码
+    has_one_Member: 成员
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: 成员

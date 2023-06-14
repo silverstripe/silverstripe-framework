@@ -38,10 +38,16 @@ is:
     PERMISSIONS: Leyfi
     PLURALNAME: Hópar
     ROLES: Hlutverk
+    db_Description: Lýsing
+    db_Title: Titill
+    has_many_Groups: Hópar
+    many_many_Roles: Hlutverk
   SilverStripe\Security\LoginAttempt:
     IP: 'IP tala'
     Status: Staða
     Email: Tölvupóstfang
+    db_Status: Staða
+    has_one_Member: Félagar
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
     BUTTONLOGIN: Innskrá
@@ -70,6 +76,8 @@ is:
     EDIT_PASSWORD: 'Nýtt lykilorð'
     PLURALNAME: Félagar
     SINGULARNAME: Félagar
+    db_Email: Tölvupóstur
+    db_Surname: Eftirnafn
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Full stjórnanda réttindi'
     PLURALNAME: Leyfi
@@ -123,3 +131,10 @@ is:
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Hlutverk
     Title: Titill
+    belongs_many_many_Groups: Hópar
+    db_Title: Titill
+  SilverStripe\Security\MemberPassword:
+    db_Password: Lykilorð
+    has_one_Member: Félagar
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Félagar

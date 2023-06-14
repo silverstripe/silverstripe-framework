@@ -106,6 +106,9 @@ de_DE:
     has_many_Permissions: Rechte
     many_many_Members: Mitglieder
     PERMISSIONS: Rechte
+    db_Description: Beschreibung
+    db_Title: Titel
+    has_many_Groups: Grouppen
   SilverStripe\Security\LoginAttempt:
     Email: 'E-Mail Adresse'
     EmailHashed: 'E-Mail Adresse (gehasht)'
@@ -116,6 +119,8 @@ de_DE:
       other: '{count} Loginversuche'
     SINGULARNAME: Loginversuch
     Status: Status
+    db_Status: Status
+    has_one_Member: Mitglied
   SilverStripe\Security\Member:
     ADDGROUP: 'Gruppe hinzufügen'
     BUTTONCHANGEPASSWORD: 'Passwort ändern'
@@ -143,12 +148,16 @@ de_DE:
     YOUROLDPASSWORD: 'Ihr altes Passwort'
     belongs_many_many_Groups: Grouppen
     db_Password: Passwort
+    db_Email: E-Mail
+    db_Surname: Nachname
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'
     BUTTONLOGOUT: Ausloggen
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     PLURALNAME: Rechte
+    db_Type: Typ
+    has_one_Group: Gruppe
   SilverStripe\Security\Security:
     LOGIN: Einloggen
     LOGOUT: Ausloggen
@@ -166,3 +175,10 @@ de_DE:
     REFUSE: Abbrechen
   SilverStripe\Security\PermissionRole:
     Title: Titel
+    belongs_many_many_Groups: Grouppen
+    db_Title: Titel
+  SilverStripe\Security\MemberPassword:
+    db_Password: Passwort
+    has_one_Member: Mitglied
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Mitglied

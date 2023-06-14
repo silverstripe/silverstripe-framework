@@ -190,6 +190,10 @@ da:
     Sort: Sortering
     has_many_Permissions: Rettigheder
     many_many_Members: Brugere
+    db_Description: Beskrivelse
+    db_Title: Titel
+    has_many_Groups: Grupper
+    many_many_Roles: Roller
   SilverStripe\Security\LoginAttempt:
     Email: 'Email adresse'
     EmailHashed: 'Email adresse (hashed)'
@@ -200,6 +204,8 @@ da:
       other: '{count} loginforsøg'
     SINGULARNAME: 'Login forsøg'
     Status: Status
+    db_Status: Status
+    has_one_Member: Bruger
   SilverStripe\Security\Member:
     ADDGROUP: 'Tilføj gruppe'
     BUTTONCHANGEPASSWORD: 'Skift kodeord'
@@ -240,6 +246,9 @@ da:
     db_LockedOutUntil: 'Låst ude indtil'
     db_Password: Kodeord
     db_PasswordExpiry: Kodeordsudløbsdato
+    db_Email: Email
+    db_Surname: Efternavn
+    db_URLSegment: 'URL adresse'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS bruger loginform'
     BUTTONFORGOTPASSWORD: 'Glemt kodeord'
@@ -256,6 +265,8 @@ da:
       one: 'Et bruger kodeord'
       other: '{count} bruger kodeord'
     SINGULARNAME: 'Bruger kodeord'
+    db_Password: Kodeord
+    has_one_Member: Bruger
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Forøg venligst kodeordets styrke, ved at tilføje nogle af følgende tegn: {chars}'
     PREVPASSWORD: 'Du har tidligere brugt dette kodeord, vælg venligst et nyt kodeord'
@@ -273,6 +284,8 @@ da:
       other: '{count} rettigheder'
     SINGULARNAME: Rettighed
     UserPermissionsIntro: 'Tildeling af grupper til denne bruger, ændrer de rettigheder brugeren har. Se gruppe området for rettigheds detaljer på de individuelle grupper.'
+    db_Type: Type
+    has_one_Group: Gruppe
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tildelt til "{title}"'
     FromGroup: 'nedarvet fra gruppen "{title}"'
@@ -286,6 +299,9 @@ da:
       other: '{count} roller'
     SINGULARNAME: Rolle
     Title: Titel
+    belongs_many_many_Groups: Grupper
+    db_OnlyAdminCanApply: 'Kun administratorer kan tilføje'
+    db_Title: Titel
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Rettigheds rolle koder'
     PLURALS:
@@ -293,12 +309,14 @@ da:
       other: '{count} rettigheds rolle koder'
     PermsError: 'Kan ikke tildele koden "{code}" med fortrinsrettigheder (kræver ADMIN adgang)'
     SINGULARNAME: 'Rettighed rolle kode'
+    has_one_Role: Rolle
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Login hashes'
     PLURALS:
       one: 'Et login hash'
       other: '{count} Login Hashes'
     SINGULARNAME: 'Login hash'
+    has_one_Member: Bruger
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne side. Hvis du har en anden bruger der har adgang til denne side, kan du logge ind med denne herunder.'
     BUTTONSEND: 'Send mig linket til at nulstille kodeordet'

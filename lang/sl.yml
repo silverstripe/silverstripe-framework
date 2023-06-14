@@ -252,6 +252,10 @@ sl:
     Sort: 'Način razvrščanja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
+    db_Description: Opis
+    db_Title: Naziv
+    has_many_Groups: Skupine
+    many_many_Roles: Vloge
   SilverStripe\Security\LoginAttempt:
     Email: E-naslov
     EmailHashed: 'E-naslov (šifriran)'
@@ -264,6 +268,8 @@ sl:
       other: '{count} poskusov prijave'
     SINGULARNAME: 'Poskus prijave'
     Status: Stanje
+    db_Status: Status
+    has_one_Member: Uporabnik
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
     BUTTONCHANGEPASSWORD: 'Spremeni geslo'
@@ -310,6 +316,9 @@ sl:
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
     KEEP_ME_SIGNED_IN: 'Ohranjaj prijavo naslednjih ({count}) dni.'
     KEEP_ME_SIGNED_IN_TOOLTIP: 'V tem brskalniku boste ostali prijavljeni naslednjih ({count}) dni. Uporabite to možnost samo, če uporabljate brskalnik, v katerem je to varno.'
+    db_Email: E-pošta
+    db_Surname: Priimek
+    db_URLSegment: 'Naslov URL'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Obrazec za prijavo v sistem'
     BUTTONFORGOTPASSWORD: 'Ne poznam gesla'
@@ -328,6 +337,8 @@ sl:
       few: '{count} gesel'
       other: '{count} gesel'
     SINGULARNAME: Geslo
+    db_Password: Geslo
+    has_one_Member: Uporabnik
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Izboljšajte geslo tako, da dodate nekaj izmed znakov: {chars}'
     PREVPASSWORD: 'To geslo ste v preteklosti že uporabljali, izberite tako geslo, ki ga še niste.'
@@ -347,6 +358,8 @@ sl:
       other: '{count} dovoljenj'
     SINGULARNAME: Dovoljenje
     UserPermissionsIntro: 'Z dodelitvijo skupine uporabniku boste vplivali na nabor njegovih dovoljenj. Za pregled dovoljenj, ki jih ima posamezna skupina, preverite stran s podrobnejšimi nastavitvami za izbrano skupino.'
+    db_Type: Tip
+    has_one_Group: Skupina
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'dodeljeno "{title}"'
     FromGroup: 'Privzeto iz skupine "{title}"'
@@ -362,6 +375,9 @@ sl:
       other: '{count} vlog'
     SINGULARNAME: Vloga
     Title: Naslov
+    belongs_many_many_Groups: Skupine
+    db_OnlyAdminCanApply: 'Dodeli jo lahko samo administrator'
+    db_Title: Naziv
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Šifra dovoljenja'
     PLURALS:
@@ -371,6 +387,7 @@ sl:
       other: '{count} šifer dovoljenja'
     PermsError: 'Šifri "{code}" ne moremo zagotoviti posebnih dovoljenj (zahteva dovoljenje administratorja).'
     SINGULARNAME: 'Šifra dovoljenja'
+    has_one_Role: Vloga
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Kriptirane prijave'
     PLURALS:
@@ -379,6 +396,7 @@ sl:
       few: '{count} kriptiranih prijav'
       other: '{count} kriptiranih prijav'
     SINGULARNAME: 'Kriptirana prijava'
+    has_one_Member: Uporabnik
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'
     BUTTONSEND: 'Pošlji povezavo za ponastavitev gesla'

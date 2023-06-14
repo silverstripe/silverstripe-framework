@@ -98,12 +98,20 @@ mi:
     ROLES: 'Ngā Tūnga'
     ROLESDESCRIPTION: 'Ko ngā tūnga he huinga o ngā whakaaetanga i tautuhia i mua, ā, ka taea te tautapa i ēnei ki ngā rōpū.<br />I tukuna iho i ngā rōpū matua ki te hiahiatia.'
     SINGULARNAME: Rōpū
+    db_Description: Whakaahuatanga
+    db_Title: Taitara
+    has_many_Groups: 'Ngā Rōpū'
+    has_one_Parent: Matua
+    many_many_Roles: 'Ngā Tūnga'
+    many_many_Subsites: 'Ngā pae iti'
   SilverStripe\Security\LoginAttempt:
     IP: 'Wāhitau KI'
     Status: Tūnga
     Email: 'Wāhitau Īmēra'
     PLURALNAME: 'Ngā Whakamātau Takiuru'
     SINGULARNAME: 'Whakamātau Takiuru'
+    db_Status: Tūnga
+    has_one_Member: Mema
   SilverStripe\Security\Member:
     ADDGROUP: 'Tāpiri rōpū'
     BUTTONCHANGEPASSWORD: 'Huri Kupuhipa'
@@ -138,6 +146,8 @@ mi:
     EDIT_PASSWORD: 'Kupuhipa Hōu'
     PLURALNAME: 'Ngā Mema'
     SINGULARNAME: Mema
+    db_Email: Īmēra
+    db_Surname: 'Ingoa Whānau'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Whakakahatia tō kupuhipa mā te tāpiri i ētahi o ēnei pūāhua: {chars}'
     PREVPASSWORD: 'Kua whakamahi kētia tēnā kupuhipa i mua, kōwhiria he kupuhipa hou'
@@ -152,6 +162,8 @@ mi:
     PERMISSIONS_CATEGORY: 'Ngā tūranga me ngā whakaaetanga uru'
     PLURALNAME: 'Ngā Whakaaetanga'
     SINGULARNAME: Whakaaetanga
+    db_Type: Momo
+    has_one_Group: Rōpū
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
@@ -162,6 +174,9 @@ mi:
     Title: Taitara
     PLURALNAME: 'Ngā Tūnga'
     SINGULARNAME: Tūranga
+    belongs_many_many_Groups: 'Ngā Rōpū'
+    db_OnlyAdminCanApply: 'Ka taea anake te tono e ngā kaiwhakahaere'
+    db_Title: Taitara
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Kāore i te whakaaetia kia uru koe ki tēnei whārangi. Mēnā he pūkete anō tōu e taea ai te uru ki tēnā whārangi, ka taea te takiuru anō i raro.'
     BUTTONSEND: 'Tukuna mai te hono tautuhi kupuhipa anō'
@@ -220,5 +235,10 @@ mi:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Ngā Kupuhipa Mema'
     SINGULARNAME: 'Kupuhipa Mema'
+    db_Password: Kupuhipa
+    has_one_Member: Mema
   SilverStripe\Security\PermissionRoleCode:
     SINGULARNAME: 'Waehere Tūnga Whakaaetanga'
+    has_one_Role: Tūranga
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Mema

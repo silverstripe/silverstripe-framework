@@ -45,6 +45,9 @@ uk:
     PERMISSIONS: Права
     PLURALNAME: Групи
     ROLES: Ролі
+    db_Title: Назва
+    has_many_Groups: Групи
+    many_many_Roles: Ролі
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Змінити пароль'
     BUTTONLOGIN: Увійти
@@ -73,6 +76,8 @@ uk:
     EDIT_PASSWORD: 'Новий пароль'
     PLURALNAME: Члени
     SINGULARNAME: Член
+    db_Email: Е-пошта
+    db_Surname: Прізвище
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Дозволи вмісту'
     CMS_ACCESS_CATEGORY: 'Доступ до CMS'
@@ -85,6 +90,8 @@ uk:
     Title: Назва
     PLURALNAME: Ролі
     SINGULARNAME: Роль
+    belongs_many_many_Groups: Групи
+    db_Title: Назва
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
     BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
@@ -131,3 +138,11 @@ uk:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Паролі користувача'
     SINGULARNAME: 'Пароль користувача'
+    db_Password: Пароль
+    has_one_Member: Член
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: Член
+  SilverStripe\Security\PermissionRoleCode:
+    has_one_Role: Роль
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Член

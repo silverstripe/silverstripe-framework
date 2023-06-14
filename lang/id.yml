@@ -112,12 +112,20 @@ id:
     ROLES: Peran
     ROLESDESCRIPTION: 'Peran adalah set perijinan yang sudah ditentukan, dan dapat dihubungkan ke kelompok.<br />Dapat diwariskan dari kelompok induk jika diperlukan.'
     SINGULARNAME: Grup
+    db_Description: Deskripsi
+    db_Title: Judul
+    has_many_Groups: Kelompok
+    has_one_Parent: Induk
+    many_many_Roles: Peran
+    many_many_Subsites: Subsitus
   SilverStripe\Security\LoginAttempt:
     IP: 'Alamat IP'
     Status: Status
     Email: 'Alamat Email'
     PLURALNAME: 'Upaya Masuk'
     SINGULARNAME: 'Upaya Masuk'
+    db_Status: Status
+    has_one_Member: Pengguna
   SilverStripe\Security\Member:
     ADDGROUP: 'Tambah kelompok'
     BUTTONCHANGEPASSWORD: 'Ganti Kata Kunci'
@@ -153,6 +161,8 @@ id:
     EDIT_PASSWORD: 'Kata Kunci Baru'
     PLURALNAME: Pengguna
     SINGULARNAME: Pengguna
+    db_Email: Email
+    db_Surname: 'Nama Belakang'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: {chars}'
     PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
@@ -167,6 +177,8 @@ id:
     PERMISSIONS_CATEGORY: 'Peran dan akses perijinan'
     PLURALNAME: Perijinan
     SINGULARNAME: Perijinan
+    db_Type: Tipe
+    has_one_Group: Grup
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'dihubungkan ke "{title}"'
     FromGroup: 'diwarisi dari kelompok "{title}"'
@@ -177,10 +189,14 @@ id:
     Title: Judul
     PLURALNAME: Peran
     SINGULARNAME: Peran
+    belongs_many_many_Groups: Kelompok
+    db_OnlyAdminCanApply: 'Hanya untuk pengelola'
+    db_Title: Judul
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Tidak dapat menghubungkan kode "{code}" dengan perijinan khusus (memerlukan akses PENGELOLA)'
     PLURALNAME: 'Kode Perijinan Peran'
     SINGULARNAME: 'Kode Perijinan Peran'
+    has_one_Role: Peran
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Anda tidak punya akses ke laman ini. Jika Anda punya akun lain dengan akses ke laman ini, silakan masuk kembali.'
     BUTTONSEND: 'Kirimkan tautan penggantian kata kunci'
@@ -239,3 +255,7 @@ id:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Kata Kunci'
     SINGULARNAME: 'Kata Kunci'
+    db_Password: 'Kata kunci'
+    has_one_Member: Pengguna
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Pengguna

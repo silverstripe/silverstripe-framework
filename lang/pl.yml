@@ -237,6 +237,10 @@ pl:
     has_many_Permissions: Zezwolenia
     many_many_Members: Użytkownicy
     ValidationIdentifierAlreadyExists: 'Grupa ({group}) już istnieje z tym samym {identifier}'
+    db_Description: Opis
+    db_Title: Tytuł
+    has_many_Groups: Grupy
+    many_many_Roles: Role
   SilverStripe\Security\LoginAttempt:
     Email: 'Adres e-mail'
     EmailHashed: 'Adres e-mail (hashed)'
@@ -249,6 +253,8 @@ pl:
       other: 'Próby logowania {count}'
     SINGULARNAME: 'Próba logowania'
     Status: Status
+    db_Status: Status
+    has_one_Member: Użytkownik
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupę'
     BUTTONCHANGEPASSWORD: 'Zmień hasło'
@@ -295,6 +301,10 @@ pl:
     KEEP_ME_SIGNED_IN_TOOLTIP: 'Pozostaniesz uwierzytelniony na tym urządzeniu przez {count} dni. Używaj tej funkcji tylko wtedy, gdy ufasz urządzeniu, z którego korzystasz.'
     VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje {identifier}'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
+    db_Email: Email
+    db_FirstName: Imię
+    db_Surname: Nazwisko
+    db_URLSegment: URL
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Formularz logowania użytkownika CMS'
     BUTTONFORGOTPASSWORD: 'Zapomniałeś hasła?'
@@ -313,6 +323,8 @@ pl:
       many: 'Haseł użytkownika'
       other: '{count} haseł użytkownika '
     SINGULARNAME: 'Hasło użytkownika'
+    db_Password: Hasło
+    has_one_Member: Użytkownik
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
@@ -332,6 +344,8 @@ pl:
       other: '{count} uprawnień'
     SINGULARNAME: Uprawnienie
     UserPermissionsIntro: 'Przydzielenie grup temu użytkownikowi spowoduje zmianę jego uprawnień. Odwołaj się do sekcji Grupy aby dowiedzieć się więcej o uprawnieniach grupowych.'
+    db_Type: 'Rodzaj strony'
+    has_one_Group: Grupa
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'przypisany do "{title}"'
     FromGroup: 'odziedziczone z grupy "{title}"'
@@ -347,6 +361,9 @@ pl:
       other: '{count} ról'
     SINGULARNAME: Rola
     Title: Tytuł
+    belongs_many_many_Groups: Grupy
+    db_OnlyAdminCanApply: 'Tylko administrator może to zastosować'
+    db_Title: Tytuł
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kod roli uprawnienia'
     PLURALS:
@@ -356,6 +373,7 @@ pl:
       other: '{count} kodów ról uprawnień'
     PermsError: 'Nie można przyporządkować uprzywilejowanego uprawnienia "{code}" (wymagane uprawnienie ADMIN)'
     SINGULARNAME: 'Kod roli uprawnienia'
+    has_one_Role: Rola
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Hasła logowania'
     PLURALS:
@@ -364,6 +382,7 @@ pl:
       many: 'Haseł logowania'
       other: '{count} haseł logowania'
     SINGULARNAME: 'Hasło logowania'
+    has_one_Member: Użytkownik
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nie masz dostępu do tej strony. Jeśli posiadasz inne konto, które umożliwi Ci dostęp do tej strony, możesz się zalogować poniżej'
     BUTTONSEND: 'Wyślij mi link do zresetowania hasła'

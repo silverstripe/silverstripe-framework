@@ -238,6 +238,12 @@ nl:
     has_many_Permissions: Rechten
     many_many_Members: Leden
     ValidationIdentifierAlreadyExists: 'Er bestaat al een groep ({group}) met eenzelfde {identifier}'
+    db_Description: Omschrijving
+    db_Sort: Volgorde
+    db_Title: Titel
+    has_many_Groups: Groepen
+    many_many_Roles: Rollen
+    many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
     Email: 'E-mailadres '
     EmailHashed: 'E-mailadres (versleuteld)'
@@ -248,6 +254,8 @@ nl:
       other: '{count} inlogpogingen'
     SINGULARNAME: Inlogpogingen
     Status: Status
+    db_Status: Status
+    has_one_Member: Lid
   SilverStripe\Security\Member:
     ADDGROUP: 'Groep toevoegen'
     BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
@@ -292,6 +300,10 @@ nl:
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
     KEEP_ME_SIGNED_IN: 'Ingelogd blijven gedurende {count} dagen'
     KEEP_ME_SIGNED_IN_TOOLTIP: 'Onthoud gedurende {count} dagen de inloggegevens op dit apparaat. Gebruik dit alleen op vertrouwde apparaten.'
+    db_Email: E-mail
+    db_FirstName: Voornaam
+    db_Surname: Achternaam
+    db_URLSegment: 'URL segment'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: Inlogformulier
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten'
@@ -308,6 +320,8 @@ nl:
       one: 'Een gebruikerswachtwoord'
       other: '{count} Gebruikerswachtwoorden'
     SINGULARNAME: Gebruikerswachtwoord
+    db_Password: Wachtwoord
+    has_one_Member: Lid
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Maak a.u.b. het wachtwoord sterker door enkele van de volgende karakters te gebruiken: {chars}'
     PREVPASSWORD: 'Dit wachtwoord is in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
@@ -325,6 +339,8 @@ nl:
       other: '{count} rechten'
     SINGULARNAME: Machtiging
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
+    db_Type: 'Soort veld'
+    has_one_Group: Groep
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'toegewezen aan "{title}"'
     FromGroup: 'geërfd van de groep "{title}"'
@@ -338,6 +354,9 @@ nl:
       other: '{count} rollen'
     SINGULARNAME: Rol
     Title: Titel
+    belongs_many_many_Groups: Groepen
+    db_OnlyAdminCanApply: 'Alleen admin kan doorvoeren'
+    db_Title: Titel
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permissie codes'
     PLURALS:
@@ -345,12 +364,14 @@ nl:
       other: '{count} permissiecodes'
     PermsError: 'U moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
     SINGULARNAME: Permissiecode
+    has_one_Role: Rol
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Versleutelde logins'
     PLURALS:
       one: 'Een versleutelde login'
       other: '{count} loginsleutels'
     SINGULARNAME: Loginsleutel
+    has_one_Member: Lid
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'

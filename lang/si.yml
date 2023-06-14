@@ -20,6 +20,8 @@ si:
     NEWGROUP: 'අලුත් කන්ඩාමක්'
     PERMISSIONS: අවසර
     PLURALNAME: කාන්ඩ
+    db_Title: මතකව
+    has_many_Groups: කාන්ඩ
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'මුර පදය අලුත් කරන්න'
     BUTTONLOGIN: ඇතුල්වන්න
@@ -45,6 +47,8 @@ si:
     PLURALNAME: සාමාජිකයින්
     SINGULARNAME: සාමාජිකයා
     db_Password: 'මුර පදය'
+    db_Email: 'ඊමේල් '
+    db_Surname: වාසගම
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'මෙම පිටුවට ඇතුල්වීමට ඹබට අවසර නැත, වෙනත් නමකින් ඇතුල් වීමට පහතින් නම හා මුරපදය යොදන්න'
     BUTTONSEND: 'මුරපදය වෙනස් කරන ලිපිනය ඵවන්න'
@@ -84,3 +88,12 @@ si:
     PLURALNAME: අවසර
   SilverStripe\Security\PermissionRole:
     Title: මතකව
+    belongs_many_many_Groups: කාන්ඩ
+    db_Title: මතකව
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: සාමාජිකයා
+  SilverStripe\Security\MemberPassword:
+    db_Password: 'මුර පදය'
+    has_one_Member: සාමාජිකයා
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: සාමාජිකයා

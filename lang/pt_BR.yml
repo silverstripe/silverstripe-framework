@@ -29,9 +29,13 @@ pt_BR:
     NEWGROUP: 'Novo Grupo'
     PERMISSIONS: Permissões
     PLURALNAME: Grupos
+    db_Description: Descrição
+    db_Title: Título
+    has_many_Groups: Grupos
   SilverStripe\Security\LoginAttempt:
     IP: 'Endereço IP'
     Email: 'Endereço de E-mail'
+    has_one_Member: Membro
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Senha'
     BUTTONLOGIN: Entrar
@@ -59,6 +63,9 @@ pt_BR:
     EDIT_PASSWORD: 'Nova Senha'
     PLURALNAME: Membros
     SINGULARNAME: Membro
+    db_Email: E-mail
+    db_FirstName: 'Primeiro nome'
+    db_Surname: Sobrenome
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Todos os direitos administrativos'
     AdminGroup: Administrador
@@ -112,3 +119,10 @@ pt_BR:
     BUTTONFORGOTPASSWORD: 'Esqueceu a senha'
   SilverStripe\Security\PermissionRole:
     Title: Título
+    belongs_many_many_Groups: Grupos
+    db_Title: Título
+  SilverStripe\Security\MemberPassword:
+    db_Password: Senha
+    has_one_Member: Membro
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Membro
