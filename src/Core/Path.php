@@ -30,7 +30,7 @@ class Path
         }
 
         // Cleanup and join all parts
-        $parts = array_filter(array_map('trim', $parts ?? []));
+        $parts = array_filter(array_map('trim', array_filter($parts ?? [])));
         $fullPath = static::normalise(implode(DIRECTORY_SEPARATOR, $parts));
 
         // Protect against directory traversal vulnerability (OTG-AUTHZ-001)
