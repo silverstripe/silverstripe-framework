@@ -567,7 +567,7 @@ class SSTemplateParser extends Parser implements TemplateParser
      */
     function CallArguments_Argument(&$res, $sub)
     {
-        if (!empty($res['php'])) {
+        if ($res['php'] !== '') {
             $res['php'] .= ', ';
         }
 

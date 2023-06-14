@@ -552,6 +552,40 @@ SS;
         $this->assertEquals("SubKid1SubKid2Number6", $result, "Loop in current scope works");
     }
 
+    public function provideArgumentTypes()
+    {
+        return [
+            [
+                'arg1:0,arg2:"string",arg3:true',
+                '$methodWithTypedArguments(0, "string", true).RAW',
+            ],
+            [
+                'arg1:false,arg2:"string",arg3:true',
+                '$methodWithTypedArguments(false, "string", true).RAW',
+            ],
+            [
+                'arg1:null,arg2:"string",arg3:true',
+                '$methodWithTypedArguments(null, "string", true).RAW',
+            ],
+            [
+                'arg1:"",arg2:"string",arg3:true',
+                '$methodWithTypedArguments("", "string", true).RAW',
+            ],
+            [
+                'arg1:0,arg2:1,arg3:2',
+                '$methodWithTypedArguments(0, 1, 2).RAW',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideArgumentTypes
+     */
+    public function testArgumentTypes(string $expected, string $template)
+    {
+        $this->assertEquals($expected, $this->render($template, new TestViewableData()));
+    }
+
     public function testObjectDotArguments()
     {
         $this->assertEquals(
