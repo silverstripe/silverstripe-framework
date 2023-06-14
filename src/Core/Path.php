@@ -9,7 +9,7 @@ use InvalidArgumentException;
  */
 class Path
 {
-    public const TRIM_CHARS = ' /\\';
+    const TRIM_CHARS = ' /\\';
 
     /**
      * Joins one or more paths, normalising all separators to DIRECTORY_SEPARATOR
