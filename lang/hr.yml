@@ -68,10 +68,18 @@ hr:
     PLURALNAME: Grupe
     ROLES: Uloge
     SINGULARNAME: Grupa
+    db_Description: Opis
+    db_Title: Naslov
+    has_many_Groups: Grupe
+    has_one_Parent: Roditelj
+    many_many_Roles: Uloge
+    many_many_Subsites: Podsajtovi
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adresa'
     Status: Status
     Email: 'Email adresa'
+    db_Status: Status
+    has_one_Member: Član
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
@@ -100,6 +108,8 @@ hr:
     BUTTONLOGOUT: Odjava
     PLURALNAME: Članovi
     SINGULARNAME: Član
+    db_Email: Email
+    db_Surname: Prezime
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     CONTENT_CATEGORY: 'Sadržajne dozvole'
@@ -108,10 +118,14 @@ hr:
     PERMISSIONS_CATEGORY: 'Uloge i prava pristupa'
     PLURALNAME: Dozvole
     SINGULARNAME: Dozvola
+    db_Type: Tip
+    has_one_Group: Grupa
   SilverStripe\Security\PermissionRole:
     Title: Naslov
     PLURALNAME: Uloge
     SINGULARNAME: Uloga
+    belongs_many_many_Groups: Grupe
+    db_Title: Naslov
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nije Vam dozvoljen pristup ovoj stranici. Imate li drugi korisnički račun koji ima prava pristupa ovoj stranici možete se koristiti njime.'
     BUTTONSEND: 'Pošalji mi link za reset lozinke'
@@ -164,3 +178,10 @@ hr:
     DefaultAdminFirstname: 'Zadani administrator'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Odjava
+  SilverStripe\Security\MemberPassword:
+    db_Password: Lozinka
+    has_one_Member: Član
+  SilverStripe\Security\PermissionRoleCode:
+    has_one_Role: Uloga
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Član

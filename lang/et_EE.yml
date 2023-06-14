@@ -96,12 +96,18 @@ et_EE:
     ROLES: Rollid
     ROLESDESCRIPTION: 'Rollid on eelmäratud õiguste kogumid, mida on võimalik määrara gruppidele.<br />Need päritakse vajaduse korral vanemgruppidest.'
     SINGULARNAME: Grupp
+    db_Description: Kirjeldus
+    db_Title: Pealkiri
+    has_many_Groups: Grupid
+    many_many_Roles: Rollid
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Aadress'
     Status: Staatus
     Email: 'E-posti aadress'
     PLURALNAME: Sisselogimiskatsed
     SINGULARNAME: Sisselogimiskatse
+    db_Status: Staatus
+    has_one_Member: Kasutaja
   SilverStripe\Security\Member:
     ADDGROUP: 'Lisa grupp'
     BUTTONCHANGEPASSWORD: 'Muuda parool'
@@ -134,6 +140,9 @@ et_EE:
     EDIT_PASSWORD: 'Uus parool'
     PLURALNAME: Liikmed
     SINGULARNAME: Kasutaja
+    db_Email: Email
+    db_FirstName: Eesnimi
+    db_Surname: Perekonnanimi
   SilverStripe\Security\Permission:
     AdminGroup: Administraator
     CONTENT_CATEGORY: 'Sisu õigused'
@@ -143,6 +152,7 @@ et_EE:
     PERMISSIONS_CATEGORY: 'Rollid ja juurdepääsuõigused'
     PLURALNAME: Õigused
     SINGULARNAME: Õigus
+    has_one_Group: Grupp
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'määratud grupile "{title}"'
     FromGroup: 'päritud grupilt "{title}"'
@@ -153,6 +163,9 @@ et_EE:
     Title: Pealkiri
     PLURALNAME: Rollid
     SINGULARNAME: Roll
+    belongs_many_many_Groups: Grupid
+    db_OnlyAdminCanApply: 'Ainult administraator saab rakendada'
+    db_Title: Pealkiri
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sul puudub õigus sellele lehele pääsemiseks. Kui sul on teine konto, millega siia sisse logida, võid uuesti sisse logida.'
     BUTTONSEND: 'Saada parooli tühistamise link'
@@ -203,3 +216,9 @@ et_EE:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Liikme paroolid'
     SINGULARNAME: 'Liikme parool'
+    db_Password: Parool
+    has_one_Member: Kasutaja
+  SilverStripe\Security\PermissionRoleCode:
+    has_one_Role: Roll
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Kasutaja

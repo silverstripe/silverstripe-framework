@@ -14,6 +14,7 @@ km:
     MEMBERS: សមាជិក
     PERMISSIONS: ការអនុញ្ញាតិ្ត
     PLURALNAME: ចំណាត់ក្រុម
+    has_many_Groups: ចំណាត់ក្រុម
   SilverStripe\Security\Member:
     EMAIL: អ៊ីម៉េល
     INTERFACELANG: ភាសាប្រើសំរាប់ទំព័រមុខ
@@ -25,6 +26,7 @@ km:
     BUTTONCHANGEPASSWORD: ផ្លាស់ប្តូរពាក្យសំងាត់
     PLURALNAME: សមាជិក
     SINGULARNAME: សមាជិក
+    db_Email: អ៊ីម៉េល
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'អ្នកមិនអាចមើលទំព័រនេះបានទេ។ សូមប្រើប្រាស់ព័ត៌មានសំរាប់ថ្មី មួយទៀតសំរាប់ចូលមើល។ សូមចូលតាម'
   SilverStripe\AssetAdmin\Forms\UploadField:
@@ -41,3 +43,11 @@ km:
     SINGULARNAME: 'Data Objects'
   SilverStripe\Security\Permission:
     PLURALNAME: ការអនុញ្ញាតិ្ត
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: សមាជិក
+  SilverStripe\Security\MemberPassword:
+    has_one_Member: សមាជិក
+  SilverStripe\Security\PermissionRole:
+    belongs_many_many_Groups: ចំណាត់ក្រុម
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: សមាជិក

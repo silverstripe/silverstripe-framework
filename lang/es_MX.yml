@@ -73,10 +73,15 @@ es_MX:
     PERMISSIONS: Permisos
     PLURALNAME: Grupos
     SINGULARNAME: Group
+    db_Description: Descripción
+    db_Title: Título
+    has_many_Groups: Grupos
   SilverStripe\Security\LoginAttempt:
     IP: 'Dirección IP'
     Status: Estado
     Email: 'Dirección de Correo Electrónico'
+    db_Status: Estado
+    has_one_Member: Miembro
   SilverStripe\Security\Member:
     ADDGROUP: 'Agregar grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
@@ -109,6 +114,9 @@ es_MX:
     EDIT_PASSWORD: 'Nueva contraseña'
     PLURALNAME: Miembros
     SINGULARNAME: Miembro
+    db_Email: Email
+    db_FirstName: Nombre
+    db_Surname: Apellido
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permisos de contenido'
@@ -117,6 +125,8 @@ es_MX:
     CMS_ACCESS_CATEGORY: 'Acceder al CMS'
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
     PLURALNAME: Permisos
+    db_Type: Tipo
+    has_one_Group: Group
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado del rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\Security:
@@ -174,3 +184,10 @@ es_MX:
     BUTTONLOGOUT: 'Cerrar sesión'
   SilverStripe\Security\PermissionRole:
     Title: Título
+    belongs_many_many_Groups: Grupos
+    db_Title: Título
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contraseña
+    has_one_Member: Miembro
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Miembro

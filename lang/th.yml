@@ -68,12 +68,18 @@ th:
     PLURALNAME: กลุ่ม
     ROLES: บทบาท
     SINGULARNAME: กลุ่ม
+    db_Description: คำอธิบาย
+    db_Title: หัวเรื่อง
+    has_many_Groups: กลุ่ม
+    many_many_Roles: บทบาท
   SilverStripe\Security\LoginAttempt:
     IP: ไอพีเครื่อง
     Status: สถานะ
     Email: ที่อยู่อีเมล
     PLURALNAME: จำนวนครั้งการเข้าสู่ระบบ
     SINGULARNAME: จำนวนครั้งการเข้าสู่ระบบ
+    db_Status: สถานะ
+    has_one_Member: สมาชิก
   SilverStripe\Security\Member:
     ADDGROUP: เพิ่มกลุ่ม
     BUTTONCHANGEPASSWORD: เปลี่ยนรหัสผ่าน
@@ -101,6 +107,8 @@ th:
     EDIT_PASSWORD: รหัสผ่านใหม่
     PLURALNAME: สมาชิก
     SINGULARNAME: สมาชิก
+    db_Email: อีเมล
+    db_Surname: นามสกุล
   SilverStripe\Security\Permission:
     AdminGroup: ผู้ดูแลระบบ
     CONTENT_CATEGORY: สิทธิ์อนุญาตของเนื้อหา
@@ -108,11 +116,15 @@ th:
     PERMISSIONS_CATEGORY: บทบาทและสิทธิ์อนุญาตการเข้าถึง
     PLURALNAME: สิทธิ์
     SINGULARNAME: สิทธิ์อนุญาต
+    has_one_Group: กลุ่ม
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
     Title: หัวเรื่อง
     PLURALNAME: บทบาท
     SINGULARNAME: บทบาท
+    belongs_many_many_Groups: กลุ่ม
+    db_OnlyAdminCanApply: เฉพาะผู้ดูแลเท่านั้นที่สามารถนำไปใช้ได้
+    db_Title: หัวเรื่อง
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ เข้าสู่ระบบอีกครั้ง'
     BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
@@ -160,3 +172,9 @@ th:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: รหัสผ่านสมาชิก
     SINGULARNAME: รหัสผ่านสมาชิก
+    db_Password: รหัสผ่าน
+    has_one_Member: สมาชิก
+  SilverStripe\Security\PermissionRoleCode:
+    has_one_Role: บทบาท
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: สมาชิก

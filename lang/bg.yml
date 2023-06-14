@@ -190,6 +190,10 @@ bg:
     Sort: Сортиране
     has_many_Permissions: Разрешения
     many_many_Members: Потребители
+    db_Description: Описание
+    db_Title: Заглавие
+    has_many_Groups: Групи
+    many_many_Roles: Роли
   SilverStripe\Security\LoginAttempt:
     Email: 'Email адрес'
     IP: 'IP адрес'
@@ -199,6 +203,8 @@ bg:
       other: '{count} опита за влизане'
     SINGULARNAME: 'Опит за влизане'
     Status: Статус
+    db_Status: Статус
+    has_one_Member: Потребител
   SilverStripe\Security\Member:
     ADDGROUP: 'Добави група'
     BUTTONCHANGEPASSWORD: 'Променете паролата'
@@ -238,6 +244,8 @@ bg:
     db_LockedOutUntil: 'Заключен до'
     db_Password: Парола
     db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
+    db_Email: Еmail
+    db_Surname: Фамилия
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Форма за вход в CMS'
     BUTTONFORGOTPASSWORD: 'Забравена парола'
@@ -252,6 +260,8 @@ bg:
       one: 'Потребителска парола'
       other: '{count} потребителски пароли'
     SINGULARNAME: 'Потребителска парола'
+    db_Password: Парола
+    has_one_Member: Потребител
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Добавете някои от следните символи: {chars}, за да увеличите силата на паролата си'
     PREVPASSWORD: 'Вече сте използвали тази парола. Моля, изберете нова.'
@@ -269,6 +279,8 @@ bg:
       other: '{count} разрешения'
     SINGULARNAME: Разрешение
     UserPermissionsIntro: 'Присвояването на групи на този потребител ще коригира разрешенията, които има. Вижте раздела за групи за подробности относно разрешенията на отделните групи.'
+    db_Type: Тип
+    has_one_Group: Група
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
@@ -282,6 +294,9 @@ bg:
       other: '{count} роли'
     SINGULARNAME: Роля
     Title: Заглавие
+    belongs_many_many_Groups: Групи
+    db_OnlyAdminCanApply: 'Може да се приложи само от администратор'
+    db_Title: Заглавие
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Кодове за роли с разрешения'
     PLURALS:
@@ -289,12 +304,14 @@ bg:
       other: '{count} кода за роли с разрешения '
     PermsError: 'Не може да се зададе код "%s" с тези разрешения (изисква се достъп от ADMIN)'
     SINGULARNAME: 'Код за роля с разрешения'
+    has_one_Role: Роля
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Хешове за вход'
     PLURALS:
       one: 'Хеш за вход'
       other: '{count} хеша за вход'
     SINGULARNAME: 'Хеш за вход'
+    has_one_Member: Потребител
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
     BUTTONSEND: 'Пратете ми линка за промяна на паролата'

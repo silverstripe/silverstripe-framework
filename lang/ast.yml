@@ -20,6 +20,8 @@ ast:
     MEMBERS: Miembros
     PERMISSIONS: Permisos
     PLURALNAME: Grupos
+    db_Description: Descripción
+    has_many_Groups: Grupos
   SilverStripe\Security\Member:
     EMAIL: Corréu
     INTERFACELANG: 'Llingua de la interfaz'
@@ -33,6 +35,7 @@ ast:
     PLURALNAME: Miembros
     SINGULARNAME: Miembru
     db_Password: Contraseña
+    db_Email: Corréu
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredáu del rol "{roletitle}" nel grupu "{grouptitle}"'
   SilverStripe\Security\Security:
@@ -52,3 +55,12 @@ ast:
     SINGULARNAME: 'Oxetu de datos'
   SilverStripe\Security\Permission:
     PLURALNAME: Permisos
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: Miembru
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contraseña
+    has_one_Member: Miembru
+  SilverStripe\Security\PermissionRole:
+    belongs_many_many_Groups: Grupos
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Miembru

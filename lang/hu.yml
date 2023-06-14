@@ -19,6 +19,9 @@ hu:
     NEWGROUP: 'Új csoport'
     PERMISSIONS: Jogosultságok
     PLURALNAME: Csoportok
+    db_Title: Cím
+    has_many_Groups: Csoportok
+    has_one_Parent: Szülő
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Jelszó megváltoztatása'
     BUTTONLOGIN: Bejelentkezés
@@ -45,6 +48,8 @@ hu:
     PLURALNAME: Tagok
     SINGULARNAME: Tag
     db_Password: Jelszó
+    db_Email: E-mail
+    db_Surname: 'Családi név'
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Tartalommal kapcsolatos jogosultságok'
     CMS_ACCESS_CATEGORY: 'CMS hozzáférés'
@@ -97,3 +102,12 @@ hu:
     BUTTONLOGOUT: Kijelentkezés
   SilverStripe\Security\PermissionRole:
     Title: Cím
+    belongs_many_many_Groups: Csoportok
+    db_Title: Cím
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: Tag
+  SilverStripe\Security\MemberPassword:
+    db_Password: Jelszó
+    has_one_Member: Tag
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Tag

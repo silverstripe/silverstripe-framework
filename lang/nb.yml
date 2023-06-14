@@ -99,12 +99,18 @@ nb:
     ROLES: Roller
     ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
     SINGULARNAME: Gruppe
+    db_Description: Beskrivelse
+    db_Title: Tittel
+    has_many_Groups: Grupper
+    many_many_Roles: Roller
   SilverStripe\Security\LoginAttempt:
     IP: IP-adresse
     Status: Status
     Email: Epostadresse
     PLURALNAME: Innloggingsforsøk
     SINGULARNAME: Innloggingsforsøk
+    db_Status: Status
+    has_one_Member: Medlem
   SilverStripe\Security\Member:
     ADDGROUP: 'Legg til en gruppe'
     BUTTONCHANGEPASSWORD: 'Bytt passord'
@@ -139,6 +145,9 @@ nb:
     EDIT_PASSWORD: 'Nytt passord'
     PLURALNAME: Medlemmer
     SINGULARNAME: Medlem
+    db_Email: Epost
+    db_FirstName: Fornavn
+    db_Surname: Etternavn
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: {chars}'
     PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
@@ -153,6 +162,7 @@ nb:
     PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'
     PLURALNAME: Tillatelser
     SINGULARNAME: Tillatelse
+    has_one_Group: Gruppe
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'
@@ -163,9 +173,13 @@ nb:
     Title: Tittel
     PLURALNAME: Roller
     SINGULARNAME: Rolle
+    belongs_many_many_Groups: Grupper
+    db_OnlyAdminCanApply: 'Bare administratorer kan søke'
+    db_Title: Tittel
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Kan ikke angi kode "{code}" med administratorrettigheter (krever ADMIN-tilgang)'
     SINGULARNAME: Tillatelseskode
+    has_one_Role: Rolle
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
     BUTTONSEND: 'Send meg en lenke for å nullstille passordet'
@@ -225,3 +239,7 @@ nb:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: Medlemspassord
     SINGULARNAME: Medlemspassord
+    db_Password: Passord
+    has_one_Member: Medlem
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Medlem
