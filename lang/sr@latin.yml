@@ -99,12 +99,19 @@ sr@latin:
     ROLES: Uloge
     ROLESDESCRIPTION: 'Uloge su predefinisani skupovi ovlašćenja i mogu biti dodeljene grupama.<br />Nasleđuju se od roditeljskih grupa ako je potrebno.'
     SINGULARNAME: Grupa
+    db_Description: Opis
+    db_Title: Naslov
+    has_many_Groups: Grupe
+    has_one_Parent: Roditelj
+    many_many_Roles: Uloge
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adresa'
     Status: Status
     Email: 'Adresa e-pošte'
     PLURALNAME: 'Pokušaji prijave'
     SINGULARNAME: 'Pokušaj prijave'
+    db_Status: Status
+    has_one_Member: Član
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
     BUTTONCHANGEPASSWORD: 'Izmeni lozinku'
@@ -139,6 +146,8 @@ sr@latin:
     EDIT_PASSWORD: 'Nova lozinka'
     PLURALNAME: Članovi
     SINGULARNAME: Član
+    db_Email: 'Elektronska pošta'
+    db_Surname: Prezime
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Pojačajte lozinku dodavanjem nekih od sledećih znakova: {chars}'
     PREVPASSWORD: 'Već ste koristili navedenu lozinku u prošlosti. Stoga, izaberite drugu lozinku'
@@ -152,6 +161,7 @@ sr@latin:
     PERMISSIONS_CATEGORY: 'Uloge i prava pristupa'
     PLURALNAME: Dozvole
     SINGULARNAME: Dozvola
+    has_one_Group: Grupa
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'dodeljeno "{title}"'
     FromGroup: 'nasleđeno od grupe "{title}"'
@@ -162,9 +172,13 @@ sr@latin:
     Title: Naslov
     PLURALNAME: Uloge
     SINGULARNAME: Uloga
+    belongs_many_many_Groups: Grupe
+    db_OnlyAdminCanApply: 'Može primenjivati samo administrator'
+    db_Title: Naslov
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'Nije moguće dodeliti kôd  "{code}" sa privilegovanim dozvolama (zahteva Administratorski pristup)'
     SINGULARNAME: 'Kôd uloge za dozvole'
+    has_one_Role: Uloga
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nemate dozvolu za pristup ovoj strani. Ukoliko imate drugi nalog kojim možete da pristupite ovoj strani, prijavite se.'
     BUTTONSEND: 'Pošalji mi link za resetovanje lozinke'
@@ -220,3 +234,7 @@ sr@latin:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Lozinke članova'
     SINGULARNAME: 'Lozinka člana'
+    db_Password: Lozinka
+    has_one_Member: Član
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Član

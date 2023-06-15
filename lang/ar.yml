@@ -101,12 +101,20 @@ ar:
     ROLES: قواعد
     ROLESDESCRIPTION: 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد'
     SINGULARNAME: مجموعة
+    db_Description: الوصف
+    db_Title: عنوان
+    has_many_Groups: المجموعات
+    has_one_Parent: والد
+    many_many_Roles: قواعد
+    many_many_Subsites: 'المواقع الفرعية'
   SilverStripe\Security\LoginAttempt:
     IP: 'عنوان IP'
     Status: الحالة
     Email: 'عنوان البريد الإلكتروني'
     PLURALNAME: 'محاولات تسجيل الدخول'
     SINGULARNAME: 'محاولة تسجيل الدخول'
+    db_Status: الحالة
+    has_one_Member: العضو
   SilverStripe\Security\Member:
     ADDGROUP: 'إضافة مجموعة'
     BUTTONCHANGEPASSWORD: 'تغيير رقم المرور'
@@ -141,6 +149,9 @@ ar:
     EDIT_PASSWORD: 'رقم المرور الجديد'
     PLURALNAME: الأعضاء
     SINGULARNAME: العضو
+    db_Email: 'البريد الإلكتروني'
+    db_FirstName: 'الاسم الأول'
+    db_Surname: 'اسم العائلة'
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
     PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
@@ -155,6 +166,8 @@ ar:
     PERMISSIONS_CATEGORY: 'تصريح الدخول والقواعد'
     PLURALNAME: الصلاحيات
     SINGULARNAME: تصريحات
+    db_Type: النوع
+    has_one_Group: مجموعة
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'تم تعيينها إلى "{عنوان}"'
     FromGroup: 'موروثة من المجموعة "{عنوان}"'
@@ -165,9 +178,13 @@ ar:
     Title: عنوان
     PLURALNAME: قواعد
     SINGULARNAME: دور
+    belongs_many_many_Groups: المجموعات
+    db_OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
+    db_Title: عنوان
   SilverStripe\Security\PermissionRoleCode:
     PermsError: 'لا يمكن تعيين كود "s%" مع سماحيات مميزة (يتطلب دخول اعن طريق المشرف)'
     SINGULARNAME: 'رمز دور الأذن'
+    has_one_Role: دور
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'لاتملك صلاحية الدخول لهذه الصفحة ، إذا كنت تملك حساب آخر فيمكنك تسجيل الدخول'
     BUTTONSEND: 'أرسل لي رابط إعادة تهيئة كلمة المرور'
@@ -230,3 +247,7 @@ ar:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'كلمات مرور الأعضاء'
     SINGULARNAME: 'كلمة مرور العضو'
+    db_Password: 'كلمة المرور'
+    has_one_Member: العضو
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: العضو

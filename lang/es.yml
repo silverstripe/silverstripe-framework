@@ -159,6 +159,12 @@ es:
     PERMISSIONS: Permisos
     ROLES: Roles
     ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
+    db_Description: Descripción
+    db_Sort: Ordenar
+    db_Title: Título
+    has_many_Groups: Grupos
+    has_one_Parent: Padre
+    many_many_Roles: Roles
   SilverStripe\Security\LoginAttempt:
     IP: 'Dirección IP'
     PLURALNAME: 'Intentos de ingreso'
@@ -169,6 +175,8 @@ es:
     SINGULARNAME: 'Intento de ingreso'
     Status: Estado
     Email: 'Correo electrónico'
+    db_Status: Estado
+    has_one_Member: Miembro
   SilverStripe\Security\Member:
     ADDGROUP: 'Añadir grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
@@ -210,6 +218,9 @@ es:
     db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
     BUTTONLOGOUT: 'Cerrar Sesión'
     VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo {identifier}'
+    db_Email: 'Correo electrónico'
+    db_FirstName: Nombre
+    db_Surname: Apellidos
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Contraseñas de los Miembros'
     PLURALS:
@@ -217,6 +228,8 @@ es:
       other: '{count} Contraseñas de Miembros'
       many: '{count} Contraseñas de Miembros'
     SINGULARNAME: 'Contraseña del Miembro'
+    db_Password: Contraseña
+    has_one_Member: Miembro
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: {chars}'
     PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
@@ -235,6 +248,8 @@ es:
     UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
     CMS_ACCESS_CATEGORY: 'Acceso CMS'
     PERMISSIONS_CATEGORY: 'Permisos de roles y accesos'
+    db_Type: Tipo
+    has_one_Group: Grupo
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'
@@ -249,6 +264,9 @@ es:
       many: '{count} Roles'
     SINGULARNAME: Rol
     Title: Título
+    belongs_many_many_Groups: Grupos
+    db_OnlyAdminCanApply: 'Sólo el administrador puede aplicar'
+    db_Title: Título
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Códigos de Roles de Permiso'
     PLURALS:
@@ -257,6 +275,7 @@ es:
       many: '{count} Códigos de Roles de Permiso'
     PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
     SINGULARNAME: 'Código del Rol de Permiso'
+    has_one_Role: Rol
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Hashes de inicio de sesión'
     PLURALS:
@@ -264,6 +283,7 @@ es:
       other: '{count} Hashes de inicio de sesión'
       many: '{count} Hashes de inicio de sesión'
     SINGULARNAME: 'Hash de inicio de sesión'
+    has_one_Member: Miembro
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'

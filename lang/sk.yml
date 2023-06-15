@@ -153,12 +153,20 @@ sk:
     PERMISSIONS: Právomoci
     ROLES: Úlohy
     ROLESDESCRIPTION: 'Úlohy sú logické zoskupenia právomocí a môžu byť pridelené k skupinám.<br />Sú zdedené z nadradených skupín, ak je to požadované.'
+    db_Description: Popis
+    db_Sort: Usporiadanie
+    db_Title: Názov
+    has_many_Groups: Skupiny
+    has_one_Parent: 'Komentovaný príspevok'
+    many_many_Roles: Úlohy
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adreasa'
     PLURALNAME: 'Pokusy o prihlásenie'
     SINGULARNAME: 'Pokus o prihlásenie'
     Status: Stav
     Email: 'Emailová adresa'
+    db_Status: Stav
+    has_one_Member: Člen
   SilverStripe\Security\Member:
     ADDGROUP: 'Pridať skupinu'
     BUTTONCHANGEPASSWORD: 'Zmeniť heslo'
@@ -196,9 +204,13 @@ sk:
     db_PasswordExpiry: 'Dátum expirácie hesla'
     BUTTONLOGOUT: 'Odhlásiť sa'
     VALIDATIONMEMBEREXISTS: 'Člen s rovnakým identifikátorom {identifier} už existuje'
+    db_Email: E-mail
+    db_Surname: Priezvisko
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Heslá člena'
     SINGULARNAME: 'Heslo člena'
+    db_Password: Heslo
+    has_one_Member: Člen
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: {chars}'
     PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové heslo, prosím'
@@ -213,6 +225,8 @@ sk:
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
     CMS_ACCESS_CATEGORY: 'Prístup do CMS'
     PERMISSIONS_CATEGORY: 'Úlohy a prístupové práva'
+    db_Type: Typ
+    has_one_Group: Skupina
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'pripojené k "{title}"'
     FromGroup: 'zdedené zo skupiny "{title}"'
@@ -223,10 +237,14 @@ sk:
     PLURALNAME: Roly
     SINGULARNAME: Rola
     Title: Názov
+    belongs_many_many_Groups: Skupiny
+    db_OnlyAdminCanApply: 'Iba administrátor môže použiť'
+    db_Title: Názov
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia role'
     PermsError: 'Nie je možné pripojiť kód "{code}" s privilegovanými právami (vyžaduje ADMIN prístup)'
     SINGULARNAME: 'Kód oprávnenia role'
+    has_one_Role: Rola
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa prihlásiť.'
     BUTTONSEND: 'Pošlite mi odkaz na resetovanie hesla'
@@ -254,3 +272,5 @@ sk:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
     NoPassword: 'Nie je tu heslo pre tohto člena.'
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Člen

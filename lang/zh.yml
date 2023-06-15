@@ -111,12 +111,20 @@ zh:
     ROLES: 角色
     ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
     SINGULARNAME: 小组
+    db_Description: 描述
+    db_Title: 题目
+    has_many_Groups: 群组
+    has_one_Parent: 父
+    many_many_Roles: 角色
+    many_many_Subsites: 多个子网站
   SilverStripe\Security\LoginAttempt:
     IP: 'IP 地址'
     Status: 状态
     Email: 电子邮件地址
     PLURALNAME: 登录尝试
     SINGULARNAME: 登录尝试
+    db_Status: 状态
+    has_one_Member: 成员
   SilverStripe\Security\Member:
     ADDGROUP: 添加组别
     BUTTONCHANGEPASSWORD: 更改密码
@@ -152,6 +160,8 @@ zh:
     EDIT_PASSWORD: 新密码
     PLURALNAME: 成员
     SINGULARNAME: 成员
+    db_Email: 电子邮件
+    db_Surname: 姓氏
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
     PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
@@ -166,6 +176,8 @@ zh:
     PERMISSIONS_CATEGORY: 角色及访问权限
     PLURALNAME: 权限
     SINGULARNAME: 权限
+    db_Type: 类型
+    has_one_Group: 小组
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '已分配至 "{title}"'
     FromGroup: '从小组 "{title}"继承'
@@ -176,10 +188,14 @@ zh:
     Title: 标题
     PLURALNAME: 角色
     SINGULARNAME: 角色
+    belongs_many_many_Groups: 群组
+    db_OnlyAdminCanApply: 只有管理员可以应用
+    db_Title: 题目
   SilverStripe\Security\PermissionRoleCode:
     PermsError: '无法为代码 "{code}"分配特权权限（要求具备 ADMIN 访问）'
     PLURALNAME: 权限角色代码
     SINGULARNAME: 权限角色代码
+    has_one_Role: 角色
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。
     BUTTONSEND: 将密码重设链接发送给我
@@ -240,3 +256,7 @@ zh:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 成员密码
     SINGULARNAME: 成员密码
+    db_Password: 密码
+    has_one_Member: 成员
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: 成员

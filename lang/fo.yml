@@ -28,10 +28,15 @@ fo:
     NEWGROUP: 'Nýggjur bólkur'
     PERMISSIONS: Loyvir
     PLURALNAME: Bólkur
+    db_Description: Frágreiðing
+    db_Title: Heiti
+    has_many_Groups: Bólkur
   SilverStripe\Security\LoginAttempt:
     IP: 'IP adressa'
     Status: Støða
     Email: Teldupostur
+    db_Status: Støða
+    has_one_Member: Limur
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
     BUTTONLOGIN: Innrita
@@ -56,6 +61,8 @@ fo:
     EDIT_PASSWORD: 'Nýtt loyniorð'
     PLURALNAME: Limir
     SINGULARNAME: Limur
+    db_Email: Teldupostur
+    db_Surname: Eftirnavn
   SilverStripe\Security\Security:
     BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
     CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
@@ -95,3 +102,10 @@ fo:
     PLURALNAME: Loyvir
   SilverStripe\Security\PermissionRole:
     Title: Heiti
+    belongs_many_many_Groups: Bólkur
+    db_Title: Heiti
+  SilverStripe\Security\MemberPassword:
+    db_Password: Loyniorð
+    has_one_Member: Limur
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Limur

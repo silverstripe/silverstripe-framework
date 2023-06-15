@@ -28,6 +28,8 @@ zh_TW:
     YOUROLDPASSWORD: 舊密碼
     EDIT_PASSWORD: 新密碼
     db_Password: 密碼
+    db_Email: 電子郵件
+    db_Surname: 姓
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 你不能瀏覽此頁。請用別的帳戶登入。
     BUTTONSEND: 寄給我密碼重設網址。
@@ -61,5 +63,9 @@ zh_TW:
     VIEW: View
   SilverStripe\Security\Group:
     NEWGROUP: 新增群組
+    db_Title: 標題
   SilverStripe\Security\PermissionRole:
     Title: 標題
+    db_Title: 標題
+  SilverStripe\Security\MemberPassword:
+    db_Password: 密碼

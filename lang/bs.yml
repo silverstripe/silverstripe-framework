@@ -46,6 +46,8 @@ bs:
     EDIT_PASSWORD: 'Nova šifra'
     PLURALNAME: Članovi
     db_Password: Šifra
+    db_Email: E-mail
+    db_Surname: Prezime
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Puna administrativna ovlaštenja'
     PLURALNAME: Ovlaštenja
@@ -93,5 +95,9 @@ bs:
     PERMISSIONS: Ovlaštenja
     has_many_Permissions: Ovlaštenja
     many_many_Members: Članovi
+    db_Title: Naslov
   SilverStripe\Security\PermissionRole:
     Title: Naslov
+    db_Title: Naslov
+  SilverStripe\Security\MemberPassword:
+    db_Password: Šifra

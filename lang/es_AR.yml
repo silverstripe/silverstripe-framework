@@ -43,10 +43,16 @@ es_AR:
     PLURALNAME: Grupos
     ROLES: roles
     ROLESDESCRIPTION: 'Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles.'
+    db_Description: Descripción
+    db_Title: Título
+    has_many_Groups: Grupos
+    many_many_Roles: roles
   SilverStripe\Security\LoginAttempt:
     IP: 'Dirección IP'
     Status: Estado
     Email: 'Dirección Email'
+    db_Status: Estado
+    has_one_Member: Miembro
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
     BUTTONLOGIN: Acceder
@@ -76,6 +82,9 @@ es_AR:
     EDIT_PASSWORD: 'Nueva contraseña'
     PLURALNAME: Miembros
     SINGULARNAME: Miembro
+    db_Email: 'Dirección Email'
+    db_FirstName: 'Primer Nombre'
+    db_Surname: Apellido
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permisos de contenido'
@@ -135,3 +144,10 @@ es_AR:
   SilverStripe\Security\PermissionRole:
     PLURALNAME: roles
     Title: Título
+    belongs_many_many_Groups: Grupos
+    db_Title: Título
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contraseña
+    has_one_Member: Miembro
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Miembro

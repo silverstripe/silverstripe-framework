@@ -41,9 +41,15 @@ el:
     EMAIL: Email
     PASSWORD: Κωδικός
     db_Password: Κωδικός
+    db_Email: Email
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Αποσύνδεση
   SilverStripe\Security\PermissionRole:
     Title: Τίτλος
+    db_Title: Τίτλος
   SilverStripe\Security\Security:
     LOGOUT: Αποσύνδεση
+  SilverStripe\Security\Group:
+    db_Title: Τίτλος
+  SilverStripe\Security\MemberPassword:
+    db_Password: Κωδικός
