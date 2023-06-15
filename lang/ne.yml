@@ -28,6 +28,8 @@ ne:
     YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
     EDIT_PASSWORD: 'नयाँ पासओड'
     db_Password: पासओड
+    db_Email: इमेल
+    db_Surname: थर
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       '
     BUTTONSEND: 'मलाई पासओड पुनर्स्थापना लिक पठाउ'
@@ -57,3 +59,5 @@ ne:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Security\MemberPassword:
+    db_Password: पासओड

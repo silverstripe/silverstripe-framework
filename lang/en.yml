@@ -149,6 +149,8 @@ en:
       one: 'A Data Object'
       other: '{count} Data Objects'
     SINGULARNAME: 'Data Object'
+    many_many_FileTracking: 'File tracking'
+    many_many_LinkTracking: 'Link tracking'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Any
     NOANSWER: 'No'
@@ -236,6 +238,22 @@ en:
     ValidationIdentifierAlreadyExists: 'A Group ({group}) already exists with the same {identifier}'
     has_many_Permissions: Permissions
     many_many_Members: Members
+    db_AccessAllSubsites: 'Access all subsites'
+    db_Code: Code
+    db_DN: DN
+    db_Description: Description
+    db_GUID: GUID
+    db_HtmlEditorConfig: 'Html editor config'
+    db_LastSynced: 'Last synced'
+    db_Locked: Locked
+    db_Sort: Sort
+    db_Title: Title
+    has_many_Groups: Groups
+    has_many_LDAPGroupMappings: 'LDAP group mappings'
+    has_one_Parent: Parent
+    many_many_Roles: Roles
+    many_many_SiteTreeContentReview: 'Site tree content review'
+    many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
     Email: 'Email Address'
     EmailHashed: 'Email Address (hashed)'
@@ -246,6 +264,10 @@ en:
       other: '{count} Login Attempts'
     SINGULARNAME: 'Login Attempt'
     Status: Status
+    db_EmailHashed: 'Email hashed'
+    db_IP: IP
+    db_Status: Status
+    has_one_Member: Member
   SilverStripe\Security\Member:
     ADDGROUP: 'Add group'
     BUTTONCHANGEPASSWORD: 'Change Password'
@@ -290,6 +312,37 @@ en:
     db_LockedOutUntil: 'Locked out until'
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
+    RequiresPasswordChangeOnNextLogin: 'Requires password change on next log in'
+    belongs_many_many_BlogPosts: 'Blog posts'
+    db_AccountResetExpired: 'Account reset expired'
+    db_AccountResetHash: 'Account reset hash'
+    db_AutoLoginExpired: 'Auto login expired'
+    db_AutoLoginHash: 'Auto login hash'
+    db_BlogProfileSummary: 'Blog profile summary'
+    db_DefaultRegisteredMethodID: 'Default registered method ID'
+    db_Email: Email
+    db_FailedLoginCount: 'Failed login count'
+    db_FirstName: 'First name'
+    db_GUID: GUID
+    db_HasSkippedMFARegistration: 'Has skippedMFA registration'
+    db_IsExpired: 'Is expired'
+    db_LastSynced: 'Last synced'
+    db_PasswordEncryption: 'Password encryption'
+    db_Salt: Salt
+    db_Surname: Surname
+    db_TempIDExpired: 'TempID expired'
+    db_TempIDHash: 'TempID hash'
+    db_URLSegment: 'URL segment'
+    db_Username: Username
+    has_many_LoggedPasswords: 'Logged passwords'
+    has_many_LoginSessions: 'Login sessions'
+    has_many_RegisteredMFAMethods: 'RegisteredMFA methods'
+    has_many_RememberLoginHashes: 'Remember login hashes'
+    has_one_AFile: 'A file'
+    has_one_AImage: 'A image'
+    has_one_BlogProfileImage: 'Blog profile image'
+    has_one_FavouritePage: 'Favourite page'
+    many_many_SiteTreeContentReview: 'Site tree content review'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS Member Login Form'
     BUTTONFORGOTPASSWORD: 'Forgot password'
@@ -306,6 +359,10 @@ en:
       one: 'A Member Password'
       other: '{count} Member Passwords'
     SINGULARNAME: 'Member Password'
+    db_Password: Password
+    db_PasswordEncryption: 'Password encryption'
+    db_Salt: Salt
+    has_one_Member: Member
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Please increase password strength by adding some of the following characters: {chars}'
     PREVPASSWORD: 'You''ve already used that password in the past, please choose a new password'
@@ -323,6 +380,10 @@ en:
       other: '{count} Permissions'
     SINGULARNAME: Permission
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
+    db_Arg: Arg
+    db_Code: Code
+    db_Type: Type
+    has_one_Group: Group
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assigned to "{title}"'
     FromGroup: 'inherited from group "{title}"'
@@ -336,6 +397,10 @@ en:
       other: '{count} Roles'
     SINGULARNAME: Role
     Title: Title
+    belongs_many_many_Groups: Groups
+    db_OnlyAdminCanApply: 'Only admin can apply'
+    db_Title: Title
+    has_many_Codes: Codes
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permission Role Codes'
     PLURALS:
@@ -343,12 +408,19 @@ en:
       other: '{count} Permission Role Codes'
     PermsError: 'Can''t assign code "{code}" with privileged permissions (requires ADMIN access)'
     SINGULARNAME: 'Permission Role Code'
+    db_Code: Code
+    has_one_Role: Role
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Login Hashes'
     PLURALS:
       one: 'A Login Hash'
       other: '{count} Login Hashes'
     SINGULARNAME: 'Login Hash'
+    db_DeviceID: 'Device ID'
+    db_ExpiryDate: 'Expiry date'
+    db_Hash: Hash
+    has_one_LoginSession: 'Login session'
+    has_one_Member: Member
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
@@ -367,3 +439,8 @@ en:
     PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'There was a problem loading the media.'
+  SilverStripe\Security\InheritedPermissionsExtension:
+    db_CanEditType: 'Can edit type'
+    db_CanViewType: 'Can view type'
+    many_many_EditorGroups: 'Editor groups'
+    many_many_ViewerGroups: 'Viewer groups'

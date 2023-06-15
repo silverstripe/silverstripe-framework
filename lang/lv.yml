@@ -41,10 +41,16 @@ lv:
     PLURALNAME: Grupas
     ROLES: Lomas
     ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
+    db_Description: Apraksts
+    db_Title: Virsraksts
+    has_many_Groups: Grupas
+    many_many_Roles: Lomas
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Adrese'
     Status: Statuss
     Email: 'E-pasta adrese'
+    db_Status: Statuss
+    has_one_Member: Dalībnieks
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Mainīt paroli'
     BUTTONLOGIN: PIeslēgties
@@ -74,6 +80,8 @@ lv:
     EDIT_PASSWORD: 'Jaunā parole'
     PLURALNAME: Dalībnieki
     SINGULARNAME: Dalībnieks
+    db_Email: E-pasts
+    db_Surname: Uzvārds
   SilverStripe\Security\Permission:
     AdminGroup: Administrators
     CONTENT_CATEGORY: 'Satura atļaujas'
@@ -132,3 +140,10 @@ lv:
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Lomas
     Title: Virsraksts
+    belongs_many_many_Groups: Grupas
+    db_Title: Virsraksts
+  SilverStripe\Security\MemberPassword:
+    db_Password: Parole
+    has_one_Member: Dalībnieks
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Dalībnieks

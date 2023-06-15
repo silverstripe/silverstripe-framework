@@ -236,6 +236,13 @@ de:
     Sort: Sortierreihenfolge
     has_many_Permissions: Berechtigungen
     many_many_Members: Mitglieder
+    db_Description: Beschreibung
+    db_Sort: Sortierung
+    db_Title: Titel
+    has_many_Groups: Gruppe
+    has_one_Parent: Übergeordnet
+    many_many_Roles: Rollen
+    many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
     Email: E-Mail-Adresse
     EmailHashed: 'E-Mail-Adresse (gehashed)'
@@ -246,6 +253,8 @@ de:
       other: '{count} Loginversuche'
     SINGULARNAME: Loginversuch
     Status: Status
+    db_Status: Status
+    has_one_Member: Benutzer
   SilverStripe\Security\Member:
     ADDGROUP: 'Gruppe hinzufügen'
     BUTTONCHANGEPASSWORD: 'Passwort ändern'
@@ -290,6 +299,10 @@ de:
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
     KEEP_ME_SIGNED_IN: '{count} Tage lang angemeldet bleiben'
     KEEP_ME_SIGNED_IN_TOOLTIP: 'Sie bleiben auf diesem Gerät für {count} Tage angemeldet. Verwenden Sie diese Funktion nur, wenn Sie dem von Ihnen verwendeten Gerät vertrauen.'
+    db_Email: E-Mail
+    db_FirstName: Vorname
+    db_Surname: Nachname
+    db_URLSegment: URL-Segment
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS Benutzer Login Formular'
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'
@@ -306,6 +319,8 @@ de:
       one: 'Ein Benutzerpasswort'
       other: '{count} Benutzerpasswörter'
     SINGULARNAME: Benutzerpasswort
+    db_Password: Passwort
+    has_one_Member: Benutzer
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: {chars}'
     PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
@@ -323,6 +338,8 @@ de:
       other: '{count} Berechtigungen'
     SINGULARNAME: Zugriffsberechtigung
     UserPermissionsIntro: 'Durch das Hinzufügen von Benutzern zu Gruppen, werden dessen Rechte angepasst. Mehr Informationen über die Berechtigungen der einzelnen Gruppen erhältst Du im Abschnitt Gruppen.'
+    db_Type: Typ
+    has_one_Group: Gruppe
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'Zugewiesen an "{title}"'
     FromGroup: 'abgeleited von Gruppe "{title}"'
@@ -336,6 +353,9 @@ de:
       other: '{count} Rollen'
     SINGULARNAME: Rolle
     Title: Titel
+    belongs_many_many_Groups: Gruppe
+    db_OnlyAdminCanApply: 'Nur Adminstratoren können beitreten'
+    db_Title: Titel
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: Berechtigungsrollencodes
     PLURALS:
@@ -343,12 +363,14 @@ de:
       other: '{count} Berechtigungsrollencodes'
     PermsError: 'Kann Berechtigungen dem Code "{code}" nicht hinzufügen (erfordert Administratorrechte)'
     SINGULARNAME: Berechtigungsrollencode
+    has_one_Role: Rolle
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Login Hashes'
     PLURALS:
       one: 'Ein Login Hash'
       other: '{count} Login Hashes'
     SINGULARNAME: 'Login Hash'
+    has_one_Member: Benutzer
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
     BUTTONSEND: 'Senden Sie mir den Link zur Passwortrücksetzung'

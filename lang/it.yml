@@ -245,6 +245,13 @@ it:
     has_many_Permissions: Permessi
     many_many_Members: Membri
     ValidationIdentifierAlreadyExists: 'Esiste già un gruppo ({group}) con lo stesso {identifier}'
+    db_Description: Descrizione
+    db_Sort: Ordine
+    db_Title: Titolo
+    has_many_Groups: Gruppi
+    has_one_Parent: Parente
+    many_many_Roles: Ruoli
+    many_many_Subsites: Sottositi
   SilverStripe\Security\LoginAttempt:
     Email: 'Indirizzo e-mail'
     EmailHashed: 'Indirizzo email (hash)'
@@ -256,6 +263,8 @@ it:
       many: '{count} tentativi d''accesso'
     SINGULARNAME: 'Tentativo d''accesso'
     Status: Stato
+    db_Status: Stato
+    has_one_Member: Utente
   SilverStripe\Security\Member:
     ADDGROUP: 'Aggiungi gruppo'
     BUTTONCHANGEPASSWORD: 'Cambia password'
@@ -301,6 +310,10 @@ it:
     db_LockedOutUntil: 'Bloccato fino al'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
+    db_Email: E-mail
+    db_FirstName: Nome
+    db_Surname: Cognome
+    db_URLSegment: 'Segmento URL'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Form di Login Utente CMS'
     BUTTONFORGOTPASSWORD: 'Password dimenticata'
@@ -318,6 +331,8 @@ it:
       other: '{count} password utente'
       many: '{count} password utente'
     SINGULARNAME: 'Password utente'
+    db_Password: Password
+    has_one_Member: Utente
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: {chars}'
     PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
@@ -336,6 +351,8 @@ it:
       many: '{count} Permessi'
     SINGULARNAME: Permesso
     UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
+    db_Type: Tipo
+    has_one_Group: Gruppo
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assegnato a "{title}"'
     FromGroup: 'ereditato dal gruppo "{title}"'
@@ -350,6 +367,9 @@ it:
       many: '{count} Ruoli'
     SINGULARNAME: Ruolo
     Title: Titolo
+    belongs_many_many_Groups: Gruppi
+    db_OnlyAdminCanApply: 'Solo l''amministratore può applicare'
+    db_Title: Titolo
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Codici di ruolo'
     PLURALS:
@@ -358,6 +378,7 @@ it:
       many: '{count} codici di ruolo'
     PermsError: 'Non posso assegnare permessi privilegiati al codice "{code}" (richiede accesso ADMIN)'
     SINGULARNAME: 'Codice di ruolo'
+    has_one_Role: Ruolo
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Hash di Login'
     PLURALS:
@@ -365,6 +386,7 @@ it:
       other: '{count} Hash di Login'
       many: '{count} Hash di Login'
     SINGULARNAME: 'Hash di Login'
+    has_one_Member: Utente
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
     BUTTONSEND: 'Inviami il link per azzerare la password'

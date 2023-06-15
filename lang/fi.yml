@@ -204,6 +204,13 @@ fi:
     Sort: Järjestys
     has_many_Permissions: Oikeudet
     many_many_Members: Jäsenet
+    db_Description: Kuvaus
+    db_Sort: Järjestä
+    db_Title: Otsikko
+    has_many_Groups: Ryhmät
+    has_one_Parent: Isäntä
+    many_many_Roles: Roolit
+    many_many_Subsites: Alasivut
   SilverStripe\Security\LoginAttempt:
     Email: Sähköpostiosoite
     EmailHashed: 'Sähköpostiosoite (tiivistetty)'
@@ -214,6 +221,8 @@ fi:
       other: '{count} Kirjautumisyritystä'
     SINGULARNAME: Kirjautumisyritys
     Status: Tila
+    db_Status: Tila
+    has_one_Member: Käyttäjä
   SilverStripe\Security\Member:
     ADDGROUP: 'Lisää ryhmä'
     BUTTONCHANGEPASSWORD: 'Vaihda salasana'
@@ -255,6 +264,10 @@ fi:
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
     VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä {identifier}.'
+    db_Email: Sähköposti
+    db_FirstName: Etunimi
+    db_Surname: Sukunimi
+    db_URLSegment: 'URL-osoitteen osio'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS-järjestelmän käyttäjän kirjautuminen'
     BUTTONFORGOTPASSWORD: 'Unohdin salasanan'
@@ -271,6 +284,8 @@ fi:
       one: 'Käyttäjän salasana'
       other: '{count} Käyttäjän salasanaa'
     SINGULARNAME: 'Käyttäjän salasana'
+    db_Password: Salasana
+    has_one_Member: Käyttäjä
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: {chars}'
     PREVPASSWORD: 'Olet jo käyttänyt tätä salasanaa aikaisemmin, ole hyvä ja valitse uusi'
@@ -288,6 +303,8 @@ fi:
       other: '{count} Oikeutta'
     SINGULARNAME: Oikeus
     UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
+    db_Type: Tyyppi
+    has_one_Group: Ryhmä
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
@@ -301,6 +318,9 @@ fi:
       other: '{count} Roolia'
     SINGULARNAME: Rooli
     Title: 'Roolin nimi'
+    belongs_many_many_Groups: Ryhmät
+    db_OnlyAdminCanApply: 'Vain järjestelmänvalvojalla on oikeudet asettaa'
+    db_Title: Otsikko
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Käyttöoikeuden roolin koodit'
     PLURALS:
@@ -308,12 +328,14 @@ fi:
       other: '{count} Käyttöoikeuksien roolien koodit'
     PermsError: 'Ei voida asettaa koodia "{code}" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     SINGULARNAME: 'Käyttöoikeuden roolin koodi'
+    has_one_Role: Rooli
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: Kirjautumistarkisteet
     PLURALS:
       one: 'Kirjautumisen tarkiste'
       other: '{count} Kirjautumisen takistetta'
     SINGULARNAME: Kirjautumistarkiste
+    has_one_Member: Käyttäjä
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua sillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'

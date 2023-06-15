@@ -109,12 +109,21 @@ fa_IR:
     MEMBERS: اعضاء
     NEWGROUP: 'گروه تازه'
     ROLES: وظایف
+    db_Description: توضحیات
+    db_Sort: مرتب‌سازی
+    db_Title: عنوان
+    has_many_Groups: گروه‌ها
+    has_one_Parent: والد
+    many_many_Roles: وظایف
+    many_many_Subsites: 'زیر سایت ها'
   SilverStripe\Security\LoginAttempt:
     IP: 'نشانی IP'
     PLURALNAME: 'مبادرت‌ به ورود'
     SINGULARNAME: 'مبادرت‌ به ورود'
     Status: وضعیت
     Email: 'نشانی ای‌میل'
+    db_Status: وضعیت
+    has_one_Member: عضو
   SilverStripe\Security\Member:
     ADDGROUP: 'افزودن گروه'
     BUTTONCHANGEPASSWORD: 'تغییر گذرواژه'
@@ -147,9 +156,14 @@ fa_IR:
     db_Password: گذرواژه
     db_PasswordExpiry: 'تاریخ انقضاء گذرواژه'
     BUTTONLOGOUT: خروج
+    db_Email: ایمیل
+    db_FirstName: نام
+    db_Surname: 'نام خانوادگی'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'گذرواژه‌های کاربر'
     SINGULARNAME: 'گذرواژه کاربر'
+    db_Password: گذرواژه
+    has_one_Member: عضو
   SilverStripe\Security\PasswordValidator:
     TOOSHORT: 'گذرواژه بسیار کوتاه است، باید {minimum} کاراکتر یا بیشتر باشد'
   SilverStripe\Security\Permission:
@@ -160,6 +174,8 @@ fa_IR:
     SINGULARNAME: مجوز
     CMS_ACCESS_CATEGORY: 'دسترسی CMS'
     PERMISSIONS_CATEGORY: 'مجوز دسترسی ها و وظایف'
+    db_Type: نوع
+    has_one_Group: گروه
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'اختصاص داده‌شده به "{title}"'
     FromGroup: 'از گروه "{title}" ارث برده است'
@@ -169,6 +185,9 @@ fa_IR:
     Title: عنوان
     PLURALNAME: وظایف
     SINGULARNAME: وظیفه
+    belongs_many_many_Groups: گروه‌ها
+    db_OnlyAdminCanApply: 'تنها مدیر ارشد می‌تواند اعمال کند'
+    db_Title: عنوان
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید دوباره وارد شوید..'
     BUTTONSEND: 'برایم لینک ازنوسازی گذرواژه ارسال کن'
@@ -224,3 +243,6 @@ fa_IR:
     NoPassword: 'گذرواژه‌ای برای این کاربر وجود ندارد'
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'کدهای دسترسی‌ وظایف'
+    has_one_Role: وظیفه
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: عضو
