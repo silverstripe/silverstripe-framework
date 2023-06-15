@@ -98,12 +98,19 @@ ja:
     ROLES: 役割
     ROLESDESCRIPTION: '役割は、事前定義された権限の設定であり、グループに割り当てることができます。<br /> 必要であれば、それらは親グループから継承されます。'
     SINGULARNAME: グループ
+    db_Description: 説明文
+    db_Title: タイトル
+    has_many_Groups: グループ
+    many_many_Roles: 役割
+    many_many_Subsites: サブサイト
   SilverStripe\Security\LoginAttempt:
     IP: IPアドレス
     Status: ステータス
     Email: メールアドレス
     PLURALNAME: ログインの試み
     SINGULARNAME: ログインの試み
+    db_Status: ステータス
+    has_one_Member: メンバー
   SilverStripe\Security\Member:
     ADDGROUP: グループを追加
     BUTTONCHANGEPASSWORD: パスワードの変更
@@ -138,6 +145,8 @@ ja:
     EDIT_PASSWORD: 新しいパスワード
     PLURALNAME: メンバー
     SINGULARNAME: メンバー
+    db_Email: メール
+    db_Surname: 姓
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: {chars}'
     PREVPASSWORD: このパスワードは過去に使用されています、新しいパスワードを選択してください
@@ -152,6 +161,7 @@ ja:
     PERMISSIONS_CATEGORY: 役割とアクセス権限
     PLURALNAME: 承認
     SINGULARNAME: 権限
+    has_one_Group: グループ
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: '"{title}" に割り当てられた'
     FromGroup: 'グループ"{title}"から継承'
@@ -162,6 +172,9 @@ ja:
     Title: タイトル
     PLURALNAME: 役割
     SINGULARNAME: 役割
+    belongs_many_many_Groups: グループ
+    db_OnlyAdminCanApply: 管理者のみ適用可能
+    db_Title: タイトル
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら 再ログインを行ってください。'
     BUTTONSEND: パスワードリセットのリンクを送信してください
@@ -218,5 +231,10 @@ ja:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: メンバーパスワード
     SINGULARNAME: メンバーパスワード
+    db_Password: パスワード
+    has_one_Member: メンバー
   SilverStripe\Security\PermissionRoleCode:
     SINGULARNAME: 許可の役割のコード
+    has_one_Role: 役割
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: メンバー

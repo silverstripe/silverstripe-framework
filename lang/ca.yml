@@ -29,10 +29,15 @@ ca:
     NEWGROUP: 'Nou grup'
     PERMISSIONS: Permisos
     PLURALNAME: Grups
+    db_Description: Descripció
+    db_Title: Títol
+    has_many_Groups: Grups
   SilverStripe\Security\LoginAttempt:
     IP: 'Adreça IP'
     Status: Estat
     Email: 'Adreça de correu'
+    db_Status: Estat
+    has_one_Member: Membre
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
     BUTTONLOGIN: Entrar
@@ -60,6 +65,9 @@ ca:
     EDIT_PASSWORD: 'Nova contrasenya'
     PLURALNAME: Membres
     SINGULARNAME: Membre
+    db_Email: 'Correu electrònic'
+    db_FirstName: Nom
+    db_Surname: Cognom
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Drets administratius totals'
     AdminGroup: Administrador
@@ -108,3 +116,10 @@ ca:
     BUTTONFORGOTPASSWORD: 'He oblidat la contrasenya'
   SilverStripe\Security\PermissionRole:
     Title: Títol
+    belongs_many_many_Groups: Grups
+    db_Title: Títol
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contrasenya
+    has_one_Member: Membre
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Membre

@@ -81,12 +81,18 @@ af:
     ROLES: Rolle
     ROLESDESCRIPTION: ' '
     SINGULARNAME: Groep
+    db_Description: Beskrywing
+    db_Title: Tietel
+    has_many_Groups: Groepe
+    many_many_Roles: Rolle
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Adres'
     Status: Posisie
     Email: 'Epos Adres'
     PLURALNAME: 'Inteken Pogings'
     SINGULARNAME: 'Inteken Poging'
+    db_Status: Posisie
+    has_one_Member: Lid
   SilverStripe\Security\Member:
     ADDGROUP: 'Voeg groep by'
     BUTTONCHANGEPASSWORD: 'Verander Wagwoord'
@@ -119,6 +125,8 @@ af:
     EDIT_PASSWORD: 'Nuwe wagwoord'
     PLURALNAME: Lidde
     SINGULARNAME: Lid
+    db_Email: Epos
+    db_Surname: Van
   SilverStripe\Security\Permission:
     AdminGroup: Administrateur
     CONTENT_CATEGORY: 'Inhoud permissies'
@@ -128,6 +136,7 @@ af:
     PERMISSIONS_CATEGORY: 'Rolle en toegang permissies'
     PLURALNAME: Toestemmings
     SINGULARNAME: Toestemming
+    has_one_Group: Groep
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'toegeken aan "{title}"'
     FromGroup: 'geërf van groep "{title}"'
@@ -138,6 +147,9 @@ af:
     Title: Tietel
     PLURALNAME: Rolle
     SINGULARNAME: Rol
+    belongs_many_many_Groups: Groepe
+    db_OnlyAdminCanApply: 'Slegs administrateur daarvoor aansoek doen'
+    db_Title: Tietel
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer inteken.'
     BUTTONSEND: 'Stuur vir my die wagwoord herstel skakel'
@@ -186,3 +198,9 @@ af:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Lid Wagwoorde'
     SINGULARNAME: 'Lid Wagwoord'
+    db_Password: Wagwoord
+    has_one_Member: Lid
+  SilverStripe\Security\PermissionRoleCode:
+    has_one_Role: Rol
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Lid

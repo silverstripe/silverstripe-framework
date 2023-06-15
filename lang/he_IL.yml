@@ -20,6 +20,8 @@ he_IL:
     NEWGROUP: 'קבוצה חדשה'
     PERMISSIONS: הרשאות
     PLURALNAME: קבוצות
+    db_Title: כותרת
+    has_many_Groups: קבוצות
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'שנה סיסמא'
     BUTTONLOGIN: התחבר
@@ -46,6 +48,8 @@ he_IL:
     PLURALNAME: 'חברים רשומים'
     SINGULARNAME: 'חבר רשום'
     db_Password: סיסמא
+    db_Email: 'דואר אלקטרוני'
+    db_Surname: 'שם משפחה'
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'הרשאות התוכן'
     CMS_ACCESS_CATEGORY: 'גישה ל־CMS'
@@ -101,3 +105,12 @@ he_IL:
     BUTTONLOGOUT: יציאה
   SilverStripe\Security\PermissionRole:
     Title: כותרת
+    belongs_many_many_Groups: קבוצות
+    db_Title: כותרת
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: 'חבר רשום'
+  SilverStripe\Security\MemberPassword:
+    db_Password: סיסמא
+    has_one_Member: 'חבר רשום'
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: 'חבר רשום'

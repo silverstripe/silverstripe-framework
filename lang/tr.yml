@@ -43,10 +43,16 @@ tr:
     PERMISSIONS: İzinler
     PLURALNAME: Gruplar
     ROLES: Roller
+    db_Description: Açıklama
+    db_Title: Başlık
+    has_many_Groups: Gruplar
+    many_many_Roles: Roller
   SilverStripe\Security\LoginAttempt:
     IP: 'IP Adresi'
     Status: Durum
     Email: 'E-posta Adresi'
+    db_Status: Durum
+    has_one_Member: Üye
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
     BUTTONLOGIN: Giriş
@@ -75,6 +81,9 @@ tr:
     EDIT_PASSWORD: 'Yeni Şifre'
     PLURALNAME: Üyeler
     SINGULARNAME: Üye
+    db_Email: Eposta
+    db_FirstName: Ad
+    db_Surname: Soyad
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
     AdminGroup: Yönetici
@@ -135,3 +144,10 @@ tr:
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Roller
     Title: Başlık
+    belongs_many_many_Groups: Gruplar
+    db_Title: Başlık
+  SilverStripe\Security\MemberPassword:
+    db_Password: Parola
+    has_one_Member: Üye
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Üye

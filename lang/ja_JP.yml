@@ -100,10 +100,16 @@ ja_JP:
     Sort: 並び順
     has_many_Permissions: 承認
     many_many_Members: メンバー
+    db_Description: 説明文
+    db_Title: タイトル
+    has_many_Groups: グループ
+    many_many_Roles: 役割
   SilverStripe\Security\LoginAttempt:
     Email: メールアドレス
     IP: IPアドレス
     Status: ステータス
+    db_Status: ステータス
+    has_one_Member: メンバー
   SilverStripe\Security\Member:
     ADDGROUP: グループを追加
     BUTTONCHANGEPASSWORD: パスワードの変更
@@ -135,6 +141,8 @@ ja_JP:
     db_LockedOutUntil: DBロックがされています。
     db_Password: パスワード
     db_PasswordExpiry: パスワードの有効期限
+    db_Email: メールアドレス
+    db_Surname: 姓
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: ログアウト
   SilverStripe\Security\Permission:
@@ -150,6 +158,8 @@ ja_JP:
   SilverStripe\Security\PermissionRole:
     PLURALNAME: 役割
     Title: タイトル
+    belongs_many_many_Groups: グループ
+    db_Title: タイトル
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'あなたはこのページにアクセスできません。別のアカウントを持っていたら <a href="%s">再ログイン</a>を行ってください。'
     BUTTONSEND: パスワードリセットのリンクを送信してください
@@ -161,3 +171,8 @@ ja_JP:
     LOGOUT: ログアウト
     NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
     NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
+  SilverStripe\Security\MemberPassword:
+    db_Password: パスワード
+    has_one_Member: メンバー
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: メンバー

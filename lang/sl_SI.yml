@@ -58,6 +58,10 @@ sl_SI:
     PLURALNAME: Grupe
     ROLES: Vloge
     SINGULARNAME: Skupina
+    db_Description: Opis
+    db_Title: Naslov
+    has_many_Groups: Grupe
+    many_many_Roles: Vloge
   SilverStripe\Security\Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
@@ -76,16 +80,21 @@ sl_SI:
     BUTTONLOGOUT: Odjava
     PLURALNAME: Člani
     SINGULARNAME: Uporabnik
+    db_Email: E-pošta
+    db_Surname: Priimek
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     FULLADMINRIGHTS: 'Polne administratorske pravice'
     CMS_ACCESS_CATEGORY: 'Dostop do CMS'
     PLURALNAME: Dovoljenja
     SINGULARNAME: Dovoljenje
+    has_one_Group: Skupina
   SilverStripe\Security\PermissionRole:
     Title: Naslov
     PLURALNAME: Vloge
     SINGULARNAME: Vloga
+    belongs_many_many_Groups: Grupe
+    db_Title: Naslov
   SilverStripe\Security\Security:
     CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
     ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
@@ -124,3 +133,12 @@ sl_SI:
     BUTTONLOGOUT: Odjava
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     NoPassword: 'Uporabnik nima nastavljenega gesla.'
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: Uporabnik
+  SilverStripe\Security\MemberPassword:
+    db_Password: Geslo
+    has_one_Member: Uporabnik
+  SilverStripe\Security\PermissionRoleCode:
+    has_one_Role: Vloga
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Uporabnik

@@ -39,9 +39,14 @@ az:
     PERMISSIONS: Səlahiyyətlər
     PLURALNAME: Qruplar
     ROLES: Rollar
+    db_Description: 'Qısa təsvir'
+    db_Title: Başlıq
+    has_many_Groups: Qruplar
+    many_many_Roles: Rollar
   SilverStripe\Security\LoginAttempt:
     IP: 'İP ünvan'
     Email: E-poçt
+    has_one_Member: Üzv
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Parolu dəyiş'
     BUTTONLOGIN: 'Daxil ol'
@@ -71,6 +76,8 @@ az:
     EDIT_PASSWORD: 'Yeni parol'
     PLURALNAME: Üzvlər
     SINGULARNAME: Üzv
+    db_Email: E-poçt
+    db_Surname: Soyad
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Məzmun səlahiyyətləri'
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
@@ -128,3 +135,10 @@ az:
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Rollar
     Title: Başlıq
+    belongs_many_many_Groups: Qruplar
+    db_Title: Başlıq
+  SilverStripe\Security\MemberPassword:
+    db_Password: Parol
+    has_one_Member: Üzv
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Üzv

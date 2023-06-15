@@ -59,10 +59,16 @@ pt:
     PERMISSIONS: Permissões
     PLURALNAME: Grupos
     ROLES: Regras
+    db_Description: Descrição
+    db_Title: Título
+    has_many_Groups: Grupos
+    many_many_Roles: Regras
   SilverStripe\Security\LoginAttempt:
     IP: 'Endereço IP'
     Status: Estado
     Email: 'Endereço de Email'
+    db_Status: Estado
+    has_one_Member: Membro
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Alterar Password'
     BUTTONLOGIN: Entrar
@@ -90,6 +96,7 @@ pt:
     PASSWORD: Palavra-chave
     PLURALNAME: Membros
     SINGULARNAME: Membro
+    db_Surname: Sobrenome
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permissões de conteúdo'
@@ -102,6 +109,8 @@ pt:
   SilverStripe\Security\PermissionRole:
     Title: Título
     PLURALNAME: Regras
+    belongs_many_many_Groups: Grupos
+    db_Title: Título
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Não tem acesso a esta página. Se tem outras credenciais que lhe permitem aceder a esta página, pode-se autenticar abaixo.'
     BUTTONSEND: 'Enviar o link para recuperar a password'
@@ -149,3 +158,8 @@ pt:
     DefaultAdminFirstname: 'Administrador por Omissão'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Sair
+  SilverStripe\Security\MemberPassword:
+    db_Password: Palavra-chave
+    has_one_Member: Membro
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Membro

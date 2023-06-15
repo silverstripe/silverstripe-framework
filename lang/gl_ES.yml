@@ -56,10 +56,14 @@ gl_ES:
     PLURALNAME: Grupos
     ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
     many_many_Members: Membros
+    db_Title: Título
+    has_many_Groups: Grupos
   SilverStripe\Security\LoginAttempt:
     IP: 'Enderezo IP'
     Status: Estado
     Email: 'Enderezo Correo-e'
+    db_Status: Estado
+    has_one_Member: Membro
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Mudar Contrasinal'
     BUTTONLOGIN: 'Iniciar sesión'
@@ -89,6 +93,8 @@ gl_ES:
     EDIT_PASSWORD: 'Novo Contrasinal'
     PLURALNAME: Membros
     SINGULARNAME: Membro
+    db_Email: Correo-e
+    db_Surname: Apelidos
   SilverStripe\Security\Permission:
     AdminGroup: Administrador
     CONTENT_CATEGORY: 'Permisos do Contido'
@@ -149,3 +155,10 @@ gl_ES:
     BUTTONLOGOUT: 'Pechar sesión'
   SilverStripe\Security\PermissionRole:
     Title: Título
+    belongs_many_many_Groups: Grupos
+    db_Title: Título
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contrasinal
+    has_one_Member: Membro
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Membro

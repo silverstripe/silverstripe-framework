@@ -20,6 +20,7 @@ ms:
     MEMBERS: Ahli-ahli
     PERMISSIONS: Keizinan
     PLURALNAME: Kumpulan-kumpulan
+    has_many_Groups: Kumpulan-kumpulan
   SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Ubah Kata Lalaun'
     BUTTONLOGIN: 'Daftar masuk'
@@ -46,6 +47,8 @@ ms:
     EDIT_PASSWORD: 'Katalaluan Baru'
     PLURALNAME: Ahli-ahli
     SINGULARNAME: Ahli
+    db_Email: Emel
+    db_Surname: 'Nama keluarga'
   SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Hak mutlah pentadbiran'
     PLURALNAME: Keizinan
@@ -78,3 +81,11 @@ ms:
     SINGULARNAME: 'Objek Data'
   SilverStripe\Security\LoginAttempt:
     Email: 'Alamat Emel'
+    has_one_Member: Ahli
+  SilverStripe\Security\MemberPassword:
+    db_Password: 'Kata Laluan'
+    has_one_Member: Ahli
+  SilverStripe\Security\PermissionRole:
+    belongs_many_many_Groups: Kumpulan-kumpulan
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Ahli

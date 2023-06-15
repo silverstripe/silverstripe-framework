@@ -29,9 +29,14 @@ ro:
     MEMBERS: Membri
     PERMISSIONS: Permisiuni
     PLURALNAME: Grupuri
+    db_Title: Titlu
+    has_many_Groups: Grupuri
+    has_one_Parent: Părinte
   SilverStripe\Security\LoginAttempt:
     IP: 'Adresa IP'
     Status: Stare
+    db_Status: Stare
+    has_one_Member: Membru
   SilverStripe\Security\Member:
     BUTTONLOGIN: Autentificare
     BUTTONLOSTPASSWORD: 'Am uitat parola'
@@ -56,6 +61,8 @@ ro:
     EMAIL: E-mail
     PLURALNAME: Membri
     SINGULARNAME: Membru
+    db_Email: E-mail
+    db_Surname: Nume
   SilverStripe\Security\Permission:
     CONTENT_CATEGORY: 'Permisiuni de conținut'
     CMS_ACCESS_CATEGORY: 'Acces CMS'
@@ -107,3 +114,10 @@ ro:
     BUTTONLOGOUT: Logout
   SilverStripe\Security\PermissionRole:
     Title: Titlu
+    belongs_many_many_Groups: Grupuri
+    db_Title: Titlu
+  SilverStripe\Security\MemberPassword:
+    db_Password: Parola
+    has_one_Member: Membru
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Membru
