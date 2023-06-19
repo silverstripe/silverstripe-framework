@@ -10,6 +10,7 @@ use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Calculates batch permissions for nested objects for:
@@ -48,7 +49,6 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     public const LOGGED_IN_USERS = 'LoggedInUsers';
 
     /**
-     * @TODO - rename this to ONLY_THESE_GROUPS
      * Restrict to specific groups
      */
     public const ONLY_THESE_USERS = 'OnlyTheseUsers';
@@ -642,11 +642,13 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * Get join table for type
      * Defaults to those provided by {@see InheritedPermissionsExtension)
      *
+     * @deprecated 5.1.0 Use getGroupJoinTable() instead
      * @param string $type
      * @return string
      */
     protected function getJoinTable($type)
     {
+        Deprecation::notice('5.1.0', 'Use getGroupJoinTable() instead');
         return $this->getGroupJoinTable($type);
     }
 
