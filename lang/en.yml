@@ -313,7 +313,6 @@ en:
     db_LockedOutUntil: 'Locked out until'
     db_Password: Password
     db_PasswordExpiry: 'Password Expiry Date'
-    RequiresPasswordChangeOnNextLogin: 'Requires password change on next log in'
     belongs_many_many_BlogPosts: 'Blog posts'
     db_AccountResetExpired: 'Account reset expired'
     db_AccountResetHash: 'Account reset hash'
