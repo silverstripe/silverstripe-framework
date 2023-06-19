@@ -172,6 +172,10 @@ class SearchContext
      */
     private function prepareQuery($sort, $limit, ?DataList $existingQuery): DataList
     {
+        // @todo In CMS 6 change method param from `$limit = false` to `array|string|null $limit = null`
+        if ($limit === false) {
+            $limit = null;
+        }
         $query = null;
         if ($existingQuery) {
             if (!($existingQuery instanceof DataList)) {
@@ -194,7 +198,7 @@ class SearchContext
         } else {
             $query = $query->limit($limit);
         }
-        if (!empty($sort) || is_null($sort)) {
+        if ($sort && (!empty($sort) || is_null($sort))) {
             $query = $query->sort($sort);
         }
         return $query;
