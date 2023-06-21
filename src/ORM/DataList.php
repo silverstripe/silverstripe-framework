@@ -1209,7 +1209,19 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * $myDataList->eagerLoad('Some.Nested.Relation', 'Another.Relation')
+     * Eager load relations for DataObjects in this DataList including nested relations
+     *
+     * Eager loading alleviates the N + 1 problem by querying the nested relationship tables before they are
+     * needed using a single large `WHERE ID in ($ids)` SQL query instead of many `WHERE RelationID = $id` queries.
+     *
+     * You can speicify nested relations by using dot notation, and you can also pass in multiple relations.
+     * When speicifying nested relations there is a maximum of 3 levels of relations allowed i.e. 2 dots
+     *
+     * Example:
+     * $myDataList->eagerLoad('MyRelation.NestedRelation.EvenMoreNestedRelation', 'DifferentRelation')
+     *
+     * IMPORTANT: Calling eagerLoad() will cause any relations on DataObjects to be returned as an ArrayList
+     * instead of a subclass of DataList such as HasManyList i.e. MyDataObject->MyHasManyRelation() returns an ArrayList
      */
     public function eagerLoad(...$relations): static
     {
