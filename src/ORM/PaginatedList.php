@@ -428,7 +428,7 @@ class PaginatedList extends ListDecorator
      */
     public function LastPage()
     {
-        return $this->CurrentPage() == $this->TotalPages();
+        return $this->CurrentPage() >= $this->TotalPages();
     }
 
     /**
