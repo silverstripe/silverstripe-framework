@@ -428,6 +428,10 @@ class PaginatedList extends ListDecorator
      */
     public function LastPage()
     {
+        if ($this->TotalPages() == 0) {
+            return true;
+        }
+
         return $this->CurrentPage() == $this->TotalPages();
     }
 
