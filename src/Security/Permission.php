@@ -347,9 +347,9 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function groupList($memberID = null)
     {
+        $member = Security::getCurrentUser();
         // Default to current member, with session-caching
-        if (!$memberID) {
-            $member = Security::getCurrentUser();
+        if (!$memberID || ($member && $member->ID == $memberID)) {
             if ($member && isset($_SESSION['Permission_groupList'][$member->ID])) {
                 return $_SESSION['Permission_groupList'][$member->ID];
             }
@@ -373,9 +373,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
 
             // Session caching
-            if (!$memberID) {
-                $_SESSION['Permission_groupList'][$member->ID] = $groupList;
-            }
+            $_SESSION['Permission_groupList'][$member->ID] = $groupList;
 
             return isset($groupList) ? $groupList : null;
         }
