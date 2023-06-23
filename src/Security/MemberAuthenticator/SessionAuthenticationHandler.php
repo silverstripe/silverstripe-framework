@@ -60,7 +60,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
             return null;
         }
         /** @var Member $member */
-        $member = DataObject::get_by_id("SilverStripe\\Security\\Member", $id);
+        $member = DataObject::get_by_id(Member::class, $id);
         return $member;
     }
 
