@@ -12,6 +12,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\Security\Member;
 
 /**
  * Represents a permission assigned to a group.
@@ -354,7 +355,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 return $_SESSION['Permission_groupList'][$member->ID];
             }
         } else {
-            $member = DataObject::get_by_id("SilverStripe\\Security\\Member", $memberID);
+            $member = DataObject::get_by_id(Member::class, $memberID);
         }
 
         if ($member) {
