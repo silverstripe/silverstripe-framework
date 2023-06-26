@@ -193,7 +193,7 @@ class PermissionCheckboxSetField extends FormField
             $privilegedPermissions = Permission::config()->privileged_permissions;
 
             // loop through all available categorized permissions and see if they're assigned for the given groups
-            $recordsCount = $this->records ? $this->records->Count() : 0;
+            $hasMultipleRecords = $this->records?->count() > 1;
             foreach ($this->source as $categoryName => $permissions) {
                 $options .= "<li><h5>$categoryName</h5></li>";
                 foreach ($permissions as $code => $permission) {
