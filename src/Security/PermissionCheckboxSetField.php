@@ -193,6 +193,7 @@ class PermissionCheckboxSetField extends FormField
             $privilegedPermissions = Permission::config()->privileged_permissions;
 
             // loop through all available categorized permissions and see if they're assigned for the given groups
+            $recordsCount = $this->records ? $this->records->Count() : 0;
             foreach ($this->source as $categoryName => $permissions) {
                 $options .= "<li><h5>$categoryName</h5></li>";
                 foreach ($permissions as $code => $permission) {
@@ -222,7 +223,7 @@ class PermissionCheckboxSetField extends FormField
                         // interface
                         $disabled = ' disabled="true"';
                         $inheritMessage = ' (' . join(', ', $inheritedCodes[$code]) . ')';
-                    } elseif ($this->records && $this->records->Count() > 1 && isset($uninheritedCodes[$code])) {
+                    } elseif ($this->records && $recordsCount > 1 && isset($uninheritedCodes[$code])) {
                         // If code assignments are collected from more than one "source group",
                         // show its origin automatically
                         $inheritMessage = ' (' . join(', ', $uninheritedCodes[$code]) . ')';
