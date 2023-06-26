@@ -2,20 +2,17 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\Map;
 use ArrayAccess;
+use SilverStripe\ORM\Map;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Represents a field that allows users to select one or more items from a list
  */
 abstract class SelectField extends FormField
 {
-    private static $casting = [
-        'OptionsHTML' => 'HTMLFragment',
-    ];
-
     /**
      * Associative or numeric array of all dropdown items,
      * with array key as the submitted field value, and the array value as a
@@ -282,7 +279,7 @@ abstract class SelectField extends FormField
      *
      * @return string
      */
-    public function OptionsHTML(): string
+    public function renderOptionsHTML(): string
     {
         // Some methods only exists for single selects
         $source = $this->hasMethod('getSourceEmpty') ? $this->getSourceEmpty() : $this->getSource();
@@ -301,7 +298,20 @@ abstract class SelectField extends FormField
             $item = '<option value="' . Convert::raw2xml($value) . '"' . $selected . $disabled . '>' . Convert::raw2xml($title) . '</option>';
             $options[] = $item;
         }
-        
+
         return implode("\n", $options);
+    }
+
+    /**
+     * @param array $properties
+     * @return string
+     */
+    public function Field($properties = [])
+    {
+        // Without this, changing the source will render the previous list due to cache
+        $OptionsHTML = new DBHTMLText('Options');
+        $OptionsHTML->setValue($this->renderOptionsHTML());
+        $properties['OptionsHTML'] = $OptionsHTML;
+        return parent::Field($properties);
     }
 }
