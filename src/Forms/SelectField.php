@@ -292,16 +292,16 @@ abstract class SelectField extends FormField
         foreach ($source as $value => $title) {
             $selected = '';
             if ($this->isSelectedValue($value, $currentValue)) {
-                $selected = ' selected';
+                $selected = ' selected="selected"';
             }
             $disabled = '';
             if ($this->isDisabledValue($value) && $title != $emptyString) {
-                $disabled = ' disabled';
+                $disabled = ' disabled="disabled"';
             }
             $item = '<option value="' . Convert::raw2xml($value) . '"' . $selected . $disabled . '>' . Convert::raw2xml($title) . '</option>';
             $options[] = $item;
         }
-
+        
         return implode("\n", $options);
     }
 }
