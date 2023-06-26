@@ -2,8 +2,10 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Dropdown field, created from a select tag.
@@ -125,6 +127,39 @@ class DropdownField extends SingleSelectField
     }
 
     /**
+     * Provides <option> list for the template
+     * This allows for a faster rendering of dropdowns with lots of options
+     *
+     * @return string
+     */
+    public function renderOptionsHTML(): string
+    {
+        // Some methods only exists for single selects
+        $source = $this->hasMethod('getSourceEmpty') ? $this->getSourceEmpty() : $this->getSource();
+        $emptyString = $this->hasMethod('getEmptyString') ? $this->getEmptyString() : '';
+
+        $currentValue = $this->Value();
+        foreach ($source as $value => $title) {
+            // It's an opt group, ignore since it has its own template
+            if (is_array($title)) {
+                continue;
+            }
+            $selected = '';
+            if ($this->isSelectedValue($value, $currentValue)) {
+                $selected = ' selected="selected"';
+            }
+            $disabled = '';
+            if ($this->isDisabledValue($value) && $title != $emptyString) {
+                $disabled = ' disabled="disabled"';
+            }
+            $item = '<option value="' . Convert::raw2xml($value) . '"' . $selected . $disabled . '>' . Convert::raw2xml($title) . '</option>';
+            $options[] = $item;
+        }
+
+        return implode("\n", $options);
+    }
+
+    /**
      * @param array $properties
      * @return string
      */
@@ -140,6 +175,11 @@ class DropdownField extends SingleSelectField
         $properties = array_merge($properties, [
             'Options' => new ArrayList($options)
         ]);
+
+        // Without this, changing the source will render the previous list due to cache
+        $OptionsHTML = new DBHTMLText('Options');
+        $OptionsHTML->setValue($this->renderOptionsHTML());
+        $properties['OptionsHTML'] = $OptionsHTML;
 
         return parent::Field($properties);
     }
