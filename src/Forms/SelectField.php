@@ -5,12 +5,16 @@ namespace SilverStripe\Forms;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Map;
 use ArrayAccess;
+use SilverStripe\Core\Convert;
 
 /**
  * Represents a field that allows users to select one or more items from a list
  */
 abstract class SelectField extends FormField
 {
+    private static $casting = [
+        'OptionsHTML' => 'HTMLFragment',
+    ];
 
     /**
      * Associative or numeric array of all dropdown items,
@@ -270,5 +274,34 @@ abstract class SelectField extends FormField
             $field->setSource($this->getSource());
         }
         return $field;
+    }
+
+    /**
+     * Provides <option> list for the template
+     * This allows for a faster rendering of dropdowns with lots of options
+     *
+     * @return string
+     */
+    public function OptionsHTML(): string
+    {
+        // Some methods only exists for single selects
+        $source = $this->hasMethod('getSourceEmpty') ? $this->getSourceEmpty() : $this->getSource();
+        $emptyString = $this->hasMethod('getEmptyString') ? $this->getEmptyString() : '';
+
+        $currentValue = $this->Value();
+        foreach ($source as $value => $title) {
+            $selected = '';
+            if ($this->isSelectedValue($value, $currentValue)) {
+                $selected = ' selected';
+            }
+            $disabled = '';
+            if ($this->isDisabledValue($value) && $title != $emptyString) {
+                $disabled = ' disabled';
+            }
+            $item = '<option value="' . Convert::raw2xml($value) . '"' . $selected . $disabled . '>' . Convert::raw2xml($title) . '</option>';
+            $options[] = $item;
+        }
+
+        return implode("\n", $options);
     }
 }
