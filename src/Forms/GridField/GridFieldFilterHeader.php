@@ -186,7 +186,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
 
         $dataListClone = clone($dataList);
         $results = $this->getSearchContext($gridField)
-            ->getQuery($filterArguments, false, false, $dataListClone);
+            ->getQuery($filterArguments, false, null, $dataListClone);
 
         return $results;
     }

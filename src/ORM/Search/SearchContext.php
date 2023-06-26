@@ -140,6 +140,7 @@ class SearchContext
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
+        // @todo In CMS 6 change method param from `$limit = false` to `array|string|null $limit = null`
         $this->setSearchParams($searchParams);
         $query = $this->prepareQuery($sort, $limit, $existingQuery);
         return $this->search($query);
@@ -172,6 +173,9 @@ class SearchContext
      */
     private function prepareQuery($sort, $limit, ?DataList $existingQuery): DataList
     {
+        if ($limit === false) {
+            $limit = null;
+        }
         $query = null;
         if ($existingQuery) {
             if (!($existingQuery instanceof DataList)) {
