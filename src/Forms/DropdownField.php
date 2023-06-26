@@ -132,7 +132,7 @@ class DropdownField extends SingleSelectField
      *
      * @return string
      */
-    public function renderOptionsHTML(): string
+    private function renderOptionsHTML(): string
     {
         // Some methods only exists for single selects
         $source = $this->hasMethod('getSourceEmpty') ? $this->getSourceEmpty() : $this->getSource();
