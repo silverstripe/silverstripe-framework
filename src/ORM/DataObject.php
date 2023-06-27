@@ -330,13 +330,24 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $cascade_duplicates = [];
 
     /**
+     * Used to cache the schema to prevent repeatedly fetching the singleton
+     * While this is a fast operation, in some scenarios getSchema() is called an extremely large number of times
+     *
+     * @internal
+     */
+    private static ?DataObjectSchema $schema = null;
+
+    /**
      * Get schema object
      *
      * @return DataObjectSchema
      */
     public static function getSchema()
     {
-        return Injector::inst()->get(DataObjectSchema::class);
+        if (is_null(self::$schema)) {
+            self::$schema = Injector::inst()->get(DataObjectSchema::class);
+        }
+        return self::$schema;
     }
 
     /**
