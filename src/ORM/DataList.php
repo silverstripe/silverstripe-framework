@@ -928,6 +928,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     private function setDataObjectEagerLoadedData(DataObject $item): void
     {
+        // cache $item->ID at the top of this method to reduce calls to ViewableData::__get()
+        $itemID = $item->ID;
         foreach (array_keys($this->eagerLoadedData) as $eagerLoadRelation) {
             list($dataClasses, $relations) = $this->getEagerLoadVariables($eagerLoadRelation);
             $dataClass = $dataClasses[count($dataClasses) - 2];
@@ -935,7 +937,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             foreach (array_keys($this->eagerLoadedData[$eagerLoadRelation]) as $eagerLoadID) {
                 $eagerLoadedData = $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relation];
                 if ($dataClass === $dataClasses[0]) {
-                    if ($eagerLoadID === $item->ID) {
+                    if ($eagerLoadID === $itemID) {
                         $item->setEagerLoadedData($relation, $eagerLoadedData);
                     }
                 } elseif ($dataClass === $dataClasses[1]) {
