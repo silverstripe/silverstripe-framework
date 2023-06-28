@@ -43,6 +43,9 @@ class ListboxField extends MultiSelectField
      */
     protected $disabledItems = [];
 
+
+    protected $schemaComponent = 'ListboxField';
+
     /**
      * Creates a new dropdown field.
      *
@@ -57,6 +60,8 @@ class ListboxField extends MultiSelectField
         if ($size) {
             $this->setSize($size);
         }
+
+        $this->addExtraClass('ss-listbox-field');
 
         parent::__construct($name, $title, $source, $value);
     }
@@ -101,6 +106,7 @@ class ListboxField extends MultiSelectField
 
         $options = new ArrayList($options);
         $this->extend('updateGetOptions', $options);
+
         return $options;
     }
 
@@ -157,5 +163,110 @@ class ListboxField extends MultiSelectField
     public function getDisabledItems()
     {
         return $this->disabledItems;
+    }
+
+     /**
+     * Provide ListboxField data to the JSON schema for the frontend component
+     *
+     * @return array
+     */
+    public function getSchemaDataDefaults()
+    {
+        $options = $this->getOptions();
+        $selected = $options->filter('Selected', true);
+        $name = $this->getName();
+        $schema = array_merge(
+            parent::getSchemaDataDefaults(),
+            [
+                'name' => $name,
+                'lazyLoad' => false,
+                'creatable' => false,
+                'multi' => true,
+                'value' => $selected->count() ? $selected->toNestedArray() : null,
+                'disabled' => $this->isDisabled() || $this->isReadonly(),
+            ]
+        );
+
+        $schema['options'] = array_values($options->toNestedArray() ?? []);
+
+        return $schema;
+    }
+
+    public function getSchemaStateDefaults()
+    {
+        $data = parent::getSchemaStateDefaults();
+
+        // Add options to 'data'
+        $data['lazyLoad'] = false;
+        $data['multi'] = true;
+        $data['creatable'] = false;
+        $options = $this->getOptions()->filter('Selected', true);
+        $data['value'] = $options->count() ? $options->toNestedArray() : null;
+
+        return $data;
+    }
+
+    /**
+     * Returns array of arrays representing tags.
+     *
+     * @param  string $term
+     * @return array
+     */
+    protected function getOptionsArray($term)
+    {
+        $source = $this->getSourceList();
+        if (!$source) {
+            return [];
+        }
+
+        $titleField = $this->getTitleField();
+
+        $query = $source
+            ->filter($titleField . ':PartialMatch:nocase', $term)
+            ->sort($titleField);
+
+        // Map into a distinct list
+        $items = [];
+        $titleField = $this->getTitleField();
+
+        foreach ($query->map('ID', $titleField)->values() as $title) {
+            $items[$title] = [
+                'Title' => $title,
+                'Value' => $title,
+            ];
+        }
+
+        return array_values($items ?? []);
+    }
+
+    public function getValueArray()
+    {
+        $value = $this->Value();
+        $validValues = $this->getValidValues();
+        if (empty($validValues)) {
+            return [];
+        }
+
+        $canary = reset($validValues);
+        if (is_array($value) && count($value) > 0) {
+            $first = reset($value);
+            // sanity check the values - make sure strings get strings, ints get ints etc
+            if (gettype($canary) !== gettype($first)) {
+                $replaced = [];
+                foreach ($value as $item) {
+                    if (!is_array($item)) {
+                        $item = json_decode($item, true);
+                    }
+
+                    if (isset($item['Value'])) {
+                        $replaced[] = $item['Value'];
+                    }
+                }
+
+                $value = $replaced;
+            }
+        }
+
+        return $this->getListValues($value);
     }
 }
