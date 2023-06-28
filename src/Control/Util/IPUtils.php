@@ -1,4 +1,5 @@
 <?php
+
 /**
  * These helpful functions were lifted from the Symfony library
  * https://github.com/symfony/http-foundation/blob/master/LICENSE
@@ -7,6 +8,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
+
 namespace SilverStripe\Control\Util;
 
 /**
@@ -158,7 +160,7 @@ class IPUtils
         $ip = inet_ntop($packedAddress & inet_pton($mask));
 
         if ($wrappedIPv6) {
-            $ip = '['.$ip.']';
+            $ip = '[' . $ip . ']';
         }
 
         return $ip;
