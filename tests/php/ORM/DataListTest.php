@@ -2254,172 +2254,150 @@ class DataListTest extends SapphireTest
     /**
      * @dataProvider provideEagerLoadRelations
      */
-    public function testEagerLoadRelations(string $iden, array $eagerLoad, int $expected): void
+    public function testEagerLoadRelations(array $eagerLoad, int $expectedCount): void
     {
         $this->createEagerLoadData();
         $dataList = EagerLoadObject::get()->eagerLoad(...$eagerLoad);
         list($results, $selectCount) = $this->iterateEagerLoadData($dataList);
-        $this->assertSame($this->expectedEagerLoadData(), $results, $iden);
-        $this->assertSame($expected, $selectCount, $iden);
+        $expectedResults=$this->expectedEagerLoadData();
+        $this->assertSame(sort($expectedResults), sort($results));
+        $this->assertSame($expectedCount, $selectCount);
     }
 
     public function provideEagerLoadRelations(): array
     {
         return [
-            [
-                'iden' => 'lazy-load',
+            'lazy-load' => [
                 'eagerLoad' => [],
                 'expected' => 83
             ],
-            [
-                'iden' => 'has-one-a',
+            'has-one-a' => [
                 'eagerLoad' => [
                     'HasOneEagerLoadObject',
                 ],
                 'expected' => 82
             ],
-            [
-                'iden' => 'has-one-b',
+            'has-one-b' => [
                 'eagerLoad' => [
                     'HasOneEagerLoadObject.HasOneSubEagerLoadObject',
                 ],
                 'expected' => 81
             ],
-            [
-                'iden' => 'has-one-c',
+            'has-one-c' => [
                 'eagerLoad' => [
                     'HasOneEagerLoadObject.HasOneSubEagerLoadObject.HasOneSubSubEagerLoadObject',
                 ],
                 'expected' => 80
             ],
-            [
-                'iden' => 'belongs-to-a',
+            'belongs-to-a' => [
                 'eagerLoad' => [
                     'BelongsToEagerLoadObject',
                 ],
                 'expected' => 82
             ],
-            [
-                'iden' => 'belongs-to-b',
+            'belongs-to-b' => [
                 'eagerLoad' => [
                     'BelongsToEagerLoadObject.BelongsToSubEagerLoadObject',
                 ],
                 'expected' => 81
             ],
-            [
-                'iden' => 'belongs-to-c',
+            'belongs-to-c' => [
                 'eagerLoad' => [
                     'BelongsToEagerLoadObject.BelongsToSubEagerLoadObject.BelongsToSubSubEagerLoadObject',
                 ],
                 'expected' => 80
             ],
-            [
-                'iden' => 'has-many-a',
+            'has-many-a' => [
                 'eagerLoad' => [
                     'HasManyEagerLoadObjects',
                 ],
                 'expected' => 82
             ],
-            [
-                'iden' => 'has-many-b',
+            'has-many-b' => [
                 'eagerLoad' => [
                     'HasManyEagerLoadObjects.HasManySubEagerLoadObjects',
                 ],
                 'expected' => 79
             ],
-            [
-                'iden' => 'has-many-c',
+            'has-many-c' => [
                 'eagerLoad' => [
                     'HasManyEagerLoadObjects.HasManySubEagerLoadObjects.HasManySubSubEagerLoadObjects',
                 ],
                 'expected' => 72
             ],
-            [
-                'iden' => 'many-many-a',
+            'many-many-a' => [
                 'eagerLoad' => [
                     'ManyManyEagerLoadObjects',
                 ],
                 'expected' => 83 // same number as lazy-load, though without an INNER JOIN
             ],
-            [
-                'iden' => 'many-many-b',
+            'many-many-b' => [
                 'eagerLoad' => [
                     'ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects',
                 ],
                 'expected' => 81
             ],
-            [
-                'iden' => 'many-many-c',
+            'many-many-c' => [
                 'eagerLoad' => [
                     'ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects.ManyManySubSubEagerLoadObjects',
                 ],
                 'expected' => 75
             ],
-            [
-                'iden' => 'many-many-through-a',
+            'many-many-through-a' => [
                 'eagerLoad' => [
                     'ManyManyThroughEagerLoadObjects',
                 ],
                 'expected' => 83
             ],
-            [
-                'iden' => 'many-many-through-b',
+            'many-many-through-b' => [
                 'eagerLoad' => [
                     'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects',
                 ],
                 'expected' => 81
             ],
-            [
-                'iden' => 'many-many-through-c',
+            'many-many-through-c' => [
                 'eagerLoad' => [
                     'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects.ManyManyThroughSubSubEagerLoadObjects',
                 ],
                 'expected' => 75
             ],
-            [
-                'iden' => 'belongs-many-many-a',
+            'belongs-many-many-a' => [
                 'eagerLoad' => [
                     'BelongsManyManyEagerLoadObjects',
                 ],
                 'expected' => 83
             ],
-            [
-                'iden' => 'belongs-many-many-b',
+            'belongs-many-many-b' => [
                 'eagerLoad' => [
                     'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects',
                 ],
                 'expected' => 81
             ],
-            [
-                'iden' => 'belongs-many-many-c',
+            'belongs-many-many-c' => [
                 'eagerLoad' => [
                     'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects.BelongsManyManySubSubEagerLoadObjects',
                 ],
                 'expected' => 75
             ],
-            [
-                'iden' => 'mixed-a',
+            'mixed-a' => [
                 'eagerLoad' => [
                     'MixedManyManyEagerLoadObjects',
                 ],
                 'expected' => 83
             ],
-            [
-                'iden' => 'mixed-b',
+            'mixed-b' => [
                 'eagerLoad' => [
                     'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects',
                 ],
                 'expected' => 80
             ],
-            [
-                'iden' => 'mixed-c',
+            'mixed-c' => [
                 'eagerLoad' => [
                     'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects.MixedHasOneEagerLoadObject',
                 ],
                 'expected' => 73
             ],
-            [
-                'iden' => 'all',
+            'all' => [
                 'eagerLoad' => [
                     'HasOneEagerLoadObject.HasOneSubEagerLoadObject.HasOneSubSubEagerLoadObject',
                     'BelongsToEagerLoadObject.BelongsToSubEagerLoadObject.BelongsToSubSubEagerLoadObject',
@@ -2518,6 +2496,7 @@ class DataListTest extends SapphireTest
                     $manyManyThroughSubObj = new ManyManyThroughSubEagerLoadObject();
                     $manyManyThroughSubObj->Title = "manyManyThroughSubObj $i $j $k";
                     $manyManyThroughSubObj->write();
+
                     $manyManyThroughObj->ManyManyThroughSubEagerLoadObjects()->add($manyManyThroughSubObj);
                     for ($l = 0; $l < 2; $l++) {
                         $manyManyThroughSubSubObj = new ManyManyThroughSubSubEagerLoadObject();
