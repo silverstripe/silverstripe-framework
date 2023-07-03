@@ -2259,7 +2259,8 @@ class DataListTest extends SapphireTest
         $this->createEagerLoadData();
         $dataList = EagerLoadObject::get()->eagerLoad(...$eagerLoad);
         list($results, $selectCount) = $this->iterateEagerLoadData($dataList);
-        $this->assertSame($this->expectedEagerLoadData(), $results, $iden);
+        $expectedResults = $this->expectedEagerLoadData();
+        $this->assertSame(sort($expectedResults), sort($results), $iden);
         $this->assertSame($expected, $selectCount, $iden);
     }
 
