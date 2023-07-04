@@ -104,6 +104,17 @@ class PermissionTest extends SapphireTest
         $this->assertFalse(in_array('CMS_ACCESS_MyAdmin', $permissions ?? []));
     }
 
+    public function testPermissionsGroupList()
+    {
+        $member = $this->objFromFixture(Member::class, 'access');
+
+        $this->assertTrue(!isset($_SESSION['Permission_groupList']));
+
+        $permissions = Permission::groupList($member->ID);
+
+        $this->assertNotEmpty($_SESSION['Permission_groupList'][$member->ID]);
+    }
+
     public function testRolesAndPermissionsFromParentGroupsAreInherited()
     {
         $member = $this->objFromFixture(Member::class, 'globalauthor');
