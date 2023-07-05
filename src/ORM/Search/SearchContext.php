@@ -18,6 +18,7 @@ use SilverStripe\Forms\CheckboxField;
 use InvalidArgumentException;
 use Exception;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataQuery;
 
 /**
@@ -140,6 +141,13 @@ class SearchContext
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
+        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['array', 'NULL', 'string']))) {
+            Deprecation::notice(
+                '5.1.0',
+                '$limit should be type of array|string|null'
+            );
+            $limit = null;
+        }
         $this->setSearchParams($searchParams);
         $query = $this->prepareQuery($sort, $limit, $existingQuery);
         return $this->search($query);
