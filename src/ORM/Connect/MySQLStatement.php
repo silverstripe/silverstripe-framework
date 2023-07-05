@@ -116,6 +116,12 @@ class MySQLStatement extends Query
             }
             yield $row;
         }
+
+        // Check for the method first since $this->statement isn't strongly typed
+        if (method_exists($this->statement, 'data_seek')) {
+            // Reset so the query can be iterated over again
+            $this->statement->data_seek(0);
+        }
     }
 
     public function numRecords()
