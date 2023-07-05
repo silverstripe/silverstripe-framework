@@ -313,6 +313,33 @@ class DatabaseTest extends SapphireTest
     }
 
     /**
+     * Test that repeated abstracted iteration of a query result with predicates returns all records.
+     */
+    public function testRepeatedIterationWithPredicates()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        // Note that by including a WHERE statement with predicates
+        // with MySQL the result is in a MySQLStatement object rather than a MySQLQuery object.
+        $select = SQLSelect::create(
+            ['"MyInt"', '"MyField"'],
+            '"DatabaseTest_MyObject"',
+            ['MyInt IN (?,?,?,?,?)' => [0,1,2,3,4]],
+            ['"MyInt"']
+        )->execute();
+
+        $this->assertEquals($inputData, $select->map());
+        $this->assertEquals($inputData, $select->map());
+    }
+
+    /**
      * Test that stopping iteration part-way through produces predictable results
      * on a subsequent iteration.
      * This test is here to ensure consistency between implementations (e.g. mysql vs postgres, etc)
@@ -329,6 +356,47 @@ class DatabaseTest extends SapphireTest
         }
 
         $query = DB::query('SELECT "MyInt", "MyField" FROM "DatabaseTest_MyObject" ORDER BY "MyInt"');
+
+        $i = 0;
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+            if ($i > 1) {
+                break;
+            }
+        }
+
+        // Continue from where we left off, since we're using a Generator
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+        }
+    }
+
+    /**
+     * Test that stopping iteration part-way through produces predictable results even when we're using predicates
+     * on a subsequent iteration.
+     * This test is here to ensure consistency between implementations (e.g. mysql vs postgres, etc)
+     */
+    public function testRepeatedPartialIterationWithPredicates()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        // Note that by including a WHERE statement with predicates
+        // with MySQL the result is in a MySQLStatement object rather than a MySQLQuery object.
+        $query = SQLSelect::create(
+            ['"MyInt"', '"MyField"'],
+            '"DatabaseTest_MyObject"',
+            ['MyInt IN (?,?,?,?,?)' => [0,1,2,3,4]],
+            ['"MyInt"']
+        )->execute();
 
         $i = 0;
         foreach ($query as $record) {
