@@ -248,17 +248,20 @@ class ListboxField extends MultiSelectField
         }
 
         $canary = reset($validValues);
+        $targetType = gettype($canary);
         if (is_array($value) && count($value) > 0) {
             $first = reset($value);
             // sanity check the values - make sure strings get strings, ints get ints etc
-            if (gettype($canary) !== gettype($first)) {
+            if ($targetType !== gettype($first)) {
                 $replaced = [];
                 foreach ($value as $item) {
                     if (!is_array($item)) {
                         $item = json_decode($item, true);
                     }
 
-                    if (isset($item['Value'])) {
+                    if ($targetType === gettype($item)) {
+                        $replaced[] = $item;
+                    } elseif (isset($item['Value'])) {
                         $replaced[] = $item['Value'];
                     }
                 }

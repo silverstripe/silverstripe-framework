@@ -10,6 +10,7 @@ use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Calculates batch permissions for nested objects for:
@@ -25,37 +26,42 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     /**
      * Delete permission
      */
-    const DELETE = 'delete';
+    public const DELETE = 'delete';
 
     /**
      * View permission
      */
-    const VIEW = 'view';
+    public const VIEW = 'view';
 
     /**
      * Edit permission
      */
-    const EDIT = 'edit';
+    public const EDIT = 'edit';
 
     /**
      * Anyone canView permission
      */
-    const ANYONE = 'Anyone';
+    public const ANYONE = 'Anyone';
 
     /**
      * Restrict to logged in users
      */
-    const LOGGED_IN_USERS = 'LoggedInUsers';
+    public const LOGGED_IN_USERS = 'LoggedInUsers';
 
     /**
      * Restrict to specific groups
      */
-    const ONLY_THESE_USERS = 'OnlyTheseUsers';
+    public const ONLY_THESE_USERS = 'OnlyTheseUsers';
+
+    /**
+     * Restrict to specific members
+     */
+    public const ONLY_THESE_MEMBERS = 'OnlyTheseMembers';
 
     /**
      * Inherit from parent
      */
-    const INHERIT = 'Inherit';
+    public const INHERIT = 'Inherit';
 
     /**
      * Class name
@@ -359,19 +365,27 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         if ($member && $member->ID) {
             if (!Permission::checkMember($member, 'ADMIN')) {
                 // Determine if this member matches any of the group or other rules
-                $groupJoinTable = $this->getJoinTable($type);
+                $groupJoinTable = $this->getGroupJoinTable($type);
+                $memberJoinTable = $this->getMemberJoinTable($type);
                 $uninheritedPermissions = $stageRecords
                     ->where([
-                        "(\"$typeField\" IN (?, ?) OR " . "(\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL))"
+                        "(\"$typeField\" IN (?, ?)"
+                        . " OR (\"$typeField\" = ? AND \"$groupJoinTable\".\"{$baseTable}ID\" IS NOT NULL)"
+                        . " OR (\"$typeField\" = ? AND \"$memberJoinTable\".\"{$baseTable}ID\" IS NOT NULL)"
+                        . ")"
                         => [
                             self::ANYONE,
                             self::LOGGED_IN_USERS,
-                            self::ONLY_THESE_USERS
+                            self::ONLY_THESE_USERS,
+                            self::ONLY_THESE_MEMBERS,
                         ]
                     ])
                     ->leftJoin(
                         $groupJoinTable,
                         "\"$groupJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$groupJoinTable\".\"GroupID\" IN ($groupIDsSQLList)"
+                    )->leftJoin(
+                        $memberJoinTable,
+                        "\"$memberJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$memberJoinTable\".\"MemberID\" = {$member->ID}"
                     )->column('ID');
             } else {
                 $uninheritedPermissions = $stageRecords->column('ID');
@@ -628,10 +642,24 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * Get join table for type
      * Defaults to those provided by {@see InheritedPermissionsExtension)
      *
+     * @deprecated 5.1.0 Use getGroupJoinTable() instead
      * @param string $type
      * @return string
      */
     protected function getJoinTable($type)
+    {
+        Deprecation::notice('5.1.0', 'Use getGroupJoinTable() instead');
+        return $this->getGroupJoinTable($type);
+    }
+
+    /**
+     * Get group join table for type
+     * Defaults to those provided by {@see InheritedPermissionsExtension)
+     *
+     * @param string $type
+     * @return string
+     */
+    protected function getGroupJoinTable($type)
     {
         switch ($type) {
             case self::DELETE:
@@ -640,6 +668,27 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                 return $this->getEditorGroupsTable();
             case self::VIEW:
                 return $this->getViewerGroupsTable();
+            default:
+                throw new InvalidArgumentException("Invalid argument type $type");
+        }
+    }
+
+    /**
+     * Get member join table for type
+     * Defaults to those provided by {@see InheritedPermissionsExtension)
+     *
+     * @param string $type
+     * @return string
+     */
+    protected function getMemberJoinTable($type)
+    {
+        switch ($type) {
+            case self::DELETE:
+                // Delete uses edit type - Drop through
+            case self::EDIT:
+                return $this->getEditorMembersTable();
+            case self::VIEW:
+                return $this->getViewerMembersTable();
             default:
                 throw new InvalidArgumentException("Invalid argument type $type");
         }
@@ -714,6 +763,28 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     {
         $table = DataObject::getSchema()->tableName($this->baseClass);
         return "{$table}_ViewerGroups";
+    }
+
+    /**
+     * Get table to use for editor members relation
+     *
+     * @return string
+     */
+    protected function getEditorMembersTable()
+    {
+        $table = DataObject::getSchema()->tableName($this->baseClass);
+        return "{$table}_EditorMembers";
+    }
+
+    /**
+     * Get table to use for viewer members relation
+     *
+     * @return string
+     */
+    protected function getViewerMembersTable()
+    {
+        $table = DataObject::getSchema()->tableName($this->baseClass);
+        return "{$table}_ViewerMembers";
     }
 
     /**
