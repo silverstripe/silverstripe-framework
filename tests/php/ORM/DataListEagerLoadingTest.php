@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use InvalidArgumentException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneSubEagerLoadObject;
@@ -34,14 +35,11 @@ use SilverStripe\ORM\Tests\DataListTest\EagerLoading\MixedManyManyEagerLoadObjec
 class DataListEagerLoadingTest extends SapphireTest
 {
 
-    // Borrow the model from DataObjectTest
-    // protected static $fixture_file = 'DataObjectTest.yml';
-
     protected $usesDatabase = true;
 
     public static function getExtraDataObjects()
     {
-        $eagerLoadDataObjects = [
+        return [
             EagerLoadObject::class,
             HasOneEagerLoadObject::class,
             HasOneSubEagerLoadObject::class,
@@ -68,11 +66,6 @@ class DataListEagerLoadingTest extends SapphireTest
             MixedHasOneEagerLoadObject::class,
             MixedManyManyEagerLoadObject::class,
         ];
-        return array_merge(
-            // DataObjectTest::$extra_data_objects,
-            // ManyManyListTest::$extra_data_objects,
-            $eagerLoadDataObjects
-        );
     }
 
     /**
@@ -337,12 +330,27 @@ class DataListEagerLoadingTest extends SapphireTest
                     }
                 }
             }
+            // many_many with extraFields
+            for ($j = 0; $j < 2; $j++) {
+                $manyManyObj = new ManyManyEagerLoadObject();
+                $manyManyObj->Title = "manyManyObj $i $j";
+                $manyManyObj->write();
+                $obj->ManyManyEagerLoadWithExtraFields()->add($manyManyObj, [
+                    'SomeText' => "Some text here $i $j",
+                    'SomeBool' => $j % 2 === 0, // true if even
+                    'SomeInt' => $j,
+                ]);
+            }
             // many_many_through
             for ($j = 0; $j < 2; $j++) {
                 $manyManyThroughObj = new ManyManyThroughEagerLoadObject();
                 $manyManyThroughObj->Title = "manyManyThroughObj $i $j";
                 $manyManyThroughObj->write();
-                $obj->ManyManyThroughEagerLoadObjects()->add($manyManyThroughObj);
+                $obj->ManyManyThroughEagerLoadObjects()->add($manyManyThroughObj, [
+                    'Title' => "Some text here $i $j",
+                    'SomeBool' => $j % 2 === 0, // true if even
+                    'SomeInt' => $j,
+                ]);
                 for ($k = 0; $k < 2; $k++) {
                     $manyManyThroughSubObj = new ManyManyThroughSubEagerLoadObject();
                     $manyManyThroughSubObj->Title = "manyManyThroughSubObj $i $j $k";
@@ -683,6 +691,100 @@ class DataListEagerLoadingTest extends SapphireTest
             ],
             [
                 'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects.Invalid'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider provideEagerLoadManyManyExtraFields
+     */
+    public function testEagerLoadManyManyExtraFields(string $parentClass, string $eagerLoadRelation): void
+    {
+        $this->createEagerLoadData();
+
+        foreach (DataObject::get($parentClass)->eagerLoad($eagerLoadRelation) as $parentRecord) {
+            if ($parentClass === EagerLoadObject::class) {
+                $this->validateEagerLoadManyManyExtraFields($parentRecord->ManyManyEagerLoadWithExtraFields());
+            } else {
+                foreach ($parentRecord->EagerLoadObjects() as $relationRecord) {
+                    $this->validateEagerLoadManyManyExtraFields($relationRecord->ManyManyEagerLoadWithExtraFields());
+                }
+            }
+        }
+    }
+
+    private function validateEagerLoadManyManyExtraFields($relationList): void
+    {
+        foreach ($relationList as $record) {
+            preg_match('/manyManyObj (?<i>\d+) (?<j>\d+)/', $record->Title, $matches);
+            $i = (int) $matches['i'];
+            $j = (int) $matches['j'];
+            $this->assertSame("Some text here $i $j", $record->SomeText);
+            // Bool fields are just small ints, so the data is either 1 or 0
+            $this->assertSame($j % 2 === 0 ? 1 : 0, $record->SomeBool);
+            $this->assertSame($j, $record->SomeInt);
+        }
+    }
+
+    public function provideEagerLoadManyManyExtraFields(): array
+    {
+        return [
+            [
+                EagerLoadObject::class,
+                'ManyManyEagerLoadWithExtraFields',
+            ],
+            [
+                BelongsManyManyEagerLoadObject::class,
+                'EagerLoadObjects.ManyManyEagerLoadWithExtraFields',
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider provideEagerLoadManyManyThroughJoinRecords
+     */
+    public function testEagerLoadManyManyThroughJoinRecords(string $parentClass, string $eagerLoadRelation): void
+    {
+        $this->createEagerLoadData();
+
+        foreach (DataObject::get($parentClass)->eagerLoad($eagerLoadRelation) as $parentRecord) {
+            if ($parentClass === EagerLoadObject::class) {
+                $this->validateEagerLoadManyManyThroughJoinRecords($parentRecord->ManyManyThroughEagerLoadObjects());
+            } else {
+                foreach ($parentRecord->EagerLoadObjects() as $relationRecord) {
+                    $this->validateEagerLoadManyManyThroughJoinRecords($relationRecord->ManyManyThroughEagerLoadObjects());
+                }
+            }
+        }
+    }
+
+    private function validateEagerLoadManyManyThroughJoinRecords($relationList): void
+    {
+        /** @var DataObject $record */
+        foreach ($relationList as $record) {
+            $joinRecord = $record->getJoin();
+            $this->assertNotNull($joinRecord);
+
+            preg_match('/manyManyThroughObj (?<i>\d+) (?<j>\d+)/', $record->Title, $matches);
+            $i = (int) $matches['i'];
+            $j = (int) $matches['j'];
+            $this->assertSame("Some text here $i $j", $joinRecord->Title);
+            // Bool fields are just small ints, so the data is either 1 or 0
+            $this->assertSame($j % 2 === 0 ? 1 : 0, $joinRecord->SomeBool);
+            $this->assertSame($j, $joinRecord->SomeInt);
+        }
+    }
+
+    public function provideEagerLoadManyManyThroughJoinRecords(): array
+    {
+        return [
+            [
+                EagerLoadObject::class,
+                'ManyManyThroughEagerLoadObjects',
+            ],
+            [
+                BelongsManyManyEagerLoadObject::class,
+                'EagerLoadObjects.ManyManyThroughEagerLoadObjects',
             ]
         ];
     }
