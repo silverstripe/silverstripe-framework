@@ -180,6 +180,9 @@ class SearchContext
      */
     private function prepareQuery($sort, $limit, ?DataList $existingQuery): DataList
     {
+        if ($limit === false) {
+            $limit = null;
+        }
         $query = null;
         if ($existingQuery) {
             if (!($existingQuery instanceof DataList)) {

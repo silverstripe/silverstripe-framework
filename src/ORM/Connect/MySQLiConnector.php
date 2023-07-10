@@ -181,12 +181,19 @@ class MySQLiConnector extends DBConnector
     {
         $this->beforeQuery($sql);
 
-        // Benchmark query
-        $handle = $this->dbConn->query($sql ?? '', MYSQLI_STORE_RESULT);
+        $error = null;
+        $handle = null;
 
-        if (!$handle || $this->dbConn->error) {
-            $this->databaseError($this->getLastError(), $errorLevel, $sql);
-            return null;
+        try {
+            // Benchmark query
+            $handle = $this->dbConn->query($sql ?? '', MYSQLI_STORE_RESULT);
+        } catch (mysqli_sql_exception $e) {
+            $error = $e->getMessage();
+        } finally {
+            if (!$handle || $this->dbConn->error) {
+                $this->databaseError($error ?? $this->getLastError(), $errorLevel, $sql);
+                return null;
+            }
         }
 
         // Some non-select queries return true on success
