@@ -6,6 +6,8 @@ use InvalidArgumentException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneSubEagerLoadObject;
@@ -68,15 +70,46 @@ class DataListEagerLoadingTest extends SapphireTest
         ];
     }
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        // Set non-zero auto increment offset for each object type so we don't end up with the same IDs across
+        // the board. If all of the IDs are 0, 1, 2 then we have no way of knowing if we're accidentally mixing
+        // up relation ID lists between different relation lists for different classes.
+        $schema = DataObject::getSchema();
+        /** @var DataObject $class */
+        $numManyManyTables = 0;
+        foreach (static::getExtraDataObjects() as $i => $class) {
+            $autoIncrementStart = ($i + 1) * 100;
+            $table = $schema->baseDataTable($class);
+            DB::query("ALTER TABLE $table AUTO_INCREMENT = $autoIncrementStart;");
+
+            // Also adjust auto increment for join tables for the same reason.
+            foreach (array_keys($class::config()->get('many_many') ?? []) as $relationName) {
+                $manyManyComponent = $schema->manyManyComponent($class, $relationName);
+
+                $joinTable = $manyManyComponent['join'];
+                if (is_a($manyManyComponent['relationClass'], ManyManyThroughList::class, true)) {
+                    $joinTable = $schema->baseDataTable($joinTable);
+                }
+                $joinAutoIncrementStart = ($numManyManyTables + 1) * 100 + 50;
+                DB::query("ALTER TABLE $joinTable AUTO_INCREMENT = $joinAutoIncrementStart;");
+                $numManyManyTables++;
+            }
+        }
+    }
+
     /**
      * @dataProvider provideEagerLoadRelations
      */
     public function testEagerLoadRelations(string $iden, array $eagerLoad, int $expected): void
     {
         $this->createEagerLoadData();
+
         $dataList = EagerLoadObject::get()->eagerLoad(...$eagerLoad);
         list($results, $selectCount) = $this->iterateEagerLoadData($dataList);
-        $expectedResults = $this->expectedEagerLoadData();
+        // We can rely on the non-eager-loaded data being correct, since it's validated by other unit tests
+        list($expectedResults, $_) = $this->iterateEagerLoadData(EagerLoadObject::get());
         // Sort because the order of the results doesn't really matter - and has proven to be different in postgres
         sort($expectedResults);
         sort($results);
@@ -88,6 +121,9 @@ class DataListEagerLoadingTest extends SapphireTest
     public function provideEagerLoadRelations(): array
     {
         return [
+            // Include the lazy-loaded expectation here, since if the number
+            // of queries changes for this we should expect the number
+            // to change for eager-loading as well.
             [
                 'iden' => 'lazy-load',
                 'eagerLoad' => [],
@@ -241,6 +277,19 @@ class DataListEagerLoadingTest extends SapphireTest
                 'expected' => 73
             ],
             [
+                'iden' => 'duplicates',
+                'eagerLoad' => [
+                    'MixedManyManyEagerLoadObjects',
+                    'MixedManyManyEagerLoadObjects',
+                    'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects',
+                    'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects',
+                    'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects.MixedManyManyEagerLoadObject',
+                    'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects',
+                    'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects.MixedHasOneEagerLoadObject',
+                ],
+                'expected' => 78
+            ],
+            [
                 'iden' => 'all',
                 'eagerLoad' => [
                     'HasOneEagerLoadObject.HasOneSubEagerLoadObject.HasOneSubSubEagerLoadObject',
@@ -256,9 +305,13 @@ class DataListEagerLoadingTest extends SapphireTest
         ];
     }
 
-    private function createEagerLoadData(): void
-    {
-        for ($i = 0; $i < 2; $i++) {
+    private function createEagerLoadData(
+        int $numBaseRecords = 2,
+        int $numLevel1Records = 2,
+        int $numLevel2Records = 2,
+        int $numLevel3Records = 2
+    ): void {
+        for ($i = 0; $i < $numBaseRecords; $i++) {
             // base object
             $obj = new EagerLoadObject();
             $obj->Title = "obj $i";
@@ -293,17 +346,17 @@ class DataListEagerLoadingTest extends SapphireTest
             $belongsToSubSubObj->Title = "belongsToSubSubObj $i";
             $belongsToSubSubObj->write();
             // has_many
-            for ($j = 0; $j < 2; $j++) {
+            for ($j = 0; $j < $numLevel1Records; $j++) {
                 $hasManyObj = new HasManyEagerLoadObject();
                 $hasManyObj->EagerLoadObjectID = $objID;
                 $hasManyObj->Title = "hasManyObj $i $j";
                 $hasManyObjID = $hasManyObj->write();
-                for ($k = 0; $k < 2; $k++) {
+                for ($k = 0; $k < $numLevel2Records; $k++) {
                     $hasManySubObj = new HasManySubEagerLoadObject();
                     $hasManySubObj->HasManyEagerLoadObjectID = $hasManyObjID;
                     $hasManySubObj->Title = "hasManySubObj $i $j $k";
                     $hasManySubObjID = $hasManySubObj->write();
-                    for ($l = 0; $l < 2; $l++) {
+                    for ($l = 0; $l < $numLevel3Records; $l++) {
                         $hasManySubSubObj = new HasManySubSubEagerLoadObject();
                         $hasManySubSubObj->HasManySubEagerLoadObjectID = $hasManySubObjID;
                         $hasManySubSubObj->Title = "hasManySubSubObj $i $j $k $l";
@@ -312,17 +365,17 @@ class DataListEagerLoadingTest extends SapphireTest
                 }
             }
             // many_many
-            for ($j = 0; $j < 2; $j++) {
+            for ($j = 0; $j < $numLevel1Records; $j++) {
                 $manyManyObj = new ManyManyEagerLoadObject();
                 $manyManyObj->Title = "manyManyObj $i $j";
                 $manyManyObj->write();
                 $obj->ManyManyEagerLoadObjects()->add($manyManyObj);
-                for ($k = 0; $k < 2; $k++) {
+                for ($k = 0; $k < $numLevel2Records; $k++) {
                     $manyManySubObj = new ManyManySubEagerLoadObject();
                     $manyManySubObj->Title = "manyManySubObj $i $j $k";
                     $manyManySubObj->write();
                     $manyManyObj->ManyManySubEagerLoadObjects()->add($manyManySubObj);
-                    for ($l = 0; $l < 2; $l++) {
+                    for ($l = 0; $l < $numLevel3Records; $l++) {
                         $manyManySubSubObj = new ManyManySubSubEagerLoadObject();
                         $manyManySubSubObj->Title = "manyManySubSubObj $i $j $k $l";
                         $manyManySubSubObj->write();
@@ -331,7 +384,7 @@ class DataListEagerLoadingTest extends SapphireTest
                 }
             }
             // many_many with extraFields
-            for ($j = 0; $j < 2; $j++) {
+            for ($j = 0; $j < $numLevel1Records; $j++) {
                 $manyManyObj = new ManyManyEagerLoadObject();
                 $manyManyObj->Title = "manyManyObj $i $j";
                 $manyManyObj->write();
@@ -342,7 +395,7 @@ class DataListEagerLoadingTest extends SapphireTest
                 ]);
             }
             // many_many_through
-            for ($j = 0; $j < 2; $j++) {
+            for ($j = 0; $j < $numLevel1Records; $j++) {
                 $manyManyThroughObj = new ManyManyThroughEagerLoadObject();
                 $manyManyThroughObj->Title = "manyManyThroughObj $i $j";
                 $manyManyThroughObj->write();
@@ -351,12 +404,12 @@ class DataListEagerLoadingTest extends SapphireTest
                     'SomeBool' => $j % 2 === 0, // true if even
                     'SomeInt' => $j,
                 ]);
-                for ($k = 0; $k < 2; $k++) {
+                for ($k = 0; $k < $numLevel2Records; $k++) {
                     $manyManyThroughSubObj = new ManyManyThroughSubEagerLoadObject();
                     $manyManyThroughSubObj->Title = "manyManyThroughSubObj $i $j $k";
                     $manyManyThroughSubObj->write();
                     $manyManyThroughObj->ManyManyThroughSubEagerLoadObjects()->add($manyManyThroughSubObj);
-                    for ($l = 0; $l < 2; $l++) {
+                    for ($l = 0; $l < $numLevel3Records; $l++) {
                         $manyManyThroughSubSubObj = new ManyManyThroughSubSubEagerLoadObject();
                         $manyManyThroughSubSubObj->Title = "manyManyThroughSubSubObj $i $j $k $l";
                         $manyManyThroughSubSubObj->write();
@@ -365,17 +418,17 @@ class DataListEagerLoadingTest extends SapphireTest
                 }
             }
             // belongs_many_many
-            for ($j = 0; $j < 2; $j++) {
+            for ($j = 0; $j < $numLevel1Records; $j++) {
                 $belongsManyManyObj = new BelongsManyManyEagerLoadObject();
                 $belongsManyManyObj->Title = "belongsManyManyObj $i $j";
                 $belongsManyManyObj->write();
                 $obj->BelongsManyManyEagerLoadObjects()->add($belongsManyManyObj);
-                for ($k = 0; $k < 2; $k++) {
+                for ($k = 0; $k < $numLevel2Records; $k++) {
                     $belongsManyManySubObj = new BelongsManyManySubEagerLoadObject();
                     $belongsManyManySubObj->Title = "belongsManyManySubObj $i $j $k";
                     $belongsManyManySubObj->write();
                     $belongsManyManyObj->BelongsManyManySubEagerLoadObjects()->add($belongsManyManySubObj);
-                    for ($l = 0; $l < 2; $l++) {
+                    for ($l = 0; $l < $numLevel3Records; $l++) {
                         $belongsManyManySubSubObj = new BelongsManyManySubSubEagerLoadObject();
                         $belongsManyManySubSubObj->Title = "belongsManyManySubSubObj $i $j $k $l";
                         $belongsManyManySubSubObj->write();
@@ -384,17 +437,17 @@ class DataListEagerLoadingTest extends SapphireTest
                 }
             }
             // mixed
-            for ($j = 0; $j < 2; $j++) {
+            for ($j = 0; $j < $numLevel1Records; $j++) {
                 $mixedManyManyObj = new MixedManyManyEagerLoadObject();
                 $mixedManyManyObj->Title = "mixedManyManyObj $i $j";
                 $mixedManyManyObj->write();
                 $obj->MixedManyManyEagerLoadObjects()->add($mixedManyManyObj);
-                for ($k = 0; $k < 2; $k++) {
+                for ($k = 0; $k < $numLevel2Records; $k++) {
                     $mixedHasManyObj = new MixedHasManyEagerLoadObject();
                     $mixedHasManyObj->Title = "mixedHasManyObj $i $j $k";
                     $mixedHasManyObjID = $mixedHasManyObj->write();
                     $mixedManyManyObj->MixedHasManyEagerLoadObjects()->add($mixedHasManyObj);
-                    for ($l = 0; $l < 2; $l++) {
+                    for ($l = 0; $l < $numLevel3Records; $l++) {
                         $mixedHasOneObj = new MixedHasOneEagerLoadObject();
                         $mixedHasOneObj->Title = "mixedHasOneObj $i $j $k $l";
                         $mixedHasOneObjID = $mixedHasOneObj->write();
@@ -406,7 +459,7 @@ class DataListEagerLoadingTest extends SapphireTest
         }
     }
 
-    private function iterateEagerLoadData(DataList $dataList): array
+    private function iterateEagerLoadData(DataList $dataList, int $chunks = 0): array
     {
         $results = [];
         $selectCount = -1;
@@ -421,6 +474,9 @@ class DataListEagerLoadingTest extends SapphireTest
             echo '__START_ITERATE__';
             $results = [];
             $i = 0;
+            if ($chunks) {
+                $dataList = $dataList->chunkedFetch($chunks);
+            }
             foreach ($dataList as $obj) {
                 // base obj
                 $results[] = $obj->Title;
@@ -498,158 +554,6 @@ class DataListEagerLoadingTest extends SapphireTest
             }
         }
         return [$results, $selectCount];
-    }
-
-    private function expectedEagerLoadData(): array
-    {
-        return [
-            'obj 0',
-            'hasOneObj 0',
-            'hasOneSubObj 0',
-            'hasOneSubSubObj 0',
-            'belongsToObj 0',
-            'belongsToSubObj 0',
-            'belongsToSubSubObj 0',
-            'hasManyObj 0 0',
-            'hasManySubObj 0 0 0',
-            'hasManySubSubObj 0 0 0 0',
-            'hasManySubSubObj 0 0 0 1',
-            'hasManySubObj 0 0 1',
-            'hasManySubSubObj 0 0 1 0',
-            'hasManySubSubObj 0 0 1 1',
-            'hasManyObj 0 1',
-            'hasManySubObj 0 1 0',
-            'hasManySubSubObj 0 1 0 0',
-            'hasManySubSubObj 0 1 0 1',
-            'hasManySubObj 0 1 1',
-            'hasManySubSubObj 0 1 1 0',
-            'hasManySubSubObj 0 1 1 1',
-            'manyManyObj 0 0',
-            'manyManySubObj 0 0 0',
-            'manyManySubSubObj 0 0 0 0',
-            'manyManySubSubObj 0 0 0 1',
-            'manyManySubObj 0 0 1',
-            'manyManySubSubObj 0 0 1 0',
-            'manyManySubSubObj 0 0 1 1',
-            'manyManyObj 0 1',
-            'manyManySubObj 0 1 0',
-            'manyManySubSubObj 0 1 0 0',
-            'manyManySubSubObj 0 1 0 1',
-            'manyManySubObj 0 1 1',
-            'manyManySubSubObj 0 1 1 0',
-            'manyManySubSubObj 0 1 1 1',
-            'manyManyThroughObj 0 0',
-            'manyManyThroughSubObj 0 0 0',
-            'manyManyThroughSubSubObj 0 0 0 0',
-            'manyManyThroughSubSubObj 0 0 0 1',
-            'manyManyThroughSubObj 0 0 1',
-            'manyManyThroughSubSubObj 0 0 1 0',
-            'manyManyThroughSubSubObj 0 0 1 1',
-            'manyManyThroughObj 0 1',
-            'manyManyThroughSubObj 0 1 0',
-            'manyManyThroughSubSubObj 0 1 0 0',
-            'manyManyThroughSubSubObj 0 1 0 1',
-            'manyManyThroughSubObj 0 1 1',
-            'manyManyThroughSubSubObj 0 1 1 0',
-            'manyManyThroughSubSubObj 0 1 1 1',
-            'belongsManyManyObj 0 0',
-            'belongsManyManySubObj 0 0 0',
-            'belongsManyManySubSubObj 0 0 0 0',
-            'belongsManyManySubSubObj 0 0 0 1',
-            'belongsManyManySubObj 0 0 1',
-            'belongsManyManySubSubObj 0 0 1 0',
-            'belongsManyManySubSubObj 0 0 1 1',
-            'belongsManyManyObj 0 1',
-            'belongsManyManySubObj 0 1 0',
-            'belongsManyManySubSubObj 0 1 0 0',
-            'belongsManyManySubSubObj 0 1 0 1',
-            'belongsManyManySubObj 0 1 1',
-            'belongsManyManySubSubObj 0 1 1 0',
-            'belongsManyManySubSubObj 0 1 1 1',
-            'mixedManyManyObj 0 0',
-            'mixedHasManyObj 0 0 0',
-            'mixedHasOneObj 0 0 0 1',
-            'mixedHasManyObj 0 0 1',
-            'mixedHasOneObj 0 0 1 1',
-            'mixedManyManyObj 0 1',
-            'mixedHasManyObj 0 1 0',
-            'mixedHasOneObj 0 1 0 1',
-            'mixedHasManyObj 0 1 1',
-            'mixedHasOneObj 0 1 1 1',
-            'obj 1',
-            'hasOneObj 1',
-            'hasOneSubObj 1',
-            'hasOneSubSubObj 1',
-            'belongsToObj 1',
-            'belongsToSubObj 1',
-            'belongsToSubSubObj 1',
-            'hasManyObj 1 0',
-            'hasManySubObj 1 0 0',
-            'hasManySubSubObj 1 0 0 0',
-            'hasManySubSubObj 1 0 0 1',
-            'hasManySubObj 1 0 1',
-            'hasManySubSubObj 1 0 1 0',
-            'hasManySubSubObj 1 0 1 1',
-            'hasManyObj 1 1',
-            'hasManySubObj 1 1 0',
-            'hasManySubSubObj 1 1 0 0',
-            'hasManySubSubObj 1 1 0 1',
-            'hasManySubObj 1 1 1',
-            'hasManySubSubObj 1 1 1 0',
-            'hasManySubSubObj 1 1 1 1',
-            'manyManyObj 1 0',
-            'manyManySubObj 1 0 0',
-            'manyManySubSubObj 1 0 0 0',
-            'manyManySubSubObj 1 0 0 1',
-            'manyManySubObj 1 0 1',
-            'manyManySubSubObj 1 0 1 0',
-            'manyManySubSubObj 1 0 1 1',
-            'manyManyObj 1 1',
-            'manyManySubObj 1 1 0',
-            'manyManySubSubObj 1 1 0 0',
-            'manyManySubSubObj 1 1 0 1',
-            'manyManySubObj 1 1 1',
-            'manyManySubSubObj 1 1 1 0',
-            'manyManySubSubObj 1 1 1 1',
-            'manyManyThroughObj 1 0',
-            'manyManyThroughSubObj 1 0 0',
-            'manyManyThroughSubSubObj 1 0 0 0',
-            'manyManyThroughSubSubObj 1 0 0 1',
-            'manyManyThroughSubObj 1 0 1',
-            'manyManyThroughSubSubObj 1 0 1 0',
-            'manyManyThroughSubSubObj 1 0 1 1',
-            'manyManyThroughObj 1 1',
-            'manyManyThroughSubObj 1 1 0',
-            'manyManyThroughSubSubObj 1 1 0 0',
-            'manyManyThroughSubSubObj 1 1 0 1',
-            'manyManyThroughSubObj 1 1 1',
-            'manyManyThroughSubSubObj 1 1 1 0',
-            'manyManyThroughSubSubObj 1 1 1 1',
-            'belongsManyManyObj 1 0',
-            'belongsManyManySubObj 1 0 0',
-            'belongsManyManySubSubObj 1 0 0 0',
-            'belongsManyManySubSubObj 1 0 0 1',
-            'belongsManyManySubObj 1 0 1',
-            'belongsManyManySubSubObj 1 0 1 0',
-            'belongsManyManySubSubObj 1 0 1 1',
-            'belongsManyManyObj 1 1',
-            'belongsManyManySubObj 1 1 0',
-            'belongsManyManySubSubObj 1 1 0 0',
-            'belongsManyManySubSubObj 1 1 0 1',
-            'belongsManyManySubObj 1 1 1',
-            'belongsManyManySubSubObj 1 1 1 0',
-            'belongsManyManySubSubObj 1 1 1 1',
-            'mixedManyManyObj 1 0',
-            'mixedHasManyObj 1 0 0',
-            'mixedHasOneObj 1 0 0 1',
-            'mixedHasManyObj 1 0 1',
-            'mixedHasOneObj 1 0 1 1',
-            'mixedManyManyObj 1 1',
-            'mixedHasManyObj 1 1 0',
-            'mixedHasOneObj 1 1 0 1',
-            'mixedHasManyObj 1 1 1',
-            'mixedHasOneObj 1 1 1 1',
-        ];
     }
 
     public function testEagerLoadFourthLevelException(): void
@@ -786,6 +690,278 @@ class DataListEagerLoadingTest extends SapphireTest
                 BelongsManyManyEagerLoadObject::class,
                 'EagerLoadObjects.ManyManyThroughEagerLoadObjects',
             ]
+        ];
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelations
+     */
+    public function testEagerLoadingFilteredList(string $iden, array $eagerLoad): void
+    {
+        $this->createEagerLoadData(5);
+        $filter = ['Title:GreaterThan' => 'obj 0'];
+        $dataList = EagerLoadObject::get()->filter($filter)->eagerLoad(...$eagerLoad);
+
+        // Validate that filtering results still actually works on the base list
+        $this->assertListEquals([
+            ['Title' => 'obj 1'],
+            ['Title' => 'obj 2'],
+            ['Title' => 'obj 3'],
+            ['Title' => 'obj 4'],
+        ], $dataList);
+
+        $this->validateEagerLoadingResults($iden, EagerLoadObject::get()->filter($filter), $dataList);
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelations
+     */
+    public function testEagerLoadingSortedList(string $iden, array $eagerLoad): void
+    {
+        $this->createEagerLoadData(3);
+        $items = [
+            'obj 0',
+            'obj 1',
+            'obj 2',
+        ];
+
+        foreach (['ASC', 'DESC'] as $order) {
+            $sort = "Title $order";
+            $dataList = EagerLoadObject::get()->sort($sort)->eagerLoad(...$eagerLoad);
+
+            if ($order === 'DESC') {
+                $items = array_reverse($items);
+            }
+
+            // Validate that sorting results still actually works on the base list
+            $this->assertSame($items, $dataList->column('Title'));
+        }
+
+        // We don't care about the order after this point, so whichever order we've got will be fine.
+        // We just want to validate that the data was correctly eager loaded.
+        $this->validateEagerLoadingResults($iden, EagerLoadObject::get()->sort($sort), $dataList);
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelations
+     */
+    public function testEagerLoadingLimitedList(string $iden, array $eagerLoad): void
+    {
+        // Make sure to create more base records AND more records on at least one relation than the limit
+        // to ensure the limit isn't accidentally carried through to the relations.
+        $this->createEagerLoadData(6, numLevel3Records: 6);
+        $limit = 5;
+        $dataList = EagerLoadObject::get()->limit($limit)->eagerLoad(...$eagerLoad);
+
+        // Validate that limiting results still actually works on the base list
+        $this->assertCount($limit, $dataList);
+
+        $this->validateEagerLoadingResults($iden, EagerLoadObject::get()->limit($limit), $dataList);
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelations
+     */
+    public function testRepeatedIterationOfEagerLoadedList(string $iden, array $eagerLoad): void
+    {
+        // We need at least 3 base records for many_many relations to have fewer db queries than lazy-loaded lists.
+        $this->createEagerLoadData(3);
+        $dataList = EagerLoadObject::get()->eagerLoad(...$eagerLoad);
+
+        // Validate twice - each validation requires a full iteration over all records including the base list.
+        $this->validateEagerLoadingResults($iden, EagerLoadObject::get(), $dataList);
+        $this->validateEagerLoadingResults($iden, EagerLoadObject::get(), $dataList);
+    }
+
+    /**
+     * This test validates that you can call eagerLoad() anywhere on the list before
+     * execution, including before or after sort/limit/filter, etc - and it will
+     * work the same way regardless of when it was called.
+     *
+     * @dataProvider provideEagerLoadRelations
+     */
+    public function testEagerLoadWorksAnywhereBeforeExecution(string $iden, array $eagerLoad): void
+    {
+        $this->createEagerLoadData(7);
+        $filter = ['Title:LessThan' => 'obj 5'];
+        $sort = 'Title DESC';
+        $limit = 3;
+
+        $lazyList = EagerLoadObject::get()->filter($filter)->sort($sort)->limit($limit);
+        $lazyListArray = $lazyList->map()->toArray();
+        $eagerList1 = EagerLoadObject::get()->eagerLoad(...$eagerLoad)->filter($filter)->sort($sort)->limit($limit);
+        $eagerList2 = EagerLoadObject::get()->filter($filter)->eagerLoad(...$eagerLoad)->sort($sort)->limit($limit);
+        $eagerList3 = EagerLoadObject::get()->filter($filter)->sort($sort)->eagerLoad(...$eagerLoad)->limit($limit);
+        $eagerList4 = EagerLoadObject::get()->filter($filter)->sort($sort)->limit($limit)->eagerLoad(...$eagerLoad);
+
+        // Validates that this list is set up correctly, and there are 3 records with this combination of filter/sort/limit.
+        $this->assertCount(3, $lazyListArray);
+
+        // This will probably be really slow, but the idea is to validate that no matter when we call eagerLoad(),
+        // both the underlying DataList results and all of the eagerloaded data is the same.
+        $this->assertSame($lazyListArray, $eagerList1->map()->toArray());
+        $this->assertSame($lazyListArray, $eagerList2->map()->toArray());
+        $this->assertSame($lazyListArray, $eagerList3->map()->toArray());
+        $this->assertSame($lazyListArray, $eagerList4->map()->toArray());
+        $this->validateEagerLoadingResults($iden, $lazyList, $eagerList1);
+        $this->validateEagerLoadingResults($iden, $lazyList, $eagerList2);
+        $this->validateEagerLoadingResults($iden, $lazyList, $eagerList3);
+        $this->validateEagerLoadingResults($iden, $lazyList, $eagerList4);
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelations
+     */
+    public function testEagerLoadWithChunkedFetch(string $iden, array $eagerLoad): void
+    {
+        $this->createEagerLoadData(10);
+        $dataList = EagerLoadObject::get()->eagerLoad(...$eagerLoad);
+
+        $this->validateEagerLoadingResults($iden, EagerLoadObject::get(), $dataList, 3);
+    }
+
+    private function validateEagerLoadingResults(string $iden, DataList $lazyList, DataList $eagerList, int $chunks = 0): void
+    {
+        list($results, $eagerCount) = $this->iterateEagerLoadData($eagerList, $chunks);
+        // We can rely on the non-eager-loaded data being correct, since it's validated by other unit tests
+        list($expectedResults, $lazyCount) = $this->iterateEagerLoadData($lazyList, $chunks);
+        // Sort because the order of the results doesn't really matter - and has proven to be different in postgres
+        sort($expectedResults);
+        sort($results);
+
+        $this->assertSame([], array_diff($expectedResults, $results));
+        $this->assertSame([], array_diff($results, $expectedResults));
+        $this->assertSame(count($expectedResults), count($results));
+
+        // Validate that we have the same eager-loaded data as the lazy-loaded list, and that lazy-loaded lists
+        // execute less database queries than lazy-loaded ones
+        $this->assertSame($expectedResults, $results);
+        if ($iden !== 'lazy-load') {
+            $this->assertLessThan($lazyCount, $eagerCount);
+        }
+    }
+
+    /**
+     * @dataProvider provideEagerLoadingEmptyRelationLists
+     */
+    public function testEagerLoadingEmptyRelationLists(string $iden, string $eagerLoad): void
+    {
+        $numBaseRecords = 2;
+        $numLevel1Records = 2;
+        $numLevel2Records = 2;
+        // Similar to createEagerLoadData(), except with less relations and
+        // making sure only the first record has any items in its relation lists.
+        for ($i = 0; $i < $numBaseRecords; $i++) {
+            // base object
+            $obj = new EagerLoadObject();
+            $obj->Title = "obj $i";
+            $objID = $obj->write();
+            if ($i > 0) {
+                continue;
+            }
+            // has_many
+            for ($j = 0; $j < $numLevel1Records; $j++) {
+                $hasManyObj = new HasManyEagerLoadObject();
+                $hasManyObj->EagerLoadObjectID = $objID;
+                $hasManyObj->Title = "hasManyObj $i $j";
+                $hasManyObjID = $hasManyObj->write();
+                if ($j > 0) {
+                    continue;
+                }
+                for ($k = 0; $k < $numLevel2Records; $k++) {
+                    $hasManySubObj = new HasManySubEagerLoadObject();
+                    $hasManySubObj->HasManyEagerLoadObjectID = $hasManyObjID;
+                    $hasManySubObj->Title = "hasManySubObj $i $j $k";
+                    $hasManySubObj->write();
+                }
+            }
+            // many_many
+            for ($j = 0; $j < $numLevel1Records; $j++) {
+                $manyManyObj = new ManyManyEagerLoadObject();
+                $manyManyObj->Title = "manyManyObj $i $j";
+                $manyManyObj->write();
+                $obj->ManyManyEagerLoadObjects()->add($manyManyObj);
+                if ($j > 0) {
+                    continue;
+                }
+                for ($k = 0; $k < $numLevel2Records; $k++) {
+                    $manyManySubObj = new ManyManySubEagerLoadObject();
+                    $manyManySubObj->Title = "manyManySubObj $i $j $k";
+                    $manyManySubObj->write();
+                    $manyManyObj->ManyManySubEagerLoadObjects()->add($manyManySubObj);
+                }
+            }
+            // many_many_through
+            for ($j = 0; $j < $numLevel1Records; $j++) {
+                $manyManyThroughObj = new ManyManyThroughEagerLoadObject();
+                $manyManyThroughObj->Title = "manyManyThroughObj $i $j";
+                $manyManyThroughObj->write();
+                $obj->ManyManyThroughEagerLoadObjects()->add($manyManyThroughObj, [
+                    'Title' => "Some text here $i $j",
+                    'SomeBool' => $j % 2 === 0, // true if even
+                    'SomeInt' => $j,
+                ]);
+                if ($j > 0) {
+                    continue;
+                }
+                for ($k = 0; $k < $numLevel2Records; $k++) {
+                    $manyManyThroughSubObj = new ManyManyThroughSubEagerLoadObject();
+                    $manyManyThroughSubObj->Title = "manyManyThroughSubObj $i $j $k";
+                    $manyManyThroughSubObj->write();
+                    $manyManyThroughObj->ManyManyThroughSubEagerLoadObjects()->add($manyManyThroughSubObj);
+                }
+            }
+        }
+
+        $i = 0;
+        $relations = explode('.', $eagerLoad);
+        foreach (EagerLoadObject::get()->eagerLoad($eagerLoad) as $parentRecord) {
+            $relation = $relations[0];
+            $list = $parentRecord->$relation();
+            // For any record after the first one, there should be nothing in the related list.
+            $this->assertCount($i > 0 ? 0 : 2, $list);
+            $i++;
+
+            if (count($relations) > 1) {
+                $j = 0;
+                foreach ($list as $relatedRecord) {
+                    $relation = $relations[1];
+                    $list2 = $relatedRecord->$relation();
+                    // For any record after the first one, there should be nothing in the related list.
+                    $this->assertCount($j > 0 ? 0 : 2, $list2);
+                    $j++;
+                }
+            }
+        }
+    }
+
+    public function provideEagerLoadingEmptyRelationLists(): array
+    {
+        return [
+            [
+                'hasmany-onelevel',
+                'HasManyEagerLoadObjects',
+            ],
+            [
+                'hasmany-twolevels',
+                'HasManyEagerLoadObjects.HasManySubEagerLoadObjects',
+            ],
+            [
+                'manymany-onelevel',
+                'ManyManyEagerLoadObjects',
+            ],
+            [
+                'manymany-twolevels',
+                'ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects',
+            ],
+            [
+                'manymany-through-onelevel',
+                'ManyManyThroughEagerLoadObjects',
+            ],
+            [
+                'manymany-through-twolevels',
+                'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects',
+            ],
         ];
     }
 }
