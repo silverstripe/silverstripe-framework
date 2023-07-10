@@ -96,6 +96,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         $this->dataQuery = clone $this->dataQuery;
         $this->finalisedQuery = null;
+        $this->eagerLoadedData = [];
     }
 
     /**
@@ -831,11 +832,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toArray()
     {
-        $rows = $this->executeQuery();
         $results = [];
 
-        foreach ($rows as $row) {
-            $results[] = $this->createDataObject($row);
+        foreach ($this as $item) {
+            $results[] = $item;
         }
 
         return $results;
@@ -1001,6 +1001,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         // Re-set the finaliseQuery so that it can be re-executed
         $this->finalisedQuery = null;
+        $this->eagerLoadedData = [];
     }
 
     /**
