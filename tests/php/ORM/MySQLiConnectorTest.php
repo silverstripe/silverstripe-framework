@@ -2,10 +2,12 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use mysqli_driver;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
+use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
 use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
 
 /**
@@ -13,21 +15,47 @@ use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
  */
 class MySQLiConnectorTest extends SapphireTest implements TestOnly
 {
+    /** @var array project database settings configuration */
+    private $config = [];
+
+    private function getConnector(?string $charset = null, ?string $collation = null, bool $selectDb = false)
+    {
+        $config = $this->config;
+
+        if ($charset) {
+            $config['charset'] = $charset;
+        }
+        if ($collation) {
+            $config['collation'] = $collation;
+        }
+
+        $config['database'] = 'information_schema';
+
+        $connector = new MySQLiConnector();
+        $connector->connect($config, $selectDb);
+
+        return $connector;
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $config = DB::getConfig();
+
+        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
+            $this->markTestSkipped("The test only relevant for MySQL - but $config[type] is in use");
+        }
+
+        $this->config = $config;
+    }
+
     /**
      * @dataProvider charsetProvider
      */
     public function testConnectionCharsetControl($charset, $defaultCollation)
     {
-        $config = DB::getConfig();
-        $config['charset'] = $charset;
-        $config['database'] = 'information_schema';
-
-        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
-            return $this->markTestSkipped('The test only relevant for MySQL');
-        }
-
-        $connector = new MySQLiConnector();
-        $connector->connect($config);
+        $connector = $this->getConnector($charset);
         $connection = $connector->getMysqliConnection();
 
         $cset = $connection->get_charset();
@@ -47,17 +75,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
      */
     public function testConnectionCollationControl($charset, $defaultCollation, $customCollation)
     {
-        $config = DB::getConfig();
-        $config['charset'] = $charset;
-        $config['collation'] = $customCollation;
-        $config['database'] = 'information_schema';
-
-        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
-            return $this->markTestSkipped('The test only relevant for MySQL');
-        }
-
-        $connector = new MySQLiConnector();
-        $connector->connect($config);
+        $connector = $this->getConnector($charset, $customCollation);
         $connection = $connector->getMysqliConnection();
 
         $cset = $connection->get_charset();
@@ -101,20 +119,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
 
     public function testUtf8mb4GeneralCollation()
     {
-        $charset = 'utf8mb4';
-        $collation = 'utf8mb4_general_ci';
-
-        $config = DB::getConfig();
-        $config['charset'] = $charset;
-        $config['collation'] = $collation;
-        $config['database'] = 'information_schema';
-
-        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
-            return $this->markTestSkipped('The test only relevant for MySQL');
-        }
-
-        $connector = new MySQLiConnector();
-        $connector->connect($config, true);
+        $connector = $this->getConnector('utf8mb4', 'utf8mb4_general_ci', true);
         $connection = $connector->getMysqliConnection();
 
         $result = $connection->query(
@@ -127,20 +132,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
 
     public function testUtf8mb4UnicodeCollation()
     {
-        $charset = 'utf8mb4';
-        $collation = 'utf8mb4_unicode_ci';
-
-        $config = DB::getConfig();
-        $config['charset'] = $charset;
-        $config['collation'] = $collation;
-        $config['database'] = 'information_schema';
-
-        if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
-            return $this->markTestSkipped('The test only relevant for MySQL');
-        }
-
-        $connector = new MySQLiConnector();
-        $connector->connect($config, true);
+        $connector = $this->getConnector('utf8mb4', 'utf8mb4_unicode_ci', true);
         $connection = $connector->getMysqliConnection();
 
         $result = $connection->query(
@@ -150,5 +142,26 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $this->assertCount(2, $result, '`utf8mb4_unicode_ci` must recognise "rst" and "rßt" as different values');
         $this->assertEquals('rßt', $result[0][0]);
         $this->assertEquals('rst', $result[1][0]);
+    }
+
+    public function testQueryThrowsDatabaseErrorOnMySQLiError()
+    {
+        $connector = $this->getConnector();
+        $driver = new mysqli_driver();
+        // The default with PHP >= 8.0
+        $driver->report_mode = MYSQLI_REPORT_OFF;
+        $this->expectException(DatabaseException::class);
+        $connector = $this->getConnector(null, null, true);
+        $connector->query('force an error with invalid SQL');
+    }
+
+    public function testQueryThrowsDatabaseErrorOnMySQLiException()
+    {
+        $driver = new mysqli_driver();
+        // The default since PHP 8.1 - https://www.php.net/manual/en/mysqli-driver.report-mode.php
+        $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
+        $this->expectException(DatabaseException::class);
+        $connector = $this->getConnector(null, null, true);
+        $connector->query('force an error with invalid SQL');
     }
 }
