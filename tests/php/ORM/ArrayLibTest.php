@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Dev\SapphireTest;
 
@@ -334,5 +335,37 @@ class ArrayLibTest extends SapphireTest
             ksort($seen),
             'New items are iterated over'
         );
+    }
+
+    public function testShuffleAssociative()
+    {
+        $list = ['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5, 'f' => 6];
+        $copy = $list;
+        // Try shuffling 3 times - it's technically possible the result of a shuffle could be
+        // the exact same order as the original list.
+        for ($attempts = 1; $attempts <= 3; $attempts++) {
+            ArrayLib::shuffleAssociative($copy);
+            // Check value/key association is retained
+            foreach ($list as $key => $value) {
+                $this->assertEquals($value, $copy[$key]);
+            }
+
+            $failed = false;
+            try {
+                // Check the order is different
+                $this->assertNotSame($list, $copy);
+            } catch (ExpectationFailedException $e) {
+                $failed = true;
+                // Only fail the test if we've tried and failed 3 times.
+                if ($attempts === 3) {
+                    throw $e;
+                }
+            }
+
+            // If we've passed the shuffle test, don't retry.
+            if (!$failed) {
+                break;
+            }
+        }
     }
 }

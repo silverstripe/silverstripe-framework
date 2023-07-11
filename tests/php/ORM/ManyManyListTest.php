@@ -2,11 +2,13 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
@@ -78,6 +80,42 @@ class ManyManyListTest extends SapphireTest
         $result = $obj->Products()->First();
         $this->assertEquals('Foo', $result->Reference, 'Basic scalar fields should exist');
         $this->assertEquals('Test Product', $result->Title);
+    }
+
+    public function testGetExtraFields()
+    {
+        $team1 = $this->objFromFixture(Team::class, 'team1');
+        $expected = DataObject::getSchema()->manyManyExtraFieldsForComponent(Team::class, 'Players');
+        $this->assertSame($expected, $team1->Players()->getExtraFields());
+    }
+
+    public function testGetExtraData()
+    {
+        // Get fixtures
+        $player1 = new Player();
+        $player1->write();
+        $player2 = new Player();
+        $player2->write();
+        $team1 = $this->objFromFixture(Team::class, 'team1');
+
+        // Validate extra data
+        $team1->Players()->add($player1, ['Position' => 'Captain']);
+        $this->assertEquals(['Position' => 'Captain'], $team1->Players()->getExtraData('Teams', $player1->ID));
+
+        // Validate no extra data
+        $team1->Players()->add($player2);
+        $this->assertEquals(['Position' => null], $team1->Players()->getExtraData('Teams', $player2->ID));
+
+        // Validate no record
+        $this->assertEquals([], $team1->Players()->getExtraData('Teams', 99999));
+    }
+
+    public function testGetExtraDataBadID()
+    {
+        $team1 = $this->objFromFixture(Team::class, 'team1');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('ManyManyList::getExtraData() passed a non-numeric child ID');
+        $team1->Players()->getExtraData('Teams', 'abc');
     }
 
     public function testSetExtraData()

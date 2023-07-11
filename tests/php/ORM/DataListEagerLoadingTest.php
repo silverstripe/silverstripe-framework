@@ -4,10 +4,10 @@ namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneEagerLoadObject;
@@ -287,7 +287,7 @@ class DataListEagerLoadingTest extends SapphireTest
                     'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects',
                     'MixedManyManyEagerLoadObjects.MixedHasManyEagerLoadObjects.MixedHasOneEagerLoadObject',
                 ],
-                'expected' => 78
+                'expected' => 73
             ],
             [
                 'iden' => 'all',
@@ -1123,7 +1123,7 @@ class DataListEagerLoadingTest extends SapphireTest
         $record->write();
         $record->HasManyEagerLoadObjects()->add(HasManyEagerLoadObject::create(['Title' => 'My related obj']));
         $obj = EagerLoadObject::get()->eagerLoad('HasManyEagerLoadObjects')->first();
-        $this->assertInstanceOf(ArrayList::class, $obj->HasManyEagerLoadObjects());
+        $this->assertInstanceOf(EagerLoadedList::class, $obj->HasManyEagerLoadObjects());
     }
 
     public function testLastHasEagerloadedRelation()
@@ -1132,6 +1132,6 @@ class DataListEagerLoadingTest extends SapphireTest
         $record->write();
         $record->HasManyEagerLoadObjects()->add(HasManyEagerLoadObject::create(['Title' => 'My related obj']));
         $obj = EagerLoadObject::get()->eagerLoad('HasManyEagerLoadObjects')->last();
-        $this->assertInstanceOf(ArrayList::class, $obj->HasManyEagerLoadObjects());
+        $this->assertInstanceOf(EagerLoadedList::class, $obj->HasManyEagerLoadObjects());
     }
 }

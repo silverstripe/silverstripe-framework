@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use BadMethodCallException;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
@@ -27,6 +28,11 @@ use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
 use SilverStripe\ORM\Tests\ManyManyListTest\Category;
 use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\ORM\FieldType\DBPrimaryKey;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst;
+use SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond;
 
 class DataListTest extends SapphireTest
 {
@@ -80,6 +86,24 @@ class DataListTest extends SapphireTest
             ->filter(['Created:GreaterThan' => '2013-02-01 00:00:00'])
             ->toArray();
         $this->assertEquals(2, count($list ?? []));
+    }
+
+    public function testCount()
+    {
+        $list = new DataList(Team::class);
+        $this->assertSame(6, $list->count());
+
+        $list->removeAll();
+        $this->assertSame(0, $list->count());
+    }
+
+    public function testExists()
+    {
+        $list = new DataList(Team::class);
+        $this->assertTrue($list->exists());
+
+        $list->removeAll();
+        $this->assertFalse($list->exists());
     }
 
     public function testSubtract()
@@ -189,6 +213,22 @@ class DataListTest extends SapphireTest
     {
         $list = TeamComment::get();
         $this->assertEquals($list, clone($list));
+    }
+
+    public function testDbObject()
+    {
+        $list = DataList::create(TeamComment::class);
+        $this->assertInstanceOf(DBPrimaryKey::class, $list->dbObject('ID'));
+        $this->assertInstanceOf(DBVarchar::class, $list->dbObject('Name'));
+        $this->assertInstanceOf(DBText::class, $list->dbObject('Comment'));
+    }
+
+    public function testGetIDList()
+    {
+        $list = DataList::create(TeamComment::class);
+        $idList = $list->getIDList();
+        $this->assertSame($list->column('ID'), array_keys($idList));
+        $this->assertSame($list->column('ID'), array_values($idList));
     }
 
     public function testSql()
@@ -454,6 +494,16 @@ class DataListTest extends SapphireTest
             $this->assertContains($player->ID, $knownIDs);
             $this->assertNotEquals($removedID, $player->ID);
         }
+    }
+
+    public function testRemove()
+    {
+        $list = Team::get();
+        $obj = $this->objFromFixture(DataObjectTest\Team::class, 'team2');
+
+        $this->assertNotNull($list->byID($obj->ID));
+        $list->remove($obj);
+        $this->assertNull($list->byID($obj->ID));
     }
 
     /**
@@ -2048,6 +2098,42 @@ class DataListTest extends SapphireTest
         $this->assertSQLContains(DB::get_conn()->random() . ' AS "_SortColumn', $list->dataQuery()->sql());
     }
 
+    public function testColumn()
+    {
+        // sorted so postgres won't complain about the order being different
+        $list = RelationChildSecond::get()->sort('Title');
+        $ids = [
+            $this->idFromFixture(RelationChildSecond::class, 'test1'),
+            $this->idFromFixture(RelationChildSecond::class, 'test2'),
+            $this->idFromFixture(RelationChildSecond::class, 'test3'),
+            $this->idFromFixture(RelationChildSecond::class, 'test3-duplicate'),
+        ];
+
+        // Test default
+        $this->assertSame($ids, $list->column());
+
+        // Test specific field
+        $this->assertSame(['Test 1', 'Test 2', 'Test 3', 'Test 3'], $list->column('Title'));
+    }
+
+    public function testColumnUnique()
+    {
+        // sorted so postgres won't complain about the order being different
+        $list = RelationChildSecond::get()->sort('Title');
+        $ids = [
+            $this->idFromFixture(RelationChildSecond::class, 'test1'),
+            $this->idFromFixture(RelationChildSecond::class, 'test2'),
+            $this->idFromFixture(RelationChildSecond::class, 'test3'),
+            $this->idFromFixture(RelationChildSecond::class, 'test3-duplicate'),
+        ];
+
+        // Test default
+        $this->assertSame($ids, $list->columnUnique());
+
+        // Test specific field
+        $this->assertSame(['Test 1', 'Test 2', 'Test 3'], $list->columnUnique('Title'));
+    }
+
     public function testColumnFailureInvalidColumn()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -2101,6 +2187,181 @@ class DataListTest extends SapphireTest
             'We must have at least 3 items for this test to be valid'
         );
         $this->assertSame('John', $list->last()->Name);
+    }
+
+    public function testOffsetGet()
+    {
+        $list = TeamComment::get()->sort('Name');
+        $this->assertEquals('Bob', $list->offsetGet(0)->Name);
+        $this->assertEquals('Joe', $list->offsetGet(1)->Name);
+        $this->assertEquals('Phil', $list->offsetGet(2)->Name);
+        $this->assertNull($list->offsetGet(999));
+    }
+
+    public function testOffsetExists()
+    {
+        $list = TeamComment::get()->sort('Name');
+        $this->assertTrue($list->offsetExists(0));
+        $this->assertTrue($list->offsetExists(1));
+        $this->assertTrue($list->offsetExists(2));
+        $this->assertFalse($list->offsetExists(999));
+    }
+
+    public function testOffsetGetNegative()
+    {
+        $list = TeamComment::get()->sort('Name');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$offset can not be negative. -1 was provided.');
+        $list->offsetGet(-1);
+    }
+
+    public function testOffsetExistsNegative()
+    {
+        $list = TeamComment::get()->sort('Name');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$offset can not be negative. -1 was provided.');
+        $list->offsetExists(-1);
+    }
+
+    public function testOffsetSet()
+    {
+        $list = TeamComment::get()->sort('Name');
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage("Can't alter items in a DataList using array-access");
+        $list->offsetSet(0, null);
+    }
+
+    public function testOffsetUnset()
+    {
+        $list = TeamComment::get()->sort('Name');
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage("Can't alter items in a DataList using array-access");
+        $list->offsetUnset(0);
+    }
+
+    /**
+     * @dataProvider provideRelation
+     */
+    public function testRelation(string $parentClass, string $relation, ?array $expected)
+    {
+        $list = $parentClass::get()->relation($relation);
+        if ($expected === null) {
+            $this->assertNull($list);
+        } else {
+            $this->assertListEquals($expected, $list);
+        }
+    }
+
+    public function provideRelation()
+    {
+        return [
+            'many_many' => [
+                'parentClass' => RelationChildFirst::class,
+                'relation' => 'ManyNext',
+                'expected' => [
+                    ['Title' => 'Test 1'],
+                    ['Title' => 'Test 2'],
+                    ['Title' => 'Test 3'],
+                ],
+            ],
+            'has_many' => [
+                'parentClass' => Team::class,
+                'relation' => 'SubTeams',
+                'expected' => [
+                    ['Title' => 'Subteam 1'],
+                ],
+            ],
+            // calling relation() for a has_one just gives you null
+            'has_one' => [
+                'parentClass' => DataObjectTest\Company::class,
+                'relation' => 'Owner',
+                'expected' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideCreateDataObject
+     */
+    public function testCreateDataObject(string $dataClass, string $realClass, array $row)
+    {
+        $list = new DataList($dataClass);
+        $obj = $list->createDataObject($row);
+
+        // Validate the class is correct
+        $this->assertSame($realClass, get_class($obj));
+
+        // Validates all fields are available
+        foreach ($row as $field => $value) {
+            $this->assertSame($value, $obj->$field);
+        }
+
+        // Validates hydration only used if the row has an ID
+        if (array_key_exists('ID', $row)) {
+            $this->assertFalse($obj->isChanged());
+        } else {
+            $this->assertTrue($obj->isChanged());
+        }
+    }
+
+    public function provideCreateDataObject()
+    {
+        return [
+            'no ClassName' => [
+                'dataClass' => Team::class,
+                'realClass' => Team::class,
+                'row' => [
+                    'ID' => 1,
+                    'Title' => 'Team 1',
+                    'NumericField' => '1',
+                    // Extra field that doesn't exist on that class
+                    'SubclassDatabaseField' => 'this shouldnt be there',
+                ],
+            ],
+            'subclassed ClassName' => [
+                'dataClass' => Team::class,
+                'realClass' => SubTeam::class,
+                'row' => [
+                    'ClassName' => SubTeam::class,
+                    'ID' => 1,
+                    'Title' => 'Team 1',
+                    'SubclassDatabaseField' => 'this time it should be there',
+                ],
+            ],
+            'RecordClassName takes precedence' => [
+                'dataClass' => Team::class,
+                'realClass' => SubTeam::class,
+                'row' => [
+                    'ClassName' => Player::class,
+                    'RecordClassName' => SubTeam::class,
+                    'ID' => 1,
+                    'Title' => 'Team 1',
+                    'SubclassDatabaseField' => 'this time it should be there',
+                ],
+            ],
+            'No ID' => [
+                'dataClass' => Team::class,
+                'realClass' => Team::class,
+                'row' => [
+                    'Title' => 'Team 1',
+                    'NumericField' => '1',
+                    'SubclassDatabaseField' => 'this shouldnt be there',
+                ],
+            ],
+        ];
+    }
+
+    public function testDebug()
+    {
+        $list = Sortable::get();
+
+        $result = $list->debug();
+        $this->assertStringStartsWith('<h2>' . DataList::class . '</h2>', $result);
+        $this->assertMatchesRegularExpression(
+            '/<ul>\s*(<li style="list-style-type: disc; margin-left: 20px">.*?<\/li>)+\s*<\/ul>/s',
+            $result
+        );
+        $this->assertStringEndsWith('</ul>', $result);
     }
 
     public function testChunkedFetch()

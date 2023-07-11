@@ -31,6 +31,7 @@ class Team extends DataObject implements TestOnly
     private static $db = [
         'Title' => 'Varchar',
         'DatabaseField' => 'HTMLVarchar',
+        'NumericField' => 'Int',
     ];
 
     private static $has_one = [

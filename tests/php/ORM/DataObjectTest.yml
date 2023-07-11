@@ -31,12 +31,14 @@ SilverStripe\ORM\Tests\DataObjectTest\SubEquipmentCompany:
 SilverStripe\ORM\Tests\DataObjectTest\Team:
   team1:
     Title: Team 1
+    NumericField: 2
     Sponsors:
       - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany1
       - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
     EquipmentSuppliers: =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
   team2:
     Title: Team 2
+    NumericField: 20
     Sponsors:
       - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
       - =>SilverStripe\ORM\Tests\DataObjectTest\SubEquipmentCompany.subequipmentcompany1
@@ -45,6 +47,7 @@ SilverStripe\ORM\Tests\DataObjectTest\Team:
       - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
   team3:
     Title: Team 3
+    NumericField: 5
 SilverStripe\ORM\Tests\DataObjectTest\Player:
   captain1:
     FirstName: Captain
@@ -69,6 +72,7 @@ SilverStripe\ORM\Tests\DataObjectTest\Player:
 SilverStripe\ORM\Tests\DataObjectTest\SubTeam:
   subteam1:
     Title: Subteam 1
+    NumericField: 7
     SubclassDatabaseField: Subclassed 1
     SubclassFieldWithOverride: DB value of SubclassFieldWithOverride
     ExtendedDatabaseField: Extended 1
@@ -168,6 +172,8 @@ SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond:
   test2:
     Title: 'Test 2'
   test3:
+    Title: 'Test 3'
+  test3-duplicate:
     Title: 'Test 3'
 SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst:
   test1:
