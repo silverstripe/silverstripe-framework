@@ -7,8 +7,11 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DatabaseAdmin;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionProvider;
+use SilverStripe\Security\Security;
 
-class DevBuildController extends Controller
+class DevBuildController extends Controller implements PermissionProvider
 {
 
     private static $url_handlers = [
@@ -18,6 +21,15 @@ class DevBuildController extends Controller
     private static $allowed_actions = [
         'build'
     ];
+
+    protected function init(): void
+    {
+        parent::init();
+
+        if (!$this->canInit()) {
+            Security::permissionFailure($this);
+        }
+    }
 
     public function build(HTTPRequest $request): HTTPResponse
     {
@@ -38,5 +50,28 @@ class DevBuildController extends Controller
 
             return $response;
         }
+    }
+
+    public function canInit(): bool
+    {
+        return (
+            Director::isDev()
+            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
+            // "dev/tasks" from CLI.
+            || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
+            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'CAN_DEV_BUILD'])
+        );
+    }
+    
+    public function providePermissions(): array
+    {
+        return [
+            'CAN_DEV_BUILD' => [
+                'name' => _t(__CLASS__ . '.CAN_DEV_BUILD_DESCRIPTION', 'Can execute /dev/build'),
+                'help' => _t(__CLASS__ . '.CAN_DEV_BUILD_HELP', 'Can execute the build command (/dev/build).'),
+                'category' => DevelopmentAdmin::permissionsCategory(),
+                'sort' => 100
+            ],
+        ];
     }
 }

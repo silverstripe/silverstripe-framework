@@ -13,11 +13,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\ViewableData;
 
-class TaskRunner extends Controller
+class TaskRunner extends Controller implements PermissionProvider
 {
 
     use Configurable;
@@ -43,15 +44,7 @@ class TaskRunner extends Controller
     {
         parent::init();
 
-        $allowAllCLI = DevelopmentAdmin::config()->get('allow_all_cli');
-        $canAccess = (
-            Director::isDev()
-            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
-            // "dev/tasks" from CLI.
-            || (Director::is_cli() && $allowAllCLI)
-            || Permission::check("ADMIN")
-        );
-        if (!$canAccess) {
+        if (!$this->canInit()) {
             Security::permissionFailure($this);
         }
     }
@@ -139,15 +132,7 @@ class TaskRunner extends Controller
     {
         $availableTasks = [];
 
-        $taskClasses = ClassInfo::subclassesFor(BuildTask::class);
-        // remove the base class
-        array_shift($taskClasses);
-
-        foreach ($taskClasses as $class) {
-            if (!$this->taskEnabled($class)) {
-                continue;
-            }
-
+        foreach ($this->getTaskList() as $class) {
             $singleton = BuildTask::singleton($class);
             $description = $singleton->getDescription();
             $description = trim($description ?? '');
@@ -167,6 +152,18 @@ class TaskRunner extends Controller
         return $availableTasks;
     }
 
+    protected function getTaskList(): array
+    {
+        $taskClasses = ClassInfo::subclassesFor(BuildTask::class, false);
+        foreach ($taskClasses as $index => $task) {
+            if (!$this->taskEnabled($task) || !$this->canViewTask($task)) {
+                unset($taskClasses[$index]);
+            }
+        }
+
+        return $taskClasses;
+    }
+
     /**
      * @param string $class
      * @return boolean
@@ -181,6 +178,36 @@ class TaskRunner extends Controller
         }
 
         return true;
+    }
+
+    protected function canViewTask(string $class): bool
+    {
+        if ($this->canViewAllTasks()) {
+            return true;
+        }
+
+        $reflectionClass = new ReflectionClass($class);
+        if ($reflectionClass->isAbstract()) {
+            return false;
+        }
+
+        $task = Injector::inst()->get($class);
+        if (!$task->hasMethod('canView') || !$task->canView()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function canViewAllTasks(): bool
+    {
+        return (
+            Director::isDev()
+            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
+            // "dev/tasks" from CLI.
+            || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
+            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'BUILDTASK_CAN_RUN'])
+        );
     }
 
     /**
@@ -206,5 +233,25 @@ class TaskRunner extends Controller
         }
 
         return $header;
+    }
+
+    public function canInit(): bool
+    {
+        if ($this->canViewAllTasks()) {
+            return true;
+        }
+        return count($this->getTaskList()) > 0;
+    }
+    
+    public function providePermissions(): array
+    {
+        return [
+            'BUILDTASK_CAN_RUN' => [
+                'name' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_DESCRIPTION', 'Can view and execute all /dev/tasks'),
+                'help' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_HELP', 'Can view and execute all Build Tasks (/dev/tasks). This supersedes individual task permissions'),
+                'category' => DevelopmentAdmin::permissionsCategory(),
+                'sort' => 70
+            ],
+        ];
     }
 }

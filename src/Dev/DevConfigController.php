@@ -7,13 +7,16 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use Symfony\Component\Yaml\Yaml;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionProvider;
+use SilverStripe\Security\Security;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Outputs the full configuration.
  */
-class DevConfigController extends Controller
+class DevConfigController extends Controller implements PermissionProvider
 {
 
     /**
@@ -31,6 +34,15 @@ class DevConfigController extends Controller
         'index',
         'audit',
     ];
+
+    protected function init(): void
+    {
+        parent::init();
+
+        if (!$this->canInit()) {
+            Security::permissionFailure($this);
+        }
+    }
 
     /**
      * Note: config() method is already defined, so let's just use index()
@@ -127,6 +139,29 @@ class DevConfigController extends Controller
         }
 
         return $this->getResponse()->setBody($body);
+    }
+
+    public function canInit(): bool
+    {
+        return (
+            Director::isDev()
+            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
+            // "dev/tasks" from CLI.
+            || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
+            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'CAN_DEV_CONFIG'])
+        );
+    }
+    
+    public function providePermissions(): array
+    {
+        return [
+            'CAN_DEV_CONFIG' => [
+                'name' => _t(__CLASS__ . '.CAN_DEV_CONFIG_DESCRIPTION', 'Can view /dev/config'),
+                'help' => _t(__CLASS__ . '.CAN_DEV_CONFIG_HELP', 'Can view all application configuration (/dev/config).'),
+                'category' => DevelopmentAdmin::permissionsCategory(),
+                'sort' => 100
+            ],
+        ];
     }
 
     /**
