@@ -51,6 +51,7 @@ use SilverStripe\ORM\Tests\DataListTest\BelongsManyManySubSubEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\MixedHasManyEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\MixedHasOneEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\MixedManyManyEagerLoadObject;
+use SilverStripe\ORM\Connect\DatabaseException;
 
 class DataListTest extends SapphireTest
 {
@@ -1943,7 +1944,7 @@ class DataListTest extends SapphireTest
             if (!(DB::get_conn()->getConnector() instanceof MySQLiConnector)) {
                 $this->markTestSkipped('Database connector is not MySQLiConnector');
             }
-            $this->expectException(\mysqli_sql_exception::class);
+            $this->expectException(DatabaseException::class);
             $this->expectExceptionMessageMatches('/Unknown column/');
         } elseif ($type === 'invalid-column') {
             $this->expectException(InvalidArgumentException::class);
@@ -1974,7 +1975,7 @@ class DataListTest extends SapphireTest
             if (!(DB::get_conn()->getConnector() instanceof MySQLiConnector)) {
                 $this->markTestSkipped('Database connector is not MySQLiConnector');
             }
-            $this->expectException(\mysqli_sql_exception::class);
+            $this->expectException(DatabaseException::class);
             if ($type === 'error-in-sql-syntax') {
                 $this->expectExceptionMessageMatches('/You have an error in your SQL syntax/');
             } else {
