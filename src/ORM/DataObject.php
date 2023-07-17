@@ -1954,12 +1954,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getComponents($componentName, $id = null)
     {
-        if (isset($this->eagerLoadedData[$componentName])) {
-            return $this->eagerLoadedData[$componentName];
-        }
-        if (!isset($id)) {
-            $id = $this->ID;
-        }
         $result = null;
 
         $schema = $this->getSchema();
@@ -1972,7 +1966,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             ));
         }
 
+        if (isset($this->eagerLoadedData[$componentName])) {
+            return $this->eagerLoadedData[$componentName];
+        }
+
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
+        if (!isset($id)) {
+            $id = $this->ID;
+        }
         if (!$id) {
             if (!isset($this->unsavedRelations[$componentName])) {
                 $this->unsavedRelations[$componentName] =
@@ -2174,12 +2175,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getManyManyComponents($componentName, $id = null)
     {
-        if (isset($this->eagerLoadedData[$componentName])) {
-            return $this->eagerLoadedData[$componentName];
-        }
-        if (!isset($id)) {
-            $id = $this->ID;
-        }
         $schema = static::getSchema();
         $manyManyComponent = $schema->manyManyComponent(static::class, $componentName);
         if (!$manyManyComponent) {
@@ -2190,7 +2185,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             ));
         }
 
+        if (isset($this->eagerLoadedData[$componentName])) {
+            return $this->eagerLoadedData[$componentName];
+        }
+
         // If we haven't been written yet, we can't save these relations, so use a list that handles this case
+        if (!isset($id)) {
+            $id = $this->ID;
+        }
         if (!$id) {
             if (!isset($this->unsavedRelations[$componentName])) {
                 $this->unsavedRelations[$componentName] = new UnsavedRelationList(
@@ -3447,6 +3449,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->extend('flushCache');
 
         $this->components = [];
+        $this->eagerLoadedData = [];
         return $this;
     }
 

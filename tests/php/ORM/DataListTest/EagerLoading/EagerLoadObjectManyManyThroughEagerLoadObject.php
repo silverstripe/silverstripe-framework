@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\ORM\Tests\DataListTest;
+namespace SilverStripe\ORM\Tests\DataListTest\EagerLoading;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\TestOnly;
@@ -10,7 +10,9 @@ class EagerLoadObjectManyManyThroughEagerLoadObject extends DataObject implement
     private static $table_name = 'EagerLoadObjectManyManyThroughEagerLoadObject';
 
     private static $db = [
-        'Title' => 'Varchar'
+        'Title' => 'Varchar',
+        'SomeBool' => 'Boolean',
+        'SomeInt' => 'Int',
     ];
 
     private static $has_one = [

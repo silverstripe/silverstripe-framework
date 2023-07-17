@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\ORM\Tests\DataListTest;
+namespace SilverStripe\ORM\Tests\DataListTest\EagerLoading;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\TestOnly;
@@ -33,6 +33,15 @@ class EagerLoadObject extends DataObject implements TestOnly
             'to' => 'ManyManyThroughEagerLoadObject',
         ],
         'MixedManyManyEagerLoadObjects' => MixedManyManyEagerLoadObject::class,
+        'ManyManyEagerLoadWithExtraFields' => ManyManyEagerLoadObject::class,
+    ];
+
+    private static $many_many_extraFields = [
+        'ManyManyEagerLoadWithExtraFields' => [
+            'SomeText' => 'Varchar',
+            'SomeBool' => 'Boolean',
+            'SomeInt' => 'Int',
+        ],
     ];
 
     private static $belongs_many_many = [

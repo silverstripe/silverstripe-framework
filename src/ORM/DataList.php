@@ -96,6 +96,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         $this->dataQuery = clone $this->dataQuery;
         $this->finalisedQuery = null;
+        $this->eagerLoadedData = [];
     }
 
     /**
@@ -831,11 +832,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function toArray()
     {
-        $rows = $this->executeQuery();
         $results = [];
 
-        foreach ($rows as $row) {
-            $results[] = $this->createDataObject($row);
+        foreach ($this as $item) {
+            $results[] = $item;
         }
 
         return $results;
@@ -1001,6 +1001,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         // Re-set the finaliseQuery so that it can be re-executed
         $this->finalisedQuery = null;
+        $this->eagerLoadedData = [];
     }
 
     /**
@@ -1030,28 +1031,37 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $hasManyIDField = null;
         $manyManyLastComponent = null;
         for ($i = 0; $i < count($relations) - 1; $i++) {
-            $hasOneComponent = $schema->hasOneComponent($dataClasses[$i], $relations[$i + 1]);
+            $parentDataClass = $dataClasses[$i];
+            $relationName = $relations[$i + 1];
+            $hasOneComponent = $schema->hasOneComponent($parentDataClass, $relationName);
             if ($hasOneComponent) {
                 $dataClasses[] = $hasOneComponent;
                 $hasOneIDField = $relations[$i + 1] . 'ID';
                 continue;
             }
-            $belongsToComponent = $schema->belongsToComponent($dataClasses[$i], $relations[$i + 1]);
+            $belongsToComponent = $schema->belongsToComponent($parentDataClass, $relationName);
             if ($belongsToComponent) {
                 $dataClasses[] = $belongsToComponent;
-                $belongsToIDField = $schema->getRemoteJoinField($dataClasses[$i], $relations[$i + 1], 'belongs_to');
+                $belongsToIDField = $schema->getRemoteJoinField($parentDataClass, $relationName, 'belongs_to');
                 continue;
             }
-            $hasManyComponent = $schema->hasManyComponent($dataClasses[$i], $relations[$i + 1]);
+            $hasManyComponent = $schema->hasManyComponent($parentDataClass, $relationName);
             if ($hasManyComponent) {
                 $dataClasses[] = $hasManyComponent;
-                $hasManyIDField = $schema->getRemoteJoinField($dataClasses[$i], $relations[$i + 1], 'has_many');
+                $hasManyIDField = $schema->getRemoteJoinField($parentDataClass, $relationName, 'has_many');
                 continue;
             }
             // this works for both many_many and belongs_many_many
-            $manyManyComponent = $schema->manyManyComponent($dataClasses[$i], $relations[$i + 1]);
+            $manyManyComponent = $schema->manyManyComponent($parentDataClass, $relationName);
             if ($manyManyComponent) {
                 $dataClasses[] = $manyManyComponent['childClass'];
+                $manyManyComponent['extraFields'] = $schema->manyManyExtraFieldsForComponent($parentDataClass, $relationName) ?: [];
+                if (is_a($manyManyComponent['relationClass'], ManyManyThroughList::class, true)) {
+                    $manyManyComponent['joinClass'] = $manyManyComponent['join'];
+                    $manyManyComponent['join'] = $schema->baseDataTable($manyManyComponent['joinClass']);
+                } else {
+                    $manyManyComponent['joinClass'] = null;
+                }
                 $manyManyLastComponent = $manyManyComponent;
                 continue;
             }
@@ -1130,7 +1140,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                     $parentIDs,
                     $relationDataClass,
                     $eagerLoadRelation,
-                    $relationName
+                    $relationName,
+                    $parentDataClass
                 );
             } else {
                 throw new LogicException('Something went wrong with the eager loading');
@@ -1221,7 +1232,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             $eagerLoadID = $relationItem->$hasManyIDField;
             if (!isset($this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName])) {
                 $arrayList = ArrayList::create();
-                $arrayList->setDataClass($relationItem->dataClass);
+                $arrayList->setDataClass($relationDataClass);
                 $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName] = $arrayList;
             }
             $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName]->push($relationItem);
@@ -1235,39 +1246,46 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         array $parentIDs,
         string $relationDataClass,
         string $eagerLoadRelation,
-        string $relationName
+        string $relationName,
+        string $parentDataClass
     ): array {
         $parentIDField = $manyManyLastComponent['parentField'];
         $childIDField = $manyManyLastComponent['childField'];
-        // $join will either be:
-        // - the join table name for many-many
-        // - the join data class for many-many-through
-        $join = $manyManyLastComponent['join'];
+        $joinTable = $manyManyLastComponent['join'];
+        $extraFields = $manyManyLastComponent['extraFields'];
+        $joinClass = $manyManyLastComponent['joinClass'];
+
+        // Get the join records so we can correctly identify which children belong to which parents
+        $joinRows = DB::query('SELECT * FROM "' . $joinTable . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')');
 
         // many_many_through
-        if (is_a($manyManyLastComponent['relationClass'], ManyManyThroughList::class, true)) {
-            $joinThroughObjs = DataObject::get($join)->filter([$parentIDField => $parentIDs]);
-            $relationItemIDs = [];
-            $joinRows = [];
-            foreach ($joinThroughObjs as $joinThroughObj) {
-                $joinRows[] = [
-                    $parentIDField => $joinThroughObj->$parentIDField,
-                    $childIDField => $joinThroughObj->$childIDField
-                ];
-                $relationItemIDs[] = $joinThroughObj->$childIDField;
-            }
+        if ($joinClass !== null) {
+            $relationList = ManyManyThroughList::create(
+                $relationDataClass,
+                $joinClass,
+                $childIDField,
+                $parentIDField,
+                $extraFields,
+                $relationDataClass,
+                $parentDataClass
+            )->forForeignID($parentIDs);
         // many_many + belongs_many_many
         } else {
-            $joinTableQuery = DB::query('SELECT * FROM "' . $join . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')');
-            $relationItemIDs = $joinTableQuery->column($childIDField);
-            $joinRows = $joinTableQuery;
+            $relationList = ManyManyList::create(
+                $relationDataClass,
+                $joinTable,
+                $childIDField,
+                $parentIDField,
+                $extraFields
+            )->forForeignID($parentIDs);
         }
 
         // Get ALL of the items for this relation up front, for ALL of the parents
+        // Use a real RelationList here so that the extraFields and join record are correctly set for all relations
         // Fetched as a map so we can get the ID for all records up front (instead of in another nested loop)
         // Fetched after that as an array because for some reason that performs better in the loop
         // Note that "Me" is a method on ViewableData that returns $this - i.e. that is the actual DataObject record
-        $relationArray = DataObject::get($relationDataClass)->byIDs($relationItemIDs)->map('ID', 'Me')->toArray();
+        $relationArray = $relationList->map('ID', 'Me')->toArray();
 
         // Store the children in an ArrayList against the correct parent
         foreach ($joinRows as $row) {
@@ -1277,13 +1295,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
             if (!isset($this->eagerLoadedData[$eagerLoadRelation][$parentID][$relationName])) {
                 $arrayList = ArrayList::create();
-                $arrayList->setDataClass($relationItem->dataClass);
+                $arrayList->setDataClass($relationDataClass);
                 $this->eagerLoadedData[$eagerLoadRelation][$parentID][$relationName] = $arrayList;
             }
             $this->eagerLoadedData[$eagerLoadRelation][$parentID][$relationName]->push($relationItem);
         }
 
-        return [$relationArray, $relationItemIDs];
+        return [$relationArray, array_keys($relationArray)];
     }
 
     /**

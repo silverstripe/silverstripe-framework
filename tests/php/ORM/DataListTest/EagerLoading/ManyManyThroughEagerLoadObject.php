@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\ORM\Tests\DataListTest;
+namespace SilverStripe\ORM\Tests\DataListTest\EagerLoading;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\TestOnly;
