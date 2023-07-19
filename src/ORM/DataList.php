@@ -1408,8 +1408,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function first()
     {
-        foreach ($this->dataQuery->firstRow()->execute() as $row) {
-            return $this->createDataObject($row);
+        // We need to trigger eager loading by iterating over the list, rather than just fetching
+        // the first row from the dataQuery.
+        // This limit and offset logic mimics that $this->dataQuery->firstRow() would ultimately do.
+        $limitOffset = $this->dataQuery->query()->getLimit() ?? [];
+        $offset =  array_key_exists('start', $limitOffset) ? $limitOffset['start'] : 0;
+        foreach ($this->limit(1, $offset) as $record) {
+            return $record;
         }
         return null;
     }
@@ -1423,8 +1428,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function last()
     {
-        foreach ($this->dataQuery->lastRow()->execute() as $row) {
-            return $this->createDataObject($row);
+        // We need to trigger eager loading by iterating over the list, rather than just fetching
+        // the last row from the dataQuery.
+        // This limit and offset logic mimics that $this->dataQuery->lastRow() would ultimately do.
+        $limitOffset = $this->dataQuery->query()->getLimit() ?? [];
+        $offset =  array_key_exists('start', $limitOffset) ? $limitOffset['start'] : 0;
+        $index = max($this->count() + $offset - 1, 0);
+        foreach ($this->limit(1, $index) as $record) {
+            return $record;
         }
         return null;
     }
