@@ -396,7 +396,7 @@ abstract class DBSchemaManager
         // Create custom fields
         if ($fieldSchema) {
             foreach ($fieldSchema as $fieldName => $fieldSpec) {
-                $fieldSpec = $fieldSpec ??= '';
+                $fieldSpec ??= '';
                 // convert Enum short array syntax to long array syntax to make parsing $arrayValue below easier
                 $fieldSpec = preg_replace('/^(enum\()\[(.*?)\]/i', '$1array($2)', $fieldSpec);
                 //Is this an array field?
