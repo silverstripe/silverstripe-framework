@@ -2081,6 +2081,28 @@ class DataListTest extends SapphireTest
         ], $productTitles);
     }
 
+    public function testFirst()
+    {
+        $list = Sortable::get()->sort('Sort');
+        $this->assertGreaterThanOrEqual(
+            3,
+            $list->count(),
+            'We must have at least 3 items for this test to be valid'
+        );
+        $this->assertSame('Steve', $list->first()->Name);
+    }
+
+    public function testLast()
+    {
+        $list = Sortable::get()->sort('Sort');
+        $this->assertGreaterThanOrEqual(
+            3,
+            $list->count(),
+            'We must have at least 3 items for this test to be valid'
+        );
+        $this->assertSame('John', $list->last()->Name);
+    }
+
     public function testChunkedFetch()
     {
         $expectedIDs = Team::get()->map('ID', 'ID')->toArray();
