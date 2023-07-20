@@ -16,25 +16,67 @@ class DBEnumTest extends SapphireTest
 
     protected $usesDatabase = true;
 
-    public function testDefault()
+    /**
+     * @dataProvider provideParse
+     *
+     * nullifyEmpty is an option on DBString, which DBEnum extends
+     * Mainly used for testing that Enum short-array style syntax works while passing in options
+     */
+    public function testParse(?string $expectedDefault, bool $expectedNullifyEmpty, string $spec)
     {
-        /** @var DBEnum $enum1 */
-        $enum1 = DBField::create_field('Enum("A, B, C, D")', null);
-        /** @var DBEnum $enum2 */
-        $enum2 = DBField::create_field('Enum("A, B, C, D", "")', null);
-        /** @var DBEnum $enum3 */
-        $enum3 = DBField::create_field('Enum("A, B, C, D", null)', null);
-        /** @var DBEnum $enum4 */
-        $enum4 = DBField::create_field('Enum("A, B, C, D", 1)', null);
+        /** @var DBEnum $enum */
+        $enum = DBField::create_field($spec, null);
+        $this->assertEquals($expectedDefault, $enum->getDefaultValue());
+        $this->assertEquals($expectedDefault, $enum->getDefault());
+        $this->assertEquals($expectedNullifyEmpty, $enum->getNullifyEmpty());
+    }
 
-        $this->assertEquals('A', $enum1->getDefaultValue());
-        $this->assertEquals('A', $enum1->getDefault());
-        $this->assertEquals(null, $enum2->getDefaultValue());
-        $this->assertEquals(null, $enum2->getDefault());
-        $this->assertEquals(null, $enum3->getDefaultValue());
-        $this->assertEquals(null, $enum3->getDefault());
-        $this->assertEquals('B', $enum4->getDefaultValue());
-        $this->assertEquals('B', $enum4->getDefault());
+    public function provideParse()
+    {
+        return [
+            // standard syntax - double quotes
+            ['A', true, 'Enum("A, B, C, D")'],
+            ['B', true, 'Enum("A, B, C, D", "B")'],
+            ['C', true, 'Enum("A, B, C, D", 2)'],
+            [null, true, 'Enum("A, B, C, D", "")'],
+            [null, true, 'Enum("A, B, C, D", null)'],
+            ['B', false, 'Enum("A, B, C, D", "B", ["nullifyEmpty" => false])'],
+            // standard syntax - single quotes
+            ['A', true, "Enum('A, B, C, D')"],
+            ['B', true, "Enum('A, B, C, D', 'B')"],
+            ['C', true, "Enum('A, B, C, D', 2)"],
+            [null, true, "Enum('A, B, C, D', '')"],
+            [null, true, "Enum('A, B, C, D', null)"],
+            ['B', false, "Enum('A, B, C, D', 'B', ['nullifyEmpty' => false])"],
+            // long array syntax - double quotes
+            ['A', true, 'Enum(array("A", "B", "C", "D"))'],
+            ['B', true, 'Enum(array("A", "B", "C", "D"), "B")'],
+            ['C', true, 'Enum(array("A", "B", "C", "D"), 2)'],
+            [null, true, 'Enum(array("A", "B", "C", "D"), "")'],
+            [null, true, 'Enum(array("A", "B", "C", "D"), null)'],
+            ['B', false, 'Enum(array("A", "B", "C", "D"), "B", ["nullifyEmpty" => false])'],
+            // long array syntax - single quotes
+            ['A', true, "Enum(array('A', 'B', 'C', 'D'))"],
+            ['B', true, "Enum(array('A', 'B', 'C', 'D'), 'B')"],
+            ['C', true, "Enum(array('A', 'B', 'C', 'D'), 2)"],
+            [null, true, "Enum(array('A', 'B', 'C', 'D'), '')"],
+            [null, true, "Enum(array('A', 'B', 'C', 'D'), null)"],
+            ['B', false, "Enum(array('A', 'B', 'C', 'D'), 'B', ['nullifyEmpty' => false])"],
+            // short array syntax - double quotes
+            ['A', true, 'Enum(["A", "B", "C", "D"])'],
+            ['B', true, 'Enum(["A", "B", "C", "D"], "B")'],
+            ['C', true, 'Enum(["A", "B", "C", "D"], 2)'],
+            [null, true, 'Enum(["A", "B", "C", "D"], "")'],
+            [null, true, 'Enum(["A", "B", "C", "D"], null)'],
+            ['B', false, 'Enum(["A", "B", "C", "D"], "B", ["nullifyEmpty" => false])'],
+            // short array syntax - single quotes
+            ['A', true, "Enum(['A', 'B', 'C', 'D'])"],
+            ['B', true, "Enum(['A', 'B', 'C', 'D'], 'B')"],
+            ['C', true, "Enum(['A', 'B', 'C', 'D'], 2)"],
+            [null, true, "Enum(['A', 'B', 'C', 'D'], '')"],
+            [null, true, "Enum(['A', 'B', 'C', 'D'], null)"],
+            ['B', false, "Enum(['A', 'B', 'C', 'D'], 'B', ['nullifyEmpty' => false])"],
+        ];
     }
 
     public function testObsoleteValues()
