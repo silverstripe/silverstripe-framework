@@ -90,12 +90,16 @@ da:
     DeletePermissionsFailure: 'Ingen slette rettigheder'
     Deleted: 'Slet {type} {name}'
     Save: Gem
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Rediger
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Kan ikke fjerne dig selv fra denne gruppe, du vil miste administrator rettigheder'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: af
     Page: Side
     View: Vis
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Vis
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Beløb
     FIELDLABELCURRENCY: Valuta
@@ -142,6 +146,8 @@ da:
       other: '{count} år'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Enhver
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'For mange relaterede objekter; fallback felt i brug'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'For mange underelementer ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -162,6 +168,8 @@ da:
     SUCCESS: Succes
     SUCCESSCONTENT: '<p>Logget ind. Hvis du ikke automatisk viderestilles så <a target="_top" href="{link}">klik her</a></p>'
     SUCCESS_TITLE: 'Logget ind med sucess'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Annuller
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Standard admin'
   SilverStripe\Security\Group:
@@ -188,11 +196,11 @@ da:
     RolesAddEditLink: 'Administrer roller'
     SINGULARNAME: Gruppe
     Sort: Sortering
-    has_many_Permissions: Rettigheder
-    many_many_Members: Brugere
     db_Description: Beskrivelse
     db_Title: Titel
     has_many_Groups: Grupper
+    has_many_Permissions: Rettigheder
+    many_many_Members: Brugere
     many_many_Roles: Roller
   SilverStripe\Security\LoginAttempt:
     Email: 'Email adresse'
@@ -243,11 +251,11 @@ da:
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende bruger #{id} med identisk identifikator ({name} = {value}))'
     YOUROLDPASSWORD: 'Dit gamle kodeord'
     belongs_many_many_Groups: Grupper
+    db_Email: Email
     db_Locale: 'Sprog i brugerfladen'
     db_LockedOutUntil: 'Låst ude indtil'
     db_Password: Kodeord
     db_PasswordExpiry: Kodeordsudløbsdato
-    db_Email: Email
     db_Surname: Efternavn
     db_URLSegment: 'URL adresse'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
@@ -333,11 +341,3 @@ da:
     NOTERESETPASSWORD: 'Indtast din email adresse, så sender vi dig et link som du kan nulstille dit kodeord med'
     PASSWORDRESETSENTHEADER: 'link til at nulstille kodeord afsendt'
     PASSWORDRESETSENTTEXT: 'Tak for det. Et link til at nulstille dit kodeord er afsendt, hvis der findes en bruger med denne email adresse.'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Rediger
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Vis
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'For mange relaterede objekter; fallback felt i brug'
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Annuller

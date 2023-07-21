@@ -145,12 +145,14 @@ eo:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bonvole enigu validan horan formaton ({format})'
   SilverStripe\ORM\DataObject:
+    GENERALSEARCH: 'Ĝenerala serĉo'
     PLURALNAME: 'Datumaj Objektoj'
     PLURALS:
       one: 'Unu datuma objekto'
       other: '{count} datumaj objektoj'
     SINGULARNAME: 'Datuma Objekto'
-    GENERALSEARCH: 'Ĝenerala serĉo'
+    many_many_FileTracking: 'Spuri dosierojn'
+    many_many_LinkTracking: 'Spuri ligilojn'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Ajna
     NOANSWER: Ne
@@ -235,16 +237,30 @@ eo:
     RolesAddEditLink: 'Aldoni/redakti rolojn'
     SINGULARNAME: Grupo
     Sort: 'Ordiga Ordo'
-    has_many_Permissions: Permesoj
-    many_many_Members: Membroj
     ValidationIdentifierAlreadyExists: 'Jam ekzistas grupo  ({group}) kun la sama {identifier}'
+    db_AccessAllSubsites: 'Aliri ĉiujn subretejojn'
+    db_Code: Kodo
+    db_DN: DN
     db_Description: Priskribo
+    db_GUID: GUID
+    db_HtmlEditorConfig: 'Agordi html-redaktilon'
+    db_LastSynced: 'Laste sinkronigita'
+    db_Locked: Ŝlosita
     db_Sort: Ordigi
     db_Title: Titolo
     has_many_Groups: Grupoj
+    has_many_LDAPGroupMappings: 'LDAP grupaj mapigoj'
+    has_many_Permissions: Permesoj
     has_one_Parent: Patra
+    many_many_Members: Membroj
     many_many_Roles: Roloj
+    many_many_SiteTreeContentReview: 'Kontroli la ret-arban enhavon'
     many_many_Subsites: Subretejoj
+  SilverStripe\Security\InheritedPermissionsExtension:
+    db_CanEditType: 'Povas redakti tipon'
+    db_CanViewType: 'Povas vidi tipon'
+    many_many_EditorGroups: 'Grupoj de redaktantoj'
+    many_many_ViewerGroups: 'Grupoj de vidantoj'
   SilverStripe\Security\LoginAttempt:
     Email: 'Retpoŝta adreso'
     EmailHashed: 'Retpoŝta adreso (haketa)'
@@ -255,6 +271,8 @@ eo:
       other: '{count} provoj ensaluti'
     SINGULARNAME: 'Provo ensaluti'
     Status: Stato
+    db_EmailHashed: 'Retpoŝto haketita'
+    db_IP: IP
     db_Status: Stato
     has_one_Member: Membro
   SilverStripe\Security\Member:
@@ -287,7 +305,7 @@ eo:
     PLURALS:
       one: 'Unu membro'
       other: '{count} membroj'
-    RequiresPasswordChangeOnNextLogin: 'Bezonas ŝanĝi pasvorton je sekva elsaluto'
+    RequiresPasswordChangeOnNextLogin: 'Nepre ŝanĝu la pasvorton je sekva ensaluto'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
@@ -297,15 +315,41 @@ eo:
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
+    belongs_many_many_BlogPosts: 'Blogaj afiŝoj'
     belongs_many_many_Groups: Grupoj
+    db_AccountResetExpired: 'Konta reagordo eksvalidiĝis'
+    db_AccountResetHash: 'Konta reagorda haketo'
+    db_AutoLoginExpired: 'Aŭtomata ensaluto eksvalidiĝis'
+    db_AutoLoginHash: 'Aŭtomata saluta haketaĵo'
+    db_BlogProfileSummary: 'Bloga profila resumo'
+    db_DefaultRegisteredMethodID: 'Apriora registrita metod-ID'
+    db_Email: Retpoŝto
+    db_FailedLoginCount: 'Malsukcesis nombri ensaluton'
+    db_FirstName: 'Persona nomo'
+    db_GUID: GUID
+    db_HasSkippedMFARegistration: 'Registris je skippedMFA'
+    db_IsExpired: Eksvalidiĝis
+    db_LastSynced: 'Laste sinkronigita'
     db_Locale: 'Interfaca Lokaĵaro'
     db_LockedOutUntil: 'Elŝlosita ĝis'
     db_Password: Pasvorto
+    db_PasswordEncryption: 'Pasvorta ĉifrado'
     db_PasswordExpiry: 'Pasvorta Limdato'
-    db_Email: Retpoŝto
-    db_FirstName: 'Persona nomo'
+    db_Salt: Salo
     db_Surname: 'Familia nomo'
+    db_TempIDExpired: 'TempID eksvalidiĝis'
+    db_TempIDHash: TempID-haketaĵo
     db_URLSegment: URL-segmento
+    db_Username: Salutnomo
+    has_many_LoggedPasswords: 'Ensalutaj pasvortoj'
+    has_many_LoginSessions: 'Ensalutaj seancoj'
+    has_many_RegisteredMFAMethods: 'RegisteredMFA methodoj'
+    has_many_RememberLoginHashes: 'Memori ensalutajn haketaĵojn'
+    has_one_AFile: 'Unu dosiero'
+    has_one_AImage: 'Unu bildo'
+    has_one_BlogProfileImage: 'Bloga profila bildo'
+    has_one_FavouritePage: 'Favorata paĝo'
+    many_many_SiteTreeContentReview: 'Kontroli la ret-arban enhavon'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS-membra ensaluta formularo'
     BUTTONFORGOTPASSWORD: 'Forgesis pasvorton'
@@ -323,6 +367,8 @@ eo:
       other: '{count} pasvortoj de membroj'
     SINGULARNAME: 'Membra pasvorto'
     db_Password: Pasvorto
+    db_PasswordEncryption: 'Pasvorta ĉifrado'
+    db_Salt: Salo
     has_one_Member: Membro
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Bonvole plifortigu la pasvortan aldonante la jenajn signojn: {chars}'
@@ -341,6 +387,8 @@ eo:
       other: '{count} permesoj'
     SINGULARNAME: Permeso
     UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
+    db_Arg: Arg
+    db_Code: Kodo
     db_Type: Tipo
     has_one_Group: Grupo
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -359,6 +407,7 @@ eo:
     belongs_many_many_Groups: Grupoj
     db_OnlyAdminCanApply: 'Nur administranto povas apliki'
     db_Title: Titolo
+    has_many_Codes: Kodoj
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permesrolaj kodoj'
     PLURALS:
@@ -366,6 +415,7 @@ eo:
       other: '{count} permesrolaj kodoj'
     PermsError: 'Ne povas agordi kodon "{code}" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
     SINGULARNAME: 'Permesrola kodo'
+    db_Code: Kodo
     has_one_Role: Rolo
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Ensalutaj haketaĵoj'
@@ -373,6 +423,10 @@ eo:
       one: 'Unu ensaluta haketaĵo'
       other: '{count} ensalutaj haketaĵoj'
     SINGULARNAME: 'Ensaluta haketaĵo'
+    db_DeviceID: 'ID de aparato'
+    db_ExpiryDate: 'Dato de eksvaidiĝo'
+    db_Hash: Haketaĵo
+    has_one_LoginSession: 'Ensaluta seanco'
     has_one_Member: Membro
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas ensaluti denove.'

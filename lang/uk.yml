@@ -1,108 +1,4 @@
 uk:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    ATLEAST: 'Пароль повинен містити що найменше {min} символів.'
-    BETWEEN: 'Пароль повинен містити від {min} до {max} символів.'
-    MAXIMUM: 'Пароль повинен містити не більше ніж {max} символів.'
-    SHOWONCLICKTITLE: 'Змінити пароль'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Оберіть)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Додати {name}'
-    CSVEXPORT: 'Експортувати в CSV'
-    Filter: Фільтр
-    FilterBy: 'Фільтр по'
-    Find: Пошук
-    Print: Друкувати
-    ResetFilter: Відновити
-  SilverStripe\Forms\GridField\GridFieldDetailForm:
-    CancelBtn: Відмінити
-    Create: Створити
-    Delete: Видалити
-    Save: Зберегти
-    Saved: 'Збережено {name} {link}'
-  SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: Кількість
-    FIELDLABELCURRENCY: Валюта
-  SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Будь-який
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
-    ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
-    ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
-  SilverStripe\Security\Group:
-    AddRole: 'Додати роль до цієї групи'
-    Code: 'Код групи'
-    Locked: 'Заблокувати?'
-    Parent: 'Батьківська група'
-    RolesAddEditLink: 'Керувати ролями'
-    has_many_Permissions: Права
-    many_many_Members: Члени
-    MEMBERS: Члени
-    NEWGROUP: 'Нова Група'
-    PERMISSIONS: Права
-    PLURALNAME: Групи
-    ROLES: Ролі
-    db_Title: Назва
-    has_many_Groups: Групи
-    many_many_Roles: Ролі
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Змінити пароль'
-    BUTTONLOGIN: Увійти
-    BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
-    BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
-    CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
-    CONFIRMPASSWORD: 'Підтвердіть пароль'
-    EMAIL: Е-пошта
-    EMPTYNEWPASSWORD: 'Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз'
-    ENTEREMAIL: 'Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю.'
-    ERRORNEWPASSWORD: 'Ви ввели новий пароль із відмінностями, спробуйте знову'
-    ERRORPASSWORDNOTMATCH: 'Ваш теперішній пароль не збігається, будь ласка, повторіть'
-    FIRSTNAME: 'Ім''я'
-    INTERFACELANG: 'Мова Інтерфейсу'
-    NEWPASSWORD: 'Новий пароль'
-    PASSWORD: Пароль
-    SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
-    SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
-    SURNAME: Прізвище
-    YOUROLDPASSWORD: 'Ваш старий пароль'
-    belongs_many_many_Groups: Групи
-    db_LockedOutUntil: 'Заблоковано поки'
-    db_Password: Пароль
-    db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
-    BUTTONLOGOUT: Вилогуватися
-    EDIT_PASSWORD: 'Новий пароль'
-    PLURALNAME: Члени
-    SINGULARNAME: Член
-    db_Email: Е-пошта
-    db_Surname: Прізвище
-  SilverStripe\Security\Permission:
-    CONTENT_CATEGORY: 'Дозволи вмісту'
-    CMS_ACCESS_CATEGORY: 'Доступ до CMS'
-    PERMISSIONS_CATEGORY: 'Ролі та дозволи доступу'
-    PLURALNAME: Права
-    SINGULARNAME: 'Право доступу'
-  SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'Успадкований з ролі "{roletitle}" на групу "{grouptitle}"'
-  SilverStripe\Security\PermissionRole:
-    Title: Назва
-    PLURALNAME: Ролі
-    SINGULARNAME: Роль
-    belongs_many_many_Groups: Групи
-    db_Title: Назва
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
-    BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
-    CHANGEPASSWORDBELOW: 'Ви можете змінити пароль нижче.'
-    CHANGEPASSWORDHEADER: 'Змінити свій пароль'
-    ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
-    ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
-    LOGIN: Увійти
-    NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
-    NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
-    LOGOUT: Вилогуватися
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Розміри
     EDIT: Edit
@@ -112,13 +8,37 @@ uk:
     HELLO: Привіт
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Привіт
+  SilverStripe\Forms\ConfirmedPasswordField:
+    ATLEAST: 'Пароль повинен містити що найменше {min} символів.'
+    BETWEEN: 'Пароль повинен містити від {min} до {max} символів.'
+    MAXIMUM: 'Пароль повинен містити не більше ніж {max} символів.'
+    SHOWONCLICKTITLE: 'Змінити пароль'
   SilverStripe\Forms\DateField:
     NOTSET: 'не встановлено'
     TODAY: сьогодні
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Оберіть)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Головна
+  SilverStripe\Forms\GridField\GridField:
+    Add: 'Додати {name}'
+    CSVEXPORT: 'Експортувати в CSV'
+    Filter: Фільтр
+    FilterBy: 'Фільтр по'
+    Find: Пошук
+    Print: Друкувати
+    ResetFilter: Відновити
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Видалити
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
+    CancelBtn: Відмінити
+    Create: Створити
+    Delete: Видалити
+    Save: Зберегти
+    Saved: 'Збережено {name} {link}'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
@@ -126,13 +46,70 @@ uk:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Кількість
+    FIELDLABELCURRENCY: Валюта
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Об’єкти даних'
     SINGULARNAME: 'Об’єкт даних'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Будь-який
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Будь-який
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
+    ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
+    ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
   SilverStripe\Security\Confirmation\Form:
     REFUSE: Відмінити
+  SilverStripe\Security\Group:
+    AddRole: 'Додати роль до цієї групи'
+    Code: 'Код групи'
+    Locked: 'Заблокувати?'
+    MEMBERS: Члени
+    NEWGROUP: 'Нова Група'
+    PERMISSIONS: Права
+    PLURALNAME: Групи
+    Parent: 'Батьківська група'
+    ROLES: Ролі
+    RolesAddEditLink: 'Керувати ролями'
+    db_Title: Назва
+    has_many_Groups: Групи
+    has_many_Permissions: Права
+    many_many_Members: Члени
+    many_many_Roles: Ролі
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: Член
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Змінити пароль'
+    BUTTONLOGIN: Увійти
+    BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
+    BUTTONLOGOUT: Вилогуватися
+    BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
+    CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
+    CONFIRMPASSWORD: 'Підтвердіть пароль'
+    EDIT_PASSWORD: 'Новий пароль'
+    EMAIL: Е-пошта
+    EMPTYNEWPASSWORD: 'Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз'
+    ENTEREMAIL: 'Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю.'
+    ERRORNEWPASSWORD: 'Ви ввели новий пароль із відмінностями, спробуйте знову'
+    ERRORPASSWORDNOTMATCH: 'Ваш теперішній пароль не збігається, будь ласка, повторіть'
+    FIRSTNAME: 'Ім''я'
+    INTERFACELANG: 'Мова Інтерфейсу'
+    NEWPASSWORD: 'Новий пароль'
+    PASSWORD: Пароль
+    PLURALNAME: Члени
+    SINGULARNAME: Член
+    SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
+    SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
+    SURNAME: Прізвище
+    YOUROLDPASSWORD: 'Ваш старий пароль'
+    belongs_many_many_Groups: Групи
+    db_Email: Е-пошта
+    db_LockedOutUntil: 'Заблоковано поки'
+    db_Password: Пароль
+    db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
+    db_Surname: Прізвище
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Вилогуватися
   SilverStripe\Security\MemberPassword:
@@ -140,9 +117,32 @@ uk:
     SINGULARNAME: 'Пароль користувача'
     db_Password: Пароль
     has_one_Member: Член
-  SilverStripe\Security\LoginAttempt:
-    has_one_Member: Член
+  SilverStripe\Security\Permission:
+    CMS_ACCESS_CATEGORY: 'Доступ до CMS'
+    CONTENT_CATEGORY: 'Дозволи вмісту'
+    PERMISSIONS_CATEGORY: 'Ролі та дозволи доступу'
+    PLURALNAME: Права
+    SINGULARNAME: 'Право доступу'
+  SilverStripe\Security\PermissionCheckboxSetField:
+    FromRoleOnGroup: 'Успадкований з ролі "{roletitle}" на групу "{grouptitle}"'
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Ролі
+    SINGULARNAME: Роль
+    Title: Назва
+    belongs_many_many_Groups: Групи
+    db_Title: Назва
   SilverStripe\Security\PermissionRoleCode:
     has_one_Role: Роль
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Член
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
+    BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
+    CHANGEPASSWORDBELOW: 'Ви можете змінити пароль нижче.'
+    CHANGEPASSWORDHEADER: 'Змінити свій пароль'
+    ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
+    ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
+    LOGIN: Увійти
+    LOGOUT: Вилогуватися
+    NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
+    NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'

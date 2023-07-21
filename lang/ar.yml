@@ -1,29 +1,53 @@
 ar:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: الأبعاد
+    EDIT: تحرير
+    EDITINFO: 'قم بتعديل هذا الملف'
+    REMOVE: حذف
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
+    HELLO: أهلاً
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: أهلاً
+    TEXT1: هنا
+    TEXT2: 'رابط إعادة تعيين كلمة المرور'
+    TEXT3: لـ
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'طلب غير صحيح'
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: لا
+    YESANSWER: نعم
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'لا توجد خيارات متاحة'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'يجب أن تكون كلمات المرور على الأقل {الحد الأدنى} حرفاً.'
     BETWEEN: 'يجب أن تكون كلمات المرور من {الحد الأدنى} إلى {الحد الأقصى} حرفاً.'
     MAXIMUM: 'يجب أن تكون كلمات المرور على الأكثر {الحد الأقصى} حرفاً.'
     SHOWONCLICKTITLE: 'تغيير كلمة المرور'
   SilverStripe\Forms\DateField:
+    NOTSET: 'غير محدد'
+    TODAY: اليوم
     VALIDDATEFORMAT2: 'الرجاء إدخال صيغة تاريخ صحيحة ({صيغة})'
     VALIDDATEMAXDATE: 'التسجيل الخاص بك قد يكون أقدم أو مطابق لأقصى تاريخ مسموح به ({تاريخ})'
     VALIDDATEMINDATE: 'التسجيل الخاص بك قد يكون أحدث أو مطابق للحد الأدنى للتاريخ المسموح به ({تاريخ})'
-    NOTSET: 'غير محدد'
-    TODAY: اليوم
   SilverStripe\Forms\DropdownField:
     CHOOSE: (اختر)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'يرجى إدخال عنوان بريد إلكتروني'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'لا يوجد معلومات عن الملف'
   SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'هناك على ما يبدو مشكلة فنية. الرجاء الضغط على الزر مرة أخرى، و تحديث المتصفح الخاص بك، ثم حاول مرة أخرى.'
+    FIELDISREQUIRED: '{name} ضروري'
     VALIDATIONPASSWORDSDONTMATCH: 'رقم المرور غير صحيح'
     VALIDATIONPASSWORDSNOTEMPTY: 'أرقام المرور لا يمكن أن تكون فارغة'
     VALIDATIONSTRONGPASSWORD: 'كلمات المرور يجب أن تحتوي على رقم و حرف على الأقل'
     VALIDATOR: المحقق
     VALIDCURRENCY: 'يرجى إدخال عملة صحيحة'
-    CSRF_FAILED_MESSAGE: 'هناك على ما يبدو مشكلة فنية. الرجاء الضغط على الزر مرة أخرى، و تحديث المتصفح الخاص بك، ثم حاول مرة أخرى.'
-    FIELDISREQUIRED: '{name} ضروري'
   SilverStripe\Forms\FormField:
     NONE: لايوجد
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: الرئيسة
   SilverStripe\Forms\GridField\GridField:
     Add: 'إضافة {اسم}'
     CSVEXPORT: 'تصدير إلى CSV'
@@ -53,6 +77,14 @@ ar:
     Deleted: '{type} {name} تم حذفه'
     Save: حفظ
     Saved: 'المحفوظ {اسم} {رابط}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: تحرير
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: من
+    Page: صفحة
+    View: عرض
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: عرض
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: الكمية
     FIELDLABELCURRENCY: العملة
@@ -62,6 +94,9 @@ ar:
     VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'بيانات كائن'
+    SINGULARNAME: 'بيانات كائن'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: أي
     NOANSWER: لا
@@ -74,45 +109,51 @@ ar:
     ANY: أي
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'العثور على حلقة لا نهائية ضمن "{نوع}" التسلسل الهرمي . الرجاء تغيير الأصل لحل هذه'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'خطأ في عملية التحقق'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'فضلاً أدخل اسم المستخدم و كلمة المرور'
     ERRORNOTADMIN: 'هذا المستخدم لا يملك صلاحيات الإدارة'
     ERRORNOTREC: 'اسم المستخدم أو الرقم السري غير صحيح'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: الغاء
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'المدير الافتراضي'
   SilverStripe\Security\Group:
     AddRole: 'إضافة دور لهذه المجموعة'
     Code: 'شفرة المجموعة'
     DefaultGroupTitleAdministrators: الإدارة
     DefaultGroupTitleContentAuthors: 'مؤلفي المحتوى'
     Description: الوصف
+    GROUPNAME: 'اسم المجموعة'
     GroupReminder: 'إذا اخترت مجموعة رئيسية، فإن هذه المجموعة سوف تتخذ جميع أدوارها'
     HierarchyPermsError: 'لا يمكن تعيين المجموعة الرئيسية "s%" مع سماحيات مميزة (يتطلب دخول عن طريق المشرف)'
     Locked: 'مغلق ؟'
-    NoRoles: 'لا يوجد أدوار'
-    Parent: 'المجموعة الرئيسة'
-    RolesAddEditLink: 'قوانين التعديل/الإضافة'
-    Sort: ترتيب
-    has_many_Permissions: الصلاحيات
-    many_many_Members: الأعضاء
-    GROUPNAME: 'اسم المجموعة'
     MEMBERS: الأعضاء
     NEWGROUP: 'مجموعة جديدة'
+    NoRoles: 'لا يوجد أدوار'
     PERMISSIONS: الصلاحيات
     PLURALNAME: المجموعات
+    Parent: 'المجموعة الرئيسة'
     ROLES: قواعد
     ROLESDESCRIPTION: 'هذا القسم يسمح لك بإضافة الأدوار إلى هذه المجموعة. قواعد المجموعات بمنطقية من الأذونات، والتي يمكن تعديلها في تبويب القواعد'
+    RolesAddEditLink: 'قوانين التعديل/الإضافة'
     SINGULARNAME: مجموعة
+    Sort: ترتيب
     db_Description: الوصف
     db_Title: عنوان
     has_many_Groups: المجموعات
+    has_many_Permissions: الصلاحيات
     has_one_Parent: والد
+    many_many_Members: الأعضاء
     many_many_Roles: قواعد
     many_many_Subsites: 'المواقع الفرعية'
   SilverStripe\Security\LoginAttempt:
-    IP: 'عنوان IP'
-    Status: الحالة
     Email: 'عنوان البريد الإلكتروني'
+    IP: 'عنوان IP'
     PLURALNAME: 'محاولات تسجيل الدخول'
     SINGULARNAME: 'محاولة تسجيل الدخول'
+    Status: الحالة
     db_Status: الحالة
     has_one_Member: العضو
   SilverStripe\Security\Member:
@@ -120,9 +161,11 @@ ar:
     BUTTONCHANGEPASSWORD: 'تغيير رقم المرور'
     BUTTONLOGIN: دخول
     BUTTONLOGINOTHER: 'الدخول بحساب آخر'
+    BUTTONLOGOUT: الخروج
     BUTTONLOSTPASSWORD: 'فقدت كلمة المرور'
     CONFIRMNEWPASSWORD: 'تأكيد رقم المرور الجديد'
     CONFIRMPASSWORD: 'تأكيد رقم المرور'
+    EDIT_PASSWORD: 'رقم المرور الجديد'
     EMAIL: 'البريد الإلكتروني'
     EMPTYNEWPASSWORD: 'كلمة المرور الجديدة لا يمكن أن تكون فارغة  ، فضلاً أعد المحاولة '
     ENTEREMAIL: 'فضلاً أدخل عنوان البريد الإلكتروني للحصول على رابط استعادة كلمة المرور'
@@ -135,109 +178,21 @@ ar:
     LOGGEDINAS: 'أنت مسجل دخولك كـ {اسم}.'
     NEWPASSWORD: 'رقم المرور الجديد'
     PASSWORD: 'رقم المرور'
+    PLURALNAME: الأعضاء
+    SINGULARNAME: العضو
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
     SURNAME: 'اسم العائلة'
     ValidationIdentifierFailed: 'لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))'
     YOUROLDPASSWORD: 'رقم المرور السابق'
     belongs_many_many_Groups: المجموعات
+    db_Email: 'البريد الإلكتروني'
+    db_FirstName: 'الاسم الأول'
     db_Locale: 'واجهة الموقع'
     db_LockedOutUntil: 'مغلق حتى تاريخ'
     db_Password: 'الرقم السري'
     db_PasswordExpiry: 'تاريخ انتهاء صلاحية كلمة المرور'
-    BUTTONLOGOUT: الخروج
-    EDIT_PASSWORD: 'رقم المرور الجديد'
-    PLURALNAME: الأعضاء
-    SINGULARNAME: العضو
-    db_Email: 'البريد الإلكتروني'
-    db_FirstName: 'الاسم الأول'
     db_Surname: 'اسم العائلة'
-  SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
-    PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
-    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على {minimum} أو أكثر من الحروف'
-  SilverStripe\Security\Permission:
-    AdminGroup: الإدارة
-    CONTENT_CATEGORY: 'تصاريح المحتوى'
-    FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
-    FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
-    UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
-    CMS_ACCESS_CATEGORY: 'الوصل لنظام إدارة المحتوى'
-    PERMISSIONS_CATEGORY: 'تصريح الدخول والقواعد'
-    PLURALNAME: الصلاحيات
-    SINGULARNAME: تصريحات
-    db_Type: النوع
-    has_one_Group: مجموعة
-  SilverStripe\Security\PermissionCheckboxSetField:
-    AssignedTo: 'تم تعيينها إلى "{عنوان}"'
-    FromGroup: 'موروثة من المجموعة "{عنوان}"'
-    FromRole: 'موروثة من دور "{عنوان}"'
-    FromRoleOnGroup: 'توريث من القاعدة "{roletitle}"  على المجموعة "{grouptitle}"'
-  SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
-    Title: عنوان
-    PLURALNAME: قواعد
-    SINGULARNAME: دور
-    belongs_many_many_Groups: المجموعات
-    db_OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
-    db_Title: عنوان
-  SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'لا يمكن تعيين كود "s%" مع سماحيات مميزة (يتطلب دخول اعن طريق المشرف)'
-    SINGULARNAME: 'رمز دور الأذن'
-    has_one_Role: دور
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'لاتملك صلاحية الدخول لهذه الصفحة ، إذا كنت تملك حساب آخر فيمكنك تسجيل الدخول'
-    BUTTONSEND: 'أرسل لي رابط إعادة تهيئة كلمة المرور'
-    CHANGEPASSWORDBELOW: 'يمكنك تغيير كلمة المرور بالأسفل'
-    CHANGEPASSWORDHEADER: 'تغيير كلمة المرور'
-    ENTERNEWPASSWORD: 'فضلاً أدخل كلمة المرور الجديدة'
-    ERRORPASSWORDPERMISSION: 'يجب تسجيل الدخول لتتمكن من تغيير كلمة المرور'
-    LOGIN: دخول
-    LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
-    NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
-    NOTERESETPASSWORD: 'أدخل بريدك الإلكتروني و سيتم إرسال رابط إعادة تهيئة كلمة المرور '
-    LOGOUT: الخروج
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: الأبعاد
-    EDIT: تحرير
-    EDITINFO: 'قم بتعديل هذا الملف'
-    REMOVE: حذف
-  SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'تم تغيير كلمة المرور لـ'
-    HELLO: أهلاً
-  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
-    HELLO: أهلاً
-    TEXT1: هنا
-    TEXT2: 'رابط إعادة تعيين كلمة المرور'
-    TEXT3: لـ
-  SilverStripe\Control\RequestProcessor:
-    INVALID_REQUEST: 'طلب غير صحيح'
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: لا
-    YESANSWER: نعم
-  SilverStripe\Forms\CheckboxSetField_ss:
-    NOOPTIONSAVAILABLE: 'لا توجد خيارات متاحة'
-  SilverStripe\Forms\FileUploadReceiver:
-    FIELDNOTSET: 'لا يوجد معلومات عن الملف'
-  SilverStripe\Forms\FormScaffolder:
-    TABMAIN: الرئيسة
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: تحرير
-  SilverStripe\Forms\GridField\GridFieldPaginator:
-    OF: من
-    Page: صفحة
-    View: عرض
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: عرض
-  SilverStripe\ORM\DataObject:
-    PLURALNAME: 'بيانات كائن'
-    SINGULARNAME: 'بيانات كائن'
-  SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'خطأ في عملية التحقق'
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: الغاء
-  SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'المدير الافتراضي'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'نسيت كلمة المرور'
     BUTTONLOGOUT: الخروج
@@ -249,5 +204,50 @@ ar:
     SINGULARNAME: 'كلمة مرور العضو'
     db_Password: 'كلمة المرور'
     has_one_Member: العضو
+  SilverStripe\Security\PasswordValidator:
+    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
+    PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
+    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على {minimum} أو أكثر من الحروف'
+  SilverStripe\Security\Permission:
+    AdminGroup: الإدارة
+    CMS_ACCESS_CATEGORY: 'الوصل لنظام إدارة المحتوى'
+    CONTENT_CATEGORY: 'تصاريح المحتوى'
+    FULLADMINRIGHTS: 'جميع صلاحيات الإدارة'
+    FULLADMINRIGHTS_HELP: 'يتضمن وينقض جميع الأذونات الأخرىالمساندة.'
+    PERMISSIONS_CATEGORY: 'تصريح الدخول والقواعد'
+    PLURALNAME: الصلاحيات
+    SINGULARNAME: تصريحات
+    UserPermissionsIntro: 'سوف يتم تعديل التصريحات لدي المجموعات المعينة لهذا المستخدم. راجع قسم المجموعات للإطلاع على تفاصيل التصريحات على مجموعات فردية.'
+    db_Type: النوع
+    has_one_Group: مجموعة
+  SilverStripe\Security\PermissionCheckboxSetField:
+    AssignedTo: 'تم تعيينها إلى "{عنوان}"'
+    FromGroup: 'موروثة من المجموعة "{عنوان}"'
+    FromRole: 'موروثة من دور "{عنوان}"'
+    FromRoleOnGroup: 'توريث من القاعدة "{roletitle}"  على المجموعة "{grouptitle}"'
+  SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
+    PLURALNAME: قواعد
+    SINGULARNAME: دور
+    Title: عنوان
+    belongs_many_many_Groups: المجموعات
+    db_OnlyAdminCanApply: 'المدير فقط هو الذي يمكنه تطبيق'
+    db_Title: عنوان
+  SilverStripe\Security\PermissionRoleCode:
+    PermsError: 'لا يمكن تعيين كود "s%" مع سماحيات مميزة (يتطلب دخول اعن طريق المشرف)'
+    SINGULARNAME: 'رمز دور الأذن'
+    has_one_Role: دور
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: العضو
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'لاتملك صلاحية الدخول لهذه الصفحة ، إذا كنت تملك حساب آخر فيمكنك تسجيل الدخول'
+    BUTTONSEND: 'أرسل لي رابط إعادة تهيئة كلمة المرور'
+    CHANGEPASSWORDBELOW: 'يمكنك تغيير كلمة المرور بالأسفل'
+    CHANGEPASSWORDHEADER: 'تغيير كلمة المرور'
+    ENTERNEWPASSWORD: 'فضلاً أدخل كلمة المرور الجديدة'
+    ERRORPASSWORDPERMISSION: 'يجب تسجيل الدخول لتتمكن من تغيير كلمة المرور'
+    LOGIN: دخول
+    LOGOUT: الخروج
+    LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
+    NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
+    NOTERESETPASSWORD: 'أدخل بريدك الإلكتروني و سيتم إرسال رابط إعادة تهيئة كلمة المرور '
