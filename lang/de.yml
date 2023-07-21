@@ -234,13 +234,13 @@ de:
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
     SINGULARNAME: Gruppe
     Sort: Sortierreihenfolge
-    has_many_Permissions: Berechtigungen
-    many_many_Members: Mitglieder
     db_Description: Beschreibung
     db_Sort: Sortierung
     db_Title: Titel
     has_many_Groups: Gruppe
+    has_many_Permissions: Berechtigungen
     has_one_Parent: Übergeordnet
+    many_many_Members: Mitglieder
     many_many_Roles: Rollen
     many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
@@ -275,6 +275,8 @@ de:
     ERRORWRONGCRED: 'Ihre Eingaben scheinen nicht richtig zu sein. Bitte versuchen Sie es erneut.'
     FIRSTNAME: Vorname
     INTERFACELANG: CMS-Sprache
+    KEEP_ME_SIGNED_IN: '{count} Tage lang angemeldet bleiben'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Sie bleiben auf diesem Gerät für {count} Tage angemeldet. Verwenden Sie diese Funktion nur, wenn Sie dem von Ihnen verwendeten Gerät vertrauen.'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
     PASSWORD: Passwort
@@ -293,14 +295,12 @@ de:
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
     belongs_many_many_Groups: Gruppe
+    db_Email: E-Mail
+    db_FirstName: Vorname
     db_Locale: 'Interface Sprachumgebung'
     db_LockedOutUntil: 'Gesperrt bis'
     db_Password: Passwort
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
-    KEEP_ME_SIGNED_IN: '{count} Tage lang angemeldet bleiben'
-    KEEP_ME_SIGNED_IN_TOOLTIP: 'Sie bleiben auf diesem Gerät für {count} Tage angemeldet. Verwenden Sie diese Funktion nur, wenn Sie dem von Ihnen verwendeten Gerät vertrauen.'
-    db_Email: E-Mail
-    db_FirstName: Vorname
     db_Surname: Nachname
     db_URLSegment: URL-Segment
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:

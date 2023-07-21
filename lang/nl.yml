@@ -145,12 +145,12 @@ nl:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
   SilverStripe\ORM\DataObject:
+    GENERALSEARCH: 'Alles doorzoeken'
     PLURALNAME: 'Data objecten'
     PLURALS:
       one: 'Data object'
       other: '{count} Data objecten'
     SINGULARNAME: 'Data object'
-    GENERALSEARCH: 'Alles doorzoeken'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Elke
     NOANSWER: Nee
@@ -235,13 +235,13 @@ nl:
     RolesAddEditLink: 'Rollen beheren'
     SINGULARNAME: Groep
     Sort: Sorteer-richting
-    has_many_Permissions: Rechten
-    many_many_Members: Leden
     ValidationIdentifierAlreadyExists: 'Er bestaat al een groep ({group}) met eenzelfde {identifier}'
     db_Description: Omschrijving
     db_Sort: Volgorde
     db_Title: Titel
     has_many_Groups: Groepen
+    has_many_Permissions: Rechten
+    many_many_Members: Leden
     many_many_Roles: Rollen
     many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
@@ -276,6 +276,8 @@ nl:
     ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
     FIRSTNAME: Voornaam
     INTERFACELANG: 'Interface taal'
+    KEEP_ME_SIGNED_IN: 'Ingelogd blijven gedurende {count} dagen'
+    KEEP_ME_SIGNED_IN_TOOLTIP: 'Onthoud gedurende {count} dagen de inloggegevens op dit apparaat. Gebruik dit alleen op vertrouwde apparaten.'
     LOGGEDINAS: 'U bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
     PASSWORD: Wachtwoord
@@ -295,14 +297,12 @@ nl:
     WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'Je oude wachtwoord'
     belongs_many_many_Groups: Groepen
+    db_Email: E-mail
+    db_FirstName: Voornaam
     db_Locale: 'Interface taal'
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
-    KEEP_ME_SIGNED_IN: 'Ingelogd blijven gedurende {count} dagen'
-    KEEP_ME_SIGNED_IN_TOOLTIP: 'Onthoud gedurende {count} dagen de inloggegevens op dit apparaat. Gebruik dit alleen op vertrouwde apparaten.'
-    db_Email: E-mail
-    db_FirstName: Voornaam
     db_Surname: Achternaam
     db_URLSegment: 'URL segment'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:

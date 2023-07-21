@@ -1,29 +1,50 @@
 nb:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Dimensjoner
+    EDIT: Rediger
+    EDITINFO: 'Rediger denne filen'
+    REMOVE: Fjern
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
+    HELLO: Hei
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Hei
+    TEXT1: 'Her er din'
+    TEXT2: 'lenke for nullstilling av passord'
+    TEXT3: for
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Ugyldig forespørsel'
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'Ingen valg tilgjengelig'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passordet må inneholde minst {min} skrifttegn'
     BETWEEN: 'Passord må inneholde {min} til {max} skrifttegn'
     MAXIMUM: 'Passord må inneholde maks {max} skrifttegn'
     SHOWONCLICKTITLE: 'Endre passord'
   SilverStripe\Forms\DateField:
+    NOTSET: 'Ikke satt'
+    TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Vennligst skriv inn et gyldig datoformat ({format})'
     VALIDDATEMAXDATE: 'Din dato må være eldre eller i samsvar med maksimum tillatte dato ({date})'
     VALIDDATEMINDATE: 'Din dato må være nyere eller i samsvar med minimum tillatte dato ({date})'
-    NOTSET: 'Ikke satt'
-    TODAY: 'i dag'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Velg)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Vennligst skriv inn en epostadresse'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Filinformasjon ikke funnet'
   SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
+    FIELDISREQUIRED: '{name} er påkrevet'
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene stemmer ikke overens'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
     VALIDATIONSTRONGPASSWORD: 'Passord må inneholde minst ett siffer og en bokstav'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
-    CSRF_FAILED_MESSAGE: 'Det ser ut til å ha oppstått et teknisk problem. Vennligst trykk på tilbakeknappen, oppdater nettsiden og prøv på nytt.'
-    FIELDISREQUIRED: '{name} er påkrevet'
   SilverStripe\Forms\FormField:
     NONE: ingen
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Hovedinnstillinger
   SilverStripe\Forms\GridField\GridField:
     Add: 'Legg til {name}'
     CSVEXPORT: 'Eksporter til CSV'
@@ -53,6 +74,14 @@ nb:
     Deleted: 'Slettet {type} {name}'
     Save: Lagre
     Saved: 'Lagret {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Rediger
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: av
+    Page: Side
+    View: Viser
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Viser
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Mengde
     FIELDLABELCURRENCY: Valuta
@@ -62,6 +91,9 @@ nb:
     VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: Dataobjekter
+    SINGULARNAME: Dataobjekt
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Sann eller usann'
   SilverStripe\ORM\FieldType\DBDate:
@@ -72,43 +104,49 @@ nb:
     ANY: Noen
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Uendelig løkke ble funnet i hierarkiet til "{type}". Vennligst skift ut overordnet type for å løse dette.'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: Valideringsfeil
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Vennligst skriv inn et brukernavn og passord'
     ERRORNOTADMIN: 'Denne brukeren er ikke administrator.'
     ERRORNOTREC: 'Det brukernavnet / passordet er ikke gjenkjent'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Avbryt
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Standard Admin'
   SilverStripe\Security\Group:
     AddRole: 'Legg til en rolle for denne gruppen'
     Code: Gruppekode
     DefaultGroupTitleAdministrators: Administratorer
     DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
+    GROUPNAME: Gruppenavn
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
     HierarchyPermsError: 'Kan ikke angi overordnet gruppe "{group}" med administratorrettigheter (krever ADMIN-tilgang)'
     Locked: 'Låst?'
-    NoRoles: 'Ingen roller funnet'
-    Parent: 'Overordnet gruppe'
-    RolesAddEditLink: 'Administrer roller'
-    Sort: Sorteringsrekkefølge
-    has_many_Permissions: Tillatelser
-    many_many_Members: Medlemmer
-    GROUPNAME: Gruppenavn
     MEMBERS: Medlemmer
     NEWGROUP: 'Ny gruppe'
+    NoRoles: 'Ingen roller funnet'
     PERMISSIONS: Tillatelser
     PLURALNAME: Grupper
+    Parent: 'Overordnet gruppe'
     ROLES: Roller
     ROLESDESCRIPTION: 'Roller er forhåndsdefinerte lister av tillatelser og kan angis til grupper.<br />De blir arvet fra overerdnede grupper om nødvendig.'
+    RolesAddEditLink: 'Administrer roller'
     SINGULARNAME: Gruppe
+    Sort: Sorteringsrekkefølge
     db_Description: Beskrivelse
     db_Title: Tittel
     has_many_Groups: Grupper
+    has_many_Permissions: Tillatelser
+    many_many_Members: Medlemmer
     many_many_Roles: Roller
   SilverStripe\Security\LoginAttempt:
-    IP: IP-adresse
-    Status: Status
     Email: Epostadresse
+    IP: IP-adresse
     PLURALNAME: Innloggingsforsøk
     SINGULARNAME: Innloggingsforsøk
+    Status: Status
     db_Status: Status
     has_one_Member: Medlem
   SilverStripe\Security\Member:
@@ -116,9 +154,11 @@ nb:
     BUTTONCHANGEPASSWORD: 'Bytt passord'
     BUTTONLOGIN: 'Logg inn'
     BUTTONLOGINOTHER: 'Logg inn med en annen brukerkonto'
+    BUTTONLOGOUT: 'Logg ut'
     BUTTONLOSTPASSWORD: 'Jeg har mistet passordet'
     CONFIRMNEWPASSWORD: 'Bekreft nytt passord'
     CONFIRMPASSWORD: 'Bekreft passord'
+    EDIT_PASSWORD: 'Nytt passord'
     EMAIL: Epost
     EMPTYNEWPASSWORD: 'Det nye passordet kan ikke være tomt, vennligst prøv igjen'
     ENTEREMAIL: 'Vennligst skriv en epostadresse så du kan bli tilsendt en lenke til å nullstille passord.'
@@ -131,105 +171,21 @@ nb:
     LOGGEDINAS: 'Du er logget inn som {name}'
     NEWPASSWORD: 'Nytt passord'
     PASSWORD: Passord
+    PLURALNAME: Medlemmer
+    SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Passordet ditt har blitt endret'
     SUBJECTPASSWORDRESET: 'Lenke for nullstilling av passord'
     SURNAME: Etternavn
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende medlem #{id} med identisk identifikator ({name})={value}))'
     YOUROLDPASSWORD: 'Ditt gamle passord'
     belongs_many_many_Groups: Grupper
+    db_Email: Epost
+    db_FirstName: Fornavn
     db_Locale: 'Lokaltilpasning av grensesnitt'
     db_LockedOutUntil: 'Stengt ute inntil'
     db_Password: Passord
     db_PasswordExpiry: 'Utløpsdato for passord'
-    BUTTONLOGOUT: 'Logg ut'
-    EDIT_PASSWORD: 'Nytt passord'
-    PLURALNAME: Medlemmer
-    SINGULARNAME: Medlem
-    db_Email: Epost
-    db_FirstName: Fornavn
     db_Surname: Etternavn
-  SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: {chars}'
-    PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
-    TOOSHORT: 'Passordet er for kort, det må være {minimum} eller flere tegn langt'
-  SilverStripe\Security\Permission:
-    AdminGroup: Administratorer
-    CONTENT_CATEGORY: Innholdstillatelser
-    FULLADMINRIGHTS: 'Fulle administrative rettigheter'
-    FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
-    UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
-    CMS_ACCESS_CATEGORY: 'Tilgang til publiseringssystemet'
-    PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'
-    PLURALNAME: Tillatelser
-    SINGULARNAME: Tillatelse
-    has_one_Group: Gruppe
-  SilverStripe\Security\PermissionCheckboxSetField:
-    AssignedTo: 'tilordnet "{title}"'
-    FromGroup: 'Arvet fra gruppe "{title}"'
-    FromRole: 'arvet fra rolle "{title}"'
-    FromRoleOnGroup: 'arvet fra rollen "{roletitle}" i gruppen "{grouptitle}"'
-  SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: 'Bare administratorer kan søke'
-    Title: Tittel
-    PLURALNAME: Roller
-    SINGULARNAME: Rolle
-    belongs_many_many_Groups: Grupper
-    db_OnlyAdminCanApply: 'Bare administratorer kan søke'
-    db_Title: Tittel
-  SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Kan ikke angi kode "{code}" med administratorrettigheter (krever ADMIN-tilgang)'
-    SINGULARNAME: Tillatelseskode
-    has_one_Role: Rolle
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
-    BUTTONSEND: 'Send meg en lenke for å nullstille passordet'
-    CHANGEPASSWORDBELOW: 'Du kan bytte passord under her.'
-    CHANGEPASSWORDHEADER: 'Bytt passord'
-    ENTERNEWPASSWORD: 'Venligst skriv inn et nytt passord.'
-    ERRORPASSWORDPERMISSION: 'Du må logge inn for å bytte passord.'
-    LOGIN: 'Logg inn'
-    LOSTPASSWORDHEADER: 'Mistet passord'
-    NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
-    NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'
-    LOGOUT: 'Logg ut'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensjoner
-    EDIT: Rediger
-    EDITINFO: 'Rediger denne filen'
-    REMOVE: Fjern
-  SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Du har byttet passordet for'
-    HELLO: Hei
-  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
-    HELLO: Hei
-    TEXT1: 'Her er din'
-    TEXT2: 'lenke for nullstilling av passord'
-    TEXT3: for
-  SilverStripe\Control\RequestProcessor:
-    INVALID_REQUEST: 'Ugyldig forespørsel'
-  SilverStripe\Forms\CheckboxSetField_ss:
-    NOOPTIONSAVAILABLE: 'Ingen valg tilgjengelig'
-  SilverStripe\Forms\FileUploadReceiver:
-    FIELDNOTSET: 'Filinformasjon ikke funnet'
-  SilverStripe\Forms\FormScaffolder:
-    TABMAIN: Hovedinnstillinger
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Rediger
-  SilverStripe\Forms\GridField\GridFieldPaginator:
-    OF: av
-    Page: Side
-    View: Viser
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Viser
-  SilverStripe\ORM\DataObject:
-    PLURALNAME: Dataobjekter
-    SINGULARNAME: Dataobjekt
-  SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: Valideringsfeil
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Avbryt
-  SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'Standard Admin'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Glemt passord'
     BUTTONLOGOUT: 'Logg ut'
@@ -241,5 +197,49 @@ nb:
     SINGULARNAME: Medlemspassord
     db_Password: Passord
     has_one_Member: Medlem
+  SilverStripe\Security\PasswordValidator:
+    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: {chars}'
+    PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
+    TOOSHORT: 'Passordet er for kort, det må være {minimum} eller flere tegn langt'
+  SilverStripe\Security\Permission:
+    AdminGroup: Administratorer
+    CMS_ACCESS_CATEGORY: 'Tilgang til publiseringssystemet'
+    CONTENT_CATEGORY: Innholdstillatelser
+    FULLADMINRIGHTS: 'Fulle administrative rettigheter'
+    FULLADMINRIGHTS_HELP: 'Overstyrer alle andre tilordnede tillatelser.'
+    PERMISSIONS_CATEGORY: 'Rolle- og tilgangstillatelser'
+    PLURALNAME: Tillatelser
+    SINGULARNAME: Tillatelse
+    UserPermissionsIntro: 'Ved å angi grupper til denne brukeren kan du justere tillatelsene han har. Se gruppeseksjonen for detaljer om tillatelser for individuelle grupper.'
+    has_one_Group: Gruppe
+  SilverStripe\Security\PermissionCheckboxSetField:
+    AssignedTo: 'tilordnet "{title}"'
+    FromGroup: 'Arvet fra gruppe "{title}"'
+    FromRole: 'arvet fra rolle "{title}"'
+    FromRoleOnGroup: 'arvet fra rollen "{roletitle}" i gruppen "{grouptitle}"'
+  SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 'Bare administratorer kan søke'
+    PLURALNAME: Roller
+    SINGULARNAME: Rolle
+    Title: Tittel
+    belongs_many_many_Groups: Grupper
+    db_OnlyAdminCanApply: 'Bare administratorer kan søke'
+    db_Title: Tittel
+  SilverStripe\Security\PermissionRoleCode:
+    PermsError: 'Kan ikke angi kode "{code}" med administratorrettigheter (krever ADMIN-tilgang)'
+    SINGULARNAME: Tillatelseskode
+    has_one_Role: Rolle
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Medlem
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
+    BUTTONSEND: 'Send meg en lenke for å nullstille passordet'
+    CHANGEPASSWORDBELOW: 'Du kan bytte passord under her.'
+    CHANGEPASSWORDHEADER: 'Bytt passord'
+    ENTERNEWPASSWORD: 'Venligst skriv inn et nytt passord.'
+    ERRORPASSWORDPERMISSION: 'Du må logge inn for å bytte passord.'
+    LOGIN: 'Logg inn'
+    LOGOUT: 'Logg ut'
+    LOSTPASSWORDHEADER: 'Mistet passord'
+    NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
+    NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'

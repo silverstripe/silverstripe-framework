@@ -33,11 +33,11 @@ sv:
     MAXIMUM: 'Lösenord får som längst vara {max} tecken långa.'
     SHOWONCLICKTITLE: 'Ändra lösenord'
   SilverStripe\Forms\DateField:
+    NOTSET: 'inte angivet'
+    TODAY: 'i dag'
     VALIDDATEFORMAT2: 'Var god att ange datumet i ett giltigt format ({format})'
     VALIDDATEMAXDATE: 'Angivet datum måste vara tidigare eller samma som det senaste godkända datumet ({date})'
     VALIDDATEMINDATE: 'Angivet datum måste vara senare eller samma som det tidigaste godkända datumet ({date})'
-    NOTSET: 'inte angivet'
-    TODAY: 'i dag'
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'Angivet datum måste vara tidigare eller samma som det senast godkända datumet ({datetime})'
     VALIDDATETIMEFORMAT: 'Vänligen ange datum och tid i ett giltigt format ({format})'
@@ -53,15 +53,17 @@ sv:
     BAD_METHOD: 'Detta formulär måste skickas med metoden {method}'
     CSRF_EXPIRED_MESSAGE: 'Din session har upphört. Var god och skicka in formuläret på nytt.'
     CSRF_FAILED_MESSAGE: 'Ett tekniskt fel uppstod. Var god klicka på bakåt-knappen, ladda om sidan i webbläsaren och försök igen'
+    FIELDISREQUIRED: '{name} är obligatoriskt'
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
     VALIDATIONPASSWORDSNOTEMPTY: 'Lösenordfältet får inte vara tomt'
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
     VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
-    FIELDISREQUIRED: '{name} är obligatoriskt'
   SilverStripe\Forms\FormField:
     EXAMPLE: 't.ex. {format}'
     NONE: ingen
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Allmän
   SilverStripe\Forms\GridField\GridField:
     Add: 'Lägg till {name}'
     CSVEXPORT: 'Exportera till CSV'
@@ -92,12 +94,16 @@ sv:
     Deleted: 'Raderade {type} {name}'
     Save: Spara
     Saved: 'Sparade {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Ändra
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Du kan inte radera dig själv från den här gruppen, då du då kommer att förlora dina admin-rättigheter'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: av
     Page: Sida
     View: Visa
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Visa
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Belopp
     FIELDLABELCURRENCY: Valuta
@@ -108,6 +114,8 @@ sv:
     IsNullLabel: 'Är NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Värdet för {name} får inte överstiga {MaxLength} tecken'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
   SilverStripe\ORM\DataObject:
@@ -144,6 +152,8 @@ sv:
       other: '{count} år'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: 'Vilken som helst'
+  SilverStripe\ORM\FieldType\DBForeignKey:
+    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'För många relaterade objekt; använder fallback-fält'
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'För många barn ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -164,6 +174,10 @@ sv:
     SUCCESS: Framgång
     SUCCESSCONTENT: '<p>Inloggningen lyckades. <a target="_top" href="{link}">Klicka här</a> om du inte skickas vidare automatiskt.</p>'
     SUCCESS_TITLE: 'Inloggning lyckades'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Avbryt
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: standard
   SilverStripe\Security\Group:
     AddRole: 'Lägg till roll för den här gruppen'
     Code: Gruppkod
@@ -188,13 +202,13 @@ sv:
     RolesAddEditLink: 'Hantera roller'
     SINGULARNAME: Grupp
     Sort: Sorteringsordning
-    has_many_Permissions: Behörigheter
-    many_many_Members: Medlemmar
     db_Description: Beskrivning
     db_Sort: Sortera
     db_Title: Titel
     has_many_Groups: Grupper
+    has_many_Permissions: Behörigheter
     has_one_Parent: Förälder
+    many_many_Members: Medlemmar
     many_many_Roles: Roller
   SilverStripe\Security\LoginAttempt:
     Email: E-postadress
@@ -245,12 +259,12 @@ sv:
     ValidationIdentifierFailed: 'Kan inte skriva över medlem #{id} med samma identifierare ({name} = {value}))'
     YOUROLDPASSWORD: 'Ditt gamla lösenord'
     belongs_many_many_Groups: Grupper
+    db_Email: E-post
+    db_FirstName: Förnamn
     db_Locale: Gränssnittsspråk
     db_LockedOutUntil: 'Utelåst till'
     db_Password: Lösenord
     db_PasswordExpiry: 'Lösenordet upphör att gälla'
-    db_Email: E-post
-    db_FirstName: Förnamn
     db_Surname: Efternamn
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS inloggnings-formulär'
@@ -262,6 +276,11 @@ sv:
     NoPassword: 'Det finns inget lösenord för den här medlemmen'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     AUTHENTICATORNAME: 'E-post & lösenord'
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Användares lösenord'
+    SINGULARNAME: 'Användares lösenord'
+    db_Password: Lösenord
+    has_one_Member: Medlem
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Var god och stärk ditt lösenord genom att lägga till något av följande tecken: {chars}'
     PREVPASSWORD: 'Du har redan använt samma lösenord tidigare, var god och välj ett nytt lösenord'
@@ -298,10 +317,12 @@ sv:
     db_OnlyAdminCanApply: 'Endast administratörer kan tillämpa denna roll'
     db_Title: Titel
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Koden "{code}" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
     PLURALNAME: 'Kod för rollrättigheter'
+    PermsError: 'Koden "{code}" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
     SINGULARNAME: 'Kodför rollrättigheter'
     has_one_Role: Roll
+  SilverStripe\Security\RememberLoginHash:
+    has_one_Member: Medlem
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'
@@ -317,24 +338,3 @@ sv:
     NOTERESETPASSWORD: 'Ange din e-postadress så skickar vi en länk med vilken du kan återställa ditt lösenord'
     PASSWORDRESETSENTHEADER: 'Återställningslänk för lösenord skickad'
     PASSWORDRESETSENTTEXT: 'Tack. En återställningslänk har skickats, förutsatt att ett konto med denna adress existerar.'
-  SilverStripe\Forms\FormScaffolder:
-    TABMAIN: Allmän
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Ändra
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Visa
-  SilverStripe\Forms\TextField:
-    VALIDATEMAXLENGTH: 'Värdet för {name} får inte överstiga {MaxLength} tecken'
-  SilverStripe\ORM\FieldType\DBForeignKey:
-    DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'För många relaterade objekt; använder fallback-fält'
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Avbryt
-  SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: standard
-  SilverStripe\Security\MemberPassword:
-    PLURALNAME: 'Användares lösenord'
-    SINGULARNAME: 'Användares lösenord'
-    db_Password: Lösenord
-    has_one_Member: Medlem
-  SilverStripe\Security\RememberLoginHash:
-    has_one_Member: Medlem

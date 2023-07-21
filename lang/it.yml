@@ -147,9 +147,9 @@ it:
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Object'
     PLURALS:
+      many: '{count} Data Object'
       one: 'Un Data Object'
       other: '{count} Data Object'
-      many: '{count} Data Object'
     SINGULARNAME: 'Data Object'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Qualsiasi
@@ -157,32 +157,32 @@ it:
     YESANSWER: Sì
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
+      many: '{count} giorni'
       one: '{count} giorno'
       other: '{count} giorni'
-      many: '{count} giorni'
     HOURS_SHORT_PLURALS:
+      many: '{count} ore'
       one: '{count} ora'
       other: '{count} ore'
-      many: '{count} ore'
     LessThanMinuteAgo: 'meno di un minuto'
     MINUTES_SHORT_PLURALS:
+      many: '{count} minuti'
       one: '{count} minuto'
       other: '{count} minuti'
-      many: '{count} minuti'
     MONTHS_SHORT_PLURALS:
+      many: '{count} mesi'
       one: '{count} mese'
       other: '{count} mesi'
-      many: '{count} mesi'
     SECONDS_SHORT_PLURALS:
+      many: '{count} secondi'
       one: '{count} secondo'
       other: '{count} secondi'
-      many: '{count} secondi'
     TIMEDIFFAGO: '{difference} fa'
     TIMEDIFFIN: 'in {difference}'
     YEARS_SHORT_PLURALS:
+      many: '{count} anni'
       one: '{count} anno'
       other: '{count} anni'
-      many: '{count} anni'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Qualsiasi
   SilverStripe\ORM\FieldType\DBForeignKey:
@@ -233,23 +233,23 @@ it:
     PERMISSIONS: Permessi
     PLURALNAME: Gruppi
     PLURALS:
+      many: '{count} Gruppi'
       one: 'Un Gruppo'
       other: '{count} Gruppi'
-      many: '{count} Gruppi'
     Parent: 'Gruppo padre'
     ROLES: Ruoli
     ROLESDESCRIPTION: 'I ruoli sono insiemi predefiniti di permessi che possono essere assegnati ai gruppi.<br />Se richiesto possono essere ereditati dai gruppi padre.'
     RolesAddEditLink: 'Gestisci ruoli'
     SINGULARNAME: Gruppo
     Sort: 'Tipo ordinamento'
-    has_many_Permissions: Permessi
-    many_many_Members: Membri
     ValidationIdentifierAlreadyExists: 'Esiste già un gruppo ({group}) con lo stesso {identifier}'
     db_Description: Descrizione
     db_Sort: Ordine
     db_Title: Titolo
     has_many_Groups: Gruppi
+    has_many_Permissions: Permessi
     has_one_Parent: Parente
+    many_many_Members: Membri
     many_many_Roles: Ruoli
     many_many_Subsites: Sottositi
   SilverStripe\Security\LoginAttempt:
@@ -258,9 +258,9 @@ it:
     IP: 'Indirizzo IP'
     PLURALNAME: 'Tentativi d''accesso'
     PLURALS:
+      many: '{count} tentativi d''accesso'
       one: 'Un tentativo d''accesso'
       other: '{count} tentativi d''accesso'
-      many: '{count} tentativi d''accesso'
     SINGULARNAME: 'Tentativo d''accesso'
     Status: Stato
     db_Status: Stato
@@ -293,9 +293,9 @@ it:
     PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
     PLURALNAME: Utenti
     PLURALS:
+      many: '{count} Utenti'
       one: 'Un Utente'
       other: '{count} Utenti'
-      many: '{count} Utenti'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
@@ -306,12 +306,12 @@ it:
     WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'
     belongs_many_many_Groups: Gruppi
+    db_Email: E-mail
+    db_FirstName: Nome
     db_Locale: 'Localizzazione interfaccia'
     db_LockedOutUntil: 'Bloccato fino al'
     db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
-    db_Email: E-mail
-    db_FirstName: Nome
     db_Surname: Cognome
     db_URLSegment: 'Segmento URL'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
@@ -327,9 +327,9 @@ it:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Password utenti'
     PLURALS:
+      many: '{count} password utente'
       one: 'Una password utente'
       other: '{count} password utente'
-      many: '{count} password utente'
     SINGULARNAME: 'Password utente'
     db_Password: Password
     has_one_Member: Utente
@@ -346,9 +346,9 @@ it:
     PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
     PLURALNAME: Permessi
     PLURALS:
+      many: '{count} Permessi'
       one: 'Un Permesso'
       other: '{count} Permessi'
-      many: '{count} Permessi'
     SINGULARNAME: Permesso
     UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
     db_Type: Tipo
@@ -362,9 +362,9 @@ it:
     OnlyAdminCanApply: 'Solo l''amministratore può applicare'
     PLURALNAME: Ruoli
     PLURALS:
+      many: '{count} Ruoli'
       one: 'Un Ruolo'
       other: '{count} Ruoli'
-      many: '{count} Ruoli'
     SINGULARNAME: Ruolo
     Title: Titolo
     belongs_many_many_Groups: Gruppi
@@ -373,18 +373,18 @@ it:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Codici di ruolo'
     PLURALS:
+      many: '{count} codici di ruolo'
       one: 'Un codice di ruolo'
       other: '{count} codici di ruolo'
-      many: '{count} codici di ruolo'
     PermsError: 'Non posso assegnare permessi privilegiati al codice "{code}" (richiede accesso ADMIN)'
     SINGULARNAME: 'Codice di ruolo'
     has_one_Role: Ruolo
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Hash di Login'
     PLURALS:
+      many: '{count} Hash di Login'
       one: 'Un Hash di Login'
       other: '{count} Hash di Login'
-      many: '{count} Hash di Login'
     SINGULARNAME: 'Hash di Login'
     has_one_Member: Utente
   SilverStripe\Security\Security:

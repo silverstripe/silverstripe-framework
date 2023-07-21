@@ -1,87 +1,4 @@
 ca:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Canvia la contrasenya'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Trieu)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Les contrasenyes no concorden'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Les contrasenyes no poden deixar-se en blanc'
-    VALIDATOR: Validador
-  SilverStripe\Forms\FormField:
-    NONE: cap
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Exporta a CSV'
-    Print: Imprimeix
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
-    ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
-    ERRORNOTREC: 'Aquest nom d''usuari / contrasenya no es reconeix'
-  SilverStripe\Security\Group:
-    Code: 'Codi de grup'
-    Description: Descripció
-    Locked: 'Bloquejat?'
-    Parent: 'Grup precedent'
-    Sort: Ordre
-    has_many_Permissions: Permisos
-    many_many_Members: Membres
-    GROUPNAME: 'Nom de grup'
-    MEMBERS: Membres
-    NEWGROUP: 'Nou grup'
-    PERMISSIONS: Permisos
-    PLURALNAME: Grups
-    db_Description: Descripció
-    db_Title: Títol
-    has_many_Groups: Grups
-  SilverStripe\Security\LoginAttempt:
-    IP: 'Adreça IP'
-    Status: Estat
-    Email: 'Adreça de correu'
-    db_Status: Estat
-    has_one_Member: Membre
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
-    BUTTONLOGIN: Entrar
-    BUTTONLOGINOTHER: 'Entreu com a algú diferent'
-    BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
-    CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
-    CONFIRMPASSWORD: 'Confirmeu la contrasenya'
-    EMAIL: 'Correu electrònic'
-    ENTEREMAIL: 'Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya.'
-    ERRORNEWPASSWORD: 'Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou'
-    ERRORPASSWORDNOTMATCH: 'La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou'
-    FIRSTNAME: Nom
-    INTERFACELANG: 'Interfície de llengua'
-    NEWPASSWORD: 'Nova contrasenya'
-    PASSWORD: Contrasenya
-    SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
-    SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
-    SURNAME: Cognom
-    YOUROLDPASSWORD: 'La vostra contrasenya anterior'
-    belongs_many_many_Groups: Grups
-    db_Locale: 'Idioma d''interfície'
-    db_LockedOutUntil: 'Bloquejat fins a'
-    db_Password: Contrasenya
-    db_PasswordExpiry: 'Data d''expiració de la contrasenya'
-    EDIT_PASSWORD: 'Nova contrasenya'
-    PLURALNAME: Membres
-    SINGULARNAME: Membre
-    db_Email: 'Correu electrònic'
-    db_FirstName: Nom
-    db_Surname: Cognom
-  SilverStripe\Security\Permission:
-    FULLADMINRIGHTS: 'Drets administratius totals'
-    AdminGroup: Administrador
-    PLURALNAME: Permisos
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
-    BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
-    CHANGEPASSWORDBELOW: 'Podeu canviar la vostra contrasenya a sota.'
-    CHANGEPASSWORDHEADER: 'Canviar la vostra contrasenya'
-    ENTERNEWPASSWORD: 'Si us plau, introduïu una nova contrasenya.'
-    ERRORPASSWORDPERMISSION: 'Heu d''estar connectat per a canviar la vostra contrasenya!'
-    LOGIN: Entrar
-    NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
-    NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'
   SilverStripe\AssetAdmin\Forms\UploadField:
     EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
@@ -92,11 +9,24 @@ ca:
     TEXT1: 'Aquí teniu el vostre'
     TEXT2: 'enllaç de reinici de la contrasenya'
     TEXT3: per
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Canvia la contrasenya'
   SilverStripe\Forms\DateField:
     NOTSET: 'no definit'
     TODAY: avui
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Trieu)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Les contrasenyes no concorden'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Les contrasenyes no poden deixar-se en blanc'
+    VALIDATOR: Validador
+  SilverStripe\Forms\FormField:
+    NONE: cap
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exporta a CSV'
+    Print: Imprimeix
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Suprimeix
   SilverStripe\Forms\GridField\GridFieldDetailForm:
@@ -112,14 +42,84 @@ ca:
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Objectes de dades'
     SINGULARNAME: 'Objecte de dades'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
+    ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
+    ERRORNOTREC: 'Aquest nom d''usuari / contrasenya no es reconeix'
+  SilverStripe\Security\Group:
+    Code: 'Codi de grup'
+    Description: Descripció
+    GROUPNAME: 'Nom de grup'
+    Locked: 'Bloquejat?'
+    MEMBERS: Membres
+    NEWGROUP: 'Nou grup'
+    PERMISSIONS: Permisos
+    PLURALNAME: Grups
+    Parent: 'Grup precedent'
+    Sort: Ordre
+    db_Description: Descripció
+    db_Title: Títol
+    has_many_Groups: Grups
+    has_many_Permissions: Permisos
+    many_many_Members: Membres
+  SilverStripe\Security\LoginAttempt:
+    Email: 'Adreça de correu'
+    IP: 'Adreça IP'
+    Status: Estat
+    db_Status: Estat
+    has_one_Member: Membre
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
+    BUTTONLOGIN: Entrar
+    BUTTONLOGINOTHER: 'Entreu com a algú diferent'
+    BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
+    CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
+    CONFIRMPASSWORD: 'Confirmeu la contrasenya'
+    EDIT_PASSWORD: 'Nova contrasenya'
+    EMAIL: 'Correu electrònic'
+    ENTEREMAIL: 'Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya.'
+    ERRORNEWPASSWORD: 'Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou'
+    ERRORPASSWORDNOTMATCH: 'La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou'
+    FIRSTNAME: Nom
+    INTERFACELANG: 'Interfície de llengua'
+    NEWPASSWORD: 'Nova contrasenya'
+    PASSWORD: Contrasenya
+    PLURALNAME: Membres
+    SINGULARNAME: Membre
+    SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
+    SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
+    SURNAME: Cognom
+    YOUROLDPASSWORD: 'La vostra contrasenya anterior'
+    belongs_many_many_Groups: Grups
+    db_Email: 'Correu electrònic'
+    db_FirstName: Nom
+    db_Locale: 'Idioma d''interfície'
+    db_LockedOutUntil: 'Bloquejat fins a'
+    db_Password: Contrasenya
+    db_PasswordExpiry: 'Data d''expiració de la contrasenya'
+    db_Surname: Cognom
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'He oblidat la contrasenya'
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contrasenya
+    has_one_Member: Membre
+  SilverStripe\Security\Permission:
+    AdminGroup: Administrador
+    FULLADMINRIGHTS: 'Drets administratius totals'
+    PLURALNAME: Permisos
   SilverStripe\Security\PermissionRole:
     Title: Títol
     belongs_many_many_Groups: Grups
     db_Title: Títol
-  SilverStripe\Security\MemberPassword:
-    db_Password: Contrasenya
-    has_one_Member: Membre
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Membre
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
+    BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
+    CHANGEPASSWORDBELOW: 'Podeu canviar la vostra contrasenya a sota.'
+    CHANGEPASSWORDHEADER: 'Canviar la vostra contrasenya'
+    ENTERNEWPASSWORD: 'Si us plau, introduïu una nova contrasenya.'
+    ERRORPASSWORDPERMISSION: 'Heu d''estar connectat per a canviar la vostra contrasenya!'
+    LOGIN: Entrar
+    NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
+    NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'

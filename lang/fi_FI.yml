@@ -65,12 +65,12 @@ fi_FI:
     BAD_METHOD: 'Tämä lomake vaatii {method} lähetyksen'
     CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
     CSRF_FAILED_MESSAGE: 'On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen.'
+    FIELDISREQUIRED: '{name} on pakollinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
     VALIDATIONPASSWORDSNOTEMPTY: 'Salasana ei voi olla tyhjä'
     VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
     VALIDATOR: Tarkistin
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
-    FIELDISREQUIRED: '{name} on pakollinen'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'esim. {format}'
     NONE: 'Ei yhtään'
@@ -227,11 +227,11 @@ fi_FI:
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
     SINGULARNAME: Ryhmä
     Sort: Järjestys
-    has_many_Permissions: Oikeudet
-    many_many_Members: Jäsenet
     db_Description: Kuvaus
     db_Title: Otsikko
     has_many_Groups: Ryhmät
+    has_many_Permissions: Oikeudet
+    many_many_Members: Jäsenet
     many_many_Roles: Roolit
   SilverStripe\Security\LoginAttempt:
     Email: Sähköpostiosoite
@@ -281,11 +281,11 @@ fi_FI:
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     YOUROLDPASSWORD: 'Vanha salasanasi'
     belongs_many_many_Groups: Ryhmät
+    db_Email: Sähköposti
     db_Locale: 'Käyttöliittymän kieli'
     db_LockedOutUntil: 'Lukittuna tähän asti:'
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
-    db_Email: Sähköposti
     db_Surname: Sukunimi
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS-järjestelmän käyttäjän kirjautuminen'

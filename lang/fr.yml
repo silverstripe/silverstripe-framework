@@ -33,11 +33,11 @@ fr:
     MAXIMUM: 'Le mot de passe ne doit pas comporter plus de {max} caractères.'
     SHOWONCLICKTITLE: 'Changer le mot de passe'
   SilverStripe\Forms\DateField:
+    NOTSET: 'non renseigné'
+    TODAY: 'aujourd''hui'
     VALIDDATEFORMAT2: 'Saisissez une date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({date})'
-    NOTSET: 'non renseigné'
-    TODAY: 'aujourd''hui'
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'La date doit être antérieure ou égale à celle autorisée ({datetime})'
     VALIDDATETIMEFORMAT: 'Saisissez un format de date et d''heure valide ({format})'
@@ -53,12 +53,12 @@ fr:
     BAD_METHOD: 'Ce formulaire requiert une action {method}'
     CSRF_EXPIRED_MESSAGE: 'Votre session a expiré. Merci de renvoyer le formulaire.'
     CSRF_FAILED_MESSAGE: 'Un problème technique est probablement survenu. Merci de cliquer sur le bouton "retour", de rafraîchir la page de votre navigateur, et de réessayer.'
+    FIELDISREQUIRED: '{name} requis'
     VALIDATIONPASSWORDSDONTMATCH: 'Les mots de passe ne correspondent pas'
     VALIDATIONPASSWORDSNOTEMPTY: 'Les mots de passe ne peuvent pas être vides'
     VALIDATIONSTRONGPASSWORD: 'Le mot de passe doit comporter au moins un chiffre et un caractère alphanumérique'
     VALIDATOR: Validateur
     VALIDCURRENCY: 'Saisissez une monnaie valide'
-    FIELDISREQUIRED: '{name} requis'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'Par ex. {format}'
     NONE: aucun
@@ -94,12 +94,16 @@ fr:
     Deleted: '{type} {name} supprimés'
     Save: Enregistrer
     Saved: '{name} {link} sauvegardé'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Éditer
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
     UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     Page: Page
     View: Vue
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Vue
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Quantité
     FIELDLABELCURRENCY: Devise
@@ -115,9 +119,9 @@ fr:
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Modèles de donnée'
     PLURALS:
+      many: '{count} modèles de donnée'
       one: 'Un modèle de donnée'
       other: '{count} modèles de donnée'
-      many: '{count} modèles de donnée'
     SINGULARNAME: 'Modèle de donnée'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Tout
@@ -125,32 +129,32 @@ fr:
     YESANSWER: Oui
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
+      many: '{count} jours'
       one: '{count} jour'
       other: '{count} jours'
-      many: '{count} jours'
     HOURS_SHORT_PLURALS:
+      many: '{count} heures'
       one: '{count} heure'
       other: '{count} heures'
-      many: '{count} heures'
     LessThanMinuteAgo: 'moins d''une minute'
     MINUTES_SHORT_PLURALS:
+      many: '{count} min.'
       one: '{count} min.'
       other: '{count} min.'
-      many: '{count} min.'
     MONTHS_SHORT_PLURALS:
+      many: '{count} mois'
       one: '{count} mois'
       other: '{count} mois'
-      many: '{count} mois'
     SECONDS_SHORT_PLURALS:
+      many: '{count} sec.'
       one: '{count} sec.'
       other: '{count} sec.'
-      many: '{count} sec.'
     TIMEDIFFAGO: 'Il y a {difference}'
     TIMEDIFFIN: 'Dans {difference}'
     YEARS_SHORT_PLURALS:
+      many: '{count} années'
       one: '{count} année'
       other: '{count} années'
-      many: '{count} années'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Tout
   SilverStripe\ORM\Hierarchy:
@@ -173,6 +177,8 @@ fr:
     SUCCESS: Succès
     SUCCESSCONTENT: '<p>Connexion réussie. Si vous n''êtes pas automatiquement redirigé <a target="_top" href="{link}">cliquez ici</a></p>'
     SUCCESS_TITLE: 'Connexion réussie'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Annuler
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Administrateur par défaut'
   SilverStripe\Security\Group:
@@ -191,22 +197,22 @@ fr:
     PERMISSIONS: Permissions
     PLURALNAME: Groupes
     PLURALS:
+      many: '{count} groupes'
       one: 'Un groupe'
       other: '{count} groupes'
-      many: '{count} groupes'
     Parent: 'Groupe parent'
     ROLES: Rôles
     ROLESDESCRIPTION: 'Les rôles sont des ensembles de permissions prédéfinies, et ils peuvent être attribués à des groupes. <br />Si nécessaire, ils peuvent hériter de groupes parents.'
     RolesAddEditLink: 'Ajouter/éditer les rôles'
     SINGULARNAME: Groupe
     Sort: 'Ordre de tri'
-    has_many_Permissions: Autorisations
-    many_many_Members: Membres
     db_Description: Description
     db_Sort: Tri
     db_Title: Titre
     has_many_Groups: Groupes
+    has_many_Permissions: Autorisations
     has_one_Parent: Parent
+    many_many_Members: Membres
     many_many_Roles: Rôles
   SilverStripe\Security\LoginAttempt:
     Email: 'Adresse email'
@@ -214,9 +220,9 @@ fr:
     IP: 'Adresse IP'
     PLURALNAME: 'Tentatives de connexion'
     PLURALS:
+      many: '{count} tentatives de connexion'
       one: 'Une tentative de connexion'
       other: '{count} tentatives de connexion'
-      many: '{count} tentatives de connexion'
     SINGULARNAME: 'Tentative de connexion'
     Status: Statut
     db_Status: Statut
@@ -247,9 +253,9 @@ fr:
     PASSWORDEXPIRED: 'Votre mot de passe a expiré. Merci d''en choisir un nouveau.'
     PLURALNAME: Membres
     PLURALS:
+      many: '{count} membres'
       one: 'Un membre'
       other: '{count} membres'
-      many: '{count} membres'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
@@ -258,12 +264,12 @@ fr:
     ValidationIdentifierFailed: 'Impossible de réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
     belongs_many_many_Groups: Groupes
+    db_Email: Email
+    db_FirstName: Prénom
     db_Locale: 'Langue de l''Interface'
     db_LockedOutUntil: 'Verrouillé jusqu''à'
     db_Password: 'Mot de passe'
     db_PasswordExpiry: 'Date d''expiration du mot de passe'
-    db_Email: Email
-    db_FirstName: Prénom
     db_Surname: 'Nom de famille'
     db_URLSegment: 'Segment d''URL'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
@@ -279,9 +285,9 @@ fr:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Mots de passe utilisateur'
     PLURALS:
+      many: '{count} mots de passe utilisateur'
       one: 'Un mot de passe utilisateur'
       other: '{count} mots de passe utilisateur'
-      many: '{count} mots de passe utilisateur'
     SINGULARNAME: 'Mot de passe utilisateur'
     db_Password: 'Mot de passe'
     has_one_Member: Membre
@@ -298,9 +304,9 @@ fr:
     PERMISSIONS_CATEGORY: 'Rôles et autorisations d’accès'
     PLURALNAME: Permissions
     PLURALS:
+      many: '{count} autorisations'
       one: 'Une autorisation'
       other: '{count} autorisations'
-      many: '{count} autorisations'
     SINGULARNAME: Permission
     UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
     db_Type: Type
@@ -314,9 +320,9 @@ fr:
     OnlyAdminCanApply: 'Limité aux administrateurs'
     PLURALNAME: Rôles
     PLURALS:
+      many: '{count} rôles'
       one: 'Un rôle'
       other: '{count} rôles'
-      many: '{count} rôles'
     SINGULARNAME: Rôle
     Title: Titre
     belongs_many_many_Groups: Groupes
@@ -325,18 +331,18 @@ fr:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Codes d''autorisations liés au rôle'
     PLURALS:
+      many: '{count} codes d''autorisation liés au rôle'
       one: 'Un code d''autorisation lié au rôle'
       other: '{count} codes d''autorisation liés au rôle'
-      many: '{count} codes d''autorisation liés au rôle'
     PermsError: 'Impossible d''attribuer le code "{code}" (requiert un accès en tant qu''administrateur)'
     SINGULARNAME: 'Code d''autorisation lié au rôle'
     has_one_Role: Rôle
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Signatures de mot de passe'
     PLURALS:
+      many: '{count} signatures de mot de passe'
       one: 'Une signature de mot de passe'
       other: '{count} signatures de mot de passe'
-      many: '{count} signatures de mot de passe'
     SINGULARNAME: 'Signature de mot de passe'
     has_one_Member: Membre
   SilverStripe\Security\Security:
@@ -352,9 +358,3 @@ fr:
     LOSTPASSWORDHEADER: 'Mot de passe oublié'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrez vos identifiants ci-dessous et vous pourrez y avoir accès.'
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Éditer
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Vue
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Annuler
