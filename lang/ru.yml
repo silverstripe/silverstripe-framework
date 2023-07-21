@@ -31,11 +31,11 @@ ru:
     MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить пароль'
   SilverStripe\Forms\DateField:
+    NOTSET: 'не установлено'
+    TODAY: сегодня
     VALIDDATEFORMAT2: 'Пожалуйста, задайте верный формат даты ({format})'
     VALIDDATEMAXDATE: 'Требуется значение даты, совпадающее с максимальным ({date}) или более старое'
     VALIDDATEMINDATE: 'Требуется значение даты, совпадающее с минимальным ({date}) или более новое'
-    NOTSET: 'не установлено'
-    TODAY: сегодня
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'Установите дату не позднее ({datetime})'
     VALIDDATETIMEFORMAT: 'Пожалуйста, задайте верный формат даты ({format})'
@@ -51,12 +51,12 @@ ru:
     BAD_METHOD: 'Для данной формы пользуйтесь методом {method}'
     CSRF_EXPIRED_MESSAGE: 'Срок действия сеанса истек. Пожалуйста, отправьте данные формы еще раз.'
     CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
+    FIELDISREQUIRED: 'Поле {name} является обязательным'
     VALIDATIONPASSWORDSDONTMATCH: 'Пароли не совпадают'
     VALIDATIONPASSWORDSNOTEMPTY: 'Пароли не могут быть пустыми'
     VALIDATIONSTRONGPASSWORD: 'Пароль должен содержать как минимум одну цифру и один буквенно-цифровой символ.'
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
-    FIELDISREQUIRED: 'Поле {name} является обязательным'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'Пример заполнения {format}'
     NONE: 'не выбрано'
@@ -92,10 +92,14 @@ ru:
     Deleted: 'Удалено {type} {name}'
     Save: Сохранить
     Saved: 'Сохранено: {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Редактировать
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: из
     Page: Страница
     View: Просмотр
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Просмотр
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Сумма
     FIELDLABELCURRENCY: Валюта
@@ -106,14 +110,16 @@ ru:
     IsNullLabel: Недействительно
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   SilverStripe\ORM\DataObject:
     PLURALNAME: Объекты
     PLURALS:
-      one: Объект
       few: '{count} объекта'
       many: '{count} объектов'
+      one: Объект
       other: '{count} объектов'
     SINGULARNAME: Объект
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -122,37 +128,37 @@ ru:
     YESANSWER: Да
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
-      one: '{count} день'
       few: '{count} дня'
       many: '{count} дней'
+      one: '{count} день'
       other: '{count} дней'
     HOURS_SHORT_PLURALS:
-      one: '{count} час'
       few: '{count} часа'
       many: '{count} часов'
+      one: '{count} час'
       other: '{count} часов'
     LessThanMinuteAgo: 'меньше минуты'
     MINUTES_SHORT_PLURALS:
-      one: '{count} минута'
       few: '{count} минут'
       many: '{count} минут'
+      one: '{count} минута'
       other: '{count} минут'
     MONTHS_SHORT_PLURALS:
-      one: '{count} месяц'
       few: '{count} месяца'
       many: '{count} месяцев'
+      one: '{count} месяц'
       other: '{count} месяцев'
     SECONDS_SHORT_PLURALS:
-      one: '{count} секунда'
       few: '{count} секунды'
       many: '{count} секунд'
+      one: '{count} секунда'
       other: '{count} секунд'
     TIMEDIFFAGO: '{difference} назад'
     TIMEDIFFIN: 'через {difference}'
     YEARS_SHORT_PLURALS:
-      one: '{count} год'
       few: '{count} года'
       many: '{count} лет'
+      one: '{count} год'
       other: '{count} лет'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Любой
@@ -176,6 +182,8 @@ ru:
     SUCCESS: Готово
     SUCCESSCONTENT: '<p>Вы вошли в систему. Если вы не были автоматически перенаправлены <a target="_top" href="{link}">нажмите здесь</a></p>'
     SUCCESS_TITLE: 'Добро пожаловать'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Отмена
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Администратор по умолчанию'
   SilverStripe\Security\Group:
@@ -194,9 +202,9 @@ ru:
     PERMISSIONS: 'Права доступа'
     PLURALNAME: Группы
     PLURALS:
-      one: Группа
       few: '{count} группы'
       many: '{count} групп'
+      one: Группа
       other: '{count} групп'
     Parent: 'Родительская группа'
     ROLES: Роли
@@ -204,13 +212,13 @@ ru:
     RolesAddEditLink: 'Добавить/редактировать роли'
     SINGULARNAME: Группа
     Sort: 'Порядок сортировки'
-    has_many_Permissions: 'Права групп пользователей'
-    many_many_Members: 'Члены группы'
     db_Description: Описание
     db_Sort: Сортировать
     db_Title: Заголовок
     has_many_Groups: Группы
+    has_many_Permissions: 'Права групп пользователей'
     has_one_Parent: Родительская
+    many_many_Members: 'Члены группы'
     many_many_Roles: Роли
     many_many_Subsites: Подсайты
   SilverStripe\Security\LoginAttempt:
@@ -218,9 +226,9 @@ ru:
     IP: IP-адрес
     PLURALNAME: 'Попыток входа в систему'
     PLURALS:
-      one: 'Попытка входа в систему'
       few: '{count} попытки входа в систему'
       many: '{count} попыток входа в систему'
+      one: 'Попытка входа в систему'
       other: '{count} попыток входа в систему'
     SINGULARNAME: 'Попытка входа в систему'
     Status: Статус
@@ -252,24 +260,24 @@ ru:
     PASSWORDEXPIRED: 'Срок действия Вашего пароля истек. Пожалуйста установите новый.'
     PLURALNAME: Пользователи
     PLURALS:
-      one: Участник
       few: '{count} участника'
       many: '{count} участников'
+      one: Участник
       other: '{count} участников'
     SINGULARNAME: Пользователь
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
+    VALIDATIONMEMBEREXISTS: 'Пользователь с таким же {identifier} уже существует'
     ValidationIdentifierFailed: 'Невозможно заменить существующего участника #{id} c таким же идентификатором ({name} = {value}))'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
+    db_Email: Email
+    db_FirstName: Имя
     db_Locale: 'Локаль интерфейса'
     db_LockedOutUntil: 'Заблокировано до'
     db_Password: Пароль
     db_PasswordExpiry: 'Дата устаревания пароля'
-    VALIDATIONMEMBEREXISTS: 'Пользователь с таким же {identifier} уже существует'
-    db_Email: Email
-    db_FirstName: Имя
     db_Surname: Фамилия
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Форма входа в систему'
@@ -282,9 +290,9 @@ ru:
   SilverStripe\Security\MemberPassword:
     PLURALNAME: Пароли
     PLURALS:
-      one: Пароль
       few: '{count} пароля'
       many: '{count} паролей'
+      one: Пароль
       other: '{count} паролей'
     SINGULARNAME: Пароль
     db_Password: Пароль
@@ -302,9 +310,9 @@ ru:
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
     PLURALNAME: 'Права доступа'
     PLURALS:
-      one: Разрешение
       few: '{count} разрешения'
       many: '{count} разрешений'
+      one: Разрешение
       other: '{count} разрешений'
     SINGULARNAME: 'Право доступа'
     UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
@@ -319,9 +327,9 @@ ru:
     OnlyAdminCanApply: 'Может применяться только администратором'
     PLURALNAME: Роли
     PLURALS:
-      one: Роль
       few: '{count} роли'
       many: '{count} ролей'
+      one: Роль
       other: '{count} ролей'
     SINGULARNAME: Роль
     Title: Название
@@ -331,9 +339,9 @@ ru:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'
     PLURALS:
-      one: 'Код роли доступа'
       few: '{count} кода роли доступа'
       many: '{count} кодов роли доступа'
+      one: 'Код роли доступа'
       other: '{count} кодов роли доступа'
     PermsError: 'У Вас недостаточно прав для назначения родительской группы "{code}" (необходимы права администратора)'
     SINGULARNAME: 'Код роли доступа'
@@ -341,9 +349,9 @@ ru:
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Хэши авторизации'
     PLURALS:
-      one: 'Хэш авторизации'
       few: '{count} хэша авторизации'
       many: '{count} хэшей авторизации'
+      one: 'Хэш авторизации'
       other: '{count} хэшей авторизации'
     SINGULARNAME: 'Хэш авторизации'
     has_one_Member: Пользователь
@@ -360,11 +368,3 @@ ru:
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Редактировать
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Просмотр
-  SilverStripe\Forms\TextField:
-    VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Отмена

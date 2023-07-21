@@ -1,145 +1,4 @@
 es_MX:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Cambiar contraseña'
-  SilverStripe\Forms\DateField:
-    VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
-    VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
-    VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
-    NOTSET: 'no especificada'
-    TODAY: ahora
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Seleccione)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Las contraeñas no son iguales'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
-    VALIDATOR: Verificador
-  SilverStripe\Forms\FormField:
-    NONE: Ninguno
-  SilverStripe\Forms\GridField\GridField:
-    Add: 'Agregar {name}'
-    CSVEXPORT: 'Exportar a CSV'
-    Filter: Filtro
-    FilterBy: 'Filtrar por'
-    Find: Buscar
-    LinkExisting: 'Enlazar existente'
-    NewRecord: 'Nuevo {type}'
-    NoItemsFound: 'No hay ítems encontrados'
-    PRINTEDAT: 'Impreso en'
-    PRINTEDBY: 'Imprimir por'
-    PlaceHolder: 'Buscar {type}'
-    PlaceHolderWithLabels: 'Buscar {type} por {name}'
-    RelationSearch: 'Buscar relación'
-    ResetFilter: Resetear
-    Print: Imprimir
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    Delete: Eliminar
-    DeletePermissionsFailure: 'No borrar permisos'
-    UnlinkRelation: Desvincular
-  SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: Importe
-    FIELDLABELCURRENCY: Moneda
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Es Nulo'
-  SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
-  SilverStripe\Forms\TimeField:
-    VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
-  SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Cualquiera
-  SilverStripe\ORM\FieldType\DBDate:
-    TIMEDIFFAGO: '{difference} atrás'
-    TIMEDIFFIN: 'en {difference}'
-  SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Cualquiera
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Por favor ingresa tu nombre de usuario y contraseña.'
-    ERRORNOTADMIN: 'El usuario no es administrador.'
-    ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
-  SilverStripe\Security\Group:
-    Code: 'Código del grupo'
-    DefaultGroupTitleAdministrators: Administradores
-    DefaultGroupTitleContentAuthors: 'Autores de Contenido'
-    Description: Descripción
-    Locked: '¿Bloqueado?'
-    NoRoles: 'No se encontraron roles'
-    Parent: 'Grupo ascendente'
-    RolesAddEditLink: 'Agregar/modificar roles'
-    Sort: 'Orden de Clasificación'
-    has_many_Permissions: Permisos
-    many_many_Members: Miembros
-    GROUPNAME: 'Nombre de grupo'
-    MEMBERS: Miembros
-    NEWGROUP: 'Nuevo grupo'
-    PERMISSIONS: Permisos
-    PLURALNAME: Grupos
-    SINGULARNAME: Group
-    db_Description: Descripción
-    db_Title: Título
-    has_many_Groups: Grupos
-  SilverStripe\Security\LoginAttempt:
-    IP: 'Dirección IP'
-    Status: Estado
-    Email: 'Dirección de Correo Electrónico'
-    db_Status: Estado
-    has_one_Member: Miembro
-  SilverStripe\Security\Member:
-    ADDGROUP: 'Agregar grupo'
-    BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
-    BUTTONLOGIN: Ingresar
-    BUTTONLOGINOTHER: 'Ingresar como alguien más'
-    BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
-    CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
-    CONFIRMPASSWORD: 'Confirmar contraseña'
-    EMAIL: 'Correo electrónico'
-    EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
-    ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'
-    ERRORNEWPASSWORD: 'Usted ha ingresado su nueva contraseña diferentemente, intenta de nuevo'
-    ERRORPASSWORDNOTMATCH: 'Tu contraseña actual no encaja, por favor inténtalo de nuevo'
-    FIRSTNAME: 'Primer Nombre'
-    INTERFACELANG: 'Lenguaje de la interfaz'
-    LOGGEDINAS: 'Conectado como {name}.'
-    NEWPASSWORD: 'Nueva contraseña'
-    PASSWORD: Contraseña
-    SUBJECTPASSWORDCHANGED: 'Su contraseña se ha cambiado'
-    SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
-    SURNAME: Apellido
-    ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
-    YOUROLDPASSWORD: 'Contraseña anterior'
-    belongs_many_many_Groups: Grupos
-    db_Locale: 'Interfaz Local'
-    db_LockedOutUntil: 'Bloqueado hasta'
-    db_Password: Contraseña
-    db_PasswordExpiry: 'Fecha en que expira la contraseña'
-    BUTTONLOGOUT: 'Cerrar sesión'
-    EDIT_PASSWORD: 'Nueva contraseña'
-    PLURALNAME: Miembros
-    SINGULARNAME: Miembro
-    db_Email: Email
-    db_FirstName: Nombre
-    db_Surname: Apellido
-  SilverStripe\Security\Permission:
-    AdminGroup: Administrador
-    CONTENT_CATEGORY: 'Permisos de contenido'
-    FULLADMINRIGHTS: 'Privilegios administrativos completos'
-    FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
-    CMS_ACCESS_CATEGORY: 'Acceder al CMS'
-    PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
-    PLURALNAME: Permisos
-    db_Type: Tipo
-    has_one_Group: Group
-  SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'heredado del rol "{roletitle}" en el grupo "{grouptitle}"'
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede abrir una sesión abajo.'
-    BUTTONSEND: 'Envíame enlace para restablecer contraseña'
-    CHANGEPASSWORDBELOW: 'Puedes cambiar tu contraseña abajo.'
-    CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
-    ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
-    ERRORPASSWORDPERMISSION: '¡Debes haber firmado para cambiar la contraseña!'
-    LOGIN: Ingresar
-    NOTEPAGESECURED: 'Se ha asegurado la página. Ingresa tus credenciales abajo y en seguida enviaremos tu autorización.'
-    NOTERESETPASSWORD: 'Ingresa tu dirección de correo-e y te enviaremos un enlace con el cual podrás restablecer la contraseña'
-    LOGOUT: 'Cerrar sesión'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensiones
     EDIT: Editar
@@ -155,10 +14,46 @@ es_MX:
     TEXT3: para
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Solicitud no válida'
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Cambiar contraseña'
+  SilverStripe\Forms\DateField:
+    NOTSET: 'no especificada'
+    TODAY: ahora
+    VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
+    VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
+    VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Seleccione)
   SilverStripe\Forms\FileUploadReceiver:
     FIELDNOTSET: 'Información acerca del archivo no encontrada'
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Las contraeñas no son iguales'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
+    VALIDATOR: Verificador
+  SilverStripe\Forms\FormField:
+    NONE: Ninguno
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridField:
+    Add: 'Agregar {name}'
+    CSVEXPORT: 'Exportar a CSV'
+    Filter: Filtro
+    FilterBy: 'Filtrar por'
+    Find: Buscar
+    LinkExisting: 'Enlazar existente'
+    NewRecord: 'Nuevo {type}'
+    NoItemsFound: 'No hay ítems encontrados'
+    PRINTEDAT: 'Impreso en'
+    PRINTEDBY: 'Imprimir por'
+    PlaceHolder: 'Buscar {type}'
+    PlaceHolderWithLabels: 'Buscar {type} por {name}'
+    Print: Imprimir
+    RelationSearch: 'Buscar relación'
+    ResetFilter: Resetear
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Eliminar
+    DeletePermissionsFailure: 'No borrar permisos'
+    UnlinkRelation: Desvincular
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancelar
     Create: Crear
@@ -172,22 +67,127 @@ es_MX:
     View: Ver
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: Ver
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Importe
+    FIELDLABELCURRENCY: Moneda
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Es Nulo'
+  SilverStripe\Forms\NumericField:
+    VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
+  SilverStripe\Forms\TimeField:
+    VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Datos de objetos'
     SINGULARNAME: 'Datos del objeto'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Cualquiera
+  SilverStripe\ORM\FieldType\DBDate:
+    TIMEDIFFAGO: '{difference} atrás'
+    TIMEDIFFIN: 'en {difference}'
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Cualquiera
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Por favor ingresa tu nombre de usuario y contraseña.'
+    ERRORNOTADMIN: 'El usuario no es administrador.'
+    ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   SilverStripe\Security\Confirmation\Form:
     REFUSE: Cancelar
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Administrador Predeterminado'
+  SilverStripe\Security\Group:
+    Code: 'Código del grupo'
+    DefaultGroupTitleAdministrators: Administradores
+    DefaultGroupTitleContentAuthors: 'Autores de Contenido'
+    Description: Descripción
+    GROUPNAME: 'Nombre de grupo'
+    Locked: '¿Bloqueado?'
+    MEMBERS: Miembros
+    NEWGROUP: 'Nuevo grupo'
+    NoRoles: 'No se encontraron roles'
+    PERMISSIONS: Permisos
+    PLURALNAME: Grupos
+    Parent: 'Grupo ascendente'
+    RolesAddEditLink: 'Agregar/modificar roles'
+    SINGULARNAME: Group
+    Sort: 'Orden de Clasificación'
+    db_Description: Descripción
+    db_Title: Título
+    has_many_Groups: Grupos
+    has_many_Permissions: Permisos
+    many_many_Members: Miembros
+  SilverStripe\Security\LoginAttempt:
+    Email: 'Dirección de Correo Electrónico'
+    IP: 'Dirección IP'
+    Status: Estado
+    db_Status: Estado
+    has_one_Member: Miembro
+  SilverStripe\Security\Member:
+    ADDGROUP: 'Agregar grupo'
+    BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
+    BUTTONLOGIN: Ingresar
+    BUTTONLOGINOTHER: 'Ingresar como alguien más'
+    BUTTONLOGOUT: 'Cerrar sesión'
+    BUTTONLOSTPASSWORD: 'Olvidé mi contraseña'
+    CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
+    CONFIRMPASSWORD: 'Confirmar contraseña'
+    EDIT_PASSWORD: 'Nueva contraseña'
+    EMAIL: 'Correo electrónico'
+    EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor, inténtelo de nuevo'
+    ENTEREMAIL: 'Por favor ingresa una dirección de correo electrónico para conseguir una contraseña y reiniciar el enlace.'
+    ERRORNEWPASSWORD: 'Usted ha ingresado su nueva contraseña diferentemente, intenta de nuevo'
+    ERRORPASSWORDNOTMATCH: 'Tu contraseña actual no encaja, por favor inténtalo de nuevo'
+    FIRSTNAME: 'Primer Nombre'
+    INTERFACELANG: 'Lenguaje de la interfaz'
+    LOGGEDINAS: 'Conectado como {name}.'
+    NEWPASSWORD: 'Nueva contraseña'
+    PASSWORD: Contraseña
+    PLURALNAME: Miembros
+    SINGULARNAME: Miembro
+    SUBJECTPASSWORDCHANGED: 'Su contraseña se ha cambiado'
+    SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
+    SURNAME: Apellido
+    ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
+    YOUROLDPASSWORD: 'Contraseña anterior'
+    belongs_many_many_Groups: Grupos
+    db_Email: Email
+    db_FirstName: Nombre
+    db_Locale: 'Interfaz Local'
+    db_LockedOutUntil: 'Bloqueado hasta'
+    db_Password: Contraseña
+    db_PasswordExpiry: 'Fecha en que expira la contraseña'
+    db_Surname: Apellido
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Olvidé la contraseña'
     BUTTONLOGOUT: 'Cerrar sesión'
+  SilverStripe\Security\MemberPassword:
+    db_Password: Contraseña
+    has_one_Member: Miembro
+  SilverStripe\Security\Permission:
+    AdminGroup: Administrador
+    CMS_ACCESS_CATEGORY: 'Acceder al CMS'
+    CONTENT_CATEGORY: 'Permisos de contenido'
+    FULLADMINRIGHTS: 'Privilegios administrativos completos'
+    FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
+    PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
+    PLURALNAME: Permisos
+    db_Type: Tipo
+    has_one_Group: Group
+  SilverStripe\Security\PermissionCheckboxSetField:
+    FromRoleOnGroup: 'heredado del rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     Title: Título
     belongs_many_many_Groups: Grupos
     db_Title: Título
-  SilverStripe\Security\MemberPassword:
-    db_Password: Contraseña
-    has_one_Member: Miembro
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Miembro
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede abrir una sesión abajo.'
+    BUTTONSEND: 'Envíame enlace para restablecer contraseña'
+    CHANGEPASSWORDBELOW: 'Puedes cambiar tu contraseña abajo.'
+    CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
+    ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
+    ERRORPASSWORDPERMISSION: '¡Debes haber firmado para cambiar la contraseña!'
+    LOGIN: Ingresar
+    LOGOUT: 'Cerrar sesión'
+    NOTEPAGESECURED: 'Se ha asegurado la página. Ingresa tus credenciales abajo y en seguida enviaremos tu autorización.'
+    NOTERESETPASSWORD: 'Ingresa tu dirección de correo-e y te enviaremos un enlace con el cual podrás restablecer la contraseña'
