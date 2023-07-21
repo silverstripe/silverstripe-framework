@@ -1,12 +1,4 @@
 el:
-  SilverStripe\ORM\FieldType\DBBoolean:
-    NOANSWER: Όχι
-    YESANSWER: Ναί
-    ANY: Οποιοδήποτε
-  SilverStripe\Security\Permission:
-    CONTENT_CATEGORY: 'Δικαιώματα περιεχόμενου'
-    CMS_ACCESS_CATEGORY: 'Πρόσβαση στο CMS'
-    PERMISSIONS_CATEGORY: 'Ρόλοι και δικαιώματα'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Διαστάσεις
     EDIT: Edit
@@ -32,24 +24,32 @@ el:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Οποιοδήποτε
+    NOANSWER: Όχι
+    YESANSWER: Ναί
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Οποιοδήποτε
   SilverStripe\Security\Confirmation\Form:
     REFUSE: Άκυρο
+  SilverStripe\Security\Group:
+    db_Title: Τίτλος
   SilverStripe\Security\Member:
     BUTTONLOGOUT: Αποσύνδεση
     EMAIL: Email
     PASSWORD: Κωδικός
-    db_Password: Κωδικός
     db_Email: Email
+    db_Password: Κωδικός
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Αποσύνδεση
+  SilverStripe\Security\MemberPassword:
+    db_Password: Κωδικός
+  SilverStripe\Security\Permission:
+    CMS_ACCESS_CATEGORY: 'Πρόσβαση στο CMS'
+    CONTENT_CATEGORY: 'Δικαιώματα περιεχόμενου'
+    PERMISSIONS_CATEGORY: 'Ρόλοι και δικαιώματα'
   SilverStripe\Security\PermissionRole:
     Title: Τίτλος
     db_Title: Τίτλος
   SilverStripe\Security\Security:
     LOGOUT: Αποσύνδεση
-  SilverStripe\Security\Group:
-    db_Title: Τίτλος
-  SilverStripe\Security\MemberPassword:
-    db_Password: Κωδικός

@@ -45,18 +45,18 @@ pl_PL:
     BUTTONLOGOUT: 'Wyloguj się'
     EMAIL: E-mail
     PASSWORD: Hasło
-    db_Password: Hasło
     db_Email: E-mail
+    db_Password: Hasło
     db_URLSegment: URL
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: 'Wyloguj się'
-  SilverStripe\Security\PermissionRole:
-    Title: Tytuł
-    db_Title: Tytuł
-  SilverStripe\Security\Security:
-    LOGOUT: 'Wyloguj się'
   SilverStripe\Security\MemberPassword:
     db_Password: Hasło
   SilverStripe\Security\Permission:
     db_Type: Typ
     has_one_Group: Grupa
+  SilverStripe\Security\PermissionRole:
+    Title: Tytuł
+    db_Title: Tytuł
+  SilverStripe\Security\Security:
+    LOGOUT: 'Wyloguj się'

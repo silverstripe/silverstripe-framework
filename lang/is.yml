@@ -1,97 +1,4 @@
 is:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Breyta lykliorði'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Veldu)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Lykilorðin mega ekki vera tóm'
-    VALIDATOR: Staðfesta
-  SilverStripe\Forms\FormField:
-    NONE: ekkert
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Flytja út í CSV'
-    Print: Prenta
-  SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: Reikningur
-    FIELDLABELCURRENCY: Gjaldmiðill
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Er Null'
-  SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Einhver
-  SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Einhver
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
-    ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
-    ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
-  SilverStripe\Security\Group:
-    Code: 'Hóp kóði'
-    Description: Lýsing
-    Locked: 'Læst?'
-    Parent: 'Yfir hópur'
-    Sort: Röðun
-    has_many_Permissions: Leyfi
-    many_many_Members: Félagar
-    GROUPNAME: 'Nafn hóps'
-    MEMBERS: Félagar
-    PERMISSIONS: Leyfi
-    PLURALNAME: Hópar
-    ROLES: Hlutverk
-    db_Description: Lýsing
-    db_Title: Titill
-    has_many_Groups: Hópar
-    many_many_Roles: Hlutverk
-  SilverStripe\Security\LoginAttempt:
-    IP: 'IP tala'
-    Status: Staða
-    Email: Tölvupóstfang
-    db_Status: Staða
-    has_one_Member: Félagar
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
-    BUTTONLOGIN: Innskrá
-    BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
-    BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
-    CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
-    CONFIRMPASSWORD: 'Staðfesta lykilorð'
-    EMAIL: Tölvupóstur
-    EMPTYNEWPASSWORD: 'Nýja lykilorðið má ekki vera autt, vinsamlegast reyndu aftur'
-    ENTEREMAIL: 'Vinsamlegast sláðu inn tölvupóstfang til að fá sendan hlekk til að endursetja lykilorðið'
-    ERRORNEWPASSWORD: 'Þú hefur slegið inn nýja lykilorðið þitt öðruvísi, prófaðu aftur'
-    ERRORPASSWORDNOTMATCH: 'Núverandi lykilorðið þitt passar ekki, vinsamlegast prófaðu aftur'
-    FIRSTNAME: Fornafn
-    INTERFACELANG: 'Tungumál viðmóts'
-    NEWPASSWORD: 'Nýtt lykilorð'
-    PASSWORD: Lykilorð
-    SUBJECTPASSWORDCHANGED: 'Lykilorði þínu hefur verið breytt'
-    SUBJECTPASSWORDRESET: 'Linkur til að búa til nýtt lykilorð'
-    SURNAME: Eftirnafn
-    YOUROLDPASSWORD: 'Gamla lykilorðið þitt'
-    belongs_many_many_Groups: Hópar
-    db_LockedOutUntil: 'Læst úti þar til'
-    db_Password: Lykilorð
-    db_PasswordExpiry: 'Lykilorð rennur út'
-    BUTTONLOGOUT: Útskrá
-    EDIT_PASSWORD: 'Nýtt lykilorð'
-    PLURALNAME: Félagar
-    SINGULARNAME: Félagar
-    db_Email: Tölvupóstur
-    db_Surname: Eftirnafn
-  SilverStripe\Security\Permission:
-    FULLADMINRIGHTS: 'Full stjórnanda réttindi'
-    PLURALNAME: Leyfi
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
-    BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
-    CHANGEPASSWORDBELOW: 'Þú getur breytt lykilorðinu þínu fyrir neðan.'
-    CHANGEPASSWORDHEADER: 'Breyttu lykilorðinu þínu'
-    ENTERNEWPASSWORD: 'Vinsamlegast sláðu inn nýtt lykilorð'
-    ERRORPASSWORDPERMISSION: 'Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!'
-    LOGIN: Innskrá
-    NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
-    NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'
-    LOGOUT: Útskrá
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Stærð
     EDIT: Breyta
@@ -103,11 +10,24 @@ is:
     TEXT1: 'Hérna er þitt'
     TEXT2: 'endursetja lykilorð'
     TEXT3: fyrir
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Breyta lykliorði'
   SilverStripe\Forms\DateField:
     NOTSET: 'ekki valið'
     TODAY: 'í dag'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Veldu)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Lykilorðin stemma ekki'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Lykilorðin mega ekki vera tóm'
+    VALIDATOR: Staðfesta
+  SilverStripe\Forms\FormField:
+    NONE: ekkert
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Aðal
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Flytja út í CSV'
+    Print: Prenta
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: 'Eyða úr birtum síðum'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
@@ -121,20 +41,100 @@ is:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Reikningur
+    FIELDLABELCURRENCY: Gjaldmiðill
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Er Null'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Gagna hlutir'
     SINGULARNAME: 'Gagna hlutir'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Einhver
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Einhver
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Vinsamlegast sláðu inn notendanafn og lykilorð.'
+    ERRORNOTADMIN: 'Þessi notandi er ekki stjórnandi'
+    ERRORNOTREC: 'Þetta notendanafn / lykilorð er ekki til'
   SilverStripe\Security\Confirmation\Form:
     REFUSE: 'Hætta við'
+  SilverStripe\Security\Group:
+    Code: 'Hóp kóði'
+    Description: Lýsing
+    GROUPNAME: 'Nafn hóps'
+    Locked: 'Læst?'
+    MEMBERS: Félagar
+    PERMISSIONS: Leyfi
+    PLURALNAME: Hópar
+    Parent: 'Yfir hópur'
+    ROLES: Hlutverk
+    Sort: Röðun
+    db_Description: Lýsing
+    db_Title: Titill
+    has_many_Groups: Hópar
+    has_many_Permissions: Leyfi
+    many_many_Members: Félagar
+    many_many_Roles: Hlutverk
+  SilverStripe\Security\LoginAttempt:
+    Email: Tölvupóstfang
+    IP: 'IP tala'
+    Status: Staða
+    db_Status: Staða
+    has_one_Member: Félagar
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Breyta lykilorði'
+    BUTTONLOGIN: Innskrá
+    BUTTONLOGINOTHER: 'Innskrá sem einhver annar'
+    BUTTONLOGOUT: Útskrá
+    BUTTONLOSTPASSWORD: 'Ég er búinn að gleyma lykilorðinu'
+    CONFIRMNEWPASSWORD: 'Staðfesta nýja lykilorðið'
+    CONFIRMPASSWORD: 'Staðfesta lykilorð'
+    EDIT_PASSWORD: 'Nýtt lykilorð'
+    EMAIL: Tölvupóstur
+    EMPTYNEWPASSWORD: 'Nýja lykilorðið má ekki vera autt, vinsamlegast reyndu aftur'
+    ENTEREMAIL: 'Vinsamlegast sláðu inn tölvupóstfang til að fá sendan hlekk til að endursetja lykilorðið'
+    ERRORNEWPASSWORD: 'Þú hefur slegið inn nýja lykilorðið þitt öðruvísi, prófaðu aftur'
+    ERRORPASSWORDNOTMATCH: 'Núverandi lykilorðið þitt passar ekki, vinsamlegast prófaðu aftur'
+    FIRSTNAME: Fornafn
+    INTERFACELANG: 'Tungumál viðmóts'
+    NEWPASSWORD: 'Nýtt lykilorð'
+    PASSWORD: Lykilorð
+    PLURALNAME: Félagar
+    SINGULARNAME: Félagar
+    SUBJECTPASSWORDCHANGED: 'Lykilorði þínu hefur verið breytt'
+    SUBJECTPASSWORDRESET: 'Linkur til að búa til nýtt lykilorð'
+    SURNAME: Eftirnafn
+    YOUROLDPASSWORD: 'Gamla lykilorðið þitt'
+    belongs_many_many_Groups: Hópar
+    db_Email: Tölvupóstur
+    db_LockedOutUntil: 'Læst úti þar til'
+    db_Password: Lykilorð
+    db_PasswordExpiry: 'Lykilorð rennur út'
+    db_Surname: Eftirnafn
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Útskrá
+  SilverStripe\Security\MemberPassword:
+    db_Password: Lykilorð
+    has_one_Member: Félagar
+  SilverStripe\Security\Permission:
+    FULLADMINRIGHTS: 'Full stjórnanda réttindi'
+    PLURALNAME: Leyfi
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Hlutverk
     Title: Titill
     belongs_many_many_Groups: Hópar
     db_Title: Titill
-  SilverStripe\Security\MemberPassword:
-    db_Password: Lykilorð
-    has_one_Member: Félagar
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Félagar
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Þú hefur ekki aðgang að þessari síðu. Ef þú hefur annan reikning sem hefur aðgang að þessari síðu, þá getur þú innskráð þig fyrir neðan.'
+    BUTTONSEND: 'Sendu mér hlekk til að endursetja lykilorðið'
+    CHANGEPASSWORDBELOW: 'Þú getur breytt lykilorðinu þínu fyrir neðan.'
+    CHANGEPASSWORDHEADER: 'Breyttu lykilorðinu þínu'
+    ENTERNEWPASSWORD: 'Vinsamlegast sláðu inn nýtt lykilorð'
+    ERRORPASSWORDPERMISSION: 'Þú verður að vera innskráður til að geta breytt lykilorðinu þínu!'
+    LOGIN: Innskrá
+    LOGOUT: Útskrá
+    NOTEPAGESECURED: 'Þessi síða er læst. Sláðu inn auðkennið þitt fyrir neðan og við munum senda þig áfram.'
+    NOTERESETPASSWORD: 'Sláðu inn tölvupóstfangið þitt og við munum senda þér hlekk þar sem þú getur endursett lykilorðið þitt'

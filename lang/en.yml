@@ -236,8 +236,6 @@ en:
     SINGULARNAME: Group
     Sort: 'Sort Order'
     ValidationIdentifierAlreadyExists: 'A Group ({group}) already exists with the same {identifier}'
-    has_many_Permissions: Permissions
-    many_many_Members: Members
     db_AccessAllSubsites: 'Access all subsites'
     db_Code: Code
     db_DN: DN
@@ -250,10 +248,17 @@ en:
     db_Title: Title
     has_many_Groups: Groups
     has_many_LDAPGroupMappings: 'LDAP group mappings'
+    has_many_Permissions: Permissions
     has_one_Parent: Parent
+    many_many_Members: Members
     many_many_Roles: Roles
     many_many_SiteTreeContentReview: 'Site tree content review'
     many_many_Subsites: Subsites
+  SilverStripe\Security\InheritedPermissionsExtension:
+    db_CanEditType: 'Can edit type'
+    db_CanViewType: 'Can view type'
+    many_many_EditorGroups: 'Editor groups'
+    many_many_ViewerGroups: 'Viewer groups'
   SilverStripe\Security\LoginAttempt:
     Email: 'Email Address'
     EmailHashed: 'Email Address (hashed)'
@@ -298,6 +303,7 @@ en:
     PLURALS:
       one: 'A Member'
       other: '{count} Members'
+    RequiresPasswordChangeOnNextLogin: 'Requires password change on next log in'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'
@@ -307,13 +313,8 @@ en:
     ValidationIdentifierFailed: 'Can''t overwrite existing member #{id} with identical identifier ({name} = {value}))'
     WELCOMEBACK: 'Welcome back, {firstname}'
     YOUROLDPASSWORD: 'Your old password'
-    belongs_many_many_Groups: Groups
-    db_Locale: 'Interface Locale'
-    db_LockedOutUntil: 'Locked out until'
-    db_Password: Password
-    db_PasswordExpiry: 'Password Expiry Date'
-    RequiresPasswordChangeOnNextLogin: 'Requires password change on next log in'
     belongs_many_many_BlogPosts: 'Blog posts'
+    belongs_many_many_Groups: Groups
     db_AccountResetExpired: 'Account reset expired'
     db_AccountResetHash: 'Account reset hash'
     db_AutoLoginExpired: 'Auto login expired'
@@ -327,7 +328,11 @@ en:
     db_HasSkippedMFARegistration: 'Has skippedMFA registration'
     db_IsExpired: 'Is expired'
     db_LastSynced: 'Last synced'
+    db_Locale: 'Interface Locale'
+    db_LockedOutUntil: 'Locked out until'
+    db_Password: Password
     db_PasswordEncryption: 'Password encryption'
+    db_PasswordExpiry: 'Password Expiry Date'
     db_Salt: Salt
     db_Surname: Surname
     db_TempIDExpired: 'TempID expired'
@@ -439,8 +444,3 @@ en:
     PASSWORDRESETSENTTEXT: 'Thank you. A reset link has been sent, provided an account exists for this email address.'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'There was a problem loading the media.'
-  SilverStripe\Security\InheritedPermissionsExtension:
-    db_CanEditType: 'Can edit type'
-    db_CanViewType: 'Can view type'
-    many_many_EditorGroups: 'Editor groups'
-    many_many_ViewerGroups: 'Viewer groups'

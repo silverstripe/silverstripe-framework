@@ -1,85 +1,4 @@
 pt_BR:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Trocar senha'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: Selecione
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Senha não confere'
-    VALIDATIONPASSWORDSNOTEMPTY: 'As Passwords não podem estar vazias'
-    VALIDATOR: Verificador
-  SilverStripe\Forms\FormField:
-    NONE: nenhum
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Exportar para CSV'
-    Print: Imprimir
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Por favor entre nome de usuário e senha.'
-    ERRORNOTADMIN: 'Este usuário não é um administrador'
-    ERRORNOTREC: 'Este nome de usuário / senha não é reconhecido'
-  SilverStripe\Security\Group:
-    Code: 'Grupo de código'
-    Description: Descrição
-    Locked: 'Travado?'
-    Parent: 'Grupo pai'
-    Sort: Ordenação
-    has_many_Permissions: Permissões
-    many_many_Members: Membros
-    GROUPNAME: 'Nome do grupo'
-    MEMBERS: Membros
-    NEWGROUP: 'Novo Grupo'
-    PERMISSIONS: Permissões
-    PLURALNAME: Grupos
-    db_Description: Descrição
-    db_Title: Título
-    has_many_Groups: Grupos
-  SilverStripe\Security\LoginAttempt:
-    IP: 'Endereço IP'
-    Email: 'Endereço de E-mail'
-    has_one_Member: Membro
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Alterar Senha'
-    BUTTONLOGIN: Entrar
-    BUTTONLOGINOTHER: 'Entrar com outro usuário'
-    BUTTONLOSTPASSWORD: 'Esqueci minha senha'
-    CONFIRMNEWPASSWORD: 'Confirme Nova Senha'
-    CONFIRMPASSWORD: 'Confirme Senha'
-    EMAIL: E-mail
-    ENTEREMAIL: 'Por favor, entre com seu enderenço de e-mail para receber o link de reinicialização de sua senha'
-    ERRORNEWPASSWORD: 'Você digitou sua nova senha incorretamente, tente novamente'
-    ERRORPASSWORDNOTMATCH: 'Sua senha atual não confere, por favor tente novamente'
-    FIRSTNAME: Nome
-    INTERFACELANG: 'Idioma da interface'
-    NEWPASSWORD: 'Nova Senha'
-    PASSWORD: Senha
-    SUBJECTPASSWORDCHANGED: 'Sua senha foi alterada'
-    SUBJECTPASSWORDRESET: 'Link para resetar sua senha'
-    SURNAME: Sobrenome
-    YOUROLDPASSWORD: 'Senha antiga'
-    belongs_many_many_Groups: Grupo
-    db_Locale: 'Interface de localização'
-    db_LockedOutUntil: 'Bloqueado até'
-    db_Password: Senha
-    db_PasswordExpiry: 'Data de expiração da senha'
-    EDIT_PASSWORD: 'Nova Senha'
-    PLURALNAME: Membros
-    SINGULARNAME: Membro
-    db_Email: E-mail
-    db_FirstName: 'Primeiro nome'
-    db_Surname: Sobrenome
-  SilverStripe\Security\Permission:
-    FULLADMINRIGHTS: 'Todos os direitos administrativos'
-    AdminGroup: Administrador
-    PLURALNAME: Permissões
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo.'
-    BUTTONSEND: 'Envie-me o link para resetar a senha'
-    CHANGEPASSWORDBELOW: 'Você pode alterar sua senha abaixo.'
-    CHANGEPASSWORDHEADER: 'Alterar sua senha'
-    ENTERNEWPASSWORD: 'Por favor entre uma nova senha.'
-    ERRORPASSWORDPERMISSION: 'Você precisa estar logado para alterar sua senha!'
-    LOGIN: Entrar
-    NOTEPAGESECURED: 'Esta página é protegida. Digite suas credenciais abaixo para continuar.'
-    NOTERESETPASSWORD: 'Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensões
     EDIT: Edit
@@ -93,11 +12,24 @@ pt_BR:
     TEXT3: para
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Não
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Trocar senha'
   SilverStripe\Forms\DateField:
     NOTSET: 'não informado'
     TODAY: hoje
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: Selecione
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Senha não confere'
+    VALIDATIONPASSWORDSNOTEMPTY: 'As Passwords não podem estar vazias'
+    VALIDATOR: Verificador
+  SilverStripe\Forms\FormField:
+    NONE: nenhum
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Principal
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Exportar para CSV'
+    Print: Imprimir
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Excluir
   SilverStripe\Forms\GridField\GridFieldDetailForm:
@@ -115,14 +47,82 @@ pt_BR:
     SINGULARNAME: 'Dado do objeto'
   SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Não
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Por favor entre nome de usuário e senha.'
+    ERRORNOTADMIN: 'Este usuário não é um administrador'
+    ERRORNOTREC: 'Este nome de usuário / senha não é reconhecido'
+  SilverStripe\Security\Group:
+    Code: 'Grupo de código'
+    Description: Descrição
+    GROUPNAME: 'Nome do grupo'
+    Locked: 'Travado?'
+    MEMBERS: Membros
+    NEWGROUP: 'Novo Grupo'
+    PERMISSIONS: Permissões
+    PLURALNAME: Grupos
+    Parent: 'Grupo pai'
+    Sort: Ordenação
+    db_Description: Descrição
+    db_Title: Título
+    has_many_Groups: Grupos
+    has_many_Permissions: Permissões
+    many_many_Members: Membros
+  SilverStripe\Security\LoginAttempt:
+    Email: 'Endereço de E-mail'
+    IP: 'Endereço IP'
+    has_one_Member: Membro
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Alterar Senha'
+    BUTTONLOGIN: Entrar
+    BUTTONLOGINOTHER: 'Entrar com outro usuário'
+    BUTTONLOSTPASSWORD: 'Esqueci minha senha'
+    CONFIRMNEWPASSWORD: 'Confirme Nova Senha'
+    CONFIRMPASSWORD: 'Confirme Senha'
+    EDIT_PASSWORD: 'Nova Senha'
+    EMAIL: E-mail
+    ENTEREMAIL: 'Por favor, entre com seu enderenço de e-mail para receber o link de reinicialização de sua senha'
+    ERRORNEWPASSWORD: 'Você digitou sua nova senha incorretamente, tente novamente'
+    ERRORPASSWORDNOTMATCH: 'Sua senha atual não confere, por favor tente novamente'
+    FIRSTNAME: Nome
+    INTERFACELANG: 'Idioma da interface'
+    NEWPASSWORD: 'Nova Senha'
+    PASSWORD: Senha
+    PLURALNAME: Membros
+    SINGULARNAME: Membro
+    SUBJECTPASSWORDCHANGED: 'Sua senha foi alterada'
+    SUBJECTPASSWORDRESET: 'Link para resetar sua senha'
+    SURNAME: Sobrenome
+    YOUROLDPASSWORD: 'Senha antiga'
+    belongs_many_many_Groups: Grupo
+    db_Email: E-mail
+    db_FirstName: 'Primeiro nome'
+    db_Locale: 'Interface de localização'
+    db_LockedOutUntil: 'Bloqueado até'
+    db_Password: Senha
+    db_PasswordExpiry: 'Data de expiração da senha'
+    db_Surname: Sobrenome
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Esqueceu a senha'
+  SilverStripe\Security\MemberPassword:
+    db_Password: Senha
+    has_one_Member: Membro
+  SilverStripe\Security\Permission:
+    AdminGroup: Administrador
+    FULLADMINRIGHTS: 'Todos os direitos administrativos'
+    PLURALNAME: Permissões
   SilverStripe\Security\PermissionRole:
     Title: Título
     belongs_many_many_Groups: Grupos
     db_Title: Título
-  SilverStripe\Security\MemberPassword:
-    db_Password: Senha
-    has_one_Member: Membro
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Membro
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo.'
+    BUTTONSEND: 'Envie-me o link para resetar a senha'
+    CHANGEPASSWORDBELOW: 'Você pode alterar sua senha abaixo.'
+    CHANGEPASSWORDHEADER: 'Alterar sua senha'
+    ENTERNEWPASSWORD: 'Por favor entre uma nova senha.'
+    ERRORPASSWORDPERMISSION: 'Você precisa estar logado para alterar sua senha!'
+    LOGIN: Entrar
+    NOTEPAGESECURED: 'Esta página é protegida. Digite suas credenciais abaixo para continuar.'
+    NOTERESETPASSWORD: 'Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha'

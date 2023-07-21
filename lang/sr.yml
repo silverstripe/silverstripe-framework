@@ -1,29 +1,48 @@
 sr:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: Димензије
+    EDIT: Измени
+    EDITINFO: 'Измени ову датотеку'
+    REMOVE: Уклони
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Променили сте своју лозинку за '
+    HELLO: Здраво
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: Здраво
+    TEXT1: 'Ево га Ваш'
+    TEXT2: 'линк за ресетовање лозинке'
+    TEXT3: за
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 'Погрешан захтев'
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Лозинка мора садржати најмање {min} знакова.'
     BETWEEN: 'Лозинка мора садржати најмање {min}, а највише {max} знакова.'
     MAXIMUM: 'Лозинка може садржати највише {max} знакова.'
     SHOWONCLICKTITLE: 'Промени лозинку'
   SilverStripe\Forms\DateField:
+    NOTSET: 'није подешено'
+    TODAY: данас
     VALIDDATEFORMAT2: 'Молимо Вас да унесете исправан формат датума ({format})'
     VALIDDATEMAXDATE: 'Датум не сме бити после ({date})'
     VALIDDATEMINDATE: 'Датум не сме бити пре ({date})'
-    NOTSET: 'није подешено'
-    TODAY: данас
   SilverStripe\Forms\DropdownField:
     CHOOSE: (изаберите)
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Унесите адресу е-поште'
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 'Информације о датотеци нису пронађене'
   SilverStripe\Forms\Form:
+    CSRF_FAILED_MESSAGE: 'Изгелда да постоји технички проблем. Кликните на дугме за повратак, освежите страницу и покушајте поново.'
+    FIELDISREQUIRED: '{name} је обавезно'
     VALIDATIONPASSWORDSDONTMATCH: 'Лозинке се не поклапају'
     VALIDATIONPASSWORDSNOTEMPTY: 'Поља за лозинке не смеју да буду празна'
     VALIDATIONSTRONGPASSWORD: 'Лозинке морају ра садрже бар једну цифру и бар један алфанумерички знак'
     VALIDATOR: 'Проверивач исправности'
     VALIDCURRENCY: 'Унесите исправну валуту'
-    CSRF_FAILED_MESSAGE: 'Изгелда да постоји технички проблем. Кликните на дугме за повратак, освежите страницу и покушајте поново.'
-    FIELDISREQUIRED: '{name} је обавезно'
   SilverStripe\Forms\FormField:
     NONE: без
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: Главно
   SilverStripe\Forms\GridField\GridField:
     Add: 'Додај {name}'
     CSVEXPORT: 'Извези у CSV'
@@ -53,6 +72,14 @@ sr:
     Deleted: 'Избрисано {type} {name}'
     Save: Сачувај
     Saved: 'Сачувано {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Измени
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: од
+    Page: Страница
+    View: Преглед
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Преглед
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Износ
     FIELDLABELCURRENCY: Валута
@@ -62,6 +89,9 @@ sr:
     VALIDATION: '''{value}'' није број. Само бројеви могу бити прихваћени за ово поље'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Унесите исправан формат времена ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Објекти података'
+    SINGULARNAME: 'Објекат података'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 'Било која'
   SilverStripe\ORM\FieldType\DBDate:
@@ -72,43 +102,49 @@ sr:
     ANY: 'Било који'
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Откривена је бесконачна петља у оквиру "{type}" хијерархије. Промените родитеља да би сте разрешили ситуацију'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 'Грешла при провери исправности'
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Унесите корисничко име и лозинку.'
     ERRORNOTADMIN: 'Овај корисник није администратор.'
     ERRORNOTREC: 'То корисничко име / лозинка није препознато'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Одустани
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 'Подразумевани администратор'
   SilverStripe\Security\Group:
     AddRole: 'Додај улогу за ову групу'
     Code: 'Кôд групе'
     DefaultGroupTitleAdministrators: Администратори
     DefaultGroupTitleContentAuthors: 'Аутори садржаја'
     Description: Опис
+    GROUPNAME: 'Име групе'
     GroupReminder: 'Ако изаберете родитељску групу, ова група ће преузети све њене улоге'
     HierarchyPermsError: 'Није могуће доделити родитељску групу "{group}" са привилегованим дозволама (захтева Администраторски приступ)'
     Locked: 'Закључано?'
-    NoRoles: 'Улоге нису пронађене'
-    Parent: 'Родитељска група'
-    RolesAddEditLink: 'Управљај улогама'
-    Sort: 'Поредак сортирања'
-    has_many_Permissions: Дозволе
-    many_many_Members: Чланови
-    GROUPNAME: 'Име групе'
     MEMBERS: Чланови
     NEWGROUP: 'Нова група'
+    NoRoles: 'Улоге нису пронађене'
     PERMISSIONS: Дозволе
     PLURALNAME: Групе
+    Parent: 'Родитељска група'
     ROLES: Улоге
     ROLESDESCRIPTION: 'Улоге су предефинисани скупови овлашћења и могу бити додељене групама.<br />Наслеђују се од родитељских група ако је потребно.'
+    RolesAddEditLink: 'Управљај улогама'
     SINGULARNAME: Група
+    Sort: 'Поредак сортирања'
     db_Description: Опис
     db_Title: Наслов
     has_many_Groups: Групе
+    has_many_Permissions: Дозволе
+    many_many_Members: Чланови
     many_many_Roles: Улоге
   SilverStripe\Security\LoginAttempt:
-    IP: 'IP адреса'
-    Status: Статус
     Email: 'Адреса е-поште'
+    IP: 'IP адреса'
     PLURALNAME: 'Покушаји пријаве'
     SINGULARNAME: 'Покушај пријаве'
+    Status: Статус
     db_Status: Статус
     has_one_Member: Члан
   SilverStripe\Security\Member:
@@ -116,9 +152,11 @@ sr:
     BUTTONCHANGEPASSWORD: 'Измени лозинку'
     BUTTONLOGIN: 'Пријави се'
     BUTTONLOGINOTHER: 'Пријавите се као неко други'
+    BUTTONLOGOUT: Одјава
     BUTTONLOSTPASSWORD: 'Заборавио сам лозинку'
     CONFIRMNEWPASSWORD: 'Потврдите нову лозинку'
     CONFIRMPASSWORD: 'Потврдите лозинку'
+    EDIT_PASSWORD: 'Нова лозинка'
     EMAIL: Е-пошта
     EMPTYNEWPASSWORD: 'Нова лозинка не може бити празна. Покушајте поново.'
     ENTEREMAIL: 'Унесите адресу е-поште да би сте добили линк за ресетовање лозинке.'
@@ -131,101 +169,20 @@ sr:
     LOGGEDINAS: 'Пријављени сте као {name}.'
     NEWPASSWORD: 'Нова лозинка'
     PASSWORD: Лозинка
+    PLURALNAME: Чланови
+    SINGULARNAME: Члан
     SUBJECTPASSWORDCHANGED: 'Ваша лозинка је промењена'
     SUBJECTPASSWORDRESET: 'Линк за ресетовање Ваше лозинке'
     SURNAME: Презиме
     ValidationIdentifierFailed: 'Није могуће преписати преко постојећег члана  #{id} са истим идентификатором ({name} = {value}))'
     YOUROLDPASSWORD: 'Ваша стара лозинка'
     belongs_many_many_Groups: Групе
+    db_Email: Е-пошта
     db_Locale: 'Локалитет интерфејса'
     db_LockedOutUntil: 'Zaključan do'
     db_Password: Лозинка
     db_PasswordExpiry: 'Датум истека лозинке'
-    BUTTONLOGOUT: Одјава
-    EDIT_PASSWORD: 'Нова лозинка'
-    PLURALNAME: Чланови
-    SINGULARNAME: Члан
-    db_Email: Е-пошта
     db_Surname: Презиме
-  SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Појачајте лозинку додавањем неких од следећих знакова: {chars}'
-    PREVPASSWORD: 'Већ сте користили наведену лозинку у прошлости. Стога, изаберите другу лозинку'
-    TOOSHORT: 'Лозинка је прекратка. Лозинка мора садржати бар {minimum} знакова'
-  SilverStripe\Security\Permission:
-    AdminGroup: Администратор
-    CONTENT_CATEGORY: 'Дозволе за садржај'
-    FULLADMINRIGHTS: 'Пуна административна права'
-    FULLADMINRIGHTS_HELP: 'Надјачава све друге додељене дозволе.'
-    UserPermissionsIntro: 'Додавањем овог корисника у групу биће прилагођена и његова права приступа. Подробнија објашњења о правима приступа за појединачне групе можете пронаћи у секцији "Групе".'
-    CMS_ACCESS_CATEGORY: 'Приступ CMS-у'
-    PERMISSIONS_CATEGORY: 'Улоге и дозволе за приступ'
-    PLURALNAME: Дозволе
-    SINGULARNAME: Дозвола
-    has_one_Group: Група
-  SilverStripe\Security\PermissionCheckboxSetField:
-    AssignedTo: 'додељено "{title}"'
-    FromGroup: 'наслеђено од групе "{title}"'
-    FromRole: 'наслеђено од улоге "{title}"'
-    FromRoleOnGroup: 'наслеђено из улоге "{roletitle}" за групу "{grouptitle}"'
-  SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: 'Може примењивати само администратор'
-    Title: Наслов
-    PLURALNAME: Улоге
-    SINGULARNAME: Улога
-    belongs_many_many_Groups: Групе
-    db_OnlyAdminCanApply: 'Може примењивати само администратор'
-    db_Title: Наслов
-  SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Није могуће доделити кôд  "{code}" са привилегованим дозволама (захтева Администраторски приступ)'
-    SINGULARNAME: 'Кôд улоге за дозволе'
-    has_one_Role: Улога
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Немате дозволу за приступ овој страни. Уколико имате други налог којим можете да приступите овој страни, пријавите се.'
-    BUTTONSEND: 'Пошаљи ми линк за ресетовање лозинке'
-    CHANGEPASSWORDBELOW: 'Овде можете да промените своју лозинку.'
-    CHANGEPASSWORDHEADER: 'Промени моју лозинку'
-    ENTERNEWPASSWORD: 'Унесите нову лозинку.'
-    ERRORPASSWORDPERMISSION: 'Морате да будете пријављени да бисте променили своју лозинку!'
-    LOGIN: Пријављивање
-    NOTEPAGESECURED: 'Ова страна је обезбеђена. Унесите своје податке и ми ћемо вам послати садржај.'
-    NOTERESETPASSWORD: 'Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку'
-    LOGOUT: Одјава
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Димензије
-    EDIT: Измени
-    EDITINFO: 'Измени ову датотеку'
-    REMOVE: Уклони
-  SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Променили сте своју лозинку за '
-    HELLO: Здраво
-  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
-    HELLO: Здраво
-    TEXT1: 'Ево га Ваш'
-    TEXT2: 'линк за ресетовање лозинке'
-    TEXT3: за
-  SilverStripe\Control\RequestProcessor:
-    INVALID_REQUEST: 'Погрешан захтев'
-  SilverStripe\Forms\FileUploadReceiver:
-    FIELDNOTSET: 'Информације о датотеци нису пронађене'
-  SilverStripe\Forms\FormScaffolder:
-    TABMAIN: Главно
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Измени
-  SilverStripe\Forms\GridField\GridFieldPaginator:
-    OF: од
-    Page: Страница
-    View: Преглед
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Преглед
-  SilverStripe\ORM\DataObject:
-    PLURALNAME: 'Објекти података'
-    SINGULARNAME: 'Објекат података'
-  SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 'Грешла при провери исправности'
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Одустани
-  SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 'Подразумевани администратор'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Одјава
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
@@ -236,5 +193,48 @@ sr:
     SINGULARNAME: 'Лозинка члана'
     db_Password: Лозинка
     has_one_Member: Члан
+  SilverStripe\Security\PasswordValidator:
+    LOWCHARSTRENGTH: 'Појачајте лозинку додавањем неких од следећих знакова: {chars}'
+    PREVPASSWORD: 'Већ сте користили наведену лозинку у прошлости. Стога, изаберите другу лозинку'
+    TOOSHORT: 'Лозинка је прекратка. Лозинка мора садржати бар {minimum} знакова'
+  SilverStripe\Security\Permission:
+    AdminGroup: Администратор
+    CMS_ACCESS_CATEGORY: 'Приступ CMS-у'
+    CONTENT_CATEGORY: 'Дозволе за садржај'
+    FULLADMINRIGHTS: 'Пуна административна права'
+    FULLADMINRIGHTS_HELP: 'Надјачава све друге додељене дозволе.'
+    PERMISSIONS_CATEGORY: 'Улоге и дозволе за приступ'
+    PLURALNAME: Дозволе
+    SINGULARNAME: Дозвола
+    UserPermissionsIntro: 'Додавањем овог корисника у групу биће прилагођена и његова права приступа. Подробнија објашњења о правима приступа за појединачне групе можете пронаћи у секцији "Групе".'
+    has_one_Group: Група
+  SilverStripe\Security\PermissionCheckboxSetField:
+    AssignedTo: 'додељено "{title}"'
+    FromGroup: 'наслеђено од групе "{title}"'
+    FromRole: 'наслеђено од улоге "{title}"'
+    FromRoleOnGroup: 'наслеђено из улоге "{roletitle}" за групу "{grouptitle}"'
+  SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 'Може примењивати само администратор'
+    PLURALNAME: Улоге
+    SINGULARNAME: Улога
+    Title: Наслов
+    belongs_many_many_Groups: Групе
+    db_OnlyAdminCanApply: 'Може примењивати само администратор'
+    db_Title: Наслов
+  SilverStripe\Security\PermissionRoleCode:
+    PermsError: 'Није могуће доделити кôд  "{code}" са привилегованим дозволама (захтева Администраторски приступ)'
+    SINGULARNAME: 'Кôд улоге за дозволе'
+    has_one_Role: Улога
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Члан
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Немате дозволу за приступ овој страни. Уколико имате други налог којим можете да приступите овој страни, пријавите се.'
+    BUTTONSEND: 'Пошаљи ми линк за ресетовање лозинке'
+    CHANGEPASSWORDBELOW: 'Овде можете да промените своју лозинку.'
+    CHANGEPASSWORDHEADER: 'Промени моју лозинку'
+    ENTERNEWPASSWORD: 'Унесите нову лозинку.'
+    ERRORPASSWORDPERMISSION: 'Морате да будете пријављени да бисте променили своју лозинку!'
+    LOGIN: Пријављивање
+    LOGOUT: Одјава
+    NOTEPAGESECURED: 'Ова страна је обезбеђена. Унесите своје податке и ми ћемо вам послати садржај.'
+    NOTERESETPASSWORD: 'Унесите своју адресу е-поште и ми ћемо вам послати линк помоћу којег можете да промените своју лозинку'

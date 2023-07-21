@@ -53,12 +53,12 @@ fi:
     BAD_METHOD: 'Tämä lomake vaatii {method} lähetyksen'
     CSRF_EXPIRED_MESSAGE: 'Istuntosi on umpeutunut. Lähetä lomake uudelleen.'
     CSRF_FAILED_MESSAGE: 'On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen.'
+    FIELDISREQUIRED: '{name} on pakollinen'
     VALIDATIONPASSWORDSDONTMATCH: 'Salasanat eivät täsmää'
     VALIDATIONPASSWORDSNOTEMPTY: 'Salasana ei voi olla tyhjä'
     VALIDATIONSTRONGPASSWORD: 'Salasanassa on oltava vähintään yksi numero ja yksi kirjain'
     VALIDATOR: Tarkistin
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
-    FIELDISREQUIRED: '{name} on pakollinen'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'esim. {format}'
     NONE: 'Ei yhtään'
@@ -118,6 +118,8 @@ fi:
     IsNullLabel: 'On nolla'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: '{name}-arvo ei voi ylittää {maxLength} merkin määrää.'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
   SilverStripe\ORM\DataObject:
@@ -176,6 +178,8 @@ fi:
     SUCCESS: Onnistui
     SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
     SUCCESS_TITLE: 'Kirjautuminen onnistui'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Peruuta
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: Oletusylläpitäjä
   SilverStripe\Security\Group:
@@ -202,13 +206,13 @@ fi:
     RolesAddEditLink: 'Lisää/muokkaa rooleja'
     SINGULARNAME: Ryhmä
     Sort: Järjestys
-    has_many_Permissions: Oikeudet
-    many_many_Members: Jäsenet
     db_Description: Kuvaus
     db_Sort: Järjestä
     db_Title: Otsikko
     has_many_Groups: Ryhmät
+    has_many_Permissions: Oikeudet
     has_one_Parent: Isäntä
+    many_many_Members: Jäsenet
     many_many_Roles: Roolit
     many_many_Subsites: Alasivut
   SilverStripe\Security\LoginAttempt:
@@ -256,16 +260,16 @@ fi:
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
     VALIDATIONADMINLOSTACCESS: 'Ylläpitäjäryhmää ei voi poistaa profiilistasi'
+    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä {identifier}.'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     YOUROLDPASSWORD: 'Vanha salasanasi'
     belongs_many_many_Groups: Ryhmät
+    db_Email: Sähköposti
+    db_FirstName: Etunimi
     db_Locale: 'Käyttöliittymän kieli'
     db_LockedOutUntil: 'Lukittuna tähän asti:'
     db_Password: Salasana
     db_PasswordExpiry: 'Salasanan viimeinen päivämäärä'
-    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä {identifier}.'
-    db_Email: Sähköposti
-    db_FirstName: Etunimi
     db_Surname: Sukunimi
     db_URLSegment: 'URL-osoitteen osio'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
@@ -352,7 +356,3 @@ fi:
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
     PASSWORDRESETSENTHEADER: 'Salasanan palautuslinkki lähetetty'
     PASSWORDRESETSENTTEXT: 'Kiitos, palautuslinkki on lähetetty käyttäjätilille asetettuun sähköpostiosoitteeseen.'
-  SilverStripe\Forms\TextField:
-    VALIDATEMAXLENGTH: '{name}-arvo ei voi ylittää {maxLength} merkin määrää.'
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Peruuta

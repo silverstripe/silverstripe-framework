@@ -1,33 +1,54 @@
 zh:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: 尺寸
+    EDIT: 编辑
+    EDITINFO: 编辑该文件
+    REMOVE: 移除
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 您的密码已更改为：
+    HELLO: 您好
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: 您好
+    TEXT1: 这是您的
+    TEXT2: 密码重设链接
+    TEXT3: 为
+  SilverStripe\Control\RequestProcessor:
+    INVALID_REQUEST: 无效请求
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 不是
     YESANSWER: 是
+  SilverStripe\Forms\CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 无可用选项
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: '密码长度必须至少 {min} 个字符。'
     BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
     MAXIMUM: '密码长度必须至多 {max} 个字符。'
     SHOWONCLICKTITLE: 更改密码
   SilverStripe\Forms\DateField:
+    NOTSET: 未设置
+    TODAY: 今天
     VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
     VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
     VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
-    NOTSET: 未设置
-    TODAY: 今天
   SilverStripe\Forms\DropdownField:
     CHOOSE: （选择）
     SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   SilverStripe\Forms\EmailField:
     VALIDATION: 请输入一个电子邮件地址
+  SilverStripe\Forms\FileUploadReceiver:
+    FIELDNOTSET: 没有找到文件信息
   SilverStripe\Forms\Form:
     CSRF_FAILED_MESSAGE: 似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。
+    FIELDISREQUIRED: '{name} 是必须的'
     VALIDATIONPASSWORDSDONTMATCH: 密码不匹配
     VALIDATIONPASSWORDSNOTEMPTY: 密码不得为空
     VALIDATIONSTRONGPASSWORD: 密码必须至少有一个数字和一个字母数字字符
     VALIDATOR: 验证器
     VALIDCURRENCY: 请输入一个有效的货币
-    FIELDISREQUIRED: '{name} 是必须的'
   SilverStripe\Forms\FormField:
     NONE: 无
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: 主要的
   SilverStripe\Forms\GridField\GridField:
     Add: '添加 {name}'
     CSVEXPORT: '导出到 CSV'
@@ -57,6 +78,14 @@ zh:
     Deleted: '已删除的 {type} {name}'
     Save: 保存
     Saved: '已保存 {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: 编辑
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    OF: 的
+    Page: 页面
+    View: 查看
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: 查看
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 金额
     FIELDLABELCURRENCY: 货币
@@ -64,8 +93,13 @@ zh:
     IsNullLabel: 为空
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
+  SilverStripe\Forms\TextField:
+    VALIDATEMAXLENGTH: '{name} 的长度必须至多{maxLength} 个字符。'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 数据对象
+    SINGULARNAME: 数据对象
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: 任何
     NOANSWER: 不是
@@ -78,6 +112,8 @@ zh:
     ANY: 任何
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
+  SilverStripe\ORM\ValidationException:
+    DEFAULT_ERROR: 验证错误
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 请输入一个用户名和密码。
     ERRORNOTADMIN: 那个用户不是一名管理员。
@@ -88,41 +124,45 @@ zh:
     INVALIDUSER: '<p>用户已无效。 <a target="_top" href="{link}">请在此继续重新进行身份验证</a>。</ p>'
     SUCCESS: 成功
     SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: 取消
+  SilverStripe\Security\DefaultAdminService:
+    DefaultAdminFirstname: 默认管理员
   SilverStripe\Security\Group:
     AddRole: 在这个小组中添加一个角色
     Code: 小组代码
     DefaultGroupTitleAdministrators: 管理员
     DefaultGroupTitleContentAuthors: 内容作者
     Description: 描述
+    GROUPNAME: 小组名称
     GroupReminder: 如果您选择了某父组，该组别将会承担起所有功能角色
     HierarchyPermsError: '无法为父组 "{group}" 分配特权权限（要求具备 ADMIN 访问）'
     Locked: 锁定？
-    NoRoles: 没有找到角色
-    Parent: 父组
-    RolesAddEditLink: 管理角色
-    Sort: 排序
-    has_many_Permissions: 权限
-    many_many_Members: 成员
-    GROUPNAME: 小组名称
     MEMBERS: 成员
     NEWGROUP: 新的小组
+    NoRoles: 没有找到角色
     PERMISSIONS: 权限
     PLURALNAME: 群组
+    Parent: 父组
     ROLES: 角色
     ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
+    RolesAddEditLink: 管理角色
     SINGULARNAME: 小组
+    Sort: 排序
     db_Description: 描述
     db_Title: 题目
     has_many_Groups: 群组
+    has_many_Permissions: 权限
     has_one_Parent: 父
+    many_many_Members: 成员
     many_many_Roles: 角色
     many_many_Subsites: 多个子网站
   SilverStripe\Security\LoginAttempt:
-    IP: 'IP 地址'
-    Status: 状态
     Email: 电子邮件地址
+    IP: 'IP 地址'
     PLURALNAME: 登录尝试
     SINGULARNAME: 登录尝试
+    Status: 状态
     db_Status: 状态
     has_one_Member: 成员
   SilverStripe\Security\Member:
@@ -130,9 +170,11 @@ zh:
     BUTTONCHANGEPASSWORD: 更改密码
     BUTTONLOGIN: 登录
     BUTTONLOGINOTHER: 以不同身份登录
+    BUTTONLOGOUT: 登出
     BUTTONLOSTPASSWORD: 我丢失了密码
     CONFIRMNEWPASSWORD: 确认新密码
     CONFIRMPASSWORD: 确认密码
+    EDIT_PASSWORD: 新密码
     EMAIL: 电子邮件
     EMPTYNEWPASSWORD: 新密码不能为空，请重试
     ENTEREMAIL: 请输入电子邮件地址以获取密码重置链接
@@ -146,108 +188,20 @@ zh:
     NEWPASSWORD: 新密码
     PASSWORD: 密码
     PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
+    PLURALNAME: 成员
+    SINGULARNAME: 成员
     SUBJECTPASSWORDCHANGED: 您的密码已更改
     SUBJECTPASSWORDRESET: 您的密码重设链接
     SURNAME: 姓氏
     ValidationIdentifierFailed: '不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}'
     YOUROLDPASSWORD: 您的旧密码
     belongs_many_many_Groups: 群组
+    db_Email: 电子邮件
     db_Locale: 界面区域设置
     db_LockedOutUntil: 保持锁定直到
     db_Password: 密码
     db_PasswordExpiry: 密码失效日期
-    BUTTONLOGOUT: 登出
-    EDIT_PASSWORD: 新密码
-    PLURALNAME: 成员
-    SINGULARNAME: 成员
-    db_Email: 电子邮件
     db_Surname: 姓氏
-  SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
-    PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
-    TOOSHORT: '密码长度过短，必须为 {minimum} 个字符或更长'
-  SilverStripe\Security\Permission:
-    AdminGroup: 管理员
-    CONTENT_CATEGORY: 内容权限
-    FULLADMINRIGHTS: 完全管理权
-    FULLADMINRIGHTS_HELP: 包含并支配其它所有已分配权限
-    UserPermissionsIntro: 把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。
-    CMS_ACCESS_CATEGORY: 'CMS 访问'
-    PERMISSIONS_CATEGORY: 角色及访问权限
-    PLURALNAME: 权限
-    SINGULARNAME: 权限
-    db_Type: 类型
-    has_one_Group: 小组
-  SilverStripe\Security\PermissionCheckboxSetField:
-    AssignedTo: '已分配至 "{title}"'
-    FromGroup: '从小组 "{title}"继承'
-    FromRole: '从角色 "{title}"继承'
-    FromRoleOnGroup: '从 "{roletitle}" 小组的 "{grouptitle}" 角色继承'
-  SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: 只有管理员可以应用
-    Title: 标题
-    PLURALNAME: 角色
-    SINGULARNAME: 角色
-    belongs_many_many_Groups: 群组
-    db_OnlyAdminCanApply: 只有管理员可以应用
-    db_Title: 题目
-  SilverStripe\Security\PermissionRoleCode:
-    PermsError: '无法为代码 "{code}"分配特权权限（要求具备 ADMIN 访问）'
-    PLURALNAME: 权限角色代码
-    SINGULARNAME: 权限角色代码
-    has_one_Role: 角色
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。
-    BUTTONSEND: 将密码重设链接发送给我
-    CHANGEPASSWORDBELOW: 您可以在下面更改您的密码。
-    CHANGEPASSWORDHEADER: 更改您的密码
-    ENTERNEWPASSWORD: 请输入一个新密码。
-    ERRORPASSWORDPERMISSION: 您必须登录才能更改您的密码！
-    LOGIN: 登录
-    LOSTPASSWORDHEADER: 忘记密码
-    NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
-    NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码
-    LOGOUT: 登出
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: 尺寸
-    EDIT: 编辑
-    EDITINFO: 编辑该文件
-    REMOVE: 移除
-  SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 您的密码已更改为：
-    HELLO: 您好
-  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
-    HELLO: 您好
-    TEXT1: 这是您的
-    TEXT2: 密码重设链接
-    TEXT3: 为
-  SilverStripe\Control\RequestProcessor:
-    INVALID_REQUEST: 无效请求
-  SilverStripe\Forms\CheckboxSetField_ss:
-    NOOPTIONSAVAILABLE: 无可用选项
-  SilverStripe\Forms\FileUploadReceiver:
-    FIELDNOTSET: 没有找到文件信息
-  SilverStripe\Forms\FormScaffolder:
-    TABMAIN: 主要的
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: 编辑
-  SilverStripe\Forms\GridField\GridFieldPaginator:
-    OF: 的
-    Page: 页面
-    View: 查看
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: 查看
-  SilverStripe\Forms\TextField:
-    VALIDATEMAXLENGTH: '{name} 的长度必须至多{maxLength} 个字符。'
-  SilverStripe\ORM\DataObject:
-    PLURALNAME: 数据对象
-    SINGULARNAME: 数据对象
-  SilverStripe\ORM\ValidationException:
-    DEFAULT_ERROR: 验证错误
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: 取消
-  SilverStripe\Security\DefaultAdminService:
-    DefaultAdminFirstname: 默认管理员
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: 登出
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
@@ -258,5 +212,51 @@ zh:
     SINGULARNAME: 成员密码
     db_Password: 密码
     has_one_Member: 成员
+  SilverStripe\Security\PasswordValidator:
+    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
+    PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
+    TOOSHORT: '密码长度过短，必须为 {minimum} 个字符或更长'
+  SilverStripe\Security\Permission:
+    AdminGroup: 管理员
+    CMS_ACCESS_CATEGORY: 'CMS 访问'
+    CONTENT_CATEGORY: 内容权限
+    FULLADMINRIGHTS: 完全管理权
+    FULLADMINRIGHTS_HELP: 包含并支配其它所有已分配权限
+    PERMISSIONS_CATEGORY: 角色及访问权限
+    PLURALNAME: 权限
+    SINGULARNAME: 权限
+    UserPermissionsIntro: 把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。
+    db_Type: 类型
+    has_one_Group: 小组
+  SilverStripe\Security\PermissionCheckboxSetField:
+    AssignedTo: '已分配至 "{title}"'
+    FromGroup: '从小组 "{title}"继承'
+    FromRole: '从角色 "{title}"继承'
+    FromRoleOnGroup: '从 "{roletitle}" 小组的 "{grouptitle}" 角色继承'
+  SilverStripe\Security\PermissionRole:
+    OnlyAdminCanApply: 只有管理员可以应用
+    PLURALNAME: 角色
+    SINGULARNAME: 角色
+    Title: 标题
+    belongs_many_many_Groups: 群组
+    db_OnlyAdminCanApply: 只有管理员可以应用
+    db_Title: 题目
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 权限角色代码
+    PermsError: '无法为代码 "{code}"分配特权权限（要求具备 ADMIN 访问）'
+    SINGULARNAME: 权限角色代码
+    has_one_Role: 角色
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: 成员
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。
+    BUTTONSEND: 将密码重设链接发送给我
+    CHANGEPASSWORDBELOW: 您可以在下面更改您的密码。
+    CHANGEPASSWORDHEADER: 更改您的密码
+    ENTERNEWPASSWORD: 请输入一个新密码。
+    ERRORPASSWORDPERMISSION: 您必须登录才能更改您的密码！
+    LOGIN: 登录
+    LOGOUT: 登出
+    LOSTPASSWORDHEADER: 忘记密码
+    NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
+    NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码

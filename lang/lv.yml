@@ -1,107 +1,4 @@
 lv:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Mainīt paroli'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Izvēlieties)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Paroles nedrīkst būt tukšas'
-    VALIDATOR: Validators
-  SilverStripe\Forms\FormField:
-    NONE: neviens
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Eksportēt uz CSV'
-    Print: Drukāt
-  SilverStripe\Forms\MoneyField:
-    FIELDLABELAMOUNT: Skaits
-    FIELDLABELCURRENCY: Valūta
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Ir Null'
-  SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Jebkurš
-  SilverStripe\ORM\FieldType\DBEnum:
-    ANY: Jebkuru
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
-    ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
-    ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
-  SilverStripe\Security\Group:
-    Code: 'Grupas kods'
-    DefaultGroupTitleAdministrators: Administratori
-    DefaultGroupTitleContentAuthors: 'Satura autori'
-    Description: Apraksts
-    Locked: 'Slēgt?'
-    Parent: 'Grupas vecāks'
-    Sort: 'Kārtošanas secība'
-    has_many_Permissions: Atļaujas
-    many_many_Members: Dalībnieki
-    GROUPNAME: 'Grupas nosaukums'
-    MEMBERS: Dalībnieki
-    PERMISSIONS: Atļaujas
-    PLURALNAME: Grupas
-    ROLES: Lomas
-    ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
-    db_Description: Apraksts
-    db_Title: Virsraksts
-    has_many_Groups: Grupas
-    many_many_Roles: Lomas
-  SilverStripe\Security\LoginAttempt:
-    IP: 'IP Adrese'
-    Status: Statuss
-    Email: 'E-pasta adrese'
-    db_Status: Statuss
-    has_one_Member: Dalībnieks
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Mainīt paroli'
-    BUTTONLOGIN: PIeslēgties
-    BUTTONLOGINOTHER: 'Pieslēgties ar citu kontu'
-    BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
-    CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
-    CONFIRMPASSWORD: 'Apstiprināt paroli'
-    EMAIL: E-pasts
-    EMPTYNEWPASSWORD: 'Jaunā parole nedrīkst būt tukša, lūdzu mēģiniet vēlreiz'
-    ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'
-    ERRORNEWPASSWORD: 'Jaunā parole ir ievadīta savādāk, lūdzu mēģiniet vēlreiz'
-    ERRORPASSWORDNOTMATCH: 'Jūsu pašreizējā parole nesakrīt, lūdzu mēģiniet vēlreiz'
-    FIRSTNAME: Vārds
-    INTERFACELANG: 'Saskarnes Valoda'
-    NEWPASSWORD: 'Jaunā parole'
-    PASSWORD: Parole
-    SUBJECTPASSWORDCHANGED: 'Jūsu parole tika nomainīta'
-    SUBJECTPASSWORDRESET: 'Jūsu paroles atiestatīšanas saite '
-    SURNAME: Uzvārds
-    YOUROLDPASSWORD: 'Jūsu vecā parole'
-    belongs_many_many_Groups: Grupas
-    db_Locale: 'Saskarnes lokalizācija'
-    db_LockedOutUntil: 'Izslēgts līdz'
-    db_Password: Parole
-    db_PasswordExpiry: 'Paroles Termiņa Izbeigšanās Datums'
-    BUTTONLOGOUT: Atslēgties
-    EDIT_PASSWORD: 'Jaunā parole'
-    PLURALNAME: Dalībnieki
-    SINGULARNAME: Dalībnieks
-    db_Email: E-pasts
-    db_Surname: Uzvārds
-  SilverStripe\Security\Permission:
-    AdminGroup: Administrators
-    CONTENT_CATEGORY: 'Satura atļaujas'
-    FULLADMINRIGHTS: 'Pilnas administratora tiesības'
-    FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
-    PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
-    PLURALNAME: Atļaujas
-  SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'mantots no lomas "{roletitle}" grupā "{grouptitle}"'
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat atkārtoti pieslēgties. '
-    BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'
-    CHANGEPASSWORDBELOW: 'Jūs varat nomainīt savu paroli zemāk.'
-    CHANGEPASSWORDHEADER: 'Mainīt paroli'
-    ENTERNEWPASSWORD: 'Lūdzu ievadiet jaunu paroli.'
-    ERRORPASSWORDPERMISSION: 'Lai mainītu paroli, Jums ir jāpieslēdzas!'
-    LOGIN: Pieslēgties
-    NOTEPAGESECURED: 'Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates'
-    NOTERESETPASSWORD: 'Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli.'
-    LOGOUT: Atslēgties
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Izmēri
     EDIT: Edit
@@ -113,11 +10,24 @@ lv:
     TEXT1: 'Šeit ir Jūsu'
     TEXT2: 'paroles atiestatīšanas saite'
     TEXT3: ' '
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Mainīt paroli'
   SilverStripe\Forms\DateField:
     NOTSET: 'nav uzstādīts'
     TODAY: šodien
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Izvēlieties)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Paroles nesakrīt'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Paroles nedrīkst būt tukšas'
+    VALIDATOR: Validators
+  SilverStripe\Forms\FormField:
+    NONE: neviens
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Sākums
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Eksportēt uz CSV'
+    Print: Drukāt
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: 'Dzēst no publicētās vietnes'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
@@ -130,20 +40,110 @@ lv:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\MoneyField:
+    FIELDLABELAMOUNT: Skaits
+    FIELDLABELCURRENCY: Valūta
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Ir Null'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Datu Objekti'
     SINGULARNAME: 'Datu Objekts'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Jebkurš
+  SilverStripe\ORM\FieldType\DBEnum:
+    ANY: Jebkuru
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Lūdz ievadiet lietotājvārdu un paroli.'
+    ERRORNOTADMIN: 'Šis lietotājs nav administrators.'
+    ERRORNOTREC: 'Šis lietotājvārds / parole nav atpazīts'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Noklusējuma administrators'
+  SilverStripe\Security\Group:
+    Code: 'Grupas kods'
+    DefaultGroupTitleAdministrators: Administratori
+    DefaultGroupTitleContentAuthors: 'Satura autori'
+    Description: Apraksts
+    GROUPNAME: 'Grupas nosaukums'
+    Locked: 'Slēgt?'
+    MEMBERS: Dalībnieki
+    PERMISSIONS: Atļaujas
+    PLURALNAME: Grupas
+    Parent: 'Grupas vecāks'
+    ROLES: Lomas
+    ROLESDESCRIPTION: 'Šī sadaļa jums ļauj pievienot šai grupai lomas. Lomas ir loģiskas atļauju grupas, kuras var labot Lomas cilnē'
+    Sort: 'Kārtošanas secība'
+    db_Description: Apraksts
+    db_Title: Virsraksts
+    has_many_Groups: Grupas
+    has_many_Permissions: Atļaujas
+    many_many_Members: Dalībnieki
+    many_many_Roles: Lomas
+  SilverStripe\Security\LoginAttempt:
+    Email: 'E-pasta adrese'
+    IP: 'IP Adrese'
+    Status: Statuss
+    db_Status: Statuss
+    has_one_Member: Dalībnieks
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Mainīt paroli'
+    BUTTONLOGIN: PIeslēgties
+    BUTTONLOGINOTHER: 'Pieslēgties ar citu kontu'
+    BUTTONLOGOUT: Atslēgties
+    BUTTONLOSTPASSWORD: 'Aizmirsāt paroli?'
+    CONFIRMNEWPASSWORD: 'Apstiprināt jauno paroli'
+    CONFIRMPASSWORD: 'Apstiprināt paroli'
+    EDIT_PASSWORD: 'Jaunā parole'
+    EMAIL: E-pasts
+    EMPTYNEWPASSWORD: 'Jaunā parole nedrīkst būt tukša, lūdzu mēģiniet vēlreiz'
+    ENTEREMAIL: 'Lai iegūtu paroles atiestatīšanas saiti, lūdzu ievadiet e-pasta adresi.'
+    ERRORNEWPASSWORD: 'Jaunā parole ir ievadīta savādāk, lūdzu mēģiniet vēlreiz'
+    ERRORPASSWORDNOTMATCH: 'Jūsu pašreizējā parole nesakrīt, lūdzu mēģiniet vēlreiz'
+    FIRSTNAME: Vārds
+    INTERFACELANG: 'Saskarnes Valoda'
+    NEWPASSWORD: 'Jaunā parole'
+    PASSWORD: Parole
+    PLURALNAME: Dalībnieki
+    SINGULARNAME: Dalībnieks
+    SUBJECTPASSWORDCHANGED: 'Jūsu parole tika nomainīta'
+    SUBJECTPASSWORDRESET: 'Jūsu paroles atiestatīšanas saite '
+    SURNAME: Uzvārds
+    YOUROLDPASSWORD: 'Jūsu vecā parole'
+    belongs_many_many_Groups: Grupas
+    db_Email: E-pasts
+    db_Locale: 'Saskarnes lokalizācija'
+    db_LockedOutUntil: 'Izslēgts līdz'
+    db_Password: Parole
+    db_PasswordExpiry: 'Paroles Termiņa Izbeigšanās Datums'
+    db_Surname: Uzvārds
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Atslēgties
+  SilverStripe\Security\MemberPassword:
+    db_Password: Parole
+    has_one_Member: Dalībnieks
+  SilverStripe\Security\Permission:
+    AdminGroup: Administrators
+    CONTENT_CATEGORY: 'Satura atļaujas'
+    FULLADMINRIGHTS: 'Pilnas administratora tiesības'
+    FULLADMINRIGHTS_HELP: 'Ietver un pārraksta visas pārējās piesaistītās atļaujas'
+    PERMISSIONS_CATEGORY: 'Lomu un piekļuves atļaujas'
+    PLURALNAME: Atļaujas
+  SilverStripe\Security\PermissionCheckboxSetField:
+    FromRoleOnGroup: 'mantots no lomas "{roletitle}" grupā "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Lomas
     Title: Virsraksts
     belongs_many_many_Groups: Grupas
     db_Title: Virsraksts
-  SilverStripe\Security\MemberPassword:
-    db_Password: Parole
-    has_one_Member: Dalībnieks
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Dalībnieks
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Jums nav piekļuves tiesību šai lapai. Ja jums ir izveidots cits konts ar kuru ir iespējams piekļūt šai lapai, tad jūs varat atkārtoti pieslēgties. '
+    BUTTONSEND: 'Nosūtīt man paroles atiestatīšanas saiti'
+    CHANGEPASSWORDBELOW: 'Jūs varat nomainīt savu paroli zemāk.'
+    CHANGEPASSWORDHEADER: 'Mainīt paroli'
+    ENTERNEWPASSWORD: 'Lūdzu ievadiet jaunu paroli.'
+    ERRORPASSWORDPERMISSION: 'Lai mainītu paroli, Jums ir jāpieslēdzas!'
+    LOGIN: Pieslēgties
+    LOGOUT: Atslēgties
+    NOTEPAGESECURED: 'Šī lapa ir pasargāta. Ievadiet savus autorizācijas datus zemāk un mēs jūs uzreiz nosūtīsim pie lapas apskates'
+    NOTERESETPASSWORD: 'Lūdzu ievadiet savu e-pasta adresi un mēs nosūtīsim jums saiti, kas atiestatīs jūsu paroli.'
