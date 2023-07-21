@@ -25,8 +25,12 @@ de_DE:
     ATLEAST: 'Passwörter müssen mindestens {min} Zeichen lang sein.'
     BETWEEN: 'Passwörter müssen {min} bis {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
+  SilverStripe\Forms\DateField:
+    TODAY: heute
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Auswählen)
+  SilverStripe\Forms\Form:
+    FIELDISREQUIRED: '{name} ist ein Pflichtfeld'
   SilverStripe\Forms\GridField\GridField:
     Add: '{name} hinzufügen'
     CSVEXPORT: 'Als CSV exportieren'
@@ -39,11 +43,17 @@ de_DE:
     Delete: Löschen
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Abbrechen
-    Save: Speichern
     Delete: Löschen
+    Save: Speichern
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Bearbeiten
+  SilverStripe\Forms\GridField\GridFieldFilterHeader:
+    Search: 'Suche "{name}"'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Seite
     View: Anzeigen
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: Anzeigen
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Betrag
     FIELDLABELCURRENCY: Währung
@@ -87,6 +97,8 @@ de_DE:
     PASSWORDEXPIRED: '<p>Ihr Passwort ist abgelaufen. <a target="_top" href="{link}">Bitte wählen Sie ein neues Passwort.</a></p>'
   SilverStripe\Security\CMSSecurity:
     SUCCESS_TITLE: 'Login erfolgreich'
+  SilverStripe\Security\Confirmation\Form:
+    REFUSE: Abbrechen
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Standard Administrator'
   SilverStripe\Security\Group:
@@ -97,18 +109,18 @@ de_DE:
     MEMBERS: Mitglieder
     NEWGROUP: 'Neue Gruppe'
     NoRoles: 'Keine Rollen gefunden'
+    PERMISSIONS: Rechte
     PLURALNAME: Gruppen
     PLURALS:
       one: 'Eine Gruppe'
       other: '{count} Gruppen'
     SINGULARNAME: Gruppe
     Sort: Sortierreihenfolge
-    has_many_Permissions: Rechte
-    many_many_Members: Mitglieder
-    PERMISSIONS: Rechte
     db_Description: Beschreibung
     db_Title: Titel
     has_many_Groups: Grouppen
+    has_many_Permissions: Rechte
+    many_many_Members: Mitglieder
   SilverStripe\Security\LoginAttempt:
     Email: 'E-Mail Adresse'
     EmailHashed: 'E-Mail Adresse (gehasht)'
@@ -147,38 +159,26 @@ de_DE:
     SURNAME: Nachname
     YOUROLDPASSWORD: 'Ihr altes Passwort'
     belongs_many_many_Groups: Grouppen
-    db_Password: Passwort
     db_Email: E-Mail
+    db_Password: Passwort
     db_Surname: Nachname
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'
     BUTTONLOGOUT: Ausloggen
+  SilverStripe\Security\MemberPassword:
+    db_Password: Passwort
+    has_one_Member: Mitglied
   SilverStripe\Security\Permission:
     AdminGroup: Administrator
     PLURALNAME: Rechte
     db_Type: Typ
     has_one_Group: Gruppe
-  SilverStripe\Security\Security:
-    LOGIN: Einloggen
-    LOGOUT: Ausloggen
-  SilverStripe\Forms\DateField:
-    TODAY: heute
-  SilverStripe\Forms\Form:
-    FIELDISREQUIRED: '{name} ist ein Pflichtfeld'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Bearbeiten
-  SilverStripe\Forms\GridField\GridFieldFilterHeader:
-    Search: 'Suche "{name}"'
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: Anzeigen
-  SilverStripe\Security\Confirmation\Form:
-    REFUSE: Abbrechen
   SilverStripe\Security\PermissionRole:
     Title: Titel
     belongs_many_many_Groups: Grouppen
     db_Title: Titel
-  SilverStripe\Security\MemberPassword:
-    db_Password: Passwort
-    has_one_Member: Mitglied
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Mitglied
+  SilverStripe\Security\Security:
+    LOGIN: Einloggen
+    LOGOUT: Ausloggen

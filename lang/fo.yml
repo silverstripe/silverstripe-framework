@@ -1,75 +1,4 @@
 fo:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Broyt loyniorð'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Áset)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
-  SilverStripe\Forms\FormField:
-    NONE: einki
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'Útles til CSV'
-    Print: Prenta
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
-    ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
-    ERRORNOTREC: 'Brúkaranavn / loyniorð er skeivt'
-  SilverStripe\Security\Group:
-    Code: 'Bólka kota'
-    Description: Frágreiðing
-    Locked: 'Læst?'
-    Parent: Yvirbólkur
-    Sort: 'Raða eftir'
-    has_many_Permissions: Loyvir
-    many_many_Members: Limir
-    GROUPNAME: Bólkaheiti
-    MEMBERS: Limir
-    NEWGROUP: 'Nýggjur bólkur'
-    PERMISSIONS: Loyvir
-    PLURALNAME: Bólkur
-    db_Description: Frágreiðing
-    db_Title: Heiti
-    has_many_Groups: Bólkur
-  SilverStripe\Security\LoginAttempt:
-    IP: 'IP adressa'
-    Status: Støða
-    Email: Teldupostur
-    db_Status: Støða
-    has_one_Member: Limur
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
-    BUTTONLOGIN: Innrita
-    BUTTONLOGINOTHER: 'Innrita sum onkur annar'
-    BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
-    CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
-    CONFIRMPASSWORD: 'Váttað loyniorð'
-    EMAIL: Teldupostur
-    ERRORPASSWORDNOTMATCH: 'Títt núverandi loyniorð samsvarar ikki, vinarliga royn aftur'
-    FIRSTNAME: Fornavn
-    INTERFACELANG: 'Mál á markamóti'
-    NEWPASSWORD: 'Nýtt loyniorð'
-    PASSWORD: Loyniorð
-    SUBJECTPASSWORDCHANGED: 'Títt loyniorð er nú broytt'
-    SUBJECTPASSWORDRESET: 'Leinka til at nullstilla títt loyniorð'
-    SURNAME: Eftirnavn
-    YOUROLDPASSWORD: 'Tygara gamla loyniorð'
-    belongs_many_many_Groups: Bólkur
-    db_LockedOutUntil: 'Útihýstur inn til'
-    db_Password: Loyniorð
-    db_PasswordExpiry: 'Loyniorð gongur út'
-    EDIT_PASSWORD: 'Nýtt loyniorð'
-    PLURALNAME: Limir
-    SINGULARNAME: Limur
-    db_Email: Teldupostur
-    db_Surname: Eftirnavn
-  SilverStripe\Security\Security:
-    BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
-    CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
-    CHANGEPASSWORDHEADER: 'Broyt títt loyniorð'
-    ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
-    ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
-    LOGIN: Innrita
   SilverStripe\AssetAdmin\Forms\UploadField:
     EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
@@ -78,11 +7,23 @@ fo:
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Hey
     TEXT1: 'Her er títt'
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Broyt loyniorð'
   SilverStripe\Forms\DateField:
     NOTSET: 'ikki ásett'
     TODAY: 'í dag'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Áset)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Loyniorð samsvara ikki'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Loyniorð kunnu ikki verða tóm'
+  SilverStripe\Forms\FormField:
+    NONE: einki
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: Alment
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'Útles til CSV'
+    Print: Prenta
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Strika
   SilverStripe\Forms\GridField\GridFieldDetailForm:
@@ -98,14 +39,73 @@ fo:
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Dáta eindir'
     SINGULARNAME: 'Dáta eind'
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Vinarliga inntøppa eitt brúkaranavn og loyniorð.'
+    ERRORNOTADMIN: 'Hasin brúkarin er ikki ein fyrisitari.'
+    ERRORNOTREC: 'Brúkaranavn / loyniorð er skeivt'
+  SilverStripe\Security\Group:
+    Code: 'Bólka kota'
+    Description: Frágreiðing
+    GROUPNAME: Bólkaheiti
+    Locked: 'Læst?'
+    MEMBERS: Limir
+    NEWGROUP: 'Nýggjur bólkur'
+    PERMISSIONS: Loyvir
+    PLURALNAME: Bólkur
+    Parent: Yvirbólkur
+    Sort: 'Raða eftir'
+    db_Description: Frágreiðing
+    db_Title: Heiti
+    has_many_Groups: Bólkur
+    has_many_Permissions: Loyvir
+    many_many_Members: Limir
+  SilverStripe\Security\LoginAttempt:
+    Email: Teldupostur
+    IP: 'IP adressa'
+    Status: Støða
+    db_Status: Støða
+    has_one_Member: Limur
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Broyt loyniorð'
+    BUTTONLOGIN: Innrita
+    BUTTONLOGINOTHER: 'Innrita sum onkur annar'
+    BUTTONLOSTPASSWORD: 'Eg havi gloymt mítt loyniorð'
+    CONFIRMNEWPASSWORD: 'Váttað nýtt loyniorð'
+    CONFIRMPASSWORD: 'Váttað loyniorð'
+    EDIT_PASSWORD: 'Nýtt loyniorð'
+    EMAIL: Teldupostur
+    ERRORPASSWORDNOTMATCH: 'Títt núverandi loyniorð samsvarar ikki, vinarliga royn aftur'
+    FIRSTNAME: Fornavn
+    INTERFACELANG: 'Mál á markamóti'
+    NEWPASSWORD: 'Nýtt loyniorð'
+    PASSWORD: Loyniorð
+    PLURALNAME: Limir
+    SINGULARNAME: Limur
+    SUBJECTPASSWORDCHANGED: 'Títt loyniorð er nú broytt'
+    SUBJECTPASSWORDRESET: 'Leinka til at nullstilla títt loyniorð'
+    SURNAME: Eftirnavn
+    YOUROLDPASSWORD: 'Tygara gamla loyniorð'
+    belongs_many_many_Groups: Bólkur
+    db_Email: Teldupostur
+    db_LockedOutUntil: 'Útihýstur inn til'
+    db_Password: Loyniorð
+    db_PasswordExpiry: 'Loyniorð gongur út'
+    db_Surname: Eftirnavn
+  SilverStripe\Security\MemberPassword:
+    db_Password: Loyniorð
+    has_one_Member: Limur
   SilverStripe\Security\Permission:
     PLURALNAME: Loyvir
   SilverStripe\Security\PermissionRole:
     Title: Heiti
     belongs_many_many_Groups: Bólkur
     db_Title: Heiti
-  SilverStripe\Security\MemberPassword:
-    db_Password: Loyniorð
-    has_one_Member: Limur
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Limur
+  SilverStripe\Security\Security:
+    BUTTONSEND: 'Send mær leinkuna til at nullstilla mítt loyniorð'
+    CHANGEPASSWORDBELOW: 'Tú kanst broyta loyniorðið niðanfyri.'
+    CHANGEPASSWORDHEADER: 'Broyt títt loyniorð'
+    ENTERNEWPASSWORD: 'Vinarliga inntøppa eitt nýtt loyniorð'
+    ERRORPASSWORDPERMISSION: 'Tú má verða innritað/ur fyri at kunna broyta títt loyniorð!'
+    LOGIN: Innrita

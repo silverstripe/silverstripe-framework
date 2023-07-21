@@ -1,9 +1,28 @@
 ne:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    Dimensions: आयाम
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
+    HELLO: हाई
+  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
+    HELLO: हाई
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'पासओड परिवर्तन गर्नुहोस् '
   SilverStripe\Forms\DropdownField:
     CHOOSE: (छान्)
   SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
     VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
+  SilverStripe\Forms\FormScaffolder:
+    TABMAIN: मुख्य
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
+  SilverStripe\Forms\GridField\GridFieldPaginator:
+    Page: पेज
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 'कृपया एउता प्रयोगकता नाम र पासओड हल्नुहोस्'
     ERRORNOTADMIN: 'यो प्रयोगकता मुख्य प्रयोगकता होइन'
@@ -15,6 +34,7 @@ ne:
     BUTTONLOSTPASSWORD: 'मैले मेरो पासओड हराएँ'
     CONFIRMNEWPASSWORD: 'नयाँ पासओड Confirm गर्नुहोस् '
     CONFIRMPASSWORD: 'Confirm पासओड'
+    EDIT_PASSWORD: 'नयाँ पासओड'
     EMAIL: इमेल
     ERRORNEWPASSWORD: 'तपाईले तपाईको नयाँ पासओड फरक लेखनुभयो, पुन प्रयास गर्नुहोल'
     ERRORPASSWORDNOTMATCH: 'पासओडहरु मिल्दैन्नन, कृपया पुन प्रयास गर्नुहोल'
@@ -26,10 +46,11 @@ ne:
     SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
     SURNAME: थर
     YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
-    EDIT_PASSWORD: 'नयाँ पासओड'
-    db_Password: पासओड
     db_Email: इमेल
+    db_Password: पासओड
     db_Surname: थर
+  SilverStripe\Security\MemberPassword:
+    db_Password: पासओड
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'तपाईंसँग भित्र जाने आधिकार छैन । यदि तपाईंसँग अरुकुनै अकाउन्ट छ जस्ले पेज भित्र जान मिल्छ, भने त्यो अकाउन्टले भित्र जानुस् ।       '
     BUTTONSEND: 'मलाई पासओड पुनर्स्थापना लिक पठाउ'
@@ -37,27 +58,6 @@ ne:
     CHANGEPASSWORDHEADER: 'पासओड परिवर्तन गर्नुहोस्  '
     ENTERNEWPASSWORD: 'कृपया नयाँ पासओड लेखनुहोस्'
     ERRORPASSWORDPERMISSION: 'तपाईंले आफ्नो पासओड परिवर्तन गर्न चाहानुहुन्छ भन्ने तपाईं भित्र जानु भएको हुनुपर्छ    ।'
+    LOGIN: 'भित्र जानुस्'
     NOTEPAGESECURED: 'त्यो पजे सुरक्षा छ । तपाईंको विवरण लेखनुहोस् अनी हामि तपाईंलाई भित्र पठाउनेछौ । '
     NOTERESETPASSWORD: 'तपाईंको ईमेल ठेगाना लेखनुहोस् र हामि तपाईंलाई पासओड पुनर्स्थापना लिक पठाउनेछौ '
-    LOGIN: 'भित्र जानुस्'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: आयाम
-    EDIT: Edit
-  SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'तपाईंले आफनो पासओड  यसका लागि परिवतन गर्नु भयो '
-    HELLO: हाई
-  SilverStripe\Control\Email\ForgotPasswordEmail_ss:
-    HELLO: हाई
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'पासओड परिवर्तन गर्नुहोस् '
-  SilverStripe\Forms\FormScaffolder:
-    TABMAIN: मुख्य
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
-  SilverStripe\Forms\GridField\GridFieldPaginator:
-    Page: पेज
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
-  SilverStripe\Security\MemberPassword:
-    db_Password: पासओड

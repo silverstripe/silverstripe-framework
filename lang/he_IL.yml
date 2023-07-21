@@ -1,71 +1,4 @@
 he_IL:
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'שינוי סיסמה'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (בחר)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
-    VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
-    ERRORNOTADMIN: 'משתמש זה אינו מנהל'
-    ERRORNOTREC: 'שם המשתמש / סיסמא לא מזוהה'
-  SilverStripe\Security\Group:
-    Code: 'קוד קבוצה'
-    Locked: 'נעול?'
-    Parent: 'קבוצת אב'
-    has_many_Permissions: הרשאות
-    many_many_Members: 'חברים רשומים'
-    MEMBERS: 'חברים רשומים'
-    NEWGROUP: 'קבוצה חדשה'
-    PERMISSIONS: הרשאות
-    PLURALNAME: קבוצות
-    db_Title: כותרת
-    has_many_Groups: קבוצות
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'שנה סיסמא'
-    BUTTONLOGIN: התחבר
-    BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
-    BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
-    CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
-    CONFIRMPASSWORD: 'אשר סיסמא'
-    EMAIL: 'דואר אלקטרוני'
-    ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
-    ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
-    FIRSTNAME: 'שם פרטי'
-    INTERFACELANG: 'שפת ממשק'
-    NEWPASSWORD: 'סיסמא חדשה'
-    PASSWORD: סיסמא
-    SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
-    SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
-    SURNAME: 'שם משפחה'
-    YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
-    belongs_many_many_Groups: קבוצות
-    db_LockedOutUntil: 'נעול עד '
-    db_PasswordExpiry: 'תאריך תפוגת סיסמא'
-    BUTTONLOGOUT: יציאה
-    EDIT_PASSWORD: 'סיסמא חדשה'
-    PLURALNAME: 'חברים רשומים'
-    SINGULARNAME: 'חבר רשום'
-    db_Password: סיסמא
-    db_Email: 'דואר אלקטרוני'
-    db_Surname: 'שם משפחה'
-  SilverStripe\Security\Permission:
-    CONTENT_CATEGORY: 'הרשאות התוכן'
-    CMS_ACCESS_CATEGORY: 'גישה ל־CMS'
-    PERMISSIONS_CATEGORY: 'תפקידים והרשאות גישה'
-    PLURALNAME: הרשאות
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
-    BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
-    CHANGEPASSWORDBELOW: 'אתה יכול לשנות את סיסמתך להלן.'
-    CHANGEPASSWORDHEADER: 'שנה את הסיסמא שלך'
-    ENTERNEWPASSWORD: 'נא הכנס סיסמא חדשה.'
-    ERRORPASSWORDPERMISSION: 'אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!'
-    NOTEPAGESECURED: 'עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד.'
-    NOTERESETPASSWORD: 'הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך'
-    LOGIN: התחבר
-    LOGOUT: יציאה
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: ממדים
     EDIT: Edit
@@ -74,6 +7,13 @@ he_IL:
     HELLO: היי
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: היי
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'שינוי סיסמה'
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (בחר)
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
+    VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: ראשי
   SilverStripe\Forms\GridField\GridField:
@@ -101,16 +41,76 @@ he_IL:
     ANY: כלשהם
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: כלשהם
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
+    ERRORNOTADMIN: 'משתמש זה אינו מנהל'
+    ERRORNOTREC: 'שם המשתמש / סיסמא לא מזוהה'
+  SilverStripe\Security\Group:
+    Code: 'קוד קבוצה'
+    Locked: 'נעול?'
+    MEMBERS: 'חברים רשומים'
+    NEWGROUP: 'קבוצה חדשה'
+    PERMISSIONS: הרשאות
+    PLURALNAME: קבוצות
+    Parent: 'קבוצת אב'
+    db_Title: כותרת
+    has_many_Groups: קבוצות
+    has_many_Permissions: הרשאות
+    many_many_Members: 'חברים רשומים'
+  SilverStripe\Security\LoginAttempt:
+    has_one_Member: 'חבר רשום'
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'שנה סיסמא'
+    BUTTONLOGIN: התחבר
+    BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
+    BUTTONLOGOUT: יציאה
+    BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
+    CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
+    CONFIRMPASSWORD: 'אשר סיסמא'
+    EDIT_PASSWORD: 'סיסמא חדשה'
+    EMAIL: 'דואר אלקטרוני'
+    ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
+    ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
+    FIRSTNAME: 'שם פרטי'
+    INTERFACELANG: 'שפת ממשק'
+    NEWPASSWORD: 'סיסמא חדשה'
+    PASSWORD: סיסמא
+    PLURALNAME: 'חברים רשומים'
+    SINGULARNAME: 'חבר רשום'
+    SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
+    SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
+    SURNAME: 'שם משפחה'
+    YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
+    belongs_many_many_Groups: קבוצות
+    db_Email: 'דואר אלקטרוני'
+    db_LockedOutUntil: 'נעול עד '
+    db_Password: סיסמא
+    db_PasswordExpiry: 'תאריך תפוגת סיסמא'
+    db_Surname: 'שם משפחה'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: יציאה
+  SilverStripe\Security\MemberPassword:
+    db_Password: סיסמא
+    has_one_Member: 'חבר רשום'
+  SilverStripe\Security\Permission:
+    CMS_ACCESS_CATEGORY: 'גישה ל־CMS'
+    CONTENT_CATEGORY: 'הרשאות התוכן'
+    PERMISSIONS_CATEGORY: 'תפקידים והרשאות גישה'
+    PLURALNAME: הרשאות
   SilverStripe\Security\PermissionRole:
     Title: כותרת
     belongs_many_many_Groups: קבוצות
     db_Title: כותרת
-  SilverStripe\Security\LoginAttempt:
-    has_one_Member: 'חבר רשום'
-  SilverStripe\Security\MemberPassword:
-    db_Password: סיסמא
-    has_one_Member: 'חבר רשום'
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: 'חבר רשום'
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
+    BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
+    CHANGEPASSWORDBELOW: 'אתה יכול לשנות את סיסמתך להלן.'
+    CHANGEPASSWORDHEADER: 'שנה את הסיסמא שלך'
+    ENTERNEWPASSWORD: 'נא הכנס סיסמא חדשה.'
+    ERRORPASSWORDPERMISSION: 'אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!'
+    LOGIN: התחבר
+    LOGOUT: יציאה
+    NOTEPAGESECURED: 'עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד.'
+    NOTERESETPASSWORD: 'הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך'

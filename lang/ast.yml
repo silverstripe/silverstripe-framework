@@ -1,4 +1,8 @@
 ast:
+  SilverStripe\AssetAdmin\Forms\UploadField:
+    EDIT: Edit
+  SilverStripe\Control\ChangePasswordEmail_ss:
+    CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Camudar contraseña'
   SilverStripe\Forms\DateField:
@@ -6,61 +10,57 @@ ast:
     TODAY: hoi
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escoyer)
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Ye nulu'
-  SilverStripe\Security\Group:
-    Code: 'Códigu de grupu'
-    DefaultGroupTitleAdministrators: Alministradores
-    Description: Descripción
-    Locked: '¿Bloquiáu?'
-    Parent: 'Grupu padre'
-    Sort: 'Orde de clasificación'
-    has_many_Permissions: Permisos
-    many_many_Members: Miembros
-    MEMBERS: Miembros
-    PERMISSIONS: Permisos
-    PLURALNAME: Grupos
-    db_Description: Descripción
-    has_many_Groups: Grupos
-  SilverStripe\Security\Member:
-    EMAIL: Corréu
-    INTERFACELANG: 'Llingua de la interfaz'
-    SUBJECTPASSWORDCHANGED: 'Se camudó la to contraseña'
-    SUBJECTPASSWORDRESET: 'Enllaz pa reaniciar la contraseña'
-    belongs_many_many_Groups: Grupos
-    db_LockedOutUntil: 'Bloquiáu fasta'
-    db_PasswordExpiry: 'Data d''espiración de la contraseña'
-    BUTTONCHANGEPASSWORD: 'Camudar contraseña'
-    PASSWORD: Contraseña
-    PLURALNAME: Miembros
-    SINGULARNAME: Miembru
-    db_Password: Contraseña
-    db_Email: Corréu
-  SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'heredáu del rol "{roletitle}" nel grupu "{grouptitle}"'
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDIT: Edit
-  SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Ye nulu'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Oxetos de datos'
     SINGULARNAME: 'Oxetu de datos'
-  SilverStripe\Security\Permission:
-    PLURALNAME: Permisos
+  SilverStripe\Security\Group:
+    Code: 'Códigu de grupu'
+    DefaultGroupTitleAdministrators: Alministradores
+    Description: Descripción
+    Locked: '¿Bloquiáu?'
+    MEMBERS: Miembros
+    PERMISSIONS: Permisos
+    PLURALNAME: Grupos
+    Parent: 'Grupu padre'
+    Sort: 'Orde de clasificación'
+    db_Description: Descripción
+    has_many_Groups: Grupos
+    has_many_Permissions: Permisos
+    many_many_Members: Miembros
   SilverStripe\Security\LoginAttempt:
     has_one_Member: Miembru
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Camudar contraseña'
+    EMAIL: Corréu
+    INTERFACELANG: 'Llingua de la interfaz'
+    PASSWORD: Contraseña
+    PLURALNAME: Miembros
+    SINGULARNAME: Miembru
+    SUBJECTPASSWORDCHANGED: 'Se camudó la to contraseña'
+    SUBJECTPASSWORDRESET: 'Enllaz pa reaniciar la contraseña'
+    belongs_many_many_Groups: Grupos
+    db_Email: Corréu
+    db_LockedOutUntil: 'Bloquiáu fasta'
+    db_Password: Contraseña
+    db_PasswordExpiry: 'Data d''espiración de la contraseña'
   SilverStripe\Security\MemberPassword:
     db_Password: Contraseña
     has_one_Member: Miembru
+  SilverStripe\Security\Permission:
+    PLURALNAME: Permisos
+  SilverStripe\Security\PermissionCheckboxSetField:
+    FromRoleOnGroup: 'heredáu del rol "{roletitle}" nel grupu "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     belongs_many_many_Groups: Grupos
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Miembru
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'

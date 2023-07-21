@@ -1,106 +1,4 @@
 tr:
-  SilverStripe\Forms\CheckboxField:
-    NOANSWER: Hayır
-    YESANSWER: Evet
-  SilverStripe\Forms\ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Parola Değiştir'
-  SilverStripe\Forms\DropdownField:
-    CHOOSE: (Seçiniz)
-  SilverStripe\Forms\Form:
-    VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
-    VALIDATOR: 'Geçerlilik tespiti'
-  SilverStripe\Forms\FormField:
-    NONE: hiç
-  SilverStripe\Forms\GridField\GridField:
-    CSVEXPORT: 'CSV olarak kaydet'
-    Filter: Filtre
-    Print: Yazdır
-    ResetFilter: Sıfırla
-  SilverStripe\Forms\GridField\GridFieldDeleteAction:
-    Delete: Sil
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Boş değer'
-  SilverStripe\ORM\FieldType\DBBoolean:
-    ANY: Herhangi
-    NOANSWER: Hayır
-    YESANSWER: Evet
-  SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
-    ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
-    ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
-  SilverStripe\Security\Group:
-    Code: 'Grup Kodu'
-    Description: Açıklama
-    Locked: 'Kilitli?'
-    Parent: 'Ana Grup'
-    Sort: Sırala
-    has_many_Permissions: İzinler
-    many_many_Members: Üyeler
-    GROUPNAME: 'Grup adı'
-    MEMBERS: Üyeler
-    NEWGROUP: 'Yeni Grup'
-    PERMISSIONS: İzinler
-    PLURALNAME: Gruplar
-    ROLES: Roller
-    db_Description: Açıklama
-    db_Title: Başlık
-    has_many_Groups: Gruplar
-    many_many_Roles: Roller
-  SilverStripe\Security\LoginAttempt:
-    IP: 'IP Adresi'
-    Status: Durum
-    Email: 'E-posta Adresi'
-    db_Status: Durum
-    has_one_Member: Üye
-  SilverStripe\Security\Member:
-    BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
-    BUTTONLOGIN: Giriş
-    BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
-    BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
-    CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
-    CONFIRMPASSWORD: 'Şifreyi Onayla'
-    EMAIL: Eposta
-    ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
-    ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
-    ERRORPASSWORDNOTMATCH: 'Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin'
-    FIRSTNAME: Ad
-    INTERFACELANG: 'Arayüz Dili'
-    NEWPASSWORD: 'Yeni Şifre'
-    PASSWORD: Şifre
-    SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
-    SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
-    SURNAME: Soyad
-    YOUROLDPASSWORD: 'Eski şifreniz'
-    belongs_many_many_Groups: Gruplar
-    db_Locale: 'Arayüz Bölümü'
-    db_LockedOutUntil: 'Şu tarihe kadar kapalı:'
-    db_Password: Parola
-    db_PasswordExpiry: 'Parola için Son Geçerlilik Tarihi'
-    BUTTONLOGOUT: 'Çıkış Yap'
-    EDIT_PASSWORD: 'Yeni Şifre'
-    PLURALNAME: Üyeler
-    SINGULARNAME: Üye
-    db_Email: Eposta
-    db_FirstName: Ad
-    db_Surname: Soyad
-  SilverStripe\Security\Permission:
-    FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
-    AdminGroup: Yönetici
-    CMS_ACCESS_CATEGORY: 'CMS Erişimi'
-    PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
-    PLURALNAME: İzinler
-  SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
-    BUTTONSEND: Gönder
-    CHANGEPASSWORDBELOW: 'Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz.'
-    CHANGEPASSWORDHEADER: 'Şifre değiştir'
-    ENTERNEWPASSWORD: 'Lütfen bir şifre giriniz.'
-    ERRORPASSWORDPERMISSION: 'Şifrenizi değiştirebilmek için sisteme giriş yapmış olmanız gerekmektedir!'
-    LOGIN: 'Oturum aç'
-    NOTEPAGESECURED: 'O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz.'
-    NOTERESETPASSWORD: 'E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz'
-    LOGOUT: 'Çıkış Yap'
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Boyutlar
     EDIT: Edit
@@ -113,13 +11,33 @@ tr:
     TEXT1: 'Profilinize ait'
     TEXT2: 'şifre sıfırlama linki'
     TEXT3: için
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Hayır
+    YESANSWER: Evet
+  SilverStripe\Forms\ConfirmedPasswordField:
+    SHOWONCLICKTITLE: 'Parola Değiştir'
   SilverStripe\Forms\DateField:
     NOTSET: ayarlanmamış
     TODAY: bugün
+  SilverStripe\Forms\DropdownField:
+    CHOOSE: (Seçiniz)
   SilverStripe\Forms\FileUploadReceiver:
     FIELDNOTSET: 'Dosya bilgisi bulunamadı'
+  SilverStripe\Forms\Form:
+    VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
+    VALIDATOR: 'Geçerlilik tespiti'
+  SilverStripe\Forms\FormField:
+    NONE: hiç
   SilverStripe\Forms\FormScaffolder:
     TABMAIN: 'Ana (Esas)'
+  SilverStripe\Forms\GridField\GridField:
+    CSVEXPORT: 'CSV olarak kaydet'
+    Filter: Filtre
+    Print: Yazdır
+    ResetFilter: Sıfırla
+  SilverStripe\Forms\GridField\GridFieldDeleteAction:
+    Delete: Sil
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Create: Oluştur
     Delete: Sil
@@ -131,23 +49,105 @@ tr:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\NullableField:
+    IsNullLabel: 'Boş değer'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Nesneleri'
     SINGULARNAME: 'Data Nesnesi'
+  SilverStripe\ORM\FieldType\DBBoolean:
+    ANY: Herhangi
+    NOANSWER: Hayır
+    YESANSWER: Evet
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Herhangi
+  SilverStripe\Security\BasicAuth:
+    ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
+    ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
+    ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
   SilverStripe\Security\DefaultAdminService:
     DefaultAdminFirstname: 'Varsayılan Yönetici'
+  SilverStripe\Security\Group:
+    Code: 'Grup Kodu'
+    Description: Açıklama
+    GROUPNAME: 'Grup adı'
+    Locked: 'Kilitli?'
+    MEMBERS: Üyeler
+    NEWGROUP: 'Yeni Grup'
+    PERMISSIONS: İzinler
+    PLURALNAME: Gruplar
+    Parent: 'Ana Grup'
+    ROLES: Roller
+    Sort: Sırala
+    db_Description: Açıklama
+    db_Title: Başlık
+    has_many_Groups: Gruplar
+    has_many_Permissions: İzinler
+    many_many_Members: Üyeler
+    many_many_Roles: Roller
+  SilverStripe\Security\LoginAttempt:
+    Email: 'E-posta Adresi'
+    IP: 'IP Adresi'
+    Status: Durum
+    db_Status: Durum
+    has_one_Member: Üye
+  SilverStripe\Security\Member:
+    BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
+    BUTTONLOGIN: Giriş
+    BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
+    BUTTONLOGOUT: 'Çıkış Yap'
+    BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
+    CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
+    CONFIRMPASSWORD: 'Şifreyi Onayla'
+    EDIT_PASSWORD: 'Yeni Şifre'
+    EMAIL: Eposta
+    ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
+    ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
+    ERRORPASSWORDNOTMATCH: 'Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin'
+    FIRSTNAME: Ad
+    INTERFACELANG: 'Arayüz Dili'
+    NEWPASSWORD: 'Yeni Şifre'
+    PASSWORD: Şifre
+    PLURALNAME: Üyeler
+    SINGULARNAME: Üye
+    SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
+    SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
+    SURNAME: Soyad
+    YOUROLDPASSWORD: 'Eski şifreniz'
+    belongs_many_many_Groups: Gruplar
+    db_Email: Eposta
+    db_FirstName: Ad
+    db_Locale: 'Arayüz Bölümü'
+    db_LockedOutUntil: 'Şu tarihe kadar kapalı:'
+    db_Password: Parola
+    db_PasswordExpiry: 'Parola için Son Geçerlilik Tarihi'
+    db_Surname: Soyad
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'Şifremi Unuttum'
     BUTTONLOGOUT: 'Çıkış Yap'
+  SilverStripe\Security\MemberPassword:
+    db_Password: Parola
+    has_one_Member: Üye
+  SilverStripe\Security\Permission:
+    AdminGroup: Yönetici
+    CMS_ACCESS_CATEGORY: 'CMS Erişimi'
+    FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
+    PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
+    PLURALNAME: İzinler
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Roller
     Title: Başlık
     belongs_many_many_Groups: Gruplar
     db_Title: Başlık
-  SilverStripe\Security\MemberPassword:
-    db_Password: Parola
-    has_one_Member: Üye
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Üye
+  SilverStripe\Security\Security:
+    ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
+    BUTTONSEND: Gönder
+    CHANGEPASSWORDBELOW: 'Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz.'
+    CHANGEPASSWORDHEADER: 'Şifre değiştir'
+    ENTERNEWPASSWORD: 'Lütfen bir şifre giriniz.'
+    ERRORPASSWORDPERMISSION: 'Şifrenizi değiştirebilmek için sisteme giriş yapmış olmanız gerekmektedir!'
+    LOGIN: 'Oturum aç'
+    LOGOUT: 'Çıkış Yap'
+    NOTEPAGESECURED: 'O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz.'
+    NOTERESETPASSWORD: 'E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz'
