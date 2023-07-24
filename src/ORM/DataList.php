@@ -1007,10 +1007,15 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
         $belongsToComponent = $schema->belongsToComponent($parentDataClass, $relationName);
         if ($belongsToComponent) {
+            $joinField = $schema->getRemoteJoinField($parentDataClass, $relationName, 'belongs_to', $polymorphic);
             return [
                 $belongsToComponent,
                 'belongs_to',
-                $schema->getRemoteJoinField($parentDataClass, $relationName, 'belongs_to'),
+                [
+                    'joinField' => $joinField,
+                    'polymorphic' => $polymorphic,
+                    'parentClass' => $parentDataClass
+                ],
             ];
         }
         $hasManyComponent = $schema->hasManyComponent($parentDataClass, $relationName);
@@ -1061,7 +1066,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         foreach ($this->eagerLoadRelationChains as $relationChain) {
             $parentDataClass = $this->dataClass();
             $parentIDs = $topLevelIDs;
-            $parentRelationName = '';
             /** @var Query|array<DataObject|EagerLoadedList> */
             $parentRelationData = $query;
             $chainToDate = [];
@@ -1080,7 +1084,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                             $relationComponent,
                             $relationDataClass,
                             implode('.', $chainToDate),
-                            $relationName
+                            $relationName,
+                            $relationType
                         );
                         break;
                     case 'belongs_to':
@@ -1090,7 +1095,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                             $relationComponent,
                             $relationDataClass,
                             implode('.', $chainToDate),
-                            $relationName
+                            $relationName,
+                            $relationType
                         );
                         break;
                     case 'has_many':
@@ -1101,7 +1107,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                             $relationDataClass,
                             implode('.', $chainToDate),
                             $relationName,
-                            $parentRelationName
+                            $relationType
                         );
                         break;
                     case 'many_many':
@@ -1112,15 +1118,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                             $relationDataClass,
                             implode('.', $chainToDate),
                             $relationName,
-                            $parentRelationName,
-                            $parentDataClass
+                            $parentDataClass,
+                            $relationType
                         );
                         break;
                     default:
                         throw new LogicException("Unexpected relation type $relationType");
                 }
                 $parentDataClass = $relationDataClass;
-                $parentRelationName = $relationName;
             }
         }
     }
@@ -1130,7 +1135,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         string $hasOneIDField,
         string $relationDataClass,
         string $relationChain,
-        string $relationName
+        string $relationName,
+        string $relationType
     ): array {
         $fetchedIDs = [];
         $addTo = [];
@@ -1155,7 +1161,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                     $addTo[$hasOneID] = ['ID' => $parentRow['ID'], 'list' => $parentData];
                 }
             } else {
-                throw new LogicException("Invalid parent for eager loading has_one relation $relationName");
+                throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
             }
         }
 
@@ -1179,9 +1185,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 }
             }
             if (!$added) {
-                throw new LogicException("Couldn't find parent for record $fetchedID on has_one relation $relationName");
+                throw new LogicException("Couldn't find parent for record $fetchedID on $relationType relation $relationName");
             }
         }
+
+        // NOTE: Unlike the other relation types, we don't have to explicitly fill empty DataObject records
+        // into the has_one components - DataObject does that for us in getComponent() without any extra
+        // db calls.
 
         return [$fetchedRecords, $fetchedIDs];
     }
@@ -1189,23 +1199,39 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     private function fetchEagerLoadBelongsTo(
         Query|array $parents,
         array $parentIDs,
-        string $belongsToIDField,
+        array $component,
         string $relationDataClass,
         string $relationChain,
-        string $relationName
+        string $relationName,
+        string $relationType
     ): array {
+        $belongsToIDField = $component['joinField'];
         // Get ALL of the items for this relation up front, for ALL of the parents
         // Fetched as an array to avoid sporadic additional queries when the DataList is looped directly
         $fetchedRecords = DataObject::get($relationDataClass)->filter([$belongsToIDField => $parentIDs])->toArray();
         $fetchedIDs = [];
-
+        $foundParentIDs = [];
 
         // Add fetched record to the correct place
         foreach ($fetchedRecords as $fetched) {
             $fetchedIDs[] = $fetched->ID;
             $parentID = $fetched->$belongsToIDField;
-            $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $fetched, 'has_one');
+            $foundParentIDs[] = $parentID;
+            $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $fetched, $relationType);
         }
+
+        // Load empty DataObject records into any parents which have no child records
+        $missingParentIDs = array_diff($parentIDs, $foundParentIDs);
+        $this->fillEmptyEagerLoadedRelations(
+            $parents,
+            $missingParentIDs,
+            $relationChain,
+            $relationName,
+            $relationType,
+            $relationDataClass,
+            null,
+            $component
+        );
 
         return [$fetchedRecords, $fetchedIDs];
     }
@@ -1216,7 +1242,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         string $hasManyIDField,
         string $relationDataClass,
         string $relationChain,
-        string $relationName
+        string $relationName,
+        string $relationType
     ): array {
         // Get ALL of the items for this relation up front, for ALL of the parents
         // Fetched as an array to avoid sporadic additional queries when the DataList is looped directly
@@ -1234,11 +1261,23 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 // If we haven't created a list yet, create it and add it to the correct parent list/record
                 $eagerLoadedList = EagerLoadedList::create($relationDataClass, HasManyList::class, $parentID);
                 $eagerLoadedLists[$parentID] = $eagerLoadedList;
-                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, 'has_many');
+                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, $relationType);
             }
             // Add this row to the list
             $eagerLoadedList->addRow($row);
         }
+
+        // Load empty EagerLoadedLists into any parents which have no child records
+        $missingParentIDs = array_diff($parentIDs, array_keys($eagerLoadedLists));
+        $this->fillEmptyEagerLoadedRelations(
+            $parents,
+            $missingParentIDs,
+            $relationChain,
+            $relationName,
+            $relationType,
+            $relationDataClass,
+            HasManyList::class
+        );
 
         return [$eagerLoadedLists, $fetchedIDs];
     }
@@ -1250,7 +1289,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         string $relationDataClass,
         string $relationChain,
         string $relationName,
-        string $parentDataClass
+        string $parentDataClass,
+        string $relationType
     ): array {
         $parentIDField = $manyManyLastComponent['parentField'];
         $childIDField = $manyManyLastComponent['childField'];
@@ -1288,6 +1328,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 $extraFields
             );
         }
+        $relationListClass = get_class($relationList);
 
         // Get ALL of the items for this relation up front, for ALL of the parents
         $fetchedRows = $relationList->forForeignID($parentIDs)->getFinalisedQuery();
@@ -1307,13 +1348,26 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 $eagerLoadedList = $eagerLoadedLists[$parentID];
             } else {
                 // If we haven't created a list yet, create it and add it to the correct parent list/record
-                $eagerLoadedList = EagerLoadedList::create($relationDataClass, get_class($relationList), $parentID, $manyManyLastComponent);
+                $eagerLoadedList = EagerLoadedList::create($relationDataClass, $relationListClass, $parentID, $manyManyLastComponent);
                 $eagerLoadedLists[$parentID] = $eagerLoadedList;
-                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, 'many_many');
+                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, $relationType);
             }
             // Add this row to the list
             $eagerLoadedList->addRow($relationItem);
         }
+
+        // Load empty EagerLoadedLists into any parents which have no child records
+        $missingParentIDs = array_diff($parentIDs, array_keys($eagerLoadedLists));
+        $this->fillEmptyEagerLoadedRelations(
+            $parents,
+            $missingParentIDs,
+            $relationChain,
+            $relationName,
+            $relationType,
+            $relationDataClass,
+            $relationListClass,
+            $manyManyLastComponent
+        );
 
         return [$eagerLoadedLists, $fetchedIDs];
     }
@@ -1364,6 +1418,46 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         if (!$added) {
             throw new LogicException("Couldn't find parent for $relationType relation $relationName");
+        }
+    }
+
+    private function fillEmptyEagerLoadedRelations(
+        Query|array $parents,
+        array $missingParentIDs,
+        string $relationChain,
+        string $relationName,
+        string $relationType,
+        string $relationDataClass,
+        ?string $relationListClass = null,
+        ?array $component = null
+    ): void {
+        foreach ($missingParentIDs as $id) {
+            // Build the empty list or record
+            switch ($relationType) {
+                case 'has_one':
+                    $dummyData = Injector::inst()->create($relationDataClass);
+                    break;
+                case 'belongs_to':
+                    $dummyData = Injector::inst()->create($relationDataClass);
+                    $joinField = $component['joinField'];
+                    if ($component['polymorphic']) {
+                        $dummyData->{$joinField . 'ID'} = $id;
+                        $dummyData->{$joinField . 'Class'} = $component['parentClass'];
+                    } else {
+                        $dummyData->$joinField = $id;
+                    }
+                    break;
+                case 'has_many':
+                    $dummyData = EagerLoadedList::create($relationDataClass, $relationListClass, $id);
+                    break;
+                case 'many_many':
+                    $dummyData = EagerLoadedList::create($relationDataClass, $relationListClass, $id, $component);
+                    break;
+                default:
+                    throw new LogicException("Unexpected relation type $relationType");
+            }
+            // Add the empty list or record to this parent
+            $this->addEagerLoadedDataToParent($parents, $id, $relationChain, $relationName, $dummyData, $relationType);
         }
     }
 
