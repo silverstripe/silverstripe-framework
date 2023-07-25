@@ -4,7 +4,11 @@ namespace SilverStripe\ORM\Filters;
 
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
-use InvalidArgumentException;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\ORM\FieldType\DBPrimaryKey;
+use SilverStripe\ORM\FieldType\DBForeignKey;
 
 /**
  * Selects textual content with an exact match between columnname and keyword.
@@ -14,6 +18,9 @@ use InvalidArgumentException;
  */
 class ExactMatchFilter extends SearchFilter
 {
+    use Configurable;
+
+    private static bool $use_placeholders_for_integer_ids = false;
 
     public function getSupportedModifiers()
     {
@@ -133,17 +140,25 @@ class ExactMatchFilter extends SearchFilter
         }
 
         $connective = '';
+        $setValuesToEmpty = false;
         if (empty($values)) {
             $predicate = '';
         } elseif ($caseSensitive === null) {
             // For queries using the default collation (no explicit case) we can use the WHERE .. NOT IN .. syntax,
             // providing simpler SQL than many WHERE .. AND .. fragments.
             $column = $this->getDbName();
-            $placeholders = DB::placeholders($values);
-            if ($inclusive) {
-                $predicate = "$column IN ($placeholders)";
+            $usePlaceholders = $this->usePlaceholders($column, $values);
+            if ($usePlaceholders) {
+                $in = DB::placeholders($values);
             } else {
-                $predicate = "$column NOT IN ($placeholders)";
+                // explicitly including space after comma to match the default for DB::placeholders
+                $in = implode(', ', $values);
+                $setValuesToEmpty = true;
+            }
+            if ($inclusive) {
+                $predicate = "$column IN ($in)";
+            } else {
+                $predicate = "$column NOT IN ($in)";
             }
         } else {
             // Generate reusable comparison clause
@@ -194,7 +209,8 @@ class ExactMatchFilter extends SearchFilter
             }
         }
 
-        $clause = [$predicate => $values];
+        $vals = $setValuesToEmpty ? [] : $values;
+        $clause = [$predicate => $vals];
 
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
@@ -204,5 +220,45 @@ class ExactMatchFilter extends SearchFilter
     public function isEmpty()
     {
         return $this->getValue() === [] || $this->getValue() === null || $this->getValue() === '';
+    }
+
+    /**
+     * Determine if we should use placeholders for the given column and values
+     * Current rules are to use placeholders for all values, unless all of these are true:
+     * - The column is a DBPrimaryKey or DBForeignKey
+     * - The values being filtered are all either integers or valid integer strings
+     * - Using placeholders for integer ids has been configured off
+     *
+     * Putting IDs directly into a where clause instead of using placehodlers was measured to be significantly
+     * faster when querying a large number of IDs e.g. over 1000
+     */
+    private function usePlaceholders(string $column, array $values): bool
+    {
+        if ($this->config()->get('use_placeholders_for_integer_ids')) {
+            return true;
+        }
+        // Ensure that the $column was created in the "Table"."Column" format
+        // by DataObjectSchema::sqlColumnForField() after first being called by SearchFilter::getDbName()
+        // earlier on in manyFilter(). Do this check to ensure that we're be safe and only not using
+        // placeholders in scenarios where we intend to not use them.
+        if (!preg_match('#^"(.+)"."(.+)"$#', $column, $matches)) {
+            return true;
+        }
+        $col = $matches[2];
+        // Check if column is Primary or Foreign key, if it's not then we use placeholders
+        $schema = DataObject::getSchema();
+        $fieldSpec = $schema->fieldSpec($this->model, $col);
+        $fieldObj = Injector::inst()->create($fieldSpec, $col);
+        if (!is_a($fieldObj, DBPrimaryKey::class) && !is_a($fieldObj, DBForeignKey::class)) {
+            return true;
+        }
+        // Validate that we're only using int ID's for the values
+        // We need to do this to protect against SQL injection
+        foreach ($values as $value) {
+            if (!ctype_digit((string) $value) || $value != (int) $value) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,0 +1,17 @@
+SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project:
+  project1:
+    Title: 'Project 1'
+  project2:
+    Title: 'Project 2'
+  project3:
+    Title: 'Project 3'
+SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Task:
+  task1:
+    Title: 'Task 1'
+    Project: =>SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project.project1
+  task2:
+    Title: 'Task 2'
+    Project: =>SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project.project2
+  task3:
+    Title: 'Task 3'
+    Project: =>SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project.project3
