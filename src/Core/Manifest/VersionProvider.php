@@ -45,6 +45,7 @@ class VersionProvider
     public function getVersion()
     {
         $key = sprintf('%s-%s', $this->getComposerLockPath(), 'all');
+        $key = preg_replace("/[^A-Za-z0-9]/", '', $key);
         $version = $this->getCachedValue($key);
         if ($version) {
             return $version;
@@ -81,6 +82,7 @@ class VersionProvider
     public function getModuleVersion(string $module): string
     {
         $key = sprintf('%s-%s', $this->getComposerLockPath(), $module);
+        $key = preg_replace("/[^A-Za-z0-9]/", '', $key);
         $version = $this->getCachedValue($key);
         if ($version) {
             return $version;
