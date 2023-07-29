@@ -87,6 +87,14 @@ class ClassInfoTest extends SapphireTest
             $subclassesWithoutBase,
             ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass', false)
         );
+
+        // Check that core classes are present (eg: Email subclasses)
+        $emailClasses = ClassInfo::subclassesFor(\SilverStripe\Control\Email\Email::class);
+        $this->assertArrayHasKey(
+            'silverstripe\\control\\tests\\email\\emailtest\\emailsubclass',
+            $emailClasses,
+            'It contains : ' . json_encode($emailClasses)
+        );
     }
 
     public function testClassName()

@@ -650,6 +650,11 @@ class ClassManifest
                     }
                     $this->children[$lowerAncestor][$lowerClassName] = $className;
                 }
+
+                // If the class extends a core class, add class to roots
+                if (strpos($ancestor, 'SilverStripe\\Control') === 0) {
+                    $this->roots[$lowerAncestor] = $ancestor;
+                }
             } else {
                 $this->roots[$lowerClassName] = $className;
             }
