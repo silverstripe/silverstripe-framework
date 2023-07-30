@@ -670,7 +670,7 @@ class Member extends DataObject
             $password->setRequireExistingPassword(true);
         }
 
-        $password->setCanBeEmpty(true);
+        $password->setCanBeEmpty(false);
         $this->extend('updateMemberPasswordField', $password);
 
         return $password;
