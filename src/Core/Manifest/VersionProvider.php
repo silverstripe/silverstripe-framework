@@ -44,7 +44,7 @@ class VersionProvider
      */
     public function getVersion()
     {
-        $key = preg_replace("/[^A-Za-z0-9]/", '', $this->getComposerLockPath() . 'all');
+        $key = preg_replace("/[^A-Za-z0-9]/", '_', $this->getComposerLockPath() . '_all');
         $version = $this->getCachedValue($key);
         if ($version) {
             return $version;
