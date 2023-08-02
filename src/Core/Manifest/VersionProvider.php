@@ -80,7 +80,7 @@ class VersionProvider
      */
     public function getModuleVersion(string $module): string
     {
-        $key = preg_replace("/[^A-Za-z0-9]/", '', $this->getComposerLockPath() . $module);
+        $key = preg_replace("/[^A-Za-z0-9]/", '_', $this->getComposerLockPath() . '_' . $module);
         $version = $this->getCachedValue($key);
         if ($version) {
             return $version;
