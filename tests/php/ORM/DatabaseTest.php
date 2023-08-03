@@ -413,4 +413,85 @@ class DatabaseTest extends SapphireTest
             $i++;
         }
     }
+
+    public function testRewind()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        $query = DB::query('SELECT "MyInt", "MyField" FROM "DatabaseTest_MyObject" ORDER BY "MyInt"');
+
+        if (!method_exists($query, 'rewind')) {
+            $class = get_class($query);
+            $this->markTestSkipped("Query subclass $class doesn't implement rewind()");
+        }
+
+        $i = 0;
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+            if ($i > 1) {
+                break;
+            }
+        }
+
+        $query->rewind();
+
+        // Start again from the beginning since we called rewind
+        $i = 0;
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+        }
+    }
+
+    public function testRewindWithPredicates()
+    {
+        $inputData = ['one', 'two', 'three', 'four'];
+
+        foreach ($inputData as $i => $text) {
+            $x = new MyObject();
+            $x->MyField = $text;
+            $x->MyInt = $i;
+            $x->write();
+        }
+
+        // Note that by including a WHERE statement with predicates
+        // with MySQL the result is in a MySQLStatement object rather than a MySQLQuery object.
+        $query = SQLSelect::create(
+            ['"MyInt"', '"MyField"'],
+            '"DatabaseTest_MyObject"',
+            ['MyInt IN (?,?,?,?,?)' => [0,1,2,3,4]],
+            ['"MyInt"']
+        )->execute();
+
+        if (!method_exists($query, 'rewind')) {
+            $class = get_class($query);
+            $this->markTestSkipped("Query subclass $class doesn't implement rewind()");
+        }
+
+        $i = 0;
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+            if ($i > 1) {
+                break;
+            }
+        }
+
+        $query->rewind();
+
+        // Start again from the beginning since we called rewind
+        $i = 0;
+        foreach ($query as $record) {
+            $this->assertEquals($inputData[$i], $record['MyField']);
+            $i++;
+        }
+    }
 }

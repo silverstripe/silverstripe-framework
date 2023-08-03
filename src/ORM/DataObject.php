@@ -1940,8 +1940,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return $this;
     }
 
-    public function setEagerLoadedData(string $eagerLoadRelation, mixed $eagerLoadedData): void
-    {
+    public function setEagerLoadedData(
+        string $eagerLoadRelation,
+        EagerLoadedList|DataObject $eagerLoadedData
+    ): void {
         $this->eagerLoadedData[$eagerLoadRelation] = $eagerLoadedData;
     }
 

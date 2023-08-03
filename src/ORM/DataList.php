@@ -60,9 +60,22 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     protected $finalisedQuery;
 
+    /**
+     * A de-duped list of all relation chains to eagerly fetch data for
+     */
+    private array $eagerLoadRelationChains = [];
 
-    private array $eagerLoadRelations = [];
+    /**
+     * A full list of all relations (including partial and complete relation chains)
+     * that we will eagerly fetch data for
+     *
+     * Used to avoid fetching duplicate relations
+     */
+    private array $eagerLoadAllRelations = [];
 
+    /**
+     * Eagerly loaded relational data
+     */
     private array $eagerLoadedData = [];
 
     /**
@@ -930,50 +943,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         // cache $item->ID at the top of this method to reduce calls to ViewableData::__get()
         $itemID = $item->ID;
-        foreach (array_keys($this->eagerLoadedData) as $eagerLoadRelation) {
-            list($dataClasses, $relations) = $this->getEagerLoadVariables($eagerLoadRelation);
-            $dataClass = $dataClasses[count($dataClasses) - 2];
-            $relation = $relations[count($relations) - 1];
-            foreach (array_keys($this->eagerLoadedData[$eagerLoadRelation]) as $eagerLoadID) {
-                $eagerLoadedData = $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relation];
-                if ($dataClass === $dataClasses[0]) {
-                    if ($eagerLoadID === $itemID) {
-                        $item->setEagerLoadedData($relation, $eagerLoadedData);
-                    }
-                } elseif ($dataClass === $dataClasses[1]) {
-                    $relationData = $item->{$relations[1]}();
-                    if ($relationData instanceof DataObject) {
-                        if ($relationData->ID === $eagerLoadID) {
-                            $subItem = $relationData;
-                        } else {
-                            $subItem = null;
-                        }
-                    } else {
-                        $subItem = $item->{$relations[1]}()->find('ID', $eagerLoadID);
-                    }
-                    if ($subItem) {
-                        $subItem->setEagerLoadedData($relations[2], $eagerLoadedData);
-                    }
-                } elseif ($dataClass === $dataClasses[2]) {
-                    $relationData = $item->{$relations[1]}();
-                    if ($relationData instanceof DataObject) {
-                        $list = new ArrayList([$relationData]);
-                    } else {
-                        $list = $relationData;
-                    }
-                    foreach ($list as $subItem) {
-                        $subRelationData = $subItem->{$relations[2]}();
-                        if ($relationData instanceof DataObject) {
-                            $subList = new ArrayList([$subRelationData]);
-                        } else {
-                            $subList = $subRelationData;
-                        }
-                        $subSubItem = $subList->find('ID', $eagerLoadID);
-                        if ($subSubItem) {
-                            $subSubItem->setEagerLoadedData($relations[3], $eagerLoadedData);
-                        }
-                    }
-                }
+        foreach (array_keys($this->eagerLoadedData) as $relation) {
+            if (array_key_exists($itemID, $this->eagerLoadedData[$relation])) {
+                $item->setEagerLoadedData($relation, $this->eagerLoadedData[$relation][$itemID][$relation]);
             }
         }
     }
@@ -1009,7 +981,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * a cached result, unless the DataQuery underlying this list has been
      * modified
      *
-     * @return SilverStripe\ORM\Connect\Query
+     * @return Query
      * @internal This API may change in minor releases
      */
     protected function getFinalisedQuery()
@@ -1021,53 +993,52 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this->finalisedQuery;
     }
 
-    private function getEagerLoadVariables(string $eagerLoadRelation): array
+    private function getEagerLoadVariables(string $relationChain, string $relationName, string $parentDataClass): array
     {
         $schema = DataObject::getSchema();
-        $relations = array_merge(['root'], explode('.', $eagerLoadRelation));
-        $dataClasses = [$this->dataClass];
-        $hasOneIDField = null;
-        $belongsToIDField = null;
-        $hasManyIDField = null;
-        $manyManyLastComponent = null;
-        for ($i = 0; $i < count($relations) - 1; $i++) {
-            $parentDataClass = $dataClasses[$i];
-            $relationName = $relations[$i + 1];
-            $hasOneComponent = $schema->hasOneComponent($parentDataClass, $relationName);
-            if ($hasOneComponent) {
-                $dataClasses[] = $hasOneComponent;
-                $hasOneIDField = $relations[$i + 1] . 'ID';
-                continue;
-            }
-            $belongsToComponent = $schema->belongsToComponent($parentDataClass, $relationName);
-            if ($belongsToComponent) {
-                $dataClasses[] = $belongsToComponent;
-                $belongsToIDField = $schema->getRemoteJoinField($parentDataClass, $relationName, 'belongs_to');
-                continue;
-            }
-            $hasManyComponent = $schema->hasManyComponent($parentDataClass, $relationName);
-            if ($hasManyComponent) {
-                $dataClasses[] = $hasManyComponent;
-                $hasManyIDField = $schema->getRemoteJoinField($parentDataClass, $relationName, 'has_many');
-                continue;
-            }
-            // this works for both many_many and belongs_many_many
-            $manyManyComponent = $schema->manyManyComponent($parentDataClass, $relationName);
-            if ($manyManyComponent) {
-                $dataClasses[] = $manyManyComponent['childClass'];
-                $manyManyComponent['extraFields'] = $schema->manyManyExtraFieldsForComponent($parentDataClass, $relationName) ?: [];
-                if (is_a($manyManyComponent['relationClass'], ManyManyThroughList::class, true)) {
-                    $manyManyComponent['joinClass'] = $manyManyComponent['join'];
-                    $manyManyComponent['join'] = $schema->baseDataTable($manyManyComponent['joinClass']);
-                } else {
-                    $manyManyComponent['joinClass'] = null;
-                }
-                $manyManyLastComponent = $manyManyComponent;
-                continue;
-            }
-            throw new InvalidArgumentException("Invalid relation passed to eagerLoad() - $eagerLoadRelation");
+
+        $hasOneComponent = $schema->hasOneComponent($parentDataClass, $relationName);
+        if ($hasOneComponent) {
+            return [
+                $hasOneComponent,
+                'has_one',
+                $relationName . 'ID',
+            ];
         }
-        return [$dataClasses, $relations, $hasOneIDField, $belongsToIDField, $hasManyIDField, $manyManyLastComponent];
+        $belongsToComponent = $schema->belongsToComponent($parentDataClass, $relationName);
+        if ($belongsToComponent) {
+            return [
+                $belongsToComponent,
+                'belongs_to',
+                $schema->getRemoteJoinField($parentDataClass, $relationName, 'belongs_to'),
+            ];
+        }
+        $hasManyComponent = $schema->hasManyComponent($parentDataClass, $relationName);
+        if ($hasManyComponent) {
+            return [
+                $hasManyComponent,
+                'has_many',
+                $schema->getRemoteJoinField($parentDataClass, $relationName, 'has_many'),
+            ];
+        }
+        // this works for both many_many and belongs_many_many
+        $manyManyComponent = $schema->manyManyComponent($parentDataClass, $relationName);
+        if ($manyManyComponent) {
+            $manyManyComponent['extraFields'] = $schema->manyManyExtraFieldsForComponent($parentDataClass, $relationName) ?: [];
+            if (is_a($manyManyComponent['relationClass'], ManyManyThroughList::class, true)) {
+                $manyManyComponent['joinClass'] = $manyManyComponent['join'];
+                $manyManyComponent['join'] = $schema->baseDataTable($manyManyComponent['joinClass']);
+            } else {
+                $manyManyComponent['joinClass'] = null;
+            }
+            return [
+                $manyManyComponent['childClass'],
+                'many_many',
+                $manyManyComponent,
+            ];
+        }
+
+        throw new InvalidArgumentException("Invalid relation passed to eagerLoad() - $relationChain");
     }
 
     private function executeQuery(): Query
@@ -1079,173 +1050,205 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     private function fetchEagerLoadRelations(Query $query): void
     {
-        if (empty($this->eagerLoadRelations)) {
+        if (empty($this->eagerLoadRelationChains)) {
             return;
         }
         $topLevelIDs = $query->column('ID');
         if (empty($topLevelIDs)) {
             return;
         }
-        $prevRelationArray = [];
-        foreach ($this->eagerLoadRelations as $eagerLoadRelation) {
-            list(
-                $dataClasses,
-                $relations,
-                $hasOneIDField,
-                $belongsToIDField,
-                $hasManyIDField,
-                $manyManyLastComponent
-            ) = $this->getEagerLoadVariables($eagerLoadRelation);
-            $parentDataClass = $dataClasses[count($dataClasses) - 2];
-            $relationName = $relations[count($relations) - 1];
-            $relationDataClass = $dataClasses[count($dataClasses) - 1];
-            if ($parentDataClass === $this->dataClass()) {
-                // When we're at "the top of a tree of nested relationships", we can just use the IDs from the query
-                // This is important to do when handling multiple eager-loaded relationship trees.
-                $parentIDs = $topLevelIDs;
-            }
-            // has_one
-            if ($hasOneIDField) {
-                list($prevRelationArray, $parentIDs) = $this->fetchEagerLoadHasOne(
-                    $query,
-                    $prevRelationArray,
-                    $hasOneIDField,
+
+        foreach ($this->eagerLoadRelationChains as $relationChain) {
+            $parentDataClass = $this->dataClass();
+            $parentIDs = $topLevelIDs;
+            $parentRelationName = '';
+            /** @var Query|array<DataObject|EagerLoadedList> */
+            $parentRelationData = $query;
+            $chainToDate = [];
+            foreach (explode('.', $relationChain) as $relationName) {
+                $chainToDate[] = $relationName;
+                list(
                     $relationDataClass,
-                    $eagerLoadRelation,
-                    $relationName,
-                    $parentDataClass
-                );
-            // belongs_to
-            } elseif ($belongsToIDField) {
-                list($prevRelationArray, $parentIDs) = $this->fetchEagerLoadBelongsTo(
-                    $parentIDs,
-                    $belongsToIDField,
-                    $relationDataClass,
-                    $eagerLoadRelation,
-                    $relationName
-                );
-            // has_many
-            } elseif ($hasManyIDField) {
-                list($prevRelationArray, $parentIDs) = $this->fetchEagerLoadHasMany(
-                    $parentIDs,
-                    $hasManyIDField,
-                    $relationDataClass,
-                    $eagerLoadRelation,
-                    $relationName
-                );
-            // many_many + belongs_many_many & many_many_through
-            } elseif ($manyManyLastComponent) {
-                list($prevRelationArray, $parentIDs) = $this->fetchEagerLoadManyMany(
-                    $manyManyLastComponent,
-                    $parentIDs,
-                    $relationDataClass,
-                    $eagerLoadRelation,
-                    $relationName,
-                    $parentDataClass
-                );
-            } else {
-                throw new LogicException('Something went wrong with the eager loading');
+                    $relationType,
+                    $relationComponent,
+                ) = $this->getEagerLoadVariables($relationChain, $relationName, $parentDataClass);
+
+                switch ($relationType) {
+                    case 'has_one':
+                        list($parentRelationData, $parentIDs) = $this->fetchEagerLoadHasOne(
+                            $parentRelationData,
+                            $relationComponent,
+                            $relationDataClass,
+                            implode('.', $chainToDate),
+                            $relationName
+                        );
+                        break;
+                    case 'belongs_to':
+                        list($parentRelationData, $parentIDs) = $this->fetchEagerLoadBelongsTo(
+                            $parentRelationData,
+                            $parentIDs,
+                            $relationComponent,
+                            $relationDataClass,
+                            implode('.', $chainToDate),
+                            $relationName
+                        );
+                        break;
+                    case 'has_many':
+                        list($parentRelationData, $parentIDs) = $this->fetchEagerLoadHasMany(
+                            $parentRelationData,
+                            $parentIDs,
+                            $relationComponent,
+                            $relationDataClass,
+                            implode('.', $chainToDate),
+                            $relationName,
+                            $parentRelationName
+                        );
+                        break;
+                    case 'many_many':
+                        list($parentRelationData, $parentIDs) = $this->fetchEagerLoadManyMany(
+                            $parentRelationData,
+                            $relationComponent,
+                            $parentIDs,
+                            $relationDataClass,
+                            implode('.', $chainToDate),
+                            $relationName,
+                            $parentRelationName,
+                            $parentDataClass
+                        );
+                        break;
+                    default:
+                        throw new LogicException("Unexpected relation type $relationType");
+                }
+                $parentDataClass = $relationDataClass;
+                $parentRelationName = $relationName;
             }
         }
     }
 
     private function fetchEagerLoadHasOne(
-        Query $query,
-        array $parentRecords,
+        Query|array $parents,
         string $hasOneIDField,
         string $relationDataClass,
-        string $eagerLoadRelation,
-        string $relationName,
-        string $parentDataClass
+        string $relationChain,
+        string $relationName
     ): array {
-        $itemArray = [];
-        $relationItemIDs = [];
+        $fetchedIDs = [];
+        $addTo = [];
 
-        // It's a has_one directly on the records in THIS list
-        if ($parentDataClass === $this->dataClass()) {
-            foreach ($query as $itemData) {
-                $itemArray[] = [
-                    'ID' => $itemData['ID'],
-                    $hasOneIDField => $itemData[$hasOneIDField]
-                ];
-                $relationItemIDs[] = $itemData[$hasOneIDField];
-            }
-        // It's a has_one on a list we've already eager-loaded
-        } else {
-            foreach ($parentRecords as $itemData) {
-                $itemArray[] = [
-                    'ID' => $itemData->ID,
-                    $hasOneIDField => $itemData->$hasOneIDField
-                ];
-                $relationItemIDs[] = $itemData->$hasOneIDField;
+        // Find which IDs to add, and where each fetched should be added to
+        foreach ($parents as $parentData) {
+            if (is_array($parentData)) {
+                // $parentData represents a record in this DataList
+                $hasOneID = $parentData[$hasOneIDField];
+                $fetchedIDs[] = $hasOneID;
+                $addTo[$hasOneID] = $parentData['ID'];
+            } elseif ($parentData instanceof DataObject) {
+                // $parentData represents another has_one record
+                $hasOneID = $parentData->$hasOneIDField;
+                $fetchedIDs[] = $hasOneID;
+                $addTo[$hasOneID] = $parentData;
+            } elseif ($parentData instanceof EagerLoadedList) {
+                // $parentData represents a has_many or many_many relation
+                foreach ($parentData->getRows() as $parentRow) {
+                    $hasOneID = $parentRow[$hasOneIDField];
+                    $fetchedIDs[] = $hasOneID;
+                    $addTo[$hasOneID] = ['ID' => $parentRow['ID'], 'list' => $parentData];
+                }
+            } else {
+                throw new LogicException("Invalid parent for eager loading has_one relation $relationName");
             }
         }
-        $relationArray = DataObject::get($relationDataClass)->byIDs($relationItemIDs)->toArray();
-        foreach ($itemArray as $itemData) {
-            foreach ($relationArray as $relationItem) {
-                $eagerLoadID = $itemData['ID'];
-                if ($relationItem->ID === $itemData[$hasOneIDField]) {
-                    $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName] = $relationItem;
+
+        $fetchedRecords = DataObject::get($relationDataClass)->byIDs($fetchedIDs)->toArray();
+
+        // Add each fetched record to the appropriate place
+        foreach ($fetchedRecords as $fetched) {
+            $fetchedID = $fetched->ID;
+            $added = false;
+            foreach ($addTo as $matchID => $addHere) {
+                if ($matchID === $fetchedID) {
+                    if ($addHere instanceof DataObject) {
+                        $addHere->setEagerLoadedData($relationName, $fetched);
+                    } elseif (is_array($addHere)) {
+                        $addHere['list']->addEagerLoadedData($relationName, $addHere['ID'], $fetched);
+                    } else {
+                        $this->eagerLoadedData[$relationChain][$addHere][$relationName] = $fetched;
+                    }
+                    $added = true;
+                    break;
                 }
             }
+            if (!$added) {
+                throw new LogicException("Couldn't find parent for record $fetchedID on has_one relation $relationName");
+            }
         }
-        return [$relationArray, $relationItemIDs];
+
+        return [$fetchedRecords, $fetchedIDs];
     }
 
     private function fetchEagerLoadBelongsTo(
+        Query|array $parents,
         array $parentIDs,
         string $belongsToIDField,
         string $relationDataClass,
-        string $eagerLoadRelation,
+        string $relationChain,
         string $relationName
     ): array {
         // Get ALL of the items for this relation up front, for ALL of the parents
         // Fetched as an array to avoid sporadic additional queries when the DataList is looped directly
-        $relationArray = DataObject::get($relationDataClass)->filter([$belongsToIDField => $parentIDs])->toArray();
-        $relationItemIDs = [];
+        $fetchedRecords = DataObject::get($relationDataClass)->filter([$belongsToIDField => $parentIDs])->toArray();
+        $fetchedIDs = [];
 
-        // Store the children against the correct parent
-        foreach ($relationArray as $relationItem) {
-            $relationItemIDs[] = $relationItem->ID;
-            $eagerLoadID = $relationItem->$belongsToIDField;
-            $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName] = $relationItem;
+
+        // Add fetched record to the correct place
+        foreach ($fetchedRecords as $fetched) {
+            $fetchedIDs[] = $fetched->ID;
+            $parentID = $fetched->$belongsToIDField;
+            $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $fetched, 'has_one');
         }
 
-        return [$relationArray, $relationItemIDs];
+        return [$fetchedRecords, $fetchedIDs];
     }
 
     private function fetchEagerLoadHasMany(
+        Query|array $parents,
         array $parentIDs,
         string $hasManyIDField,
         string $relationDataClass,
-        string $eagerLoadRelation,
+        string $relationChain,
         string $relationName
     ): array {
         // Get ALL of the items for this relation up front, for ALL of the parents
         // Fetched as an array to avoid sporadic additional queries when the DataList is looped directly
-        $relationArray = DataObject::get($relationDataClass)->filter([$hasManyIDField => $parentIDs])->toArray();
-        $relationItemIDs = [];
+        $fetchedRows = DataObject::get($relationDataClass)->filter([$hasManyIDField => $parentIDs])->getFinalisedQuery();
+        $fetchedIDs = [];
+        $eagerLoadedLists = [];
 
-        // Store the children in an ArrayList against the correct parent
-        foreach ($relationArray as $relationItem) {
-            $relationItemIDs[] = $relationItem->ID;
-            $eagerLoadID = $relationItem->$hasManyIDField;
-            if (!isset($this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName])) {
-                $arrayList = ArrayList::create();
-                $arrayList->setDataClass($relationDataClass);
-                $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName] = $arrayList;
+        // Store the children in an EagerLoadedList against the correct parent
+        foreach ($fetchedRows as $row) {
+            $fetchedIDs[] = $row['ID'];
+            $parentID = $row[$hasManyIDField];
+            if (isset($eagerLoadedLists[$parentID])) {
+                $eagerLoadedList = $eagerLoadedLists[$parentID];
+            } else {
+                // If we haven't created a list yet, create it and add it to the correct parent list/record
+                $eagerLoadedList = EagerLoadedList::create($relationDataClass, HasManyList::class, $parentID);
+                $eagerLoadedLists[$parentID] = $eagerLoadedList;
+                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, 'has_many');
             }
-            $this->eagerLoadedData[$eagerLoadRelation][$eagerLoadID][$relationName]->push($relationItem);
+            // Add this row to the list
+            $eagerLoadedList->addRow($row);
         }
 
-        return [$relationArray, $relationItemIDs];
+        return [$eagerLoadedLists, $fetchedIDs];
     }
 
     private function fetchEagerLoadManyMany(
+        Query|array $parents,
         array $manyManyLastComponent,
         array $parentIDs,
         string $relationDataClass,
-        string $eagerLoadRelation,
+        string $relationChain,
         string $relationName,
         string $parentDataClass
     ): array {
@@ -1254,12 +1257,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $joinTable = $manyManyLastComponent['join'];
         $extraFields = $manyManyLastComponent['extraFields'];
         $joinClass = $manyManyLastComponent['joinClass'];
+        $fetchedRowsArray = [];
+        $fetchedIDs = [];
+        $eagerLoadedLists = [];
 
         // Get the join records so we can correctly identify which children belong to which parents
+        // This also holds extra fields data
         $joinRows = DB::query('SELECT * FROM "' . $joinTable . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')');
 
-        // many_many_through
+        // Use a real RelationList here so that the extraFields and join record are correctly fetched for all relations
+        // There's a lot of special handling for things like DBComposite extra fields, etc.
         if ($joinClass !== null) {
+            // many_many_through
             $relationList = ManyManyThroughList::create(
                 $relationDataClass,
                 $joinClass,
@@ -1268,40 +1277,94 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 $extraFields,
                 $relationDataClass,
                 $parentDataClass
-            )->forForeignID($parentIDs);
-        // many_many + belongs_many_many
+            );
         } else {
+            // many_many + belongs_many_many
             $relationList = ManyManyList::create(
                 $relationDataClass,
                 $joinTable,
                 $childIDField,
                 $parentIDField,
                 $extraFields
-            )->forForeignID($parentIDs);
+            );
         }
 
         // Get ALL of the items for this relation up front, for ALL of the parents
-        // Use a real RelationList here so that the extraFields and join record are correctly set for all relations
-        // Fetched as a map so we can get the ID for all records up front (instead of in another nested loop)
-        // Fetched after that as an array because for some reason that performs better in the loop
-        // Note that "Me" is a method on ViewableData that returns $this - i.e. that is the actual DataObject record
-        $relationArray = $relationList->map('ID', 'Me')->toArray();
+        $fetchedRows = $relationList->forForeignID($parentIDs)->getFinalisedQuery();
 
-        // Store the children in an ArrayList against the correct parent
+        foreach ($fetchedRows as $row) {
+            $fetchedRowsArray[$row['ID']] = $row;
+            $fetchedIDs[] = $row['ID'];
+        }
+
+        // Store the children in an EagerLoadedList against the correct parent
         foreach ($joinRows as $row) {
             $parentID = $row[$parentIDField];
             $childID = $row[$childIDField];
-            $relationItem = $relationArray[$childID];
+            $relationItem = $fetchedRowsArray[$childID];
 
-            if (!isset($this->eagerLoadedData[$eagerLoadRelation][$parentID][$relationName])) {
-                $arrayList = ArrayList::create();
-                $arrayList->setDataClass($relationDataClass);
-                $this->eagerLoadedData[$eagerLoadRelation][$parentID][$relationName] = $arrayList;
+            if (isset($eagerLoadedLists[$parentID])) {
+                $eagerLoadedList = $eagerLoadedLists[$parentID];
+            } else {
+                // If we haven't created a list yet, create it and add it to the correct parent list/record
+                $eagerLoadedList = EagerLoadedList::create($relationDataClass, get_class($relationList), $parentID, $manyManyLastComponent);
+                $eagerLoadedLists[$parentID] = $eagerLoadedList;
+                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, 'many_many');
             }
-            $this->eagerLoadedData[$eagerLoadRelation][$parentID][$relationName]->push($relationItem);
+            // Add this row to the list
+            $eagerLoadedList->addRow($relationItem);
         }
 
-        return [$relationArray, array_keys($relationArray)];
+        return [$eagerLoadedLists, $fetchedIDs];
+    }
+
+    /**
+     * Adds eager loaded data to the correct parent list or record
+     */
+    private function addEagerLoadedDataToParent(
+        Query|array $parents,
+        int $parentID,
+        string $relationChain,
+        string $relationName,
+        DataObject|EagerLoadedList $eagerLoadedData,
+        string $relationType
+    ): void {
+        $added = false;
+        foreach ($parents as $parentData) {
+            if (is_array($parentData)) {
+                // $parentData represents a record in this DataList
+                if ($parentData['ID'] === $parentID) {
+                    $this->eagerLoadedData[$relationChain][$parentID][$relationName] = $eagerLoadedData;
+                    $added = true;
+                    // Reset the query if we can - but if not, we have to iterate over the whole result set
+                    // so that we will be starting from the beginning again on the next iteration
+                    if (method_exists($parents, 'rewind')) {
+                        $parents->rewind();
+                        break;
+                    }
+                }
+            } elseif ($parentData instanceof DataObject) {
+                // $parentData represents another has_one record
+                if ($parentData->ID === $parentID) {
+                    $parentData->setEagerLoadedData($relationName, $eagerLoadedData);
+                    $added = true;
+                    break;
+                }
+            } elseif ($parentData instanceof EagerLoadedList) {
+                // $parentData represents a has_many or many_many relation
+                if ($parentData->hasID($parentID)) {
+                    $parentData->addEagerLoadedData($relationName, $parentID, $eagerLoadedData);
+                    $added = true;
+                    break;
+                }
+            } else {
+                throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
+            }
+        }
+
+        if (!$added) {
+            throw new LogicException("Couldn't find parent for $relationType relation $relationName");
+        }
     }
 
     /**
@@ -1310,35 +1373,43 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Eager loading alleviates the N + 1 problem by querying the nested relationship tables before they are
      * needed using a single large `WHERE ID in ($ids)` SQL query instead of many `WHERE RelationID = $id` queries.
      *
-     * You can speicify nested relations by using dot notation, and you can also pass in multiple relations.
-     * When speicifying nested relations there is a maximum of 3 levels of relations allowed i.e. 2 dots
+     * You can specify nested relations by using dot notation, and you can also pass in multiple relations.
+     * When specifying nested relations there is a maximum of 3 levels of relations allowed i.e. 2 dots
      *
      * Example:
      * $myDataList->eagerLoad('MyRelation.NestedRelation.EvenMoreNestedRelation', 'DifferentRelation')
      *
-     * IMPORTANT: Calling eagerLoad() will cause any relations on DataObjects to be returned as an ArrayList
-     * instead of a subclass of DataList such as HasManyList i.e. MyDataObject->MyHasManyRelation() returns an ArrayList
+     * IMPORTANT: Calling eagerLoad() will cause any relations on DataObjects to be returned as an EagerLoadedList
+     * instead of a subclass of DataList such as HasManyList i.e. MyDataObject->MyHasManyRelation() returns an EagerLoadedList
      */
-    public function eagerLoad(...$relations): static
+    public function eagerLoad(...$relationChains): static
     {
-        $arr = [];
-        foreach ($relations as $relation) {
-            $parts = explode('.', $relation);
+        foreach ($relationChains as $relationChain) {
+            // Don't add any relations we've added before
+            if (array_key_exists($relationChain, $this->eagerLoadAllRelations)) {
+                continue;
+            }
+            $parts = explode('.', $relationChain);
             $count = count($parts);
             if ($count > 3) {
-                $message = "Eager loading only supports up to 3 levels of nesting, passed $count levels - $relation";
+                $message = "Eager loading only supports up to 3 levels of nesting, passed $count levels - $relationChain";
                 throw new InvalidArgumentException($message);
             }
-            // Add each relation in the chain as its own entry to be eagerloaded
-            // e.g. for "Players.Teams.Coaches" you'll have three entries:
-            // "Players", "Players.Teams", and "Players.Teams.Coaches
+            // Remove any smaller parts of chains and only keep the longest chain for each set of relations
+            // e.g. for "Players.Teams.Coaches" we want to make sure to remove these duplicates:
+            // "Players" and "Players.Teams"
             $usedParts = [];
             foreach ($parts as $part) {
                 $usedParts[] = $part;
-                $arr[] = implode('.', $usedParts);
+                $item = implode('.', $usedParts);
+                unset($this->eagerLoadRelationChains[$item]);
+                // Keep track of what we've seen before so we don't accidentally add a level 1 relation
+                // (e.g. "Players") to the chains list when we already have it as part of a longer chain
+                // (e.g. "Players.Teams")
+                $this->eagerLoadAllRelations[$item] = $item;
             }
+            $this->eagerLoadRelationChains[$relationChain] = $relationChain;
         }
-        $this->eagerLoadRelations = array_unique(array_merge($this->eagerLoadRelations, $arr));
         return $this;
     }
 

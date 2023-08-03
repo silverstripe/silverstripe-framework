@@ -274,4 +274,21 @@ class ArrayLib
             }
         }
     }
+
+    /**
+     * Similar to shuffle, but retains the existing association between the keys and the values.
+     * Shuffles the array in place.
+     */
+    public static function shuffleAssociative(array &$array): void
+    {
+        $shuffledArray = [];
+        $keys = array_keys($array);
+        shuffle($keys);
+
+        foreach ($keys as $key) {
+            $shuffledArray[$key] = $array[$key];
+        }
+
+        $array = $shuffledArray;
+    }
 }
