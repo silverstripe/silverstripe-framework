@@ -3,12 +3,14 @@
 namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
+use LogicException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\PostgreSQL\PostgreSQLDatabase;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\ArrayList;
 
 class SQLSelectTest extends SapphireTest
 {
@@ -856,6 +858,56 @@ class SQLSelectTest extends SapphireTest
         );
         $this->assertEquals(['%MyName%', '2012-08-08 12:00'], $parameters);
         $query->execute();
+    }
+
+    public function provideUnion()
+    {
+        return [
+            // Note that a default (null) UNION is identical to a DISTINCT UNION
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => null,
+                'expected' => [
+                    [1 => 1, 2 => 2],
+                ],
+            ],
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => SQLSelect::UNION_DISTINCT,
+                'expected' => [
+                    [1 => 1, 2 => 2],
+                ],
+            ],
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => SQLSelect::UNION_ALL,
+                'expected' => [
+                    [1 => 1, 2 => 2],
+                    [1 => 1, 2 => 2],
+                ],
+            ],
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => 'tulips',
+                'expected' => LogicException::class,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideUnion
+     */
+    public function testUnion(SQLSelect $unionQuery, ?string $type, string|array $expected)
+    {
+        if (is_string($expected)) {
+            $this->expectException($expected);
+            $this->expectExceptionMessage('Union $type must be one of the constants UNION_ALL or UNION_DISTINCT.');
+        }
+
+        $query = new SQLSelect([1, 2]);
+        $query->addUnion($unionQuery, $type);
+
+        $this->assertSame($expected, iterator_to_array($query->execute(), true));
     }
 
     public function testBaseTableAliases()

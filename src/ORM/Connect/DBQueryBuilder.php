@@ -68,13 +68,23 @@ class DBQueryBuilder
      */
     protected function buildSelectQuery(SQLSelect $query, array &$parameters)
     {
-        $sql  = $this->buildSelectFragment($query, $parameters);
+        $needsParenthisis = count($query->getUnions()) > 0;
+        $nl = $this->getSeparator();
+        $sql = '';
+        if ($needsParenthisis) {
+            $sql .= "({$nl}";
+        }
+        $sql .= $this->buildSelectFragment($query, $parameters);
         $sql .= $this->buildFromFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
         $sql .= $this->buildGroupByFragment($query, $parameters);
         $sql .= $this->buildHavingFragment($query, $parameters);
         $sql .= $this->buildOrderByFragment($query, $parameters);
         $sql .= $this->buildLimitFragment($query, $parameters);
+        if ($needsParenthisis) {
+            $sql .= "{$nl})";
+        }
+        $sql .= $this->buildUnionFragment($query, $parameters);
         return $sql;
     }
 
@@ -283,6 +293,37 @@ class DBQueryBuilder
         $parameters = array_merge($parameters, $whereParameters);
         $nl = $this->getSeparator();
         return "{$nl}WHERE (" . implode("){$nl}{$connective} (", $where) . ")";
+    }
+
+    /**
+     * Return the UNION clause(s) ready for inserting into a query.
+     */
+    protected function buildUnionFragment(SQLSelect $query, array &$parameters): string
+    {
+        $unions = $query->getUnions();
+        if (empty($unions)) {
+            return '';
+        }
+
+        $nl = $this->getSeparator();
+        $clauses = [];
+
+        foreach ($unions as $union) {
+            $unionQuery = $union['query'];
+            $unionType = $union['type'];
+
+            $clause = "{$nl}UNION";
+
+            if ($unionType) {
+                $clause .= " $unionType";
+            }
+
+            $clause .= "$nl($nl" . $this->buildSelectQuery($unionQuery, $parameters) . "$nl)";
+
+            $clauses[] = $clause;
+        }
+
+        return implode('', $clauses);
     }
 
     /**

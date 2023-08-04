@@ -668,6 +668,20 @@ class DataQuery
     }
 
     /**
+     * Add a query to UNION with.
+     *
+     * @param string|null $type One of the SQLSelect::UNION_ALL or SQLSelect::UNION_DISTINCT constants - or null for a default union
+     */
+    public function union(DataQuery|SQLSelect $query, ?string $type = null): static
+    {
+        if ($query instanceof self) {
+            $query = $query->query();
+        }
+        $this->query->addUnion($query, $type);
+        return $this;
+    }
+
+    /**
      * Create a disjunctive subgroup.
      *
      * That is a subgroup joined by OR
