@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -37,8 +38,11 @@ use SilverStripe\ORM\Tests\DataListTest\EagerLoading\MixedManyManyEagerLoadObjec
 
 class DataListEagerLoadingTest extends SapphireTest
 {
-
     protected $usesDatabase = true;
+
+    private const SHOW_QUERIES_RESET = 'SET_TO_THIS_VALUE_WHEN_FINISHED';
+
+    private $showQueries = self::SHOW_QUERIES_RESET;
 
     public static function getExtraDataObjects()
     {
@@ -98,6 +102,51 @@ class DataListEagerLoadingTest extends SapphireTest
                 $numManyManyTables++;
             }
         }
+    }
+
+    /**
+     * Start counting the number of SELECT database queries being run
+     */
+    private function startCountingSelectQueries(): void
+    {
+        if ($this->showQueries !== self::SHOW_QUERIES_RESET) {
+            throw new LogicException('showQueries wasnt reset, you did something wrong');
+        }
+        $this->showQueries = $_REQUEST['showqueries'] ?? null;
+        // force showqueries on to count the number of SELECT statements via output-buffering
+        // if this approach turns out to be too brittle later on, switch to what debugbar
+        // does and use tractorcow/proxy-db which should be installed as a dev-dependency
+        // https://github.com/lekoala/silverstripe-debugbar/blob/master/code/Collector/DatabaseCollector.php#L79
+        $_REQUEST['showqueries'] = 1;
+        ob_start();
+        echo '__START_ITERATE__';
+    }
+
+    /**
+     * Stop counting database queries and return the count
+     */
+    private function stopCountingSelectQueries(): int
+    {
+        $s = ob_get_clean();
+        $s = preg_replace('/.*__START_ITERATE__/s', '', $s);
+        $this->resetShowQueries();
+        return substr_count($s, ': SELECT');
+    }
+
+    /**
+     * Reset the "showqueries" request var
+     */
+    private function resetShowQueries(): void
+    {
+        if ($this->showQueries === self::SHOW_QUERIES_RESET) {
+            return;
+        }
+        if ($this->showQueries) {
+            $_REQUEST['showqueries'] = $this->showQueries;
+        } else {
+            unset($_REQUEST['showqueries']);
+        }
+        $this->showQueries = self::SHOW_QUERIES_RESET;
     }
 
     /**
@@ -615,17 +664,9 @@ class DataListEagerLoadingTest extends SapphireTest
     {
         $results = [];
         $selectCount = -1;
-        $showqueries = $_REQUEST['showqueries'] ?? null;
         try {
-            // force showqueries on to count the number of SELECT statements via output-buffering
-            // if this approach turns out to be too brittle later on, switch to what debugbar
-            // does and use tractorcow/proxy-db which should be installed as a dev-dependency
-            // https://github.com/lekoala/silverstripe-debugbar/blob/master/code/Collector/DatabaseCollector.php#L79
-            $_REQUEST['showqueries'] = 1;
-            ob_start();
-            echo '__START_ITERATE__';
+            $this->startCountingSelectQueries();
             $results = [];
-            $i = 0;
             if ($chunks) {
                 $dataList = $dataList->chunkedFetch($chunks);
             }
@@ -695,15 +736,9 @@ class DataListEagerLoadingTest extends SapphireTest
                     }
                 }
             }
-            $s = ob_get_clean();
-            $s = preg_replace('/.*__START_ITERATE__/s', '', $s);
-            $selectCount = substr_count($s, ': SELECT');
+            $selectCount = $this->stopCountingSelectQueries();
         } finally {
-            if ($showqueries) {
-                $_REQUEST['showqueries'] = $showqueries;
-            } else {
-                unset($_REQUEST['showqueries']);
-            }
+            $this->resetShowQueries();
         }
         return [$results, $selectCount];
     }
@@ -994,11 +1029,11 @@ class DataListEagerLoadingTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideEagerLoadingEmptyRelationLists
+     * @dataProvider provideEagerLoadingEmptyRelations
      */
-    public function testEagerLoadingEmptyRelationLists(string $iden, string $eagerLoad): void
+    public function testEagerLoadingEmptyRelations(string $iden, string $eagerLoad): void
     {
-        $numBaseRecords = 2;
+        $numBaseRecords = 3;
         $numLevel1Records = 2;
         $numLevel2Records = 2;
         // Similar to createEagerLoadData(), except with less relations and
@@ -1008,9 +1043,34 @@ class DataListEagerLoadingTest extends SapphireTest
             $obj = new EagerLoadObject();
             $obj->Title = "obj $i";
             $objID = $obj->write();
+            if ($i > 1) {
+                continue;
+            }
+            // has_one - level1
+            $hasOneObj = new HasOneEagerLoadObject();
+            $hasOneObj->Title = "hasOneObj $i";
+            $hasOneObjID = $hasOneObj->write();
+            $obj->HasOneEagerLoadObjectID = $hasOneObjID;
+            $obj->write();
+            // belongs_to - level1
+            $belongsToObj = new BelongsToEagerLoadObject();
+            $belongsToObj->EagerLoadObjectID = $objID;
+            $belongsToObj->Title = "belongsToObj $i";
+            $belongsToObjID = $belongsToObj->write();
             if ($i > 0) {
                 continue;
             }
+            // has_one - level2
+            $hasOneSubObj = new HasOneSubEagerLoadObject();
+            $hasOneSubObj->Title = "hasOneSubObj $i";
+            $hasOneSubObjID = $hasOneSubObj->write();
+            $hasOneObj->HasOneSubEagerLoadObjectID = $hasOneSubObjID;
+            $hasOneObj->write();
+            // belongs_to - level2
+            $belongsToSubObj = new BelongsToSubEagerLoadObject();
+            $belongsToSubObj->BelongsToEagerLoadObjectID = $belongsToObjID;
+            $belongsToSubObj->Title = "belongsToSubObj $i";
+            $belongsToSubObj->write();
             // has_many
             for ($j = 0; $j < $numLevel1Records; $j++) {
                 $hasManyObj = new HasManyEagerLoadObject();
@@ -1065,31 +1125,81 @@ class DataListEagerLoadingTest extends SapphireTest
             }
         }
 
+        // The actual test starts here - everything above is for creating fixtures
         $i = 0;
         $relations = explode('.', $eagerLoad);
-        foreach (EagerLoadObject::get()->eagerLoad($eagerLoad) as $parentRecord) {
-            $relation = $relations[0];
-            $list = $parentRecord->$relation();
-            // For any record after the first one, there should be nothing in the related list.
-            $this->assertCount($i > 0 ? 0 : 2, $list);
-            $i++;
+        try {
+            foreach (EagerLoadObject::get()->eagerLoad($eagerLoad) as $parentRecord) {
+                if ($i === 0) {
+                    $this->startCountingSelectQueries();
+                }
 
-            if (count($relations) > 1) {
-                $j = 0;
-                foreach ($list as $relatedRecord) {
-                    $relation = $relations[1];
-                    $list2 = $relatedRecord->$relation();
+                // Test first level items are handled correctly
+                $relation = $relations[0];
+                $listOrRecord = $parentRecord->$relation();
+                if (str_starts_with($iden, 'hasone') || str_starts_with($iden, 'belongsto')) {
+                    $class = str_starts_with($iden, 'hasone') ? HasOneEagerLoadObject::class : BelongsToEagerLoadObject::class;
+                    if ($i > 1) {
+                        $this->assertSame(0, $listOrRecord->ID);
+                    }
+                    $this->assertInstanceOf($class, $listOrRecord);
+                } else {
                     // For any record after the first one, there should be nothing in the related list.
-                    $this->assertCount($j > 0 ? 0 : 2, $list2);
-                    $j++;
+                    // All lists, even empty ones, should be an instance of EagerLoadedList
+                    $this->assertCount($i > 0 ? 0 : 2, $listOrRecord);
+                    $this->assertInstanceOf(EagerLoadedList::class, $listOrRecord);
+                }
+                $i++;
+
+                // Test second level items are handled correctly
+                if (count($relations) > 1) {
+                    $j = 0;
+                    $relation = $relations[1];
+                    if (str_starts_with($iden, 'hasone') || str_starts_with($iden, 'belongsto')) {
+                        $record2 = $listOrRecord->$relation();
+                        $class = str_starts_with($iden, 'hasone') ? HasOneSubEagerLoadObject::class : BelongsToSubEagerLoadObject::class;
+                        if ($j > 0) {
+                            $this->assertSame(0, $record2->ID);
+                        }
+                        $this->assertInstanceOf($class, $record2);
+                    } else {
+                        // For any record after the first one, there should be nothing in the related list.
+                        // All lists, even empty ones, should be an instance of EagerLoadedList
+                        foreach ($listOrRecord as $relatedRecord) {
+                            $list2 = $relatedRecord->$relation();
+                            $this->assertCount($j > 0 ? 0 : 2, $list2);
+                            $this->assertInstanceOf(EagerLoadedList::class, $list2);
+                            $j++;
+                        }
+                    }
                 }
             }
+            // No queries should have been run after initiating the loop
+            $this->assertSame(0, $this->stopCountingSelectQueries());
+        } finally {
+            $this->resetShowQueries();
         }
     }
 
-    public function provideEagerLoadingEmptyRelationLists(): array
+    public function provideEagerLoadingEmptyRelations(): array
     {
         return [
+            [
+                'hasone-onelevel',
+                'HasOneEagerLoadObject',
+            ],
+            [
+                'hasone-twolevels',
+                'HasOneEagerLoadObject.HasOneSubEagerLoadObject',
+            ],
+            [
+                'belongsto-onelevel',
+                'BelongsToEagerLoadObject',
+            ],
+            [
+                'belongsto-twolevels',
+                'BelongsToEagerLoadObject.BelongsToSubEagerLoadObject',
+            ],
             [
                 'hasmany-onelevel',
                 'HasManyEagerLoadObjects',
