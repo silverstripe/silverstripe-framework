@@ -1478,9 +1478,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      */
     public function eagerLoad(...$relationChains): static
     {
+        $list = clone $this;
         foreach ($relationChains as $relationChain) {
             // Don't add any relations we've added before
-            if (array_key_exists($relationChain, $this->eagerLoadAllRelations)) {
+            if (array_key_exists($relationChain, $list->eagerLoadAllRelations)) {
                 continue;
             }
             $parts = explode('.', $relationChain);
@@ -1496,15 +1497,15 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             foreach ($parts as $part) {
                 $usedParts[] = $part;
                 $item = implode('.', $usedParts);
-                unset($this->eagerLoadRelationChains[$item]);
+                unset($list->eagerLoadRelationChains[$item]);
                 // Keep track of what we've seen before so we don't accidentally add a level 1 relation
                 // (e.g. "Players") to the chains list when we already have it as part of a longer chain
                 // (e.g. "Players.Teams")
-                $this->eagerLoadAllRelations[$item] = $item;
+                $list->eagerLoadAllRelations[$item] = $item;
             }
-            $this->eagerLoadRelationChains[$relationChain] = $relationChain;
+            $list->eagerLoadRelationChains[$relationChain] = $relationChain;
         }
-        return $this;
+        return $list;
     }
 
     /**
