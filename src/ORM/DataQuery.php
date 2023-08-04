@@ -674,7 +674,7 @@ class DataQuery
      */
     public function union(DataQuery|SQLSelect $query, ?string $type = null): static
     {
-        if ($query instanceof self) {
+        if ($query instanceof DataQuery) {
             $query = $query->query();
         }
         $this->query->addUnion($query, $type);
@@ -701,8 +701,6 @@ class DataQuery
         return new DataQuery_SubGroup($this, 'OR', $clause);
     }
 
-
-
     /**
      * Create a conjunctive subgroup
      *
@@ -721,6 +719,39 @@ class DataQuery
             $clause = $args[0];
         }
         return new DataQuery_SubGroup($this, 'AND', $clause);
+    }
+
+    /**
+     * Adds a Common Table Expression (CTE), aka WITH clause.
+     *
+     * Use of this method should usually be within a conditional check against DB::get_conn()->supportsCteQueries().
+     *
+     * @param string $name The name of the WITH clause, which can be referenced in any queries UNIONed to the $query
+     * and in this query directly, as though it were a table name.
+     * @param string[] $cteFields Aliases for any columns selected in $query which can be referenced in any queries
+     * UNIONed to the $query and in this query directly, as though they were columns in a real table.
+     * NOTE: If $query is a DataQuery, then cteFields must be the names of real columns on that DataQuery's data class.
+     */
+    public function with(string $name, DataQuery|SQLSelect $query, array $cteFields = [], bool $recursive = false): static
+    {
+        $schema = DataObject::getSchema();
+
+        // If the query is a DataQuery, make sure all manipulators, joins, etc are applied
+        if ($query instanceof self) {
+            $cteDataClass = $query->dataClass();
+            $query = $query->query();
+            // DataQuery wants to select ALL columns by default,
+            // but if we're setting cteFields then we only want to select those fields.
+            if (!empty($cteFields)) {
+                $selectFields = array_map(fn($colName) => $schema->sqlColumnForField($cteDataClass, $colName), $cteFields);
+                $query->setSelect($selectFields);
+            }
+        }
+
+        // Add the WITH clause
+        $this->query->addWith($name, $query, $cteFields, $recursive);
+
+        return $this;
     }
 
     /**

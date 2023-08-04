@@ -46,6 +46,18 @@ class SQLSelect extends SQLConditionalExpression
     protected array $union = [];
 
     /**
+     * An array of WITH clauses.
+     * This array is indexed with the name for the temporary table generated for the WITH clause,
+     * and contains data in the following format:
+     * [
+     *   'cte_fields' => string[],
+     *   'query' => SQLSelect|null,
+     *   'recursive' => boolean,
+     * ]
+     */
+    protected array $with = [];
+
+    /**
      * If this is true DISTINCT will be added to the SQL.
      *
      * @var bool
@@ -546,7 +558,7 @@ class SQLSelect extends SQLConditionalExpression
      *
      * @param string|null $type One of the UNION_ALL or UNION_DISTINCT constants - or null for a default union
      */
-    public function addUnion(self $query, ?string $type = null): static
+    public function addUnion(SQLSelect $query, ?string $type = null): static
     {
         if ($type && $type !== self::UNION_ALL && $type !== self::UNION_DISTINCT) {
             throw new LogicException('Union $type must be one of the constants UNION_ALL or UNION_DISTINCT.');
@@ -562,6 +574,37 @@ class SQLSelect extends SQLConditionalExpression
     public function getUnions(): array
     {
         return $this->union;
+    }
+
+    /**
+     * Adds a Common Table Expression (CTE), aka WITH clause.
+     *
+     * Use of this method should usually be within a conditional check against DB::get_conn()->supportsCteQueries().
+     *
+     * @param string $name The name of the WITH clause, which can be referenced in any queries UNIONed to the $query
+     * and in this query directly, as though it were a table name.
+     * @param string[] $cteFields Aliases for any columns selected in $query which can be referenced in any queries
+     * UNIONed to the $query and in this query directly, as though they were columns in a real table.
+     */
+    public function addWith(string $name, SQLSelect $query, array $cteFields = [], bool $recursive = false): static
+    {
+        if (array_key_exists($name, $this->with)) {
+            throw new LogicException("WITH clause with name '$name' already exists.");
+        }
+        $this->with[$name] = [
+            'cte_fields' => $cteFields,
+            'query' => $query,
+            'recursive' => $recursive,
+        ];
+        return $this;
+    }
+
+    /**
+     * Get the data which will be used to generate the WITH clause of the query
+     */
+    public function getWith(): array
+    {
+        return $this->with;
     }
 
     /**

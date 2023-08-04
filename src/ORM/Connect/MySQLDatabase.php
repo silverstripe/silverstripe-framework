@@ -313,6 +313,41 @@ class MySQLDatabase extends Database implements TransactionManager
         return $list;
     }
 
+    public function supportsCteQueries(bool $recursive = false): bool
+    {
+        $version = $this->getVersion();
+        $mariaDBVersion = $this->getMariaDBVersion($version);
+        if ($mariaDBVersion) {
+            // MariaDB has supported CTEs since 10.2.1, and recursive CTEs from 10.2.2
+            // see https://mariadb.com/kb/en/mariadb-1021-release-notes/ and https://mariadb.com/kb/en/mariadb-1022-release-notes/
+            $supportedFrom = $recursive ? '10.2.2' : '10.2.1';
+            return $this->compareVersion($mariaDBVersion, $supportedFrom) >= 0;
+        }
+        // MySQL has supported both kinds of CTEs since 8.0.1
+        // see https://dev.mysql.com/doc/relnotes/mysql/8.0/en/news-8-0-1.html
+        return $this->compareVersion($version, '8.0.1') >= 0;
+    }
+
+    private function getMariaDBVersion(string $version): ?string
+    {
+        // MariaDB versions look like "5.5.5-10.6.8-mariadb-1:10.6.8+maria~focal"
+        // or "10.8.3-MariaDB-1:10.8.3+maria~jammy"
+        // The relevant part is the x.y.z-mariadb portion.
+        if (!preg_match('/((\d+\.){2}\d+)-mariadb/i', $version, $matches)) {
+            return null;
+        }
+        return $matches[1];
+    }
+
+    private function compareVersion(string $actualVersion, string $atLeastVersion): int
+    {
+        // Assume it's lower if it's not a proper version number
+        if (!preg_match('/^(\d+\.){2}\d+$/', $actualVersion)) {
+            return -1;
+        }
+        return version_compare($actualVersion, $atLeastVersion);
+    }
+
     /**
      * Returns the TransactionManager to handle transactions for this database.
      *
