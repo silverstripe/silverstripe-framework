@@ -67,19 +67,80 @@ class SQLSelectTest extends SapphireTest
         }
     }
 
+    public function provideIsEmpty()
+    {
+        return [
+            [
+                'query' => new SQLSelect(),
+                'expected' => true,
+            ],
+            [
+                'query' => new SQLSelect(from: 'someTable'),
+                'expected' => false,
+            ],
+            [
+                'query' => new SQLSelect(''),
+                'expected' => true,
+            ],
+            [
+                'query' => new SQLSelect('', 'someTable'),
+                'expected' => true,
+            ],
+            [
+                'query' => new SQLSelect('column', 'someTable'),
+                'expected' => false,
+            ],
+            [
+                'query' => new SQLSelect('value'),
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideIsEmpty
+     */
+    public function testIsEmpty(SQLSelect $query, $expected)
+    {
+        $this->assertSame($expected, $query->isEmpty());
+    }
+
     public function testEmptyQueryReturnsNothing()
     {
         $query = new SQLSelect();
         $this->assertSQLEquals('', $query->sql($parameters));
     }
 
-    public function testSelectFromBasicTable()
+    public function provideSelectFrom()
+    {
+        return [
+            [
+                'from' => ['MyTable'],
+                'expected' => 'SELECT * FROM MyTable',
+            ],
+            [
+                'from' => ['MyTable', 'MySecondTable'],
+                'expected' => 'SELECT * FROM MyTable, MySecondTable',
+            ],
+            [
+                'from' => ['MyTable', 'INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID'],
+                'expected' => 'SELECT * FROM MyTable INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID',
+            ],
+            [
+                'from' => ['MyTable', 'MySecondTable', 'INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID'],
+                'expected' => 'SELECT * FROM MyTable, MySecondTable INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSelectFrom
+     */
+    public function testSelectFrom(array $from, string $expected)
     {
         $query = new SQLSelect();
-        $query->setFrom('MyTable');
-        $this->assertSQLEquals("SELECT * FROM MyTable", $query->sql($parameters));
-        $query->addFrom('MyJoin');
-        $this->assertSQLEquals("SELECT * FROM MyTable MyJoin", $query->sql($parameters));
+        $query->setFrom($from);
+        $this->assertSQLEquals($expected, $query->sql($parameters));
     }
 
     public function testSelectFromUserSpecifiedFields()
@@ -724,6 +785,13 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
+    public function testSelectWithNoTable()
+    {
+        $query = new SQLSelect('200');
+        $this->assertSQLEquals('SELECT 200 AS "200"', $query->sql());
+        $this->assertSame([['200' => 200]], iterator_to_array($query->execute(), true));
+    }
+
     /**
      * Test passing in a LIMIT with OFFSET clause string.
      */
@@ -819,12 +887,12 @@ class SQLSelectTest extends SapphireTest
         // In SS4 the "explicitAlias" would be ignored
         $query = SQLSelect::create('*', [
             'MyTableAlias' => '"MyTable"',
-            'explicitAlias' => ', (SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
+            'explicitAlias' => '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
         ]);
         $sql = $query->sql();
 
         $this->assertSQLEquals(
-            'SELECT * FROM "MyTable" AS "MyTableAlias" , ' .
+            'SELECT * FROM "MyTable" AS "MyTableAlias", ' .
             '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin" AS "explicitAlias"',
             $sql
         );
