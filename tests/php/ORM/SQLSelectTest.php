@@ -435,16 +435,18 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
-    public function testInnerJoin()
+    public function testJoinSQL()
     {
         $query = new SQLSelect();
         $query->setFrom('MyTable');
         $query->addInnerJoin('MyOtherTable', 'MyOtherTable.ID = 2');
+        $query->addRightJoin('MySecondTable', 'MyOtherTable.ID = MySecondTable.ID');
         $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID');
 
         $this->assertSQLEquals(
             'SELECT * FROM MyTable ' .
             'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 ' .
+            'RIGHT JOIN "MySecondTable" ON MyOtherTable.ID = MySecondTable.ID ' .
             'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
@@ -452,12 +454,14 @@ class SQLSelectTest extends SapphireTest
         $query = new SQLSelect();
         $query->setFrom('MyTable');
         $query->addInnerJoin('MyOtherTable', 'MyOtherTable.ID = 2', 'table1');
-        $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table2');
+        $query->addRightJoin('MySecondTable', 'MyOtherTable.ID = MySecondTable.ID', 'table2');
+        $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table3');
 
         $this->assertSQLEquals(
             'SELECT * FROM MyTable ' .
             'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 ' .
-            'LEFT JOIN "MyLastTable" AS "table2" ON MyOtherTable.ID = MyLastTable.ID',
+            'RIGHT JOIN "MySecondTable" AS "table2" ON MyOtherTable.ID = MySecondTable.ID ' .
+            'LEFT JOIN "MyLastTable" AS "table3" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
     }
@@ -739,38 +743,33 @@ class SQLSelectTest extends SapphireTest
         $this->assertEquals(10, $limit['start']);
     }
 
-    public function testParameterisedInnerJoins()
+    public function provideParameterisedJoinSQL()
     {
-        $query = new SQLSelect();
-        $query->setSelect(['"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"']);
-        $query->setFrom('"SQLSelectTest_DO"');
-        $query->addInnerJoin(
-            '(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
-            '"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
-            'SubSelect',
-            20,
-            ['%MyName%']
-        );
-        $query->addWhere(['"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00']);
-
-        $this->assertSQLEquals(
-            'SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
-			FROM "SQLSelectTest_DO" INNER JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
-		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLSelectTest_DO"."Name" =
-		   "SubSelect"."Title"
-			WHERE ("SQLSelectTest_DO"."Date" > ?)',
-            $query->sql($parameters)
-        );
-        $this->assertEquals(['%MyName%', '2012-08-08 12:00'], $parameters);
-        $query->execute();
+        return [
+            [
+                'joinMethod' => 'addInnerJoin',
+                'joinType' => 'INNER',
+            ],
+            [
+                'joinMethod' => 'addLeftJoin',
+                'joinType' => 'LEFT',
+            ],
+            [
+                'joinMethod' => 'addRightJoin',
+                'joinType' => 'RIGHT',
+            ],
+        ];
     }
 
-    public function testParameterisedLeftJoins()
+    /**
+     * @dataProvider provideParameterisedJoinSQL
+     */
+    public function testParameterisedJoinSQL($joinMethod, $joinType)
     {
         $query = new SQLSelect();
         $query->setSelect(['"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"']);
         $query->setFrom('"SQLSelectTest_DO"');
-        $query->addLeftJoin(
+        $query->$joinMethod(
             '(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
             '"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
             'SubSelect',
@@ -781,7 +780,7 @@ class SQLSelectTest extends SapphireTest
 
         $this->assertSQLEquals(
             'SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
-			FROM "SQLSelectTest_DO" LEFT JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
+			FROM "SQLSelectTest_DO" ' . $joinType . ' JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
 		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLSelectTest_DO"."Name" =
 		   "SubSelect"."Title"
 			WHERE ("SQLSelectTest_DO"."Date" > ?)',

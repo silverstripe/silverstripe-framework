@@ -51,22 +51,33 @@ class DataQueryTest extends SapphireTest
         $this->assertEquals('Foo', $result['Title']);
     }
 
+    public function provideJoins()
+    {
+        return [
+            [
+                'joinMethod' => 'innerJoin',
+                'joinType' => 'INNER',
+            ],
+            [
+                'joinMethod' => 'leftJoin',
+                'joinType' => 'LEFT',
+            ],
+            [
+                'joinMethod' => 'rightJoin',
+                'joinType' => 'RIGHT',
+            ],
+        ];
+    }
+
     /**
-     * Test the leftJoin() and innerJoin method of the DataQuery object
+     * @dataProvider provideJoins
      */
-    public function testJoins()
+    public function testJoins($joinMethod, $joinType)
     {
         $dq = new DataQuery(Member::class);
-        $dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+        $dq->$joinMethod("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
         $this->assertSQLContains(
-            "INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
-            $dq->sql($parameters)
-        );
-
-        $dq = new DataQuery(Member::class);
-        $dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-        $this->assertSQLContains(
-            "LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+            "$joinType JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
             $dq->sql($parameters)
         );
     }

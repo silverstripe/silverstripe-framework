@@ -832,6 +832,26 @@ class DataQuery
     }
 
     /**
+     * Add a RIGHT JOIN clause to this query.
+     *
+     * @param string $table The unquoted table to join to.
+     * @param string $onClause The filter for the join (escaped SQL statement).
+     * @param string $alias An optional alias name (unquoted)
+     * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+     * will cause the query to appear first. The default is 20, and joins created automatically by the
+     * ORM have a value of 10.
+     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @return $this
+     */
+    public function rightJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    {
+        if ($table) {
+            $this->query->addRightJoin($table, $onClause, $alias, $order, $parameters);
+        }
+        return $this;
+    }
+
+    /**
      * Prefix of all joined table aliases. E.g. ->filter('Banner.Image.Title)'
      * Will join the Banner, and then Image relations
      * `$relationPrefx` will be `banner_image_`
