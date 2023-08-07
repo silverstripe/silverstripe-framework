@@ -4,6 +4,7 @@ namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Security\AuthenticationHandler;
@@ -59,7 +60,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
             return null;
         }
         /** @var Member $member */
-        $member = Member::get()->byID($id);
+        $member = DataObject::get_by_id(Member::class, $id);
         return $member;
     }
 

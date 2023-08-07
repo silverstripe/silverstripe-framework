@@ -37,4 +37,9 @@ class Player extends Member implements TestOnly
         'IsRetired',
         'ShirtNumber'
     ];
+
+    public function ReturnsNull()
+    {
+        return null;
+    }
 }
