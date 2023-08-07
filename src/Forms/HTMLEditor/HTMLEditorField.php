@@ -190,4 +190,14 @@ class HTMLEditorField extends TextareaField
         $stateDefaults['data'] = $config->getConfigSchemaData();
         return $stateDefaults;
     }
+
+    /**
+     * Return value with all values encoded in html entities
+     *
+     * @return string Raw HTML
+     */
+    public function ValueEntities()
+    {
+        return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8', false);
+    }
 }
