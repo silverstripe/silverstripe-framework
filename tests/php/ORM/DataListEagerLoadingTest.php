@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -78,6 +79,15 @@ class DataListEagerLoadingTest extends SapphireTest
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+
+        // The AUTO_INCREMENT functionality isn't abstracted, and doesn't work with the same syntax in
+        // other database drivers. But for other drivers we don't care so much if there are overlapping
+        // IDs because avoiding them is only required to test the PHP logic, not the database driver
+        // compatibility.
+        if (!(DB::get_conn() instanceof MySQLDatabase)) {
+            return;
+        }
+
         // Set non-zero auto increment offset for each object type so we don't end up with the same IDs across
         // the board. If all of the IDs are 0, 1, 2 then we have no way of knowing if we're accidentally mixing
         // up relation ID lists between different relation lists for different classes.
