@@ -7,6 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Task;
 use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project;
+use SilverStripe\ORM\DataList;
 
 class ExactMatchFilterTest extends SapphireTest
 {
@@ -22,7 +23,7 @@ class ExactMatchFilterTest extends SapphireTest
      */
     public function testUsePlaceholders(?bool $expectedID, ?bool $expectedTitle, bool $config, callable $fn): void
     {
-        Config::modify()->set(ExactMatchFilter::class, 'use_placeholders_for_integer_ids', $config);
+        Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
         [$idQueryUsesPlaceholders, $titleQueryUsesPlaceholders] = $this->usesPlaceholders($fn);
         $this->assertSame($expectedID, $idQueryUsesPlaceholders);
         $this->assertSame($expectedTitle, $titleQueryUsesPlaceholders);

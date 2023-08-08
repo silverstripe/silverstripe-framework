@@ -13,6 +13,7 @@ use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
 use SilverStripe\ORM\Tests\ManyManyListTest\Product;
+use SilverStripe\ORM\DataList;
 
 class ManyManyListTest extends SapphireTest
 {
@@ -614,5 +615,53 @@ class ManyManyListTest extends SapphireTest
 
         $relation->removeAll();
         $this->assertEquals(sort($remove), sort($removedIds));
+    }
+
+    /**
+     * @dataProvider provideForForeignIDPlaceholders
+     */
+    public function testForForeignIDPlaceholders(bool $config, bool $useInt, bool $expected): void
+    {
+        Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
+        $team1 = $this->objFromFixture(Team::class, 'team1');
+        $team2 = $this->objFromFixture(Team::class, 'team2');
+        $players1 = $team1->Players();
+        $players2 = $team2->Players();
+        $ids = $useInt ? [$team1->ID, $team2->ID] : ['Lorem', 'Ipsum'];
+        $newPlayersList = $players1->forForeignID($ids);
+        $sql = $newPlayersList->dataQuery()->sql();
+        preg_match('#ID" IN \(([^\)]+)\)\)#', $sql, $matches);
+        $usesPlaceholders = $matches[1] === '?, ?';
+        $this->assertSame($expected, $usesPlaceholders);
+        $expectedIDs = $useInt
+            ? array_values(array_merge($players1->column('ID'), $players2->column('ID')))
+            : [];
+        $this->assertEqualsCanonicalizing($expectedIDs, $newPlayersList->column('ID'));
+    }
+
+    public function provideForForeignIDPlaceholders(): array
+    {
+        return [
+            'config false' => [
+                'config' => false,
+                'useInt' => true,
+                'expected' => false,
+            ],
+            'config false non-int' => [
+                'config' => false,
+                'useInt' => false,
+                'expected' => true,
+            ],
+            'config true' => [
+                'config' => true,
+                'useInt' => true,
+                'expected' => true,
+            ],
+            'config true non-int' => [
+                'config' => true,
+                'useInt' => false,
+                'expected' => true,
+            ],
+        ];
     }
 }

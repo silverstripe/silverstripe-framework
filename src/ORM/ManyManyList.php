@@ -177,7 +177,9 @@ class ManyManyList extends RelationList
         // Apply relation filter
         $key = "\"{$this->joinTable}\".\"{$this->foreignKey}\"";
         if (is_array($id)) {
-            return ["$key IN (" . DB::placeholders($id) . ")"  => $id];
+            $in = $this->prepareForeignIDsForWhereInClause($id);
+            $vals = str_contains($in, '?') ? $id : [];
+            return ["$key IN ($in)" => $vals];
         }
         if ($id !== null) {
             return [$key => $id];
