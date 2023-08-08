@@ -15,6 +15,7 @@ use SilverStripe\ORM\Tests\ManyManyThroughListTest\PolyJoinObject;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\FallbackLocale;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject;
+use SilverStripe\ORM\DataList;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -513,5 +514,53 @@ class ManyManyThroughListTest extends SapphireTest
 
         $relation->removeAll();
         $this->assertEquals(sort($remove), sort($removedIds));
+    }
+
+    /**
+     * @dataProvider provideForForeignIDPlaceholders
+     */
+    public function testForForeignIDPlaceholders(bool $config, bool $useInt, bool $expected): void
+    {
+        Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
+        $parent1 = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $parent2 = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent2');
+        $items1 = $parent1->Items();
+        $items2 = $parent2->Items();
+        $ids = $useInt ? [$parent1->ID, $parent2->ID] : ['Lorem', 'Ipsum'];
+        $newItemsList = $items1->forForeignID($ids);
+        $sql = $newItemsList->dataQuery()->sql();
+        preg_match('#ID" IN \(([^\)]+)\)\)#', $sql, $matches);
+        $usesPlaceholders = $matches[1] === '?, ?';
+        $this->assertSame($expected, $usesPlaceholders);
+        $expectedIDs = $useInt
+            ? array_values(array_merge($items1->column('ID'), $items2->column('ID')))
+            : [];
+        $this->assertEqualsCanonicalizing($expectedIDs, $newItemsList->column('ID'));
+    }
+
+    public function provideForForeignIDPlaceholders(): array
+    {
+        return [
+            'config false' => [
+                'config' => false,
+                'useInt' => true,
+                'expected' => false,
+            ],
+            'config false non-int' => [
+                'config' => false,
+                'useInt' => false,
+                'expected' => true,
+            ],
+            'config true' => [
+                'config' => true,
+                'useInt' => true,
+                'expected' => true,
+            ],
+            'config true non-int' => [
+                'config' => true,
+                'useInt' => false,
+                'expected' => true,
+            ],
+        ];
     }
 }

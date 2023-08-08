@@ -38,6 +38,11 @@ use SilverStripe\ORM\ArrayList;
  */
 class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
+    /**
+     * Whether to use placeholders for integer IDs on Primary and Foriegn keys during a WHERE IN query
+     * It is significantly faster to not use placeholders
+     */
+    private static bool $use_placeholders_for_integer_ids = false;
 
     /**
      * The DataObject class name that this data list is querying

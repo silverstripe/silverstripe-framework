@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use Exception;
 use Sminnee\CallbackList\CallbackList;
+use SilverStripe\ORM\DB;
 
 /**
  * A DataList that represents a relation.
@@ -159,4 +160,29 @@ abstract class RelationList extends DataList implements Relation
      * @return array Condition In array(SQL => parameters format)
      */
     abstract protected function foreignIDFilter($id = null);
+
+    /**
+     * Prepare an array of IDs for a 'WHERE IN` clause deciding if we should use placeholders
+     * Current rules are to use not use placeholders, unless:
+     * - SilverStripe\ORM\DataList.use_placeholders_for_integer_ids is set to false, or
+     * - Any of the IDs values being filtered are not integers or valid integer strings
+     *
+     * Putting IDs directly into a where clause instead of using placeholders was measured to be significantly
+     * faster when querying a large number of IDs e.g. over 1000
+     */
+    protected function prepareForeignIDsForWhereInClause(array $ids): string
+    {
+        if ($this->config()->get('use_placeholders_for_integer_ids')) {
+            return DB::placeholders($ids);
+        }
+        // Validate that we're only using int ID's for the IDs
+        // We need to do this to protect against SQL injection
+        foreach ($ids as $id) {
+            if (!ctype_digit((string) $id) || $id != (int) $id) {
+                return DB::placeholders($ids);
+            }
+        }
+        // explicitly including space after comma to match the default for DB::placeholders
+        return implode(', ', $ids);
+    }
 }

@@ -4,11 +4,11 @@ namespace SilverStripe\ORM\Filters;
 
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBForeignKey;
+use SilverStripe\ORM\DataList;
 
 /**
  * Selects textual content with an exact match between columnname and keyword.
@@ -18,9 +18,6 @@ use SilverStripe\ORM\FieldType\DBForeignKey;
  */
 class ExactMatchFilter extends SearchFilter
 {
-    use Configurable;
-
-    private static bool $use_placeholders_for_integer_ids = false;
 
     public function getSupportedModifiers()
     {
@@ -229,12 +226,12 @@ class ExactMatchFilter extends SearchFilter
      * - The values being filtered are all either integers or valid integer strings
      * - Using placeholders for integer ids has been configured off
      *
-     * Putting IDs directly into a where clause instead of using placehodlers was measured to be significantly
+     * Putting IDs directly into a where clause instead of using placeholders was measured to be significantly
      * faster when querying a large number of IDs e.g. over 1000
      */
     private function usePlaceholders(string $column, array $values): bool
     {
-        if ($this->config()->get('use_placeholders_for_integer_ids')) {
+        if (DataList::config()->get('use_placeholders_for_integer_ids')) {
             return true;
         }
         // Ensure that the $column was created in the "Table"."Column" format

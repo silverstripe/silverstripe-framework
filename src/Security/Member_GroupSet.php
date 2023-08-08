@@ -54,8 +54,9 @@ class Member_GroupSet extends ManyManyList
 
         // Add a filter to this DataList
         if (!empty($allGroupIDs)) {
-            $allGroupIDsPlaceholders = DB::placeholders($allGroupIDs);
-            return ["\"Group\".\"ID\" IN ($allGroupIDsPlaceholders)" => $allGroupIDs];
+            $in = $this->prepareForeignIDsForWhereInClause($allGroupIDs);
+            $vals = str_contains($in, '?') ? $allGroupIDs : [];
+            return ["\"Group\".\"ID\" IN ($in)" => $vals];
         }
 
         return ['"Group"."ID"' => 0];

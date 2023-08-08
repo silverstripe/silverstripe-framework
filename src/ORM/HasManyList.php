@@ -50,11 +50,12 @@ class HasManyList extends RelationList
         if ($id === null) {
             $id = $this->getForeignID();
         }
-
         // Apply relation filter
         $key = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $this->getForeignKey());
         if (is_array($id)) {
-            return ["$key IN (" . DB::placeholders($id) . ")"  => $id];
+            $in = $this->prepareForeignIDsForWhereInClause($id);
+            $vals = str_contains($in, '?') ? $id : [];
+            return ["$key IN ($in)" => $vals];
         }
         if ($id !== null) {
             return [$key => $id];
