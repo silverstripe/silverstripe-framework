@@ -889,7 +889,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      */
     public function getExtraData($componentName, int|string $itemID): array
     {
-        if (!in_array(get_class($this->dataList), [ManyManyList::class, ManyManyThroughList::class])) {
+        if (!($this->dataList instanceof ManyManyList) && !($this->dataList instanceof ManyManyThroughList)) {
             throw new BadMethodCallException('Cannot have extra fields on this list type');
         }
 
@@ -926,7 +926,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      */
     public function getExtraFields(): array
     {
-        if (!in_array(get_class($this->dataList), [ManyManyList::class, ManyManyThroughList::class])) {
+        if (!($this->dataList instanceof ManyManyList) && !($this->dataList instanceof ManyManyThroughList)) {
             throw new BadMethodCallException('Cannot have extra fields on this list type');
         }
         return $this->extraFields;
