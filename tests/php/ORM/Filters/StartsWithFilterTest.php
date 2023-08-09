@@ -2,208 +2,162 @@
 
 namespace SilverStripe\ORM\Tests\Filters;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Task;
-use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project;
-use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\Filters\StartsWithFilter;
 use SilverStripe\View\ArrayData;
 
-class ExactMatchFilterTest extends SapphireTest
+class StartsWithFilterTest extends SapphireTest
 {
-    protected static $fixture_file = 'ExactMatchFilterTest.yml';
-
-    protected static $extra_dataobjects = [
-        Task::class,
-        Project::class,
-    ];
-
-    /**
-     * @dataProvider provideUsePlaceholders
-     */
-    public function testUsePlaceholders(?bool $expectedID, ?bool $expectedTitle, bool $config, callable $fn): void
-    {
-        Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
-        [$idQueryUsesPlaceholders, $titleQueryUsesPlaceholders] = $this->usesPlaceholders($fn);
-        $this->assertSame($expectedID, $idQueryUsesPlaceholders);
-        $this->assertSame($expectedTitle, $titleQueryUsesPlaceholders);
-    }
-
-    public function provideUsePlaceholders(): array
-    {
-        $ids = [1, 2, 3];
-        $taskTitles = array_map(fn($i) => "Task $i", $ids);
-        return [
-            'primary key' => [
-                'expectedID' => false,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Task::get()->byIDs($ids)
-            ],
-            'primary key on relation' => [
-                'expectedID' => false,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Project::get()->filter('Tasks.ID', $ids)
-            ],
-            'foriegn key' => [
-                'expectedID' => false,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter(['ProjectID' => $ids])
-            ],
-            'regular column' => [
-                'expectedID' => null,
-                'expectedTitle' => true,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter(['Title' => $taskTitles])
-            ],
-            'primary key + regular column' => [
-                'expectedID' => false,
-                'expectedTitle' => true,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter([
-                    'ID' => $ids,
-                    'Title' => $taskTitles
-                ])
-            ],
-            'primary key config enabled' => [
-                'expectedID' => true,
-                'expectedTitle' => null,
-                'config' => true,
-                'fn' => fn() => Task::get()->byIDs($ids)
-            ],
-            'non int values' => [
-                'expectedID' => true,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter(['ID' => ['a', 'b', 'c']])
-            ],
-        ];
-    }
-
-    private function usesPlaceholders(callable $fn): array
-    {
-        // force showqueries on to view executed SQL via output-buffering
-        $list = $fn();
-        $sql = $list->dataQuery()->sql();
-        preg_match('#ID" IN \(([^\)]+)\)\)#', $sql, $matches);
-        $idQueryUsesPlaceholders = isset($matches[1]) ? $matches[1] === '?, ?, ?' : null;
-        preg_match('#"Title" IN \(([^\)]+)\)\)#', $sql, $matches);
-        $titleQueryUsesPlaceholders = isset($matches[1]) ? $matches[1] === '?, ?, ?' : null;
-        return [$idQueryUsesPlaceholders, $titleQueryUsesPlaceholders];
-    }
 
     public function provideMatches()
     {
         $scenarios = [
             // without modifiers
-            [
+            'null starts with null' => [
                 'filterValue' => null,
                 'objValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
-            [
+            'empty starts with null' => [
                 'filterValue' => null,
                 'objValue' => '',
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'null starts with empty' => [
                 'filterValue' => '',
                 'objValue' => null,
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'empty starts with empty' => [
                 'filterValue' => '',
                 'objValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
-            [
+            'empty starts with false' => [
                 'filterValue' => false,
                 'objValue' => '',
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'true doesnt start with empty' => [
                 'filterValue' => true,
                 'objValue' => '',
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'false doesnt start with empty' => [
                 'filterValue' => '',
                 'objValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'true doesnt start with empty' => [
                 'filterValue' => '',
                 'objValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'null starts with false' => [
                 'filterValue' => false,
                 'objValue' => null,
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'false doesnt start with null' => [
                 'filterValue' => null,
                 'objValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'false doesnt start with true' => [
                 'filterValue' => true,
                 'objValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'true doesnt start with false' => [
+                'filterValue' => false,
+                'objValue' => true,
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            'false doesnt start with false' => [
                 'filterValue' => false,
                 'objValue' => false,
                 'modifiers' => [],
-                'matches' => true,
+                'matches' => false,
             ],
-            [
+            'true doesnt start with true' => [
                 'filterValue' => true,
                 'objValue' => true,
                 'modifiers' => [],
-                'matches' => true,
-            ],
-            [
-                'filterValue' => 'SomeValue',
-                'objValue' => 'SomeValue',
-                'modifiers' => [],
-                'matches' => true,
-            ],
-            [
-                'filterValue' => 'somevalue',
-                'objValue' => 'SomeValue',
-                'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'number is cast to string' => [
                 'filterValue' => 1,
                 'objValue' => '1',
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            '1 starts with 1' => [
                 'filterValue' => 1,
                 'objValue' => 1,
                 'modifiers' => [],
                 'matches' => true,
             ],
-            // test some values that are clearly not strings, since exact match
-            // is the default for ArrayList filtering which can have basically
-            // anything as its value
+            '100 starts with 1' => [
+                'filterValue' => '1',
+                'objValue' => 100,
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            '100 still starts with 1' => [
+                'filterValue' => 1,
+                'objValue' => 100,
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            '100 doesnt start with 0' => [
+                'filterValue' => 0,
+                'objValue' => 100,
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            'SomeValue starts with SomeValue' => [
+                'filterValue' => 'SomeValue',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'SomeValue doesnt start with SomeValue' => [
+                'filterValue' => 'somevalue',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            'SomeValue doesnt start with meVal' => [
+                'filterValue' => 'meVal',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            'SomeValue starts with Some' => [
+                'filterValue' => 'Some',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'SomeValue doesnt with sOmE' => [
+                'filterValue' => 'sOmE',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            // These will both evaluate to true because the __toString() method just returns the class name.
             [
                 'filterValue' => new ArrayData(['SomeField' => 'some value']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
@@ -214,7 +168,7 @@ class ExactMatchFilterTest extends SapphireTest
                 'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
             // case insensitive
             [
@@ -224,11 +178,24 @@ class ExactMatchFilterTest extends SapphireTest
                 'matches' => true,
             ],
             [
-                'filterValue' => 'some',
+                'filterValue' => 'sOmE',
+                'objValue' => 'SomeValue',
+                'modifiers' => ['nocase'],
+                'matches' => true,
+            ],
+            [
+                'filterValue' => 'meval',
                 'objValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => false,
             ],
+            [
+                'filterValue' => 'different',
+                'objValue' => 'SomeValue',
+                'modifiers' => ['nocase'],
+                'matches' => false,
+            ],
+            // These will both evaluate to true because the __toString() method just returns the class name.
             [
                 'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
@@ -239,7 +206,7 @@ class ExactMatchFilterTest extends SapphireTest
                 'filterValue' => new ArrayData(['SomeField' => 'VaLuE']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => ['nocase'],
-                'matches' => false,
+                'matches' => true,
             ],
         ];
         // negated
@@ -261,11 +228,11 @@ class ExactMatchFilterTest extends SapphireTest
     /**
      * @dataProvider provideMatches
      */
-    public function testMatches(mixed $filterValue, mixed $objValue, array $modifiers, bool $matches)
+    public function testMatches(mixed $filterValue, mixed $matchValue, array $modifiers, bool $matches)
     {
-        $filter = new ExactMatchFilter();
+        $filter = new StartsWithFilter();
         $filter->setValue($filterValue);
         $filter->setModifiers($modifiers);
-        $this->assertSame($matches, $filter->matches($objValue));
+        $this->assertSame($matches, $filter->matches($matchValue));
     }
 }

@@ -2,11 +2,14 @@
 
 namespace SilverStripe\ORM\Filters;
 
+use BadMethodCallException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
 use InvalidArgumentException;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -26,7 +29,19 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 abstract class SearchFilter
 {
-    use Injectable;
+    use Injectable, Configurable;
+
+    /**
+     * Whether the database uses case sensitive collation or not.
+     * @internal
+     */
+    private static ?bool $caseSensitiveByCollation = null;
+
+    /**
+     * Whether search filters should be case sensitive or not by default.
+     * If null, the database collation setting is used.
+     */
+    private static ?bool $default_case_sensitive = null;
 
     /**
      * Classname of the inspected {@link DataObject}.
@@ -346,6 +361,17 @@ abstract class SearchFilter
     }
 
     /**
+     * Check whether this filter matches against a value.
+     */
+    public function matches(mixed $value): bool
+    {
+        // We can't add an abstract method but we want to enforce the method signature for any subclasses
+        // which do implement this - therefore, throw an exception by default.
+        $actualClass = get_class($this);
+        throw new BadMethodCallException("matches is not implemented on $actualClass");
+    }
+
+    /**
      * Apply filter criteria to a SQL query.
      *
      * @param DataQuery $query
@@ -437,7 +463,7 @@ abstract class SearchFilter
     /**
      * Determines case sensitivity based on {@link getModifiers()}.
      *
-     * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
+     * @return ?bool TRUE or FALSE to enforce sensitivity, NULL to use field collation.
      */
     protected function getCaseSensitive()
     {
@@ -447,7 +473,52 @@ abstract class SearchFilter
         } elseif (in_array('nocase', $modifiers ?? [])) {
             return false;
         } else {
-            return null;
+            $sensitive = self::config()->get('default_case_sensitive');
+            if ($sensitive !== null) {
+                return $sensitive;
+            }
         }
+        return null;
+    }
+
+    /**
+     * Find out whether the database is set to use case sensitive comparisons or not by default.
+     * Used for static comparisons in the matches() method.
+     */
+    protected function getCaseSensitivityByCollation()
+    {
+        if (!self::$caseSensitiveByCollation) {
+            $whereClause = DB::get_conn()->comparisonClause("'CASE'", 'case', true);
+            self::$caseSensitiveByCollation = DB::query("SELECT '' WHERE $whereClause")->numRecords() === 0;
+        }
+
+        return self::$caseSensitiveByCollation;
+    }
+
+    protected function isNumericNotString(mixed $value): bool
+    {
+        return is_numeric($value) && !is_string($value);
+    }
+
+    /**
+     * Coerce a string into a number in a way that matches MySQL behaviour.
+     *
+     * Whitespace at the start of the string is ignored.
+     * Any string starting with a number is equivalent to that number.
+     * Any string that doesn't start with a number is equivalent to 0.
+     *
+     * The following examples demonstrate how this coercion works:
+     * ".012a" = 0.012
+     * "0.012a" = 0.012
+     * "123a" = 123
+     * "abc123 = 0
+     *
+     * @see https://dev.mysql.com/doc/refman/8.1/en/type-conversion.html
+     * @see https://dev.mysql.com/doc/refman/8.1/en/comparison-operators.html
+     */
+    protected function coerceStringToNumber(string $string): float
+    {
+        $startsWithNumber = preg_match('/^(\.[0-9]+|[0-9]+(\.[0-9]+)?)/', ltrim($string), $match);
+        return $startsWithNumber ? (float) $match[0] : 0.0;
     }
 }

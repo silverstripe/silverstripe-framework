@@ -19,6 +19,68 @@ use SilverStripe\ORM\DataList;
 class ExactMatchFilter extends SearchFilter
 {
 
+    public function matches(mixed $toMatch): bool
+    {
+        $useCollation = false;
+        $isCaseSensitive = $this->getCaseSensitive();
+        if ($isCaseSensitive === null) {
+            $isCaseSensitive = $this->getCaseSensitivityByCollation();
+            $useCollation = true;
+        }
+        $caseSensitive = $isCaseSensitive ? '' : 'i';
+        $negated = in_array('not', $this->getModifiers());
+        $fieldMatches = false;
+
+        // Can't just cast to array, because that will convert null into an empty array
+        $values = $this->getValue();
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+
+        foreach ($values as $value) {
+            // Match how MySQL compares native numbers with strings
+            if ($useCollation) {
+                if ($this->isNumericNotString($value) && is_string($toMatch)) {
+                    $toMatch = $this->coerceStringToNumber($toMatch);
+                }
+                if ($this->isNumericNotString($toMatch) && is_string($value)) {
+                    $value = $this->coerceStringToNumber($value);
+                }
+                // Match how MySQL compares ints with floats
+                if (is_int($toMatch) && is_float($value) && $value == $toMatch) {
+                    $value = (int) $value;
+                }
+                if (is_int($value) && is_float($toMatch) && $value == $toMatch) {
+                    $toMatch = (int) $toMatch;
+                }
+            // This regex explicitly omits strings like "012", ".12", and " 123" which MySQL doesn't treat as numeric in this scenario.
+            } elseif ($this->isNumericNotString($value) && is_numeric($toMatch) && preg_match('/^(0(?![0-9])|[1-9])/', $toMatch)) {
+                $toMatch = (is_float($value) || is_float($toMatch + 0)) ? (float) $toMatch : (int) $toMatch;
+            } elseif ($this->isNumericNotString($toMatch) && is_numeric($value) && preg_match('/^(0(?![0-9])|[1-9])/', $value)) {
+                $value = is_float($value + 0) ? (float) $value : (int) $value;
+            }
+
+            $regexSafeValue = preg_quote(serialize($value), '/');
+            if ($this->isNumericNotString($value) && $this->isNumericNotString($toMatch)) {
+                $doesMatch = $value === $toMatch;
+            } else {
+                $doesMatch = preg_match('/^' . $regexSafeValue . '$/u' . $caseSensitive, serialize($toMatch));
+            }
+
+            // Respect "not" modifier.
+            if ($negated) {
+                $doesMatch = !$doesMatch;
+            }
+            // If any value matches, then we consider the field to have matched
+            if ($doesMatch) {
+                $fieldMatches = true;
+                break;
+            }
+        }
+
+        return $fieldMatches;
+    }
+
     public function getSupportedModifiers()
     {
         return ['not', 'nocase', 'case'];
@@ -81,7 +143,7 @@ class ExactMatchFilter extends SearchFilter
         }
 
         $clause = [$where => $value];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);

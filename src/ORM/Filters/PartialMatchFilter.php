@@ -11,6 +11,8 @@ use InvalidArgumentException;
  */
 class PartialMatchFilter extends SearchFilter
 {
+    protected static $matchesStartsWith = false;
+    protected static $matchesEndsWith = false;
 
     public function getSupportedModifiers()
     {
@@ -26,6 +28,58 @@ class PartialMatchFilter extends SearchFilter
     protected function getMatchPattern($value)
     {
         return "%$value%";
+    }
+
+    public function matches(mixed $toMatch): bool
+    {
+        $isCaseSensitive = $this->getCaseSensitive();
+        if ($isCaseSensitive === null) {
+            $isCaseSensitive = $this->getCaseSensitivityByCollation();
+        }
+        $caseSensitive = $isCaseSensitive ? '' : 'i';
+        $negated = in_array('not', $this->getModifiers());
+        $toMatchString = (string) $toMatch;
+        $fieldMatches = false;
+
+        // Match how MYSQL performs partial matches against null values
+        if ($toMatch === null) {
+            return false;
+        }
+
+        // can't just cast to array, because that will convert null into an empty array
+        $values = $this->getValue();
+        if (!is_array($values)) {
+            $values = [$values];
+        }
+
+        foreach ($values as $value) {
+            if (is_bool($toMatch)) {
+                if (static::$matchesStartsWith || static::$matchesEndsWith) {
+                    // Nothing "starts" or "ends" with a boolean value, so automatically fail those matches.
+                    $doesMatch = false;
+                } else {
+                    // A partial boolean match should match truthy and falsy values.
+                    $doesMatch = $toMatch == $value;
+                }
+            } else {
+                $value = (string) $value;
+                $regexSafeValue = preg_quote($value, '/');
+                $start = static::$matchesStartsWith ? '^' : '';
+                $end = static::$matchesEndsWith ? '$' : '';
+                $doesMatch = preg_match('/' . $start . $regexSafeValue . $end . '/u' . $caseSensitive, $toMatchString);
+            }
+            // Respect "not" modifier.
+            if ($negated) {
+                $doesMatch = !$doesMatch;
+            }
+            // If any value matches, then we consider the field to have matched.
+            if ($doesMatch) {
+                $fieldMatches = true;
+                break;
+            }
+        }
+
+        return $fieldMatches;
     }
 
     /**

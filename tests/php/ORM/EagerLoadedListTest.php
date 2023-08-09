@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use BadMethodCallException;
 use InvalidArgumentException;
 use PHPUnit\Framework\ExpectationFailedException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\MySQLiConnector;
@@ -1025,6 +1026,182 @@ class EagerLoadedListTest extends SapphireTest
         $dataList = Sortable::get()->sort([$field => $sortDir]);
         $eagerList = $this->getListWithRecords(Sortable::class)->sort([$field => $sortDir]);
         $this->assertSame($dataList->map('ID', $field)->toArray(), $eagerList->map('ID', $field)->toArray());
+    }
+
+    public function provideComparisonSearchFiltersMatchDataList()
+    {
+        // These will be used to make fixtures
+        // We don't use a fixtures yaml file here because we want a full DataList of only
+        // records with THESE values, with no other items to interfere.
+        $dataSets = [
+            'numbers' => [
+                'field' => 'Sort',
+                'values' => [null, 0, 0.01, 1, 1.0, 123, 123.0, 2, 3],
+            ],
+            'numeric-strings' => [
+                'field' => 'Name',
+                'values' => ['0', '1', '1.0', '123', '123.0', '2', '3', '0123', '123.0123', '    123', '123 456 ', '123456', '.01', '0.01'],
+            ],
+            'numeric-before/after/mid-strings' => [
+                'field' => 'Name',
+                'values' => ['test0', 'test1', 'test2', 'test3', 'test123', '123test', '0test', '1test2test3', 'test2test3'],
+            ],
+            'strings' => [
+                'field' => 'Name',
+                'values' => [null, '', 'abc', 'a', 'A', 'AB'],
+            ],
+        ];
+
+        $filterTypes = [
+            'LessThan',
+            'LessThanOrEqual',
+            'GreaterThan',
+            'GreaterThanOrEqual',
+            'LessThan:not',
+            'LessThanOrEqual:not',
+            'GreaterThan:not',
+            'GreaterThanOrEqual:not',
+        ];
+
+        // Build the test scenario with each filter type
+        $scenarios = [];
+        foreach ($filterTypes as $filterType) {
+            foreach ($dataSets as $data) {
+                $scenarios[] = [
+                    'filterType' => $filterType,
+                    'field' => $data['field'],
+                    'values' => $data['values'],
+                    'filterBy' => [
+                        null, '', 0, '0', 0.01, 1, '1', 1.0, 123, '123', 123.0, 2, '2', 2.6, '2.6', 3, '3',
+                        'abc', 'a', 'A', 'AB', 'test1', 'test2', 'test0', 'test123', 'test3', '123test', '0test', '1test2test3', 'test2test3',
+                        '0123', '123.0123', '    123', '123 456 ', '123456', '.01', '0.01',
+                    ],
+                ];
+            }
+        }
+
+        return $scenarios;
+    }
+
+    public function provideTextualSearchFiltersMatchDataList()
+    {
+        // These will be used to make fixtures
+        // We don't use a fixtures yaml file here because we want a full DataList of only
+        // records with THESE values, with no other items to interfere.
+        $dataSets = [
+            'numbers' => [
+                'field' => 'Sort',
+                'values' => [null, 0, 0.01, 1, 1.0, 123, 123.0, 2, 3],
+            ],
+            'numeric-strings' => [
+                'field' => 'Name',
+                'values' => ['0', '1', '1.0', '123', '123.0', '2', '3', '0123', '123.0123', '    123', '123 456 ', '123456', '.01', '0.01'],
+            ],
+            'numeric-before/after/mid-strings' => [
+                'field' => 'Name',
+                'values' => ['test0', 'test1', 'test2', 'test3', 'test123', '123test', '0test', '1test2test3', 'test2test3'],
+            ],
+            'strings' => [
+                'field' => 'Name',
+                'values' => [null, '', 'abc', 'a', 'A', 'AB'],
+            ],
+        ];
+
+        $filterTypes = [
+            'ExactMatch',
+            'PartialMatch',
+            'StartsWith',
+            'EndsWith',
+            'ExactMatch:case',
+            'PartialMatch:case',
+            'StartsWith:case',
+            'EndsWith:case',
+            // 'ExactMatch:nocase',
+            // 'PartialMatch:nocase',
+            // 'StartsWith:nocase',
+            // 'EndsWith:nocase',
+            // 'ExactMatch:not',
+            // 'PartialMatch:not',
+            // 'StartsWith:not',
+            // 'EndsWith:not',
+            // 'ExactMatch:case:not',
+            // 'PartialMatch:case:not',
+            // 'StartsWith:case:not',
+            // 'EndsWith:case:not',
+            // 'ExactMatch:nocase:not',
+            // 'PartialMatch:nocase:not',
+            // 'StartsWith:nocase:not',
+            // 'EndsWith:nocase:not',
+        ];
+
+        // Build the test scenario with each filter type
+        $scenarios = [];
+        foreach ($filterTypes as $filterType) {
+            foreach ($dataSets as $data) {
+                $scenarios[] = [
+                    'filterType' => $filterType,
+                    'field' => $data['field'],
+                    'values' => $data['values'],
+                    'filterBy' => [
+                        null, '', 0, '0', 0.01, 1, '1', 1.0, 123, '123', 123.0, 2, '2', 2.6, '2.6', 3, '3',
+                        'a', 'A', 'b', 'B', 'c', 'C', 'abc', 'AbC', 'test', 'TeSt', 'test123', '123test', '0test', '1test2test3', 'test2test3',
+                        '0123', '123.0123', '    123', '123 456 ', '123456', '.01', '0.01',
+                    ],
+                ];
+            }
+        }
+
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideComparisonSearchFiltersMatchDataList
+     * @dataProvider provideTextualSearchFiltersMatchDataList
+     */
+    public function testSearchFiltersMatchDataList(string $filterType, string $field, array $values, array $filterBy)
+    {
+        // Use explicit per-scenario fixtures
+        Sortable::get()->removeAll();
+        foreach ($values as $value) {
+            $data = [$field => $value];
+            if (!$field === 'Name') {
+                $data['Name'] = $value;
+            }
+            $record = new Sortable($data);
+            $record->write();
+        }
+
+        // Create a DataList and EagerLoadedList with the same items
+        $dataList = Sortable::get();
+        $eagerList = $this->getListWithRecords(Sortable::class);
+
+        // Filter by each value, applying the search filter
+        $dataListComparisons = [];
+        $eagerListComparisons = [];
+        foreach ($filterBy as $value) {
+            $key = $value;
+            // Avoids 1 overriding '1'
+            if (is_string($key)) {
+                $key = "'$key'";
+            }
+            // Avoids null being cast to empty string
+            if ($key === null) {
+                $key = 'null';
+            }
+            // Avoids float being implicitly cast to int
+            if (is_float($key)) {
+                $key = (string)$key;
+                if (!str_contains($key, '.')) {
+                    $key .= '.0';
+                }
+            }
+            // Just collect comparisons here rather than asserting so we can see all failures at once if multiple comparisons fail.
+            $dataListComparisons[$key] = $dataList->filter($field . ':' . $filterType, $value)->column($field);
+            $eagerListComparisons[$key] = $eagerList->filter($field . ':' . $filterType, $value)->column($field);
+        }
+
+        // Ensure eagerlist comparisons match datalist comparisons
+        $this->assertSame($dataListComparisons, $eagerListComparisons);
     }
 
     public function testCanFilterBy()

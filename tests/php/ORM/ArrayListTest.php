@@ -342,23 +342,6 @@ class ArrayListTest extends SapphireTest
         );
     }
 
-    public function testFind()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve'],
-            (object) ['Name' => 'Bob'],
-            ['Name' => 'John']
-            ]
-        );
-        $this->assertEquals(
-            $list->find('Name', 'Bob'),
-            (object) [
-            'Name' => 'Bob'
-            ]
-        );
-    }
-
     public function testColumn()
     {
         $list = new ArrayList(
@@ -776,213 +759,548 @@ class ArrayListTest extends SapphireTest
         $this->assertTrue(true, 'Sort with circular dependencies does not trigger an error.');
     }
 
-    /**
-     * $list->filter('Name', 'bob'); // only bob in the list
-     */
-    public function testSimpleFilter()
+    private function getFilterObjects()
     {
-        $list = new ArrayList(
+        return [
             [
-            ['Name' => 'Steve'],
-            (object) ['Name' => 'Bob'],
-            ['Name' => 'John']
-            ]
-        );
-        $list = $list->filter('Name', 'Bob');
-        $this->assertEquals([(object)['Name'=>'Bob']], $list->toArray(), 'List should only contain Bob');
-    }
-
-    /**
-     * $list->filter('Name', ['Steve', 'John']; // Steve and John in list
-     */
-    public function testSimpleFilterWithMultiple()
-    {
-        $list = new ArrayList(
+                'ID' => 1,
+                'Name' => 'Steve',
+                'Age' => 21,
+                'Title' => 'First Object',
+                'NoCase' => 'CaSe SeNsItIvE',
+                'CaseSensitive' => 'Case Sensitive',
+                'StartsWithTest' => 'Test Value',
+                'GreaterThan100' => 300,
+                'LessThan100' => 50,
+                'SomeField' => 'Some Value',
+            ],
             [
-            ['Name' => 'Steve'],
-            (object) ['Name' => 'Bob'],
-            ['Name' => 'John']
-            ]
-        );
-
-        $expected = [
-            ['Name' => 'Steve'],
-            ['Name' => 'John']
+                'ID' => 2,
+                'Name' => 'Steve',
+                'Age' => 18,
+                'Title' => 'Second Object',
+                'NoCase' => 'case sensitive',
+                'CaseSensitive' => 'case sensitive',
+                'StartsWithTest' => 'Not Starts With Test',
+                'GreaterThan100' => 101,
+                'LessThan100' => 99,
+                'SomeField' => 'Another Value',
+            ],
+            (object) [
+                'ID' => 3,
+                'Name' => 'Steve',
+                'Age' => 43,
+                'Title' => 'Third Object',
+                'NoCase' => null,
+                'CaseSensitive' => '',
+                'StartsWithTest' => 'Does not start with test',
+                'GreaterThan100' => 99,
+                'LessThan100' => 99,
+                'SomeField' => 'Some Value',
+            ],
+            [
+                'ID' => 4,
+                'Name' => 'Clair',
+                'Age' => 21,
+                'Title' => 'Fourth Object',
+                'StartsWithTest' => 'test value, but lower case',
+                'GreaterThan100' => 100,
+                'LessThan100' => 100,
+                'SomeField' => 'some value',
+            ],
+            // This one importantly doesn't have a lot of fields that the other items have
+            [
+                'ID' => 5,
+                'Name' => 'Clair',
+                'Age' => 52,
+                'Title' => '',
+            ],
         ];
-        $list = $list->filter('Name', ['Steve','John']);
-        $this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and John');
     }
 
-    /**
-     * $list->filter('Name', ['Steve', 'John']; // negative version
-     */
-    public function testSimpleFilterWithMultipleNoMatch()
+    public function provideFind()
     {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve', 'ID' => 1],
-            (object) ['Name' => 'Steve', 'ID' => 2],
-            ['Name' => 'John', 'ID' => 2]
-            ]
-        );
-        $list = $list->filter(['Name'=>'Clair']);
-        $this->assertEquals([], $list->toArray(), 'List should be empty');
-    }
-
-    /**
-     * $list->filter(['Name'=>'bob, 'Age'=>21]); // bob with the Age 21 in list
-     */
-    public function testMultipleFilter()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve', 'ID' => 1],
-            (object) ['Name' => 'Steve', 'ID' => 2],
-            ['Name' => 'John', 'ID' => 2]
-            ]
-        );
-        $list = $list->filter(['Name'=>'Steve', 'ID'=>2]);
-        $this->assertEquals(
-            [(object)['Name'=>'Steve', 'ID'=>2]],
-            $list->toArray(),
-            'List should only contain object Steve'
-        );
-    }
-
-    /**
-     * $list->filter(['Name'=>'bob, 'Age'=>21]); // negative version
-     */
-    public function testMultipleFilterNoMatch()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve', 'ID' => 1],
-            (object) ['Name' => 'Steve', 'ID' => 2],
-            ['Name' => 'John', 'ID' => 2]
-            ]
-        );
-        $list = $list->filter(['Name'=>'Steve', 'ID'=>4]);
-        $this->assertEquals([], $list->toArray(), 'List should be empty');
-    }
-
-    /**
-     * $list->filter(['Name'=>'Steve', 'Age'=>[21, 43]]); // Steve with the Age 21 or 43
-     */
-    public function testMultipleWithArrayFilter()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve', 'ID' => 1, 'Age'=>21],
-            ['Name' => 'Steve', 'ID' => 2, 'Age'=>18],
-            ['Name' => 'Clair', 'ID' => 2, 'Age'=>21],
-            ['Name' => 'Steve', 'ID' => 3, 'Age'=>43]
-            ]
-        );
-
-        $list = $list->filter(['Name'=>'Steve','Age'=>[21, 43]]);
-
-        $expected = [
-            ['Name' => 'Steve', 'ID' => 1, 'Age'=>21],
-            ['Name' => 'Steve', 'ID' => 3, 'Age'=>43]
+        $objects = $this->getFilterObjects();
+        return [
+            'exact match with object' => [
+                'objects' => $objects,
+                'find' => ['Title', 'Third Object'],
+                'expected' => $objects[2],
+            ],
+            'exact match with array' => [
+                'objects' => $objects,
+                'find' => ['Title', 'First Object'],
+                'expected' => $objects[0],
+            ],
+            'exact match null' => [
+                'objects' => $objects,
+                'find' => ['NoCase', null],
+                'expected' => $objects[2],
+            ],
+            'exact match case sensitive' => [
+                'objects' => $objects,
+                'find' => ['NoCase', 'case sensitive'],
+                'expected' => $objects[1],
+            ],
+            'exact match not case sensitive' => [
+                'objects' => $objects,
+                'find' => ['NoCase:nocase', 'case sensitive'],
+                'expected' => $objects[0],
+            ],
+            'startswith match' => [
+                'objects' => $objects,
+                'find' => ['StartsWithTest:StartsWith', 'test'],
+                'expected' => $objects[3],
+            ],
+            'startswith match no case' => [
+                'objects' => $objects,
+                'find' => ['StartsWithTest:StartsWith:nocase', 'test'],
+                'expected' => $objects[0],
+            ],
+            'startswith match negated' => [
+                'objects' => $objects,
+                'find' => ['StartsWithTest:StartsWith:not', 'Test'],
+                'expected' => $objects[1],
+            ],
+            'lessthan match' => [
+                'objects' => $objects,
+                'find' => ['GreaterThan100:LessThan', '100'],
+                'expected' => $objects[2],
+            ],
+            'nomatch exact' => [
+                'objects' => $objects,
+                'find' => ['Title', 'No results'],
+                'expected' => null,
+            ],
+            'nomatch exact null vs empty string' => [
+                'objects' => $objects,
+                'find' => ['Title', null],
+                'expected' => null,
+            ],
+            'nomatch greaterthan' => [
+                'objects' => $objects,
+                'find' => ['LessThan100:GreaterThan', 1000],
+                'expected' => null,
+            ],
+            'nomatch lessthan' => [
+                'objects' => $objects,
+                'find' => ['LessThan100:LessThan:not', 1000],
+                'expected' => null,
+            ],
         ];
-        $this->assertEquals(2, $list->count());
-        $this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve');
     }
 
     /**
-     * $list->filter(['Name'=>['aziz','bob'], 'Age'=>[21, 43]]);
+     * @dataProvider provideFind
      */
-    public function testMultipleWithArrayFilterAdvanced()
+    public function testFind(array $objects, array $find, object|array|null $expected)
     {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve', 'ID' => 1, 'Age'=>21],
-            ['Name' => 'Steve', 'ID' => 2, 'Age'=>18],
-            ['Name' => 'Clair', 'ID' => 2, 'Age'=>21],
-            ['Name' => 'Clair', 'ID' => 2, 'Age'=>52],
-            ['Name' => 'Steve', 'ID' => 3, 'Age'=>43]
-            ]
-        );
-
-        $list = $list->filter(['Name'=>['Steve','Clair'],'Age'=>[21, 43]]);
-
-        $expected = [
-            ['Name' => 'Steve', 'ID' => 1, 'Age'=>21],
-            ['Name' => 'Clair', 'ID' => 2, 'Age'=>21],
-            ['Name' => 'Steve', 'ID' => 3, 'Age'=>43]
-        ];
-
-        $this->assertEquals(3, $list->count());
-        $this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve and Clair');
+        $list = new ArrayList($objects);
+        $this->assertEquals($expected, $list->find($find[0], $find[1]));
     }
 
-    public function testFilterAny()
+    public function provideFilter()
     {
+        // Note that search filter tests here are to test syntax and to ensure all supported search filters
+        // work with arraylist - but we don't need to test every possible edge case here,
+        // we can rely on individual searchfilter unit tests for most edge cases
+        $objects = $this->getFilterObjects();
+        return [
+            // testing basic and advanced filter scenarios - ignore SearchFilters for now
+            'exact match' => [
+                'objects' => $objects,
+                'filter' => ['Title', 'Third Object'],
+                'expected' => [$objects[2]],
+                'filterWithArgs' => true,
+            ],
+            'exact match multiple' => [
+                'objects' => $objects,
+                'filter' => ['Title', ['First Object', 'Third Object']],
+                'expected' => [$objects[0], $objects[2]],
+                'filterWithArgs' => true,
+            ],
+            'exact match multiple, array syntax' => [
+                'objects' => $objects,
+                'filter' => ['Title' => ['First Object', 'Third Object']],
+                'expected' => [$objects[0], $objects[2]],
+            ],
+            'exact match against several fields' => [
+                'objects' => $objects,
+                'filter' => [
+                    'SomeField' => 'Some Value',
+                    'Title' => 'Third Object',
+                ],
+                'expected' => [$objects[2]],
+            ],
+            'exact match against several fields with multiple values' => [
+                'objects' => $objects,
+                'filter' => [
+                    'Name' => 'Steve',
+                    'Age' => [21, 43],
+                ],
+                'expected' => [$objects[0], $objects[2]],
+            ],
+            'exact match against several fields with multiple values advanced' => [
+                'objects' => $objects,
+                'filter' => [
+                    'Name' => ['Steve', 'Clair'],
+                    'Age' => [21, 43],
+                ],
+                'expected' => [$objects[0], $objects[2], $objects[3]],
+            ],
+            'no match multiple' => [
+                'objects' => $objects,
+                'filter' => ['Title' => ['No match', 'Another miss']],
+                'expected' => [],
+            ],
+            'no match against several fields' => [
+                'objects' => $objects,
+                'filter' => [
+                    'SomeField' => 'Some Value',
+                    'Title' => 'No Object',
+                ],
+                'expected' => [],
+            ],
+            // exact match filter tests
+            'exact match - negate' => [
+                'objects' => $objects,
+                'filter' => ['Title:not' => 'First Object'],
+                'expected' => [$objects[1], $objects[2], $objects[3], $objects[4]],
+            ],
+            'exact match - negate two different ways' => [
+                'objects' => $objects,
+                'filter' => [
+                    'Title:not' => 'First Object',
+                    'Title:ExactMatch:not' => 'Third Object',
+                ],
+                'expected' => [$objects[1], $objects[3], $objects[4]],
+            ],
+            'exact match negated - nothing gets filtered out' => [
+                'objects' => $objects,
+                'filter' => ['Title:not' => 'No object has this title - we should have all objects'],
+                'expected' => $objects,
+            ],
+            'exact match negated against null - only last item gets filtered out' => [
+                'objects' => $objects,
+                'filter' => ['SomeField:not' => null],
+                'expected' => [$objects[0], $objects[1], $objects[2], $objects[3]],
+            ],
+            // case sensitivity checks
+            'exact match case sensitive' => [
+                'objects' => $objects,
+                'filter' => ['NoCase' => 'case sensitive'],
+                'expected' => [$objects[1]],
+            ],
+            'exact match case insensitive' => [
+                'objects' => $objects,
+                'filter' => ['NoCase:nocase' => 'case sensitive'],
+                'expected' => [$objects[0], $objects[1]],
+            ],
+            'exact match mixed case filters' => [
+                'objects' => $objects,
+                'filter' => [
+                    'NoCase:nocase' => 'case sensitive',
+                    'CaseSensitive' => 'case sensitive',
+                ],
+                'expected' => [$objects[1]],
+            ],
+            // explicit exact match
+            'exact match explicit' => [
+                'objects' => $objects,
+                'filter' => ['Title:ExactMatch', 'Third Object'],
+                'expected' => [$objects[2]],
+                'filterWithArgs' => true,
+            ],
+            'exact match explicit with modifier' => [
+                'objects' => $objects,
+                'filter' => ['Title:ExactMatch:nocase' => 'third object'],
+                'expected' => [$objects[2]],
+            ],
+            // partialmatch filter
+            'partial match' => [
+                'objects' => $objects,
+                'filter' => ['StartsWithTest:PartialMatch' => 'start'],
+                'expected' => [$objects[2]],
+            ],
+            'partial match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['StartsWithTest:PartialMatch:nocase' => 'start'],
+                'expected' => [$objects[1], $objects[2]],
+            ],
+            // greaterthan filter
+            'greaterthan match' => [
+                'objects' => $objects,
+                'filter' => ['GreaterThan100:GreaterThan' => 100],
+                'expected' => [$objects[0], $objects[1]],
+            ],
+            'greaterthan match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['GreaterThan100:GreaterThan:not' => 100],
+                'expected' => [$objects[2], $objects[3], $objects[4]],
+            ],
+            // greaterthanorequal filter
+            'greaterthanorequal match' => [
+                'objects' => $objects,
+                'filter' => ['GreaterThan100:GreaterThanOrEqual' => 100],
+                'expected' => [$objects[0], $objects[1], $objects[3]],
+            ],
+            'greaterthanorequal match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['GreaterThan100:GreaterThanOrEqual:not' => 100],
+                'expected' => [$objects[2], $objects[4]],
+            ],
+            // lessthan filter
+            'lessthan match' => [
+                'objects' => $objects,
+                'filter' => ['LessThan100:LessThan' => 100],
+                'expected' => [$objects[0], $objects[1], $objects[2], $objects[4]],
+            ],
+            'lessthan match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['LessThan100:LessThan:not' => 100],
+                'expected' => [$objects[3]],
+            ],
+            // lessthanorequal filter
+            'lessthanorequal match' => [
+                'objects' => $objects,
+                'filter' => ['LessThan100:LessThanOrEqual' => 99],
+                'expected' => [$objects[0], $objects[1], $objects[2], $objects[4]],
+            ],
+            'lessthanorequal match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['LessThan100:LessThanOrEqual:not' => 99],
+                'expected' => [$objects[3]],
+            ],
+            // various more complex filters/combinations and extra scenarios
+            'complex1' => [
+                'objects' => $objects,
+                'filter' => [
+                    'NoCase:nocase' => 'CASE SENSITIVE',
+                    'StartsWithTest:StartsWith' => 'Not',
+                ],
+                'expected' => [$objects[1]],
+            ],
+            'complex2' => [
+                'objects' => $objects,
+                'filter' => [
+                    'NoCase:case' => 'CASE SENSITIVE',
+                    'StartsWithTest:StartsWith' => 'Not',
+                ],
+                'expected' => [],
+            ],
+            'complex3' => [
+                'objects' => $objects,
+                'filter' => [
+                    'LessThan100:LessThan' => 100,
+                    'GreaterThan100:GreaterThan:not' => 100,
+                ],
+                'expected' => [$objects[2], $objects[4]],
+            ],
+            'complex4' => [
+                'objects' => $objects,
+                'filter' => [
+                    'LessThan100:LessThan' => 1,
+                    'GreaterThan100:GreaterThan' => 100,
+                ],
+                'expected' => [],
+            ],
+        ];
+    }
 
-        $list = new ArrayList(
-            [
-            $steve = ['Name' => 'Steve', 'ID' => 1, 'Age' => 21],
-            $bob = ['Name' => 'Bob', 'ID' => 2, 'Age' => 18],
-            $clair = ['Name' => 'Clair', 'ID' => 3, 'Age' => 21],
-            $phil = ['Name' => 'Phil', 'ID' => 4, 'Age' => 21],
-            $oscar = ['Name' => 'Oscar', 'ID' => 5, 'Age' => 52],
-            $mike = ['Name' => 'Mike', 'ID' => 6, 'Age' => 43],
-            ]
-        );
+    /**
+     * @dataProvider provideFilter
+     */
+    public function testFilter(array $objects, array $filter, array $expected, bool $filterWithArgs = false)
+    {
+        $list = new ArrayList($objects);
+        if ($filterWithArgs) {
+            $list = $list->filter($filter[0], $filter[1]);
+        } else {
+            $list = $list->filter($filter);
+        }
+        $this->assertEquals($expected, $list->toArray());
+    }
 
-        // only bob in the list
-        //$list = $list->filterAny('Name', 'bob');
-        $filteredList = $list->filterAny('Name', 'Bob')->toArray();
-        $this->assertCount(1, $filteredList);
-        $this->assertContains($bob, $filteredList);
+    public function provideFilterAny()
+    {
+        $objects = $this->getFilterObjects();
+        return [
+            // testing basic and advanced filter scenarios - ignore SearchFilters for now
+            'exact match' => [
+                'objects' => $objects,
+                'filter' => ['Title', 'Third Object'],
+                'expected' => [$objects[2]],
+                'filterWithArgs' => true,
+            ],
+            'exact match multiple' => [
+                'objects' => $objects,
+                'filter' => ['Title', ['First Object', 'Third Object']],
+                'expected' => [$objects[0], $objects[2]],
+                'filterWithArgs' => true,
+            ],
+            'exact match multiple, array syntax' => [
+                'objects' => $objects,
+                'filter' => ['Title' => ['First Object', 'Third Object']],
+                'expected' => [$objects[0], $objects[2]],
+            ],
+            'exact match multiple, one wouldnt match' => [
+                'objects' => $objects,
+                'filter' => ['Title' => ['First Object', 'Missing Object']],
+                'expected' => [$objects[0]],
+            ],
+            'exact match against several fields - with crossover' => [
+                'objects' => $objects,
+                'filter' => [
+                    'SomeField' => 'Some Value',
+                    'Title' => 'Third Object',
+                ],
+                'expected' => [$objects[0], $objects[2]],
+            ],
+            'exact match against several fields - without crossover' => [
+                'objects' => $objects,
+                'filter' => [
+                    'SomeField' => 'Some Value',
+                    'Title' => 'Fourth Object',
+                ],
+                'expected' => [$objects[0], $objects[2], $objects[3]],
+            ],
+            'exact match multiple fields, multiple values' => [
+                'objects' => $objects,
+                'filter' => [
+                    'Title' => 'First Object',
+                    'Name' => ['Steve', 'Bob']
+                ],
+                'expected' => [$objects[0], $objects[1], $objects[2]],
+            ],
+            'exact match multiple fields, all multiple values' => [
+                'objects' => $objects,
+                'filter' => [
+                    'Title' => ['First Object', 'Fourth Object'],
+                    'Name' => ['Steve', 'Bob']
+                ],
+                'expected' => [$objects[0], $objects[1], $objects[2], $objects[3]],
+            ],
+            'no match' => [
+                'objects' => $objects,
+                'filter' => [
+                    'Title' => 'Ninth Object',
+                    'Name' => ['Janet', 'Bob']
+                ],
+                'expected' => [],
+            ],
+            // test a couple of search filters
+            // don't need to be as explicit as the filter tests, just check the syntax works
+            'partial match' => [
+                'objects' => $objects,
+                'filter' => ['StartsWithTest:PartialMatch' => 'start'],
+                'expected' => [$objects[2]],
+            ],
+            'partial match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['StartsWithTest:PartialMatch:nocase' => 'start'],
+                'expected' => [$objects[1], $objects[2]],
+            ],
+            'greaterthan match' => [
+                'objects' => $objects,
+                'filter' => ['GreaterThan100:GreaterThan' => 100],
+                'expected' => [$objects[0], $objects[1]],
+            ],
+            'greaterthan match with modifier' => [
+                'objects' => $objects,
+                'filter' => ['GreaterThan100:GreaterThan:not' => 100],
+                'expected' => [$objects[2], $objects[3], $objects[4]],
+            ],
+        ];
+    }
 
-        // azis or bob in the list
-        //$list = $list->filterAny('Name', ['aziz', 'bob']);
-        $filteredList = $list->filterAny('Name', ['Aziz', 'Bob'])->toArray();
-        $this->assertCount(1, $filteredList);
-        $this->assertContains($bob, $filteredList);
+    /**
+     * @dataProvider provideFilterAny
+     */
+    public function testFilterAny(array $objects, array $filter, array $expected, bool $filterWithArgs = false)
+    {
+        $list = new ArrayList($objects);
+        if ($filterWithArgs) {
+            $list = $list->filterAny($filter[0], $filter[1]);
+        } else {
+            $list = $list->filterAny($filter);
+        }
+        $this->assertEquals($expected, $list->toArray());
+    }
 
-        $filteredList = $list->filterAny('Name', ['Steve', 'Bob'])->toArray();
-        $this->assertCount(2, $filteredList);
-        $this->assertContains($steve, $filteredList);
-        $this->assertContains($bob, $filteredList);
+    public function provideExclude()
+    {
+        // If it's included in the filter test, then it's excluded in the exclude test,
+        // so we can just use the same scenarios and reverse the expected results.
+        $objects = $this->getFilterObjects();
+        $scenarios = $this->provideFilter();
+        foreach ($scenarios as $name => $scenario) {
+            $kept = [];
+            $excluded = [];
+            foreach ($scenario['expected'] as $object) {
+                $objectAsArray = (array)$object;
+                $kept[] = $objectAsArray['ID'];
+            }
+            foreach ($objects as $object) {
+                $objectAsArray = (array)$object;
+                if (!in_array($objectAsArray['ID'], $kept)) {
+                    $excluded[] = $object;
+                }
+            }
+            $scenarios[$name]['expected'] = $excluded;
+        }
+        return $scenarios;
+    }
 
-        // bob or anyone aged 21 in the list
-        //$list = $list->filterAny(['Name'=>'bob, 'Age'=>21]);
-        $filteredList = $list->filterAny(['Name' => 'Bob', 'Age' => 21])->toArray();
-        $this->assertCount(4, $filteredList);
-        $this->assertContains($bob, $filteredList);
-        $this->assertContains($steve, $filteredList);
-        $this->assertContains($clair, $filteredList);
-        $this->assertContains($phil, $filteredList);
+    /**
+     * @dataProvider provideExclude
+     */
+    public function testExclude(array $objects, array $exclude, array $expected, bool $filterWithArgs = false)
+    {
+        $list = new ArrayList($objects);
+        if ($filterWithArgs) {
+            $list = $list->exclude($exclude[0], $exclude[1]);
+        } else {
+            $list = $list->exclude($exclude);
+        }
+        $this->assertEquals($expected, $list->toArray());
+    }
 
-        // bob or anyone aged 21 or 43 in the list
-        // $list = $list->filterAny(['Name'=>'bob, 'Age'=>[21, 43]]);
-        $filteredList = $list->filterAny(['Name' => 'Bob', 'Age' => [21, 43]])->toArray();
-        $this->assertCount(5, $filteredList);
-        $this->assertContains($bob, $filteredList);
-        $this->assertContains($steve, $filteredList);
-        $this->assertContains($clair, $filteredList);
-        $this->assertContains($mike, $filteredList);
-        $this->assertContains($phil, $filteredList);
+    public function provideExcludeAny()
+    {
+        // If it's included in the filterAny test, then it's excluded in the excludeAny test,
+        // so we can just use the same scenarios and reverse the expected results.
+        $objects = $this->getFilterObjects();
+        $scenarios = $this->provideFilterAny();
+        foreach ($scenarios as $name => $scenario) {
+            $kept = [];
+            $excluded = [];
+            foreach ($scenario['expected'] as $object) {
+                $objectAsArray = (array)$object;
+                $kept[] = $objectAsArray['ID'];
+            }
+            foreach ($objects as $object) {
+                $objectAsArray = (array)$object;
+                if (!in_array($objectAsArray['ID'], $kept)) {
+                    $excluded[] = $object;
+                }
+            }
+            $scenarios[$name]['expected'] = $excluded;
+        }
+        return $scenarios;
+    }
 
-        // all bobs, phils or anyone aged 21 or 43 in the list
-        //$list = $list->filterAny(['Name'=>['bob','phil'], 'Age'=>[21, 43]]);
-        $filteredList = $list->filterAny(['Name' => ['Bob', 'Phil'], 'Age' => [21, 43]])->toArray();
-        $this->assertCount(5, $filteredList);
-        $this->assertContains($bob, $filteredList);
-        $this->assertContains($steve, $filteredList);
-        $this->assertContains($clair, $filteredList);
-        $this->assertContains($mike, $filteredList);
-        $this->assertContains($phil, $filteredList);
-
-        $filteredList = $list->filterAny(['Name' => ['Bob', 'Nobody'], 'Age' => [21, 43]])->toArray();
-        $this->assertCount(5, $filteredList);
-        $this->assertContains($bob, $filteredList);
-        $this->assertContains($steve, $filteredList);
-        $this->assertContains($clair, $filteredList);
-        $this->assertContains($mike, $filteredList);
-        $this->assertContains($phil, $filteredList);
+    /**
+     * @dataProvider provideExcludeAny
+     */
+    public function testExcludeAny(array $objects, array $exclude, array $expected, bool $filterWithArgs = false)
+    {
+        $list = new ArrayList($objects);
+        if ($filterWithArgs) {
+            $list = $list->excludeAny($exclude[0], $exclude[1]);
+        } else {
+            $list = $list->excludeAny($exclude);
+        }
+        $this->assertEquals($expected, $list->toArray());
     }
 
     /**
@@ -1010,188 +1328,6 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($steve, $list[0]->toMap(), 'List should only contain Steve and Clair');
         $this->assertEquals($clair, $list[1]->toMap(), 'List should only contain Steve and Clair');
         $this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
-    }
-
-    /**
-     * $list->exclude('Name', 'bob'); // exclude bob from list
-     */
-    public function testSimpleExclude()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve'],
-            ['Name' => 'Bob'],
-            ['Name' => 'John']
-            ]
-        );
-
-        $list = $list->exclude('Name', 'Bob');
-        $expected = [
-            ['Name' => 'Steve'],
-            ['Name' => 'John']
-        ];
-        $this->assertEquals(2, $list->count());
-        $this->assertEquals($expected, $list->toArray(), 'List should not contain Bob');
-    }
-
-    /**
-     * $list->exclude('Name', 'bob'); // No exclusion version
-     */
-    public function testSimpleExcludeNoMatch()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve'],
-            ['Name' => 'Bob'],
-            ['Name' => 'John']
-            ]
-        );
-
-        $list = $list->exclude('Name', 'Clair');
-        $expected = [
-            ['Name' => 'Steve'],
-            ['Name' => 'Bob'],
-            ['Name' => 'John']
-        ];
-        $this->assertEquals($expected, $list->toArray(), 'List should be unchanged');
-    }
-
-    /**
-     * $list->exclude('Name', array('Steve','John'));
-     */
-    public function testSimpleExcludeWithArray()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Steve'],
-            ['Name' => 'Bob'],
-            ['Name' => 'John']
-            ]
-        );
-        $list = $list->exclude('Name', ['Steve','John']);
-        $expected = [['Name' => 'Bob']];
-        $this->assertEquals(1, $list->count());
-        $this->assertEquals($expected, $list->toArray(), 'List should only contain Bob');
-    }
-
-    /**
-     * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude all Bob that has Age 21
-     */
-    public function testExcludeWithTwoArrays()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'Bob' , 'Age' => 21],
-            ['Name' => 'Bob' , 'Age' => 32],
-            ['Name' => 'John', 'Age' => 21]
-            ]
-        );
-
-        $list = $list->exclude(['Name' => 'Bob', 'Age' => 21]);
-
-        $expected = [
-            ['Name' => 'Bob', 'Age' => 32],
-            ['Name' => 'John', 'Age' => 21]
-        ];
-
-        $this->assertEquals(2, $list->count());
-        $this->assertEquals($expected, $list->toArray(), 'List should only contain John and Bob');
-    }
-
-    /**
-     * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16)));
-     */
-    public function testMultipleExclude()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'bob', 'Age' => 10],
-            ['Name' => 'phil', 'Age' => 11],
-            ['Name' => 'bob', 'Age' => 12],
-            ['Name' => 'phil', 'Age' => 12],
-            ['Name' => 'bob', 'Age' => 14],
-            ['Name' => 'phil', 'Age' => 14],
-            ['Name' => 'bob', 'Age' => 16],
-            ['Name' => 'phil', 'Age' => 16]
-            ]
-        );
-
-        $list = $list->exclude(['Name'=>['bob','phil'],'Age'=>[10, 16]]);
-        $expected = [
-            ['Name' => 'phil', 'Age' => 11],
-            ['Name' => 'bob', 'Age' => 12],
-            ['Name' => 'phil', 'Age' => 12],
-            ['Name' => 'bob', 'Age' => 14],
-            ['Name' => 'phil', 'Age' => 14],
-        ];
-        $this->assertEquals($expected, $list->toArray());
-    }
-
-    /**
-     * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16), 'Bananas'=>true));
-     */
-    public function testMultipleExcludeNoMatch()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'bob', 'Age' => 10],
-            ['Name' => 'phil', 'Age' => 11],
-            ['Name' => 'bob', 'Age' => 12],
-            ['Name' => 'phil', 'Age' => 12],
-            ['Name' => 'bob', 'Age' => 14],
-            ['Name' => 'phil', 'Age' => 14],
-            ['Name' => 'bob', 'Age' => 16],
-            ['Name' => 'phil', 'Age' => 16]
-            ]
-        );
-
-        $list = $list->exclude(['Name'=>['bob','phil'],'Age'=>[10, 16],'Bananas'=>true]);
-        $expected = [
-            ['Name' => 'bob', 'Age' => 10],
-            ['Name' => 'phil', 'Age' => 11],
-            ['Name' => 'bob', 'Age' => 12],
-            ['Name' => 'phil', 'Age' => 12],
-            ['Name' => 'bob', 'Age' => 14],
-            ['Name' => 'phil', 'Age' => 14],
-            ['Name' => 'bob', 'Age' => 16],
-            ['Name' => 'phil', 'Age' => 16]
-        ];
-        $this->assertEquals($expected, $list->toArray());
-    }
-
-    /**
-     * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16), 'HasBananas'=>true));
-     */
-    public function testMultipleExcludeThreeArguments()
-    {
-        $list = new ArrayList(
-            [
-            ['Name' => 'bob', 'Age' => 10, 'HasBananas'=>false],
-            ['Name' => 'phil','Age' => 11, 'HasBananas'=>true],
-            ['Name' => 'bob', 'Age' => 12, 'HasBananas'=>true],
-            ['Name' => 'phil','Age' => 12, 'HasBananas'=>true],
-            ['Name' => 'bob', 'Age' => 14, 'HasBananas'=>false],
-            ['Name' => 'ann', 'Age' => 14, 'HasBananas'=>true],
-            ['Name' => 'phil','Age' => 14, 'HasBananas'=>false],
-            ['Name' => 'bob', 'Age' => 16, 'HasBananas'=>false],
-            ['Name' => 'phil','Age' => 16, 'HasBananas'=>true],
-            ['Name' => 'clair','Age' => 16, 'HasBananas'=>true]
-            ]
-        );
-
-        $list = $list->exclude(['Name'=>['bob','phil'],'Age'=>[10, 16],'HasBananas'=>true]);
-        $expected = [
-            ['Name' => 'bob', 'Age' => 10, 'HasBananas'=>false],
-            ['Name' => 'phil','Age' => 11, 'HasBananas'=>true],
-            ['Name' => 'bob', 'Age' => 12, 'HasBananas'=>true],
-            ['Name' => 'phil','Age' => 12, 'HasBananas'=>true],
-            ['Name' => 'bob', 'Age' => 14, 'HasBananas'=>false],
-            ['Name' => 'ann', 'Age' => 14, 'HasBananas'=>true],
-            ['Name' => 'phil','Age' => 14, 'HasBananas'=>false],
-            ['Name' => 'bob', 'Age' => 16, 'HasBananas'=>false],
-            ['Name' => 'clair','Age' => 16, 'HasBananas'=>true]
-        ];
-        $this->assertEquals($expected, $list->toArray());
     }
 
     public function testCanFilterBy()

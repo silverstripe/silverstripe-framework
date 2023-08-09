@@ -2,208 +2,156 @@
 
 namespace SilverStripe\ORM\Tests\Filters;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Filters\ExactMatchFilter;
-use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Task;
-use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project;
-use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\View\ArrayData;
 
-class ExactMatchFilterTest extends SapphireTest
+class PartialMatchFilterTest extends SapphireTest
 {
-    protected static $fixture_file = 'ExactMatchFilterTest.yml';
-
-    protected static $extra_dataobjects = [
-        Task::class,
-        Project::class,
-    ];
-
-    /**
-     * @dataProvider provideUsePlaceholders
-     */
-    public function testUsePlaceholders(?bool $expectedID, ?bool $expectedTitle, bool $config, callable $fn): void
-    {
-        Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
-        [$idQueryUsesPlaceholders, $titleQueryUsesPlaceholders] = $this->usesPlaceholders($fn);
-        $this->assertSame($expectedID, $idQueryUsesPlaceholders);
-        $this->assertSame($expectedTitle, $titleQueryUsesPlaceholders);
-    }
-
-    public function provideUsePlaceholders(): array
-    {
-        $ids = [1, 2, 3];
-        $taskTitles = array_map(fn($i) => "Task $i", $ids);
-        return [
-            'primary key' => [
-                'expectedID' => false,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Task::get()->byIDs($ids)
-            ],
-            'primary key on relation' => [
-                'expectedID' => false,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Project::get()->filter('Tasks.ID', $ids)
-            ],
-            'foriegn key' => [
-                'expectedID' => false,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter(['ProjectID' => $ids])
-            ],
-            'regular column' => [
-                'expectedID' => null,
-                'expectedTitle' => true,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter(['Title' => $taskTitles])
-            ],
-            'primary key + regular column' => [
-                'expectedID' => false,
-                'expectedTitle' => true,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter([
-                    'ID' => $ids,
-                    'Title' => $taskTitles
-                ])
-            ],
-            'primary key config enabled' => [
-                'expectedID' => true,
-                'expectedTitle' => null,
-                'config' => true,
-                'fn' => fn() => Task::get()->byIDs($ids)
-            ],
-            'non int values' => [
-                'expectedID' => true,
-                'expectedTitle' => null,
-                'config' => false,
-                'fn' => fn() => Task::get()->filter(['ID' => ['a', 'b', 'c']])
-            ],
-        ];
-    }
-
-    private function usesPlaceholders(callable $fn): array
-    {
-        // force showqueries on to view executed SQL via output-buffering
-        $list = $fn();
-        $sql = $list->dataQuery()->sql();
-        preg_match('#ID" IN \(([^\)]+)\)\)#', $sql, $matches);
-        $idQueryUsesPlaceholders = isset($matches[1]) ? $matches[1] === '?, ?, ?' : null;
-        preg_match('#"Title" IN \(([^\)]+)\)\)#', $sql, $matches);
-        $titleQueryUsesPlaceholders = isset($matches[1]) ? $matches[1] === '?, ?, ?' : null;
-        return [$idQueryUsesPlaceholders, $titleQueryUsesPlaceholders];
-    }
 
     public function provideMatches()
     {
         $scenarios = [
             // without modifiers
-            [
+            'null partially matches null' => [
                 'filterValue' => null,
                 'objValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
-            [
+            'null partially matches empty' => [
                 'filterValue' => null,
                 'objValue' => '',
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'empty partially matches null' => [
                 'filterValue' => '',
                 'objValue' => null,
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'empty partially matches empty' => [
                 'filterValue' => '',
                 'objValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
-            [
+            'false partially matches empty' => [
                 'filterValue' => false,
                 'objValue' => '',
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'true doesnt partially match empty' => [
                 'filterValue' => true,
                 'objValue' => '',
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'empty partially matches false' => [
                 'filterValue' => '',
                 'objValue' => false,
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'empty doesnt partially match true' => [
                 'filterValue' => '',
                 'objValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'false partially matches null' => [
                 'filterValue' => false,
                 'objValue' => null,
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'null partially matches false' => [
                 'filterValue' => null,
                 'objValue' => false,
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'true doesnt partially match false' => [
                 'filterValue' => true,
                 'objValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
-            [
+            'false doesnt partially match true' => [
+                'filterValue' => false,
+                'objValue' => true,
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            'false partially matches false' => [
                 'filterValue' => false,
                 'objValue' => false,
                 'modifiers' => [],
                 'matches' => true,
             ],
-            [
+            'true partially matches true' => [
                 'filterValue' => true,
                 'objValue' => true,
                 'modifiers' => [],
                 'matches' => true,
             ],
-            [
-                'filterValue' => 'SomeValue',
-                'objValue' => 'SomeValue',
-                'modifiers' => [],
-                'matches' => true,
-            ],
-            [
-                'filterValue' => 'somevalue',
-                'objValue' => 'SomeValue',
-                'modifiers' => [],
-                'matches' => false,
-            ],
-            [
+            'number is cast to string' => [
                 'filterValue' => 1,
                 'objValue' => '1',
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
-            [
+            'numeric match' => [
                 'filterValue' => 1,
                 'objValue' => 1,
                 'modifiers' => [],
                 'matches' => true,
             ],
-            // test some values that are clearly not strings, since exact match
-            // is the default for ArrayList filtering which can have basically
-            // anything as its value
+            'partial numeric match' => [
+                'filterValue' => '1',
+                'objValue' => 100,
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'partial numeric match2' => [
+                'filterValue' => 1,
+                'objValue' => 100,
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'partial numeric match3' => [
+                'filterValue' => 0,
+                'objValue' => 100,
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'case sensitive match' => [
+                'filterValue' => 'SomeValue',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'case sensitive mismatch' => [
+                'filterValue' => 'somevalue',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            'case sensitive partial match' => [
+                'filterValue' => 'meVal',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => true,
+            ],
+            'case sensitive partial mismatch' => [
+                'filterValue' => 'meval',
+                'objValue' => 'SomeValue',
+                'modifiers' => [],
+                'matches' => false,
+            ],
+            // These will both evaluate to true because the __toString() method just returns the class name.
             [
                 'filterValue' => new ArrayData(['SomeField' => 'some value']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
@@ -214,7 +162,7 @@ class ExactMatchFilterTest extends SapphireTest
                 'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => [],
-                'matches' => false,
+                'matches' => true,
             ],
             // case insensitive
             [
@@ -227,8 +175,21 @@ class ExactMatchFilterTest extends SapphireTest
                 'filterValue' => 'some',
                 'objValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
+                'matches' => true,
+            ],
+            [
+                'filterValue' => 'meval',
+                'objValue' => 'SomeValue',
+                'modifiers' => ['nocase'],
+                'matches' => true,
+            ],
+            [
+                'filterValue' => 'different',
+                'objValue' => 'SomeValue',
+                'modifiers' => ['nocase'],
                 'matches' => false,
             ],
+            // These will both evaluate to true because the __toString() method just returns the class name.
             [
                 'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
@@ -239,7 +200,7 @@ class ExactMatchFilterTest extends SapphireTest
                 'filterValue' => new ArrayData(['SomeField' => 'VaLuE']),
                 'objValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => ['nocase'],
-                'matches' => false,
+                'matches' => true,
             ],
         ];
         // negated
@@ -263,7 +224,7 @@ class ExactMatchFilterTest extends SapphireTest
      */
     public function testMatches(mixed $filterValue, mixed $objValue, array $modifiers, bool $matches)
     {
-        $filter = new ExactMatchFilter();
+        $filter = new PartialMatchFilter();
         $filter->setValue($filterValue);
         $filter->setModifiers($modifiers);
         $this->assertSame($matches, $filter->matches($objValue));

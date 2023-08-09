@@ -13,6 +13,7 @@ namespace SilverStripe\ORM\Filters;
  */
 class StartsWithFilter extends PartialMatchFilter
 {
+    protected static $matchesStartsWith = true;
 
     protected function getMatchPattern($value)
     {
