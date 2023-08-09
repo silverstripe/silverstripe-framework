@@ -25,6 +25,7 @@ use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
+use ReflectionMethod;
 use stdClass;
 
 class DataObjectTest extends SapphireTest
@@ -2677,5 +2678,49 @@ class DataObjectTest extends SapphireTest
         $this->assertSame('some value', $obj->getField('MyTestField'));
         // Getter overrides it with all upper case
         $this->assertSame('SOME VALUE', $obj->MyTestField);
+    }
+
+    public function provideTestGetDatabaseBackedField()
+    {
+        return [
+            ['Captain.IsRetired', 'Captain.IsRetired'],
+            ['Captain.ShirtNumber', 'Captain.ShirtNumber'],
+            ['Captain.FavouriteTeam', null],
+            ['Captain.FavouriteTeam.Fans', null],
+            ['Captain.FavouriteTeam.Fans.Count', null],
+            ['Captain.FavouriteTeam.Title', 'Captain.FavouriteTeam.Title'],
+            ['Captain.FavouriteTeam.Title.Plain', 'Captain.FavouriteTeam.Title'],
+            ['Captain.FavouriteTeam.ReturnsNull', null],
+            ['Captain.FavouriteTeam.MethodDoesNotExist', null],
+            ['Captain.ReturnsNull', null],
+            ['Founder.FavouriteTeam.Captain.ShirtNumber', 'Founder.FavouriteTeam.Captain.ShirtNumber'],
+            ['Founder.FavouriteTeam.Captain.Fans', null],
+            ['Founder.FavouriteTeam.Captain.Fans.Name.Plain', 'Founder.FavouriteTeam.Captain.Fans.Name'],
+            ['Founder.FavouriteTeam.Captain.ReturnsNull', null],
+            ['HasOneRelationship.FavouriteTeam.MyTitle', null],
+            ['SubTeams.Comments.Name.Plain', 'SubTeams.Comments.Name'],
+            ['Title', 'Title'],
+            ['Title.Plain', 'Title'],
+            ['DatabaseField', 'DatabaseField'],
+            ['DatabaseField.MethodDoesNotExist', 'DatabaseField'],
+            ['ReturnsNull', null],
+            ['DynamicField', null],
+            ['SubTeams.ParentTeam.Fans', null],
+            ['SubTeams.ParentTeam.Founder.FoundingTeams', null],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTestGetDatabaseBackedField
+     */
+    public function testGetDatabaseBackedField(string $fieldPath, $expected)
+    {
+        $dataObjectClass = new DataObject();
+        $method = new ReflectionMethod($dataObjectClass, 'getDatabaseBackedField');
+        $method->setAccessible(true);
+        $class = new Team([]);
+
+        $databaseBackedField = $method->invokeArgs($class, [$fieldPath]);
+        $this->assertSame($expected, $databaseBackedField);
     }
 }

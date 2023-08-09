@@ -208,4 +208,25 @@ EOS
             $readonlyContent->getValue()
         );
     }
+
+    public function testValueEntities()
+    {
+        $inputText = "The company &amp; partners";
+        $field = new HTMLEditorField("Content");
+        $field->setValue($inputText);
+
+        $this->assertEquals(
+            "The company &amp; partners",
+            $field->obj('ValueEntities')->forTemplate()
+        );
+
+        $inputText = "The company &amp;&amp; partners";
+        $field = new HTMLEditorField("Content");
+        $field->setValue($inputText);
+
+        $this->assertEquals(
+            "The company &amp;&amp; partners",
+            $field->obj('ValueEntities')->forTemplate()
+        );
+    }
 }

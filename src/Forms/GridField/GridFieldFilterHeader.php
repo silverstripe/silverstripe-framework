@@ -214,7 +214,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             sort($searchableFields);
             sort($summaryFields);
             // searchable_fields has been explictily defined i.e. searchableFields() is not falling back to summary_fields
-            if ($searchableFields !== $summaryFields) {
+            if (!empty($searchableFields) && ($searchableFields !== $summaryFields)) {
                 return true;
             }
             // we have fallen back to summary_fields, check they are filterable

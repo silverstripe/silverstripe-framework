@@ -8,8 +8,15 @@ Requires PHPUnit ^9
         <testsuite name="Default">
             <directory>tests/php</directory>
         </testsuite>
-        <testsuite name="framework">
+        <!-- Framework ORM tests are split up to run in parallel -->
+        <testsuite name="framework-core">
             <directory>tests/php</directory>
+            <exclude>
+                <directory>tests/php/ORM</directory>
+            </exclude>
+        </testsuite>
+        <testsuite name="framework-orm">
+            <directory>tests/php/ORM</directory>
         </testsuite>
         <testsuite name="cms">
             <directory>vendor/silverstripe/cms/tests</directory>
