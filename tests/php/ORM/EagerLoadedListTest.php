@@ -49,16 +49,19 @@ class EagerLoadedListTest extends SapphireTest
                 'ID' => 1,
                 'Name' => 'test obj 1',
                 'Created' => '2013-01-01 00:00:00',
+                'SomeField' => 'VaLuE',
             ],
             [
                 'ID' => 2,
                 'Name' => 'test obj 2',
                 'Created' => '2023-01-01 00:00:00',
+                'SomeField' => 'value',
             ],
             [
                 'ID' => 3,
                 'Name' => 'test obj 3',
                 'Created' => '2023-01-01 00:00:00',
+                'SomeField' => null,
             ],
         ];
     }
@@ -316,6 +319,7 @@ class EagerLoadedListTest extends SapphireTest
 
     /**
      * @dataProvider provideFilter
+     * @dataProvider provideFilterWithSearchFilters
      */
     public function testFilter(
         string $dataListClass,
@@ -417,13 +421,290 @@ class EagerLoadedListTest extends SapphireTest
                 'dataListClass' => ManyManyThroughList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
                 $rows,
-                // Filter by ID is handled slightly differently than other fields
                 'filter' => [
                     'ID' => [1, 2],
                 ],
                 'expected' => [1, 2],
             ],
         ];
+    }
+
+    public function provideFilterWithSearchFilters()
+    {
+        $rows = $this->getBasicRecordRows();
+        $scenarios = [
+            // exact match filter tests
+            'exact match - negate' => [
+                'filter' => ['Name:not' => 'test obj 1'],
+                'expected' => [2, 3],
+            ],
+            'exact match - negate two different ways' => [
+                'filter' => [
+                    'Name:not' => 'test obj 1',
+                    'Name:ExactMatch:not' => 'test obj 3',
+                ],
+                'expected' => [2],
+            ],
+            'exact match negated - nothing gets filtered out' => [
+                'filter' => ['Name:not' => 'No row has this name - we should have all rows'],
+                'expected' => array_column($rows, 'ID'),
+            ],
+            'exact match negated against null - only last item gets filtered out' => [
+                'filter' => ['SomeField:not' => null],
+                'expected' => [1, 2],
+            ],
+            'exact match negated with a few items' => [
+                'filter' => [
+                    'Name:not' => ['test obj 1', 'test obj 3', 'not there'],
+                ],
+                'expected' => [2],
+            ],
+            // case sensitivity checks
+            'exact match case sensitive' => [
+                'filter' => ['SomeField:case' => 'value'],
+                'expected' => [2],
+            ],
+            'exact match case insensitive' => [
+                'filter' => ['SomeField:nocase' => 'value'],
+                'expected' => [1, 2],
+            ],
+            // explicit exact match
+            'exact match explicit' => [
+                'filter' => ['Name:ExactMatch' => 'test obj 2'],
+                'expected' => [2],
+            ],
+            'exact match explicit with modifier' => [
+                'filter' => ['Name:ExactMatch:nocase' => 'Test Obj 2'],
+                'expected' => [2],
+            ],
+            // partialmatch filter
+            'partial match' => [
+                'filter' => ['SomeField:PartialMatch:case' => 'alu'],
+                'expected' => [2],
+            ],
+            'partial match with modifier' => [
+                'filter' => ['SomeField:PartialMatch:nocase' => 'alu'],
+                'expected' => [1, 2],
+            ],
+            // greaterthan filter
+            'greaterthan match' => [
+                'filter' => ['ID:GreaterThan' => 2],
+                'expected' => [3],
+            ],
+            'greaterthan match with modifier' => [
+                'filter' => ['ID:GreaterThan:not' => 2],
+                'expected' => [1, 2],
+            ],
+            // greaterthanorequal filter
+            'greaterthanorequal match' => [
+                'filter' => ['ID:GreaterThanOrEqual' => 2],
+                'expected' => [2, 3],
+            ],
+            'greaterthanorequal match with modifier' => [
+                'filter' => ['ID:GreaterThanOrEqual:not' => 2],
+                'expected' => [1],
+            ],
+            // lessthan filter
+            'lessthan match' => [
+                'filter' => ['ID:LessThan' => 2],
+                'expected' => [1],
+            ],
+            'lessthan match with modifier' => [
+                'filter' => ['ID:LessThan:not' => 2],
+                'expected' => [2, 3],
+            ],
+            // lessthanorequal filter
+            'lessthanorequal match' => [
+                'filter' => ['ID:LessThanOrEqual' => 2],
+                'expected' => [1, 2],
+            ],
+            'lessthanorequal match with modifier' => [
+                'filter' => ['ID:LessThanOrEqual:not' => 2],
+                'expected' => [3],
+            ],
+            // various more complex filters/combinations and extra scenarios
+            'complex1' => [
+                'filter' => [
+                    'SomeField:nocase' => 'value',
+                    'Name:StartsWith' => 'test',
+                ],
+                'expected' => [1, 2],
+            ],
+            'complex2' => [
+                'filter' => [
+                    'ID:LessThan' => 3,
+                    'ID:GreaterThan:not' => 1,
+                ],
+                'expected' => [1],
+            ],
+            'complex3' => [
+                'filter' => [
+                    'ID:LessThan' => 3,
+                    'ID:GreaterThan' => 1,
+                ],
+                'expected' => [2],
+            ],
+        ];
+        // No need to vary these between scenarios, we're just checking search filter
+        // syntax works as expected.
+        foreach (array_keys($scenarios) as $key) {
+            array_unshift($scenarios[$key], $rows);
+            array_unshift($scenarios[$key], ValidatedObject::class);
+            array_unshift($scenarios[$key], DataList::class);
+        }
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideFilterAnyWithSearchFilters
+     */
+    public function testFilterAnyWithSearchfilters(array $filter, array $expectedIDs): void
+    {
+        $rows = $this->getBasicRecordRows();
+        $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
+        foreach ($rows as $row) {
+            $list->addRow($row);
+        }
+        $filteredList = $list->filterAny($filter);
+
+        // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
+        $this->assertCount(count($rows), $list);
+        $this->assertCount(count($expectedIDs), $filteredList);
+
+        // Validate that the filtered list has the CORRECT records
+        $this->iterate($list, $rows, array_column($rows, 'ID'));
+    }
+
+    public function provideFilterAnyWithSearchFilters()
+    {
+        return [
+            // test a couple of search filters
+            // don't need to be as explicit as the filter tests, just check the syntax works
+            'partial match' => [
+                'filter' => ['Name:PartialMatch' => 'test obj'],
+                'expected' => [1, 2, 3],
+            ],
+            'partial match2' => [
+                'filter' => ['Name:PartialMatch' => 3],
+                'expected' => [3],
+            ],
+            'partial match with modifier' => [
+                'filter' => ['SomeField:PartialMatch:nocase' => 'alu'],
+                'expected' => [1, 2],
+            ],
+            'greaterthan match' => [
+                'filter' => ['ID:GreaterThan'=> 2],
+                'expected' => [3],
+            ],
+            'greaterthan match with modifier' => [
+                'filter' => ['ID:GreaterThan:not' => 2],
+                'expected' => [1, 2],
+            ],
+            'multiple filters match' => [
+                'filter' => [
+                    'SomeField:PartialMatch:case' => 'val',
+                    'ID:GreaterThanOrEqual' => 2,
+                ],
+                'expected' => [2, 3],
+            ],
+            'exact match with a few items' => [
+                'filter' => ['Name:ExactMatch' => ['test obj 1', 'test obj 2']],
+                'expected' => [1, 2],
+            ],
+            'negate the above test' => [
+                'filter' => ['Name:ExactMatch:not' => ['test obj 1', 'test obj 2']],
+                'expected' => [3],
+            ],
+        ];
+    }
+
+    public function provideExcludeWithSearchfilters()
+    {
+        // If it's included in the filter test, then it's excluded in the exclude test,
+        // so we can just use the same scenarios and reverse the expected results.
+        $rows = $this->getBasicRecordRows();
+        $scenarios = $this->provideFilterWithSearchfilters();
+        foreach ($scenarios as $name => $scenario) {
+            $kept = [];
+            $excluded = [];
+            foreach ($scenario['expected'] as $id) {
+                $kept[] = $id;
+            }
+            foreach ($rows as $row) {
+                if (!in_array($row['ID'], $kept)) {
+                    $excluded[] = $row['ID'];
+                }
+            }
+            $scenarios[$name]['expected'] = $excluded;
+
+            // Remove args we won't be using for this test
+            foreach (['dataListClass', 'eagerloadedDataClass', 'rows'] as $removeFromScenario) {
+                array_shift($scenarios[$name]);
+            }
+        }
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideExcludeWithSearchfilters
+     */
+    public function testExcludeWithSearchfilters(array $filter, array $expectedIDs): void
+    {
+        $rows = $this->getBasicRecordRows();
+        $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
+        foreach ($rows as $row) {
+            $list->addRow($row);
+        }
+        $filteredList = $list->exclude($filter);
+
+        // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
+        $this->assertCount(count($rows), $list);
+        $this->assertCount(count($expectedIDs), $filteredList);
+
+        // Validate that the filtered list has the CORRECT records
+        $this->iterate($list, $rows, array_column($rows, 'ID'));
+    }
+
+    public function provideExcludeAnyWithSearchfilters()
+    {
+        // If it's included in the filterAny test, then it's excluded in the excludeAny test,
+        // so we can just use the same scenarios and reverse the expected results.
+        $rows = $this->getBasicRecordRows();
+        $scenarios = $this->provideFilterAnyWithSearchfilters();
+        foreach ($scenarios as $name => $scenario) {
+            $kept = [];
+            $excluded = [];
+            foreach ($scenario['expected'] as $id) {
+                $kept[] = $id;
+            }
+            foreach ($rows as $row) {
+                if (!in_array($row['ID'], $kept)) {
+                    $excluded[] = $row['ID'];
+                }
+            }
+            $scenarios[$name]['expected'] = $excluded;
+        }
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideExcludeAnyWithSearchfilters
+     */
+    public function testExcludeAnyWithSearchfilters(array $filter, array $expectedIDs): void
+    {
+        $rows = $this->getBasicRecordRows();
+        $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
+        foreach ($rows as $row) {
+            $list->addRow($row);
+        }
+        $filteredList = $list->excludeAny($filter);
+
+        // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
+        $this->assertCount(count($rows), $list);
+        $this->assertCount(count($expectedIDs), $filteredList);
+
+        // Validate that the filtered list has the CORRECT records
+        $this->iterate($list, $rows, array_column($rows, 'ID'));
     }
 
     public function testFilterByInvalidColumn()
@@ -1189,12 +1470,50 @@ class EagerLoadedListTest extends SapphireTest
                     ]
                 ],
             ],
+            'Filter by non-null' => [
+                'filterMethod' => 'filter',
+                'filter' => ['Email:not' => null],
+                'expected' => [
+                    [
+                        'Name' => 'Damian',
+                        'Email' => 'damian@thefans.com',
+                    ],
+                    [
+                        'Name' => 'Richard',
+                        'Email' => 'richie@richers.com',
+                    ],
+                    [
+                        'Name' => 'Hamish',
+                    ]
+                ],
+            ],
             'Filter by empty only' => [
                 'filterMethod' => 'filter',
                 'filter' => ['Email' => ''],
                 'expected' => [
                     [
                         'Name' => 'Hamish',
+                    ]
+                ],
+            ],
+            // This should include null values, matching the behaviour in DataList
+            'Non-empty only' => [
+                'filterMethod' => 'filter',
+                'filter' => ['Email:not' => ''],
+                'expected' => [
+                    [
+                        'Name' => 'Damian',
+                        'Email' => 'damian@thefans.com',
+                    ],
+                    [
+                        'Name' => 'Richard',
+                        'Email' => 'richie@richers.com',
+                    ],
+                    [
+                        'Name' => 'Stephen',
+                    ],
+                    [
+                        'Name' => 'Mitch',
                     ]
                 ],
             ],
@@ -1232,7 +1551,17 @@ class EagerLoadedListTest extends SapphireTest
                     ]
                 ],
             ],
-            'Filter by many including empty string and non-empty' => [
+            'Filter exclusion of above list' => [
+                'filterMethod' => 'filter',
+                'filter' => ['Email:not' => [null, '', 'damian@thefans.com']],
+                'expected' => [
+                    [
+                        'Name' => 'Richard',
+                        'Email' => 'richie@richers.com',
+                    ],
+                ],
+            ],
+            'Filter by many including empty string and non-empty 1' => [
                 'filterMethod' => 'filter',
                 'filter' => ['Email' => ['', 'damian@thefans.com']],
                 'expected' => [
@@ -1242,6 +1571,41 @@ class EagerLoadedListTest extends SapphireTest
                     ],
                     [
                         'Name' => 'Hamish',
+                    ]
+                ],
+            ],
+            'Filter by many including empty string and non-empty 2' => [
+                'filterMethod' => 'filter',
+                'filter' => ['Email:not' => ['', 'damian@thefans.com']],
+                'expected' => [
+                    [
+                        'Name' => 'Richard',
+                        'Email' => 'richie@richers.com',
+                    ],
+                    [
+                        'Name' => 'Stephen',
+                    ],
+                    [
+                        'Name' => 'Mitch',
+                    ]
+                ],
+            ],
+            'Filter by many including empty string and non-empty 3' => [
+                'filterMethod' => 'filterAny',
+                'filter' => [
+                    'Email:not' => ['', 'damian@thefans.com'],
+                    'Email' => null
+                ],
+                'expected' => [
+                    [
+                        'Name' => 'Richard',
+                        'Email' => 'richie@richers.com',
+                    ],
+                    [
+                        'Name' => 'Stephen',
+                    ],
+                    [
+                        'Name' => 'Mitch',
                     ]
                 ],
             ],
@@ -1388,6 +1752,16 @@ class EagerLoadedListTest extends SapphireTest
                 ],
             ],
         ];
+    }
+
+    public function testExcludeWithSearchFilter()
+    {
+        $list = $this->getListWithRecords(TeamComment::class);
+        $list = $list->exclude('Comment:PartialMatch', 'Bob');
+        $this->assertListEquals([
+            ['Name' => 'Joe'],
+            ['Name' => 'Phil'],
+        ], $list);
     }
 
     /**

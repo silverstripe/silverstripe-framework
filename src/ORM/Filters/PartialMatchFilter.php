@@ -11,6 +11,8 @@ use InvalidArgumentException;
  */
 class PartialMatchFilter extends SearchFilter
 {
+    protected static $matchesStartsWith = false;
+    protected static $matchesEndsWith = false;
 
     public function getSupportedModifiers()
     {
@@ -26,6 +28,55 @@ class PartialMatchFilter extends SearchFilter
     protected function getMatchPattern($value)
     {
         return "%$value%";
+    }
+
+    public function matches(mixed $objectValue): bool
+    {
+        $isCaseSensitive = $this->getCaseSensitive();
+        if ($isCaseSensitive === null) {
+            $isCaseSensitive = $this->getCaseSensitiveByCollation();
+        }
+        $caseSensitive = $isCaseSensitive ? '' : 'i';
+        $negated = in_array('not', $this->getModifiers());
+        $objectValueString = (string) $objectValue;
+
+        // can't just cast to array, because that will convert null into an empty array
+        $filterValues = $this->getValue();
+        if (!is_array($filterValues)) {
+            $filterValues = [$filterValues];
+        }
+
+        // This is essentially a in_array($objectValue, $filterValues) check, with some special handling.
+        $hasMatch = false;
+        foreach ($filterValues as $filterValue) {
+            if (is_bool($objectValue)) {
+                if (static::$matchesStartsWith || static::$matchesEndsWith) {
+                    // Nothing "starts" or "ends" with a boolean value, so automatically fail those matches.
+                    $doesMatch = false;
+                } else {
+                    // A partial boolean match should match truthy and falsy values.
+                    $doesMatch = $objectValue == $filterValue;
+                }
+            } else {
+                $filterValue = (string) $filterValue;
+                $regexSafeFilterValue = preg_quote($filterValue, '/');
+                $start = static::$matchesStartsWith ? '^' : '';
+                $end = static::$matchesEndsWith ? '$' : '';
+                $doesMatch = preg_match('/' . $start . $regexSafeFilterValue . $end . '/u' . $caseSensitive, $objectValueString);
+            }
+            // Any match is a match
+            if ($doesMatch) {
+                $hasMatch = true;
+                break;
+            }
+        }
+
+        // Respect "not" modifier.
+        if ($negated) {
+            $hasMatch = !$hasMatch;
+        }
+
+        return $hasMatch;
     }
 
     /**

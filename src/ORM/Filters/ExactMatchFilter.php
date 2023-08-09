@@ -13,11 +13,53 @@ use SilverStripe\ORM\DataList;
 /**
  * Selects textual content with an exact match between columnname and keyword.
  *
- * @todo case sensitivity switch
  * @todo documentation
  */
 class ExactMatchFilter extends SearchFilter
 {
+
+    public function matches(mixed $objectValue): bool
+    {
+        $isCaseSensitive = $this->getCaseSensitive();
+        if ($isCaseSensitive === null) {
+            $isCaseSensitive = $this->getCaseSensitiveByCollation();
+        }
+        $caseSensitive = $isCaseSensitive ? '' : 'i';
+        $negated = in_array('not', $this->getModifiers());
+
+        // Can't just cast to array, because that will convert null into an empty array
+        $filterValues = $this->getValue();
+        if (!is_array($filterValues)) {
+            $filterValues = [$filterValues];
+        }
+
+        // This is essentially a in_array($objectValue, $filterValues) check, with some special handling.
+        $hasMatch = false;
+        foreach ($filterValues as $filterValue) {
+            if (is_string($filterValue) && is_string($objectValue)) {
+                $regexSafeFilterValue = preg_quote($filterValue, '/');
+                $doesMatch = preg_match('/^' . $regexSafeFilterValue . '$/u' . $caseSensitive, $objectValue);
+            } elseif ($filterValue === null || $objectValue === null) {
+                $doesMatch = $filterValue === $objectValue;
+            } else {
+                // case sensitivity is meaningless if one or both values aren't strings,
+                // so fall back to a loose equivalency comparison.
+                $doesMatch = $filterValue == $objectValue;
+            }
+            // Any match is a match
+            if ($doesMatch) {
+                $hasMatch = true;
+                break;
+            }
+        }
+
+        // Respect "not" modifier.
+        if ($negated) {
+            $hasMatch = !$hasMatch;
+        }
+
+        return $hasMatch;
+    }
 
     public function getSupportedModifiers()
     {
@@ -81,7 +123,7 @@ class ExactMatchFilter extends SearchFilter
         }
 
         $clause = [$where => $value];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);

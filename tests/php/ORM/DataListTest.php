@@ -31,6 +31,7 @@ use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst;
 use SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond;
 
@@ -86,6 +87,62 @@ class DataListTest extends SapphireTest
             ->filter(['Created:GreaterThan' => '2013-02-01 00:00:00'])
             ->toArray();
         $this->assertEquals(2, count($list ?? []));
+    }
+
+    public function provideDefaultCaseSensitivity()
+    {
+        return [
+            [
+                'caseSensitive' => true,
+                'filter' => ['FirstName' => 'captain'],
+                'expectedCount' => 0,
+            ],
+            [
+                'caseSensitive' => false,
+                'filter' => ['FirstName' => 'captain'],
+                'expectedCount' => 1,
+            ],
+            [
+                'caseSensitive' => true,
+                'filter' => ['FirstName:PartialMatch' => 'captain'],
+                'expectedCount' => 0,
+            ],
+            [
+                'caseSensitive' => false,
+                'filter' => ['FirstName:PartialMatch' => 'captain'],
+                'expectedCount' => 2,
+            ],
+            [
+                'caseSensitive' => true,
+                'filter' => ['FirstName:StartsWith' => 'captain'],
+                'expectedCount' => 0,
+            ],
+            [
+                'caseSensitive' => false,
+                'filter' => ['FirstName:StartsWith' => 'captain'],
+                'expectedCount' => 2,
+            ],
+            [
+                'caseSensitive' => true,
+                'filter' => ['Surname:EndsWith' => 'Keeper'],
+                'expectedCount' => 0,
+            ],
+            [
+                'caseSensitive' => false,
+                'filter' => ['Surname:EndsWith' => 'Keeper'],
+                'expectedCount' => 1,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideDefaultCaseSensitivity
+     */
+    public function testDefaultCaseSensitivity(bool $caseSensitive, array $filter, int $expectedCount)
+    {
+        SearchFilter::config()->set('default_case_sensitive', $caseSensitive);
+        $list = Player::get()->filter($filter);
+        $this->assertCount($expectedCount, $list);
     }
 
     public function testCount()

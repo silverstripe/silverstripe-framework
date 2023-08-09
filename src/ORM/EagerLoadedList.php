@@ -9,6 +9,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use BadMethodCallException;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\ORM\Filters\SearchFilterable;
 use Traversable;
 
 /**
@@ -23,6 +24,8 @@ use Traversable;
  */
 class EagerLoadedList extends ViewableData implements Relation, SS_List, Filterable, Sortable, Limitable
 {
+    use SearchFilterable;
+
     /**
      * List responsible for instantiating the actual DataObject objects from eager-loaded data
      */
@@ -545,7 +548,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
                 throw new InvalidArgumentException("Incorrect number of arguments passed to $function");
         }
         foreach (array_keys($filter) as $column) {
-            if (!$this->canFilterBy($column)) {
+            if (!$this->canFilterBy(explode(':', $column)[0])) {
                 throw new InvalidArgumentException("Can't filter by column '$column'");
             }
         }
@@ -561,12 +564,23 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
     private function getMatches($filters, bool $any = false): array
     {
         $matches = [];
+        $searchFilters = [];
+
+        foreach ($filters as $filterKey => $filterValue) {
+            $searchFilters[$filterKey] = $this->createSearchFilter($filterKey, $filterValue);
+        }
+
         foreach ($this->rows as $id => $row) {
             $doesMatch = true;
             foreach ($filters as $column => $value) {
-                $extractedValue = $this->extractValue($row, $this->standardiseColumn($column));
-                $strict = $value === null || $extractedValue === null;
-                $doesMatch = $this->doesMatch($column, $value, $extractedValue, $strict);
+                // Throw exception for empty $value arrays to match ExactMatchFilter::manyFilter
+                if (is_array($value) && empty($value)) {
+                    throw new InvalidArgumentException("Cannot filter $column against an empty set");
+                }
+                /** @var SearchFilter $searchFilter */
+                $searchFilter = $searchFilters[$column];
+                $extractedValue = $this->extractValue($row, $this->standardiseColumn($searchFilter->getFullName()));
+                $doesMatch = $searchFilter->matches($extractedValue);
                 if (!$any && !$doesMatch) {
                     $doesMatch = false;
                     break;
@@ -580,23 +594,6 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
             }
         }
         return $matches;
-    }
-
-    private function doesMatch(string $field, mixed $value1, mixed $value2, bool $strict): bool
-    {
-        if (is_array($value1)) {
-            if (empty($value1)) {
-                // mimics ExactMatchFilter::manyFilter
-                throw new InvalidArgumentException("Cannot filter $field against an empty set");
-            }
-            return in_array($value2, $value1, $strict);
-        }
-
-        if ($strict) {
-            return $value1 === $value2;
-        }
-
-        return $value1 == $value2;
     }
 
     /**
