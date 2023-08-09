@@ -6,6 +6,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Mink\Element\Element;
 use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Selector\Xpath\Escaper;
 use Behat\Mink\Session;
 use PHPUnit\Framework\Assert;
@@ -86,26 +87,37 @@ class CmsUiContext implements Context
     }
 
     /**
-     * @Then /^I should see a "(.+)" (\w+) toast$/
+     * @Then /^I should (not |)see a "(.+)" (\w+) toast$/
      */
-    public function iShouldSeeAToast($notice, $type)
+    public function iShouldSeeAToast($not, $notice, $type)
     {
-        $this->getMainContext()->assertElementContains('.toast--' . $type, $notice);
+        if ($not) {
+            try {
+                // If there is a toast of that type, ensure it doesn't contain the notice.
+                $this->getMainContext()->assertElementNotContains('.toast--' . $type, $notice);
+            } catch (ElementNotFoundException $e) {
+                // no-op - if the element doesn't exist at all, then that passes the test.
+            }
+        } else {
+            $this->getMainContext()->assertElementContains('.toast--' . $type, $notice);
+        }
     }
 
     /**
-     * @Then /^I should see a "(.+)" (\w+) toast with these actions: (.+)$/
+     * @Then /^I should (not |)see a "(.+)" (\w+) toast with these actions: (.+)$/
      */
-    public function iShouldSeeAToastWithAction($notice, $type, $actions)
+    public function iShouldSeeAToastWithAction($not, $notice, $type, $actions)
     {
-        $this->iShouldSeeAToast($notice, $type);
+        $this->iShouldSeeAToast($not, $notice, $type);
 
-        $actions = explode(',', $actions ?? '');
-        foreach ($actions as $order => $action) {
-            $this->getMainContext()->assertElementContains(
-                sprintf('.toast--%s .toast__action:nth-child(%s)', $type, $order+1),
-                trim($action ?? '')
-            );
+        if (!$not) {
+            $actions = explode(',', $actions ?? '');
+            foreach ($actions as $order => $action) {
+                $this->getMainContext()->assertElementContains(
+                    sprintf('.toast--%s .toast__action:nth-child(%s)', $type, $order+1),
+                    trim($action ?? '')
+                );
+            }
         }
     }
 

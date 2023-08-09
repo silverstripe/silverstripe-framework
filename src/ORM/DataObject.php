@@ -16,6 +16,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
+use SilverStripe\Forms\FieldsValidator;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
@@ -2600,7 +2601,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getCMSCompositeValidator(): CompositeValidator
     {
-        $compositeValidator = CompositeValidator::create();
+        $compositeValidator = CompositeValidator::create([FieldsValidator::create()]);
 
         // Support for the old method during the deprecation period
         if ($this->hasMethod('getCMSValidator')) {
@@ -3735,7 +3736,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 return null;
             }
             $fieldParts[] = $nextPart;
-            
+
             if ($component instanceof Relation || $component instanceof DataList) {
                 if ($component->hasMethod($nextPart)) {
                     // If the next part is a method, we don't have a database-backed field.
