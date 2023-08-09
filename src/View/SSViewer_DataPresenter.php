@@ -377,7 +377,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         // Check if the method to-be-called exists on the target object - if so, don't check any further
         // injection locations
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-        if ($on !== null && (isset($on->$property) || method_exists($on, $property ?? ''))) {
+        if (is_object($on) && (isset($on->$property) || method_exists($on, $property ?? ''))) {
             return [];
         }
 

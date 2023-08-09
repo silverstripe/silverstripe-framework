@@ -58,13 +58,22 @@ class SearchContextTest extends SapphireTest
         $obj = new SearchContextTest\NoSearchableFields();
         $summaryFields = $obj->summaryFields();
         $expected = [];
-        foreach ($summaryFields as $field => $label) {
+
+        $expectedSearchableFields = [
+            'Name',
+            'Customer.FirstName',
+            'HairColor',
+            'EyeColor',
+        ];
+
+        foreach ($expectedSearchableFields as $field) {
             $expected[$field] = [
                 'title' => $obj->fieldLabel($field),
                 'filter' => 'PartialMatchFilter',
             ];
         }
         $this->assertEquals($expected, $obj->searchableFields());
+        $this->assertNotEquals($summaryFields, $obj->searchableFields());
     }
 
     public function testSummaryIncludesDefaultFieldsIfNotDefined()

@@ -1069,22 +1069,22 @@ after'
     {
         $this->assertEquals(
             $this->render('<% include SSViewerTestIncludeWithArguments %>'),
-            '<p>[out:Arg1]</p><p>[out:Arg2]</p>'
+            '<p>[out:Arg1]</p><p>[out:Arg2]</p><p>[out:Arg2.Count]</p>'
         );
 
         $this->assertEquals(
             $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A %>'),
-            '<p>A</p><p>[out:Arg2]</p>'
+            '<p>A</p><p>[out:Arg2]</p><p>[out:Arg2.Count]</p>'
         );
 
         $this->assertEquals(
             $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A, Arg2=B %>'),
-            '<p>A</p><p>B</p>'
+            '<p>A</p><p>B</p><p></p>'
         );
 
         $this->assertEquals(
             $this->render('<% include SSViewerTestIncludeWithArguments Arg1=A Bare String, Arg2=B Bare String %>'),
-            '<p>A Bare String</p><p>B Bare String</p>'
+            '<p>A Bare String</p><p>B Bare String</p><p></p>'
         );
 
         $this->assertEquals(
@@ -1092,7 +1092,7 @@ after'
                 '<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=$B %>',
                 new ArrayData(['B' => 'Bar'])
             ),
-            '<p>A</p><p>Bar</p>'
+            '<p>A</p><p>Bar</p><p></p>'
         );
 
         $this->assertEquals(
@@ -1100,7 +1100,22 @@ after'
                 '<% include SSViewerTestIncludeWithArguments Arg1="A" %>',
                 new ArrayData(['Arg1' => 'Foo', 'Arg2' => 'Bar'])
             ),
-            '<p>A</p><p>Bar</p>'
+            '<p>A</p><p>Bar</p><p></p>'
+        );
+
+        $this->assertEquals(
+            $this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=0 %>'),
+            '<p>A</p><p>0</p><p></p>'
+        );
+
+        $this->assertEquals(
+            $this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=false %>'),
+            '<p>A</p><p></p><p></p>'
+        );
+
+        $this->assertEquals(
+            $this->render('<% include SSViewerTestIncludeWithArguments Arg1="A", Arg2=null %>'),
+            '<p>A</p><p></p><p></p>'
         );
 
         $this->assertEquals(

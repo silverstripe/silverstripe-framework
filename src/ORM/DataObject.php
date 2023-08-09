@@ -16,6 +16,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
+use SilverStripe\Forms\FieldsValidator;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
@@ -2574,7 +2575,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getCMSCompositeValidator(): CompositeValidator
     {
-        $compositeValidator = CompositeValidator::create();
+        $compositeValidator = CompositeValidator::create([FieldsValidator::create()]);
 
         // Support for the old method during the deprecation period
         if ($this->hasMethod('getCMSValidator')) {
@@ -3721,6 +3722,52 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->extend('onAfterBuild');
     }
 
+    private function getDatabaseBackedField(string $fieldPath): ?string
+    {
+        $component = $this;
+        $fieldParts = [];
+        $parts = explode('.', $fieldPath ?? '');
+
+        foreach ($parts as $nextPart) {
+            if (!$component) {
+                return null;
+            }
+            $fieldParts[] = $nextPart;
+
+            if ($component instanceof Relation || $component instanceof DataList) {
+                if ($component->hasMethod($nextPart)) {
+                    // If the next part is a method, we don't have a database-backed field.
+                    return null;
+                }
+                // The next part could either be a field, or another relation
+                $singleton = DataObject::singleton($component->dataClass());
+                if ($singleton->dbObject($nextPart) instanceof DBField) {
+                    // If the next part is a DBField, we've found the database-backed field.
+                    break;
+                }
+                $component = $component->relation($nextPart);
+                array_shift($parts);
+            } elseif ($component instanceof DataObject && ($component->dbObject($nextPart) instanceof DBField)) {
+                // If the next part is a DBField, we've found the database-backed field.
+                break;
+            } elseif ($component instanceof DataObject && $component->getRelationType($nextPart) !== null) {
+                // If it's a last part or only one elemnt of a relation, we don't have a database-backed field.
+                if (count($parts) === 1) {
+                    return null;
+                }
+                $component = $component->$nextPart();
+                array_shift($parts);
+            } elseif (ClassInfo::hasMethod($component, $nextPart)) {
+                // If the next part is a method, we don't have a database-backed field.
+                return null;
+            } else {
+                return null;
+            }
+        }
+
+        return implode('.', $fieldParts) ?: null;
+    }
+
     /**
      * Get the default searchable fields for this object, as defined in the
      * $searchable_fields list. If searchable fields are not defined on the
@@ -3739,21 +3786,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $summaryFields = array_keys($this->summaryFields() ?? []);
             $fields = [];
 
-            // remove the custom getters as the search should not include them
-            $schema = static::getSchema();
             if ($summaryFields) {
-                foreach ($summaryFields as $key => $name) {
-                    $spec = $name;
-
-                    // Extract field name in case this is a method called on a field (e.g. "Date.Nice")
-                    if (($fieldPos = strpos($name ?? '', '.')) !== false) {
-                        $name = substr($name ?? '', 0, $fieldPos);
-                    }
-
-                    if ($schema->fieldSpec($this, $name)) {
-                        $fields[] = $name;
-                    } elseif ($this->relObject($spec)) {
-                        $fields[] = $spec;
+                foreach ($summaryFields as $name) {
+                    if ($field = $this->getDatabaseBackedField($name)) {
+                        $fields[] = $field;
                     }
                 }
             }
