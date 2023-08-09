@@ -290,10 +290,11 @@ class GroupTest extends FunctionalTest
 
         $newGroup = new Group();
 
-        $validators = $newGroup->getCMSCompositeValidator()->getValidators();
+        $validators = $newGroup->getCMSCompositeValidator()->getValidatorsByType(RequiredFields::class);
         $this->assertCount(1, $validators);
-        $this->assertInstanceOf(RequiredFields::class, $validators[0]);
-        $this->assertTrue(in_array('Title', $validators[0]->getRequired() ?? []));
+        $validator = array_shift($validators);
+        $this->assertInstanceOf(RequiredFields::class, $validator);
+        $this->assertTrue(in_array('Title', $validator->getRequired() ?? []));
 
         $newGroup->Title = $group1->Title;
         $result = $newGroup->validate();
