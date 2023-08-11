@@ -114,6 +114,7 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OverriddenMoney')->getTable());
     }
 
+    /* Uncomment this for SS5
     public function testSetFieldDynamicPropertyException()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -124,6 +125,7 @@ class DBCompositeTest extends SapphireTest
         $object = new DBCompositeTest\TestObject();
         $object->MyMoney->abc = 'def';
     }
+    */
 
     public function testWriteToManipuationIsCalledWhenWritingDataObject()
     {
