@@ -114,19 +114,6 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OverriddenMoney')->getTable());
     }
 
-    /* Uncomment this for SS5
-    public function testSetFieldDynamicPropertyException()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(implode(' ', [
-            'Field abc does not exist.',
-            'If this was accessed via a dynamic property then call setDynamicData() instead.'
-        ]));
-        $object = new DBCompositeTest\TestObject();
-        $object->MyMoney->abc = 'def';
-    }
-    */
-
     public function testWriteToManipuationIsCalledWhenWritingDataObject()
     {
         $obj = DBCompositeTest\TestObject::create();
