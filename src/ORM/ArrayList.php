@@ -604,7 +604,15 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
         $firstRecord = $this->first();
 
-        return is_array($firstRecord) ? array_key_exists($by, $firstRecord) : property_exists($firstRecord, $by ?? '');
+        if (is_array($firstRecord)) {
+            return array_key_exists($by, $firstRecord);
+        }
+
+        if ($firstRecord instanceof ViewableData) {
+            return $firstRecord->hasField($by);
+        }
+
+        return property_exists($firstRecord, $by ?? '');
     }
 
     /**
