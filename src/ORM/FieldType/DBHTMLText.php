@@ -134,6 +134,24 @@ class DBHTMLText extends DBText
         return $this->value;
     }
 
+    public function getAnchors() : array
+    {
+        $parseSuccess = preg_match_all(
+            "/\\s+(name|id)\\s*=\\s*([\"'])([^\\2\\s>]*?)\\2|\\s+(name|id)\\s*=\\s*([^\"']+)[\\s +>]/im",
+            $this->value ?? '',
+            $matches
+        );
+
+        $anchors = [];
+        if ($parseSuccess >= 1) {
+            $anchors = array_values(array_unique(array_filter(
+                array_merge($matches[3], $matches[5])
+            )));
+        }
+        
+        return $anchors;
+    }
+    
     /**
      * Return the value of the field with relative links converted to absolute urls (with placeholders parsed).
      * @return string
