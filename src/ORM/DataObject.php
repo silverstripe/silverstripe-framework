@@ -25,6 +25,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -991,6 +992,22 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return array_filter($this->record ?? [], function ($val) {
             return $val !== null;
         });
+    }
+
+    public function getAnchorsInHtml() : array
+    {
+        $anchors = [];
+        $allFields = DataObject::getSchema()->fieldSpecs($this);
+        foreach ($allFields as $field => $fieldSpec) {
+            $fieldObj = $this->dbObject($field);
+            if ($fieldObj instanceof DBHTMLText) {
+                $anchors = array_merge($anchors, $fieldObj->getAnchors());
+            }
+        }
+        $anchors = array_unique($anchors);
+
+        $this->extend('getAnchorsInHtml', $anchors);        
+        return $anchors;
     }
 
     /**
