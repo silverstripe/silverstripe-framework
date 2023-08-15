@@ -797,7 +797,7 @@ class Member extends DataObject
         if (!$this->ID || $this->isChanged('Password')) {
             $this->encryptPassword();
         }
-        if(! $this->PasswordEncryption) {
+        if (!$this->PasswordEncryption) {
             $this->PasswordEncryption = Security::config()->get('password_encryption_algorithm');
         }
         // save locale
