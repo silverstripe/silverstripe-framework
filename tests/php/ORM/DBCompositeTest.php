@@ -53,7 +53,8 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals(
             [
                 'MyMoney' => 'Money',
-                'OverriddenMoney' => 'Money'
+                'OverriddenMoney' => 'Money',
+                'DoubleMoney' => DBCompositeTest\DBDoubleMoney::class
             ],
             $schema->compositeFields(DBCompositeTest\TestObject::class)
         );
@@ -68,6 +69,7 @@ class DBCompositeTest extends SapphireTest
                 'MyMoney' => 'Money',
                 'OtherMoney' => 'Money',
                 'OverriddenMoney' => 'Money',
+                'DoubleMoney' => DBCompositeTest\DBDoubleMoney::class
             ],
             $schema->compositeFields(DBCompositeTest\SubclassedDBFieldObject::class)
         );
@@ -110,5 +112,23 @@ class DBCompositeTest extends SapphireTest
         $this->assertEquals('DBCompositeTest_DataObject', $object2->dbObject('MyMoney')->getTable());
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OtherMoney')->getTable());
         $this->assertEquals('DBCompositeTest_SubclassedDBFieldObject', $object2->dbObject('OverriddenMoney')->getTable());
+    }
+
+    public function testWriteToManipuationIsCalledWhenWritingDataObject()
+    {
+        $obj = DBCompositeTest\TestObject::create();
+        $obj->DoubleMoney = ['Amount' => 10, 'Currency' => 'CAD'];
+        $moneyField = $obj->dbObject('DoubleMoney');
+        $this->assertEquals(10, $moneyField->getAmount());
+
+        $obj->write();
+
+        // Custom money class should double the amount before writing
+        $this->assertEquals(20, $moneyField->getAmount());
+
+        // Note: these would fail since dbObject will return a new instance
+        // of the DoubleMoney field based on the initial values
+        // $this->assertSame($moneyField, $obj->dbObject('DoubleMoney'));
+        // $this->assertEquals(20, $obj->dbObject('DoubleMoney')->getAmount());
     }
 }

@@ -7,6 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
+use SilverStripe\View\ArrayData;
 use stdClass;
 
 class ArrayListTest extends SapphireTest
@@ -1167,6 +1168,20 @@ class ArrayListTest extends SapphireTest
             ['Name' => 'Steve'],
             ['Name' => 'Bob'],
             ['Name' => 'John']
+            ]
+        );
+
+        $this->assertTrue($list->canFilterBy('Name'));
+        $this->assertFalse($list->canFilterBy('Age'));
+    }
+
+    public function testCanFilterByArrayData()
+    {
+        $list = new ArrayList(
+            [
+                new ArrayData(['Name' => 'Steve']),
+                new ArrayData(['Name' => 'Bob']),
+                new ArrayData(['Name' => 'John'])
             ]
         );
 

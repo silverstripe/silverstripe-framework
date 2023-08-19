@@ -1491,7 +1491,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $specification = $schema->fieldSpec(
                 $class,
                 $fieldName,
-                DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED
+                DataObjectSchema::UNINHERITED
             );
             if (!$specification) {
                 continue;
