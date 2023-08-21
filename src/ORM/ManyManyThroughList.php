@@ -87,7 +87,8 @@ class ManyManyThroughList extends RelationList
         if ($joinRow) {
             $joinClass = $this->manipulator->getJoinClass();
             $joinQueryParams = $this->manipulator->extractInheritableQueryParameters($this->dataQuery);
-            $joinRecord = Injector::inst()->create($joinClass, $joinRow, false, $joinQueryParams);
+            $creationType = empty($joinRow['ID']) ? DataObject::CREATE_OBJECT : DataObject::CREATE_HYDRATED;
+            $joinRecord = Injector::inst()->create($joinClass, $joinRow, $creationType, $joinQueryParams);
             $record->setJoin($joinRecord, $joinAlias);
         }
 
