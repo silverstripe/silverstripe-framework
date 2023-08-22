@@ -12,6 +12,7 @@ class TestObject extends DataObject implements TestOnly
     private static $db = [
         'Title' => 'Text',
         'MyMoney' => 'Money',
-        'OverriddenMoney' => 'Money'
+        'OverriddenMoney' => 'Money',
+        'DoubleMoney' => DBDoubleMoney::class,
     ];
 }
