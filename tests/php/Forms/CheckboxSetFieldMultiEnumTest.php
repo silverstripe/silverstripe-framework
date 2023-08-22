@@ -11,7 +11,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 
-class CheckboxSetFieldMulitEnumTest extends SapphireTest
+class CheckboxSetFieldMultiEnumTest extends SapphireTest
 {
 
     protected $usesDatabase = true;
