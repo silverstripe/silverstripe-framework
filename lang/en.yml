@@ -258,7 +258,9 @@ en:
     db_CanEditType: 'Can edit type'
     db_CanViewType: 'Can view type'
     many_many_EditorGroups: 'Editor groups'
+    many_many_EditorMembers: 'Editor members'
     many_many_ViewerGroups: 'Viewer groups'
+    many_many_ViewerMembers: 'Viewer members'
   SilverStripe\Security\LoginAttempt:
     Email: 'Email Address'
     EmailHashed: 'Email Address (hashed)'
