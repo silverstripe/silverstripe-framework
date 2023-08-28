@@ -563,4 +563,19 @@ class ManyManyThroughListTest extends SapphireTest
             ],
         ];
     }
+
+    public function testChangedFields()
+    {
+        /** @var ManyManyThroughListTest\TestObject $parent */
+        $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+        $item1 = $parent->Items()->first();
+
+        // Nothing has changed yet
+        $this->assertEmpty($item1->getChangedFields());
+        $this->assertFalse($item1->isChanged('Title'));
+
+        // Change a field, ensure change is flagged
+        $item1->Title = 'a test title';
+        $this->assertTrue($item1->isChanged('Title'));
+    }
 }
