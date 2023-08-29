@@ -22,6 +22,7 @@ use Exception;
  * You are advised to backup your tables if changing settings on an existing database
  * `connection_charset` and `charset` should be equal, similarly so should `connection_collation` and `collation`
  */
+#[\AllowDynamicProperties]
 class MySQLDatabase extends Database implements TransactionManager
 {
     use Configurable;

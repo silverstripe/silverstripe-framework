@@ -8,6 +8,7 @@
  *  Of course, the next regex might be outside that bracket - after the bracket if other matches have progressed beyond the match position, or before
  *  the bracket if a failed match + restore has moved the current position backwards - so we have to check that too.
  */
+#[\AllowDynamicProperties]
 class ParserRegexp {
 	function __construct( $parser, $rx ) {
 		$this->parser = $parser ;
@@ -44,6 +45,7 @@ class ParserRegexp {
  * - some abstraction of code that would otherwise be repeated many times in a compiled grammer, mostly related to calling user functions
  *   for result construction and building
  */
+#[\AllowDynamicProperties]
 class Parser {
     /**
      * @var string
@@ -202,6 +204,7 @@ class Parser {
  *
  * @author Hamish Friedlander
  */
+#[\AllowDynamicProperties]
 class Packrat extends Parser {
 	function __construct( $string ) {
 		parent::__construct( $string ) ;
@@ -254,6 +257,7 @@ class Packrat extends Parser {
  *
  * @author Hamish Friedlander
  */
+#[\AllowDynamicProperties]
 class FalseOnlyPackrat extends Parser {
 	function __construct( $string ) {
 		parent::__construct( $string ) ;
@@ -288,6 +292,7 @@ class FalseOnlyPackrat extends Parser {
  *
  * @author Hamish Friedlander
  */
+#[\AllowDynamicProperties]
 class ConservativePackrat extends Parser {
 	function packhas( $key, $pos ) {
 		return isset( $this->packres[$key] ) && $this->packres[$key] !== NULL ;

@@ -65,6 +65,7 @@ use SilverStripe\View\ViewableData;
  * For example, the "URLSegment" field in a standard CMS form would be
  * accessible through "admin/EditForm/field/URLSegment/FieldHolder".
  */
+#[\AllowDynamicProperties]
 class Form extends ViewableData implements HasRequestHandler
 {
     use AttributesHTML;
