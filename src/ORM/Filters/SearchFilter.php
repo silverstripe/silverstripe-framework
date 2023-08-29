@@ -2,11 +2,14 @@
 
 namespace SilverStripe\ORM\Filters;
 
+use BadMethodCallException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
 use InvalidArgumentException;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -26,7 +29,19 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 abstract class SearchFilter
 {
-    use Injectable;
+    use Injectable, Configurable;
+
+    /**
+     * Whether the database uses case sensitive collation or not.
+     * @internal
+     */
+    private static ?bool $caseSensitiveByCollation = null;
+
+    /**
+     * Whether search filters should be case sensitive or not by default.
+     * If null, the database collation setting is used.
+     */
+    private static ?bool $default_case_sensitive = null;
 
     /**
      * Classname of the inspected {@link DataObject}.
@@ -346,6 +361,19 @@ abstract class SearchFilter
     }
 
     /**
+     * Check whether this filter matches against a value.
+     */
+    public function matches(mixed $objectValue): bool
+    {
+        // We can't add an abstract method because that will mean custom subclasses would need to
+        // implement this new method which makes it a breaking change - but we want to enforce the
+        // method signature for any subclasses which do implement this - therefore, throw an
+        // exception by default.
+        $actualClass = get_class($this);
+        throw new BadMethodCallException("matches is not implemented on $actualClass");
+    }
+
+    /**
      * Apply filter criteria to a SQL query.
      *
      * @param DataQuery $query
@@ -437,7 +465,7 @@ abstract class SearchFilter
     /**
      * Determines case sensitivity based on {@link getModifiers()}.
      *
-     * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
+     * @return ?bool TRUE or FALSE to enforce sensitivity, NULL to use field collation.
      */
     protected function getCaseSensitive()
     {
@@ -447,7 +475,27 @@ abstract class SearchFilter
         } elseif (in_array('nocase', $modifiers ?? [])) {
             return false;
         } else {
-            return null;
+            $sensitive = self::config()->get('default_case_sensitive');
+            if ($sensitive !== null) {
+                return $sensitive;
+            }
         }
+        return null;
+    }
+
+    /**
+     * Find out whether the database is set to use case sensitive comparisons or not by default.
+     * Used for static comparisons in the matches() method.
+     */
+    protected function getCaseSensitiveByCollation(): ?bool
+    {
+        if (!self::$caseSensitiveByCollation) {
+            if (!DB::is_active()) {
+                return null;
+            }
+            self::$caseSensitiveByCollation = DB::query("SELECT 'CASE' = 'case'")->record() === 0;
+        }
+
+        return self::$caseSensitiveByCollation;
     }
 }

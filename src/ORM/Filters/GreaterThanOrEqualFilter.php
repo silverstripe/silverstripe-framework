@@ -10,6 +10,10 @@ namespace SilverStripe\ORM\Filters;
  */
 class GreaterThanOrEqualFilter extends ComparisonFilter
 {
+    protected function match(mixed $objectValue, mixed $filterValue): bool
+    {
+        return $objectValue >= $filterValue;
+    }
 
     protected function getOperator()
     {

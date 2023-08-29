@@ -5,7 +5,12 @@ namespace SilverStripe\ORM;
 use ArrayIterator;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\Filters\SearchFilterable;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\ViewableData;
 use Traversable;
@@ -26,6 +31,15 @@ use Traversable;
  */
 class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
+    use SearchFilterable;
+
+    /**
+     * Whether filter and exclude calls should be case sensitive by default or not.
+     * This configuration property is here for backwards compatability.
+     *
+     * @deprecated 5.1.0 use SearchFilter.default_case_sensitive instead
+     */
+    private static bool $default_case_sensitive = true;
 
     /**
      * Holds the items in the list
@@ -369,23 +383,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
-     * Find the first item of this list where the given key = value
-     *
-     * @param string $key
-     * @param string $value
-     * @return mixed
-     */
-    public function find($key, $value)
-    {
-        foreach ($this->items as $item) {
-            if ($this->extractValue($item, $key) == $value) {
-                return $item;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Returns an array of a single field value for all items in the list.
      *
      * @param string $colName
@@ -595,6 +592,18 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     }
 
     /**
+     * Find the first item of this list where the given key = value
+     *
+     * @param string $key
+     * @param string $value
+     * @return mixed
+     */
+    public function find($key, $value)
+    {
+        return $this->filter($key, $value)->first();
+    }
+
+    /**
      * Filter the list to include items with these characteristics
      *
      * @return ArrayList
@@ -605,31 +614,15 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
      * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
      *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
+     *
+     * Also supports SearchFilter syntax
+     * @example // include anyone with "sam" anywhere in their name
+     *          $list = $list->filter('Name:PartialMatch', 'sam');
      */
     public function filter()
     {
-
-        $keepUs = call_user_func_array([$this, 'normaliseFilterArgs'], func_get_args());
-
-        $itemsToKeep = [];
-        foreach ($this->items as $item) {
-            $keepItem = true;
-            foreach ($keepUs as $column => $value) {
-                if ((is_array($value) && !in_array($this->extractValue($item, $column), $value ?? []))
-                    || (!is_array($value) && $this->extractValue($item, $column) != $value)
-                ) {
-                    $keepItem = false;
-                    break;
-                }
-            }
-            if ($keepItem) {
-                $itemsToKeep[] = $item;
-            }
-        }
-
-        $list = clone $this;
-        $list->items = $itemsToKeep;
-        return $list;
+        $filters = $this->normaliseFilterArgs(...func_get_args());
+        return $this->filterOrExclude($filters);
     }
 
     /**
@@ -646,28 +639,118 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example // all bobs, phils or anyone aged 21 or 43 in the list
      *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *
+     * Also supports SearchFilter syntax
+     * @example // include anyone with "sam" anywhere in their name
+     *          $list = $list->filterAny('Name:PartialMatch', 'sam');
+     *
      * @param string|array See {@link filter()}
      * @return static
      */
     public function filterAny()
     {
-        $keepUs = $this->normaliseFilterArgs(...func_get_args());
+        $filters = $this->normaliseFilterArgs(...func_get_args());
+        return $this->filterOrExclude($filters, true, true);
+    }
 
+    /**
+     * Exclude the list to not contain items with these characteristics
+     *
+     * @return ArrayList
+     * @see SS_List::exclude()
+     * @example $list->exclude('Name', 'bob'); // exclude bob from list
+     * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+     * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
+     * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
+     * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+     *          // bob age 21 or 43, phil age 21 or 43 would be excluded
+     *
+     * Also supports SearchFilter syntax
+     * @example // everyone except anyone with "sam" anywhere in their name
+     *          $list = $list->exclude('Name:PartialMatch', 'sam');
+     */
+    public function exclude()
+    {
+        $filters = $this->normaliseFilterArgs(...func_get_args());
+        return $this->filterOrExclude($filters, false);
+    }
+
+    /**
+     * Return a copy of the list excluding any items that have any of these characteristics
+     *
+     * @example // everyone except bob in the list
+     *          $list = $list->excludeAny('Name', 'bob');
+     * @example // everyone except azis or bob in the list
+     *          $list = $list->excludeAny('Name', array('aziz', 'bob');
+     * @example // everyone except bob or anyone aged 21 in the list
+     *          $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>21));
+     * @example // everyone except bob or anyone aged 21 or 43 in the list
+     *          $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+     * @example // everyone except all bobs, phils or anyone aged 21 or 43 in the list
+     *          $list = $list->excludeAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+     *
+     * Also supports SearchFilter syntax
+     * @example // everyone except anyone with "sam" anywhere in their name
+     *          $list = $list->excludeAny('Name:PartialMatch', 'sam');
+     *
+     * @param string|array See {@link filter()}
+     */
+    public function excludeAny(): static
+    {
+        $filters = $this->normaliseFilterArgs(...func_get_args());
+        return $this->filterOrExclude($filters, false, true);
+    }
+
+    /**
+     * Apply the appropriate filtering or excluding
+     */
+    protected function filterOrExclude(array $filters, bool $inclusive = true, bool $any = false): static
+    {
         $itemsToKeep = [];
+        $searchFilters = [];
+
+        foreach ($filters as $filterKey => $filterValue) {
+            // Convert null to an empty string for backwards compatability, since nulls are treated specially
+            // in the ExactMatchFilter
+            $searchFilter = $this->createSearchFilter($filterKey, $filterValue ?? '');
+
+            // Apply default case sensitivity for backwards compatability
+            if (!str_contains($filterKey, ':case') && !str_contains($filterKey, ':nocase')) {
+                $caseSensitive = Deprecation::withNoReplacement(fn() => static::config()->get('default_case_sensitive'));
+                if ($caseSensitive && in_array('case', $searchFilter->getSupportedModifiers())) {
+                    $searchFilter->setModifiers($searchFilter->getModifiers() + ['case']);
+                } elseif (!$caseSensitive && in_array('nocase', $searchFilter->getSupportedModifiers())) {
+                    $searchFilter->setModifiers($searchFilter->getModifiers() + ['nocase']);
+                }
+            }
+
+            $searchFilters[$filterKey] = $searchFilter;
+        }
 
         foreach ($this->items as $item) {
-            foreach ($keepUs as $column => $value) {
-                $extractedValue = $this->extractValue($item, $column);
-                $matches = is_array($value) ? in_array($extractedValue, $value) : $extractedValue == $value;
-                if ($matches) {
-                    $itemsToKeep[] = $item;
+            $matches = [];
+            foreach ($filters as $filterKey => $filterValue) {
+                /** @var SearchFilter $searchFilter */
+                $searchFilter = $searchFilters[$filterKey];
+                $hasMatch = $searchFilter->matches($this->extractValue($item, $searchFilter->getFullName()) ?? '');
+                $matches[$hasMatch] = 1;
+                // If this is excludeAny or filterAny and we have a match, we can stop looking for matches.
+                if ($any && $hasMatch) {
                     break;
                 }
+            }
+
+            // filterAny or excludeAny allow any true value to be a match; filter or exclude require any false value
+            // to be a mismatch.
+            $isMatch = $any ? isset($matches[true]) : !isset($matches[false]);
+
+            // If inclusive (filter) and we have a match, or exclusive (exclude) and there is NO match, keep the item.
+            if (($inclusive && $isMatch) || (!$inclusive && !$isMatch)) {
+                $itemsToKeep[] = $item;
             }
         }
 
         $list = clone $this;
-        $list->items = array_unique($itemsToKeep ?? [], SORT_REGULAR);
+        $list->items = $itemsToKeep;
         return $list;
     }
 
@@ -753,48 +836,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         }
 
         return $output;
-    }
-
-    /**
-     * Exclude the list to not contain items with these characteristics
-     *
-     * @return ArrayList
-     * @see SS_List::exclude()
-     * @example $list->exclude('Name', 'bob'); // exclude bob from list
-     * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
-     * @example $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
-     * @example $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
-     * @example $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
-     *          // bob age 21 or 43, phil age 21 or 43 would be excluded
-     */
-    public function exclude()
-    {
-        $removeUs = $this->normaliseFilterArgs(...func_get_args());
-
-        $hitsRequiredToRemove = count($removeUs ?? []);
-        $matches = [];
-        foreach ($removeUs as $column => $excludeValue) {
-            foreach ($this->items as $key => $item) {
-                if (!is_array($excludeValue) && $this->extractValue($item, $column) == $excludeValue) {
-                    $matches[$key] = isset($matches[$key]) ? $matches[$key] + 1 : 1;
-                } elseif (is_array($excludeValue) && in_array($this->extractValue($item, $column), $excludeValue ?? [])) {
-                    $matches[$key] = isset($matches[$key]) ? $matches[$key] + 1 : 1;
-                }
-            }
-        }
-
-        $keysToRemove = array_keys($matches ?? [], $hitsRequiredToRemove);
-
-        $itemsToKeep = [];
-        foreach ($this->items as $key => $value) {
-            if (!in_array($key, $keysToRemove ?? [])) {
-                $itemsToKeep[] = $value;
-            }
-        }
-
-        $list = clone $this;
-        $list->items = $itemsToKeep;
-        return $list;
     }
 
     protected function shouldExclude($item, $args)
