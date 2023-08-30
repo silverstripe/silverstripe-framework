@@ -970,6 +970,127 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve and Clair');
     }
 
+    /**
+     * @dataProvider provideFilterNullComparisons
+     */
+    public function testFilterNullComparisons(mixed $objectValue, mixed $filterValue, bool $doesMatch, bool $negated = false)
+    {
+        $filterField = 'Value';
+        if ($negated) {
+            $filterField .= ':not';
+        }
+        $list = new ArrayList([['Value' => $objectValue]]);
+        $list = $list->filter($filterField, $filterValue);
+        $this->assertCount($doesMatch ? 1 : 0, $list);
+    }
+
+    public function provideFilterNullComparisons()
+    {
+        // This is for backwards compatibility, since arraylist used to just do a straight == comparison
+        // Everything that passes here would have passed a $objectValue == $filterValue comparison previously
+        $scenarios = [
+            [
+                'objectValue' => null,
+                'filterValues' => null,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => '',
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => '',
+                'filterValues' => null,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => 0,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => 0,
+                'filterValues' => null,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => false,
+                'filterValues' => null,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => false,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => [],
+                'filterValues' => null,
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => [[]],
+                'doesMatch' => true,
+            ],
+            // Include some multi-value filters
+            [
+                'objectValue' => null,
+                'filterValues' => ['one', '', 1],
+                'doesMatch' => true,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => ['one', '1', 1],
+                'doesMatch' => false,
+            ],
+            [
+                'objectValue' => '',
+                'filterValues' => ['one', null, 1],
+                'doesMatch' => true,
+            ],
+            // Check that we're not skipping comparisons that don't match null
+            [
+                'objectValue' => '1',
+                'filterValues' => ['one', null, 1],
+                'doesMatch' => true,
+            ],
+            // This is here because 0 == '0' is true, and 0 == null is true, so essentially protecting
+            // against swapping null out for 0 in attempt to pass the other tests.
+            [
+                'objectValue' => '0',
+                'filterValues' => null,
+                'doesMatch' => false,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => '0',
+                'doesMatch' => false,
+            ],
+            // We're comparing with false above so this is just a sanity check.
+            [
+                'objectValue' => true,
+                'filterValues' => null,
+                'doesMatch' => false,
+            ],
+            [
+                'objectValue' => null,
+                'filterValues' => true,
+                'doesMatch' => false,
+            ],
+        ];
+
+        // Ensure the not modifier works as expected
+        foreach ($scenarios as $scenario) {
+            $scenario['doesMatch'] = !$scenario['doesMatch'];
+            $scenario['negated'] = true;
+            $scenarios[] = $scenario;
+        }
+
+        return $scenarios;
+    }
+
     private function getFilterWithSearchfiltersObjects()
     {
         return [

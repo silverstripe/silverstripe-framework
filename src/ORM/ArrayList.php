@@ -9,6 +9,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Filters\SearchFilterable;
 use SilverStripe\View\ArrayData;
@@ -707,11 +708,21 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     {
         $itemsToKeep = [];
         $searchFilters = [];
+        $hasNullFilter = false;
 
         foreach ($filters as $filterKey => $filterValue) {
-            // Convert null to an empty string for backwards compatability, since nulls are treated specially
+            // Check if we have any null filter values for backwards compatability, since nulls are treated specially
             // in the ExactMatchFilter
-            $searchFilter = $this->createSearchFilter($filterKey, $filterValue ?? '');
+            if (is_array($filterValue)) {
+                foreach ($filterValue as $value) {
+                    if ($value === null) {
+                        $hasNullFilter = true;
+                    }
+                }
+            } elseif ($filterValue === null) {
+                $hasNullFilter = true;
+            }
+            $searchFilter = $this->createSearchFilter($filterKey, $filterValue);
 
             // Apply default case sensitivity for backwards compatability
             if (!str_contains($filterKey, ':case') && !str_contains($filterKey, ':nocase')) {
@@ -731,7 +742,23 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
             foreach ($filters as $filterKey => $filterValue) {
                 /** @var SearchFilter $searchFilter */
                 $searchFilter = $searchFilters[$filterKey];
-                $hasMatch = $searchFilter->matches($this->extractValue($item, $searchFilter->getFullName()) ?? '');
+                $extractedValue = $this->extractValue($item, $searchFilter->getFullName());
+                $hasMatch = null;
+
+                // If we need to do a legacy null comparison, try that first.
+                if (($searchFilter instanceof ExactMatchFilter) && ($hasNullFilter || $extractedValue === null)) {
+                    $hasMatch = $this->performLegacyNullMatch($extractedValue, $filterValue);
+                    if ($hasMatch !== null && in_array('not', $searchFilter->getModifiers())) {
+                        $hasMatch = !$hasMatch;
+                    }
+                }
+
+                // If the null comparison wasn't necessary or was incomplete, let searchfilters do the work.
+                if ($hasMatch === null) {
+                    $hasMatch = $searchFilter->matches($extractedValue);
+                }
+
+
                 $matches[$hasMatch] = 1;
                 // If this is excludeAny or filterAny and we have a match, we can stop looking for matches.
                 if ($any && $hasMatch) {
@@ -752,6 +779,27 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         $list = clone $this;
         $list->items = $itemsToKeep;
         return $list;
+    }
+
+    /**
+     * Required for backwards compatibility since ExactMatch handles null values differently than ArrayList used to.
+     */
+    private function performLegacyNullMatch(mixed $objectValue, mixed $filterValues): ?bool
+    {
+        if (!is_array($filterValues)) {
+            $filterValues = [$filterValues];
+        }
+        foreach ($filterValues as $filterValue) {
+            // Skip comparisons between two non-null values, we can trust searchfilter for those.
+            if ($objectValue !== null && $filterValue !== null) {
+                continue;
+            }
+            // This is the legacy comparison.
+            if ($filterValue == $objectValue) {
+                return true;
+            }
+        }
+        return $objectValue === null ? false : null;
     }
 
     /**
