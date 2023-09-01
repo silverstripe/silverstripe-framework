@@ -18,6 +18,7 @@ class DataQueryTest extends SapphireTest
     protected static $fixture_file = 'DataQueryTest.yml';
 
     protected static $extra_dataobjects = [
+        DataQueryTest\DataObjectAddsToQuery::class,
         DataQueryTest\ObjectA::class,
         DataQueryTest\ObjectB::class,
         DataQueryTest\ObjectC::class,
@@ -379,6 +380,15 @@ class DataQueryTest extends SapphireTest
         $query2->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld', false, false, true));
         $this->assertEquals(0, $query2->count(), "Found mystring. Shouldn't be able too.");
         static::resetDBSchema(true);
+    }
+
+    public function testAddToQueryIsCalled()
+    {
+        // Including filter on parent table only doesn't pull in second
+        $query = new DataQuery(DataQueryTest\DataObjectAddsToQuery::class);
+        $result = $query->getFinalisedQuery();
+        // The `DBFieldAddsToQuery` test field removes itself from the select query
+        $this->assertArrayNotHasKey('FieldTwo', $result->getSelect());
     }
 
     /**
