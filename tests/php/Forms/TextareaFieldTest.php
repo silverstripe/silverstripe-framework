@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\RequiredFields;
 
 class TextareaFieldTest extends SapphireTest
 {
@@ -48,6 +49,30 @@ class TextareaFieldTest extends SapphireTest
             . ' &quot;double&quot; quotations',
             $field->Field()
         );
+    }
+
+    /**
+     * Tests the TextareaField Max Length Validation Failure
+     */
+    public function testMaxLengthValidationFail()
+    {
+        $field = new TextareaField("Test", "Test");
+        $field->setMaxLength(5);
+        $field->setValue("John Doe"); // 8 characters, so should fail
+        $result = $field->validate(new RequiredFields());
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Tests the TextareaField Max Length Validation Success
+     */
+    public function testMaxLengthValidationSuccess()
+    {
+        $field = new TextareaField("Test", "Test");
+        $field->setMaxLength(5);
+        $field->setValue("John"); // 4 characters, so should pass
+        $result = $field->validate(new RequiredFields());
+        $this->assertTrue($result);
     }
 
     public function testValueEntities()
