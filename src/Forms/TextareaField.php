@@ -152,7 +152,6 @@ class TextareaField extends FormField
         return $attributes;
     }
 
-
     /**
      * {@inheritdoc}
      */
@@ -165,6 +164,41 @@ class TextareaField extends FormField
         }
 
         return $parent;
+    }
+
+    /**
+     * Validate this field
+     *
+     * @param Validator $validator
+     * @return bool
+     */
+    public function validate($validator)
+    {
+        if (!is_null($this->maxLength) && mb_strlen($this->value ?? '') > $this->maxLength) {
+            $name = strip_tags($this->Title() ? $this->Title() : $this->getName());
+            $validator->validationError(
+                $this->name,
+                _t(
+                    'SilverStripe\\Forms\\TextField.VALIDATEMAXLENGTH',
+                    'The value for {name} must not exceed {maxLength} characters in length',
+                    ['name' => $name, 'maxLength' => $this->maxLength]
+                ),
+                "validation"
+            );
+            return false;
+        }
+        return true;
+    }
+
+    public function getSchemaValidation()
+    {
+        $rules = parent::getSchemaValidation();
+        if ($this->getMaxLength()) {
+            $rules['max'] = [
+                'length' => $this->getMaxLength(),
+            ];
+        }
+        return $rules;
     }
 
     /**
