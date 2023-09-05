@@ -36,3 +36,8 @@ SilverStripe\ORM\Tests\DataQueryTest\ObjectH:
     SortOrder: 2
     ManyTestEs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectE.query2
     ManyTestIs: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectI.query3
+
+SilverStripe\ORM\Tests\DataQueryTest\DataObjectAddsToQuery:
+  obj1:
+    FieldOne: 'This is a value'
+    FieldTwo: 'This is also a value'
