@@ -174,6 +174,7 @@ class TextareaField extends FormField
      */
     public function validate($validator)
     {
+        $result = true;
         if (!is_null($this->maxLength) && mb_strlen($this->value ?? '') > $this->maxLength) {
             $name = strip_tags($this->Title() ? $this->Title() : $this->getName());
             $validator->validationError(
@@ -185,9 +186,9 @@ class TextareaField extends FormField
                 ),
                 "validation"
             );
-            return false;
+            $result = false;
         }
-        return true;
+        return $this->extendValidationResult($result, $validator);
     }
 
     public function getSchemaValidation()
