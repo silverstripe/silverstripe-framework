@@ -617,6 +617,8 @@ class DataQuery
                 } else {
                     $query->selectField($quotedField, $k);
                 }
+                $dbO = Injector::inst()->create($v, $k);
+                $dbO->addToQuery($query);
             }
         }
         foreach ($compositeFields as $k => $v) {
