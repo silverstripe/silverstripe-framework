@@ -151,6 +151,8 @@ class DBClassName extends DBEnum
         if ($record instanceof DataObject) {
             $this->record = $record;
         }
+
+        return $this;
     }
 
     public function getDefault()
