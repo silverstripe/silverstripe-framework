@@ -603,6 +603,7 @@ class DataQuery
         $schema = DataObject::getSchema();
         $databaseFields = $schema->databaseFields($tableClass, false);
         $compositeFields = $schema->compositeFields($tableClass, false);
+        $tableName = $schema->tableName($tableClass);
         unset($databaseFields['ID']);
         foreach ($databaseFields as $k => $v) {
             if ((is_null($columns) || in_array($k, $columns ?? [])) && !isset($compositeFields[$k])) {
@@ -618,12 +619,12 @@ class DataQuery
                     $query->selectField($quotedField, $k);
                 }
                 $dbO = Injector::inst()->create($v, $k);
+                $dbO->setTable($tableName);
                 $dbO->addToQuery($query);
             }
         }
         foreach ($compositeFields as $k => $v) {
             if ((is_null($columns) || in_array($k, $columns ?? [])) && $v) {
-                $tableName = $schema->tableName($tableClass);
                 $dbO = Injector::inst()->create($v, $k);
                 $dbO->setTable($tableName);
                 $dbO->addToQuery($query);

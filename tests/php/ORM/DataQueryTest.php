@@ -384,8 +384,9 @@ class DataQueryTest extends SapphireTest
         // Including filter on parent table only doesn't pull in second
         $query = new DataQuery(DataQueryTest\DataObjectAddsToQuery::class);
         $result = $query->getFinalisedQuery();
-        // The `DBFieldAddsToQuery` test field removes itself from the select query
-        $this->assertArrayNotHasKey('FieldTwo', $result->getSelect());
+        // The `DBFieldAddsToQuery` test field adds a new field to the select query
+        $this->assertArrayHasKey('FieldTwo2', $result->getSelect());
+        $this->assertSame('"DataQueryTest_AddsToQuery"."FieldTwo"', $result->getSelect()['FieldTwo2']);
     }
 
     /**
