@@ -68,5 +68,7 @@ class DBPrimaryKey extends DBInt
         if ($record instanceof DataObject) {
             $this->object = $record;
         }
+
+        return $this;
     }
 }
