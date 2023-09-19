@@ -2,15 +2,28 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * Legacy implementation for SilverStripe 2.1 - 2.3,
  * which had a design flaw in password hashing that caused
  * the hashes to differ between architectures due to
  * floating point precision problems in base_convert().
  * See http://open.silverstripe.org/ticket/3004
+ *
+ * @deprecated 5.2.0 Use SilverStripe\Security\PasswordEncryptor_PHPHash instead.
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash
 {
+    public function __construct()
+    {
+        Deprecation::notice(
+            '5.2.0',
+            'Use SilverStripe\Security\PasswordEncryptor_PHPHash instead.',
+            Deprecation::SCOPE_CLASS
+        );
+    }
+
     public function encrypt($password, $salt = null, $member = null)
     {
         $password = parent::encrypt($password, $salt, $member);
