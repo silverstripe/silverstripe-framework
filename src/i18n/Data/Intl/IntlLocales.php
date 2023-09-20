@@ -1455,7 +1455,9 @@ class IntlLocales implements Locales, Resettable
         $locales = $this->config()->get('locales');
         $localised = [];
         foreach ($locales as $code => $default) {
-            $localised[$code] = $this->localeName($code);
+            // Fix spelling Maori language
+            $localeName = str_replace('Maori', 'Māori', $this->localeName($code));
+            $localised[$code] = $localeName;
         }
 
         // Save cache

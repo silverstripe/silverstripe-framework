@@ -477,4 +477,9 @@ class i18nTest extends SapphireTest
             return i18n::getData()->languageName('de_CGN');
         }));
     }
+
+    public function testGetLocales()
+    {
+        $this->assertEquals('Māori (New Zealand)', i18n::getData()->getLocales()['mi_NZ']);
+    }
 }
