@@ -50,6 +50,11 @@ class DataQuery
     protected $collidingFields = [];
 
     /**
+     * If true, collisions are allowed for statements aliased as db columns
+     */
+    private $allowCollidingFieldStatements = false;
+
+    /**
      * Allows custom callback to be registered before getFinalisedQuery is called.
      *
      * @var DataQueryManipulator[]
@@ -287,6 +292,7 @@ class DataQuery
         if ($this->collidingFields) {
             foreach ($this->collidingFields as $collisionField => $collisions) {
                 $caseClauses = [];
+                $lastClauses = [];
                 foreach ($collisions as $collision) {
                     if (preg_match('/^"(?<table>[^"]+)"\./', $collision ?? '', $matches)) {
                         $collisionTable = $matches['table'];
@@ -298,9 +304,14 @@ class DataQuery
                             $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
                         }
                     } else {
-                        user_error("Bad collision item '$collision'", E_USER_WARNING);
+                        if ($this->getAllowCollidingFieldStatements()) {
+                            $lastClauses[] = "WHEN $collision IS NOT NULL THEN $collision";
+                        } else {
+                            user_error("Bad collision item '$collision'", E_USER_WARNING);
+                        }
                     }
                 }
+                $caseClauses = array_merge($caseClauses, $lastClauses);
                 $query->selectField("CASE " . implode(" ", $caseClauses) . " ELSE NULL END", $collisionField);
             }
         }
@@ -1355,6 +1366,25 @@ class DataQuery
     public function pushQueryManipulator(DataQueryManipulator $manipulator)
     {
         $this->dataQueryManipulators[] = $manipulator;
+        return $this;
+    }
+
+    /**
+     * Get whether field statements aliased as columns are allowed when that column is already
+     * being selected
+     */
+    public function getAllowCollidingFieldStatements(): bool
+    {
+        return $this->allowCollidingFieldStatements;
+    }
+
+    /**
+     * Set whether field statements aliased as columns are allowed when that column is already
+     * being selected
+     */
+    public function setAllowCollidingFieldStatements(bool $value): static
+    {
+        $this->allowCollidingFieldStatements = $value;
         return $this;
     }
 
