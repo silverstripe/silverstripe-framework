@@ -242,9 +242,25 @@ class DBQueryBuilder
     public function buildFromFragment(SQLConditionalExpression $query, array &$parameters)
     {
         $from = $query->getJoins($joinParameters);
+        $tables = [];
+        $joins = [];
+
+        // E.g. a naive "Select 1" statement is valid SQL
+        if (empty($from)) {
+            return '';
+        }
+
+        foreach ($from as $joinOrTable) {
+            if (preg_match(SQLConditionalExpression::getJoinRegex(), $joinOrTable)) {
+                $joins[] = $joinOrTable;
+            } else {
+                $tables[] = $joinOrTable;
+            }
+        }
+
         $parameters = array_merge($parameters, $joinParameters);
         $nl = $this->getSeparator();
-        return  "{$nl}FROM " . implode(' ', $from);
+        return  "{$nl}FROM " . implode(', ', $tables) . ' ' . implode(' ', $joins);
     }
 
     /**

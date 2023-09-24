@@ -162,6 +162,9 @@ class SQLSelect extends SQLConditionalExpression
             $fields = [$fields];
         }
         foreach ($fields as $idx => $field) {
+            if ($field === '') {
+                continue;
+            }
             $this->selectField($field, is_numeric($idx) ? null : $idx);
         }
 
@@ -712,5 +715,11 @@ class SQLSelect extends SQLConditionalExpression
         $index = max($this->count() + $offset - 1, 0);
         $query->setLimit(1, $index);
         return $query;
+    }
+
+    public function isEmpty()
+    {
+        // Empty if there's no select, or we're trying to select '*' but there's no FROM clause
+        return empty($this->select) || (empty($this->from) && array_key_exists('*', $this->select));
     }
 }
