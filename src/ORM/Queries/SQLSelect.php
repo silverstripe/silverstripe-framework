@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Queries;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DB;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * Object representing a SQL SELECT query.
@@ -12,6 +13,9 @@ use InvalidArgumentException;
  */
 class SQLSelect extends SQLConditionalExpression
 {
+    public const UNION_ALL = 'ALL';
+
+    public const UNION_DISTINCT = 'DISTINCT';
 
     /**
      * An array of SELECT fields, keyed by an optional alias.
@@ -35,6 +39,11 @@ class SQLSelect extends SQLConditionalExpression
      * @var array
      */
     protected $having = [];
+
+    /**
+     * An array of subqueries to union with this one.
+     */
+    protected array $union = [];
 
     /**
      * If this is true DISTINCT will be added to the SQL.
@@ -530,6 +539,29 @@ class SQLSelect extends SQLConditionalExpression
     {
         $this->splitQueryParameters($this->having, $conditions, $parameters);
         return $conditions;
+    }
+
+    /**
+     * Add a select query to UNION with.
+     *
+     * @param string|null $type One of the UNION_ALL or UNION_DISTINCT constants - or null for a default union
+     */
+    public function addUnion(self $query, ?string $type = null): static
+    {
+        if ($type && $type !== self::UNION_ALL && $type !== self::UNION_DISTINCT) {
+            throw new LogicException('Union $type must be one of the constants UNION_ALL or UNION_DISTINCT.');
+        }
+
+        $this->union[] = ['query' => $query, 'type' => $type];
+        return $this;
+    }
+
+    /**
+     * Get all of the queries that will be UNIONed with this one.
+     */
+    public function getUnions(): array
+    {
+        return $this->union;
     }
 
     /**
