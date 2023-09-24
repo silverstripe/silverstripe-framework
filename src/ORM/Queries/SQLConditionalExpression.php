@@ -135,17 +135,25 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
     {
-        if (!$tableAlias) {
-            $tableAlias = $table;
-        }
-        $this->from[$tableAlias] = [
-            'type' => 'LEFT',
-            'table' => $table,
-            'filter' => [$onPredicate],
-            'order' => $order,
-            'parameters' => $parameters
-        ];
-        return $this;
+        return $this->addJoin($table, 'LEFT', $onPredicate, $tableAlias, $order, $parameters);
+    }
+
+    /**
+     * Add a RIGHT JOIN criteria to the tables list.
+     *
+     * @param string $table Unquoted table name
+     * @param string $onPredicate The "ON" SQL fragment in a "RIGHT JOIN ... AS ... ON ..." statement, Needs to be valid
+     *                            (quoted) SQL.
+     * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
+     * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+     *                   will cause the query to appear first. The default is 20, and joins created automatically by the
+     *                   ORM have a value of 10.
+     * @param array $parameters Any additional parameters if the join is a parameterized subquery
+     * @return $this Self reference
+     */
+    public function addRightJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
+    {
+        return $this->addJoin($table, 'RIGHT', $onPredicate, $tableAlias, $order, $parameters);
     }
 
     /**
@@ -163,11 +171,19 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = [])
     {
+        return $this->addJoin($table, 'INNER', $onPredicate, $tableAlias, $order, $parameters);
+    }
+
+    /**
+     * Add a JOIN criteria
+     */
+    private function addJoin($table, $type, $onPredicate, $tableAlias = null, $order = 20, $parameters = []): static
+    {
         if (!$tableAlias) {
             $tableAlias = $table;
         }
         $this->from[$tableAlias] = [
-            'type' => 'INNER',
+            'type' => $type,
             'table' => $table,
             'filter' => [$onPredicate],
             'order' => $order,
