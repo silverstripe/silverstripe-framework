@@ -183,6 +183,33 @@ class DataQueryTest extends SapphireTest
         $this->assertTrue(true);
     }
 
+    public function provideFieldCollision()
+    {
+        return [
+            'allow collisions' => [true],
+            'disallow collisions' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFieldCollision
+     */
+    public function testFieldCollision($allowCollisions)
+    {
+        $dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
+        $dataQuery->selectField('COALESCE(NULL, 1) AS "Title"');
+        $dataQuery->setAllowCollidingFieldStatements($allowCollisions);
+
+        if ($allowCollisions) {
+            $this->assertSQLContains('THEN "DataQueryTest_B"."Title" WHEN COALESCE(NULL, 1) AS "Title" IS NOT NULL THEN COALESCE(NULL, 1) AS "Title" ELSE NULL END AS "Title"', $dataQuery->sql());
+        } else {
+            $this->expectError();
+            $this->expectErrorMessageMatches('/^Bad collision item /');
+        }
+
+        $dataQuery->getFinalisedQuery();
+    }
+
     public function testDisjunctiveGroup()
     {
         $dq = new DataQuery(DataQueryTest\ObjectA::class);
