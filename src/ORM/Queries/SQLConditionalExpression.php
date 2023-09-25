@@ -802,6 +802,6 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public static function getJoinRegex(): string
     {
-        return '/JOIN +.*? +(AS|ON|USING\(?) +/i';
+        return '/JOIN\s+.*?\s+(AS|ON|USING\(?)\s+/is';
     }
 }
