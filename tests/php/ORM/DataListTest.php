@@ -304,12 +304,33 @@ class DataListTest extends SapphireTest
         $this->assertSQLEquals($expected, $list->sql($parameters));
     }
 
-    public function testInnerJoin()
+    public function provideJoin()
+    {
+        return [
+            [
+                'joinMethod' => 'innerJoin',
+                'joinType' => 'INNER JOIN',
+            ],
+            [
+                'joinMethod' => 'leftJoin',
+                'joinType' => 'LEFT JOIN',
+            ],
+            [
+                'joinMethod' => 'rightJoin',
+                'joinType' => 'RIGHT JOIN',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideJoin
+     */
+    public function testJoin(string $joinMethod, string $joinType)
     {
         $db = DB::get_conn();
 
         $list = TeamComment::get();
-        $list = $list->innerJoin(
+        $list = $list->$joinMethod(
             'DataObjectTest_Team',
             '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"',
             'Team'
@@ -322,22 +343,24 @@ class DataListTest extends SapphireTest
             . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
             . ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
             . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
-            . '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
+            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" ' . $joinType
+            . ' "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
             . '"DataObjectTest_TeamComment"."TeamID"'
             . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
 
-
         $this->assertSQLEquals($expected, $list->sql($parameters));
         $this->assertEmpty($parameters);
     }
 
-    public function testInnerJoinParameterised()
+    /**
+     * @dataProvider provideJoin
+     */
+    public function testJoinParameterised(string $joinMethod, string $joinType)
     {
         $db = DB::get_conn();
 
         $list = TeamComment::get();
-        $list = $list->innerJoin(
+        $list = $list->$joinMethod(
             'DataObjectTest_Team',
             '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID" '
             . 'AND "DataObjectTest_Team"."Title" LIKE ?',
@@ -353,66 +376,8 @@ class DataListTest extends SapphireTest
             . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
             . ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
             . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" INNER JOIN '
-            . '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
-            . '"DataObjectTest_TeamComment"."TeamID" '
-            . 'AND "DataObjectTest_Team"."Title" LIKE ?'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
-
-        $this->assertSQLEquals($expected, $list->sql($parameters));
-        $this->assertEquals(['Team%'], $parameters);
-    }
-
-    public function testLeftJoin()
-    {
-        $db = DB::get_conn();
-
-        $list = TeamComment::get();
-        $list = $list->leftJoin(
-            'DataObjectTest_Team',
-            '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"',
-            'Team'
-        );
-
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL '
-            . 'THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN "DataObjectTest_Team" '
-            . 'AS "Team" ON "DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID"'
-            . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';
-
-
-        $this->assertSQLEquals($expected, $list->sql($parameters));
-        $this->assertEmpty($parameters);
-    }
-
-    public function testLeftJoinParameterised()
-    {
-        $db = DB::get_conn();
-
-        $list = TeamComment::get();
-        $list = $list->leftJoin(
-            'DataObjectTest_Team',
-            '"DataObjectTest_Team"."ID" = "DataObjectTest_TeamComment"."TeamID" '
-            . 'AND "DataObjectTest_Team"."Title" LIKE ?',
-            'Team',
-            20,
-            ['Team%']
-        );
-
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
-            . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
-            . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
-            . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
-            . 'CASE WHEN "DataObjectTest_TeamComment"."ClassName" IS NOT NULL'
-            . ' THEN "DataObjectTest_TeamComment"."ClassName" ELSE '
-            . $db->quoteString(DataObjectTest\TeamComment::class)
-            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" LEFT JOIN '
-            . '"DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
+            . ' END AS "RecordClassName" FROM "DataObjectTest_TeamComment" ' . $joinType
+            . ' "DataObjectTest_Team" AS "Team" ON "DataObjectTest_Team"."ID" = '
             . '"DataObjectTest_TeamComment"."TeamID" '
             . 'AND "DataObjectTest_Team"."Title" LIKE ?'
             . ' ORDER BY "DataObjectTest_TeamComment"."Name" ASC';

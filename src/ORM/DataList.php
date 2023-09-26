@@ -807,6 +807,25 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
+     * Return a new DataList instance with a right join clause added to this list's query.
+     *
+     * @param string $table Table name (unquoted and as escaped SQL)
+     * @param string $onClause Escaped SQL statement, e.g. '"Table1"."ID" = "Table2"."ID"'
+     * @param string $alias - if you want this table to be aliased under another name
+     * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+     * will cause the query to appear first. The default is 20, and joins created automatically by the
+     * ORM have a value of 10.
+     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @return static
+     */
+    public function rightJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    {
+        return $this->alterDataQuery(function (DataQuery $query) use ($table, $onClause, $alias, $order, $parameters) {
+            $query->rightJoin($table, $onClause, $alias, $order, $parameters);
+        });
+    }
+
+    /**
      * Return an array of the actual items that this DataList contains at this stage.
      * This is when the query is actually executed.
      *
