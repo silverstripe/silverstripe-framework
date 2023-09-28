@@ -268,14 +268,17 @@ class FieldList extends ArrayList
 
         // Add the fields to the end of this set
         foreach ($fields as $field) {
-            // Check if a field by the same name exists in this tab
-            if ($insertBefore) {
-                $tab->insertBefore($insertBefore, $field);
-            } elseif (($name = $field->getName()) && $tab->fieldByName($name)) {
-                // It exists, so we need to replace the old one
-                $this->replaceField($field->getName(), $field);
-            } else {
-                $tab->push($field);
+            // Check if field is not null
+            if($field !== null) {
+                // Check if a field by the same name exists in this tab
+                if ($insertBefore) {
+                    $tab->insertBefore($insertBefore, $field);
+                } elseif (($name = $field->getName()) && $tab->fieldByName($name)) {
+                    // It exists, so we need to replace the old one
+                    $this->replaceField($field->getName(), $field);
+                } else {
+                    $tab->push($field);
+                }
             }
         }
 
