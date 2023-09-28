@@ -114,19 +114,22 @@ class HTMLEditorField extends TextareaField
 
     public function getAttributes()
     {
+        $config = $this->getEditorConfig();
         // Fix CSS height based on rows
         $rowHeight = $this->config()->get('fixed_row_height');
         $attributes = [];
-        if ($rowHeight) {
+        if ($rowHeight && ($config instanceof TinyMCEConfig)) {
             $height = $this->getRows() * $rowHeight;
             $attributes['style'] = sprintf('height: %dpx;', $height);
+            $config = clone $config;
+            $config->setOption('height', 'auto');
         }
 
         // Merge attributes
         return array_merge(
             $attributes,
             parent::getAttributes(),
-            $this->getEditorConfig()->getAttributes()
+            $config->getAttributes()
         );
     }
 
