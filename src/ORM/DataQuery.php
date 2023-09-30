@@ -212,7 +212,11 @@ class DataQuery
             $queriedColumns = $this->queriedColumns;
         }
         if ($queriedColumns) {
-            $queriedColumns = array_merge($queriedColumns, ['Created', 'LastEdited', 'ClassName']);
+            // Add fixed fields to the query
+            // ID is a special case and gets added separately later
+            $fixedFields = DataObject::config()->uninherited('fixed_fields');
+            unset($fixedFields['ID']);
+            $queriedColumns = array_merge($queriedColumns, array_keys($fixedFields));
         }
         $query = clone $this->query;
 
