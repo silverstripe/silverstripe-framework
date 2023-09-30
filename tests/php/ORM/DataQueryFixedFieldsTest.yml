@@ -1,0 +1,4 @@
+SilverStripe\ORM\Tests\DataQueryTest\ObjectA:
+  query1:
+    Name: 'Only one object'
+    ExtraFixedField: 'This is the field'
