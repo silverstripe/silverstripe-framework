@@ -9,6 +9,16 @@ SilverStripe\ORM\Tests\DataQueryTest\ObjectE:
     Title: 'Second'
     SortOrder: 2
 
+SilverStripe\ORM\Tests\DataQueryTest\ObjectF:
+  query1:
+    MyDate: '2023-06-01'
+  query2:
+    MyDate: '2023-01-01'
+  query3:
+    MyDate: '2023-01-02'
+  query4:
+    MyDate: '2023-06-02'
+
 SilverStripe\ORM\Tests\DataQueryTest\ObjectI:
   query1:
     Title: 'First'
@@ -41,3 +51,42 @@ SilverStripe\ORM\Tests\DataQueryTest\DataObjectAddsToQuery:
   obj1:
     FieldOne: 'This is a value'
     FieldTwo: 'This is also a value'
+
+SilverStripe\ORM\Tests\DataQueryTest\DateAndPriceObject:
+  nullobj:
+    Date: null
+    Price: null
+  obj1:
+    Price: 0
+    Date: '2023-01-01'
+  obj2:
+    Price: 100
+    Date: '2023-01-02'
+  obj3:
+    Price: 200
+    Date: '2023-01-04'
+  obj4:
+    Price: 300
+    Date: '2023-01-07'
+  obj5:
+    Price: 400
+    Date: '2023-01-08'
+
+SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject:
+  grandparent:
+    Title: 'grandparent'
+  parent:
+    Title: 'parent'
+    Parent: =>SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject.grandparent
+  child1:
+    Title: 'child1'
+    Parent: =>SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject.parent
+  child2:
+    Title: 'child2'
+    Parent: =>SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject.parent
+  child-of-child1:
+    Title: 'child of child1'
+    Parent: =>SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject.child1
+  child-of-child2:
+    Title: 'child of child2'
+    Parent: =>SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject.child2
