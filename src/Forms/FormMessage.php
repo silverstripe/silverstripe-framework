@@ -31,7 +31,6 @@ trait FormMessage
      */
     protected $messageCast = null;
 
-
     /**
      * Returns the field message, used by form validation.
      *
@@ -90,6 +89,58 @@ trait FormMessage
         $this->messageType = $messageType;
         $this->messageCast = $messageCast;
         return $this;
+    }
+
+    /**
+     * Appends a message to the existing message if the types and casts match.
+     * If either is different, the $force argument determines the behaviour.
+     *
+     * Note: to prevent duplicates, we check for the $message string in the existing message.
+     * If the existing message contains $message as a substring, it won't be added.
+     *
+     * @param bool $force if true, and the new message cannot be appended to the existing one, the existing message will be overridden.
+     * @throws InvalidArgumentException if $force is false and the messages can't be merged because of a mismatched type or cast.
+     */
+    public function appendMessage(
+        string $message,
+        string $messageType = ValidationResult::TYPE_ERROR,
+        string $messageCast = ValidationResult::CAST_TEXT,
+        bool $force = false,
+    ): static {
+        if (empty($message)) {
+            return $this;
+        }
+
+        if (empty($this->message)) {
+            return $this->setMessage($message, $messageType, $messageCast);
+        }
+
+        $canBeMerged = ($messageType === $this->getMessageType() && $messageCast === $this->getMessageCast());
+
+        if (!$canBeMerged && !$force) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    "Couldn't append message of type %s and cast %s to existing message of type %s and cast %s",
+                    $messageType,
+                    $messageCast,
+                    $this->getMessageType(),
+                    $this->getMessageCast(),
+                )
+            );
+        }
+
+        // Checks that the exact message string is not already contained before appending
+        $messageContainsString = strpos($this->message, $message) !== false;
+        if ($canBeMerged && $messageContainsString) {
+            return $this;
+        }
+
+        if ($canBeMerged) {
+            $separator = $messageCast === ValidationResult::CAST_HTML ? '<br />' : PHP_EOL;
+            $message = $this->message . $separator . $message;
+        }
+
+        return $this->setMessage($message, $messageType, $messageCast);
     }
 
     /**

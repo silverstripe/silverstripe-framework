@@ -76,6 +76,73 @@ class FormTest extends FunctionalTest
         ];
     }
 
+    public function formMessageDataProvider()
+    {
+        return [
+            [
+                [
+                    'Just a string',
+                ],
+            ],
+            [
+                [
+                    'Just a string',
+                    'Certainly different',
+                ],
+            ],
+            [
+                [
+                    'Just a string',
+                    'Certainly different',
+                    'Just a string',
+                ],
+            ],
+        ];
+    }
+
+    public function formMessageExceptionsDataProvider()
+    {
+        return [
+            [
+                'message_1' => [
+                    'val' => 'Just a string',
+                    'type' => ValidationResult::TYPE_ERROR,
+                    'cast' => ValidationResult::CAST_TEXT,
+                ],
+                'message_2' => [
+                    'val' => 'This is a good message',
+                    'type' => ValidationResult::TYPE_GOOD,
+                    'cast' => ValidationResult::CAST_TEXT,
+                ],
+            ],
+            [
+                'message_1' => [
+                    'val' => 'This is a good message',
+                    'type' => ValidationResult::TYPE_GOOD,
+                    'cast' => ValidationResult::CAST_TEXT,
+                ],
+                'message_2' => [
+                    'val' => 'HTML is the future of the web',
+                    'type' => ValidationResult::TYPE_GOOD,
+                    'cast' => ValidationResult::CAST_HTML,
+                ],
+            ],
+            [
+                'message_1' => [
+                    'val' => 'This is a good message',
+                    'type' => ValidationResult::TYPE_GOOD,
+                    'cast' => ValidationResult::CAST_TEXT,
+                ],
+                'message_2' => [
+                    'val' => 'HTML is the future of the web',
+                    'type' => ValidationResult::TYPE_GOOD,
+                    'cast' => ValidationResult::CAST_HTML,
+                ],
+                'force' => true,
+            ],
+        ];
+    }
+
     public function testLoadDataFromRequest()
     {
         $form = new Form(
@@ -1028,6 +1095,54 @@ class FormTest extends FunctionalTest
             '<em>Unescaped HTML</em>',
             $messageEls[0]->asXML()
         );
+    }
+
+    /**
+     * @dataProvider formMessageDataProvider
+     */
+    public function testFieldMessageAppend($messages)
+    {
+        $form = $this->getStubForm();
+        foreach ($messages as $message) {
+            $form->appendMessage($message);
+        }
+        $parser = new CSSContentParser($form->forTemplate());
+        $messageEls = $parser->getBySelector('.message');
+
+        foreach ($messages as $message) {
+            $this->assertStringContainsString($message, $messageEls[0]->asXML());
+            $this->assertEquals(1, substr_count($messageEls[0]->asXML(), $message), 'Should not append if already present');
+        }
+    }
+
+    /**
+     * @dataProvider formMessageExceptionsDataProvider
+     */
+    public function testFieldMessageAppendExceptions(array $message1, array $message2, bool $force = false)
+    {
+        $form = $this->getStubForm();
+        $form->appendMessage($message1['val'], $message1['type'], $message1['cast']);
+        if (!$force) {
+            $this->expectException(\InvalidArgumentException::class);
+            $this->expectExceptionMessage(
+                sprintf(
+                    "Couldn't append message of type %s and cast %s to existing message of type %s and cast %s",
+                    $message2['type'],
+                    $message2['cast'],
+                    $message1['type'],
+                    $message1['cast'],
+                )
+            );
+        }
+
+        $form->appendMessage($message2['val'], $message2['type'], $message2['cast'], $force);
+
+        if ($force) {
+            $parser = new CSSContentParser($form->forTemplate());
+            $messageEls = $parser->getBySelector('.message');
+            $this->assertStringContainsString($message2['val'], $messageEls[0]->asXML());
+            $this->assertStringNotContainsString($message1['val'], $messageEls[0]->asXML());
+        }
     }
 
     public function testGetExtraFields()
