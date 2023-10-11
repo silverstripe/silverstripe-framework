@@ -67,6 +67,7 @@ SilverStripe\Control\HTTP:
     box: application/vnd.previewsystems.box
     boz: application/x-bzip2
     bpk: application/octet-stream
+    brf: text/plain
     btif: image/prs.btif
     bz: application/x-bzip
     bz2: application/x-bzip2
