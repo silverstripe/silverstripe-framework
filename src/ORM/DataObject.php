@@ -1994,6 +1994,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $result = HasManyList::create($componentClass, $joinField);
         }
 
+        // Guy note: This mirrors the "updateManyManyComponents" extension hook in getManyManyComponents()
+        // except it (by necessity) includes the component name as well.
+        $this->extend('updateComponents', $result, $componentName);
+
         return $result
             ->setDataQueryParam($this->getInheritableQueryParams())
             ->forForeignID($id);
@@ -2111,9 +2115,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $joinField = "{$remoteRelation}ID";
                 $componentClass = $schema->classForField($remoteClass, $joinField);
                 $result = HasManyList::create($componentClass, $joinField);
-                return $result
+                $result = $result
                     ->setDataQueryParam($this->getInheritableQueryParams())
                     ->forForeignID($this->ID);
+                // $this->extend('updateComponents', $result, $componentName); // Not sure what the component name should be here though... maybe this isn't doable here?
+                return $result;
             }
             case 'belongs_to':
             case 'has_many': {
