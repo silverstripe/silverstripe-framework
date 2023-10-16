@@ -953,6 +953,13 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertFalse($subteam->canSortBy('SomethingElse'));
     }
 
+    public function testCannotSortByRelation()
+    {
+        $list = $this->getListWithRecords(TeamComment::class);
+        $this->assertFalse($list->canSortBy('Team'));
+        $this->assertFalse($list->canSortBy('Team.Title'));
+    }
+
     public function testArrayAccess()
     {
         $list = $this->getListWithRecords(Team::class)->sort('Title');
@@ -1110,6 +1117,14 @@ class EagerLoadedListTest extends SapphireTest
             ],
             $list1->column('Name')
         );
+    }
+
+    public function testSortByRelation()
+    {
+        $list = $this->getListWithRecords(TeamComment::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot sort by relations on EagerLoadedList');
+        $list = $list->sort('Team.Title', 'ASC');
     }
 
     /**
@@ -1324,6 +1339,26 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertTrue($subteam->canFilterBy("SubclassDatabaseField"));
     }
 
+    public function testCannotFilterByRelation()
+    {
+        $list = $this->getListWithRecords(Team::class);
+
+        $this->assertFalse($list->canFilterBy('Captain.ShirtNumber'));
+        $this->assertFalse($list->canFilterBy('SomethingElse.ShirtNumber'));
+        $this->assertFalse($list->canFilterBy('Captain.SomethingElse'));
+        $this->assertFalse($list->canFilterBy('Captain.FavouriteTeam.Captain.ShirtNumber'));
+
+        // Has many
+        $this->assertFalse($list->canFilterBy('Fans.Name'));
+        $this->assertFalse($list->canFilterBy('SomethingElse.Name'));
+        $this->assertFalse($list->canFilterBy('Fans.SomethingElse'));
+
+        // Many many
+        $this->assertFalse($list->canFilterBy('Players.FirstName'));
+        $this->assertFalse($list->canFilterBy('SomethingElse.FirstName'));
+        $this->assertFalse($list->canFilterBy('Players.SomethingElse'));
+    }
+
     public function testAddfilter()
     {
         $list = $this->getListWithRecords(TeamComment::class);
@@ -1439,6 +1474,60 @@ class EagerLoadedListTest extends SapphireTest
         $list = $this->getListWithRecords(SubTeam::class);
         $this->assertEquals(3, count($list ?? []));
         $this->assertEquals(2, count($list->exclude('ID', $id) ?? []));
+    }
+
+    public function testFilterAnyByRelation()
+    {
+        $list = $this->getListWithRecords(Player::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Can't filter by column 'Teams.Title'");
+        $list = $list->filterAny(['Teams.Title' => 'Team']);
+    }
+
+    public function testFilterAggregate()
+    {
+        $list = $this->getListWithRecords(Team::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Can't filter by column 'Players.Count()'");
+        $list->filter(['Players.Count()' => 2]);
+    }
+
+    public function testFilterAnyAggregate()
+    {
+        $list = $this->getListWithRecords(Team::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Can't filter by column 'Players.Count()'");
+        $list->filterAny(['Players.Count()' => 2]);
+    }
+
+    public function provideCantFilterByRelation()
+    {
+        return [
+            'many_many' => [
+                'Players.FirstName',
+            ],
+            'has_many' => [
+                'Comments.Name',
+            ],
+            'has_one' => [
+                'FavouriteTeam.Title',
+            ],
+            'non-existent relation' => [
+                'MascotAnimal.Name',
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider provideCantFilterByRelation
+     */
+    public function testCantFilterByRelation(string $column)
+    {
+        // Many to many
+        $list = $this->getListWithRecords(Team::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Can't filter by column '$column'");
+        $list->filter($column, ['Captain', 'Captain 2']);
     }
 
     /**
