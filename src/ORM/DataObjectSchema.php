@@ -1153,7 +1153,7 @@ class DataObjectSchema
             if ($key === 'from') {
                 return $relationClass;
             }
-            // @todo support polymorphic 'to'
+
             throw new InvalidArgumentException(
                 "many_many through relation {$parentClass}.{$component} {$key} references a polymorphic field "
                 . "{$joinClass}::{$relation} which is not supported"

@@ -35,7 +35,6 @@ class DBMultiEnum extends DBEnum
 
     public function requireField()
     {
-        // @todo: Remove mysql-centric logic from this
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
         $values = [

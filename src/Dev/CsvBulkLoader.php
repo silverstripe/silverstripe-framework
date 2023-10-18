@@ -15,9 +15,6 @@ use SilverStripe\ORM\DataObject;
  * input.
  *
  * @see http://tools.ietf.org/html/rfc4180
- *
- * @todo Support for deleting existing records not matched in the import
- * (through relation checks)
  */
 class CsvBulkLoader extends BulkLoader
 {
@@ -160,9 +157,6 @@ class CsvBulkLoader extends BulkLoader
     }
 
     /**
-     * @todo Better messages for relation checks and duplicate detection
-     * Note that columnMap isn't used.
-     *
      * @param array $record
      * @param array $columnMap
      * @param BulkLoader_Result $results
@@ -261,7 +255,6 @@ class CsvBulkLoader extends BulkLoader
             $obj->write();
         }
 
-        // @todo better message support
         $message = '';
 
         // save to results
@@ -288,8 +281,6 @@ class CsvBulkLoader extends BulkLoader
     /**
      * Find an existing objects based on one or more uniqueness columns
      * specified via {@link self::$duplicateChecks}.
-     *
-     * @todo support $columnMap
      *
      * @param array $record CSV data column
      * @param array $columnMap

@@ -28,8 +28,6 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     /**
      * Generate response for the given request
      *
-     * @todo Refactor HTTP::add_cache_headers() (e.g. etag handling) into this middleware
-     *
      * @param HTTPRequest $request
      * @param callable $delegate
      * @return HTTPResponse

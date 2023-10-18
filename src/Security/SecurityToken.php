@@ -35,7 +35,6 @@ use SilverStripe\View\TemplateGlobalProvider;
  * }
  * </code>
  *
- * @todo Make token name form specific for additional forgery protection.
  */
 class SecurityToken implements TemplateGlobalProvider
 {

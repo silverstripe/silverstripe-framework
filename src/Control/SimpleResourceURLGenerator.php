@@ -140,7 +140,6 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             // All resources mapped directly to _resources/
             $relativePath = Path::join(RESOURCES_DIR, $relativePath);
         } elseif (stripos($relativePath ?? '', ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
-            // @todo Non-public dir support will be removed in 5.0, so remove this block there
             // If there is no public folder, map to _resources/ but trim leading vendor/ too (4.0 compat)
             $relativePath = Path::join(
                 RESOURCES_DIR,

@@ -563,7 +563,6 @@ abstract class Database
      */
     public function concatOperator()
     {
-        // @todo Make ' + ' in mssql
         return ' || ';
     }
 
@@ -714,7 +713,6 @@ abstract class Database
      * will be an extension name, and the value the configuration for that extension. This
      * could be one of partitions, tablespaces, or clustering
      * @return boolean Flag indicating support for all of the above
-     * @todo Write test cases
      */
     public function supportsExtensions($extensions)
     {

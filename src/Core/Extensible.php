@@ -217,8 +217,6 @@ trait Extensible
      * Clears any previously created singletons through {@link singleton()}
      * to avoid side-effects from stale extension information.
      *
-     * @todo Add support for removing extensions with parameters
-     *
      * @param string $extension class name of an {@link Extension} subclass, without parameters
      */
     public static function remove_extension($extension)

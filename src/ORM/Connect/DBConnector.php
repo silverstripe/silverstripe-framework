@@ -37,7 +37,6 @@ abstract class DBConnector
      * it will be called on the object itself and as such can be overridden in a subclass.
      * Subclasses should run all errors through this function.
      *
-     * @todo hook this into a more well-structured error handling system.
      * @param string $msg The error message.
      * @param integer $errorLevel The level of the error to throw.
      * @param string $sql The SQL related to this query

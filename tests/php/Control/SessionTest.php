@@ -133,9 +133,6 @@ class SessionTest extends SapphireTest
     public function testStartRetainsInMemoryData()
     {
         $this->markTestIncomplete('Test');
-        // TODO Figure out how to simulate session vars without a session_start() resetting them
-        // $_SESSION['existing'] = true;
-        // $_SESSION['merge'] = 1;
         $req = new HTTPRequest('GET', '/');
         $session = new Session(null); // unstarted session
         $session->set('new', true);

@@ -4,11 +4,6 @@ namespace SilverStripe\ORM\Filters;
 
 use SilverStripe\ORM\DataQuery;
 
-/**
- * Incomplete.
- *
- * @todo add to tests
- */
 class WithinRangeFilter extends SearchFilter
 {
 

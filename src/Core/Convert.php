@@ -204,7 +204,6 @@ class Convert
      * Warning: Does not decode array keys
      *
      * @uses html2raw()
-     * @todo Currently &#xxx; entries are stripped; they should be converted
      * @param mixed $val
      * @return array|string
      */

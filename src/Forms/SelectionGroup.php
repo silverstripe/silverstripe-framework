@@ -90,7 +90,6 @@ class SelectionGroup extends CompositeField
             }
 
             $itemID = $this->ID() . '_' . (++$count);
-            // @todo Move into SelectionGroup_Item.ss template at some point.
             $extra = [
                 "RadioButton" => DBField::create_field('HTMLFragment', HTML::createTag(
                     'input',

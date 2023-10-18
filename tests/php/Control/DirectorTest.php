@@ -18,9 +18,6 @@ use SilverStripe\Core\Environment;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @todo test Director::alternateBaseFolder()
- */
 class DirectorTest extends SapphireTest
 {
     protected static $extra_controllers = [

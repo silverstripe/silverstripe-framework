@@ -95,8 +95,6 @@ class DataObjectLazyLoadingTest extends SapphireTest
         $teams = DataObject::get(Team::class); // query parent class
         $subteam1Lazy = $teams->find('ID', $subteam1->ID);
 
-        // TODO Fix hasField() to exclude *_Lazy
-        // $this->assertFalse($subteam1Lazy->hasField('SubclassDatabaseField_Lazy'));
         $this->assertTrue($subteam1Lazy->hasField('SubclassDatabaseField'));
     }
 

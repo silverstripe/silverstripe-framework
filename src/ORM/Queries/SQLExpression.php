@@ -45,8 +45,6 @@ abstract class SQLExpression
     /**
      * Return the generated SQL string for this query
      *
-     * @todo Is it ok for this to consider parameters? Test cases here!
-     *
      * @return string
      */
     public function __toString()

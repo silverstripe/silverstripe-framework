@@ -146,8 +146,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     /**
      * A bootstrap for the handleRequest method
      *
-     * @todo setDataModel and setRequest are redundantly called in parent::handleRequest() - sort this out
-     *
      * @param HTTPRequest $request
      */
     protected function beforeHandleRequest(HTTPRequest $request)

@@ -84,7 +84,6 @@ class MemberLoginForm extends BaseLoginForm
         }
 
         if ($checkCurrentUser && Security::getCurrentUser()) {
-            // @todo find a more elegant way to handle this
             $logoutAction = Security::logout_url();
             $fields = FieldList::create(
                 HiddenField::create('AuthenticationMethod', null, $this->getAuthenticatorClass(), $this)
@@ -134,7 +133,6 @@ class MemberLoginForm extends BaseLoginForm
             HiddenField::create("AuthenticationMethod", null, $this->getAuthenticatorClass(), $this),
             // Regardless of what the unique identifier field is (usually 'Email'), it will be held in the
             // 'Email' value, below:
-            // @todo Rename the field to a more generic covering name
             $emailField = TextField::create("Email", $label, null, null, $this),
             PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         );

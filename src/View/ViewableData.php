@@ -438,8 +438,6 @@ class ViewableData implements IteratorAggregate
     {
         $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
-        // TODO: It would be quicker not to instantiate the object, but to merely
-        // get its class from the Injector
         /** @var DBField $type */
         $type = Injector::inst()->get($class, true);
         return $type->config()->get('escape_type');

@@ -126,7 +126,6 @@ class DebugViewFriendlyErrorFormatter implements FormatterInterface
      */
     public function output($statusCode)
     {
-        // TODO: Refactor into a content-type option
         if (Director::is_ajax()) {
             return $this->getTitle();
         }

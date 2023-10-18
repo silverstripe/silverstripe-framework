@@ -36,11 +36,6 @@ use SilverStripe\View\ArrayData;
  *   the database records.
  * - If the field name matches a database field, a comma-separated list of values will be saved to that field.  The
  *   keys can be text or numbers.
- *
- * @todo Document the different source data that can be used
- * with this form field - e.g ComponentSet, ArrayList,
- * array. Is it also appropriate to accept so many different
- * types of data when just using an array would be appropriate?
  */
 class CheckboxSetField extends MultiSelectField
 {
@@ -48,9 +43,6 @@ class CheckboxSetField extends MultiSelectField
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
 
     /**
-     * @todo Explain different source data that can be used with this field,
-     * e.g. SQLMap, ArrayList or an array.
-     *
      * @param array $properties
      * @return DBHTMLText
      */

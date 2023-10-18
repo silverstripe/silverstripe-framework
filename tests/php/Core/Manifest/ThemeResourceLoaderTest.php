@@ -213,7 +213,6 @@ class ThemeResourceLoaderTest extends SapphireTest
      */
     public function testFindTemplatesInApplication()
     {
-        // TODO: replace with one that doesn't create temporary files (so bad)
         $templates = [
             $this->base . '/myproject/templates/Page.ss',
             $this->base . '/myproject/templates/Layout/Page.ss'

@@ -214,8 +214,6 @@ PHP
 
     /**
      * Tests {@link Convert::testRaw2URL()}
-     *
-     * @todo test toASCII()
      */
     public function testRaw2URL()
     {

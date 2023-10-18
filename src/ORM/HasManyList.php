@@ -119,7 +119,6 @@ class HasManyList extends RelationList
      * Doesn't actually remove the item, it just clears the foreign key value.
      *
      * @param DataObject $item The DataObject to be removed
-     * @todo Maybe we should delete the object instead?
      */
     public function remove($item)
     {

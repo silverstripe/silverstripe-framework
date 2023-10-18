@@ -24,7 +24,6 @@ class Category extends DataObject implements TestOnly
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        // TODO No longer necessary once FormScaffolder uses GridField
         $fields->replaceField(
             'People',
             GridField::create(

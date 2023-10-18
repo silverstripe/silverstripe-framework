@@ -114,7 +114,6 @@ abstract class BaseKernel implements Kernel
         $this->setModuleLoader($moduleLoader);
 
         // Config loader
-        // @todo refactor CoreConfigFactory
         $configFactory = new CoreConfigFactory($manifestCacheFactory);
         $configManifest = $configFactory->createRoot();
         $configLoader = ConfigLoader::inst();

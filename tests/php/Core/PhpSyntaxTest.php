@@ -18,7 +18,6 @@ class PhpSyntaxTest extends SapphireTest
     public function testShortTagsOffWillWork()
     {
         // Ignore this test completely if running the test suite on windows
-        // TODO: Make it work on all platforms, by building an alternative to find | grep.
         $returnCode = 0;
         $output = [];
         exec("which find && which grep && which php", $output, $returnCode);
@@ -51,7 +50,6 @@ class PhpSyntaxTest extends SapphireTest
 
     public function getAllFiles($ext = 'php')
     {
-        // TODO: Unix only
         $cmd = sprintf(
             'find %s | grep %s',
             BASE_PATH,

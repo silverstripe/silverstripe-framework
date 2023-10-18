@@ -183,8 +183,6 @@ class Group extends DataObject
                         if ($record && !$record->ID) {
                             $groupsField->setValue($group->ID);
                         } elseif ($record && $record->ID) {
-                            // TODO Mark disabled once chosen.js supports it
-                            // $groupsField->setDisabledItems(array($group->ID));
                             $form->Fields()->replaceField(
                                 'DirectGroups',
                                 $groupsField->performReadonlyTransformation()
@@ -194,8 +192,6 @@ class Group extends DataObject
                 });
             $memberList = GridField::create('Members', false, $this->DirectMembers(), $config)
                 ->addExtraClass('members_grid');
-            // @todo Implement permission checking on GridField
-            //$memberList->setPermissions(array('edit', 'delete', 'export', 'add', 'inlineadd'));
             $fields->addFieldToTab('Root.Members', $memberList);
         }
 
@@ -238,8 +234,6 @@ class Group extends DataObject
                     sprintf(
                         '<a href="%s" class="add-role">%s</a>',
                         SecurityAdmin::singleton()->Link('show/root#Root_Roles'),
-                        // TODO This should include #Root_Roles to switch directly to the tab,
-                        // but tabstrip.js doesn't display tabs when directly addressed through a URL pragma
                         _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
                     ) .
                     "</p>"

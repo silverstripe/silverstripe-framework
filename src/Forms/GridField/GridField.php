@@ -342,8 +342,6 @@ class GridField extends FormField
     /**
      * Cast an arbitrary value with the help of a $castingDefinition.
      *
-     * @todo refactor this into GridFieldComponent
-     *
      * @param mixed $value
      * @param string|array $castingDefinition
      *
@@ -554,8 +552,6 @@ class GridField extends FormField
             'after' => true,
         ];
         $fragmentDeferred = [];
-
-        // TODO: Break the below into separate reducer methods
 
         // Continue looping if any placeholders exist
         while (array_filter($content ?? [], function ($value) {
@@ -1181,8 +1177,6 @@ class GridField extends FormField
     /**
      * Custom request handler that will check component handlers before proceeding to the default
      * implementation.
-     *
-     * @todo copy less code from RequestHandler.
      *
      * @param HTTPRequest $request
      * @return array|RequestHandler|HTTPResponse|string

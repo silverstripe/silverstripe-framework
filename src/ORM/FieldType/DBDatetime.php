@@ -30,7 +30,6 @@ use SilverStripe\View\TemplateGlobalProvider;
  * );
  * </code>
  *
- * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  */
 class DBDatetime extends DBDate implements TemplateGlobalProvider
 {

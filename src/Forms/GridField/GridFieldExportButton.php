@@ -209,7 +209,6 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
 
         $items = $gridField->getManipulatedList();
 
-        // @todo should GridFieldComponents change behaviour based on whether others are available in the config?
         foreach ($gridField->getConfig()->getComponents() as $component) {
             if ($component instanceof GridFieldFilterHeader || $component instanceof GridFieldSortableHeader) {
                 $items = $component->getManipulatedData($gridField, $items);

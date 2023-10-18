@@ -133,7 +133,6 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
     /**
      * Flush the permission cache, for example if you have edited group membership or a permission record.
-     * @todo Call this whenever Group_Members is added to or removed from
      */
     public static function reset()
     {

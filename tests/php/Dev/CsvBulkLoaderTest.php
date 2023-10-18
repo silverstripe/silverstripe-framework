@@ -227,8 +227,6 @@ class CsvBulkLoaderTest extends SapphireTest
 
     /**
      * Test import with custom identifiers by importing the data.
-     *
-     * @todo Test duplicateCheck callbacks
      */
     public function testLoadWithIdentifiers()
     {
