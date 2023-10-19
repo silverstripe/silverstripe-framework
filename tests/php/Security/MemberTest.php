@@ -1896,4 +1896,35 @@ class MemberTest extends FunctionalTest
             ],
         ];
     }
+
+    public function testGenerateRandomPassword()
+    {
+        $member = new Member();
+        // no password validator
+        Member::set_password_validator(null);
+        // password length is same as length argument
+        $password = $member->generateRandomPassword(5);
+        $this->assertSame(5, strlen($password));
+        // default to 20 if not length argument
+        $password = $member->generateRandomPassword();
+        $this->assertSame(20, strlen($password));
+        // password validator
+        $validator = new PasswordValidator();
+        Member::set_password_validator($validator);
+        // Password length of 20 even if validator minLength is less than 20
+        $validator->setMinLength(10);
+        $password = $member->generateRandomPassword();
+        $this->assertSame(20, strlen($password));
+        // Password length of 25 if passing length argument, and validator minlength is less than length argument
+        $password = $member->generateRandomPassword(25);
+        $this->assertSame(25, strlen($password));
+        // Password length is validator minLength if validator minLength is greater than 20 and no length argument
+        $validator->setMinLength(30);
+        $password = $member->generateRandomPassword();
+        $this->assertSame(30, strlen($password));
+        // Exception throw if length argument is less than validator minLength
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('length argument is less than password validator minLength');
+        $password = $member->generateRandomPassword(15);
+    }
 }
