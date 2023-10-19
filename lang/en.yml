@@ -36,6 +36,7 @@ en:
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    RANDOM_IF_EMPTY: 'If this is left blank then a random password will be automatically generated.'
     CURRENT_PASSWORD_ERROR: 'The current password you have entered is not correct.'
     CURRENT_PASSWORD_MISSING: 'You must enter your current password.'
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'

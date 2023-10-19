@@ -11,6 +11,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordValidator;
+use Closure;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
@@ -380,5 +381,50 @@ class ConfirmedPasswordFieldTest extends SapphireTest
 
         $field->setRequireExistingPassword(false);
         $this->assertCount(2, $field->getChildren(), 'Current password field should not be removed');
+    }
+
+    /**
+     * @dataProvider provideSetCanBeEmptySaveInto
+     */
+    public function testSetCanBeEmptySaveInto(bool $generateRandomPasswordOnEmpty, ?string $expected)
+    {
+        $field = new ConfirmedPasswordField('Test', 'Change it');
+        $field->setCanBeEmpty(true);
+        if ($generateRandomPasswordOnEmpty) {
+            $field->setRandomPasswordCallback(Closure::fromCallable(function () {
+                return 'R4ndom-P4ssw0rd$LOREM^ipsum#12345';
+            }));
+        }
+        $this->assertEmpty($field->Value());
+        $member = new Member();
+        $field->saveInto($member);
+        $this->assertSame($expected, $field->Value());
+    }
+
+    public function provideSetCanBeEmptySaveInto(): array
+    {
+        return [
+            [
+                'generateRandomPasswordOnEmpty' => true,
+                'expected' => 'R4ndom-P4ssw0rd$LOREM^ipsum#12345',
+            ],
+            [
+                'generateRandomPasswordOnEmpty' => false,
+                'expected' => null,
+            ],
+        ];
+    }
+
+    public function testSetCanBeEmptyRightTitle()
+    {
+        $field = new ConfirmedPasswordField('Test', 'Change it');
+        $passwordField = $field->getPasswordField();
+        $this->assertEmpty($passwordField->RightTitle());
+        $field->setCanBeEmpty(true);
+        $this->assertEmpty($passwordField->RightTitle());
+        $field->setRandomPasswordCallback(Closure::fromCallable(function () {
+            return 'R4ndom-P4ssw0rd$LOREM^ipsum#12345';
+        }));
+        $this->assertNotEmpty($passwordField->RightTitle());
     }
 }
