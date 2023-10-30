@@ -123,8 +123,6 @@ class FormField extends RequestHandler
      * Adds a title attribute to the markup.
      *
      * @var string
-     *
-     * @todo Implement in all subclasses
      */
     protected $description;
 
@@ -1425,8 +1423,6 @@ class FormField extends RequestHandler
      *
      * @param array $schemaData - The data to be merged with $this->schemaData.
      * @return FormField
-     *
-     * @todo Add deep merging of arrays like `data` and `attributes`.
      */
     public function setSchemaData($schemaData = [])
     {
@@ -1447,8 +1443,6 @@ class FormField extends RequestHandler
     }
 
     /**
-     * @todo Throw exception if value is missing, once a form field schema is mandatory across the CMS
-     *
      * @return string
      */
     public function getSchemaDataType()
@@ -1501,8 +1495,6 @@ class FormField extends RequestHandler
      *
      * @param array $schemaState The data to be merged with $this->schemaData.
      * @return FormField
-     *
-     * @todo Add deep merging of arrays like `data` and `attributes`.
      */
     public function setSchemaState($schemaState = [])
     {
@@ -1529,7 +1521,6 @@ class FormField extends RequestHandler
      * Includes validation data if the field is associated to a {@link Form},
      * and {@link Form->validate()} has been called.
      *
-     * @todo Make form / field messages not always stored as html; Store value / casting as separate values.
      * @return array
      */
     public function getSchemaStateDefaults()

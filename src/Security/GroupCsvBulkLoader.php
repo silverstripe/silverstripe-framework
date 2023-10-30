@@ -5,9 +5,6 @@ namespace SilverStripe\Security;
 use SilverStripe\Dev\CsvBulkLoader;
 use SilverStripe\ORM\DataObject;
 
-/**
- * @todo Migrate Permission->Arg and Permission->Type values
- */
 class GroupCsvBulkLoader extends CsvBulkLoader
 {
 

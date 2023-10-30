@@ -18,7 +18,6 @@ use SilverStripe\View\ViewableData;
  * RSSFeed class
  *
  * This class is used to create an RSS feed.
- * @todo Improve documentation
  */
 class RSSFeed extends ViewableData
 {
@@ -214,8 +213,6 @@ class RSSFeed extends ViewableData
 
     /**
      * Output the feed to the browser.
-     *
-     * TODO: Pass $response object to ->outputToBrowser() to loosen dependence on global state for easier testing/prototyping so dev can inject custom HTTPResponse instance.
      *
      * @return DBHTMLText
      */

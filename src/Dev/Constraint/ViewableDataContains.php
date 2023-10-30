@@ -74,8 +74,6 @@ class ViewableDataContains extends Constraint implements TestOnly
 
     /**
      * Returns a string representation of the object.
-     *
-     * @todo: add representation for more than one match
      */
     public function toString(): string
     {

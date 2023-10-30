@@ -519,8 +519,6 @@ class DatabaseAdmin extends Controller
 
     /**
      * Migrate all class names
-     *
-     * @todo Migrate to separate build task
      */
     protected function migrateClassNames()
     {

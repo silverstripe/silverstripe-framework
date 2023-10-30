@@ -594,8 +594,6 @@ SCRIPT
      */
     public function clickLinkInPreview($link)
     {
-        // TODO Remove once we have native support in Mink and php-webdriver,
-        // see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
         $this->getSession()->switchToIFrame('cms-preview-iframe');
         $link = $this->fixStepArgument($link);
         $this->getSession()->getPage()->clickLink($link);

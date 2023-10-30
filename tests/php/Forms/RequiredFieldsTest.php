@@ -5,9 +5,6 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\RequiredFields;
 
-/**
- * @todo Test the validation method php()
- */
 class RequiredFieldsTest extends SapphireTest
 {
 

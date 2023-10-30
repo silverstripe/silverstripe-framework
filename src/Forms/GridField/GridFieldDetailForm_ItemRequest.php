@@ -169,7 +169,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         } else {
             // If not requested by ajax, we need to render it within the controller context+template
             return $controller->customise([
-                // TODO CMS coupling
                 'Content' => $return,
             ]);
         }
@@ -178,10 +177,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     /**
      * Builds an item edit form.  The arguments to getCMSFields() are the popupController and
      * popupFormName, however this is an experimental API and may change.
-     *
-     * @todo In the future, we will probably need to come up with a tigher object representing a partially
-     * complete controller with gaps for extra functionality.  This, for example, would be a better way
-     * of letting Security/login put its log-in form inside a UI specified elsewhere.
      *
      * @return Form|HTTPResponse
      */
@@ -266,12 +261,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $form->loadDataFrom(['ManyMany' => $extraData]);
         }
 
-        // TODO Coupling with CMS
         $toplevelController = $this->getToplevelController();
         if ($toplevelController && $toplevelController instanceof LeftAndMain) {
             // Always show with base template (full width, no other panels),
             // regardless of overloaded CMS controller templates.
-            // TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
             $form->setTemplate([
                 'type' => 'Includes',
                 'SilverStripe\\Admin\\LeftAndMain_EditForm',
@@ -464,7 +457,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
     protected function getBackLink()
     {
-        // TODO Coupling with CMS
         $backlink = '';
         $toplevelController = $this->getToplevelController();
         if ($toplevelController && $toplevelController instanceof LeftAndMain) {

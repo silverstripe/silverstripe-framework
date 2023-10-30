@@ -830,9 +830,6 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals($captain2->ID, $team1->Captain->ID);
     }
 
-    /**
-     * @todo Extend type change tests (e.g. '0'==NULL)
-     */
     public function testChangedFields()
     {
         $obj = $this->objFromFixture(DataObjectTest\Player::class, 'captain1');
@@ -1140,9 +1137,6 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @todo Re-enable all test cases for field existence after behaviour has been fixed
-     */
     public function testFieldExistence()
     {
         $teamInstance = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
@@ -1290,9 +1284,6 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @todo Re-enable all test cases for field inheritance aggregation after behaviour has been fixed
-     */
     public function testFieldInheritance()
     {
         $schema = DataObject::getSchema();
@@ -1633,12 +1624,6 @@ class DataObjectTest extends SapphireTest
             null,
             'merge() with $overwriteWithEmpty overwrites empty fields on left object'
         );
-
-        // @todo test "left" priority flag
-        // @todo test includeRelations flag
-        // @todo test includeRelations in combination with overwriteWithEmpty
-        // @todo test has_one relations
-        // @todo test has_many and many_many relations
     }
 
     public function testPopulateDefaults()
@@ -1919,7 +1904,6 @@ class DataObjectTest extends SapphireTest
     public function testManyManyUnlimitedRowCount()
     {
         $player = $this->objFromFixture(DataObjectTest\Player::class, 'player2');
-        // TODO: What's going on here?
         $this->assertEquals(2, $player->Teams()->dataQuery()->query()->unlimitedRowCount());
     }
 

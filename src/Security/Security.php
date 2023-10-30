@@ -416,7 +416,6 @@ class Security extends Controller implements TemplateGlobalProvider
             $request->getSession()->set("BackURL", $_SERVER['REQUEST_URI']);
         }
 
-        // TODO AccessLogEntry needs an extension to handle permission denied errors
         // Audit logging hook
         $controller->extend('permissionDenied', $member);
 

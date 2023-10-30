@@ -472,8 +472,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * E.g. ->filter('Field:not', 'value) will generate '... OR "Field" IS NULL', and
      * ->filter('Field:not', null) will generate '"Field" IS NOT NULL'
      *
-     * @todo extract the sql from $customQuery into a SQLGenerator class
-     *
      * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
      * @return $this
      */
@@ -535,8 +533,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example // all bobs, phils or anyone aged 21 or 43 in the list
      *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
-     *
-     * @todo extract the sql from this method into a SQLGenerator class
      *
      * @param string|array See {@link filter()}
      * @return static
@@ -678,8 +674,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->exclude(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob with Age 21 or 43
      * @example $list = $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
      *          // bob age 21 or 43, phil age 21 or 43 would be excluded
-     *
-     * @todo extract the sql from this method into a SQLGenerator class
      *
      * @param string|array
      * @param string [optional]
@@ -1817,7 +1811,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return a new item to add to this DataList.
      *
-     * @todo This doesn't factor in filters.
      * @param array $initialFields
      * @return DataObject
      */
@@ -1831,8 +1824,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Remove this item by deleting it
      *
      * @param DataObject $item
-     * @todo Allow for amendment of this behaviour - for example, we can remove an item from
-     * an "ActiveItems" DataList by changing the status to inactive.
      */
     public function remove($item)
     {

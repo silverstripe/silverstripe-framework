@@ -25,7 +25,6 @@ use Exception;
  *   ];
  * </code>
  *
- * @todo Add support for databases besides MySQL
  */
 class FulltextFilter extends SearchFilter
 {

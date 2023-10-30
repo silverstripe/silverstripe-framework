@@ -36,16 +36,12 @@ class FormScaffolder
     /**
      * @var array $restrictFields Numeric array of a field name whitelist.
      * If left blank, all fields from {@link DataObject->db()} will be included.
-     *
-     * @todo Implement restrictions for has_many and many_many relations.
      */
     public $restrictFields;
 
     /**
      * @var array $fieldClasses Optional mapping of fieldnames to subclasses of {@link FormField}.
      * By default the scaffolder will determine the field instance by {@link DBField::scaffoldFormField()}.
-     *
-     * @todo Implement fieldClasses for has_many and many_many relations
      */
     public $fieldClasses;
 
@@ -87,7 +83,6 @@ class FormScaffolder
                 continue;
             }
 
-            // @todo Pass localized title
             if ($this->fieldClasses && isset($this->fieldClasses[$fieldName])) {
                 $fieldClass = $this->fieldClasses[$fieldName];
                 $fieldObject = new $fieldClass($fieldName);

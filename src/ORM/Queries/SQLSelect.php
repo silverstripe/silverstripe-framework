@@ -575,7 +575,6 @@ class SQLSelect extends SQLConditionalExpression
         // Choose a default column
         if ($column == null) {
             if ($this->groupby) {
-                // @todo Test case required here
                 $countQuery = new SQLSelect();
                 $countQuery->setSelect("count(*)");
                 $countQuery->setFrom(['(' . $clone->sql($innerParameters) . ') all_distinct']);

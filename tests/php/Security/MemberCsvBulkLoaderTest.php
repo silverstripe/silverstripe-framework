@@ -104,7 +104,6 @@ class MemberCsvBulkLoaderTest extends SapphireTest
         DataObject::flush_and_destroy_cache();
         $member = DataObject::get_by_id(Member::class, $memberID);
 
-        // TODO Direct getter doesn't work, wtf!
         $this->assertEquals(Security::config()->password_encryption_algorithm, $member->getField('PasswordEncryption'));
         $auth = new MemberAuthenticator();
         $result = $auth->checkPassword($member, 'mypassword');

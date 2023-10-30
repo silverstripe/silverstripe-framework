@@ -6,8 +6,6 @@ use SilverStripe\i18n\i18n;
 
 /**
  * Locale database field
- *
- * @todo Allowing showing locale values in different languages through Nice()
  */
 class DBLocale extends DBVarchar
 {

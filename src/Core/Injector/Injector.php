@@ -666,10 +666,6 @@ class Injector implements ContainerInterface
     /**
      * Inject $object with available objects from the service cache
      *
-     * @todo Track all the existing objects that have had a service bound
-     * into them, so we can update that binding at a later point if needbe (ie
-     * if the managed service changes)
-     *
      * @param object $object
      *              The object to inject
      * @param string $asType

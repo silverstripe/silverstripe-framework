@@ -168,7 +168,6 @@ class MemberAuthenticator implements Authenticator
 
     /**
      * Log login attempt
-     * TODO We could handle this with an extension
      *
      * @param array $data
      * @param HTTPRequest $request

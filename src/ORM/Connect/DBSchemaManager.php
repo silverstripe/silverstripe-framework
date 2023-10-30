@@ -350,8 +350,6 @@ abstract class DBSchemaManager
      * Generate the following table in the database, modifying whatever already exists
      * as necessary.
      *
-     * @todo Change detection for CREATE TABLE $options other than "Engine"
-     *
      * @param string $table The name of the table
      * @param array $fieldSchema A list of the fields to create, in the same form as DataObject::$db
      * @param array $indexSchema A list of indexes to create. See {@link requireIndex()}
@@ -669,7 +667,6 @@ abstract class DBSchemaManager
      */
     public function requireField($table, $field, $spec)
     {
-        //TODO: this is starting to get extremely fragmented.
         //There are two different versions of $spec floating around, and their content changes depending
         //on how they are structured.  This needs to be tidied up.
         $fieldValue = null;
@@ -687,7 +684,6 @@ abstract class DBSchemaManager
 
         // Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
         // collations.
-        // TODO: move this to the MySQLDatabase file, or drop it altogether?
         if (!$this->database->supportsCollations()) {
             $spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec ?? '');
         }
@@ -974,7 +970,6 @@ abstract class DBSchemaManager
      * @param string $tableName The name of the table.
      * @param string $indexName The name of the index.
      * @param array $indexSpec The specification of the index, see Database::requireIndex() for more details.
-     * @todo Find out where this is called from - Is it even used? Aren't indexes always dropped and re-added?
      */
     abstract public function alterIndex($tableName, $indexName, $indexSpec);
 

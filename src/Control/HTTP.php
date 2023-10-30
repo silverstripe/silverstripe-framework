@@ -121,7 +121,6 @@ class HTTP
             $regExps[] = "/(<{$tagPrefix}[^>]*$attrib *= *)([^\"' ]*)( )/i";
         }
         // Replace css styles
-        // @todo - http://www.css3.info/preview/multiple-backgrounds/
         $styles = ['background-image', 'background', 'list-style-image', 'list-style', 'content'];
         foreach ($styles as $style) {
             $regExps[] = "/($style:[^;]*url *\\(\")([^\"]+)(\"\\))/i";

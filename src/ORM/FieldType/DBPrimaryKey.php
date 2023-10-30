@@ -7,8 +7,6 @@ use SilverStripe\ORM\DB;
 
 /**
  * A special type Int field used for primary keys.
- *
- * @todo Allow for custom limiting/filtering of scaffoldFormField dropdown
  */
 class DBPrimaryKey extends DBInt
 {

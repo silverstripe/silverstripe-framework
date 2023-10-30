@@ -411,8 +411,6 @@ class FieldList extends ArrayList
     /**
      * Returns the specified tab object, creating it if necessary.
      *
-     * @todo Support recursive creation of TabSets
-     *
      * @param string $tabName The tab to return, in the form "Tab.Subtab.Subsubtab".
      *   Caution: Does not recursively create TabSet instances, you need to make sure everything
      *   up until the last tab in the chain exists.
@@ -461,8 +459,6 @@ class FieldList extends ArrayList
     /**
      * Returns a named field.
      * You can use dot syntax to get fields from child composite fields
-     *
-     * @todo Implement similarly to dataFieldByName() to support nested sets - or merge with dataFields()
      *
      * @param string $name
      * @return FormField|null

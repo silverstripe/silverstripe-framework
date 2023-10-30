@@ -2057,7 +2057,6 @@ EOC;
 
     public function testRequireCallInTemplateInclude()
     {
-        //TODO undo skip test on the event that templates ever obtain the ability to reference MODULE_DIR (or something to that effect)
         if (FRAMEWORK_DIR === 'framework') {
             $template = new SSViewer(['SSViewerTestProcess']);
 

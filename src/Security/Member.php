@@ -114,9 +114,6 @@ class Member extends DataObject
      * statement.
      *
      * @var array
-     * @todo Generic implementation of $searchable_fields on DataObject,
-     * with definition for different searching algorithms
-     * (LIKE, FULLTEXT) and default FormFields to construct a searchform.
      */
     private static $searchable_fields = [
         'FirstName',
@@ -446,7 +443,6 @@ class Member extends DataObject
      */
     public function beforeMemberLoggedIn()
     {
-        // @todo Move to middleware on the AuthenticationMiddleware IdentityStore
         $this->extend('beforeMemberLoggedIn');
     }
 
@@ -619,7 +615,6 @@ class Member extends DataObject
      * Returns the fields for the member form - used in the registration/profile module.
      * It should return fields that are editable by the admin and the logged-in user.
      *
-     * @todo possibly move this to an extension
      *
      * @return FieldList Returns a {@link FieldList} containing the fields for
      *                   the member form.
@@ -770,7 +765,6 @@ class Member extends DataObject
 
         // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
-        // @todo some developers use external tools, so emailing might be a good idea anyway
         if ((Director::isLive() || Injector::inst()->get(MailerInterface::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
@@ -1151,7 +1145,6 @@ class Member extends DataObject
      * including any parent groups where membership is implied.
      * Use {@link DirectGroups()} to only retrieve the group relations without inheritance.
      *
-     * @todo Push all this logic into Member_GroupSet's getIterator()?
      * @return Member_Groupset
      */
     public function Groups()

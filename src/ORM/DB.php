@@ -471,8 +471,6 @@ class DB
      * That's a limitation of the system that's due to it being written for {@link DataObject::write()},
      * which needs to do a single write on a number of different tables.
      *
-     * @todo Update this to support paramaterised queries
-     *
      * @param array $manipulation
      */
     public static function manipulate($manipulation)

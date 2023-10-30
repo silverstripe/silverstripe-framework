@@ -82,8 +82,6 @@ class ClassInfo
     }
 
     /**
-     * @todo Move this to SS_Database or DB
-     *
      * @param string $tableName
      * @return bool
      */
@@ -129,8 +127,6 @@ class ClassInfo
     /**
      * Returns an array of the current class and all its ancestors and children
      * which require a DB table.
-     *
-     * @todo Move this into {@see DataObjectSchema}
      *
      * @param string|object $nameOrObject Class or object instance
      * @return array

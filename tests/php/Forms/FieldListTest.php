@@ -20,17 +20,6 @@ use SilverStripe\Forms\HiddenField;
 
 /**
  * Tests for FieldList
- *
- * @todo        test for {@link FieldList->setValues()}. Need to check
- *  that the values that were set are the correct ones given back.
- * @todo        test for {@link FieldList->transform()} and {@link FieldList->makeReadonly()}.
- *  Need to ensure that it correctly transforms the FieldList object.
- * @todo        test for {@link FieldList->HiddenFields()}. Need to check
- *  the fields returned are the correct HiddenField objects for a
- *  given FieldList instance.
- * @todo        test for {@link FieldList->dataFields()}.
- * @todo        test for {@link FieldList->findOrMakeTab()}.
- * @todo        the same as above with insertBefore() and insertAfter()
  */
 class FieldListTest extends SapphireTest
 {
@@ -856,9 +845,6 @@ class FieldListTest extends SapphireTest
         );
     }
 
-    /**
-     * @todo check actual placement of fields
-     */
     public function testInsertBeforeWithNestedTabsets()
     {
         $FieldListA = new FieldList(
@@ -973,9 +959,6 @@ class FieldListTest extends SapphireTest
         );
     }
 
-    /**
-     * @todo check actual placement of fields
-     */
     public function testInsertAfterWithNestedTabsets()
     {
         $FieldListA = new FieldList(

@@ -58,7 +58,6 @@ class ChangePasswordHandler extends RequestHandler
 
     /**
      * Handle the change password request
-     * @todo this could use some spring cleaning
      *
      * @return array|HTTPResponse
      */

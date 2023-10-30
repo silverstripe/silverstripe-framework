@@ -18,8 +18,6 @@ class EmailFieldTest extends FunctionalTest
     /**
      * Check the php validator for email addresses. We should be checking against RFC 5322 which defines email address
      * syntax.
-     *
-     * @TODO
      *   - double quotes around the local part (before @) is not supported
      *   - special chars ! # $ % & ' * + - / = ? ^ _ ` { | } ~ are all valid in local part
      *   - special chars ()[]\;:,<> are valid in the local part if the local part is in double quotes
