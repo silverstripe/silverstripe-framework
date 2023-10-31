@@ -87,7 +87,7 @@ SilverStripe\Core\Injector\Injector:
         DevUrlsConfirmationMiddleware: '%$DevUrlsConfirmationMiddleware'
 
   DevUrlsConfirmationMiddleware:
-    class: SilverStripe\Control\Middleware\PermissionAwareConfirmationMiddleware
+    class: SilverStripe\Control\Middleware\DevelopmentAdminConfirmationMiddleware
     constructor:
       - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev")'
     properties:
@@ -97,8 +97,6 @@ SilverStripe\Core\Injector\Injector:
         - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass'
         - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass("dev")'
       EnforceAuthentication: false
-      AffectedPermissions:
-        - ADMIN
 
 ---
 Name: dev_urls-confirmation-exceptions

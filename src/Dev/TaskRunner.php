@@ -33,6 +33,12 @@ class TaskRunner extends Controller implements PermissionProvider
         'runTask',
     ];
 
+    private static $init_permissions = [
+        'ADMIN',
+        'ALL_DEV_ADMIN',
+        'BUILDTASK_CAN_RUN',
+    ];
+
     /**
      * @var array
      */
@@ -206,7 +212,7 @@ class TaskRunner extends Controller implements PermissionProvider
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tasks" from CLI.
             || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
-            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'BUILDTASK_CAN_RUN'])
+            || Permission::check(static::config()->get('init_permissions'))
         );
     }
 

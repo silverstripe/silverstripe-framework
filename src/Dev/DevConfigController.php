@@ -35,6 +35,12 @@ class DevConfigController extends Controller implements PermissionProvider
         'audit',
     ];
 
+    private static $init_permissions = [
+        'ADMIN',
+        'ALL_DEV_ADMIN',
+        'CAN_DEV_CONFIG',
+    ];
+
     protected function init(): void
     {
         parent::init();
@@ -148,7 +154,7 @@ class DevConfigController extends Controller implements PermissionProvider
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tasks" from CLI.
             || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
-            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'CAN_DEV_CONFIG'])
+            || Permission::check(static::config()->get('init_permissions'))
         );
     }
     

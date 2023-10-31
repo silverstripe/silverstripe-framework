@@ -22,6 +22,12 @@ class DevBuildController extends Controller implements PermissionProvider
         'build'
     ];
 
+    private static $init_permissions = [
+        'ADMIN',
+        'ALL_DEV_ADMIN',
+        'CAN_DEV_BUILD',
+    ];
+
     protected function init(): void
     {
         parent::init();
@@ -59,7 +65,7 @@ class DevBuildController extends Controller implements PermissionProvider
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tasks" from CLI.
             || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
-            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'CAN_DEV_BUILD'])
+            || Permission::check(static::config()->get('init_permissions'))
         );
     }
     
