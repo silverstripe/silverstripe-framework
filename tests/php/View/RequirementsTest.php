@@ -18,10 +18,6 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 
-/**
- * @todo Test that order of combine_files() is correct
- * @todo Figure out how to clear the modified state of Requirements class - might affect other tests.
- */
 class RequirementsTest extends SapphireTest
 {
 

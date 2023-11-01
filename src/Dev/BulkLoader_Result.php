@@ -11,8 +11,6 @@ use SilverStripe\View\ArrayData;
  * Encapsulates the result of a {@link BulkLoader} import
  * (usually through the {@link BulkLoader->processAll()} method).
  *
- * @todo Refactor to support lazy-loaded DataObjectSets once they are implemented.
- *
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
 class BulkLoader_Result implements \Countable

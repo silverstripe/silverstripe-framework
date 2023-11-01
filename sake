@@ -90,7 +90,6 @@ if [ "$1" = "-start" ]; then
 			url=$3
 		fi
 
-		# TODO: Give a globally unique processname by including the projectname as well
 		processname=$2
 
 		daemon -n $processname -r -D $base --pidfile=$pidfile --stdout=$outlog --stderr=$errlog $sake $url
@@ -105,7 +104,6 @@ if [ "$1" = "-stop" ]; then
 	if [ -f $pidfile ]; then
 		echo "Stopping service $2"
 
-		# TODO: This is a bad way of killing the process
 		kill -KILL `cat $pidfile`
 		unlink $pidfile
 	else

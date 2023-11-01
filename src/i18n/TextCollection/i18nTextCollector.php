@@ -71,8 +71,6 @@ class i18nTextCollector
      * The directory base on which the collector should act.
      * Usually the webroot set through {@link Director::baseFolder()}.
      *
-     * @todo Fully support changing of basePath through {@link SSViewer} and {@link ManifestBuilder}
-     *
      * @var string
      */
     public $basePath;
@@ -313,9 +311,6 @@ class i18nTextCollector
             $this->classModuleCache[$class] = $owner;
             return $owner;
         }
-
-        // @todo - How to determine ownership of templates? Templates can
-        // exist in multiple locations with the same name.
 
         // Display notice if not found
         Debug::message(

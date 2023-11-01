@@ -68,9 +68,8 @@ class DataQuery
      */
     private $queryFinalised = false;
 
-    // TODO: replace subclass_access with this
     protected $querySubclasses = true;
-    // TODO: replace restrictclasses with this
+
     protected $filterByClassName = true;
 
     /**
@@ -345,9 +344,6 @@ class DataQuery
 			ELSE " . Convert::raw2sql($baseDataClass, true) . " END",
             "RecordClassName"
         );
-
-        // TODO: Versioned, SiteTreeSubsites, etc, could probably be better implemented as subclasses
-        // of DataQuery
 
         $obj = Injector::inst()->get($this->dataClass);
         $obj->extend('augmentSQL', $query, $this);

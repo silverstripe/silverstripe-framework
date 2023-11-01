@@ -37,9 +37,6 @@ class CurrencyFieldReadonlyTest extends SapphireTest
         $this->assertStringContainsString('AUD0.00', $result, 'The value should be rendered');
     }
 
-    /**
-     * @todo: Update the expectation when intl for currencies is implemented
-     */
     public function testFieldWithCustomisedCurrencySymbol()
     {
         DBCurrency::config()->set('currency_symbol', '€');

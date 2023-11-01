@@ -25,10 +25,6 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * Please see http://webkit.org/blog/68/understanding-html-xml-and-xhtml/ for further information.
  *
- * @todo Check for correct XHTML doctype in xhtml()
- * @todo Allow for other HTML4 doctypes (e.g. Transitional) in html()
- * @todo Make content replacement and doctype setting two separately configurable behaviours
- *
  * Some developers might know what they're doing and don't want ContentNegotiator messing with their
  * HTML4 doctypes, but still find it useful to have self-closing tags removed.
  */
@@ -169,8 +165,6 @@ class ContentNegotiator
      * <input>, checked, selected).
      *
      * @param HTTPResponse $response
-     *
-     * @todo Search for more xhtml replacement
      */
     public function xhtml(HTTPResponse $response)
     {

@@ -10,8 +10,6 @@ use SilverStripe\ORM\Tests\DataObjectTest\Team;
  * Tests the PolymorphicHasManyList class
  *
  * @see PolymorphicHasManyList
- *
- * @todo Complete
  */
 class PolymorphicHasManyListTest extends SapphireTest
 {

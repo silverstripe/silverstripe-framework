@@ -271,8 +271,6 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * Retrieves the finalized list of joins
      *
-     * @todo This part of the code could be simplified
-     *
      * @param array $parameters Out variable for parameters required for this query
      * @return array List of joins as a mapping from array('Alias' => 'Join Expression')
      */
@@ -716,8 +714,6 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * Checks whether this query is for a specific ID in a table
      *
-     * @todo Doesn't work with combined statements (e.g. "Foo='bar' AND ID=5")
-     *
      * @return boolean
      */
     public function filtersOnID()
@@ -736,15 +732,12 @@ abstract class SQLConditionalExpression extends SQLExpression
     /**
      * Checks whether this query is filtering on a foreign key, ie finding a has_many relationship
      *
-     * @todo Doesn't work with combined statements (e.g. "Foo='bar' AND ParentID=5")
-     *
      * @return boolean
      */
     public function filtersOnFK()
     {
         $regexp = '/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?(=|IN)/';
 
-        // @todo - Test this works with parameterized queries
         foreach ($this->getWhereParameterised($parameters) as $predicate) {
             if (preg_match($regexp ?? '', $predicate ?? '')) {
                 return true;

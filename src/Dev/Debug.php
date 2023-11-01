@@ -25,9 +25,6 @@ use SilverStripe\Security\Security;
  * Errors handled by this class are passed along to {@link SS_Log}.
  * For configuration information, see the {@link SS_Log}
  * class documentation.
- *
- * @todo add support for user defined config: Debug::die_on_notice(true | false)
- * @todo better way of figuring out the error context to display in highlighted source
  */
 class Debug
 {
@@ -212,7 +209,6 @@ class Debug
             // being called again.
             // This basically calls Permission::checkMember($_SESSION['loggedInAs'], 'ADMIN');
 
-            // @TODO - Rewrite safely using DataList::filter
             $memberID = $_SESSION['loggedInAs'];
             $permission = DB::prepared_query(
                 '

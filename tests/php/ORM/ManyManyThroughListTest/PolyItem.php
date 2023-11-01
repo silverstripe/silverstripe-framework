@@ -21,7 +21,6 @@ class PolyItem extends DataObject implements TestOnly
     /**
      * Placeholder for missing belongs_many_many for polymorphic relation
      *
-     * @todo Make this work for belongs_many_many
      * @return Generator|DataObject[]
      */
     public function Objects()

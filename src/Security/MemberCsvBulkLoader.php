@@ -45,7 +45,6 @@ class MemberCsvBulkLoader extends CsvBulkLoader
         /** @var Member $member */
         $member = DataObject::get_by_id($this->objectClass, $objID);
         foreach ($this->groups as $group) {
-            // TODO This isnt the most memory effective way to add members to a group
             $member->Groups()->add($group);
         }
 

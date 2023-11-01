@@ -128,9 +128,6 @@ class NumericFieldTest extends SapphireTest
         $field = new NumericField('Number');
 
         $html = $field->Field();
-
-        // @todo - Revert to number one day when html5 number supports proper localisation
-        // See https://github.com/silverstripe/silverstripe-framework/pull/4565
         $this->assertStringContainsString('type="text"', $html, 'number type not set');
     }
 

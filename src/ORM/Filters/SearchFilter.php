@@ -332,7 +332,6 @@ abstract class SearchFilter
     public function getDbFormattedValue()
     {
         // SRM: This code finds the table where the field named $this->name lives
-        // Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
 
         if ($this->aggregate) {
             return intval($this->value);

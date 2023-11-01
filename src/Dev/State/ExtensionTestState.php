@@ -104,9 +104,6 @@ class ExtensionTestState implements TestState
 
     public function tearDownOnce($class)
     {
-        // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
-        // Object::$extra_methods is properly flushed. This should be replaced with a simple
-        // flush mechanism for each $class.
         /** @var string|DataObject $dataClass */
 
         // Remove extensions added for testing

@@ -137,7 +137,6 @@ class FormRequestHandler extends RequestHandler
         $this->form->loadDataFrom($vars, true, $allowedFields);
 
         // Protection against CSRF attacks
-        // @todo Move this to SecurityTokenField::validate()
         $token = $this->form->getSecurityToken();
         if (! $token->checkRequest($request)) {
             $securityID = $token->getName();

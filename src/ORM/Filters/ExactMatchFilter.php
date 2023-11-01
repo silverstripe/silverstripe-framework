@@ -13,7 +13,6 @@ use SilverStripe\ORM\DataList;
 /**
  * Selects textual content with an exact match between columnname and keyword.
  *
- * @todo documentation
  */
 class ExactMatchFilter extends SearchFilter
 {

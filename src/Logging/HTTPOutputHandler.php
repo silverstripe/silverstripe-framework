@@ -165,8 +165,6 @@ class HTTPOutputHandler extends AbstractProcessingHandler
             }
         }
 
-        // TODO: This coupling isn't ideal
-        // See https://github.com/silverstripe/silverstripe-framework/issues/4484
         if (Controller::has_curr()) {
             $response = Controller::curr()->getResponse();
         } else {

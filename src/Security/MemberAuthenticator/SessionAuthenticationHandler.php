@@ -80,7 +80,6 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         $session->set($this->getSessionVariable(), $member->ID);
 
         // This lets apache rules detect whether the user has logged in
-        // @todo make this a setting on the authentication handler
         if (Member::config()->get('login_marker_cookie')) {
             Cookie::set(Member::config()->get('login_marker_cookie'), 1, 0);
         }
@@ -109,7 +108,6 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         $file = '';
         $line = '';
 
-        // TODO: deprecate and use Session::regenerateSessionId
         // @ is to suppress win32 warnings/notices when session wasn't cleaned up properly
         // There's nothing we can do about this, because it's an operating system function!
         if (!headers_sent($file, $line)) {

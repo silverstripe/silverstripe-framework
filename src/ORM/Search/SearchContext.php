@@ -107,10 +107,6 @@ class SearchContext
         return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
     }
 
-    /**
-     * @todo move to SQLSelect
-     * @todo fix hack
-     */
     protected function applyBaseTableFields()
     {
         $classes = ClassInfo::dataClassesFor($this->modelClass);
@@ -326,8 +322,6 @@ class SearchContext
 
     /**
      * Returns a result set from the given search parameters.
-     *
-     * @todo rearrange start and limit params to reflect DataObject
      *
      * @param array $searchParams
      * @param array|bool|string $sort

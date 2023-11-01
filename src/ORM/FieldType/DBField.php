@@ -41,8 +41,6 @@ use SilverStripe\View\ViewableData;
  *  }
  * }
  * </code>
- *
- * @todo remove MySQL specific code from subclasses
  */
 abstract class DBField extends ViewableData implements DBIndexable
 {
@@ -579,12 +577,6 @@ abstract class DBField extends ViewableData implements DBIndexable
     }
 
     /**
-     * @todo documentation
-     *
-     * @todo figure out how we pass configuration parameters to
-     *       search filters (note: parameter hack now in place to pass in the required full path - using $this->name
-     *       won't work)
-     *
      * @param string $name Override name of this field
      * @return SearchFilter
      */

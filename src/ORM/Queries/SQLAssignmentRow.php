@@ -68,8 +68,6 @@ class SQLAssignmentRow
                     $parameters = [$parameters];
                 }
 
-                // @todo Some input sanitisation checking the key contains the
-                // correct number of ? placeholders as the number of parameters
                 return [$sql => $parameters];
             }
         }

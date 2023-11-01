@@ -243,9 +243,6 @@ class DataQueryTest extends SapphireTest
         );
     }
 
-    /**
-     * @todo Test paramaterised
-     */
     public function testNestedGroups()
     {
         $dq = new DataQuery(DataQueryTest\ObjectA::class);

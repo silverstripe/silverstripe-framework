@@ -12,10 +12,6 @@ use SilverStripe\View\ViewableData;
  *
  * You can configure column-handling,
  *
- * @todo Add support for adding/editing has_many relations.
- * @todo Add support for deep chaining of relation properties (e.g. Player.Team.Stats.GoalCount)
- * @todo Character conversion
- *
  * @see http://tools.ietf.org/html/rfc4180
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
@@ -217,7 +213,6 @@ abstract class BulkLoader extends ViewableData
      * ]
      * </code>
      *
-     * @todo Mix in custom column mappings
      *
      * @return array
      **/

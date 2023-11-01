@@ -67,7 +67,6 @@ class DefaultFormFactory implements FormFactory
     protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
     {
         // Fall back to standard "getCMSFields" which itself uses the FormScaffolder as a fallback
-        // @todo Deprecate or formalise support for getCMSFields()
         $fields = $context['Record']->getCMSFields();
         $this->invokeWithExtensions('updateFormFields', $fields, $controller, $name, $context);
         return $fields;
@@ -83,7 +82,6 @@ class DefaultFormFactory implements FormFactory
      */
     protected function getFormActions(RequestHandler $controller = null, $name, $context = [])
     {
-        // @todo Deprecate or formalise support for getCMSActions()
         $actions = $context['Record']->getCMSActions();
         $this->invokeWithExtensions('updateFormActions', $actions, $controller, $name, $context);
         return $actions;

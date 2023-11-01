@@ -22,11 +22,6 @@ use SilverStripe\Core\Tests\ObjectTest\TestExtension;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Versioned\Versioned;
 
-/**
- * @todo tests for addStaticVars()
- * @todo tests for setting statics which are not defined on the object as built-in PHP statics
- * @todo tests for setting statics through extensions (#2387)
- */
 class ObjectTest extends SapphireTest
 {
 
@@ -253,8 +248,6 @@ class ObjectTest extends SapphireTest
             "Injected sub-extensions are detected with static has_extension() when added through add_extension()"
         );
 
-        // @todo At the moment, this does NOT remove the extension due to parameterized naming,
-        //  meaning the extension will remain added in further test cases
         ExtensionTest::remove_extension(ExtendTest3::class);
     }
 

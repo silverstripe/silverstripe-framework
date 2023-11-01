@@ -171,8 +171,6 @@ class RequestHandler extends ViewableData
         // We used to put "handleAction" as the action on controllers, but (a) this could only be called when
         // you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
         if ($action == 'handleAction') {
-            // TODO Fix LeftAndMain usage
-            // Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
             $action = '$Action';
         }
 

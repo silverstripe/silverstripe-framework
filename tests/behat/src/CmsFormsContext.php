@@ -137,7 +137,6 @@ class CmsFormsContext implements Context
 	 * Example: Given "my text" in the "Content" HTML field should be right aligned
 	 * Example: Given "my text" in the "Content" HTML field should not be bold
 	 *
-	 * @todo Use an actual DOM parser for more accurate assertions
 	 *
 	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>(?:[^"]|\\")*)" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
 	 */
@@ -194,8 +193,7 @@ class CmsFormsContext implements Context
         $text = addcslashes($text ?? '', "'");
 
         $js = <<<JS
-// TODO <IE9 support
-// TODO Allow text matches across nodes
+
 var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
 	doc = editor.getInstance().getDoc(),
 	sel = editor.getInstance().selection,

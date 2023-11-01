@@ -173,12 +173,8 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         }
 
         if ($this->cascadeInTo) {
-            // @todo look at how to block "regular login" triggers from happening here
-            // @todo deal with the fact that the Session::current_session() isn't correct here :-/
             $this->cascadeInTo->logIn($member, false, $request);
         }
-
-        // @todo Consider whether response should be part of logIn() as well
 
         // Renew the token
         $rememberLoginHash->renew();

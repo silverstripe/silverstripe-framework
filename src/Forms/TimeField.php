@@ -14,8 +14,6 @@ use SilverStripe\ORM\FieldType\DBTime;
  * # Localization
  *
  * See {@link DateField}
- *
- * @todo Timezone support
  */
 class TimeField extends TextField
 {

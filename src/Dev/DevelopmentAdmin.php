@@ -19,11 +19,6 @@ use Exception;
  *
  * Configured in framework/_config/dev.yml, with the config key registeredControllers being
  * used to generate the list of links for /dev.
- *
- * @todo documentation for how to add new unit tests and tasks
- * @todo do we need buildDefaults and generatesecuretoken? if so, register in the list
- * @todo cleanup errors() it's not even an allowed action, so can go
- * @todo cleanup index() html building
  */
 class DevelopmentAdmin extends Controller
 {

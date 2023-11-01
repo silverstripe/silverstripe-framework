@@ -117,8 +117,6 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals(true, $boolean->prepValueForDB(1));
         $this->assertEquals(true, $boolean->prepValueForDB('1'));
 
-        // @todo - Revisit Varchar to evaluate correct behaviour of nullifyEmpty
-
         /* Varchar behaviour: nullifyifEmpty defaults to true */
         $varchar = DBVarchar::create();
         $this->assertEquals(0, $varchar->prepValueForDB(0));

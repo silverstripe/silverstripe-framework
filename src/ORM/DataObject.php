@@ -99,9 +99,6 @@ use stdClass;
  * the results are cached in memory through {@link cachedCall()}.
  *
  *
- * @todo Add instance specific removeExtension() which undos loadExtraStatics()
- *  and defineMethods()
- *
  * @property int $ID ID of the DataObject, 0 if the DataObject doesn't exist in database.
  * @property int $OldID ID of object, if deleted
  * @property string $Title
@@ -128,8 +125,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $plural_name = null;
 
     /**
-     * Allow API access to this object?
-     * @todo Define the options that can be set here
      * @config
      */
     private static $api_access = false;
@@ -682,8 +677,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $clonedItem = $item->duplicate(false);
         $destinationObject->setComponent($relation, $clonedItem);
         // After $clonedItem is assigned the appropriate FieldID / FieldClass, force write
-        // @todo Write this component in onAfterWrite instead, assigning the FieldID then
-        // https://github.com/silverstripe/silverstripe-framework/issues/7818
         $clonedItem->write();
     }
 
@@ -1151,7 +1144,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 continue;
             }
 
-            // TODO remove redundant merge of has_one fields
             $leftObj->{$key} = $rightObj->{$key};
         }
 
@@ -1752,10 +1744,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             throw new LogicException("DataObject::delete() called on a DataObject without an ID");
         }
 
-        // TODO: This is quite ugly.  To improve:
-        //  - move the details of the delete code in the DataQuery system
-        //  - update the code to just delete the base table, and rely on cascading deletes in the DB to do the rest
-        //    obviously, that means getting requireTable() to configure cascading deletes ;-)
         $srcQuery = DataList::create(static::class)
             ->filter('ID', $this->ID)
             ->dataQuery()
@@ -1908,8 +1896,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $schema = static::getSchema();
         if ($class = $schema->hasOneComponent(static::class, $componentName)) {
             // Force item to be written if not by this point
-            // @todo This could be lazy-written in a beforeWrite hook, but force write here for simplicity
-            // https://github.com/silverstripe/silverstripe-framework/issues/7818
             if ($item && !$item->isInDB()) {
                 $item->write();
             }
@@ -2594,8 +2580,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * by default. To customize, either overload this method in your
      * subclass, or extend it by {@link DataExtension->updateFrontEndFields()}.
      *
-     * @todo Decide on naming for "website|frontend|site|page" and stick with it in the API
-     *
      * @param array $params See {@link scaffoldFormFields()}
      * @return FieldList Always returns a simple field collection without TabSet.
      */
@@ -2692,7 +2676,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $columns = [];
 
         // Add SQL for fields, both simple & multi-value
-        // TODO: This is copy & pasted from buildSQL(), it could be moved into a method
         $databaseFields = $schema->databaseFields($class, false);
         foreach ($databaseFields as $k => $v) {
             if (!isset($this->record[$k]) || $this->record[$k] === null) {
@@ -2771,7 +2754,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 array_keys($this->record ?? []),
                 array_fill(0, count($this->record ?? []), self::CHANGE_STRICT)
             );
-            // @todo Find better way to allow versioned to write a new version after forceChange
             unset($changed['Version']);
         } else {
             $changed = $this->changed;
@@ -2905,8 +2887,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         // if a field is not existing or has strictly changed
         if (!array_key_exists($fieldName, $this->original ?? []) || $this->original[$fieldName] !== $val) {
-            // TODO Add check for php-level defaults which are not set in the db
-            // TODO Add check for hidden input-fields (readonly) which are not set in the db
             // At the very least, the type has changed
             $this->changed[$fieldName] = self::CHANGE_STRICT;
 
@@ -3314,8 +3294,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
      * @param string $containerClass The container class to return the results in.
      *
-     * @todo $containerClass is Ignored, why?
-     *
      * @return DataList The objects matching the filter, in the class specified by $containerClass
      */
     public static function get(
@@ -3480,7 +3458,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public static function reset()
     {
-        // @todo Decouple these
         DBEnum::flushCache();
         ClassInfo::reset_db_cache();
         static::getSchema()->reset();
@@ -3941,8 +3918,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Get the default summary fields for this object.
      *
-     * @todo use the translation apparatus to return a default field selection for the language
-     *
      * @return array
      */
     public function summaryFields()
@@ -3999,8 +3974,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * If a filter class mapping is defined on the data object,
      * it is constructed here. Otherwise, the default filter specified in
      * {@link DBField} is used.
-     *
-     * @todo error handling/type checking for valid FormField and SearchFilter subclasses?
      *
      * @return array
      */

@@ -11,10 +11,6 @@ use LogicException;
  * This backend allows one to better test Cookie setting and separate cookie
  * handling from the core
  *
- * @todo Create a config array for defaults (eg: httpOnly, secure, path, domain, expiry)
- * @todo A getter for cookies that haven't been sent to the browser yet
- * @todo Tests / a way to set the state without hacking with $_COOKIE
- * @todo Store the meta information around cookie setting (path, domain, secure, etc)
  */
 class CookieJar implements Cookie_Backend
 {
