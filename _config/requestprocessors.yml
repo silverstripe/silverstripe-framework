@@ -121,9 +121,6 @@ SilverStripe\Core\Injector\Injector:
   DevUrlsConfirmationMiddleware:
     properties:
       Bypasses:
-        # dev/build is covered by URLSpecialsMiddleware
-        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/build")'
-
         # The confirmation form is where people will be redirected for confirmation. We don't want to block it.
         - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/confirm")'
 
