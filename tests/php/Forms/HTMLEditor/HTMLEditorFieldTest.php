@@ -255,7 +255,7 @@ EOS
         $editor->setEditorConfig($restrictedConfig);
 
         $expectedHtmlString = '<p>standard text</p>Header';
-        $htmlValue = '<p>standard text</p><table><th></th><tr><td>Header</td></tr><tbody></tbody></table>';
+        $htmlValue = '<p>standard text</p><table><tbody><tr><th></th></tr><tr><td>Header</td></tr></tbody><tbody></tbody></table>';
         $editor->setValue($htmlValue);
         $editor->saveInto($obj);
         $this->assertEquals($expectedHtmlString, $obj->Content, 'Table is not removed');
