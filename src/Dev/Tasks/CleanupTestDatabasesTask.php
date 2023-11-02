@@ -23,15 +23,11 @@ class CleanupTestDatabasesTask extends BuildTask
 
     public function run($request)
     {
-        if (!Permission::check('ADMIN') && !Director::is_cli()) {
-            $response = Security::permissionFailure();
-            if ($response) {
-                $response->output();
-            }
-            die;
-        }
-
-        // Delete all temp DBs
         TempDatabase::create()->deleteAll();
+    }
+
+    public function canView(): bool
+    {
+        return Permission::check('ADMIN') || Director::is_cli();
     }
 }
