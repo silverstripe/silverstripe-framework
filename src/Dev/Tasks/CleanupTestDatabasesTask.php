@@ -23,6 +23,13 @@ class CleanupTestDatabasesTask extends BuildTask
 
     public function run($request)
     {
+        if (!$this->canView()) {
+            $response = Security::permissionFailure();
+            if ($response) {
+                $response->output();
+            }
+            die;
+        }
         TempDatabase::create()->deleteAll();
     }
 

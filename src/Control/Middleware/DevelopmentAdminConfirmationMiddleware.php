@@ -44,6 +44,11 @@ class DevelopmentAdminConfirmationMiddleware extends PermissionAwareConfirmation
         }
 
         $registeredRoutes = DevelopmentAdmin::config()->get('registered_controllers');
+        while (!isset($registeredRoutes[$action]) && strpos($action, '/') !== false) {
+            // Check for the parent route if a specific route isn't found
+            $action = substr($action, 0, strrpos($action, '/'));
+        }
+
         if (isset($registeredRoutes[$action]['controller'])) {
             $initPermissions = Config::forClass($registeredRoutes[$action]['controller'])->get('init_permissions');
             foreach ($initPermissions as $permission) {

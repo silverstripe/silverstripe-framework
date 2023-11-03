@@ -10,6 +10,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\DevBuildController;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Connect\TableBuilder;
@@ -367,7 +368,7 @@ class DatabaseAdmin extends Controller
             // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
             // "dev/tests" from CLI.
             || (Director::is_cli() && $allowAllCLI)
-            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN', 'CAN_DEV_BUILD'])
+            || Permission::check(DevBuildController::config()->get('init_permissions'))
         );
     }
 
