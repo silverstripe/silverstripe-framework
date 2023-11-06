@@ -13,9 +13,9 @@ nl:
     HELLO: Hallo
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Hallo
-    TEXT1: 'Je hebt aangegeven je wachtwoord te zijn vergeten. Klik op de'
-    TEXT2: 'onderstaande link'
-    TEXT3: 'om je wachtwoord opnieuw in te stellen voor '
+    TEXT1: 'Je hebt aangegeven je wachtwoord te zijn vergeten. Klik op de knop '
+    TEXT2: 'herstel wachtwoord'
+    TEXT3: ', om je wachtwoord opnieuw in te stellen voor '
   SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
     CONFIRMATION_NAME: '"{key}" GET parameter'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
@@ -151,6 +151,8 @@ nl:
       one: 'Data object'
       other: '{count} Data objecten'
     SINGULARNAME: 'Data object'
+    many_many_FileTracking: 'Bestanden volgen'
+    many_many_LinkTracking: 'Links volgen'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Elke
     NOANSWER: Nee
@@ -236,11 +238,20 @@ nl:
     SINGULARNAME: Groep
     Sort: Sorteer-richting
     ValidationIdentifierAlreadyExists: 'Er bestaat al een groep ({group}) met eenzelfde {identifier}'
+    db_AccessAllSubsites: 'Toegang tot alle subsites'
+    db_Code: Code
+    db_DN: DN
     db_Description: Omschrijving
+    db_GUID: GUID
+    db_HtmlEditorConfig: 'HTML editor config'
+    db_LastSynced: 'Laatst gesynchroniseerd'
+    db_Locked: Vergrendeld
     db_Sort: Volgorde
     db_Title: Titel
     has_many_Groups: Groepen
+    has_many_LDAPGroupMappings: 'LDAP group mappings'
     has_many_Permissions: Rechten
+    has_one_Parent: Bovenliggende
     many_many_Members: Leden
     many_many_Roles: Rollen
     many_many_Subsites: Subsites
@@ -254,6 +265,7 @@ nl:
       other: '{count} inlogpogingen'
     SINGULARNAME: Inlogpogingen
     Status: Status
+    db_IP: IP
     db_Status: Status
     has_one_Member: Lid
   SilverStripe\Security\Member:
@@ -286,6 +298,7 @@ nl:
     PLURALS:
       one: 'Een lid'
       other: '{count} leden'
+    RequiresPasswordChangeOnNextLogin: 'Vereist wachtwoordwijziging bij volgende aanmelding'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'Je wachtwoord is aangepast'
     SUBJECTPASSWORDRESET: 'Je wachtwoord opnieuw instellen'
@@ -296,8 +309,11 @@ nl:
     WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'Je oude wachtwoord'
     belongs_many_many_Groups: Groepen
+    db_AccountResetExpired: 'Het opnieuw instellen van het account is verlopen'
     db_Email: E-mail
     db_FirstName: Voornaam
+    db_GUID: GUID
+    db_LastSynced: 'Laatst gesynchroniseerd'
     db_Locale: 'Interface taal'
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
@@ -339,6 +355,7 @@ nl:
       other: '{count} rechten'
     SINGULARNAME: Machtiging
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
+    db_Code: Code
     db_Type: 'Soort veld'
     has_one_Group: Groep
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -364,6 +381,7 @@ nl:
       other: '{count} permissiecodes'
     PermsError: 'U moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
     SINGULARNAME: Permissiecode
+    db_Code: Code
     has_one_Role: Rol
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Versleutelde logins'
@@ -371,6 +389,7 @@ nl:
       one: 'Een versleutelde login'
       other: '{count} loginsleutels'
     SINGULARNAME: Loginsleutel
+    has_one_LoginSession: inlogsessie
     has_one_Member: Lid
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'

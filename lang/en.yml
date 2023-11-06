@@ -40,6 +40,7 @@ en:
     CURRENT_PASSWORD_MISSING: 'You must enter your current password.'
     LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
+    RANDOM_IF_EMPTY: 'If this is left blank then a random password will be automatically generated.'
     SHOWONCLICKTITLE: 'Change Password'
   SilverStripe\Forms\DateField:
     NOTSET: 'not set'
