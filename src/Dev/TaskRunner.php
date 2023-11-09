@@ -118,8 +118,8 @@ class TaskRunner extends Controller implements PermissionProvider
                 $inst = Injector::inst()->create($task['class']);
                 $title(sprintf('Running Task %s', $inst->getTitle()));
 
-                if (!$inst->isEnabled()) {
-                    $message('The task is disabled');
+                if (!$this->taskEnabled($task['class'])) {
+                    $message('The task is disabled or you do not have sufficient permission to run it');
                     return;
                 }
 
@@ -162,7 +162,7 @@ class TaskRunner extends Controller implements PermissionProvider
     {
         $taskClasses = ClassInfo::subclassesFor(BuildTask::class, false);
         foreach ($taskClasses as $index => $task) {
-            if (!$this->taskEnabled($task) || !$this->canViewTask($task)) {
+            if (!$this->taskEnabled($task)) {
                 unset($taskClasses[$index]);
             }
         }
@@ -179,30 +179,18 @@ class TaskRunner extends Controller implements PermissionProvider
         $reflectionClass = new ReflectionClass($class);
         if ($reflectionClass->isAbstract()) {
             return false;
-        } elseif (!singleton($class)->isEnabled()) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function canViewTask(string $class): bool
-    {
-        if ($this->canViewAllTasks()) {
-            return true;
-        }
-
-        $reflectionClass = new ReflectionClass($class);
-        if ($reflectionClass->isAbstract()) {
-            return false;
         }
 
         $task = Injector::inst()->get($class);
-        if (!$task->hasMethod('canView') || !$task->canView()) {
+        if (!$task->isEnabled()) {
             return false;
         }
 
-        return true;
+        if ($task->hasMethod('canView') && !$task->canView()) {
+            return false;
+        }
+
+        return $this->canViewAllTasks();
     }
 
     protected function canViewAllTasks(): bool
@@ -254,7 +242,7 @@ class TaskRunner extends Controller implements PermissionProvider
         return [
             'BUILDTASK_CAN_RUN' => [
                 'name' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_DESCRIPTION', 'Can view and execute all /dev/tasks'),
-                'help' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_HELP', 'Can view and execute all Build Tasks (/dev/tasks). This supersedes individual task permissions'),
+                'help' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_HELP', 'Can view and execute all Build Tasks (/dev/tasks). This may still be overriden by individual task view permissions'),
                 'category' => DevelopmentAdmin::permissionsCategory(),
                 'sort' => 70
             ],
