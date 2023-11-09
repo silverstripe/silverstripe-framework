@@ -128,7 +128,7 @@ class TaskRunner extends Controller implements PermissionProvider
             }
         }
 
-        $message(sprintf('The build task "%s" could not be found', Convert::raw2xml($name)));
+        $message(sprintf('The build task "%s" could not be found, is disabled or you do not have sufficient permission to run it', Convert::raw2xml($name)));
     }
 
     /**
