@@ -2,11 +2,15 @@
 
 namespace SilverStripe\Dev\Tests;
 
+use Exception;
+use ReflectionMethod;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\Director;
-use Exception;
 use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
+use SilverStripe\Dev\Tests\DevAdminControllerTest\ControllerWithPermissions;
 
 /**
  * Note: the running of this test is handled by the thing it's testing (DevelopmentAdmin controller).
@@ -21,23 +25,28 @@ class DevAdminControllerTest extends FunctionalTest
         DevelopmentAdmin::config()->merge(
             'registered_controllers',
             [
-            'x1' => [
-                'controller' => Controller1::class,
-                'links' => [
-                    'x1' => 'x1 link description',
-                    'x1/y1' => 'x1/y1 link description'
-                ]
-            ],
-            'x2' => [
-                'controller' => 'DevAdminControllerTest_Controller2', // intentionally not a class that exists
-                'links' => [
-                    'x2' => 'x2 link description'
-                ]
-            ]
+                'x1' => [
+                    'controller' => Controller1::class,
+                    'links' => [
+                        'x1' => 'x1 link description',
+                        'x1/y1' => 'x1/y1 link description'
+                    ]
+                ],
+                'x2' => [
+                    'controller' => 'DevAdminControllerTest_Controller2', // intentionally not a class that exists
+                    'links' => [
+                        'x2' => 'x2 link description'
+                    ]
+                ],
+                'x3' => [
+                    'controller' => ControllerWithPermissions::class,
+                    'links' => [
+                        'x3' => 'x3 link description'
+                    ]
+                ],
             ]
         );
     }
-
 
     public function testGoodRegisteredControllerOutput()
     {
@@ -57,7 +66,43 @@ class DevAdminControllerTest extends FunctionalTest
         $this->assertEquals(true, $this->getAndCheckForError('/dev/x2'));
     }
 
+    /**
+     * @dataProvider getLinksPermissionsProvider
+     */
+    public function testGetLinks(string $permission, array $present, array $absent): void
+    {
+        DevelopmentAdmin::config()->set('allow_all_cli', false);
+        $kernel = Injector::inst()->get(Kernel::class);
+        $env = $kernel->getEnvironment();
+        $kernel->setEnvironment(Kernel::LIVE);
+        try {
+            $this->logInWithPermission($permission);
+            $controller = new DevelopmentAdmin();
+            $method = new ReflectionMethod($controller, 'getLinks');
+            $method->setAccessible(true);
+            $links = $method->invoke($controller);
 
+            foreach ($present as $expected) {
+                $this->assertArrayHasKey($expected, $links, sprintf('Expected link %s not found in %s', $expected, json_encode($links)));
+            }
+
+            foreach ($absent as $unexpected) {
+                $this->assertArrayNotHasKey($unexpected, $links, sprintf('Unexpected link %s found in %s', $unexpected, json_encode($links)));
+            }
+        } finally {
+            $kernel->setEnvironment($env);
+        }
+    }
+
+    protected function getLinksPermissionsProvider() : array
+    {
+        return [
+            ['ADMIN', ['x1', 'x1/y1', 'x3'], ['x2']],
+            ['ALL_DEV_ADMIN', ['x1', 'x1/y1', 'x3'], ['x2']],
+            ['DEV_ADMIN_TEST_PERMISSION', ['x3'], ['x1', 'x1/y1', 'x2']],
+            ['NOTHING', [], ['x1', 'x1/y1', 'x2', 'x3']],
+        ];
+    }
 
     protected function getCapture($url)
     {

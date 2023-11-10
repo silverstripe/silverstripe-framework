@@ -2,17 +2,20 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
+use Exception;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\Controller;
-use SilverStripe\Versioned\Versioned;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
-use Exception;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * Base class for development tools.
@@ -20,7 +23,7 @@ use Exception;
  * Configured in framework/_config/dev.yml, with the config key registeredControllers being
  * used to generate the list of links for /dev.
  */
-class DevelopmentAdmin extends Controller
+class DevelopmentAdmin extends Controller implements PermissionProvider
 {
 
     private static $url_handlers = [
@@ -79,22 +82,8 @@ class DevelopmentAdmin extends Controller
         if (static::config()->get('deny_non_cli') && !Director::is_cli()) {
             return $this->httpError(404);
         }
-
-        // Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
-        $requestedDevBuild = (stripos($this->getRequest()->getURL() ?? '', 'dev/build') === 0)
-            && (stripos($this->getRequest()->getURL() ?? '', 'dev/build/defaults') === false);
-
-        // We allow access to this controller regardless of live-status or ADMIN permission only
-        // if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-        $allowAllCLI = static::config()->get('allow_all_cli');
-        $canAccess = (
-            $requestedDevBuild
-            || Director::isDev()
-            || (Director::is_cli() && $allowAllCLI)
-            // Its important that we don't run this check if dev/build was requested
-            || Permission::check("ADMIN")
-        );
-        if (!$canAccess) {
+        
+        if (!$this->canViewAll() && empty($this->getLinks())) {
             Security::permissionFailure($this);
             return;
         }
@@ -109,6 +98,7 @@ class DevelopmentAdmin extends Controller
 
     public function index()
     {
+        $links = $this->getLinks();
         // Web mode
         if (!Director::is_cli()) {
             $renderer = DebugView::create();
@@ -118,7 +108,7 @@ class DevelopmentAdmin extends Controller
 
             echo '<div class="options"><ul>';
             $evenOdd = "odd";
-            foreach (self::get_links() as $action => $description) {
+            foreach ($links as $action => $description) {
                 echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
                     . " $description</a></li>\n";
                 $evenOdd = ($evenOdd == "odd") ? "even" : "odd";
@@ -130,7 +120,7 @@ class DevelopmentAdmin extends Controller
         } else {
             echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
             echo "You can execute any of the following commands:\n\n";
-            foreach (self::get_links() as $action => $description) {
+            foreach ($links as $action => $description) {
                 echo "  sake dev/$action: $description\n";
             }
             echo "\n\n";
@@ -160,23 +150,49 @@ class DevelopmentAdmin extends Controller
         }
     }
 
-
-
-
     /*
      * Internal methods
      */
 
     /**
+     * @deprecated 5.2.0 use getLinks() instead to include permission checks
      * @return array of url => description
      */
     protected static function get_links()
     {
+        Deprecation::notice('5.2.0', 'Use getLinks() instead to include permission checks');
         $links = [];
 
         $reg = Config::inst()->get(static::class, 'registered_controllers');
         foreach ($reg as $registeredController) {
             if (isset($registeredController['links'])) {
+                foreach ($registeredController['links'] as $url => $desc) {
+                    $links[$url] = $desc;
+                }
+            }
+        }
+        return $links;
+    }
+
+    protected function getLinks(): array
+    {
+        $canViewAll = $this->canViewAll();
+        $links = [];
+        $reg = Config::inst()->get(static::class, 'registered_controllers');
+        foreach ($reg as $registeredController) {
+            if (isset($registeredController['links'])) {
+                if (!ClassInfo::exists($registeredController['controller'])) {
+                    continue;
+                }
+
+                if (!$canViewAll) {
+                    // Check access to controller
+                    $controllerSingleton = Injector::inst()->get($registeredController['controller']);
+                    if (!$controllerSingleton->hasMethod('canInit') || !$controllerSingleton->canInit()) {
+                        continue;
+                    }
+                }
+
                 foreach ($registeredController['links'] as $url => $desc) {
                     $links[$url] = $desc;
                 }
@@ -196,8 +212,6 @@ class DevelopmentAdmin extends Controller
 
         return null;
     }
-
-
 
 
     /*
@@ -252,5 +266,40 @@ TXT;
     public function errors()
     {
         $this->redirect("Debug_");
+    }
+
+    public function providePermissions(): array
+    {
+        return [
+            'ALL_DEV_ADMIN' => [
+                'name' => _t(__CLASS__ . '.ALL_DEV_ADMIN_DESCRIPTION', 'Can view and execute all /dev endpoints'),
+                'help' => _t(__CLASS__ . '.ALL_DEV_ADMIN_HELP', 'Can view and execute all /dev endpoints'),
+                'category' => static::permissionsCategory(),
+                'sort' => 50
+            ],
+        ];
+    }
+
+    public static function permissionsCategory(): string
+    {
+        return  _t(__CLASS__ . 'PERMISSIONS_CATEGORY', 'Dev permissions');
+    }
+
+    protected function canViewAll(): bool
+    {
+        // Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
+        $requestedDevBuild = (stripos($this->getRequest()->getURL() ?? '', 'dev/build') === 0)
+            && (stripos($this->getRequest()->getURL() ?? '', 'dev/build/defaults') === false);
+
+        // We allow access to this controller regardless of live-status or ADMIN permission only
+        // if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
+        $allowAllCLI = static::config()->get('allow_all_cli');
+        return (
+            $requestedDevBuild
+            || Director::isDev()
+            || (Director::is_cli() && $allowAllCLI)
+            // Its important that we don't run this check if dev/build was requested
+            || Permission::check(['ADMIN', 'ALL_DEV_ADMIN'])
+        );
     }
 }
