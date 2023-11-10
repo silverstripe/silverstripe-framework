@@ -942,6 +942,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         return $this->dataQuery()->getQueryParams();
     }
+protected static $dataObjects = [];
 
     /**
      * Returns an Iterator for this DataList.
@@ -950,13 +951,20 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function getIterator(): Traversable
     {
         foreach ($this->getFinalisedQuery() as $row) {
-            yield $this->createDataObject($row);
+            if(! isset(self::$dataObjects[$this->queryHash . '_' . $row['ID']])) {
+                self::$dataObjects[$this->queryHash . '_' . $row['ID']] = $this->createDataObject($row);
+            }
+            yield self::$dataObjects[$this->queryHash . '_' . $row['ID']];
         }
 
         // Re-set the finaliseQuery so that it can be re-executed
         $this->finalisedQuery = null;
+        $this->queryHash = null;
         $this->eagerLoadedData = [];
     }
+
+    protected static $query = [];
+    protected $queryHash = '';
 
     /**
      * Returns the Query result for this DataList. Repeated calls will return
@@ -969,12 +977,20 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     protected function getFinalisedQuery()
     {
         if (!$this->finalisedQuery) {
-            $this->finalisedQuery = $this->executeQuery();
+            $sql = $this->dataQuery()->sql();
+            $this->queryHash = md5($sql);
+            if(! empty(self::$query[$this->queryHash])) {
+                $this->finalisedQuery = self::$query[$this->queryHash];
+            } else {
+                $this->finalisedQuery = $this->executeQuery();
+                self::$query[$this->queryHash] = $this->finalisedQuery;
+            }
+
         }
 
         return $this->finalisedQuery;
     }
-
+    
     private function getEagerLoadVariables(string $relationChain, string $relationName, string $parentDataClass): array
     {
         $schema = DataObject::getSchema();
