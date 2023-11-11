@@ -854,13 +854,6 @@ PHP;
      */
     public static function get_base_tag($contentGeneratedSoFar)
     {
-        $base = Director::absoluteBaseURL();
-
-        // Is the document XHTML?
-        if (preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar ?? '')) {
-            return "<base href=\"$base\" />";
-        } else {
-            return "<base href=\"$base\"><!--[if lte IE 6]></base><![endif]-->";
-        }
+        return '<base href="' . Director::absoluteBaseURL() . '" />';
     }
 }

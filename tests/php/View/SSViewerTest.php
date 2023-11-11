@@ -962,35 +962,13 @@ after'
 			</html>';
         $this->assertMatchesRegularExpression('/<head><base href=".*" \/><\/head>/', $this->render($tmpl1));
 
-        // HTML4 and 5 will only have it for IE
-        $tmpl2 = '<!DOCTYPE html>
-			<html>
-				<head><% base_tag %></head>
-				<body><p>test</p><body>
-			</html>';
-        $this->assertMatchesRegularExpression(
-            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
-            $this->render($tmpl2)
-        );
-
-
-        $tmpl3 = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-			<html>
-				<head><% base_tag %></head>
-				<body><p>test</p><body>
-			</html>';
-        $this->assertMatchesRegularExpression(
-            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
-            $this->render($tmpl3)
-        );
-
         // Check that the content negotiator converts to the equally legal formats
         $negotiator = new ContentNegotiator();
 
         $response = new HTTPResponse($this->render($tmpl1));
         $negotiator->html($response);
         $this->assertMatchesRegularExpression(
-            '/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
+            '/<head><base href=".*" \/><\/head>/',
             $response->getBody()
         );
 

@@ -228,13 +228,6 @@ class ContentNegotiator
         $content = $response->getBody();
         $hasXMLHeader = (substr($content ?? '', 0, 5) == '<' . '?xml');
 
-        // Fix base tag
-        $content = preg_replace(
-            '/<base href="([^"]*)" \/>/',
-            '<base href="$1"><!--[if lte IE 6]></base><![endif]-->',
-            $content ?? ''
-        );
-
         $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content ?? '');
         $content = str_replace(
             ['/>', 'xml:lang', 'application/xhtml+xml'],
