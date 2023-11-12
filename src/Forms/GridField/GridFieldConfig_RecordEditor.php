@@ -1,6 +1,8 @@
 <?php
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * Allows editing of records contained within the GridField, instead of only allowing the ability to view records in
  * the GridField.
@@ -30,9 +32,11 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
         $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
         $this->addComponent(GridFieldDetailForm::create(null, $showPagination, $showAdd));
 
-        $sort->setThrowExceptionOnBadDataType(false);
-        $filter->setThrowExceptionOnBadDataType(false);
-        $pagination->setThrowExceptionOnBadDataType(false);
+        Deprecation::withNoReplacement(function () use ($sort, $filter, $pagination) {
+            $sort->setThrowExceptionOnBadDataType(false);
+            $filter->setThrowExceptionOnBadDataType(false);
+            $pagination->setThrowExceptionOnBadDataType(false);
+        });
 
         $this->extend('updateConfig');
     }

@@ -12,6 +12,7 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * GridFieldSortableHeader adds column headers to a {@link GridField} that can
@@ -26,6 +27,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     protected $throwExceptionOnBadDataType = true;
 
@@ -45,9 +47,11 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      *
      * @param bool $throwExceptionOnBadDataType
      * @return $this
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
         return $this;
     }
@@ -56,9 +60,11 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @return bool
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function getThrowExceptionOnBadDataType()
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         return $this->throwExceptionOnBadDataType;
     }
 
@@ -74,6 +80,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
         if ($dataList instanceof Sortable) {
             return true;
         } else {
+            // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
                     static::class . " expects an SS_Sortable list to be passed to the GridField."

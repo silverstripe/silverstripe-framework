@@ -7,6 +7,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
@@ -27,6 +28,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     protected $throwExceptionOnBadDataType = true;
 
@@ -66,17 +68,21 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * {@link GridFieldConfig} subclasses set this to false for flexibility.
      *
      * @param bool $throwExceptionOnBadDataType
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
     }
 
     /**
      * See {@link setThrowExceptionOnBadDataType()}
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function getThrowExceptionOnBadDataType()
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         return $this->throwExceptionOnBadDataType;
     }
 
@@ -103,6 +109,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         if ($dataList instanceof Filterable) {
             return true;
         } else {
+            // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
                     static::class . " expects an SS_Filterable list to be passed to the GridField."
