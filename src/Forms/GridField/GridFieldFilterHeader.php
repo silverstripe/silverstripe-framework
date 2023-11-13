@@ -12,6 +12,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -33,7 +34,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     protected $throwExceptionOnBadDataType = true;
 
     /**
-     * @var \SilverStripe\ORM\Search\SearchContext
+     * @var SearchContext
      */
     protected $searchContext = null;
 
@@ -250,7 +251,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * Generate a search context based on the model class of the of the GridField
      *
      * @param GridField $gridfield
-     * @return \SilverStripe\ORM\Search\SearchContext
+     * @return SearchContext
      */
     public function getSearchContext(GridField $gridField)
     {
@@ -259,6 +260,16 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         }
 
         return $this->searchContext;
+    }
+
+    /**
+     * Sets a specific SearchContext instance for this component to use, instead of the default
+     * context provided by the ModelClass.
+     */
+    public function setSearchContext(SearchContext $context): static
+    {
+        $this->searchContext = $context;
+        return $this;
     }
 
     /**
@@ -287,8 +298,6 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
         }
 
-        $name = $gridField->Title ?: $inst->i18n_plural_name();
-
         // Prefix "Search__" onto the filters for the React component
         $filters = $context->getSearchParams();
         if (!empty($filters)) {
@@ -302,7 +311,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
-            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
+            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $this->getTitle($gridField, $inst)]),
             'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => $searchAction->getAttribute('name'),
@@ -312,6 +321,19 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         ];
 
         return json_encode($schema);
+    }
+
+    private function getTitle(GridField $gridField, object $inst): string
+    {
+        if ($gridField->Title) {
+            return $gridField->Title;
+        }
+
+        if (ClassInfo::hasMethod($inst, 'i18n_plural_name')) {
+            return $inst->i18n_plural_name();
+        }
+
+        return ClassInfo::shortName($inst);
     }
 
     /**
@@ -357,7 +379,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $field->addExtraClass('stacked no-change-track');
         }
 
-        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+        $name = $this->getTitle($gridField, singleton($gridField->getModelClass()));
 
         $this->searchForm = $form = new Form(
             $gridField,
