@@ -103,7 +103,7 @@ en:
     Create: Create
     Delete: Delete
     DeletePermissionsFailure: 'No delete permissions'
-    Deleted: 'Deleted {type} {name}'
+    Deleted: 'Deleted {type} "{name}"'
     Save: Save
     Saved: 'Saved {name} {link}'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
@@ -112,6 +112,8 @@ en:
     NEXT: 'Go to next record'
     PREVIOUS: 'Go to previous record'
     ViewPermissionsFailure: 'It seems you don''t have the necessary permissions to view "{ObjectTitle}"'
+    SAVETOASTMESSAGE: 'Saved {type} "{title}" successfully.'
+    SAVEDUP: 'Saved successfully.'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldFilterHeader:

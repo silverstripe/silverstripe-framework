@@ -8,6 +8,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -543,6 +544,18 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $form->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
 
+        $message = _t(
+            __CLASS__ . '.SAVETOASTMESSAGE',
+            'Saved {type} "{title}" successfully.',
+            [
+                'type' => $this->record->i18n_singular_name(),
+                'title' => Convert::raw2xml($this->record->Title)
+            ]
+        );
+
+        $controller = $this->getToplevelController();
+        $controller->getResponse()->addHeader('X-Status', $message);
+
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
     }
@@ -706,6 +719,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         } elseif ($this->gridField->getList()->byID($this->record->ID)) {
             // Return new view, as we can't do a "virtual redirect" via the CMS Ajax
             // to the same URL (it assumes that its content is already current, and doesn't reload)
+            $message = $controller->getResponse()->getHeader('X-Status') ?? rawurlencode(_t(__CLASS__ . '.SAVEDUP', 'Saved successfully') ?? '');
+            $controller->getResponse()->addHeader('X-Status', $message);
             return $this->edit($controller->getRequest());
         } else {
             // We might be able to redirect to open the record in a different view
@@ -782,7 +797,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $message = _t(
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Deleted',
-            'Deleted {type} {name}',
+            'Deleted {type} "{name}"',
             [
                 'type' => $this->record->i18n_singular_name(),
                 'name' => htmlspecialchars($title ?? '', ENT_QUOTES)
@@ -800,6 +815,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         //when an item is deleted, redirect to the parent controller
         $controller = $this->getToplevelController();
         $controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
+        $controller->getResponse()->addHeader('X-Status', $message);
 
         return $controller->redirect($this->getBackLink(), 302); //redirect back to admin section
     }
