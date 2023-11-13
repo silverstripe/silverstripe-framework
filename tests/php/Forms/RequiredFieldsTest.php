@@ -4,10 +4,12 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\TreeDropdownField;
+use SilverStripe\Security\Group;
 
 class RequiredFieldsTest extends SapphireTest
 {
-
     public function testConstructingWithArray()
     {
         //can we construct with an array?
@@ -285,5 +287,19 @@ class RequiredFieldsTest extends SapphireTest
             $requiredFields->fieldIsRequired('DoesntExist'),
             "Unexpectedly returned true for a non-existent field"
         );
+    }
+
+    public function testTreedropFieldValidation()
+    {
+        $form = new Form();
+        $field = new TreeDropdownField('TestField', 'TestField', Group::class);
+        $form->Fields()->push($field);
+        $validator = new RequiredFields('TestField');
+        $validator->setForm($form);
+        // blank string and '0' are fail required field validation
+        $this->assertFalse($validator->php(['TestField' => '']));
+        $this->assertFalse($validator->php(['TestField' => '0']));
+        // '1' passes required field validation
+        $this->assertTrue($validator->php(['TestField' => '1']));
     }
 }
