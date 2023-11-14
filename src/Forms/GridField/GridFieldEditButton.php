@@ -3,9 +3,9 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\ViewableData;
 
 /**
  * Provides the entry point to editing a single record presented by the
@@ -91,7 +91,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      * Return any special attributes that will be used for FormField::create_tag()
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param string $columnName
      * @return array
      */
@@ -139,7 +139,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
 
     /**
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param string $columnName
      * @return string The HTML for the column
      */

@@ -256,7 +256,15 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     public function getSearchContext(GridField $gridField)
     {
         if (!$this->searchContext) {
-            $this->searchContext = singleton($gridField->getModelClass())->getDefaultSearchContext();
+            $modelClass = $gridField->getModelClass();
+            $singleton = singleton($modelClass);
+            if (!$singleton->hasMethod('getDefaultSearchContext')) {
+                throw new LogicException(
+                    'Cannot dynamically instantiate SearchContext. Pass the SearchContext to setSearchContext()'
+                    . " or implement a getDefaultSearchContext() method on $modelClass"
+                );
+            }
+            $this->searchContext = $singleton->getDefaultSearchContext();
         }
 
         return $this->searchContext;

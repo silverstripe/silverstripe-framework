@@ -105,7 +105,7 @@ class SearchContext
      */
     public function getSearchFields()
     {
-        if ($this->fields->exists()) {
+        if ($this->fields?->exists()) {
             return $this->fields;
         }
 
@@ -443,7 +443,7 @@ class SearchContext
      */
     public function addField($field)
     {
-        $this->fields->push($field);
+        $this->fields?->push($field);
     }
 
     /**
@@ -453,7 +453,7 @@ class SearchContext
      */
     public function removeFieldByName($fieldName)
     {
-        $this->fields->removeByName($fieldName);
+        $this->fields?->removeByName($fieldName);
     }
 
     /**
@@ -500,7 +500,7 @@ class SearchContext
                 continue;
             }
 
-            $field = $this->fields->fieldByName($filter->getFullName());
+            $field = $this->fields?->fieldByName($filter->getFullName());
             if (!$field) {
                 continue;
             }

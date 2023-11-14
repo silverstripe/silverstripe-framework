@@ -62,7 +62,8 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
 
     public function getColumnContent($field, $record, $col)
     {
-        if (!$record->canView()) {
+        // Assume item can be viewed if canView() isn't implemented
+        if ($record->hasMethod('canView') && !$record->canView()) {
             return null;
         }
         $data = new ArrayData([

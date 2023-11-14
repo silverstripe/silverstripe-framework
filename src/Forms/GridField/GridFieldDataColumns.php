@@ -4,7 +4,8 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
-use SilverStripe\ORM\DataObject;
+use LogicException;
+use SilverStripe\View\ViewableData;
 
 /**
  * @see GridField
@@ -87,7 +88,15 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     public function getDisplayFields($gridField)
     {
         if (!$this->displayFields) {
-            return singleton($gridField->getModelClass())->summaryFields();
+            $modelClass = $gridField->getModelClass();
+            $singleton = singleton($modelClass);
+            if (!$singleton->hasMethod('summaryFields')) {
+                throw new LogicException(
+                    'Cannot dynamically determine columns. Pass the column names to setDisplayFields()'
+                    . " or implement a summaryFields() method on $modelClass"
+                );
+            }
+            return $singleton->summaryFields();
         }
         return $this->displayFields;
     }
@@ -146,7 +155,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * HTML for the column, content of the <td> element.
      *
      * @param GridField $gridField
-     * @param DataObject $record Record displayed in this row
+     * @param ViewableData $record Record displayed in this row
      * @param string $columnName
      * @return string HTML for the column. Return NULL to skip.
      */
@@ -180,7 +189,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * Attributes for the element containing the content returned by {@link getColumnContent()}.
      *
      * @param  GridField $gridField
-     * @param  DataObject $record displayed in this row
+     * @param  ViewableData $record displayed in this row
      * @param  string $columnName
      * @return array
      */
@@ -216,7 +225,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     /**
      * Translate a Object.RelationName.ColumnName $columnName into the value that ColumnName returns
      *
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param string $columnName
      * @return string|null - returns null if it could not found a value
      */
@@ -269,7 +278,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     /**
      *
      * @param GridField $gridField
-     * @param DataObject $item
+     * @param ViewableData $item
      * @param string $fieldName
      * @param string $value
      * @return string

@@ -11,6 +11,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 
@@ -154,7 +155,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
                     if ($tmpItem instanceof SS_List) {
                         // It's impossible to sort on a HasManyList/ManyManyList
                         break;
-                    } elseif ($tmpItem && method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
+                    } elseif ($tmpItem && ClassInfo::hasMethod($tmpItem, $methodName)) {
                         // The part is a relation name, so get the object/list from it
                         $tmpItem = $tmpItem->$methodName();
                     } elseif ($tmpItem instanceof DataObject

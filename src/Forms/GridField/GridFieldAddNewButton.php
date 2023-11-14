@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\RelationList;
 use SilverStripe\View\ArrayData;
@@ -12,8 +14,7 @@ use SilverStripe\View\SSViewer;
  * This component provides a button for opening the add new form provided by
  * {@link GridFieldDetailForm}.
  *
- * Only returns a button if {@link DataObject->canCreate()} for this record
- * returns true.
+ * Only returns a button if canCreate() for this record returns true.
  */
 class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
@@ -36,7 +37,16 @@ class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridFi
 
     public function getHTMLFragments($gridField)
     {
-        $singleton = singleton($gridField->getModelClass());
+        $modelClass = $gridField->getModelClass();
+        $singleton = singleton($modelClass);
+
+        if (!$singleton->hasMethod('canCreate')) {
+            throw new LogicException(
+                __CLASS__ . ' cannot be used with models that do not implement canCreate().'
+                . " Remove this component from your GridField or implement canCreate() on $modelClass"
+            );
+        }
+
         $context = [];
         if ($gridField->getList() instanceof RelationList) {
             $record = $gridField->getForm()->getRecord();
@@ -51,7 +61,7 @@ class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridFi
 
         if (!$this->buttonName) {
             // provide a default button name, can be changed by calling {@link setButtonName()} on this component
-            $objectName = $singleton->i18n_singular_name();
+            $objectName = $singleton->hasMethod('i18n_singular_name') ? $singleton->i18n_singular_name() : ClassInfo::shortName($singleton);
             $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.Add', 'Add {name}', ['name' => $objectName]);
         }
 
