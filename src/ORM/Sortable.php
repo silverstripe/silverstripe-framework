@@ -11,6 +11,9 @@ namespace SilverStripe\ORM;
  * @see SS_List
  * @see Filterable
  * @see Limitable
+ *
+ * @template T
+ * @extends SS_List<T>
  */
 interface Sortable extends SS_List
 {
@@ -27,11 +30,12 @@ interface Sortable extends SS_List
      * Return a new instance of this list that is sorted by one or more fields. You can either pass in a single
      * field name and direction, or a map of field names to sort directions.
      *
-     * @return static
      * @example $list = $list->sort('Name'); // default ASC sorting
      * @example $list = $list->sort('Name DESC'); // DESC sorting
      * @example $list = $list->sort('Name', 'ASC');
      * @example $list = $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+     *
+     * @return static<T>
      */
     public function sort();
 
@@ -39,8 +43,9 @@ interface Sortable extends SS_List
     /**
      * Return a new instance of this list based on reversing the current sort.
      *
-     * @return Sortable
      * @example $list = $list->reverse();
+     *
+     * @return static<T>
      */
     public function reverse();
 }

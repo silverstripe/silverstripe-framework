@@ -716,7 +716,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * or destroy and reinstanciate the record.
      *
      * @param string $className The new ClassName attribute (a subclass of {@link DataObject})
-     * @return $this
+     * @return static $this
      */
     public function setClassName($className)
     {
@@ -742,9 +742,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * there is no record, or the record has no ID. In this case, we do have an ID but
      * we still need to repopulate the defaults.
      *
-     * @param string $newClassName The name of the new class
+     * @template T of DataObject
+     * @param class-string<T> $newClassName The name of the new class
      *
-     * @return DataObject The new instance of the new class, The exact type will be of the class name provided.
+     * @return T The new instance of the new class, The exact type will be of the class name provided.
      */
     public function newClassInstance($newClassName)
     {
@@ -963,7 +964,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Returns the associated database record - in this case, the object itself.
      * This is included so that you can call $dataOrController->data() and get a DataObject all the time.
      *
-     * @return DataObject Associated database record
+     * @return static Associated database record
      */
     public function data()
     {
@@ -1012,7 +1013,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * whitelist the allowed keys.
      *
      * @param array $data A map of field name to data values to update.
-     * @return DataObject $this
+     * @return static $this
      */
     public function update($data)
     {
@@ -1073,7 +1074,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * use the write() method.
      *
      * @param array $data A map of field name to data values to update.
-     * @return DataObject $this
+     * @return static $this
      */
     public function castedUpdate($data)
     {
@@ -1097,7 +1098,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Caution: Does not delete the merged object.
      * Caution: Does now overwrite Created date on the original object.
      *
-     * @param DataObject $rightObj
+     * @param static $rightObj
      * @param string $priority left|right Determines who wins in case of a conflict (optional)
      * @param bool $includeRelations Merge any existing relations (optional)
      * @param bool $overwriteWithEmpty Overwrite existing left values with empty right values.
@@ -1182,7 +1183,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * next write. Existing CHANGE_VALUE or CHANGE_STRICT values
      * are preserved.
      *
-     * @return $this
+     * @return static $this
      */
     public function forceChange()
     {
@@ -1303,7 +1304,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Called by the constructor when creating new records.
      *
      * @uses DataExtension::populateDefaults()
-     * @return DataObject $this
+     * @return static $this
      */
     public function populateDefaults()
     {
@@ -1654,7 +1655,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param bool $recursive Recursively write components
      * @param array $skip List of DataObject references to skip
-     * @return DataObject $this
+     * @return static $this
      */
     public function writeComponents($recursive = false, $skip = [])
     {
@@ -1888,7 +1889,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param string $componentName
      * @param DataObject|null $item
-     * @return $this
+     * @return static $this
      */
     public function setComponent($componentName, $item)
     {
@@ -2327,7 +2328,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Generates a SearchContext to be used for building and processing
      * a generic search form for properties on this object.
      *
-     * @return SearchContext
+     * @return SearchContext<static>
      */
     public function getDefaultSearchContext()
     {
@@ -2817,7 +2818,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param string $fieldName Name of the field
      * @param mixed $val New field value
-     * @return $this
+     * @return static $this
      */
     public function setField($fieldName, $val)
     {
@@ -2913,7 +2914,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param string $fieldName Name of the field
      * @param mixed $value New field value
-     * @return $this
+     * @return static $this
      */
     public function setCastedField($fieldName, $value)
     {
@@ -2992,7 +2993,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * See {@link extendedCan()} for a more versatile tri-state permission control.
      *
      * @param string $perm The permission to be checked, such as 'View'.
-     * @param Member $member The member whose permissions need checking.  Defaults to the currently logged
+     * @param Member|null $member The member whose permissions need checking.  Defaults to the currently logged
      * in user.
      * @param array $context Additional $context to pass to extendedCan()
      *
@@ -3038,7 +3039,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * </code>
      *
      * @param string $methodName Method on the same object, e.g. {@link canEdit()}
-     * @param Member|int $member
+     * @param Member|null $member
      * @param array $context Optional context
      * @return boolean|null
      */
@@ -3060,7 +3061,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * @param Member $member
+     * @param Member|null $member
      * @return boolean
      */
     public function canView($member = null)
@@ -3073,7 +3074,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * @param Member $member
+     * @param Member|null $member
      * @return boolean
      */
     public function canEdit($member = null)
@@ -3086,7 +3087,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * @param Member $member
+     * @param Member|null $member
      * @return boolean
      */
     public function canDelete($member = null)
@@ -3099,7 +3100,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * @param Member $member
+     * @param Member|null $member
      * @param array $context Additional context-specific data which might
      * affect whether (or where) this object could be created.
      * @return boolean
@@ -3285,7 +3286,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Return all objects matching the filter
      * sub-classes are automatically selected and included
      *
-     * @param string $callerClass The class of objects to be returned
+     * @param string|null $callerClass The class of objects to be returned
      * @param string|array $filter A filter to be inserted into the WHERE clause.
      * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
      * @param string|array|null $sort Passed to DataList::sort()
@@ -3294,7 +3295,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
      * @param string $containerClass The container class to return the results in.
      *
-     * @return DataList The objects matching the filter, in the class specified by $containerClass
+     * @return DataList<static> The objects matching the filter, in the class specified by $containerClass
      */
     public static function get(
         $callerClass = null,
@@ -3360,7 +3361,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param boolean $cache Use caching
      * @param string|array|null $sort Passed to DataList::sort() so that DataList::first() returns the desired item
      *
-     * @return DataObject|null The first item matching the query
+     * @return static|null The first item matching the query
      */
     public static function get_one($callerClass = null, $filter = "", $cache = true, $sort = "")
     {
@@ -3411,7 +3412,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
      *                            When false will just clear session-local cached data
-     * @return DataObject $this
+     * @return static $this
      */
     public function flushCache($persistent = true)
     {
@@ -3512,7 +3513,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Get the base class for this object
      *
-     * @return string
+     * @return class-string<DataObject>
      */
     public function baseClass()
     {
@@ -3569,7 +3570,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * @see $sourceQueryParams
      * @param string $key
-     * @return string
+     * @return string|null
      */
     public function getSourceQueryParam($key)
     {
@@ -4314,7 +4315,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param DataObject $object
      * @param string $alias Alias
-     * @return $this
+     * @return static $this
      */
     public function setJoin(DataObject $object, $alias = null)
     {
