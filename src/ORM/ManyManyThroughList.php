@@ -9,6 +9,9 @@ use SilverStripe\Core\Injector\Injector;
 
 /**
  * ManyManyList backed by a dataobject join table
+ *
+ * @template T of DataObject
+ * @extends RelationList<T>
  */
 class ManyManyThroughList extends RelationList
 {
@@ -21,7 +24,7 @@ class ManyManyThroughList extends RelationList
      * Create a new ManyManyRelationList object. This relation will utilise an intermediary dataobject
      * as a join table, unlike ManyManyList which scaffolds a table automatically.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $joinClass Class name of the joined dataobject record
      * @param string $localKey The key in the join table that maps to the dataClass' PK.
      * @param string $foreignKey The key in the join table that maps to joined class' PK.
@@ -101,7 +104,7 @@ class ManyManyThroughList extends RelationList
      * Note that for a ManyManyList, the item is never actually deleted, only
      * the join table is affected.
      *
-     * @param DataObject $item
+     * @param T $item
      */
     public function remove($item)
     {
@@ -169,7 +172,7 @@ class ManyManyThroughList extends RelationList
     }
 
     /**
-     * @param mixed $item
+     * @param T $item
      * @param array $extraFields
      */
     public function add($item, $extraFields = [])
@@ -216,7 +219,7 @@ class ManyManyThroughList extends RelationList
         $foreignKey = $this->manipulator->getForeignIDKey();
         $hasManyList = $this->manipulator->getParentRelationship($this->dataQuery());
         $records = $hasManyList->filter($localKey, $itemID);
-        /** @var DataObject $record */
+
         foreach ($records as $record) {
             if ($extraFields) {
                 foreach ($extraFields as $field => $value) {

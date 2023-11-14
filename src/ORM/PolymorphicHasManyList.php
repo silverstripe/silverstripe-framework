@@ -8,6 +8,10 @@ use InvalidArgumentException;
 
 /**
  * Represents a has_many list linked against a polymorphic relationship
+ *
+ * @template T of DataObject
+ * @template TForeign of DataObject
+ * @extends HasManyList<T>
  */
 class PolymorphicHasManyList extends HasManyList
 {
@@ -22,7 +26,7 @@ class PolymorphicHasManyList extends HasManyList
     /**
      * Retrieve the name of the class this relation is filtered by
      *
-     * @return string
+     * @return class-string<TForeign>
      */
     public function getForeignClass()
     {
@@ -40,10 +44,10 @@ class PolymorphicHasManyList extends HasManyList
     /**
      * Create a new PolymorphicHasManyList relation list.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $foreignField The name of the composite foreign relation field. Used
      * to generate the ID and Class foreign keys.
-     * @param string $foreignClass Name of the class filter this relation is filtered against
+     * @param class-string<TForeign> $foreignClass Name of the class filter this relation is filtered against
      */
     public function __construct($dataClass, $foreignField, $foreignClass)
     {
@@ -68,7 +72,7 @@ class PolymorphicHasManyList extends HasManyList
      *
      * It does so by setting the relationFilters.
      *
-     * @param DataObject|int $item The DataObject to be added, or its ID
+     * @param T|int $item The DataObject to be added, or its ID
      */
     public function add($item)
     {
@@ -110,7 +114,7 @@ class PolymorphicHasManyList extends HasManyList
      * Remove an item from this relation.
      * Doesn't actually remove the item, it just clears the foreign key value.
      *
-     * @param DataObject $item The DataObject to be removed
+     * @param T $item The DataObject to be removed
      */
     public function remove($item)
     {

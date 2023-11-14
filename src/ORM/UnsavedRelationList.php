@@ -17,6 +17,9 @@ use Traversable;
  * It can store both saved objects (as IDs) or unsaved objects (as instances
  * of $dataClass). Unsaved objects are then written when the list is saved
  * into an instance of {@link RelationList}.
+ *
+ * @template T of DataObject
+ * @implements Relation<T>
  */
 class UnsavedRelationList extends ArrayList implements Relation
 {
@@ -38,7 +41,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * The DataObject class name that this relation is querying
      *
-     * @var string
+     * @var class-string<T>
      */
     protected $dataClass;
 
@@ -52,7 +55,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Create a new UnsavedRelationList
      *
-     * @param string $baseClass
+     * @param class-string<T> $baseClass
      * @param string $relationName
      * @param string $dataClass The DataObject class used in the relation
      */
@@ -67,7 +70,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Add an item to this relationship
      *
-     * @param mixed $item
+     * @param T $item
      * @param array $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
      */
     public function add($item, $extraFields = null)
@@ -78,7 +81,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Save all the items in this list into the RelationList
      *
-     * @param RelationList $list
+     * @param RelationList<T> $list
      */
     public function changeToList(RelationList $list)
     {
@@ -90,7 +93,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Pushes an item onto the end of this list.
      *
-     * @param array|object $item
+     * @param array|T $item
      * @param array $extraFields
      */
     public function push($item, $extraFields = null)
@@ -112,7 +115,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Get the dataClass name for this relation, ie the DataObject ClassName
      *
-     * @return string
+     * @return class-string<T>
      */
     public function dataClass()
     {
@@ -121,6 +124,8 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * Returns an Iterator for this relation.
+     *
+     * @return iterator<T>
      */
     public function getIterator(): Traversable
     {
@@ -131,7 +136,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * Return an array of the actual items that this relation contains at this stage.
      * This is when the query is actually executed.
      *
-     * @return array
+     * @return array<T>
      */
     public function toArray()
     {
@@ -151,7 +156,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Add a number of items to the relation.
      *
-     * @param array $items Items to add, as either DataObjects or IDs.
+     * @param array<T> $items Items to add, as either DataObjects or IDs.
      * @return $this
      */
     public function addMany($items)
@@ -174,7 +179,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Remove the items from this list with the given IDs
      *
-     * @param array $items
+     * @param array<T> $items
      * @return $this
      */
     public function removeMany($items)
@@ -233,7 +238,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Returns the first item in the list
      *
-     * @return mixed
+     * @return T|null
      */
     public function first()
     {
@@ -250,7 +255,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Returns the last item in the list
      *
-     * @return mixed
+     * @return T|null
      */
     public function last()
     {
@@ -287,8 +292,9 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * Returns a copy of this list with the relationship linked to the given foreign ID.
+     *
      * @param int|array $id An ID or an array of IDs.
-     * @return Relation
+     * @return Relation<T>
      */
     public function forForeignID($id)
     {
@@ -300,7 +306,7 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * @param string $relationName
-     * @return Relation
+     * @return Relation<T>
      */
     public function relation($relationName)
     {

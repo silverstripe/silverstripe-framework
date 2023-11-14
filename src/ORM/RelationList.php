@@ -10,6 +10,10 @@ use SilverStripe\ORM\DB;
  * A DataList that represents a relation.
  *
  * Adds the notion of a foreign ID that can be optionally set.
+ *
+ * @template T of DataObject
+ * @extends DataList<T>
+ * @implements Relation<T>
  */
 abstract class RelationList extends DataList implements Relation
 {
@@ -34,8 +38,6 @@ abstract class RelationList extends DataList implements Relation
      * every time they're called.
      *
      * Note that subclasses of RelationList must implement the callback for it to function
-     *
-     * @return this
      */
     public function addCallbacks(): CallbackList
     {
@@ -75,8 +77,6 @@ abstract class RelationList extends DataList implements Relation
      * when adding records to this list.
      *
      * Subclasses of RelationList must implement the callback for it to function
-     *
-     * @return this
      */
     public function removeCallbacks(): CallbackList
     {
@@ -118,7 +118,7 @@ abstract class RelationList extends DataList implements Relation
      *
      * @param int|array $id An ID or an array of IDs.
      *
-     * @return static
+     * @return static<T>
      */
     public function forForeignID($id)
     {
