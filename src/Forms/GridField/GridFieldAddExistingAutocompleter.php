@@ -32,6 +32,8 @@ use LogicException;
  *
  * For easier setup, have a look at a sample configuration in
  * {@link GridFieldConfig_RelationEditor}.
+ *
+ * The modelClass of the GridField this component is in must be a DataObject subclass.
  */
 class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler
 {
@@ -105,6 +107,10 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
     public function getHTMLFragments($gridField)
     {
         $dataClass = $gridField->getModelClass();
+
+        if (!is_a($dataClass, DataObject::class, true)) {
+            throw new LogicException(__CLASS__ . " must be used with DataObject subclasses. Found '$dataClass'");
+        }
 
         $forTemplate = new ArrayData([]);
         $forTemplate->Fields = new FieldList();
@@ -191,11 +197,17 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      */
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
     {
+        $dataClass = $gridField->getModelClass();
+
+        if (!is_a($dataClass, DataObject::class, true)) {
+            throw new LogicException(__CLASS__ . " must be used with DataObject subclasses. Found '$dataClass'");
+        }
+
         $objectID = $gridField->State->GridFieldAddRelation(null);
         if (empty($objectID)) {
             return $dataList;
         }
-        $object = DataObject::get_by_id($gridField->getModelClass(), $objectID);
+        $object = DataObject::get_by_id($dataClass, $objectID);
         if ($object) {
             $dataList->add($object);
         }
@@ -226,6 +238,10 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
     {
         $searchStr = $request->getVar('gridfield_relationsearch');
         $dataClass = $gridField->getModelClass();
+
+        if (!is_a($dataClass, DataObject::class, true)) {
+            throw new LogicException(__CLASS__ . " must be used with DataObject subclasses. Found '$dataClass'");
+        }
 
         $searchFields = ($this->getSearchFields())
             ? $this->getSearchFields()
@@ -337,6 +353,10 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      */
     public function scaffoldSearchFields($dataClass)
     {
+        if (!is_a($dataClass, DataObject::class, true)) {
+            throw new LogicException(__CLASS__ . " must be used with DataObject subclasses. Found '$dataClass'");
+        }
+
         $obj = DataObject::singleton($dataClass);
         $fields = null;
         if ($fieldSpecs = $obj->searchableFields()) {
@@ -387,6 +407,10 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
      */
     public function getPlaceholderText($dataClass)
     {
+        if (!is_a($dataClass, DataObject::class, true)) {
+            throw new LogicException(__CLASS__ . " must be used with DataObject subclasses. Found '$dataClass'");
+        }
+
         $searchFields = ($this->getSearchFields())
             ? $this->getSearchFields()
             : $this->scaffoldSearchFields($dataClass);
