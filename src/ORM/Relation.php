@@ -12,6 +12,12 @@ use SilverStripe\ORM\FieldType\DBField;
  * @method Relation relation($relationName)
  * @method Relation forForeignID($id)
  * @method string dataClass()
+ *
+ * @template T
+ * @extends SS_List<T>
+ * @extends Filterable<T>
+ * @extends Sortable<T>
+ * @extends Limitable<T>
  */
 interface Relation extends SS_List, Filterable, Sortable, Limitable
 {

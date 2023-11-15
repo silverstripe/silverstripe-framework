@@ -9,6 +9,10 @@ use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
  * Injected into DataQuery to augment getFinalisedQuery() with a join table
+ *
+ * @template TJoin of DataObject
+ * @template TParent of DataObject
+ * @template TForeign of DataObject
  */
 class ManyManyThroughQueryManipulator implements DataQueryManipulator
 {
@@ -18,7 +22,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * DataObject that backs the joining table
      *
-     * @var string
+     * @var class-string<TJoin>
      */
     protected $joinClass;
 
@@ -39,20 +43,24 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     /**
      * Foreign class 'from' property. Normally not needed unless polymorphic.
      *
-     * @var string
+     * @var class-string<TForeign>
      */
     protected $foreignClass;
 
     /**
      * Class name of instance that owns this list
      *
-     * @var string
+     * @var class-string<TParent>
      */
     protected $parentClass;
 
     /**
      * Build query manipulator for a given join table. Additional parameters (foreign key, etc)
      * will be inferred at evaluation from query parameters set via the ManyManyThroughList
+     *
+     * @param class-string<TJoin> $joinClass
+     * @param class-string<TForeign> $foreignClass
+     * @param class-string<TParent> $parentClass
      */
     public function __construct(string $joinClass, string $localKey, string $foreignKey, string $foreignClass, string $parentClass)
     {
@@ -68,7 +76,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
-     * @return string
+     * @return class-string<TJoin>
      */
     public function getJoinClass()
     {
@@ -76,7 +84,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
-     * @param mixed $joinClass
+     * @param class-string<TJoin> $joinClass
      * @return $this
      */
     public function setJoinClass($joinClass)
@@ -152,7 +160,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
      * Get has_many relationship between parent and join table (for a given DataQuery)
      *
      * @param DataQuery $query
-     * @return HasManyList
+     * @return HasManyList<TJoin>
      */
     public function getParentRelationship(DataQuery $query)
     {
@@ -280,7 +288,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
-     * @return string
+     * @return class-string<TForeign>
      */
     public function getForeignClass()
     {
@@ -288,7 +296,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
-     * @param string $foreignClass
+     * @param class-string<TForeign> $foreignClass
      * @return $this
      */
     public function setForeignClass($foreignClass)
@@ -298,7 +306,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
-     * @return string
+     * @return class-string<TParent>
      */
     public function getParentClass()
     {
@@ -306,8 +314,8 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
     }
 
     /**
-     * @param string $parentClass
-     * @return ManyManyThroughQueryManipulator
+     * @param class-string<TParent> $parentClass
+     * @return $this
      */
     public function setParentClass($parentClass)
     {

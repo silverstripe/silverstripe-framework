@@ -12,6 +12,9 @@ use Exception;
 
 /**
  * Subclass of {@link DataList} representing a many_many relation.
+ *
+ * @template T of DataObject
+ * @extends RelationList<T>
  */
 class ManyManyList extends RelationList
 {
@@ -50,7 +53,7 @@ class ManyManyList extends RelationList
      * the normal {@link DataList} methods. Addition arguments are used to
      * support {@link add()} and {@link remove()} methods.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
      * @param string $localKey The key in the join table that maps to the dataClass' PK.
      * @param string $foreignKey The key in the join table that maps to joined class' PK.
@@ -124,7 +127,7 @@ class ManyManyList extends RelationList
      * Create a DataObject from the given SQL row.
      *
      * @param array $row
-     * @return DataObject
+     * @return T
      */
     public function createDataObject($row)
     {
@@ -166,7 +169,7 @@ class ManyManyList extends RelationList
      *
      * @param int|null|string|array $id
      *
-     * @return array
+     * @return array|null
      */
     protected function foreignIDFilter($id = null)
     {
@@ -214,10 +217,11 @@ class ManyManyList extends RelationList
      * @throws InvalidArgumentException
      * @throws Exception
      *
-     * @param DataObject|int $item
+     * @param T|int $item
      * @param array $extraFields A map of additional columns to insert into the joinTable.
      * Column names should be ANSI quoted.
-     * @throws Exception
+     * @throws BadMethodCallException
+     * @throws InvalidArgumentException
      */
     public function add($item, $extraFields = [])
     {
@@ -335,7 +339,7 @@ class ManyManyList extends RelationList
      * Note that for a ManyManyList, the item is never actually deleted, only
      * the join table is affected.
      *
-     * @param DataObject $item
+     * @param T $item
      */
     public function remove($item)
     {
