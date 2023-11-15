@@ -15,8 +15,10 @@ use SilverStripe\Core\Manifest\ModuleManifest;
  * way to access instance methods which don't rely on instance
  * data (e.g. the custom SilverStripe static handling).
  *
- * @param string $className
+ * @template T of object
+ * @param class-string<T> $className
  * @return mixed
+ * @phpstan-return ($className is class-string<T> ? T : mixed)
  */
 function singleton($className)
 {
