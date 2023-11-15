@@ -856,8 +856,6 @@ class Injector implements ContainerInterface
      *
      * Will recursively call itself for each depth of dotting.
      *
-     * @template T of object
-     * @param class-string<T>|string
      */
     public function has(string $name): bool
     {
@@ -896,10 +894,8 @@ class Injector implements ContainerInterface
      * Register a service object with an optional name to register it as the
      * service for
      *
-     * @template TService of object
-     * @template TReplace of object
-     * @param TService $service The object to register
-     * @param class-string<TReplace>|string|null $replace The name of the object to replace (if different to the
+     * @param object $service The object to register
+     * @param string $replace The name of the object to replace (if different to the
      * class name of the object to register)
      * @return $this
      */
@@ -919,8 +915,7 @@ class Injector implements ContainerInterface
      * Removes a named object from the cached list of objects managed
      * by the inject
      *
-     * @template T of object
-     * @param class-string<T>|string $name The name to unregister
+     * @param string $name The name to unregister
      * @return $this
      */
     public function unregisterNamedObject($name)
@@ -977,7 +972,8 @@ class Injector implements ContainerInterface
      * @param bool $asSingleton If set to false a new instance will be returned.
      * If true a singleton will be returned unless the spec is type=prototype'
      * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
-     * @return ($name is class-string<T> ? T : mixed) Instance of the specified object
+     * @return mixed Instance of the specified object
+     * @phpstan-return ($name is class-string<T> ? T : mixed) Instance of the specified object
      */
     public function get($name, $asSingleton = true, $constructorArgs = [])
     {
@@ -993,13 +989,12 @@ class Injector implements ContainerInterface
     /**
      * Returns the service, or `null` if it doesnt' exist. See {@link get()} for main usage.
      *
-     * @template T of object
-     * @param class-string<T> $name The name of the service to retrieve. If not a registered
+     * @param string $name The name of the service to retrieve. If not a registered
      * service, then a class of the given name is instantiated
      * @param bool $asSingleton If set to false a new instance will be returned.
      * If true a singleton will be returned unless the spec is type=prototype'
      * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
-     * @return ($name is class-string<T> ? T : mixed) Instance of the specified object
+     * @return mixed Instance of the specified object
      */
     protected function getNamedService($name, $asSingleton = true, $constructorArgs = [])
     {
@@ -1135,7 +1130,8 @@ class Injector implements ContainerInterface
      * @template T of object
      * @param class-string<T> $name
      * @param mixed ...$argument arguments to pass to the constructor
-     * @return ($name is class-string<T> ? T : mixed) A new instance of the specified object
+     * @return mixed A new instance of the specified object
+     * @phpstan-return ($name is class-string<T> ? T : mixed) A new instance of the specified object
      */
     public function create($name, $argument = null)
     {
@@ -1147,10 +1143,11 @@ class Injector implements ContainerInterface
     /**
      * Creates an object with the supplied argument array
      *
-     * @template T of object
-     * @param class-string<T>|string $name Name of the class to create an object of
+     * @template T
+     * @param class-string<T> $name Name of the class to create an object of
      * @param array $constructorArgs Arguments to pass to the constructor
-     * @return ($name is class-string<T> ? T : mixed)
+     * @return mixed
+     * @phpstan-return ($name is class-string<T> ? T : mixed)
      */
     public function createWithArgs($name, $constructorArgs)
     {

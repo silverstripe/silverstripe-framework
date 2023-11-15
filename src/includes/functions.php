@@ -17,7 +17,8 @@ use SilverStripe\Core\Manifest\ModuleManifest;
  *
  * @template T of object
  * @param class-string<T> $className
- * @return ($className is class-string<T> ? T : mixed)
+ * @return mixed
+ * @phpstan-return ($className is class-string<T> ? T : mixed)
  */
 function singleton($className)
 {
