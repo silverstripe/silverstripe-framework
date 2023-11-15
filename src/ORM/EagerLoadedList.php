@@ -194,7 +194,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
     }
 
     /**
-     * @return iterator<T>
+     * @return iterable<array-key, T>
      */
     public function getIterator(): Traversable
     {

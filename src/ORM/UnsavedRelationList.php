@@ -125,7 +125,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Returns an Iterator for this relation.
      *
-     * @return iterator<T>
+     * @return iterable<array-key, T>
      */
     public function getIterator(): Traversable
     {
