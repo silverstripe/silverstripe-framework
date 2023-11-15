@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Type\Tests\Source;
 
-use SilverStripe\Core\Extension;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\DataExtension;
 
 /**
- * @extends Extension<ExtensibleMockOne|ExtensibleMockTwo|static>
+ * @extends DataExtension<ExtensibleMockOne|ExtensibleMockTwo|static>
  */
-class ExtensionMockTwo extends Extension implements TestOnly
+class ExtensionMockTwo extends DataExtension implements TestOnly
 {
 }

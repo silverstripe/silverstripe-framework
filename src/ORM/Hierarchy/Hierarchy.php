@@ -23,8 +23,8 @@ use SilverStripe\View\ViewableData;
  * obvious example of this is SiteTree.
  *
  * @property int $ParentID
- * @property DataObject|Hierarchy $owner
  * @method DataObject Parent()
+ * @extends DataExtension<DataObject|static>
  */
 class Hierarchy extends DataExtension
 {
@@ -119,8 +119,7 @@ class Hierarchy extends DataExtension
     public function validate(ValidationResult $validationResult)
     {
         // The object is new, won't be looping.
-        /** @var DataObject|Hierarchy $owner */
-        $owner = $this->owner;
+        $owner = $this->getOwner();
         if (!$owner->ID) {
             return;
         }

@@ -14,7 +14,7 @@ use Exception;
  * An extension that adds additional functionality to a {@link DataObject}.
  *
  * @template T of DataObject
- * @extends Extension<T|static>
+ * @extends Extension<T>
  */
 abstract class DataExtension extends Extension
 {
