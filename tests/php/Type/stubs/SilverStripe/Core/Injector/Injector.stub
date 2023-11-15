@@ -1,0 +1,62 @@
+<?php
+
+namespace SilverStripe\Core\Injector;
+
+use Psr\Container\ContainerInterface;
+
+class Injector implements ContainerInterface
+{
+    /**
+     * Get a named managed object
+     *
+     * Will first check to see if the item has been registered as a configured service/bean
+     * and return that if so.
+     *
+     * Next, will check to see if there's any registered configuration for the given type
+     * and will then try and load that
+     *
+     * Failing all of that, will just return a new instance of the specified object.
+     *
+     * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
+     *
+     * @template T of object
+     * @param class-string<T>|string $name The name of the service to retrieve. If not a registered
+     * service, then a class of the given name is instantiated
+     * @param bool $asSingleton If set to false a new instance will be returned.
+     * If true a singleton will be returned unless the spec is type=prototype'
+     * @param array $constructorArgs Args to pass in to the constructor. Note: Ignored for singletons
+     * @return T|mixed Instance of the specified object
+     * @phpstan-return ($name is class-string<T> ? T : mixed)
+     */
+    public function get($name, $asSingleton = true, $constructorArgs = [])
+    {
+    }
+
+    /**
+     * Similar to get() but always returns a new object of the given type
+     *
+     * Additional parameters are passed through as
+     *
+     * @template T of object
+     * @param class-string<T>|string $name
+     * @param mixed ...$argument arguments to pass to the constructor
+     * @return T|mixed A new instance of the specified object
+     * @phpstan-return ($name is class-string<T> ? T : mixed) A new instance of the specified object
+     */
+    public function create($name, $argument = null)
+    {
+    }
+
+    /**
+     * Creates an object with the supplied argument array
+     *
+     * @template T
+     * @param class-string<T>|string $name Name of the class to create an object of
+     * @param array $constructorArgs Arguments to pass to the constructor
+     * @return T|mixed
+     * @phpstan-return ($name is class-string<T> ? T : mixed)
+     */
+    public function createWithArgs($name, $constructorArgs)
+    {
+    }
+}

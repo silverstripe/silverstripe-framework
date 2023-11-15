@@ -24,4 +24,12 @@ class InjectorTypeTest extends TypeInferenceTestCase
     {
         $this->assertFileAsserts($assertType, $file, ...$args);
     }
+
+    /**
+     * @return string[]
+     */
+    public static function getAdditionalConfigFiles(): array
+    {
+        return [__DIR__ . '/phpstan.neon.dist'];
+    }
 }

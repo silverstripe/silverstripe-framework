@@ -1,3 +1,5 @@
 parameters:
-	bootstrapFiles:
-		- phpstan-bootstrap.php
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    stubFiles:
+        - stubs/SilverStripe/Core/Injector/Injector.stub
