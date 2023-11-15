@@ -30,10 +30,6 @@ use SilverStripe\ORM\ValidationResult;
  * {
  *   $compositeValidator->addValidator(RequiredFields::create(['AdditionalContent']));
  * }
- *
- * Class CompositeValidator
- *
- * @package SilverStripe\Forms
  */
 class CompositeValidator extends Validator
 {
@@ -159,8 +155,9 @@ class CompositeValidator extends Validator
      * The keys for the return array match the keys in the unfiltered array. You cannot assume the keys will be
      * sequential or that the first key will be ZERO.
      *
-     * @param string $className
-     * @return array|Validator[]
+     * @template T of Validator
+     * @param class-string<T> $className
+     * @return T[]
      */
     public function getValidatorsByType(string $className): array
     {
