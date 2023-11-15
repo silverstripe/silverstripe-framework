@@ -31,7 +31,7 @@ class GridFieldConfig
     use Configurable;
 
     /**
-     * @var ArrayList
+     * @var ArrayList<GridFieldComponent>
      */
     protected $components = null;
 
@@ -111,7 +111,7 @@ class GridFieldConfig
     }
 
     /**
-     * @return ArrayList Of GridFieldComponent
+     * @return ArrayList<GridFieldComponent> Of GridFieldComponent
      */
     public function getComponents()
     {
@@ -124,8 +124,9 @@ class GridFieldConfig
     /**
      * Returns all components extending a certain class, or implementing a certain interface.
      *
-     * @param string $type Class name or interface
-     * @return ArrayList Of GridFieldComponent
+     * @template T of GridFieldComponent
+     * @param class-string<T> $type Class name or interface
+     * @return ArrayList<T> Of GridFieldComponent
      */
     public function getComponentsByType($type)
     {
@@ -141,8 +142,9 @@ class GridFieldConfig
     /**
      * Returns the first available component with the given class or interface.
      *
-     * @param string $type ClassName
-     * @return GridFieldComponent
+     * @template T of GridFieldComponent
+     * @param class-string<T>|null $type ClassName
+     * @return T
      */
     public function getComponentByType($type)
     {
