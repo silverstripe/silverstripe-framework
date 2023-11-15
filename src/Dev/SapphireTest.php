@@ -464,10 +464,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * Get an object from the fixture.
      *
-     * @param string $className The data class or table name, as specified in your fixture file. Parent classes won't work
+     * @template T
+     * @param class-string<T> $className The data class or table name, as specified in your fixture file. Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
      *
      * @return DataObject
+     * @phpstan-return T
      */
     protected function objFromFixture($className, $identifier)
     {
