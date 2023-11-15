@@ -13,6 +13,8 @@ use SilverStripe\ORM\DataObject;
  * Every object instance gets its own set of extension instances,
  * meaning you can set parameters specific to the "owner instance"
  * in new Extension instances.
+ *
+ * @template T of object
  */
 abstract class Extension
 {
@@ -25,7 +27,7 @@ abstract class Extension
     /**
      * The object this extension is applied to.
      *
-     * @var Object
+     * @var T
      */
     protected $owner;
 
@@ -95,7 +97,7 @@ abstract class Extension
     /**
      * Returns the owner of this extension.
      *
-     * @return Object
+     * @return T
      */
     public function getOwner()
     {
