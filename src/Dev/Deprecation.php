@@ -234,12 +234,12 @@ class Deprecation
 
     public static function isEnabled(): bool
     {
-        if (!Director::isDev()) {
-            return false;
-        }
         if (Environment::hasEnv('SS_DEPRECATION_ENABLED')) {
             $envVar = Environment::getEnv('SS_DEPRECATION_ENABLED');
             return self::varAsBoolean($envVar);
+        }
+        if (!Director::isDev()) {
+            return false;
         }
         return static::$currentlyEnabled;
     }
