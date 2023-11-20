@@ -2,8 +2,15 @@
 
 namespace SilverStripe\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Limitable;
+use SilverStripe\ORM\Sortable;
+use SilverStripe\ORM\DataList;
 
 /**
  * Multi-line listbox field, created from a select tag.
@@ -30,6 +37,97 @@ use SilverStripe\View\ArrayData;
  */
 class ListboxField extends MultiSelectField
 {
+    // ===== NEW FUNCTIONALITY BELOW THIS LINE =====
+
+    private static array $allowed_actions = [
+        'suggest',
+    ];
+
+    private bool $lazyLoad = false;
+
+    private int $lazyLoadLimit = 10;
+
+    private string $titleField = 'Title';
+
+    public function getLazyLoad(): bool
+    {
+        return $this->lazyLoad;
+    }
+
+    public function setLazyLoad(bool $lazyLoad): static
+    {
+        $this->lazyLoad = $lazyLoad;
+        return $this;
+    }
+
+    public function getLazyLoadLimit(): int
+    {
+        return $this->lazyLoadLimit;
+    }
+
+    public function setLazyLoadLimit(int $lazyLoadLimit): static
+    {
+        $this->lazyLoadLimit = $lazyLoadLimit;
+        return $this;
+    }
+
+    public function getTitleField(): string
+    {
+        return $this->titleField;
+    }
+
+    public function setTitleField(string $titleField): static
+    {
+        $this->titleField = $titleField;
+        return $this;
+    }
+
+    /**
+     * Returns a JSON string of items, for lazy loading.
+     */
+    public function suggest(HTTPRequest $request): HTTPResponse
+    {
+        $term = $request->getVar('term');
+        $items = $this->getItems($term);
+        return HTTPResponse::create()
+            ->addHeader('Content-Type', 'application/json')
+            ->setBody(json_encode([
+                'items' => $items
+            ]));
+    }
+
+    /**
+     * Returns array representing it items used for lazy loading.
+     */
+    private function getItems(string $term): array
+    {
+        $source = $this->getSource();
+        if (is_array($source)) {
+            $list = ArrayList::create($source);
+        } else {
+            $list = $source;
+        }
+        if (!is_a($list, Filterable::class) || !is_a($list, Sortable::class) || !is_a($list, Limitable::class)) {
+            throw new InvalidArgumentException('$list must be queryable');
+        }
+        /** @var DataList|ArrayList $list */
+        $titleField = $this->getTitleField();
+        $list = $list
+            ->filter($titleField . ':PartialMatch:nocase', $term)
+            ->sort($titleField)
+            ->limit($this->getLazyLoadLimit());
+        $items = [];
+        $titleField = $this->getTitleField();
+        foreach ($list->map('ID', $titleField)->values() as $title) {
+            $items[$title] = [
+                'Title' => $title,
+                'Value' => $title,
+            ];
+        }
+        return array_values($items);
+    }
+
+    // ===== NEW FUNCTIONALITY ABOVE THIS LINE =====
 
     /**
      * The size of the field in rows.
@@ -45,6 +143,7 @@ class ListboxField extends MultiSelectField
 
 
     protected $schemaComponent = 'ListboxField';
+
 
     /**
      * Creates a new dropdown field.
