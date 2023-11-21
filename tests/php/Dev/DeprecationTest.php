@@ -4,12 +4,14 @@ namespace SilverStripe\Dev\Tests;
 
 use PHPUnit\Framework\Error\Deprecated;
 use ReflectionMethod;
+use ReflectionProperty;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 
 class DeprecationTest extends SapphireTest
 {
@@ -444,5 +446,105 @@ class DeprecationTest extends SapphireTest
         $reflectionVarAsBoolean->setAccessible(true);
 
         $this->assertSame($expected, $reflectionVarAsBoolean->invoke(null, $rawValue));
+    }
+
+    public function provideIsEnabled()
+    {
+        return [
+            'dev, explicitly enabled' => [
+                'envMode' => 'dev',
+                'envEnabled' => true,
+                'staticEnabled' => true,
+                'expected' => true,
+            ],
+            'dev, explicitly enabled override static' => [
+                'envMode' => 'dev',
+                'envEnabled' => true,
+                'staticEnabled' => false,
+                'expected' => true,
+            ],
+            'dev, explicitly disabled override static' => [
+                'envMode' => 'dev',
+                'envEnabled' => false,
+                'staticEnabled' => true,
+                'expected' => false,
+            ],
+            'dev, explicitly disabled' => [
+                'envMode' => 'dev',
+                'envEnabled' => false,
+                'staticEnabled' => false,
+                'expected' => false,
+            ],
+            'dev, statically disabled' => [
+                'envMode' => 'dev',
+                'envEnabled' => null,
+                'staticEnabled' => true,
+                'expected' => true,
+            ],
+            'dev, statically disabled' => [
+                'envMode' => 'dev',
+                'envEnabled' => null,
+                'staticEnabled' => false,
+                'expected' => false,
+            ],
+            'live, explicitly enabled' => [
+                'envMode' => 'live',
+                'envEnabled' => true,
+                'staticEnabled' => true,
+                'expected' => false,
+            ],
+            'live, explicitly disabled' => [
+                'envMode' => 'live',
+                'envEnabled' => false,
+                'staticEnabled' => false,
+                'expected' => false,
+            ],
+            'live, statically disabled' => [
+                'envMode' => 'live',
+                'envEnabled' => null,
+                'staticEnabled' => true,
+                'expected' => false,
+            ],
+            'live, statically disabled' => [
+                'envMode' => 'live',
+                'envEnabled' => null,
+                'staticEnabled' => false,
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideIsEnabled
+     */
+    public function testIsEnabled(string $envMode, ?bool $envEnabled, bool $staticEnabled, bool $expected)
+    {
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        $origMode = $kernel->getEnvironment();
+        $origEnvEnabled = Environment::getEnv('SS_DEPRECATION_ENABLED');
+        $reflectionEnabled = new ReflectionProperty(Deprecation::class, 'currentlyEnabled');
+        $reflectionEnabled->setAccessible(true);
+        $origStaticEnabled = $reflectionEnabled->getValue();
+
+        try {
+            $kernel->setEnvironment($envMode);
+            Environment::setEnv('SS_DEPRECATION_ENABLED', $envEnabled);
+            $this->setEnabledViaStatic($staticEnabled);
+            $this->assertSame($expected, Deprecation::isEnabled());
+        } finally {
+            $kernel->setEnvironment($origMode);
+            Environment::setEnv('SS_DEPRECATION_ENABLED', $origEnvEnabled);
+            $this->setEnabledViaStatic($origStaticEnabled);
+        }
+    }
+
+    private function setEnabledViaStatic(bool $enabled): void
+    {
+        if ($enabled) {
+            Deprecation::enable();
+        } else {
+            Deprecation::disable();
+        }
     }
 }
