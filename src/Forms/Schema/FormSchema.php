@@ -9,6 +9,7 @@ use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\ValidationResult;
+use LogicException;
 
 /**
  * Represents a {@link Form} as structured data which allows a frontend library to render it.
@@ -112,7 +113,27 @@ class FormSchema
             $schema['fields'][] = $field->getSchemaData();
         }
 
+        // Validate there are react components for all fields
+        // Note 'actions' (FormActions) are always valid because FormAction.schemaComponent has a default value
+        $this->recursivelyValidateSchemaData($schema['fields']);
+
         return $schema;
+    }
+
+    private function recursivelyValidateSchemaData(array $schemaData)
+    {
+        foreach ($schemaData as $data) {
+            if (!$data['schemaType'] && !$data['component']) {
+                $name = $data['name'];
+                $message = "Could not find a react component for field \"$name\"."
+                    . "Replace or remove the field instance from the field list,"
+                    . ' or update the field class and set the schemaDataType or schemaComponent property.';
+                throw new LogicException($message);
+            }
+            if (array_key_exists('children', $data)) {
+                $this->recursivelyValidateSchemaData($data['children']);
+            }
+        }
     }
 
     /**
