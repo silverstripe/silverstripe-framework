@@ -491,8 +491,8 @@ class Requirements_Backend
      * @param string $script The script content as a string (without enclosing `<script>` tag)
      * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
      * @param array $options List of options. Available options include:
-     * - 'provides' : List of scripts files included in this file
-     * - 'async' : Boolean value to set async attribute to script tag
+     * - 'type' : Specifies the type of script
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
     public function customScript($script, $uniquenessID = null, $options = [])
     {
