@@ -14,6 +14,8 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\PopoverField;
+use SilverStripe\Forms\FormField;
+use LogicException;
 
 class FormSchemaTest extends SapphireTest
 {
@@ -37,6 +39,49 @@ class FormSchemaTest extends SapphireTest
         $schema = $formSchema->getSchema($form);
         $this->assertIsArray($schema);
         $this->assertEquals($expected, $schema);
+    }
+
+    /**
+     * @dataProvider provideGetSchemaException
+     */
+    public function testGetSchemaException(string $field, bool $expectException): void
+    {
+        $fields = [];
+        if ($field === '<HasComponent>') {
+            $fields[] = (new FormField('TestField'))->setSchemaComponent('MyPretendComponent');
+        } elseif ($field === '<HasDataType>') {
+            $fields[] = new class('TestField') extends FormField {
+                protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_CUSTOM;
+            };
+        } elseif ($field === '<None>') {
+            $fields[] = new FormField('TestField');
+        }
+        $form = new Form(null, 'TestForm', new FieldList($fields));
+        $formSchema = new FormSchema($form);
+        if ($expectException) {
+            $this->expectException(LogicException::class);
+        } else {
+            $this->expectNotToPerformAssertions();
+        }
+        $formSchema->getSchema($form);
+    }
+
+    public function provideGetSchemaException(): array
+    {
+        return [
+            [
+                'field' => '<HasComponent>',
+                'expectException' => false,
+            ],
+            [
+                'field' => '<HasDataType>',
+                'expectException' => false,
+            ],
+            [
+                'field' => '<None>',
+                'expectException' => true,
+            ],
+        ];
     }
 
     public function testGetState()
