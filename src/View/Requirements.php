@@ -136,10 +136,13 @@ class Requirements implements Flushable
      *
      * @param string     $script       The script content as a string (without enclosing `<script>` tag)
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+     * @param array $options List of options. Available options include:
+     * - 'type' : Specifies the type of script
+     * - 'crossorigin' : Cross-origin policy for the resource
      */
-    public static function customScript($script, $uniquenessID = null)
+    public static function customScript($script, $uniquenessID = null, $options = [])
     {
-        self::backend()->customScript($script, $uniquenessID);
+        self::backend()->customScript($script, $uniquenessID, $options);
     }
 
     /**
