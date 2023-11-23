@@ -2,14 +2,20 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use LogicException;
+use ReflectionMethod;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\ArrayDataWithID;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
@@ -17,6 +23,8 @@ use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PolymorphicPeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 
 class GridFieldDetailFormTest extends FunctionalTest
 {
@@ -459,5 +467,122 @@ class GridFieldDetailFormTest extends FunctionalTest
         );
 
         $this->autoFollowRedirection = $origAutoFollow;
+    }
+
+    public function provideGetRecordFromRequestFindExisting()
+    {
+        return [
+            'No records' => [
+                'data' => [],
+                'hasRecord' => false,
+            ],
+            'Records exist but without ID field' => [
+                'data' => [new ArrayDataWithID()],
+                'hasRecord' => false,
+            ],
+            'Record exists with matching ID' => [
+                'data' => [new ArrayDataWithID(['ID' => 32])],
+                'hasRecord' => true,
+            ],
+            'Record exists, no matching ID' => [
+                'data' => [new ArrayDataWithID(['ID' => 1])],
+                'hasRecord' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetRecordFromRequestFindExisting
+     */
+    public function testGetRecordFromRequestFindExisting(array $data, bool $hasRecord)
+    {
+        $controller = new TestController();
+        $form = $controller->Form(null, new ArrayList($data));
+        $gridField = $form->Fields()->dataFieldByName('testfield');
+        if (empty($data)) {
+            $gridField->setModelClass(ArrayDataWithID::class);
+        }
+        $component = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $request = new HTTPRequest('GET', $gridField->Link('item/32'));
+        $request->match(Controller::join_links($gridField->Link(), 'item/$ID'));
+
+        $reflectionMethod = new ReflectionMethod($component, 'getRecordFromRequest');
+        $reflectionMethod->setAccessible(true);
+        $this->assertSame($hasRecord, (bool) $reflectionMethod->invoke($component, $gridField, $request));
+    }
+
+    public function provideGetRecordFromRequestCreateNew()
+    {
+        // Note that in all of these scenarios a new record gets created, so it *shouldn't* matter what's already in there.
+        return [
+            'No records' => [
+                'data' => [],
+            ],
+            'Records exist but without ID field' => [
+                'data' => [new ArrayDataWithID()],
+            ],
+            'Record exists with ID field' => [
+                'data' => [new ArrayDataWithID(['ID' => 32])],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetRecordFromRequestCreateNew
+     */
+    public function testGetRecordFromRequestCreateNew(array $data)
+    {
+        $controller = new TestController();
+        $form = $controller->Form(null, new ArrayList($data));
+        $gridField = $form->Fields()->dataFieldByName('testfield');
+        if (empty($data)) {
+            $gridField->setModelClass(ArrayDataWithID::class);
+        }
+        $component = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $request = new HTTPRequest('GET', $gridField->Link('item/new'));
+        $request->match(Controller::join_links($gridField->Link(), 'item/$ID'));
+
+        $reflectionMethod = new ReflectionMethod($component, 'getRecordFromRequest');
+        $reflectionMethod->setAccessible(true);
+        $this->assertEquals(new ArrayDataWithID(['ID' => 0]), $reflectionMethod->invoke($component, $gridField, $request));
+    }
+
+    public function provideGetRecordFromRequestWithoutData()
+    {
+        // Note that in all of these scenarios a new record gets created, so it *shouldn't* matter what's already in there.
+        return [
+            'No records' => [
+                'data' => [],
+            ],
+            'Records exist but without ID field' => [
+                'data' => [new ArrayData()],
+            ],
+            'Record exists with ID field' => [
+                'data' => [new ArrayData(['ID' => 32])],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetRecordFromRequestWithoutData
+     */
+    public function testGetRecordFromRequestWithoutData(array $data)
+    {
+        $controller = new TestController();
+        $form = $controller->Form(null, new ArrayList($data));
+        $gridField = $form->Fields()->dataFieldByName('testfield');
+        if (empty($data)) {
+            $gridField->setModelClass(ArrayData::class);
+        }
+        $component = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $request = new HTTPRequest('GET', $gridField->Link('item/new'));
+        $request->match(Controller::join_links($gridField->Link(), 'item/$ID'));
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(ArrayData::class . ' must have an ID field.');
+
+        $reflectionMethod = new ReflectionMethod($component, 'getRecordFromRequest');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($component, $gridField, $request);
     }
 }

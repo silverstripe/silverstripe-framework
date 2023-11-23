@@ -18,6 +18,7 @@ use SilverStripe\ORM\Filters\EndsWithFilter;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Search\SearchContext;
+use SilverStripe\View\ArrayData;
 
 class SearchContextTest extends SapphireTest
 {
@@ -526,5 +527,19 @@ class SearchContextTest extends SapphireTest
         $this->assertCount(0, $results);
         $results = $context->getResults(['PartialMatchField' => 'an']);
         $this->assertCount(1, $results);
+    }
+
+    public function testGetSearchFieldsThrowsException()
+    {
+        $modelClass = ArrayData::class;
+        $context = new SearchContext($modelClass);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Cannot dynamically determine search fields. Pass the fields to setFields()'
+            . " or implement a scaffoldSearchFields() method on {$modelClass}"
+        );
+
+        $context->getSearchFields();
     }
 }

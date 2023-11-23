@@ -3,6 +3,8 @@
 namespace SilverStripe\Forms\Tests\GridField;
 
 use League\Csv\Reader;
+use LogicException;
+use ReflectionMethod;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team;
 use SilverStripe\ORM\DataList;
@@ -12,8 +14,10 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ArrayData;
 
 class GridFieldExportButtonTest extends SapphireTest
 {
@@ -155,13 +159,16 @@ class GridFieldExportButtonTest extends SapphireTest
     public function testArrayListInput()
     {
         $button = new GridFieldExportButton();
+        $columns = new GridFieldDataColumns();
+        $columns->setDisplayFields(['ID' => 'ID']);
+        $this->gridField->getConfig()->addComponent($columns);
         $this->gridField->getConfig()->addComponent(new GridFieldPaginator());
 
         //Create an ArrayList 1 greater the Paginator's default 15 rows
         $arrayList = new ArrayList();
         for ($i = 1; $i <= 16; $i++) {
-            $dataobject = new DataObject(['ID' => $i]);
-            $arrayList->add($dataobject);
+            $datum = new ArrayData(['ID' => $i]);
+            $arrayList->add($datum);
         }
         $this->gridField->setList($arrayList);
 
@@ -190,6 +197,25 @@ class GridFieldExportButtonTest extends SapphireTest
             "$bom\"Rugby Team Number\"\r\n2\r\n0\r\n",
             (string) $csvReader
         );
+    }
+
+    public function testGetExportColumnsForGridFieldThrowsException()
+    {
+        $component = new GridFieldExportButton();
+        $gridField = new GridField('dummy', 'dummy', new ArrayList());
+        $gridField->getConfig()->removeComponentsByType(GridFieldDataColumns::class);
+        $modelClass = ArrayData::class;
+        $gridField->setModelClass($modelClass);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Cannot dynamically determine columns. Add a GridFieldDataColumns component to your GridField'
+            . " or implement a summaryFields() method on $modelClass"
+        );
+
+        $reflectionMethod = new ReflectionMethod($component, 'getExportColumnsForGridField');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invoke($component, $gridField);
     }
 
     protected function createReader($string)

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use LogicException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -9,11 +10,14 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\View\ArrayData;
 
 class GridFieldAddNewButtonTest extends SapphireTest
 {
@@ -74,6 +78,24 @@ class GridFieldAddNewButtonTest extends SapphireTest
             );
 
         $this->mockButtonFragments($list, null);
+    }
+
+    public function testGetHTMLFragmentsThrowsException()
+    {
+        $component = new GridFieldAddNewButton();
+        $config = new GridFieldConfig_Base();
+        $config->addComponent($component);
+        $gridField = new GridField('dummy', 'dummy', new ArrayList(), $config);
+        $modelClass = ArrayData::class;
+        $gridField->setModelClass($modelClass);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            GridFieldAddNewButton::class . ' cannot be used with models that do not implement canCreate().'
+            . " Remove this component from your GridField or implement canCreate() on $modelClass"
+        );
+
+        $component->getHTMLFragments($gridField);
     }
 
     protected function mockButtonFragments(SS_List $list, $parent = null)

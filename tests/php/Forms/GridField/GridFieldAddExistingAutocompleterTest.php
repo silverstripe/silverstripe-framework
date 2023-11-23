@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use LogicException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\CSSContentParser;
@@ -17,6 +18,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Stadium;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest
 {
@@ -165,6 +167,118 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
                 $result ?? []
             )
         );
+    }
+
+    public function testGetHTMLFragmentsNeedsDataObject()
+    {
+        $component = new GridFieldAddExistingAutocompleter();
+        $gridField = $this->getGridFieldForComponent($component);
+        $list = new ArrayList();
+        $dataClass = ArrayData::class;
+        $list->setDataClass($dataClass);
+        $gridField->setList($list);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            GridFieldAddExistingAutocompleter::class
+            . " must be used with DataObject subclasses. Found '$dataClass'"
+        );
+        // Calling the method will throw an exception.
+        $component->getHTMLFragments($gridField);
+    }
+
+    public function testGetManipulatedDataNeedsDataObject()
+    {
+        $component = new GridFieldAddExistingAutocompleter();
+        $gridField = $this->getGridFieldForComponent($component);
+        $list = new ArrayList();
+        $dataClass = ArrayData::class;
+        $list->setDataClass($dataClass);
+        $gridField->setList($list);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            GridFieldAddExistingAutocompleter::class
+            . " must be used with DataObject subclasses. Found '$dataClass'"
+        );
+
+        // Calling the method will throw an exception.
+        $component->getManipulatedData($gridField, $list);
+    }
+
+    public function testDoSearchNeedsDataObject()
+    {
+        $component = new GridFieldAddExistingAutocompleter();
+        $gridField = $this->getGridFieldForComponent($component);
+        $list = new ArrayList();
+        $dataClass = ArrayData::class;
+        $list->setDataClass($dataClass);
+        $gridField->setList($list);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            GridFieldAddExistingAutocompleter::class
+            . " must be used with DataObject subclasses. Found '$dataClass'"
+        );
+
+        // Calling the method will throw an exception.
+        $component->doSearch($gridField, new HTTPRequest('GET', ''));
+    }
+
+    public function testScaffoldSearchFieldsNeedsDataObject()
+    {
+        $component = new GridFieldAddExistingAutocompleter();
+        $gridField = $this->getGridFieldForComponent($component);
+        $list = new ArrayList();
+        $dataClass = ArrayData::class;
+        $list->setDataClass($dataClass);
+        $gridField->setList($list);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            GridFieldAddExistingAutocompleter::class
+            . " must be used with DataObject subclasses. Found '$dataClass'"
+        );
+
+        // Calling the method will either throw an exception or not.
+        // The test pass/failure is explicitly about whether an exception is thrown.
+        $component->scaffoldSearchFields($dataClass);
+    }
+
+    public function testGetPlaceholderTextNeedsDataObject()
+    {
+        $component = new GridFieldAddExistingAutocompleter();
+        $gridField = $this->getGridFieldForComponent($component);
+        $list = new ArrayList();
+        $dataClass = ArrayData::class;
+        $list->setDataClass($dataClass);
+        $gridField->setList($list);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            GridFieldAddExistingAutocompleter::class
+            . " must be used with DataObject subclasses. Found '$dataClass'"
+        );
+
+        // Calling the method will either throw an exception or not.
+        // The test pass/failure is explicitly about whether an exception is thrown.
+        $component->getPlaceholderText($dataClass);
+    }
+
+    public function testSetPlaceholderTextDoesntNeedDataObject()
+    {
+        $component = new GridFieldAddExistingAutocompleter();
+        $gridField = $this->getGridFieldForComponent($component);
+        $list = new ArrayList();
+        $dataClass = ArrayData::class;
+        $list->setDataClass($dataClass);
+        $gridField->setList($list);
+
+        // Prevent from being marked risky.
+        // This test passes if there's no exception thrown.
+        $this->expectNotToPerformAssertions();
+
+        $component->setPlaceholderText('');
     }
 
     protected function getGridFieldForComponent($component)

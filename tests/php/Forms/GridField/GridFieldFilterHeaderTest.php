@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use LogicException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
@@ -20,6 +21,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TeamGroup;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ArrayData;
 
 class GridFieldFilterHeaderTest extends SapphireTest
 {
@@ -225,5 +227,21 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $htmlFragment = $component->getHTMLFragments($gridField);
 
         $this->assertNull($htmlFragment);
+    }
+
+    public function testGetDisplayFieldsThrowsException()
+    {
+        $component = new GridFieldFilterHeader();
+        $gridField = new GridField('dummy', 'dummy', new ArrayList());
+        $modelClass = ArrayData::class;
+        $gridField->setModelClass($modelClass);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Cannot dynamically instantiate SearchContext. Pass the SearchContext to setSearchContext()'
+            . " or implement a getDefaultSearchContext() method on $modelClass"
+        );
+
+        $component->getSearchContext($gridField);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use LogicException;
+use ReflectionMethod;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
@@ -12,6 +14,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
@@ -22,6 +25,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\View\ArrayData;
 
 class GridFieldDeleteActionTest extends SapphireTest
 {
@@ -229,5 +233,71 @@ class GridFieldDeleteActionTest extends SapphireTest
 
         $group = $action->getGroup($gridField, $this->list->first(), 'dummy');
         $this->assertNull($group, 'A menu group does not exist when the user cannot delete');
+    }
+
+    public function provideHandleActionThrowsException()
+    {
+        return [
+            'unlinks relation' => [true],
+            'deletes related record' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideHandleActionThrowsException
+     */
+    public function testHandleActionThrowsException(bool $unlinkRelation)
+    {
+        $component = new GridFieldDeleteAction();
+        $config = new GridFieldConfig_Base();
+        $config->addComponent($component);
+        $gridField = new GridField('dummy', 'dummy', new ArrayList([new ArrayData(['ID' => 1])]), $config);
+        $modelClass = ArrayData::class;
+        $gridField->setModelClass($modelClass);
+
+        $this->expectException(LogicException::class);
+        $permissionMethod = $unlinkRelation ? 'canEdit' : 'canDelete';
+        $this->expectExceptionMessage(
+            GridFieldDeleteAction::class . " cannot be used with models that don't implement {$permissionMethod}()."
+            . " Remove this component from your GridField or implement {$permissionMethod}() on $modelClass"
+        );
+
+        // Calling the method will throw an exception.
+        $secondArg = $unlinkRelation ? 'unlinkrelation' : 'deleterecord';
+        $component->handleAction($gridField, $secondArg, ['RecordID' => 1], []);
+    }
+
+    public function provideGetRemoveActionThrowsException()
+    {
+        return [
+            'removes relation' => [true],
+            'deletes related record' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetRemoveActionThrowsException
+     */
+    public function testGetRemoveActionThrowsException(bool $removeRelation)
+    {
+        $component = new GridFieldDeleteAction();
+        $component->setRemoveRelation($removeRelation);
+        $config = new GridFieldConfig_Base();
+        $config->addComponent($component);
+        $gridField = new GridField('dummy', 'dummy', new ArrayList([new ArrayData(['ID' => 1])]), $config);
+        $modelClass = ArrayData::class;
+        $gridField->setModelClass($modelClass);
+
+        $this->expectException(LogicException::class);
+        $permissionMethod = $removeRelation ? 'canEdit' : 'canDelete';
+        $this->expectExceptionMessage(
+            GridFieldDeleteAction::class . " cannot be used with models that don't implement {$permissionMethod}()."
+            . " Remove this component from your GridField or implement {$permissionMethod}() on $modelClass"
+        );
+
+        // Calling the method will throw an exception.
+        $reflectionMethod = new ReflectionMethod($component, 'getRemoveAction');
+        $reflectionMethod->setAccessible(true);
+        $reflectionMethod->invokeArgs($component, [$gridField, new ArrayData(), '']);
     }
 }
