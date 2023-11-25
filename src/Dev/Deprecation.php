@@ -234,14 +234,23 @@ class Deprecation
 
     public static function isEnabled(): bool
     {
-        if (Environment::hasEnv('SS_DEPRECATION_ENABLED')) {
-            $envVar = Environment::getEnv('SS_DEPRECATION_ENABLED');
-            return self::varAsBoolean($envVar);
+        $hasEnv = Environment::hasEnv('SS_DEPRECATION_ENABLED');
+
+        // Return early if disabled
+        if ($hasEnv && !Environment::getEnv('SS_DEPRECATION_ENABLED')) {
+            return false;
         }
+        if (!$hasEnv && !static::$currentlyEnabled) {
+            // Static property is ignored if SS_DEPRECATION_ENABLED was set
+            return false;
+        }
+
+        // If it's enabled, explicitly don't allow for non-dev environments
         if (!Director::isDev()) {
             return false;
         }
-        return static::$currentlyEnabled;
+
+        return true;
     }
 
     /**
