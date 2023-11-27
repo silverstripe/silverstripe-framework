@@ -1403,6 +1403,7 @@ EOS
         $this->setupRequirements($backend);
 
         $backend->javascript('javascript/RequirementsTest_a.js', ['integrity' => 'abc', 'crossorigin' => 'use-credentials']);
+        $backend->customScriptWithAttributes("//TEST", ['type' => 'module', 'crossorigin' => 'anonymous']);
         $backend->css('css/RequirementsTest_a.css', null, ['integrity' => 'def', 'crossorigin' => 'anonymous']);
         $html = $backend->includeInHTML(self::$html_template);
 
@@ -1412,6 +1413,14 @@ EOS
             $html,
             'javascript has correct sri attributes'
         );
+
+        /* Custom Javascript has correct attribute */
+        $this->assertMatchesRegularExpression(
+            '#<script type="module" crossorigin="anonymous"#',
+            $html,
+            'custom javascript has correct sri attributes'
+        );
+
 
         /* CSS has correct attributes */
         $this->assertMatchesRegularExpression(

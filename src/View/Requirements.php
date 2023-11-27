@@ -141,6 +141,19 @@ class Requirements implements Flushable
     {
         self::backend()->customScript($script, $uniquenessID);
     }
+    /**
+     * Register the given Javascript code into the list of requirements with optional tag
+     * attributes.
+     *
+     * @param string     $script       The script content as a string (without enclosing `<script>` tag)
+     * @param array $options List of options. Available options include:
+     * - 'type' : Specifies the type of script
+     * - 'crossorigin' : Cross-origin policy for the resource
+     * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+     */
+    public static function customScriptWithAttributes($script, $options = [], $uniquenessID = null){
+        self::backend()->customScriptWithAttributes($script, $options, $uniquenessID);
+    }
 
     /**
      * Return all registered custom scripts

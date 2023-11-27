@@ -494,9 +494,46 @@ class Requirements_Backend
     public function customScript($script, $uniquenessID = null)
     {
         if ($uniquenessID) {
-            $this->customScript[$uniquenessID] = $script;
+            $this->customScript[$uniquenessID]['content'] = $script;
         } else {
-            $this->customScript[] = $script;
+            $this->customScript[]['content'] = $script;
+        }
+    }
+
+    /**
+     * Register the given Javascript code into the list of requirements with optional tag
+     * attributes.
+     *
+     * @param string     $script       The script content as a string (without enclosing `<script>` tag)
+     * @param array $options List of options. Available options include:
+     * - 'type' : Specifies the type of script
+     * - 'crossorigin' : Cross-origin policy for the resource
+     * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+     */
+    public function customScriptWithAttributes($script, $options = [], $uniquenessID = null){
+        // Get type
+        $type = null;
+        if (isset($this->customScript[$uniquenessID]['type'])) {
+            $type = $this->customScript[$uniquenessID]['type'];
+        }
+        if (isset($options['type'])) {
+            $type = $options['type'];
+        }
+
+        $crossorigin = $options['crossorigin'] ?? null;
+
+        if ($uniquenessID) {
+            $this->customScript[$uniquenessID] = [
+                'content' => $script,
+                'type' => $type,
+                'crossorigin' => $crossorigin
+            ];
+        } else {
+            $this->customScript[] = [
+                'content' => $script,
+                'type' => $type,
+                'crossorigin' => $crossorigin
+            ];
         }
     }
 
@@ -792,10 +829,17 @@ class Requirements_Backend
 
         // Add all inline JavaScript *after* including external files they might rely on
         foreach ($this->getCustomScripts() as $script) {
+            // Build html attributes
+            $htmlAttributes = [
+                'type' => isset($script['type']) ? $script['type'] : "application/javascript"
+            ];
+            if (!empty($script['crossorigin'])) {
+                $htmlAttributes['crossorigin'] = $script['crossorigin'];
+            }
             $jsRequirements .= HTML::createTag(
                 'script',
-                [ 'type' => 'application/javascript' ],
-                "//<![CDATA[\n{$script}\n//]]>"
+                $htmlAttributes,
+                "//<![CDATA[\n{$script['content']}\n//]]>"
             );
             $jsRequirements .= "\n";
         }
