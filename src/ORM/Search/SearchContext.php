@@ -130,17 +130,17 @@ class SearchContext
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
      * @param array|bool|string $sort Database column to sort on.
      *  Falls back to {@link DataObject::$default_sort} if not provided.
-     * @param array|null|string $limit
+     * @param int|array|null $limit
      * @param DataList $existingQuery
      * @return DataList
      * @throws Exception
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
     {
-        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['array', 'NULL', 'string']))) {
+        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['integer', 'array', 'NULL']))) {
             Deprecation::notice(
                 '5.1.0',
-                '$limit should be type of array|string|null'
+                '$limit should be type of int|array|null'
             );
             $limit = null;
         }
@@ -172,7 +172,7 @@ class SearchContext
      * Prepare the query to begin searching
      *
      * @param array|bool|string $sort Database column to sort on.
-     * @param array|null|string $limit
+     * @param int|array|null $limit
      */
     private function prepareQuery($sort, $limit, ?DataList $existingQuery): DataList
     {
