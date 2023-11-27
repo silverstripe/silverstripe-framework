@@ -554,7 +554,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         );
 
         $controller = $this->getToplevelController();
-        $controller->getResponse()->addHeader('X-Status', $message);
+        $response = $controller->getResponse();
+        if ($response) {
+            $response->addHeader('X-Status', $message);
+        }
 
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
@@ -719,8 +722,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         } elseif ($this->gridField->getList()->byID($this->record->ID)) {
             // Return new view, as we can't do a "virtual redirect" via the CMS Ajax
             // to the same URL (it assumes that its content is already current, and doesn't reload)
-            $message = $controller->getResponse()->getHeader('X-Status') ?? rawurlencode(_t(__CLASS__ . '.SAVEDUP', 'Saved successfully') ?? '');
-            $controller->getResponse()->addHeader('X-Status', $message);
+            $response = $controller->getResponse();
+            if ($response) {
+                $message = $response->getHeader('X-Status') ?? rawurlencode(_t(__CLASS__ . '.SAVEDUP', 'Saved successfully') ?? '');
+                $response->addHeader('X-Status', $message);
+            }
             return $this->edit($controller->getRequest());
         } else {
             // We might be able to redirect to open the record in a different view
