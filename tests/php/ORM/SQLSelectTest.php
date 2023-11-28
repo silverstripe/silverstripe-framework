@@ -1194,6 +1194,7 @@ class SQLSelectTest extends SapphireTest
                 'selectFrom' => '"SQLSelectTestCteRecursive"',
                 'extraManipulations' => [
                     'addInnerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                    'addOrderBy' => ['hierarchy.parent_id', 'DESC'],
                 ],
                 'expected' => [
                     ['Title' => 'child1'],
@@ -1223,6 +1224,7 @@ class SQLSelectTest extends SapphireTest
                 'selectFrom' => '"SQLSelectTestCteRecursive"',
                 'extraManipulations' => [
                     'addInnerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                    'addOrderBy' => ['hierarchy.parent_id', 'DESC'],
                 ],
                 'expected' => [
                     ['Title' => 'child1'],
