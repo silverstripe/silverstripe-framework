@@ -1174,13 +1174,19 @@ class SQLSelectTest extends SapphireTest
                 'name' => 'hierarchy',
                 'query' => (
                     new SQLSelect(
-                        ['parent_id' => '"SQLSelectTestCteRecursive"."ParentID"'],
+                        [
+                            'parent_id' => '"SQLSelectTestCteRecursive"."ParentID"',
+                            'sort_order' => 0,
+                        ],
                         "SQLSelectTestCteRecursive",
                         [['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."Title" = ?' => 'child of child1']]
                     )
                 )->addUnion(
                     new SQLSelect(
-                        '"SQLSelectTestCteRecursive"."ParentID"',
+                        [
+                            '"SQLSelectTestCteRecursive"."ParentID"',
+                            'sort_order + 1',
+                        ],
                         // Note that we select both the CTE and the real table in the FROM statement.
                         // We could also select one of these and JOIN on the other.
                         ['"hierarchy"', '"SQLSelectTestCteRecursive"'],
@@ -1194,6 +1200,7 @@ class SQLSelectTest extends SapphireTest
                 'selectFrom' => '"SQLSelectTestCteRecursive"',
                 'extraManipulations' => [
                     'addInnerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                    'setOrderBy' => ['sort_order', 'ASC'],
                 ],
                 'expected' => [
                     ['Title' => 'child1'],
@@ -1205,24 +1212,31 @@ class SQLSelectTest extends SapphireTest
                 'name' => 'hierarchy',
                 'query' => (
                     new SQLSelect(
-                        '"SQLSelectTestCteRecursive"."ParentID"',
+                        [
+                            '"SQLSelectTestCteRecursive"."ParentID"',
+                            0
+                        ],
                         "SQLSelectTestCteRecursive",
                         [['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."Title" = ?' => 'child of child1']]
                     )
                 )->addUnion(
                     new SQLSelect(
-                        '"SQLSelectTestCteRecursive"."ParentID"',
+                        [
+                            '"SQLSelectTestCteRecursive"."ParentID"',
+                            'sort_order + 1'
+                        ],
                         ['"hierarchy"', '"SQLSelectTestCteRecursive"'],
                         ['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"']
                     ),
                     SQLSelect::UNION_ALL
                 ),
-                'cteFields' => ['parent_id'],
+                'cteFields' => ['parent_id', 'sort_order'],
                 'recursive' => true,
                 'selectFields' => ['"SQLSelectTestCteRecursive"."Title"'],
                 'selectFrom' => '"SQLSelectTestCteRecursive"',
                 'extraManipulations' => [
                     'addInnerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                    'setOrderBy' => ['sort_order', 'ASC'],
                 ],
                 'expected' => [
                     ['Title' => 'child1'],
