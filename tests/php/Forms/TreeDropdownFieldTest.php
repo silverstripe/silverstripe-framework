@@ -10,6 +10,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject;
@@ -50,6 +51,22 @@ class TreeDropdownFieldTest extends SapphireTest
             'FileTest-folder1/FileTest-folder1-subfolder1/',
             $schema['data']['valueObject']['titlePath']
         );
+    }
+
+    public function testGetSchemaValidation(): void
+    {
+        // field is not required
+        $field = new TreeDropdownField('TestTree', 'Test tree', Folder::class);
+        $expected = [];
+        $this->assertSame($expected, $field->getSchemaValidation());
+        // field is required
+        $fieldList = new FieldList([$field]);
+        $validator = new RequiredFields('TestTree');
+        new Form(null, null, $fieldList, null, $validator);
+        $expected = [
+            'required' => ['extraEmptyValues' => ['0']],
+        ];
+        $this->assertSame($expected, $field->getSchemaValidation());
     }
 
     public function testTreeSearchJson()
