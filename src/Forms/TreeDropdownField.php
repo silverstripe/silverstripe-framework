@@ -250,7 +250,12 @@ class TreeDropdownField extends FormField
 
         $this->addExtraClass('single');
 
-        parent::__construct($name, $title);
+        // Set a default value of 0 instead of null
+        // Because TreedropdownField requires SourceObject to have the Hierarchy extension, make the default
+        // value the same as the default value for a RelationID, which is 0.
+        $value = 0;
+
+        parent::__construct($name, $title, $value);
     }
 
     /**
@@ -983,5 +988,17 @@ class TreeDropdownField extends FormField
     {
         $this->showSelectedPath = $showSelectedPath;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSchemaValidation()
+    {
+        $validationList = parent::getSchemaValidation();
+        if (array_key_exists('required', $validationList)) {
+            $validationList['required'] = ['extraEmptyValues' => ['0']];
+        }
+        return $validationList;
     }
 }

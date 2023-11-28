@@ -116,8 +116,15 @@ class RequiredFields extends Validator
                     $error = (count($value ?? [])) ? false : true;
                 }
             } else {
-                // assume a string or integer
-                $error = (strlen($value ?? '')) ? false : true;
+                $stringValue = (string) $value;
+                if ($formField instanceof TreeDropdownField) {
+                    // test for blank string as well as '0' because older versions of silverstripe/admin FormBuilder
+                    // forms created using redux-form would have a value of null for unsaved records
+                    // the null value will have been converted to '' by the time it gets to this point
+                    $error = in_array($stringValue, ['0', '']);
+                } else {
+                    $error = strlen($stringValue) > 0 ? false : true;
+                }
             }
 
             if ($formField && $error) {
