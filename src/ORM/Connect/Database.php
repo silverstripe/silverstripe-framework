@@ -636,6 +636,17 @@ abstract class Database
     );
 
     /**
+     * Determines if this database supports Common Table Expression (aka WITH) clauses.
+     * By default it is assumed that it doesn't unless this method is explicitly overridden.
+     *
+     * @param bool $recursive if true, checks specifically if recursive CTEs are supported.
+     */
+    public function supportsCteQueries(bool $recursive = false): bool
+    {
+        return false;
+    }
+
+    /**
      * Determines if this database supports transactions
      *
      * @return boolean Flag indicating support for transactions
@@ -652,7 +663,6 @@ abstract class Database
     {
         return false;
     }
-
 
     /**
      * Determines if the used database supports given transactionMode as an argument to startTransaction()

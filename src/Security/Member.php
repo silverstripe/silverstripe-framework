@@ -35,6 +35,8 @@ use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use Symfony\Component\Mailer\MailerInterface;
+use Closure;
+use RuntimeException;
 
 /**
  * The member class which represents the users of the system
@@ -665,7 +667,13 @@ class Member extends DataObject
             $password->setRequireExistingPassword(true);
         }
 
-        $password->setCanBeEmpty(false);
+        if (!$editingPassword) {
+            $password->setCanBeEmpty(true);
+            $password->setRandomPasswordCallback(Closure::fromCallable([$this, 'generateRandomPassword']));
+            // explicitly set "require strong password" to false because its regex in ConfirmedPasswordField
+            // is too restrictive for generateRandomPassword() which will add in non-alphanumeric characters
+            $password->setRequireStrongPassword(false);
+        }
         $this->extend('updateMemberPasswordField', $password);
 
         return $password;
@@ -1694,5 +1702,52 @@ class Member extends DataObject
 
         // If can't find a suitable editor, just default to cms
         return $currentName ? $currentName : 'cms';
+    }
+
+    /**
+     * Generate a random password and validate it against the current password validator if one is set
+     *
+     * @param int $length The length of the password to generate, defaults to 0 which will use the
+     *                    greater of the validator's minimum length or 20
+     */
+    public function generateRandomPassword(int $length = 0): string
+    {
+        $password = '';
+        $validator = self::password_validator();
+        if ($length && $validator && $length < $validator->getMinLength()) {
+            throw new InvalidArgumentException('length argument is less than password validator minLength');
+        }
+        $validatorMinLength = $validator ? $validator->getMinLength() : 0;
+        $len = $length ?: max($validatorMinLength, 20);
+        // The default PasswordValidator checks the password includes the following four character sets
+        $charsets = [
+            'abcdefghijklmnopqrstuvwyxz',
+            'ABCDEFGHIJKLMNOPQRSTUVWYXZ',
+            '0123456789',
+            '!@#$%^&*()_+-=[]{};:,./<>?',
+        ];
+        $password = '';
+        for ($i = 0; $i < $len; $i++) {
+            $charset = $charsets[$i % 4];
+            $randomInt = random_int(0, strlen($charset) - 1);
+            $password .= $charset[$randomInt];
+        }
+        // randomise the order of the characters
+        $passwordArr = [];
+        $len = strlen($password);
+        foreach (str_split($password) as $char) {
+            $r = random_int(0, $len + 10000);
+            while (array_key_exists($r, $passwordArr)) {
+                $r++;
+            }
+            $passwordArr[$r] = $char;
+        }
+        ksort($passwordArr);
+        $password = implode('', $passwordArr);
+        $this->extend('updateRandomPassword', $password);
+        if ($validator && !$validator->validate($password, $this)) {
+            throw new RuntimeException('Unable to generate a random password');
+        }
+        return $password;
     }
 }

@@ -10,6 +10,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\DevBuildController;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Connect\TableBuilder;
@@ -61,23 +62,10 @@ class DatabaseAdmin extends Controller
     {
         parent::init();
 
-        // We allow access to this controller regardless of live-status or ADMIN permission only
-        // if on CLI or with the database not ready. The latter makes it less error-prone to do an
-        // initial schema build without requiring a default-admin login.
-        // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-        $allowAllCLI = DevelopmentAdmin::config()->get('allow_all_cli');
-        $canAccess = (
-            Director::isDev()
-            || !Security::database_is_ready()
-            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
-            // "dev/tests" from CLI.
-            || (Director::is_cli() && $allowAllCLI)
-            || Permission::check("ADMIN")
-        );
-        if (!$canAccess) {
+        if (!$this->canInit()) {
             Security::permissionFailure(
                 $this,
-                "This page is secured and you need administrator rights to access it. " .
+                "This page is secured and you need elevated permissions to access it. " .
                 "Enter your credentials below and we will send you right along."
             );
         }
@@ -365,6 +353,23 @@ class DatabaseAdmin extends Controller
         ClassInfo::reset_db_cache();
 
         $this->extend('onAfterBuild', $quiet, $populate, $testMode);
+    }
+
+    public function canInit(): bool
+    {
+        // We allow access to this controller regardless of live-status or ADMIN permission only
+        // if on CLI or with the database not ready. The latter makes it less error-prone to do an
+        // initial schema build without requiring a default-admin login.
+        // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
+        $allowAllCLI = DevelopmentAdmin::config()->get('allow_all_cli');
+        return (
+            Director::isDev()
+            || !Security::database_is_ready()
+            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
+            // "dev/tests" from CLI.
+            || (Director::is_cli() && $allowAllCLI)
+            || Permission::check(DevBuildController::config()->get('init_permissions'))
+        );
     }
 
     /**

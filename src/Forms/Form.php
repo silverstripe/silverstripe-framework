@@ -477,7 +477,8 @@ class Form extends ViewableData implements HasRequestHandler
 
     /**
      * Populate this form with messages from the given ValidationResult.
-     * Note: This will not clear any pre-existing messages
+     * Note: This will try not to clear any pre-existing messages, but will clear them
+     * if a new message has a different message type or cast than the existing ones.
      *
      * @param ValidationResult $result
      * @return $this
@@ -494,7 +495,7 @@ class Form extends ViewableData implements HasRequestHandler
                 $owner = $this;
             }
 
-            $owner->setMessage($message['message'], $message['messageType'], $message['messageCast']);
+            $owner->appendMessage($message['message'], $message['messageType'], $message['messageCast'], true);
         }
         return $this;
     }

@@ -6,16 +6,18 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Tests\DataQueryTest\ObjectE;
 use SilverStripe\Security\Member;
 
 class DataQueryTest extends SapphireTest
 {
-
     protected static $fixture_file = 'DataQueryTest.yml';
 
     protected static $extra_dataobjects = [
         DataQueryTest\DataObjectAddsToQuery::class,
+        DataQueryTest\DateAndPriceObject::class,
         DataQueryTest\ObjectA::class,
         DataQueryTest\ObjectB::class,
         DataQueryTest\ObjectC::class,
@@ -25,6 +27,7 @@ class DataQueryTest extends SapphireTest
         DataQueryTest\ObjectG::class,
         DataQueryTest\ObjectH::class,
         DataQueryTest\ObjectI::class,
+        SQLSelectTest\CteRecursiveObject::class,
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
         SQLSelectTest\TestChild::class,
@@ -51,22 +54,33 @@ class DataQueryTest extends SapphireTest
         $this->assertEquals('Foo', $result['Title']);
     }
 
+    public function provideJoins()
+    {
+        return [
+            [
+                'joinMethod' => 'innerJoin',
+                'joinType' => 'INNER',
+            ],
+            [
+                'joinMethod' => 'leftJoin',
+                'joinType' => 'LEFT',
+            ],
+            [
+                'joinMethod' => 'rightJoin',
+                'joinType' => 'RIGHT',
+            ],
+        ];
+    }
+
     /**
-     * Test the leftJoin() and innerJoin method of the DataQuery object
+     * @dataProvider provideJoins
      */
-    public function testJoins()
+    public function testJoins($joinMethod, $joinType)
     {
         $dq = new DataQuery(Member::class);
-        $dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
+        $dq->$joinMethod("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
         $this->assertSQLContains(
-            "INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
-            $dq->sql($parameters)
-        );
-
-        $dq = new DataQuery(Member::class);
-        $dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
-        $this->assertSQLContains(
-            "LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
+            "$joinType JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
             $dq->sql($parameters)
         );
     }
@@ -170,6 +184,33 @@ class DataQueryTest extends SapphireTest
         $dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
         $dataQuery->execute();
         $this->assertTrue(true);
+    }
+
+    public function provideFieldCollision()
+    {
+        return [
+            'allow collisions' => [true],
+            'disallow collisions' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFieldCollision
+     */
+    public function testFieldCollision($allowCollisions)
+    {
+        $dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
+        $dataQuery->selectField('COALESCE(NULL, 1) AS "Title"');
+        $dataQuery->setAllowCollidingFieldStatements($allowCollisions);
+
+        if ($allowCollisions) {
+            $this->assertSQLContains('THEN "DataQueryTest_B"."Title" WHEN COALESCE(NULL, 1) AS "Title" IS NOT NULL THEN COALESCE(NULL, 1) AS "Title" ELSE NULL END AS "Title"', $dataQuery->sql());
+        } else {
+            $this->expectError();
+            $this->expectErrorMessageMatches('/^Bad collision item /');
+        }
+
+        $dataQuery->getFinalisedQuery();
     }
 
     public function testDisjunctiveGroup()
@@ -532,5 +573,281 @@ class DataQueryTest extends SapphireTest
             $query->limit(1, 9999)->exists(),
             'exist is false when a limit returns no results'
         );
+    }
+
+    public function provideWith()
+    {
+        return [
+            // Simple scenarios to test auto-join functionality
+            'naive CTE query with array join' => [
+                'dataClass' => DataQueryTest\DateAndPriceObject::class,
+                'name' => 'cte',
+                'query' => new SQLSelect(
+                    ['"DataQueryTest_DateAndPriceObject"."ID"'],
+                    '"DataQueryTest_DateAndPriceObject"',
+                    ['"DataQueryTest_DateAndPriceObject"."Price" > 200']
+                ),
+                'cteFields' => ['cte_id'],
+                'recursive' => false,
+                'extraManipulations' => [
+                    'innerJoin' => ['cte', '"DataQueryTest_DateAndPriceObject"."ID" = "cte"."cte_id"'],
+                ],
+                'expectedItems' => [
+                    'fixtures' => [
+                        'obj4',
+                        'obj5',
+                    ],
+                ],
+            ],
+            'naive CTE query with string join' => [
+                'dataClass' => DataQueryTest\DateAndPriceObject::class,
+                'name' => 'cte',
+                'query' => new SQLSelect('200'),
+                'cteFields' => ['value'],
+                'recursive' => false,
+                'extraManipulations' => [
+                    'innerJoin' => ['cte', '"DataQueryTest_DateAndPriceObject"."Price" < "cte"."value"'],
+                ],
+                'expectedItems' => [
+                    'fixtures' => [
+                        'nullobj',
+                        'obj1',
+                        'obj2',
+                    ]
+                ],
+            ],
+            // Simple scenario to test where the query is another DataQuery
+            'naive CTE query with DataQuery' => [
+                'dataClass' => DataQueryTest\DateAndPriceObject::class,
+                'name' => 'cte',
+                'query' => DataQueryTest\ObjectF::class,
+                'cteFields' => ['MyDate'],
+                'recursive' => false,
+                'extraManipulations' => [
+                    'innerJoin' => ['cte', '"DataQueryTest_DateAndPriceObject"."Date" = "cte"."MyDate"'],
+                ],
+                'expectedItems' => [
+                    'fixtures' => [
+                        'obj1',
+                        'obj2',
+                    ]
+                ],
+            ],
+            // Extrapolate missing data with a recursive query
+            // Missing data will be returned as records with no ID
+            'recursive CTE with extrapolated data' => [
+                'dataClass' => DataQueryTest\DateAndPriceObject::class,
+                'name' => 'dates',
+                'query' => (new SQLSelect(
+                    'MIN("DataQueryTest_DateAndPriceObject"."Date")',
+                    "DataQueryTest_DateAndPriceObject",
+                    '"DataQueryTest_DateAndPriceObject"."Date" IS NOT NULL'
+                ))->addUnion(
+                    new SQLSelect(
+                        'Date + INTERVAL 1 DAY',
+                        'dates',
+                        ['Date + INTERVAL 1 DAY <= (SELECT MAX("DataQueryTest_DateAndPriceObject"."Date") FROM "DataQueryTest_DateAndPriceObject")']
+                    ),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => ['Date'],
+                'recursive' => true,
+                'extraManipulations' => [
+                    'selectField' => ['COALESCE("DataQueryTest_DateAndPriceObject"."Date", "dates"."Date")', 'Date'],
+                    'setAllowCollidingFieldStatements' => [true],
+                    'sort' => ['dates.Date'],
+                    'rightJoin' => ['dates', '"DataQueryTest_DateAndPriceObject"."Date" = "dates"."Date"'],
+                ],
+                'expectedItems' => [
+                    'data' => [
+                        ['fixtureName' => 'obj5'],
+                        ['fixtureName' => 'obj4'],
+                        ['Date' => '2023-01-06'],
+                        ['Date' => '2023-01-05'],
+                        ['fixtureName' => 'obj3'],
+                        ['Date' => '2023-01-03'],
+                        ['fixtureName' => 'obj2'],
+                        ['fixtureName' => 'obj1'],
+                    ]
+                ],
+            ],
+            // Get the ancestors of a given record with a recursive query
+            'complex hierarchical CTE with explicit columns' => [
+                'dataClass' => SQLSelectTest\CteRecursiveObject::class,
+                'name' => 'hierarchy',
+                'query' => (
+                    new SQLSelect(
+                        '"SQLSelectTestCteRecursive"."ParentID"',
+                        "SQLSelectTestCteRecursive",
+                        [['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."Title" = ?' => 'child of child1']]
+                    )
+                )->addUnion(new SQLSelect(
+                    '"SQLSelectTestCteRecursive"."ParentID"',
+                    ['"hierarchy"', '"SQLSelectTestCteRecursive"'],
+                    ['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"']
+                )),
+                'cteFields' => ['parent_id'],
+                'recursive' => true,
+                'extraManipulations' => [
+                    'innerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                ],
+                'expected' => [
+                    'fixtures' => [
+                        'grandparent',
+                        'parent',
+                        'child1',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideWith
+     */
+    public function testWith(
+        string $dataClass,
+        string $name,
+        string|SQLSelect $query,
+        array $cteFields,
+        bool $recursive,
+        array $extraManipulations,
+        array $expectedItems
+    ) {
+        if (!DB::get_conn()->supportsCteQueries()) {
+            $this->markTestSkipped('The current database does not support WITH clauses');
+        }
+        if ($recursive && !DB::get_conn()->supportsCteQueries(true)) {
+            $this->markTestSkipped('The current database does not support recursive WITH clauses');
+        }
+
+        // We can't instantiate a DataQuery in a provider method because it requires the injector, which isn't
+        // initialised that early. So we just pass the dataclass instead and instiate the query here.
+        if (is_string($query)) {
+            $query = new DataQuery($query);
+        }
+
+        $dataQuery = new DataQuery($dataClass);
+        $dataQuery->with($name, $query, $cteFields, $recursive);
+
+        foreach ($extraManipulations as $method => $args) {
+            $dataQuery->$method(...$args);
+        }
+
+        $expected = [];
+
+        if (isset($expectedItems['fixtures'])) {
+            foreach ($expectedItems['fixtures'] as $fixtureName) {
+                $expected[] = $this->idFromFixture($dataClass, $fixtureName);
+            }
+            $this->assertEquals($expected, $dataQuery->execute()->column('ID'));
+        }
+
+        if (isset($expectedItems['data'])) {
+            foreach ($expectedItems['data'] as $data) {
+                if (isset($data['fixtureName'])) {
+                    $data = $this->objFromFixture($dataClass, $data['fixtureName'])->toMap();
+                } else {
+                    $data['ClassName'] = null;
+                    $data['LastEdited'] = null;
+                    $data['Created'] = null;
+                    $data['Price'] = null;
+                    $data['ID'] = null;
+                }
+                $expected[] = $data;
+            }
+            $this->assertListEquals($expected, new ArrayList(iterator_to_array($dataQuery->execute(), true)));
+        }
+    }
+
+    /**
+     * tests the WITH clause, using a DataQuery as the CTE query
+     */
+    public function testWithUsingDataQuery()
+    {
+        if (!DB::get_conn()->supportsCteQueries(true)) {
+            $this->markTestSkipped('The current database does not support recursive WITH clauses');
+        }
+        $dataQuery = new DataQuery(SQLSelectTest\CteRecursiveObject::class);
+        $cteQuery = new DataQuery(SQLSelectTest\CteRecursiveObject::class);
+        $cteQuery->where([
+            '"SQLSelectTestCteRecursive"."ParentID" > 0',
+            '"SQLSelectTestCteRecursive"."Title" = ?' => 'child of child2'
+        ]);
+        $cteQuery->union(new SQLSelect(
+            '"SQLSelectTestCteRecursive"."ParentID"',
+            ['"hierarchy"', '"SQLSelectTestCteRecursive"'],
+            [
+                '"SQLSelectTestCteRecursive"."ParentID" > 0',
+                '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."ParentID"'
+            ]
+        ));
+        $dataQuery->with('hierarchy', $cteQuery, ['ParentID'], true);
+        $dataQuery->innerJoin('hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."ParentID"');
+
+        $expectedFixtures = [
+            'child2',
+            'parent',
+            'grandparent',
+        ];
+        $expectedData = [];
+        foreach ($expectedFixtures as $fixtureName) {
+            $expectedData[] = $this->objFromFixture(SQLSelectTest\CteRecursiveObject::class, $fixtureName)->toMap();
+        }
+        $this->assertListEquals($expectedData, new ArrayList(iterator_to_array($dataQuery->execute(), true)));
+    }
+
+    /**
+     * tests the WITH clause, using a DataQuery as the CTE query and as the unioned recursive query
+     */
+    public function testWithUsingOnlyDataQueries()
+    {
+        if (!DB::get_conn()->supportsCteQueries(true)) {
+            $this->markTestSkipped('The current database does not support recursive WITH clauses');
+        }
+        $dataQuery = new DataQuery(SQLSelectTest\CteRecursiveObject::class);
+        $cteQuery = new DataQuery(SQLSelectTest\CteRecursiveObject::class);
+        $cteQuery->where([
+            '"SQLSelectTestCteRecursive"."ParentID" > 0',
+            '"SQLSelectTestCteRecursive"."Title" = ?' => 'child of child2'
+        ]);
+        $cteQuery->union((new DataQuery(SQLSelectTest\CteRecursiveObject::class))
+            ->innerJoin('hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."ParentID"')
+            ->where('"SQLSelectTestCteRecursive"."ParentID" > 0')
+            ->sort(null)
+            ->distinct(false));
+        // This test exists because previously when $cteFields was empty, it would cause an error with the above setup.
+        $dataQuery->with('hierarchy', $cteQuery, [], true);
+        $dataQuery->innerJoin('hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."ParentID"');
+
+        $expectedFixtures = [
+            'child2',
+            'parent',
+            'grandparent',
+        ];
+        $expectedData = [];
+        foreach ($expectedFixtures as $fixtureName) {
+            $expectedData[] = $this->objFromFixture(SQLSelectTest\CteRecursiveObject::class, $fixtureName)->toMap();
+        }
+        $this->assertListEquals($expectedData, new ArrayList(iterator_to_array($dataQuery->execute(), true)));
+    }
+
+    /**
+     * Tests that CTE queries have appropriate JOINs for subclass tables etc.
+     * If `$query->query()->` was replaced with `$query->query->` in DataQuery::with(), this test would throw an exception.
+     * @doesNotPerformAssertions
+     */
+    public function testWithUsingDataQueryAppliesRelations()
+    {
+        if (!DB::get_conn()->supportsCteQueries()) {
+            $this->markTestSkipped('The current database does not support WITH clauses');
+        }
+        $dataQuery = new DataQuery(DataQueryTest\ObjectG::class);
+        $cteQuery = new DataQuery(DataQueryTest\ObjectG::class);
+        $cteQuery->where(['"DataQueryTest_G"."SubClassOnlyField" = ?' => 'This is the one']);
+        $dataQuery->with('test_implicit_joins', $cteQuery, ['ID']);
+        $dataQuery->innerJoin('test_implicit_joins', '"DataQueryTest_G"."ID" = "test_implicit_joins"."ID"');
+        // This will throw an exception if it fails - it passes if there's no exception.
+        $dataQuery->execute();
     }
 }

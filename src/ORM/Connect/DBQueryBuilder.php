@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use InvalidArgumentException;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\Queries\SQLExpression;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -68,13 +69,24 @@ class DBQueryBuilder
      */
     protected function buildSelectQuery(SQLSelect $query, array &$parameters)
     {
-        $sql  = $this->buildSelectFragment($query, $parameters);
+        $needsParenthisis = count($query->getUnions()) > 0;
+        $nl = $this->getSeparator();
+        $sql = '';
+        if ($needsParenthisis) {
+            $sql .= "({$nl}";
+        }
+        $sql .= $this->buildWithFragment($query, $parameters);
+        $sql .= $this->buildSelectFragment($query, $parameters);
         $sql .= $this->buildFromFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
         $sql .= $this->buildGroupByFragment($query, $parameters);
         $sql .= $this->buildHavingFragment($query, $parameters);
         $sql .= $this->buildOrderByFragment($query, $parameters);
         $sql .= $this->buildLimitFragment($query, $parameters);
+        if ($needsParenthisis) {
+            $sql .= "{$nl})";
+        }
+        $sql .= $this->buildUnionFragment($query, $parameters);
         return $sql;
     }
 
@@ -153,6 +165,41 @@ class DBQueryBuilder
         $sql  = $this->buildUpdateFragment($query, $parameters);
         $sql .= $this->buildWhereFragment($query, $parameters);
         return $sql;
+    }
+
+    /**
+     * Returns the WITH clauses ready for inserting into a query.
+     */
+    protected function buildWithFragment(SQLSelect $query, array &$parameters): string
+    {
+        $with = $query->getWith();
+        if (empty($with)) {
+            return '';
+        }
+
+        $nl = $this->getSeparator();
+        $clauses = [];
+
+        foreach ($with as $name => $bits) {
+            $clause = $bits['recursive'] ? 'RECURSIVE ' : '';
+            $clause .= Convert::symbol2sql($name);
+
+            if (!empty($bits['cte_fields'])) {
+                $cteFields = $bits['cte_fields'];
+                // Ensure all cte fields are escaped correctly
+                array_walk($cteFields, function (&$colName) {
+                    $colName = preg_match('/^".*"$/', $colName) ? $colName : Convert::symbol2sql($colName);
+                });
+                $clause .= ' (' . implode(', ', $cteFields) . ')';
+            }
+
+            $clause .= " AS ({$nl}";
+            $clause .= $this->buildSelectQuery($bits['query'], $parameters);
+            $clause .= "{$nl})";
+            $clauses[] = $clause;
+        }
+
+        return 'WITH ' . implode(",{$nl}", $clauses) . $nl;
     }
 
     /**
@@ -242,9 +289,25 @@ class DBQueryBuilder
     public function buildFromFragment(SQLConditionalExpression $query, array &$parameters)
     {
         $from = $query->getJoins($joinParameters);
+        $tables = [];
+        $joins = [];
+
+        // E.g. a naive "Select 1" statement is valid SQL
+        if (empty($from)) {
+            return '';
+        }
+
+        foreach ($from as $joinOrTable) {
+            if (preg_match(SQLConditionalExpression::getJoinRegex(), $joinOrTable)) {
+                $joins[] = $joinOrTable;
+            } else {
+                $tables[] = $joinOrTable;
+            }
+        }
+
         $parameters = array_merge($parameters, $joinParameters);
         $nl = $this->getSeparator();
-        return  "{$nl}FROM " . implode(' ', $from);
+        return  "{$nl}FROM " . implode(', ', $tables) . ' ' . implode(' ', $joins);
     }
 
     /**
@@ -267,6 +330,37 @@ class DBQueryBuilder
         $parameters = array_merge($parameters, $whereParameters);
         $nl = $this->getSeparator();
         return "{$nl}WHERE (" . implode("){$nl}{$connective} (", $where) . ")";
+    }
+
+    /**
+     * Return the UNION clause(s) ready for inserting into a query.
+     */
+    protected function buildUnionFragment(SQLSelect $query, array &$parameters): string
+    {
+        $unions = $query->getUnions();
+        if (empty($unions)) {
+            return '';
+        }
+
+        $nl = $this->getSeparator();
+        $clauses = [];
+
+        foreach ($unions as $union) {
+            $unionQuery = $union['query'];
+            $unionType = $union['type'];
+
+            $clause = "{$nl}UNION";
+
+            if ($unionType) {
+                $clause .= " $unionType";
+            }
+
+            $clause .= "$nl($nl" . $this->buildSelectQuery($unionQuery, $parameters) . "$nl)";
+
+            $clauses[] = $clause;
+        }
+
+        return implode('', $clauses);
     }
 
     /**

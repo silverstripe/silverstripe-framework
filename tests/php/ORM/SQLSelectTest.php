@@ -3,12 +3,17 @@
 namespace SilverStripe\ORM\Tests;
 
 use InvalidArgumentException;
+use LogicException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\PostgreSQL\PostgreSQLDatabase;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\ORM\Tests\SQLSelectTest\CteDatesObject;
+use SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject;
 
 class SQLSelectTest extends SapphireTest
 {
@@ -18,7 +23,9 @@ class SQLSelectTest extends SapphireTest
     protected static $extra_dataobjects = [
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
-        SQLSelectTest\TestChild::class
+        SQLSelectTest\TestChild::class,
+        SQLSelectTest\CteDatesObject::class,
+        SQLSelectTest\CteRecursiveObject::class,
     ];
 
     protected $oldDeprecation = null;
@@ -67,19 +74,80 @@ class SQLSelectTest extends SapphireTest
         }
     }
 
+    public function provideIsEmpty()
+    {
+        return [
+            [
+                'query' => new SQLSelect(),
+                'expected' => true,
+            ],
+            [
+                'query' => new SQLSelect(from: 'someTable'),
+                'expected' => false,
+            ],
+            [
+                'query' => new SQLSelect(''),
+                'expected' => true,
+            ],
+            [
+                'query' => new SQLSelect('', 'someTable'),
+                'expected' => true,
+            ],
+            [
+                'query' => new SQLSelect('column', 'someTable'),
+                'expected' => false,
+            ],
+            [
+                'query' => new SQLSelect('value'),
+                'expected' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideIsEmpty
+     */
+    public function testIsEmpty(SQLSelect $query, $expected)
+    {
+        $this->assertSame($expected, $query->isEmpty());
+    }
+
     public function testEmptyQueryReturnsNothing()
     {
         $query = new SQLSelect();
         $this->assertSQLEquals('', $query->sql($parameters));
     }
 
-    public function testSelectFromBasicTable()
+    public function provideSelectFrom()
+    {
+        return [
+            [
+                'from' => ['MyTable'],
+                'expected' => 'SELECT * FROM MyTable',
+            ],
+            [
+                'from' => ['MyTable', 'MySecondTable'],
+                'expected' => 'SELECT * FROM MyTable, MySecondTable',
+            ],
+            [
+                'from' => ['MyTable', 'INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID'],
+                'expected' => 'SELECT * FROM MyTable INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID',
+            ],
+            [
+                'from' => ['MyTable', 'MySecondTable', 'INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID'],
+                'expected' => 'SELECT * FROM MyTable, MySecondTable INNER JOIN AnotherTable on AnotherTable.ID = MyTable.SomeFieldID',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSelectFrom
+     */
+    public function testSelectFrom(array $from, string $expected)
     {
         $query = new SQLSelect();
-        $query->setFrom('MyTable');
-        $this->assertSQLEquals("SELECT * FROM MyTable", $query->sql($parameters));
-        $query->addFrom('MyJoin');
-        $this->assertSQLEquals("SELECT * FROM MyTable MyJoin", $query->sql($parameters));
+        $query->setFrom($from);
+        $this->assertSQLEquals($expected, $query->sql($parameters));
     }
 
     public function testSelectFromUserSpecifiedFields()
@@ -435,16 +503,18 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
-    public function testInnerJoin()
+    public function testJoinSQL()
     {
         $query = new SQLSelect();
         $query->setFrom('MyTable');
         $query->addInnerJoin('MyOtherTable', 'MyOtherTable.ID = 2');
+        $query->addRightJoin('MySecondTable', 'MyOtherTable.ID = MySecondTable.ID');
         $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID');
 
         $this->assertSQLEquals(
             'SELECT * FROM MyTable ' .
             'INNER JOIN "MyOtherTable" ON MyOtherTable.ID = 2 ' .
+            'RIGHT JOIN "MySecondTable" ON MyOtherTable.ID = MySecondTable.ID ' .
             'LEFT JOIN "MyLastTable" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
@@ -452,12 +522,14 @@ class SQLSelectTest extends SapphireTest
         $query = new SQLSelect();
         $query->setFrom('MyTable');
         $query->addInnerJoin('MyOtherTable', 'MyOtherTable.ID = 2', 'table1');
-        $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table2');
+        $query->addRightJoin('MySecondTable', 'MyOtherTable.ID = MySecondTable.ID', 'table2');
+        $query->addLeftJoin('MyLastTable', 'MyOtherTable.ID = MyLastTable.ID', 'table3');
 
         $this->assertSQLEquals(
             'SELECT * FROM MyTable ' .
             'INNER JOIN "MyOtherTable" AS "table1" ON MyOtherTable.ID = 2 ' .
-            'LEFT JOIN "MyLastTable" AS "table2" ON MyOtherTable.ID = MyLastTable.ID',
+            'RIGHT JOIN "MySecondTable" AS "table2" ON MyOtherTable.ID = MySecondTable.ID ' .
+            'LEFT JOIN "MyLastTable" AS "table3" ON MyOtherTable.ID = MyLastTable.ID',
             $query->sql($parameters)
         );
     }
@@ -724,6 +796,13 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
+    public function testSelectWithNoTable()
+    {
+        $query = new SQLSelect('200');
+        $this->assertSQLEquals('SELECT 200 AS "200"', $query->sql());
+        $this->assertSame([['200' => 200]], iterator_to_array($query->execute(), true));
+    }
+
     /**
      * Test passing in a LIMIT with OFFSET clause string.
      */
@@ -739,12 +818,33 @@ class SQLSelectTest extends SapphireTest
         $this->assertEquals(10, $limit['start']);
     }
 
-    public function testParameterisedInnerJoins()
+    public function provideParameterisedJoinSQL()
+    {
+        return [
+            [
+                'joinMethod' => 'addInnerJoin',
+                'joinType' => 'INNER',
+            ],
+            [
+                'joinMethod' => 'addLeftJoin',
+                'joinType' => 'LEFT',
+            ],
+            [
+                'joinMethod' => 'addRightJoin',
+                'joinType' => 'RIGHT',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideParameterisedJoinSQL
+     */
+    public function testParameterisedJoinSQL($joinMethod, $joinType)
     {
         $query = new SQLSelect();
         $query->setSelect(['"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"']);
         $query->setFrom('"SQLSelectTest_DO"');
-        $query->addInnerJoin(
+        $query->$joinMethod(
             '(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
             '"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
             'SubSelect',
@@ -755,7 +855,7 @@ class SQLSelectTest extends SapphireTest
 
         $this->assertSQLEquals(
             'SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
-			FROM "SQLSelectTest_DO" INNER JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
+			FROM "SQLSelectTest_DO" ' . $joinType . ' JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
 		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLSelectTest_DO"."Name" =
 		   "SubSelect"."Title"
 			WHERE ("SQLSelectTest_DO"."Date" > ?)',
@@ -765,30 +865,54 @@ class SQLSelectTest extends SapphireTest
         $query->execute();
     }
 
-    public function testParameterisedLeftJoins()
+    public function provideUnion()
     {
-        $query = new SQLSelect();
-        $query->setSelect(['"SQLSelectTest_DO"."Name"', '"SubSelect"."Count"']);
-        $query->setFrom('"SQLSelectTest_DO"');
-        $query->addLeftJoin(
-            '(SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase" GROUP BY "Title" HAVING "Title" NOT LIKE ?)',
-            '"SQLSelectTest_DO"."Name" = "SubSelect"."Title"',
-            'SubSelect',
-            20,
-            ['%MyName%']
-        );
-        $query->addWhere(['"SQLSelectTest_DO"."Date" > ?' => '2012-08-08 12:00']);
+        return [
+            // Note that a default (null) UNION is identical to a DISTINCT UNION
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => null,
+                'expected' => [
+                    [1 => 1, 2 => 2],
+                ],
+            ],
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => SQLSelect::UNION_DISTINCT,
+                'expected' => [
+                    [1 => 1, 2 => 2],
+                ],
+            ],
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => SQLSelect::UNION_ALL,
+                'expected' => [
+                    [1 => 1, 2 => 2],
+                    [1 => 1, 2 => 2],
+                ],
+            ],
+            [
+                'unionQuery' => new SQLSelect([1, 2]),
+                'type' => 'tulips',
+                'expected' => LogicException::class,
+            ],
+        ];
+    }
 
-        $this->assertSQLEquals(
-            'SELECT "SQLSelectTest_DO"."Name", "SubSelect"."Count"
-			FROM "SQLSelectTest_DO" LEFT JOIN (SELECT "Title", COUNT(*) AS "Count" FROM "SQLSelectTestBase"
-		   GROUP BY "Title" HAVING "Title" NOT LIKE ?) AS "SubSelect" ON "SQLSelectTest_DO"."Name" =
-		   "SubSelect"."Title"
-			WHERE ("SQLSelectTest_DO"."Date" > ?)',
-            $query->sql($parameters)
-        );
-        $this->assertEquals(['%MyName%', '2012-08-08 12:00'], $parameters);
-        $query->execute();
+    /**
+     * @dataProvider provideUnion
+     */
+    public function testUnion(SQLSelect $unionQuery, ?string $type, string|array $expected)
+    {
+        if (is_string($expected)) {
+            $this->expectException($expected);
+            $this->expectExceptionMessage('Union $type must be one of the constants UNION_ALL or UNION_DISTINCT.');
+        }
+
+        $query = new SQLSelect([1, 2]);
+        $query->addUnion($unionQuery, $type);
+
+        $this->assertSame($expected, iterator_to_array($query->execute(), true));
     }
 
     public function testBaseTableAliases()
@@ -819,14 +943,388 @@ class SQLSelectTest extends SapphireTest
         // In SS4 the "explicitAlias" would be ignored
         $query = SQLSelect::create('*', [
             'MyTableAlias' => '"MyTable"',
-            'explicitAlias' => ', (SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
+            'explicitAlias' => '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin"'
         ]);
         $sql = $query->sql();
 
         $this->assertSQLEquals(
-            'SELECT * FROM "MyTable" AS "MyTableAlias" , ' .
+            'SELECT * FROM "MyTable" AS "MyTableAlias", ' .
             '(SELECT * FROM "MyTable" where "something" = "whatever") as "CrossJoin" AS "explicitAlias"',
             $sql
         );
+    }
+
+    public function provideWith()
+    {
+        // Each of these examples shows it working with aliased implicit columns, and with explicit CTE columns.
+        // Most of these examples are derived from https://dev.mysql.com/doc/refman/8.0/en/with.html
+        return [
+            // Just a CTE, no union
+            'basic CTE with aliased columns' => [
+                'name' => 'cte',
+                'query' => new SQLSelect(['col1' => 1, 'col2' => 2]),
+                'cteFields' => [],
+                'recursive' => false,
+                'selectFields' => ['col1', 'col2'],
+                'selectFrom' => 'cte',
+                'extraManipulations' => [],
+                'expected' => [['col1' => 1, 'col2' => 2]],
+            ],
+            'basic CTE with explicit columns' => [
+                'name' => 'cte',
+                'query' => new SQLSelect([1, 2]),
+                'cteFields' => ['col1', 'col2'],
+                'recursive' => false,
+                'selectFields' => ['col1', 'col2'],
+                'selectFrom' => 'cte',
+                'extraManipulations' => [],
+                'expected' => [['col1' => 1, 'col2' => 2]],
+            ],
+            // CTE with a simple union, non-recursive
+            'basic unioned CTE with aliased columns' => [
+                'name' => 'cte',
+                'query' => (new SQLSelect(['col1' => 1, 'col2' => 2]))->addUnion(
+                    new SQLSelect(['ignoredAlias1' => '3', 'ignoredAlias2' => '4']),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => [],
+                'recursive' => false,
+                'selectFields' => ['col1', 'col2'],
+                'selectFrom' => 'cte',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['col1' => 1, 'col2' => 2],
+                    ['col1' => 3, 'col2' => 4],
+                ],
+            ],
+            'basic unioned CTE with explicit columns' => [
+                'name' => 'cte',
+                'query' => (new SQLSelect([1, 2]))->addUnion(new SQLSelect(['3', '4']), SQLSelect::UNION_ALL),
+                'cteFields' => ['col1', 'col2'],
+                'recursive' => false,
+                'selectFields' => ['col1', 'col2'],
+                'selectFrom' => 'cte',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['col1' => 1, 'col2' => 2],
+                    ['col1' => 3, 'col2' => 4],
+                ],
+            ],
+            // Recursive CTE with only one field in it
+            'basic recursive CTE with aliased columns' => [
+                'name' => 'cte',
+                'query' => (new SQLSelect(['str' => "CAST('abc' AS CHAR(20))"]))->addUnion(
+                    new SQLSelect(['ignoredAlias' => 'CONCAT(str, str)'], 'cte', ['LENGTH(str) < 10']),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => [],
+                'recursive' => true,
+                'selectFields' => '*',
+                'selectFrom' => 'cte',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['str' => 'abc'],
+                    ['str' => 'abcabc'],
+                    ['str' => 'abcabcabcabc'],
+                ],
+            ],
+            'basic recursive CTE with explicit columns' => [
+                'name' => 'cte',
+                'query' => (new SQLSelect("CAST('abc' AS CHAR(20))"))->addUnion(
+                    new SQLSelect('CONCAT(str, str)', 'cte', ['LENGTH(str) < 10']),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => ['str'],
+                'recursive' => true,
+                'selectFields' => '*',
+                'selectFrom' => 'cte',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['str' => 'abc'],
+                    ['str' => 'abcabc'],
+                    ['str' => 'abcabcabcabc'],
+                ],
+            ],
+            // More complex recursive CTE
+            'medium recursive CTE with aliased columns' => [
+                'name' => 'fibonacci',
+                'query' => (new SQLSelect(['n' => 1, 'fib_n' => 0, 'next_fib_n' => 1]))->addUnion(
+                    new SQLSelect(['n + 1', 'next_fib_n', 'fib_n + next_fib_n'], 'fibonacci', ['n < 6']),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => [],
+                'recursive' => true,
+                'selectFields' => '*',
+                'selectFrom' => 'fibonacci',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['n' => 1, 'fib_n' => 0, 'next_fib_n' => 1],
+                    ['n' => 2, 'fib_n' => 1, 'next_fib_n' => 1],
+                    ['n' => 3, 'fib_n' => 1, 'next_fib_n' => 2],
+                    ['n' => 4, 'fib_n' => 2, 'next_fib_n' => 3],
+                    ['n' => 5, 'fib_n' => 3, 'next_fib_n' => 5],
+                    ['n' => 6, 'fib_n' => 5, 'next_fib_n' => 8],
+                ],
+            ],
+            // SQLSelect dedupes select fields. Because of that, for this test we have to start from a sequence
+            // that doesn't select duplicate values - otherwise we end up selecting "1, 0" instead of "1, 0, 1"
+            // in the main CTE select expression.
+            'medium recursive CTE with explicit columns' => [
+                'name' => 'fibonacci',
+                'query' => (new SQLSelect([3, 1, 2]))->addUnion(
+                    new SQLSelect(['n + 1', 'next_fib_n', 'fib_n + next_fib_n'], 'fibonacci', ['n < 6']),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => ['n', 'fib_n', 'next_fib_n'],
+                'recursive' => true,
+                'selectFields' => '*',
+                'selectFrom' => 'fibonacci',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['n' => 3, 'fib_n' => 1, 'next_fib_n' => 2],
+                    ['n' => 4, 'fib_n' => 2, 'next_fib_n' => 3],
+                    ['n' => 5, 'fib_n' => 3, 'next_fib_n' => 5],
+                    ['n' => 6, 'fib_n' => 5, 'next_fib_n' => 8],
+                ],
+            ],
+            // Validate that we can have a CTE with multiple fields, while only using one field in the result set
+            'medium recursive CTE selecting only one column in the result' => [
+                'name' => 'fibonacci',
+                'query' => (new SQLSelect(['n' => 1, 'fib_n' => 0, 'next_fib_n' => 1]))->addUnion(
+                    new SQLSelect(['n + 1', 'next_fib_n', 'fib_n + next_fib_n'], 'fibonacci', ['n < 6']),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => [],
+                'recursive' => true,
+                'selectFields' => 'fib_n',
+                'selectFrom' => 'fibonacci',
+                'extraManipulations' => [],
+                'expected' => [
+                    ['fib_n' => 0],
+                    ['fib_n' => 1],
+                    ['fib_n' => 1],
+                    ['fib_n' => 2],
+                    ['fib_n' => 3],
+                    ['fib_n' => 5],
+                ],
+            ],
+            // Using an actual database table, extrapolate missing data with a recursive query
+            'complex recursive CTE with aliased columns' => [
+                'name' => 'dates',
+                'query' => (new SQLSelect(['date' => 'MIN("Date")'], "SQLSelectTestCteDates"))->addUnion(
+                    new SQLSelect(
+                        'date + INTERVAL 1 DAY',
+                        'dates',
+                        ['date + INTERVAL 1 DAY <= (SELECT MAX("Date") FROM "SQLSelectTestCteDates")']
+                    ),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => [],
+                'recursive' => true,
+                'selectFields' => ['dates.date', 'sum_price' => 'COALESCE(SUM("Price"), 0)'],
+                'selectFrom' => 'dates',
+                'extraManipulations' => [
+                    'addLeftJoin' => ['SQLSelectTestCteDates', 'dates.date = "SQLSelectTestCteDates"."Date"'],
+                    'addOrderBy' => ['dates.date'],
+                    'addGroupBy' => ['dates.date'],
+                ],
+                'expected' => [
+                    ['date' => '2017-01-03', 'sum_price' => 300],
+                    ['date' => '2017-01-04', 'sum_price' => 0],
+                    ['date' => '2017-01-05', 'sum_price' => 0],
+                    ['date' => '2017-01-06', 'sum_price' => 50],
+                    ['date' => '2017-01-07', 'sum_price' => 0],
+                    ['date' => '2017-01-08', 'sum_price' => 180],
+                    ['date' => '2017-01-09', 'sum_price' => 0],
+                    ['date' => '2017-01-10', 'sum_price' => 5],
+                ],
+            ],
+            'complex recursive CTE with explicit columns' => [
+                'name' => 'dates',
+                'query' => (new SQLSelect('MIN("Date")', "SQLSelectTestCteDates"))->addUnion(
+                    new SQLSelect(
+                        'date + INTERVAL 1 DAY',
+                        'dates',
+                        ['date + INTERVAL 1 DAY <= (SELECT MAX("Date") FROM "SQLSelectTestCteDates")']
+                    ),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => ['date'],
+                'recursive' => true,
+                'selectFields' => ['dates.date', 'sum_price' => 'COALESCE(SUM("Price"), 0)'],
+                'selectFrom' => 'dates',
+                'extraManipulations' => [
+                    'addLeftJoin' => ['SQLSelectTestCteDates', 'dates.date = "SQLSelectTestCteDates"."Date"'],
+                    'addOrderBy' => ['dates.date'],
+                    'addGroupBy' => ['dates.date'],
+                ],
+                'expected' => [
+                    ['date' => '2017-01-03', 'sum_price' => 300],
+                    ['date' => '2017-01-04', 'sum_price' => 0],
+                    ['date' => '2017-01-05', 'sum_price' => 0],
+                    ['date' => '2017-01-06', 'sum_price' => 50],
+                    ['date' => '2017-01-07', 'sum_price' => 0],
+                    ['date' => '2017-01-08', 'sum_price' => 180],
+                    ['date' => '2017-01-09', 'sum_price' => 0],
+                    ['date' => '2017-01-10', 'sum_price' => 5],
+                ],
+            ],
+            // Using an actual database table, get the ancestors of a given record with a recursive query
+            'complex hierarchical CTE with aliased columns' => [
+                'name' => 'hierarchy',
+                'query' => (
+                    new SQLSelect(
+                        [
+                            'parent_id' => '"SQLSelectTestCteRecursive"."ParentID"',
+                            'sort_order' => 0,
+                        ],
+                        "SQLSelectTestCteRecursive",
+                        [['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."Title" = ?' => 'child of child1']]
+                    )
+                )->addUnion(
+                    new SQLSelect(
+                        [
+                            '"SQLSelectTestCteRecursive"."ParentID"',
+                            'sort_order + 1',
+                        ],
+                        // Note that we select both the CTE and the real table in the FROM statement.
+                        // We could also select one of these and JOIN on the other.
+                        ['"hierarchy"', '"SQLSelectTestCteRecursive"'],
+                        ['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"']
+                    ),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => [],
+                'recursive' => true,
+                'selectFields' => ['"SQLSelectTestCteRecursive"."Title"'],
+                'selectFrom' => '"SQLSelectTestCteRecursive"',
+                'extraManipulations' => [
+                    'addInnerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                    'setOrderBy' => ['sort_order', 'ASC'],
+                ],
+                'expected' => [
+                    ['Title' => 'child1'],
+                    ['Title' => 'parent'],
+                    ['Title' => 'grandparent'],
+                ],
+            ],
+            'complex hierarchical CTE with explicit columns' => [
+                'name' => 'hierarchy',
+                'query' => (
+                    new SQLSelect(
+                        [
+                            '"SQLSelectTestCteRecursive"."ParentID"',
+                            0
+                        ],
+                        "SQLSelectTestCteRecursive",
+                        [['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."Title" = ?' => 'child of child1']]
+                    )
+                )->addUnion(
+                    new SQLSelect(
+                        [
+                            '"SQLSelectTestCteRecursive"."ParentID"',
+                            'sort_order + 1'
+                        ],
+                        ['"hierarchy"', '"SQLSelectTestCteRecursive"'],
+                        ['"SQLSelectTestCteRecursive"."ParentID" > 0 AND "SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"']
+                    ),
+                    SQLSelect::UNION_ALL
+                ),
+                'cteFields' => ['parent_id', 'sort_order'],
+                'recursive' => true,
+                'selectFields' => ['"SQLSelectTestCteRecursive"."Title"'],
+                'selectFrom' => '"SQLSelectTestCteRecursive"',
+                'extraManipulations' => [
+                    'addInnerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
+                    'setOrderBy' => ['sort_order', 'ASC'],
+                ],
+                'expected' => [
+                    ['Title' => 'child1'],
+                    ['Title' => 'parent'],
+                    ['Title' => 'grandparent'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideWith
+     */
+    public function testWith(
+        string $name,
+        SQLSelect $query,
+        array $cteFields,
+        bool $recursive,
+        string|array $selectFields,
+        string|array $selectFrom,
+        array $extraManipulations,
+        array $expected
+    ) {
+        if (!DB::get_conn()->supportsCteQueries()) {
+            $this->markTestSkipped('The current database does not support WITH statements');
+        }
+        if ($recursive && !DB::get_conn()->supportsCteQueries(true)) {
+            $this->markTestSkipped('The current database does not support recursive WITH statements');
+        }
+
+        $select = new SQLSelect($selectFields, $selectFrom);
+        $select->addWith($name, $query, $cteFields, $recursive);
+
+        foreach ($extraManipulations as $method => $args) {
+            $select->$method(...$args);
+        }
+
+        $this->assertEquals($expected, iterator_to_array($select->execute(), true));
+    }
+
+    /**
+     * Tests that we can have multiple WITH statements for a given SQLSelect object, and that
+     * subsequent WITH statements can refer to one another.
+     */
+    public function testMultipleWith()
+    {
+        if (!DB::get_conn()->supportsCteQueries()) {
+            $this->markTestSkipped('The current database does not support WITH statements');
+        }
+
+        $cte1 = new SQLSelect('"SQLSelectTestCteDates"."Price"', "SQLSelectTestCteDates");
+        $cte2 = new SQLSelect('"SQLSelectTestCteRecursive"."Title"', "SQLSelectTestCteRecursive");
+        $cte3 = new SQLSelect(['price' => 'price', 'title' => 'title'], ['cte1', 'cte2']);
+
+        $select = new SQLSelect(['price', 'title'], 'cte3');
+        $select->addWith('cte1', $cte1, ['price'])
+            ->addWith('cte2', $cte2, ['title'])
+            ->addWith('cte3', $cte3)
+            ->addOrderBy(['price', 'title']);
+
+        $expected = [];
+        foreach (CteDatesObject::get()->sort('Price') as $priceRecord) {
+            foreach (CteRecursiveObject::get()->sort('Title') as $titleRecord) {
+                $expected[] = [
+                    'price' => $priceRecord->Price,
+                    'title' => $titleRecord->Title,
+                ];
+            }
+        }
+
+        $this->assertEquals($expected, iterator_to_array($select->execute(), true));
+    }
+
+    /**
+     * Tests that a second WITH clause with a duplicate name triggers an exception.
+     */
+    public function testMultipleWithDuplicateName()
+    {
+        if (!DB::get_conn()->supportsCteQueries()) {
+            $this->markTestSkipped('The current database does not support WITH statements');
+        }
+
+        $select = new SQLSelect();
+        $select->addWith('cte', new SQLSelect());
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('WITH clause with name \'cte\' already exists.');
+
+        $select->addWith('cte', new SQLSelect());
     }
 }

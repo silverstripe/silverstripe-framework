@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Queries;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DB;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * Object representing a SQL SELECT query.
@@ -12,6 +13,9 @@ use InvalidArgumentException;
  */
 class SQLSelect extends SQLConditionalExpression
 {
+    public const UNION_ALL = 'ALL';
+
+    public const UNION_DISTINCT = 'DISTINCT';
 
     /**
      * An array of SELECT fields, keyed by an optional alias.
@@ -35,6 +39,23 @@ class SQLSelect extends SQLConditionalExpression
      * @var array
      */
     protected $having = [];
+
+    /**
+     * An array of subqueries to union with this one.
+     */
+    protected array $union = [];
+
+    /**
+     * An array of WITH clauses.
+     * This array is indexed with the name for the temporary table generated for the WITH clause,
+     * and contains data in the following format:
+     * [
+     *   'cte_fields' => string[],
+     *   'query' => SQLSelect|null,
+     *   'recursive' => boolean,
+     * ]
+     */
+    protected array $with = [];
 
     /**
      * If this is true DISTINCT will be added to the SQL.
@@ -162,6 +183,9 @@ class SQLSelect extends SQLConditionalExpression
             $fields = [$fields];
         }
         foreach ($fields as $idx => $field) {
+            if ($field === '') {
+                continue;
+            }
             $this->selectField($field, is_numeric($idx) ? null : $idx);
         }
 
@@ -530,6 +554,60 @@ class SQLSelect extends SQLConditionalExpression
     }
 
     /**
+     * Add a select query to UNION with.
+     *
+     * @param string|null $type One of the UNION_ALL or UNION_DISTINCT constants - or null for a default union
+     */
+    public function addUnion(SQLSelect $query, ?string $type = null): static
+    {
+        if ($type && $type !== self::UNION_ALL && $type !== self::UNION_DISTINCT) {
+            throw new LogicException('Union $type must be one of the constants UNION_ALL or UNION_DISTINCT.');
+        }
+
+        $this->union[] = ['query' => $query, 'type' => $type];
+        return $this;
+    }
+
+    /**
+     * Get all of the queries that will be UNIONed with this one.
+     */
+    public function getUnions(): array
+    {
+        return $this->union;
+    }
+
+    /**
+     * Adds a Common Table Expression (CTE), aka WITH clause.
+     *
+     * Use of this method should usually be within a conditional check against DB::get_conn()->supportsCteQueries().
+     *
+     * @param string $name The name of the WITH clause, which can be referenced in any queries UNIONed to the $query
+     * and in this query directly, as though it were a table name.
+     * @param string[] $cteFields Aliases for any columns selected in $query which can be referenced in any queries
+     * UNIONed to the $query and in this query directly, as though they were columns in a real table.
+     */
+    public function addWith(string $name, SQLSelect $query, array $cteFields = [], bool $recursive = false): static
+    {
+        if (array_key_exists($name, $this->with)) {
+            throw new LogicException("WITH clause with name '$name' already exists.");
+        }
+        $this->with[$name] = [
+            'cte_fields' => $cteFields,
+            'query' => $query,
+            'recursive' => $recursive,
+        ];
+        return $this;
+    }
+
+    /**
+     * Get the data which will be used to generate the WITH clause of the query
+     */
+    public function getWith(): array
+    {
+        return $this->with;
+    }
+
+    /**
      * Return a list of GROUP BY clauses used internally.
      *
      * @return array
@@ -711,5 +789,11 @@ class SQLSelect extends SQLConditionalExpression
         $index = max($this->count() + $offset - 1, 0);
         $query->setLimit(1, $index);
         return $query;
+    }
+
+    public function isEmpty()
+    {
+        // Empty if there's no select, or we're trying to select '*' but there's no FROM clause
+        return empty($this->select) || (empty($this->from) && array_key_exists('*', $this->select));
     }
 }

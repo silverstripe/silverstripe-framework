@@ -50,6 +50,11 @@ class DataQuery
     protected $collidingFields = [];
 
     /**
+     * If true, collisions are allowed for statements aliased as db columns
+     */
+    private $allowCollidingFieldStatements = false;
+
+    /**
      * Allows custom callback to be registered before getFinalisedQuery is called.
      *
      * @var DataQueryManipulator[]
@@ -290,6 +295,7 @@ class DataQuery
         if ($this->collidingFields) {
             foreach ($this->collidingFields as $collisionField => $collisions) {
                 $caseClauses = [];
+                $lastClauses = [];
                 foreach ($collisions as $collision) {
                     if (preg_match('/^"(?<table>[^"]+)"\./', $collision ?? '', $matches)) {
                         $collisionTable = $matches['table'];
@@ -301,9 +307,14 @@ class DataQuery
                             $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
                         }
                     } else {
-                        user_error("Bad collision item '$collision'", E_USER_WARNING);
+                        if ($this->getAllowCollidingFieldStatements()) {
+                            $lastClauses[] = "WHEN $collision IS NOT NULL THEN $collision";
+                        } else {
+                            user_error("Bad collision item '$collision'", E_USER_WARNING);
+                        }
                     }
                 }
+                $caseClauses = array_merge($caseClauses, $lastClauses);
                 $query->selectField("CASE " . implode(" ", $caseClauses) . " ELSE NULL END", $collisionField);
             }
         }
@@ -657,6 +668,20 @@ class DataQuery
     }
 
     /**
+     * Add a query to UNION with.
+     *
+     * @param string|null $type One of the SQLSelect::UNION_ALL or SQLSelect::UNION_DISTINCT constants - or null for a default union
+     */
+    public function union(DataQuery|SQLSelect $query, ?string $type = null): static
+    {
+        if ($query instanceof DataQuery) {
+            $query = $query->query();
+        }
+        $this->query->addUnion($query, $type);
+        return $this;
+    }
+
+    /**
      * Create a disjunctive subgroup.
      *
      * That is a subgroup joined by OR
@@ -676,8 +701,6 @@ class DataQuery
         return new DataQuery_SubGroup($this, 'OR', $clause);
     }
 
-
-
     /**
      * Create a conjunctive subgroup
      *
@@ -696,6 +719,39 @@ class DataQuery
             $clause = $args[0];
         }
         return new DataQuery_SubGroup($this, 'AND', $clause);
+    }
+
+    /**
+     * Adds a Common Table Expression (CTE), aka WITH clause.
+     *
+     * Use of this method should usually be within a conditional check against DB::get_conn()->supportsCteQueries().
+     *
+     * @param string $name The name of the WITH clause, which can be referenced in any queries UNIONed to the $query
+     * and in this query directly, as though it were a table name.
+     * @param string[] $cteFields Aliases for any columns selected in $query which can be referenced in any queries
+     * UNIONed to the $query and in this query directly, as though they were columns in a real table.
+     * NOTE: If $query is a DataQuery, then cteFields must be the names of real columns on that DataQuery's data class.
+     */
+    public function with(string $name, DataQuery|SQLSelect $query, array $cteFields = [], bool $recursive = false): static
+    {
+        $schema = DataObject::getSchema();
+
+        // If the query is a DataQuery, make sure all manipulators, joins, etc are applied
+        if ($query instanceof self) {
+            $cteDataClass = $query->dataClass();
+            $query = $query->query();
+            // DataQuery wants to select ALL columns by default,
+            // but if we're setting cteFields then we only want to select those fields.
+            if (!empty($cteFields)) {
+                $selectFields = array_map(fn($colName) => $schema->sqlColumnForField($cteDataClass, $colName), $cteFields);
+                $query->setSelect($selectFields);
+            }
+        }
+
+        // Add the WITH clause
+        $this->query->addWith($name, $query, $cteFields, $recursive);
+
+        return $this;
     }
 
     /**
@@ -828,6 +884,26 @@ class DataQuery
     {
         if ($table) {
             $this->query->addLeftJoin($table, $onClause, $alias, $order, $parameters);
+        }
+        return $this;
+    }
+
+    /**
+     * Add a RIGHT JOIN clause to this query.
+     *
+     * @param string $table The unquoted table to join to.
+     * @param string $onClause The filter for the join (escaped SQL statement).
+     * @param string $alias An optional alias name (unquoted)
+     * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+     * will cause the query to appear first. The default is 20, and joins created automatically by the
+     * ORM have a value of 10.
+     * @param array $parameters Any additional parameters if the join is a parameterised subquery
+     * @return $this
+     */
+    public function rightJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
+    {
+        if ($table) {
+            $this->query->addRightJoin($table, $onClause, $alias, $order, $parameters);
         }
         return $this;
     }
@@ -1356,6 +1432,25 @@ class DataQuery
     public function pushQueryManipulator(DataQueryManipulator $manipulator)
     {
         $this->dataQueryManipulators[] = $manipulator;
+        return $this;
+    }
+
+    /**
+     * Get whether field statements aliased as columns are allowed when that column is already
+     * being selected
+     */
+    public function getAllowCollidingFieldStatements(): bool
+    {
+        return $this->allowCollidingFieldStatements;
+    }
+
+    /**
+     * Set whether field statements aliased as columns are allowed when that column is already
+     * being selected
+     */
+    public function setAllowCollidingFieldStatements(bool $value): static
+    {
+        $this->allowCollidingFieldStatements = $value;
         return $this;
     }
 

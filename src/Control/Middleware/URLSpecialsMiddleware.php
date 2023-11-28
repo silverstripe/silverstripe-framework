@@ -39,8 +39,7 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
         parent::__construct(
             new ConfirmationMiddleware\GetParameter("flush"),
             new ConfirmationMiddleware\GetParameter("isDev"),
-            new ConfirmationMiddleware\GetParameter("isTest"),
-            new ConfirmationMiddleware\UrlPathStartswith("dev/build")
+            new ConfirmationMiddleware\GetParameter("isTest")
         );
     }
 

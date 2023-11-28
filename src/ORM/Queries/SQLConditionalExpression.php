@@ -8,7 +8,6 @@ namespace SilverStripe\ORM\Queries;
  */
 abstract class SQLConditionalExpression extends SQLExpression
 {
-
     /**
      * An array of WHERE clauses.
      *
@@ -136,17 +135,25 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
     {
-        if (!$tableAlias) {
-            $tableAlias = $table;
-        }
-        $this->from[$tableAlias] = [
-            'type' => 'LEFT',
-            'table' => $table,
-            'filter' => [$onPredicate],
-            'order' => $order,
-            'parameters' => $parameters
-        ];
-        return $this;
+        return $this->addJoin($table, 'LEFT', $onPredicate, $tableAlias, $order, $parameters);
+    }
+
+    /**
+     * Add a RIGHT JOIN criteria to the tables list.
+     *
+     * @param string $table Unquoted table name
+     * @param string $onPredicate The "ON" SQL fragment in a "RIGHT JOIN ... AS ... ON ..." statement, Needs to be valid
+     *                            (quoted) SQL.
+     * @param string $tableAlias Optional alias which makes it easier to identify and replace joins later on
+     * @param int $order A numerical index to control the order that joins are added to the query; lower order values
+     *                   will cause the query to appear first. The default is 20, and joins created automatically by the
+     *                   ORM have a value of 10.
+     * @param array $parameters Any additional parameters if the join is a parameterized subquery
+     * @return $this Self reference
+     */
+    public function addRightJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = [])
+    {
+        return $this->addJoin($table, 'RIGHT', $onPredicate, $tableAlias, $order, $parameters);
     }
 
     /**
@@ -164,11 +171,19 @@ abstract class SQLConditionalExpression extends SQLExpression
      */
     public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = [])
     {
+        return $this->addJoin($table, 'INNER', $onPredicate, $tableAlias, $order, $parameters);
+    }
+
+    /**
+     * Add a JOIN criteria
+     */
+    private function addJoin($table, $type, $onPredicate, $tableAlias = null, $order = 20, $parameters = []): static
+    {
         if (!$tableAlias) {
             $tableAlias = $table;
         }
         $this->from[$tableAlias] = [
-            'type' => 'INNER',
+            'type' => $type,
             'table' => $table,
             'filter' => [$onPredicate],
             'order' => $order,
@@ -226,7 +241,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         foreach ($this->from as $key => $tableClause) {
             if (is_array($tableClause)) {
                 $table = '"' . $tableClause['table'] . '"';
-            } elseif (is_string($tableClause) && preg_match('/JOIN +("[^"]+") +(AS|ON) +/i', $tableClause ?? '', $matches)) {
+            } elseif (is_string($tableClause) && preg_match(self::getJoinRegex(), $tableClause ?? '', $matches)) {
                 $table = $matches[1];
             } else {
                 $table = $tableClause;
@@ -323,11 +338,16 @@ abstract class SQLConditionalExpression extends SQLExpression
             return $from;
         }
 
-        // shift the first FROM table out from so we only deal with the JOINs
-        reset($from);
-        $baseFromAlias = key($from ?? []);
-        $baseFrom = array_shift($from);
+        // Remove the regular FROM tables out so we only deal with the JOINs
+        $regularTables = [];
+        foreach ($from as $alias => $tableClause) {
+            if (is_string($tableClause) && !preg_match(self::getJoinRegex(), $tableClause)) {
+                $regularTables[$alias] = $tableClause;
+                unset($from[$alias]);
+            }
+        }
 
+        // Sort the joins
         $this->mergesort($from, function ($firstJoin, $secondJoin) {
             if (!is_array($firstJoin)
                 || !is_array($secondJoin)
@@ -339,11 +359,14 @@ abstract class SQLConditionalExpression extends SQLExpression
             }
         });
 
-        // Put the first FROM table back into the results
-        if (!empty($baseFromAlias) && !is_numeric($baseFromAlias)) {
-            $from = array_merge([$baseFromAlias => $baseFrom], $from);
-        } else {
-            array_unshift($from, $baseFrom);
+        // Put the regular FROM tables back into the results
+        $regularTables = array_reverse($regularTables, true);
+        foreach ($regularTables as $alias => $tableName) {
+            if (!empty($alias) && !is_numeric($alias)) {
+                $from = array_merge([$alias => $tableName], $from);
+            } else {
+                array_unshift($from, $tableName);
+            }
         }
 
         return $from;
@@ -765,5 +788,13 @@ abstract class SQLConditionalExpression extends SQLExpression
         $update = new SQLUpdate();
         $this->copyTo($update);
         return $update;
+    }
+
+    /**
+     * Get the regular expression pattern used to identify JOIN statements
+     */
+    public static function getJoinRegex(): string
+    {
+        return '/JOIN\s+.*?\s+(AS|ON|USING\(?)\s+/is';
     }
 }

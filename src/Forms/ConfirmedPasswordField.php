@@ -2,11 +2,13 @@
 
 namespace SilverStripe\Forms;
 
+use LogicException;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\HTML;
+use Closure;
 
 /**
  * Two masked input fields, checks for matching passwords.
@@ -43,11 +45,19 @@ class ConfirmedPasswordField extends FormField
     public $requireStrongPassword = false;
 
     /**
-     * Allow empty fields in serverside validation
+     * Allow empty fields when entering the password for the first time
+     * If this is set to true then a random password may be generated if the field is empty
+     * depending on the value of $self::generateRandomPasswordOnEmtpy
      *
      * @var boolean
      */
     public $canBeEmpty = false;
+
+    /**
+     * Callback used to generate a random password if $this->canBeEmpty is true and the field is left blank
+     * If this is set to null then a random password will not be generated
+     */
+    private ?Closure $randomPasswordCallback = null;
 
     /**
      * If set to TRUE, the "password" and "confirm password" form fields will
@@ -255,7 +265,27 @@ class ConfirmedPasswordField extends FormField
     public function setCanBeEmpty($value)
     {
         $this->canBeEmpty = (bool)$value;
+        $this->updateRightTitle();
+        return $this;
+    }
 
+    /**
+     * Gets the callback used to generate a random password
+     */
+    public function getRandomPasswordCallback(): ?Closure
+    {
+        return $this->randomPasswordCallback;
+    }
+
+    /**
+     * Sets a callback used to generate a random password if canBeEmpty is set to true
+     * and the password field is left blank
+     * If this is set to null then a random password will not be generated
+     */
+    public function setRandomPasswordCallback(?Closure $callback): static
+    {
+        $this->randomPasswordCallback = $callback;
+        $this->updateRightTitle();
         return $this;
     }
 
@@ -552,9 +582,7 @@ class ConfirmedPasswordField extends FormField
     }
 
     /**
-     * Only save if field was shown on the client, and is not empty.
-     *
-     * @param DataObjectInterface $record
+     * Only save if field was shown on the client, and is not empty or random password generation is enabled
      */
     public function saveInto(DataObjectInterface $record)
     {
@@ -562,7 +590,18 @@ class ConfirmedPasswordField extends FormField
             return;
         }
 
-        if (!($this->canBeEmpty && !$this->value)) {
+        // Create a random password if password is blank and the flag is set
+        if (!$this->value
+            && $this->canBeEmpty
+            && $this->randomPasswordCallback
+        ) {
+            if (!is_callable($this->randomPasswordCallback)) {
+                throw new LogicException('randomPasswordCallback must be callable');
+            }
+            $this->value = call_user_func_array($this->randomPasswordCallback, [$this->maxLength ?: 0]);
+        }
+
+        if ($this->value || $this->canBeEmtpy) {
             parent::saveInto($record);
         }
     }
@@ -693,5 +732,22 @@ class ConfirmedPasswordField extends FormField
     public function getRequireStrongPassword()
     {
         return $this->requireStrongPassword;
+    }
+
+    /**
+     * Appends a warning to the right title, or removes that appended warning.
+     */
+    private function updateRightTitle(): void
+    {
+        $text = _t(
+            __CLASS__ . '.RANDOM_IF_EMPTY',
+            'If this is left blank then a random password will be automatically generated.'
+        );
+        $rightTitle = $this->passwordField->RightTitle() ?? '';
+        $rightTitle = trim(str_replace($text, '', $rightTitle));
+        if ($this->canBeEmpty && $this->randomPasswordCallback) {
+            $rightTitle = $text . ' ' . $rightTitle;
+        }
+        $this->passwordField->setRightTitle($rightTitle ?: null);
     }
 }
