@@ -510,7 +510,8 @@ class Requirements_Backend
      * - 'crossorigin' : Cross-origin policy for the resource
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public function customScriptWithAttributes($script, $options = [], $uniquenessID = null){
+    public function customScriptWithAttributes($script, $options = [], $uniquenessID = null)
+    {
         // Get type
         $type = null;
         if (isset($this->customScript[$uniquenessID]['type'])) {

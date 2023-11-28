@@ -151,7 +151,8 @@ class Requirements implements Flushable
      * - 'crossorigin' : Cross-origin policy for the resource
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public static function customScriptWithAttributes($script, $options = [], $uniquenessID = null){
+    public static function customScriptWithAttributes($script, $options = [], $uniquenessID = null)
+    {
         self::backend()->customScriptWithAttributes($script, $options, $uniquenessID);
     }
 
