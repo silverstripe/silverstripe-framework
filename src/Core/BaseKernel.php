@@ -115,11 +115,13 @@ abstract class BaseKernel implements Kernel
         $this->setModuleLoader($moduleLoader);
 
         // Config loader
-        // @todo refactor CoreConfigFactory
-        $configFactory = new CoreConfigFactory($manifestCacheFactory);
-        $configManifest = $configFactory->createRoot();
         $configLoader = ConfigLoader::inst();
-        $configLoader->pushManifest($configManifest);
+        // If nesting kernels, don't create a new config manifest as that will reset config deltas
+        if (!$configLoader->hasManifest()) {
+            $configFactory = new CoreConfigFactory($manifestCacheFactory);
+            $configManifest = $configFactory->createRoot();
+            $configLoader->pushManifest($configManifest);
+        }
         $this->setConfigLoader($configLoader);
 
         // Load template manifest
