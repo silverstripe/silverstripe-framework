@@ -257,6 +257,9 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function last()
     {
         $item = end($this->items) ?: null;
+        if (is_numeric($item)) {
+            $item = DataObject::get_by_id($this->dataClass, $item);
+        }
         if ($item && !empty($this->extraFields[key($this->items)])) {
             $item->update($this->extraFields[key($this->items)]);
         }
