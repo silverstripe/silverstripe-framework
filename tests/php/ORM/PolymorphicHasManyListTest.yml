@@ -1,0 +1,25 @@
+SilverStripe\ORM\Tests\DataObjectTest\Player:
+  multiRelationalPlayer1:
+    FirstName: MultiRelational Player 1
+  multiRelationalPlayer2:
+    FirstName: MultiRelational Player 2
+  multiRelationalPlayer3:
+    FirstName: MultiRelational Player 3
+  multiRelationalPlayer4:
+    FirstName: MultiRelational Player 4
+  multiRelationalPlayer5:
+    FirstName: MultiRelational Player 5
+  multiRelationalPlayer6:
+    FirstName: MultiRelational Player 6
+
+SilverStripe\ORM\Tests\DataObjectTest\Team:
+  multiRelationalTeam:
+    Title: MultiRelational team
+    ManyPlayers1:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Player.multiRelationalPlayer1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Player.multiRelationalPlayer2
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Player.multiRelationalPlayer6
+    ManyPlayers2:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Player.multiRelationalPlayer3
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Player.multiRelationalPlayer4
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Player.multiRelationalPlayer5

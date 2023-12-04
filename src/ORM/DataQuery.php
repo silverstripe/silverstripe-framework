@@ -1025,8 +1025,6 @@ class DataQuery
      * Join the given has_many relation to this query.
      * Also works with belongs_to
      *
-     * Doesn't work with polymorphic relationships
-     *
      * @param string $localClass Name of class that has the has_many to the joined class
      * @param string $localField Name of the has_many relationship to join
      * @param string $foreignClass Class to join
@@ -1065,6 +1063,15 @@ class DataQuery
             $localClassColumn = $schema->sqlColumnForField($localClass, 'ClassName', $localPrefix);
             $joinExpression =
                 "{$foreignKeyIDColumn} = {$localIDColumn} AND {$foreignKeyClassColumn} = {$localClassColumn}";
+
+            // Add relation key if the has_many points to a has_one that could handle multiple reciprocal has_many relations
+            if ($type === 'has_many') {
+                $details = $schema->getHasManyComponentDetails($localClass, $localField);
+                if ($details['needsRelation']) {
+                    $foreignKeyRelationColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}Relation", $foreignPrefix);
+                    $joinExpression .= " AND {$foreignKeyRelationColumn} = {$localField}";
+                }
+            }
         } else {
             $foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, $foreignKey, $foreignPrefix);
             $joinExpression = "{$foreignKeyIDColumn} = {$localIDColumn}";

@@ -4,6 +4,7 @@ namespace SilverStripe\Dev\Tests\Validation;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ManyManyThroughList;
@@ -29,6 +30,13 @@ class Team extends DataObject implements TestOnly
      */
     private static $db = [
         'Title' => 'Varchar(255)',
+    ];
+
+    private static array $has_one = [
+        'SingleMember' => [
+            'class' => DataObject::class,
+            DataObjectSchema::HAS_ONE_MULTI_RELATIONAL => true,
+        ],
     ];
 
     /**

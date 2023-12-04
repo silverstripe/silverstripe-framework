@@ -5,9 +5,11 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
+use SilverStripe\Dev\Deprecation;
+use Traversable;
 
 /**
- * Represents a has_many list linked against a polymorphic relationship
+ * Represents a has_many list linked against a polymorphic relationship.
  */
 class PolymorphicHasManyList extends HasManyList
 {
@@ -20,7 +22,13 @@ class PolymorphicHasManyList extends HasManyList
     protected $classForeignKey;
 
     /**
-     * Retrieve the name of the class this relation is filtered by
+     * Name of the foreign key field that references the relation name, for has_one
+     * relations that can handle multiple reciprocal has_many relations.
+     */
+    protected string $relationForeignKey;
+
+    /**
+     * Retrieve the name of the class this (has_many) relation is filtered by
      *
      * @return string
      */
@@ -30,7 +38,28 @@ class PolymorphicHasManyList extends HasManyList
     }
 
     /**
-     * Gets the field name which holds the related object class.
+     * Retrieve the name of the has_many relation this list is filtered by
+     */
+    public function getForeignRelation(): ?string
+    {
+        return $this->dataQuery->getQueryParam('Foreign.Relation');
+    }
+
+    /**
+     * Retrieve the name of the has_many relation this list is filtered by
+     *
+     * @deprecated 5.2.0 Will be replaced with a parameter in the constructor
+     */
+    public function setForeignRelation(string $relationName): static
+    {
+        Deprecation::notice('5.2.0', 'Will be replaced with a parameter in the constructor');
+        $this->dataQuery->where(["\"{$this->relationForeignKey}\"" => $relationName]);
+        $this->dataQuery->setQueryParam('Foreign.Relation', $relationName);
+        return $this;
+    }
+
+    /**
+     * Gets the field name which holds the related (has_many) object class.
      */
     public function getForeignClassKey(): string
     {
@@ -38,11 +67,22 @@ class PolymorphicHasManyList extends HasManyList
     }
 
     /**
+     * Gets the field name which holds the has_many relation name.
+     *
+     * Note that this will return a value even if the has_one relation
+     * doesn't support multiple reciprocal has_many relations.
+     */
+    public function getForeignRelationKey(): string
+    {
+        return $this->relationForeignKey;
+    }
+
+    /**
      * Create a new PolymorphicHasManyList relation list.
      *
      * @param string $dataClass The class of the DataObjects that this will list.
-     * @param string $foreignField The name of the composite foreign relation field. Used
-     * to generate the ID and Class foreign keys.
+     * @param string $foreignField The name of the composite foreign (has_one) relation field. Used
+     * to generate the ID, Class, and Relation foreign keys.
      * @param string $foreignClass Name of the class filter this relation is filtered against
      */
     public function __construct($dataClass, $foreignField, $foreignClass)
@@ -50,6 +90,7 @@ class PolymorphicHasManyList extends HasManyList
         // Set both id foreign key (as in HasManyList) and the class foreign key
         parent::__construct($dataClass, "{$foreignField}ID");
         $this->classForeignKey = "{$foreignField}Class";
+        $this->relationForeignKey = "{$foreignField}Relation";
 
         // Ensure underlying DataQuery globally references the class filter
         $this->dataQuery->setQueryParam('Foreign.Class', $foreignClass);
@@ -98,10 +139,18 @@ class PolymorphicHasManyList extends HasManyList
             return;
         }
 
+        // set the {$relationName}Class field value
         $foreignKey = $this->foreignKey;
         $classForeignKey = $this->classForeignKey;
         $item->$foreignKey = $foreignID;
         $item->$classForeignKey = $this->getForeignClass();
+
+        // set the {$relationName}Relation field value if appropriate
+        $foreignRelation = $this->getForeignRelation();
+        if ($foreignRelation) {
+            $relationForeignKey = $this->getForeignRelationKey();
+            $item->$relationForeignKey = $foreignRelation;
+        }
 
         $item->write();
     }
@@ -129,6 +178,13 @@ class PolymorphicHasManyList extends HasManyList
             return;
         }
 
+        // Don't remove item with unrelated relation key
+        $foreignRelation = $this->getForeignRelation();
+        $relationForeignKey = $this->getForeignRelationKey();
+        if (!$this->relationMatches($item->$relationForeignKey, $foreignRelation)) {
+            return;
+        }
+
         // Don't remove item which doesn't belong to this list
         $foreignID = $this->getForeignID();
         $foreignKey = $this->foreignKey;
@@ -137,9 +193,20 @@ class PolymorphicHasManyList extends HasManyList
             || $foreignID == $item->$foreignKey
             || (is_array($foreignID) && in_array($item->$foreignKey, $foreignID ?? []))
         ) {
+            // Unset the foreign relation key if appropriate
+            if ($foreignRelation) {
+                $item->$relationForeignKey = null;
+            }
+
+            // Unset the rest of the relation and write the record
             $item->$foreignKey = null;
             $item->$classForeignKey = null;
             $item->write();
         }
+    }
+
+    private function relationMatches(?string $actual, ?string $expected): bool
+    {
+        return (empty($actual) && empty($expected)) || $actual === $expected;
     }
 }

@@ -159,68 +159,94 @@ class DataObjectSchemaTest extends SapphireTest
         );
     }
 
-    public function testFieldSpec()
+    /**
+     * @dataProvider provideFieldSpec
+     */
+    public function testFieldSpec(array $args, array $expected): void
     {
         $schema = DataObject::getSchema();
-        $this->assertEquals(
-            [
-                'ID' => 'PrimaryKey',
-                'ClassName' => 'DBClassName',
-                'LastEdited' => 'DBDatetime',
-                'Created' => 'DBDatetime',
-                'Title' => 'Varchar',
-                'Description' => 'Varchar',
-                'MoneyFieldCurrency' => 'Varchar(3)',
-                'MoneyFieldAmount' => 'Decimal(19,4)',
-                'MoneyField' => 'Money',
-            ],
-            $schema->fieldSpecs(HasFields::class)
-        );
-        $this->assertEquals(
-            [
-                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
-                'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
-                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
-                'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
-                'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
-                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
-                'MoneyField' => DataObjectSchemaTest\HasFields::class . '.Money',
-            ],
-            $schema->fieldSpecs(HasFields::class, DataObjectSchema::INCLUDE_CLASS)
-        );
-        // DB_ONLY excludes composite field MoneyField
-        $this->assertEquals(
-            [
-                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
-                'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
-                'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
-                'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
-                'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
-                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)'
-            ],
-            $schema->fieldSpecs(
-                HasFields::class,
-                DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
-            )
-        );
+        $this->assertEquals($expected, $schema->fieldSpecs(...$args));
+    }
 
-        // Use all options at once
-        $this->assertEquals(
-            [
-                'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
-                'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
-                'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
-                'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
+    public function provideFieldSpec(): array
+    {
+        return [
+            'just pass a class' => [
+                'args' => [HasFields::class],
+                'expected' => [
+                    'ID' => 'PrimaryKey',
+                    'ClassName' => 'DBClassName',
+                    'LastEdited' => 'DBDatetime',
+                    'Created' => 'DBDatetime',
+                    'Title' => 'Varchar',
+                    'Description' => 'Varchar',
+                    'MoneyFieldCurrency' => 'Varchar(3)',
+                    'MoneyFieldAmount' => 'Decimal(19,4)',
+                    'MoneyField' => 'Money',
+                ],
             ],
-            $schema->fieldSpecs(
-                HasFields::class,
-                DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED
-            )
-        );
+            'prefix with classname' => [
+                'args' => [HasFields::class, DataObjectSchema::INCLUDE_CLASS],
+                'expected' => [
+                    'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                    'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
+                    'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                    'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                    'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
+                    'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                    'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                    'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
+                    'MoneyField' => DataObjectSchemaTest\HasFields::class . '.Money',
+                ],
+            ],
+            'DB_ONLY excludes composite field MoneyField' => [
+                'args' => [
+                    HasFields::class,
+                    DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY,
+                ],
+                'expected' => [
+                    'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                    'ClassName' => DataObjectSchemaTest\BaseDataClass::class . '.DBClassName',
+                    'LastEdited' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                    'Created' => DataObjectSchemaTest\BaseDataClass::class . '.DBDatetime',
+                    'Title' => DataObjectSchemaTest\BaseDataClass::class . '.Varchar',
+                    'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                    'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                    'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)'
+                ],
+            ],
+            'Use all options at once' => [
+                'args' => [
+                    HasFields::class,
+                    DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED
+                ],
+                'expected' => [
+                    'ID' => DataObjectSchemaTest\HasFields::class . '.PrimaryKey',
+                    'Description' => DataObjectSchemaTest\HasFields::class . '.Varchar',
+                    'MoneyFieldCurrency' => DataObjectSchemaTest\HasFields::class . '.Varchar(3)',
+                    'MoneyFieldAmount' => DataObjectSchemaTest\HasFields::class . '.Decimal(19,4)',
+                ],
+            ],
+            'has_one relations are returned correctly' => [
+                'args' => [WithRelation::class],
+                'expected' => [
+                    'ID' => 'PrimaryKey',
+                    'ClassName' => 'DBClassName',
+                    'LastEdited' => 'DBDatetime',
+                    'Created' => 'DBDatetime',
+                    'Title' => 'Varchar',
+                    'RelationID' => 'ForeignKey',
+                    'PolymorphicRelationID' => 'Int',
+                    'PolymorphicRelationClass' => "DBClassName('SilverStripe\ORM\DataObject', ['index' => false])",
+                    'MultiRelationalRelationID' => 'Int',
+                    'MultiRelationalRelationClass' => "DBClassName('SilverStripe\ORM\DataObject', ['index' => false])",
+                    'MultiRelationalRelationRelation' => 'Varchar',
+                    'PolymorphicRelation' => 'PolymorphicForeignKey',
+                    'MultiRelationalRelation' => 'PolymorphicRelationAwareForeignKey',
+                    'ArraySyntaxRelationID' => 'ForeignKey',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -372,5 +398,77 @@ class DataObjectSchemaTest extends SapphireTest
             ],
             AllIndexes::get()
         );
+    }
+
+    /**
+     * @dataProvider provideHasOneComponent
+     */
+
+    public function testHasOneComponent(string $class, string $component, string $expected): void
+    {
+        $this->assertSame($expected, DataObject::getSchema()->hasOneComponent($class, $component));
+    }
+
+    public function provideHasOneComponent(): array
+    {
+        return [
+            [
+                'class' => WithRelation::class,
+                'component' => 'Relation',
+                'expected' => HasFields::class,
+            ],
+            [
+                'class' => WithRelation::class,
+                'component' => 'PolymorphicRelation',
+                'expected' => DataObject::class,
+            ],
+            [
+                'class' => WithRelation::class,
+                'component' => 'ArraySyntaxRelation',
+                'expected' => HasFields::class,
+            ],
+            [
+                'class' => WithRelation::class,
+                'component' => 'MultiRelationalRelation',
+                'expected' => DataObject::class,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideHasOneComponentHandlesMultipleRelations
+     */
+    public function testHasOneComponentHandlesMultipleRelations(string $class, string $component, bool $expected): void
+    {
+        $this->assertSame(
+            $expected,
+            DataObject::getSchema()->hasOneComponentHandlesMultipleRelations($class, $component)
+        );
+    }
+
+    public function provideHasOneComponentHandlesMultipleRelations(): array
+    {
+        return [
+            [
+                'class' => WithRelation::class,
+                'component' => 'Relation',
+                'expected' => false,
+            ],
+            [
+                'class' => WithRelation::class,
+                'component' => 'PolymorphicRelation',
+                'expected' => false,
+            ],
+            [
+                'class' => WithRelation::class,
+                'component' => 'ArraySyntaxRelation',
+                'expected' => false,
+            ],
+            [
+                'class' => WithRelation::class,
+                'component' => 'MultiRelationalRelation',
+                'expected' => true,
+            ],
+        ];
     }
 }

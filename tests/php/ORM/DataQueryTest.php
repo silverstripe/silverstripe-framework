@@ -27,6 +27,8 @@ class DataQueryTest extends SapphireTest
         DataQueryTest\ObjectG::class,
         DataQueryTest\ObjectH::class,
         DataQueryTest\ObjectI::class,
+        DataQueryTest\ObjectHasMultiRelationalHasOne::class,
+        DataQueryTest\ObjectHasMultiRelationalHasMany::class,
         SQLSelectTest\CteRecursiveObject::class,
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
@@ -97,6 +99,33 @@ class DataQueryTest extends SapphireTest
         $dq->applyRelation('TestCTwo');
         $this->assertTrue($dq->query()->isJoinedTo('testctwo_DataQueryTest_C'));
         $this->assertStringContainsString('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
+    }
+
+    /**
+     * @dataProvider provideApplyRelationMultiRelational
+     */
+    public function testApplyRelationMultiRelational(string $relation): void
+    {
+        $dq = new DataQuery(DataQueryTest\ObjectHasMultiRelationalHasMany::class);
+        $dq->applyRelation($relation);
+        $joinAlias = strtolower($relation) . '_DataQueryTest_ObjectHasMultiRelationalHasOne';
+        $joinAliasWithQuotes = '"' . $joinAlias . '"';
+        $this->assertTrue($dq->query()->isJoinedTo($joinAlias));
+        $this->assertStringContainsString($joinAliasWithQuotes . '."MultiRelationalID" = "DataQueryTest_ObjectHasMultiRelationalHasMany"."ID"', $dq->sql());
+        $this->assertStringContainsString($joinAliasWithQuotes . '."MultiRelationalRelation" = ' . $relation, $dq->sql());
+        $this->assertStringContainsString($joinAliasWithQuotes . '."MultiRelationalClass" = "DataQueryTest_ObjectHasMultiRelationalHasMany"."ClassName"', $dq->sql());
+    }
+
+    public function provideApplyRelationMultiRelational(): array
+    {
+        return [
+            'relation1' => [
+                'relation' => 'MultiRelational1',
+            ],
+            'relation2' => [
+                'relation' => 'MultiRelational2',
+            ],
+        ];
     }
 
     public function testApplyRelationDeepInheritance()

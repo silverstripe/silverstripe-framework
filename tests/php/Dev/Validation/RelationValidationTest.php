@@ -6,6 +6,8 @@ use Page;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Validation\RelationValidationService;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectSchema;
 
 class RelationValidationTest extends SapphireTest
 {
@@ -107,6 +109,14 @@ class RelationValidationTest extends SapphireTest
                     'SilverStripe\Dev\Tests\Validation\Member / Hat : Back relation is ambiguous',
                 ],
             ],
+            'polymorphic has one' => [
+                Team::class,
+                'has_one',
+                [
+                    'SingleMember' => DataObject::class,
+                ],
+                [],
+            ],
             'invalid has one' => [
                 Member::class,
                 'has_one',
@@ -116,6 +126,45 @@ class RelationValidationTest extends SapphireTest
                 ],
                 [
                     'SilverStripe\Dev\Tests\Validation\Member / HomeTeam : Relation SilverStripe\Dev\Tests\Validation\Team.UnnecessaryRelation is not in the expected format (needs class only format).'
+                ],
+            ],
+            'has_one missing class in array config' => [
+                Team::class,
+                'has_one',
+                [
+                    'SingleMember' => [
+                        DataObjectSchema::HAS_ONE_MULTI_RELATIONAL => true,
+                    ],
+                ],
+                [
+                    'SilverStripe\Dev\Tests\Validation\Team / SingleMember : No class has been defined for this relation.'
+                ],
+            ],
+            'multi-relational has_one should be polymorphic' => [
+                Team::class,
+                'has_one',
+                [
+                    'SingleMember' => [
+                        'class' => Member::class,
+                        DataObjectSchema::HAS_ONE_MULTI_RELATIONAL => true,
+                    ],
+                ],
+                [
+                    'SilverStripe\Dev\Tests\Validation\Team / SingleMember : has_one relation that can handle multiple reciprocal has_many relations must be polymorphic.'
+                ],
+            ],
+            'has_one defines class in array config' => [
+                Team::class,
+                'has_one',
+                [
+                    'SingleMember' => [
+                        'class' => Member::class,
+                    ],
+                ],
+                // Note there's no message about the has_one class, which is technically correctly defined.
+                // The bad thing now is just that we still have multiple has_many relations pointing at it.
+                [
+                    'SilverStripe\Dev\Tests\Validation\Team / SingleMember : Back relation is ambiguous'
                 ],
             ],
             'ambiguous has_many - no relation name' => [

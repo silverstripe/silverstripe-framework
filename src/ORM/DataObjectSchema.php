@@ -25,6 +25,11 @@ class DataObjectSchema
     use Configurable;
 
     /**
+     * Configuration key for has_one relations that can support multiple reciprocal has_many relations.
+     */
+    public const HAS_ONE_MULTI_RELATIONAL = 'multirelational';
+
+    /**
      * Default separate for table namespaces. Can be set to any string for
      * databases that do not support some characters.
      *
@@ -501,7 +506,20 @@ class DataObjectSchema
 
         // Add in all has_ones
         $hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: [];
-        foreach ($hasOne as $fieldName => $hasOneClass) {
+        foreach ($hasOne as $fieldName => $spec) {
+            if (is_array($spec)) {
+                if (!isset($spec['class'])) {
+                    throw new LogicException("has_one relation {$class}.{$fieldName} must declare a class");
+                }
+                // Handle has_one which handles multiple reciprocal has_many relations
+                $hasOneClass = $spec['class'];
+                if (($spec[self::HAS_ONE_MULTI_RELATIONAL] ?? false) === true) {
+                    $compositeFields[$fieldName] = 'PolymorphicRelationAwareForeignKey';
+                    continue;
+                }
+            } else {
+                $hasOneClass = $spec;
+            }
             if ($hasOneClass === DataObject::class) {
                 $compositeFields[$fieldName] = 'PolymorphicForeignKey';
             } else {
@@ -902,10 +920,32 @@ class DataObjectSchema
             return null;
         }
 
+        $spec = $hasOnes[$component];
+
         // Validate
-        $relationClass = $hasOnes[$component];
+        if (is_array($spec)) {
+            $this->checkHasOneArraySpec($class, $component, $spec);
+        }
+        $relationClass = is_array($spec) ? $spec['class'] : $spec;
         $this->checkRelationClass($class, $component, $relationClass, 'has_one');
+
         return $relationClass;
+    }
+
+    /**
+     * Check if a has_one relation handles multiple reciprocal has_many relations.
+     *
+     * @return bool True if the relation exists and handles multiple reciprocal has_many relations.
+     */
+    public function hasOneComponentHandlesMultipleRelations(string $class, string $component): bool
+    {
+        $hasOnes = Config::forClass($class)->get('has_one');
+        if (!isset($hasOnes[$component])) {
+            return false;
+        }
+
+        $spec = $hasOnes[$component];
+        return ($spec[self::HAS_ONE_MULTI_RELATIONAL] ?? false) === true;
     }
 
     /**
@@ -1047,6 +1087,20 @@ class DataObjectSchema
      */
     public function getRemoteJoinField($class, $component, $type = 'has_many', &$polymorphic = false)
     {
+        return $this->getBelongsToAndHasManyDetails($class, $component, $type, $polymorphic)['joinField'];
+    }
+
+    public function getHasManyComponentDetails(string $class, string $component): array
+    {
+        return $this->getBelongsToAndHasManyDetails($class, $component);
+    }
+
+    private function getBelongsToAndHasManyDetails(
+        string $class,
+        string $component,
+        string $type = 'has_many',
+        &$polymorphic = false
+    ): array {
         // Extract relation from current object
         if ($type === 'has_many') {
             $remoteClass = $this->hasManyComponent($class, $component, false);
@@ -1071,6 +1125,11 @@ class DataObjectSchema
 
         // Reference remote has_one to check against
         $remoteRelations = Config::inst()->get($remoteClass, 'has_one');
+        foreach ($remoteRelations as $key => $value) {
+            if (is_array($value)) {
+                $remoteRelations[$key] = $this->hasOneComponent($remoteClass, $key);
+            }
+        }
 
         // Without an explicit field name, attempt to match the first remote field
         // with the same type as the current class
@@ -1104,14 +1163,23 @@ class DataObjectSchema
 				on class {$class}");
         }
 
-        // Inspect resulting found relation
-        if ($remoteRelations[$remoteField] === DataObject::class) {
-            $polymorphic = true;
-            return $remoteField; // Composite polymorphic field does not include 'ID' suffix
-        } else {
-            $polymorphic = false;
-            return $remoteField . 'ID';
+        $polymorphic = $this->hasOneComponent($remoteClass, $remoteField) === DataObject::class;
+        $remoteClassField = $polymorphic ? $remoteField . 'Class' : null;
+        $needsRelation = $type === 'has_many' && $polymorphic && $this->hasOneComponentHandlesMultipleRelations($remoteClass, $remoteField);
+        $remoteRelationField = $needsRelation ? $remoteField . 'Relation' : null;
+
+        // This must be after the above assignments, as they rely on the original value.
+        if (!$polymorphic) {
+            $remoteField .= 'ID';
         }
+
+        return [
+            'joinField' => $remoteField,
+            'relationField' => $remoteRelationField,
+            'classField' => $remoteClassField,
+            'polymorphic' => $polymorphic,
+            'needsRelation' => $needsRelation,
+        ];
     }
 
     /**
@@ -1202,6 +1270,24 @@ class DataObjectSchema
             );
         }
         return $joinClass;
+    }
+
+    private function checkHasOneArraySpec(string $class, string $component, array $spec): void
+    {
+        if (!array_key_exists('class', $spec)) {
+            throw new InvalidArgumentException(
+                "has_one relation {$class}.{$component} doesn't define a class for the relation"
+            );
+        }
+
+        if (($spec[self::HAS_ONE_MULTI_RELATIONAL] ?? false) === true
+            && $spec['class'] !== DataObject::class
+        ) {
+            throw new InvalidArgumentException(
+                "has_one relation {$class}.{$component} must be polymorphic, or not support multiple"
+                . 'reciprocal has_many relations'
+            );
+        }
     }
 
     /**

@@ -12,6 +12,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
@@ -1972,12 +1973,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Determine type and nature of foreign relation
-        $joinField = $schema->getRemoteJoinField(static::class, $componentName, 'has_many', $polymorphic);
-        /** @var HasManyList $result */
-        if ($polymorphic) {
-            $result = PolymorphicHasManyList::create($componentClass, $joinField, static::class);
+        $details = $schema->getHasManyComponentDetails(static::class, $componentName);
+        if ($details['polymorphic']) {
+            $result = PolymorphicHasManyList::create($componentClass, $details['joinField'], static::class);
+            if ($details['needsRelation']) {
+                Deprecation::withNoReplacement(fn () => $result->setForeignRelation($componentName));
+            }
         } else {
-            $result = HasManyList::create($componentClass, $joinField);
+            $result = HasManyList::create($componentClass, $details['joinField']);
         }
 
         return $result
@@ -1993,16 +1996,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getRelationClass($relationName)
     {
-        // Parse many_many
-        $manyManyComponent = $this->getSchema()->manyManyComponent(static::class, $relationName);
+        // Parse many_many, which can have an array instead of a class name
+        $manyManyComponent = static::getSchema()->manyManyComponent(static::class, $relationName);
         if ($manyManyComponent) {
             return $manyManyComponent['childClass'];
         }
 
-        // Go through all relationship configuration fields.
+        // Parse has_one, which can have an array instead of a class name
+        $hasOneComponent = static::getSchema()->hasOneComponent(static::class, $relationName);
+        if ($hasOneComponent) {
+            return $hasOneComponent;
+        }
+
+        // Go through all remaining relationship configuration fields.
         $config = $this->config();
         $candidates = array_merge(
-            ($relations = $config->get('has_one')) ? $relations : [],
             ($relations = $config->get('has_many')) ? $relations : [],
             ($relations = $config->get('belongs_to')) ? $relations : []
         );
@@ -2228,15 +2236,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Return the class of a one-to-one component.  If $component is null, return all of the one-to-one components and
-     * their classes. If the selected has_one is a polymorphic field then 'DataObject' will be returned for the type.
+     * Return the class of a all has_one relations.
      *
-     * @return string|array The class of the one-to-one component, or an array of all one-to-one components and
-     *                          their classes.
+     * @return array An array of all has_one components and their classes.
      */
     public function hasOne()
     {
-        return (array)$this->config()->get('has_one');
+        $hasOne = (array) $this->config()->get('has_one');
+        // Boil down has_one spec to just the class name
+        foreach ($hasOne as $relationName => $spec) {
+            if (is_array($spec)) {
+                $hasOne[$relationName] = DataObject::getSchema()->hasOneComponent(static::class, $relationName);
+            }
+        }
+        return $hasOne;
     }
 
     /**
