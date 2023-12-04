@@ -310,4 +310,20 @@ class UnsavedRelationListTest extends SapphireTest
             ]
         );
     }
+
+    public function testFirstAndLast()
+    {
+        $object = new UnsavedRelationListTest\TestObject();
+        $children = $object->Children();
+
+        $this->assertNull($children->first(), 'Empty UnsavedRelationList should return null for first item.');
+        $this->assertNull($children->last(), 'Empty UnsavedRelationList should return null for last item.');
+
+        $children->add($firstChild = $this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectA'));
+        $children->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectB'));
+        $children->add($lastChild = $this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectC'));
+
+        $this->assertEquals($firstChild, $children->first(), 'Incorrect first item in UnsavedRelationList.');
+        $this->assertEquals($lastChild, $children->last(), 'Incorrect last item in UnsavedRelationList.');
+    }
 }
