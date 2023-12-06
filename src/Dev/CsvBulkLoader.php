@@ -5,6 +5,7 @@ namespace SilverStripe\Dev;
 use League\Csv\MapIterator;
 use League\Csv\Reader;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -42,6 +43,10 @@ class CsvBulkLoader extends BulkLoader
      * @var boolean
      */
     public $hasHeaderRow = true;
+
+    public $duplicateChecks = [
+        'ID' => 'ID',
+    ];
 
     /**
      * Number of lines to split large CSV files into.
@@ -136,6 +141,10 @@ class CsvBulkLoader extends BulkLoader
                 $this->processRecord($row, $this->columnMap, $result, $preview);
             }
         } catch (\Exception $e) {
+            if ($e instanceof HTTPResponse_Exception) {
+                throw $e;
+            }
+
             $failedMessage = sprintf("Failed to parse %s", $filepath);
             if (Director::isDev()) {
                 $failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
@@ -305,8 +314,29 @@ class CsvBulkLoader extends BulkLoader
 
         // find existing object, or create new one
         $existingObj = $this->findExistingObject($record, $columnMap);
+        $alreadyExists = (bool) $existingObj;
+
+        // If we can't edit the existing object, bail early.
+        if ($this->getCheckPermissions() && !$preview && $alreadyExists && !$existingObj->canEdit()) {
+            $type = $existingObj->i18n_singular_name();
+            throw new HTTPResponse_Exception(
+                _t(BulkLoader::class . '.CANNOT_EDIT', "Not allowed to edit '$type' records"),
+                403
+            );
+        }
+
         /** @var DataObject $obj */
-        $obj = ($existingObj) ? $existingObj : new $class();
+        $obj = $alreadyExists ? $existingObj : new $class();
+
+        // If we can't create a new record, bail out early.
+        if ($this->getCheckPermissions() && !$preview && !$alreadyExists && !$obj->canCreate()) {
+            $type = $obj->i18n_singular_name();
+            throw new HTTPResponse_Exception(
+                _t(BulkLoader::class . '.CANNOT_CREATE', "Not allowed to create '$type' records"),
+                403
+            );
+        }
+
         $schema = DataObject::getSchema();
 
         // first run: find/create any relations and store them on the object
@@ -331,9 +361,17 @@ class CsvBulkLoader extends BulkLoader
                 }
                 if (!$relationObj || !$relationObj->exists()) {
                     $relationClass = $schema->hasOneComponent(get_class($obj), $relationName);
+                    /** @var DataObject $relationObj */
                     $relationObj = new $relationClass();
                     //write if we aren't previewing
                     if (!$preview) {
+                        if ($this->getCheckPermissions() && !$relationObj->canCreate()) {
+                            $type = $relationObj->i18n_singular_name();
+                            throw new HTTPResponse_Exception(
+                                _t(BulkLoader::class . '.CANNOT_CREATE', "Not allowed to create '$type' records"),
+                                403
+                            );
+                        }
                         $relationObj->write();
                     }
                 }
@@ -349,6 +387,13 @@ class CsvBulkLoader extends BulkLoader
                 // always gives us an component (either empty or existing)
                 $relationObj = $obj->getComponent($relationName);
                 if (!$preview) {
+                    if ($this->getCheckPermissions() && !$relationObj->canEdit()) {
+                        $type = $relationObj->i18n_singular_name();
+                        throw new HTTPResponse_Exception(
+                            _t(BulkLoader::class . '.CANNOT_EDIT', "Not allowed to edit '$type' records"),
+                            403
+                        );
+                    }
                     $relationObj->write();
                 }
                 $obj->{"{$relationName}ID"} = $relationObj->ID;

@@ -3,6 +3,7 @@
 namespace SilverStripe\Dev\Tests;
 
 use League\Csv\Writer;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CustomLoader;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\Player;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\PlayerContract;
@@ -12,6 +13,10 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\CsvBulkLoader;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CanModifyModel;
+use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantCreateModel;
+use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantDeleteModel;
+use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantEditModel;
 
 class CsvBulkLoaderTest extends SapphireTest
 {
@@ -22,6 +27,10 @@ class CsvBulkLoaderTest extends SapphireTest
         Team::class,
         Player::class,
         PlayerContract::class,
+        CanModifyModel::class,
+        CantCreateModel::class,
+        CantEditModel::class,
+        CantDeleteModel::class,
     ];
 
     /**
@@ -336,5 +345,66 @@ class CsvBulkLoaderTest extends SapphireTest
         $results = $loader->load($path);
 
         $this->assertCount(10, $results);
+    }
+
+    /**
+     * @dataProvider provideCheckPermissions
+     */
+    public function testCheckPermissions(string $class, string $file, bool $respectPerms, string $exceptionMessage)
+    {
+        $loader = new CsvBulkLoader($class);
+        $loader->setCheckPermissions($respectPerms);
+        // Don't delete CantEditModel records, 'cause we need to explicitly edit them
+        $loader->deleteExistingRecords = $class !== CantEditModel::class;
+        // We can't rely on IDs in unit tests, so use Title as the unique field
+        $loader->duplicateChecks['Title'] = 'Title';
+
+        if ($exceptionMessage) {
+            $this->expectException(HTTPResponse_Exception::class);
+            $this->expectExceptionMessage($exceptionMessage);
+        }
+
+        $results = $loader->load($this->csvPath . $file);
+
+        // If there's no permission exception, we should get some valid results.
+        if (!$exceptionMessage) {
+            $this->assertCount(3, $results);
+        }
+    }
+
+    public function provideCheckPermissions()
+    {
+        $scenarios = [
+            'Has all permissions' => [
+                'class' => CanModifyModel::class,
+                'file' => 'PermissionCheck.csv',
+                'respectPerms' => true,
+                'exceptionMessage' => '',
+            ],
+            'No create permissions' => [
+                'class' => CantCreateModel::class,
+                'file' => 'PermissionCheck.csv',
+                'respectPerms' => true,
+                'exceptionMessage' => "Not allowed to create 'Cant Create Model' records",
+            ],
+            'No edit permissions' => [
+                'class' => CantEditModel::class,
+                'file' => 'PermissionCheck.csv',
+                'respectPerms' => true,
+                'exceptionMessage' => "Not allowed to edit 'Cant Edit Model' records",
+            ],
+            'No delete permissions' => [
+                'class' => CantDeleteModel::class,
+                'file' => 'PermissionCheck.csv',
+                'respectPerms' => true,
+                'exceptionMessage' => "Not allowed to delete 'Cant Delete Model' records",
+            ],
+        ];
+        foreach ($scenarios as $name => $scenario) {
+            $scenario['respectPerms'] = false;
+            $scenario['exceptionMessage'] = '';
+            $scenarios[$name . ' but no perm checks'] = $scenario;
+        }
+        return $scenarios;
     }
 }
