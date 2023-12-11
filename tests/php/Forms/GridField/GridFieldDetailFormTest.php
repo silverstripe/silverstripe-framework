@@ -13,6 +13,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\MultiRelationalPeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PolymorphicPeopleGroup;
@@ -26,6 +27,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         Person::class,
         PeopleGroup::class,
         PolymorphicPeopleGroup::class,
+        MultiRelationalPeopleGroup::class,
         Category::class,
     ];
 
@@ -141,6 +143,31 @@ class GridFieldDetailFormTest extends FunctionalTest
         // The polymorphic values should be pre-loaded
         $this->assertEquals(PolymorphicPeopleGroup::class, $record->PolymorphicGroupClass);
         $this->assertEquals($group->ID, $record->PolymorphicGroupID);
+    }
+
+    public function testAddFormWithMultiRelationalHasOne(): void
+    {
+        // Log in for permissions check
+        $this->logInWithPermission('ADMIN');
+        // Prepare gridfield and other objects
+        $group = new MultiRelationalPeopleGroup();
+        $group->write();
+        $gridField = $group->getCMSFields()->dataFieldByName('People');
+        $gridField->setForm(new Form());
+        $detailForm = $gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
+        $record = new Person();
+
+        // Trigger creation of the item edit form
+        $reflectionDetailForm = new \ReflectionClass($detailForm);
+        $reflectionMethod = $reflectionDetailForm->getMethod('getItemRequestHandler');
+        $reflectionMethod->setAccessible(true);
+        $itemrequest = $reflectionMethod->invoke($detailForm, $gridField, $record, new Controller());
+        $itemrequest->ItemEditForm();
+
+        // The polymorphic and multi-relational values should be pre-loaded
+        $this->assertEquals(MultiRelationalPeopleGroup::class, $record->MultiRelationalGroupClass);
+        $this->assertEquals('People', $record->MultiRelationalGroupRelation);
+        $this->assertEquals($group->ID, $record->MultiRelationalGroupID);
     }
 
     public function testViewForm()

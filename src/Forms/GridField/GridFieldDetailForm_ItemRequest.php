@@ -204,6 +204,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 $classKey = $list->getForeignClassKey();
                 $class = $list->getForeignClass();
                 $this->record->$classKey = $class;
+
+                // If the has_one relation storing the data can handle multiple reciprocal has_many relations,
+                // make sure we tell it which has_many relation this belongs to.
+                $relation = $list->getForeignRelation();
+                if ($relation) {
+                    $relationKey = $list->getForeignRelationKey();
+                    $this->record->$relationKey = $relation;
+                }
             }
         }
 

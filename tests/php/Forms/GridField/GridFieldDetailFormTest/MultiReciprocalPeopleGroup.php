@@ -7,16 +7,16 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\ORM\DataObject;
 
-class PolymorphicPeopleGroup extends DataObject implements TestOnly
+class MultiRelationalPeopleGroup extends DataObject implements TestOnly
 {
-    private static $table_name = 'GridFieldDetailFormTest_PolymorphicPeopleGroup';
+    private static $table_name = 'GridFieldDetailFormTest_MultiRelationalPeopleGroup';
 
     private static $db = [
         'Name' => 'Varchar'
     ];
 
     private static $has_many = [
-        'People' => Person::class . '.PolymorphicGroup'
+        'People' => Person::class . '.MultiRelationalGroup'
     ];
 
     private static $default_sort = '"Name"';

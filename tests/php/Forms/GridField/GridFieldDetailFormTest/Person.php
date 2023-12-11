@@ -7,6 +7,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectSchema;
 
 class Person extends DataObject implements TestOnly
 {
@@ -20,6 +21,10 @@ class Person extends DataObject implements TestOnly
     private static $has_one = [
         'Group' => PeopleGroup::class,
         'PolymorphicGroup' => DataObject::class,
+        'MultiRelationalGroup' => [
+            'class' => DataObject::class,
+            DataObjectSchema::HAS_ONE_MULTI_RELATIONAL => true,
+        ],
     ];
 
     private static $many_many = [

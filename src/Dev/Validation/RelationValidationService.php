@@ -2,12 +2,14 @@
 
 namespace SilverStripe\Dev\Validation;
 
+use InvalidArgumentException;
 use ReflectionException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\DB;
 
 /**
@@ -291,6 +293,25 @@ class RelationValidationService implements Resettable
         $relations = (array) $singleton->config()->uninherited('has_one');
 
         foreach ($relations as $relationName => $relationData) {
+            if (is_array($relationData)) {
+                $spec = $relationData;
+                if (!isset($spec['class'])) {
+                    $this->logError($class, $relationName, 'No class has been defined for this relation.');
+                    continue;
+                }
+                $relationData = $spec['class'];
+                if (($spec[DataObjectSchema::HAS_ONE_MULTI_RELATIONAL] ?? false) === true
+                    && $relationData !== DataObject::class
+                ) {
+                    $this->logError(
+                        $class,
+                        $relationName,
+                        'has_one relation that can handle multiple reciprocal has_many relations must be polymorphic.'
+                    );
+                    continue;
+                }
+            }
+
             if ($this->isIgnored($class, $relationName)) {
                 continue;
             }
@@ -303,6 +324,11 @@ class RelationValidationService implements Resettable
                 );
 
                 return;
+            }
+
+            // Skip checking for back relations when has_one is polymorphic
+            if ($relationData === DataObject::class) {
+                continue;
             }
 
             if (!is_subclass_of($relationData, DataObject::class)) {
@@ -616,7 +642,8 @@ class RelationValidationService implements Resettable
                 return null;
             }
 
-            return $throughRelations[$to];
+            $spec = $throughRelations[$to];
+            return is_array($spec) ? $spec['class'] ?? null : $spec;
         }
 
         return $relationData;

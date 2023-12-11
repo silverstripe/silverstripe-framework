@@ -3,6 +3,8 @@
 namespace SilverStripe\ORM\Tests\DataObjectTest;
 
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Tests\DataObjectTest;
 use SilverStripe\Security\Member;
 
@@ -17,6 +19,10 @@ class Player extends Member implements TestOnly
 
     private static $has_one = [
         'FavouriteTeam' => DataObjectTest\Team::class,
+        'MultiRelational' => [
+            'class' => DataObject::class,
+            DataObjectSchema::HAS_ONE_MULTI_RELATIONAL => true,
+        ],
     ];
 
     private static $belongs_many_many = [

@@ -44,7 +44,10 @@ class Team extends DataObject implements TestOnly
         'SubTeams' => SubTeam::class,
         'Comments' => TeamComment::class,
         'Fans' => Fan::class . '.Favourite', // Polymorphic - Team fans
-        'PlayerFans' => Player::class . '.FavouriteTeam'
+        'PlayerFans' => Player::class . '.FavouriteTeam',
+        // multi-relational relation:
+        'ManyPlayers1' => Player::class . '.MultiRelational',
+        'ManyPlayers2' => Player::class . '.MultiRelational',
     ];
 
     private static $many_many = [

@@ -43,6 +43,8 @@ class Member extends DataObject implements TestOnly
      */
     private static $has_many = [
         'TemporaryMembers' => Freelancer::class . '.TemporaryMember',
+        'ManyTeams' => Team::class . '.SingleMember',
+        'ManyMoreTeams' => Team::class . '.SingleMember',
     ];
 
     /**

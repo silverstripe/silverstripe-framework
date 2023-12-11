@@ -48,6 +48,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBPercentage
   PolymorphicForeignKey:
     class: SilverStripe\ORM\FieldType\DBPolymorphicForeignKey
+  PolymorphicRelationAwareForeignKey:
+    class: SilverStripe\ORM\FieldType\DBPolymorphicRelationAwareForeignKey
   PrimaryKey:
     class: SilverStripe\ORM\FieldType\DBPrimaryKey
   Text:
