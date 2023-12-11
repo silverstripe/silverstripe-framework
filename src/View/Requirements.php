@@ -149,9 +149,9 @@ class Requirements implements Flushable
      * @param array $options List of options. Available options include:
      * - 'type' : Specifies the type of script
      * - 'crossorigin' : Cross-origin policy for the resource
-     * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+     * @param string|int|null $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public static function customScriptWithAttributes($script, $options = [], $uniquenessID = null)
+    public static function customScriptWithAttributes(string $script, array $options = [], string|int|null $uniquenessID = null)
     {
         self::backend()->customScriptWithAttributes($script, $options, $uniquenessID);
     }

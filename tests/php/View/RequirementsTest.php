@@ -1403,7 +1403,8 @@ EOS
         $this->setupRequirements($backend);
 
         $backend->javascript('javascript/RequirementsTest_a.js', ['integrity' => 'abc', 'crossorigin' => 'use-credentials']);
-        $backend->customScriptWithAttributes("//TEST", ['type' => 'module', 'crossorigin' => 'anonymous']);
+        // Tests attribute appending AND lowercase string conversion
+        $backend->customScriptWithAttributes("//TEST", ['type' => 'module', 'crossorigin' => 'Anonymous']);
         $backend->css('css/RequirementsTest_a.css', null, ['integrity' => 'def', 'crossorigin' => 'anonymous']);
         $html = $backend->includeInHTML(self::$html_template);
 

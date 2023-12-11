@@ -96,6 +96,14 @@ class Requirements_Backend
     protected $customScript = [];
 
     /**
+     * Maintains attributes for each entry in the `$customScript` array, indexed by either a
+     * unique identifier (uniquenessID) or the script's array position.
+     *
+     * @var array
+     */
+    private array $customScriptAttributes = [];
+
+    /**
      * All custom CSS rules which are inserted directly at the bottom of the HTML `<head>` tag
      *
      * @var array
@@ -510,28 +518,30 @@ class Requirements_Backend
      * - 'crossorigin' : Cross-origin policy for the resource
      * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
      */
-    public function customScriptWithAttributes($script, $options = [], $uniquenessID = null)
+    public function customScriptWithAttributes(string $script, array $attributes = [], string|int|null $uniquenessID = null)
     {
         // Get type
         $type = null;
-        if (isset($this->customScript[$uniquenessID]['type'])) {
-            $type = $this->customScript[$uniquenessID]['type'];
+        if (isset($this->customScriptAttributes[$uniquenessID]['type'])) {
+            $type = $this->customScriptAttributes[$uniquenessID]['type'];
         }
-        if (isset($options['type'])) {
-            $type = $options['type'];
+        if (isset($attributes['type'])) {
+            $type = strtolower($attributes['type']);
         }
 
-        $crossorigin = $options['crossorigin'] ?? null;
+        $crossorigin = $attributes['crossorigin'];
+        $crossorigin = isset($crossorigin) ? strtolower($crossorigin) : null;
 
         if ($uniquenessID) {
-            $this->customScript[$uniquenessID] = [
-                'content' => $script,
+            $this->customScript[$uniquenessID] = $script;
+            $this->customScriptAttributess[$uniquenessID] = [
                 'type' => $type,
                 'crossorigin' => $crossorigin
             ];
         } else {
-            $this->customScript[] = [
-                'content' => $script,
+            $this->customScript[] = $script;
+            $index = count($this->customScript) - 1;
+            $this->customScriptAttributes[$index] = [
                 'type' => $type,
                 'crossorigin' => $crossorigin
             ];
@@ -829,18 +839,22 @@ class Requirements_Backend
         }
 
         // Add all inline JavaScript *after* including external files they might rely on
-        foreach ($this->getCustomScripts() as $script) {
+        foreach ($this->getCustomScripts() as $key => $script) {
             // Build html attributes
-            $htmlAttributes = [
-                'type' => isset($script['type']) ? $script['type'] : "application/javascript"
-            ];
-            if (!empty($script['crossorigin'])) {
-                $htmlAttributes['crossorigin'] = $script['crossorigin'];
+            $curScriptAttributes = $this->customScriptAttributes[$key];
+            $htmlAttributes = [];
+            if (isset($curScriptAttributes)) {
+                $htmlAttributes = [
+                    'type' => $curScriptAttributes['type'] ?? "application/javascript"
+                ];
+                if (!empty($curScriptAttributes['crossorigin'])) {
+                    $htmlAttributes['crossorigin'] = $curScriptAttributes['crossorigin'];
+                }
             }
             $jsRequirements .= HTML::createTag(
                 'script',
                 $htmlAttributes,
-                "//<![CDATA[\n{$script['content']}\n//]]>"
+                "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";
         }
