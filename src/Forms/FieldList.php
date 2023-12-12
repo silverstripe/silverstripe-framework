@@ -400,7 +400,6 @@ class FieldList extends ArrayList
         $currentPointer = $this;
 
         foreach ($parts as $k => $part) {
-            $parentPointer = $currentPointer;
             /** @var FormField $currentPointer */
             $currentPointer = $currentPointer->fieldByName($part);
         }
