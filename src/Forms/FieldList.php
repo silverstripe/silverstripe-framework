@@ -395,7 +395,6 @@ class FieldList extends ArrayList
     public function findTab($tabName)
     {
         $parts = explode('.', $tabName ?? '');
-        $last_idx = count($parts ?? []) - 1;
 
         $currentPointer = $this;
 
