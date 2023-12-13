@@ -11,7 +11,7 @@ use SilverStripe\ORM\DataObject;
  * @property string $Salt
  * @property string $PasswordEncryption
  * @property int $MemberID ID of the Member
- * @method Member Member() Owner of the password
+ * @method Member Member()
  */
 class MemberPassword extends DataObject
 {

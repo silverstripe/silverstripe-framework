@@ -24,7 +24,6 @@ use SilverStripe\View\ViewableData;
  *
  * @property int $ParentID
  * @property DataObject|Hierarchy $owner
- * @method DataObject Parent()
  */
 class Hierarchy extends DataExtension
 {

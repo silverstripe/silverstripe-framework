@@ -20,8 +20,8 @@ use SilverStripe\ORM\ManyManyList;
  * @property string Title
  * @property string OnlyAdminCanApply
  *
- * @method HasManyList Codes() List of PermissionRoleCode objects
- * @method ManyManyList Groups() List of Group objects
+ * @method SilverStripe\ORM\HasManyList<PermissionRoleCode> Codes()
+ * @method SilverStripe\ORM\ManyManyList<Group> Groups()
  */
 class PermissionRole extends DataObject
 {

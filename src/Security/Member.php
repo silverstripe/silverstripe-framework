@@ -39,8 +39,6 @@ use Symfony\Component\Mailer\MailerInterface;
 /**
  * The member class which represents the users of the system
  *
- * @method HasManyList LoggedPasswords()
- * @method HasManyList RememberLoginHashes()
  * @property string $FirstName
  * @property string $Surname
  * @property string $Email
@@ -57,6 +55,9 @@ use Symfony\Component\Mailer\MailerInterface;
  * @property int $FailedLoginCount
  * @property string $DateFormat
  * @property string $TimeFormat
+ * @method SilverStripe\ORM\ManyManyList<Group> Groups()
+ * @method SilverStripe\ORM\HasManyList<MemberPassword> LoggedPasswords()
+ * @method SilverStripe\ORM\HasManyList<RememberLoginHash> RememberLoginHashes()
  */
 class Member extends DataObject
 {

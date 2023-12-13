@@ -20,7 +20,7 @@ use SilverStripe\ORM\DataObject;
  * @property string $IP IP address of user attempting to login
  * @property int $MemberID ID of the Member
  *
- * @method Member Member() Member object of the user trying to log in
+ * @method Member Member()
  */
 class LoginAttempt extends DataObject
 {
