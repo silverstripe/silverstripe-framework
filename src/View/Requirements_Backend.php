@@ -534,7 +534,6 @@ class Requirements_Backend
             $index = count($this->customScript) - 1;
             $this->customScriptAttributes[$index] = $attrs;
         }
-        }
     }
 
     /**
