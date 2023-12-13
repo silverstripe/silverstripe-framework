@@ -1421,8 +1421,6 @@ EOS
             $html,
             'custom javascript has correct sri attributes'
         );
-
-
         /* CSS has correct attributes */
         $this->assertMatchesRegularExpression(
             '#<link .*href=".*/RequirementsTest_a\.css.*" integrity="def" crossorigin="anonymous"#',
