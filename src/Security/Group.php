@@ -47,11 +47,12 @@ use SilverStripe\ORM\UnsavedRelationList;
  *
  * @property int $ParentID ID of parent group
  *
- * @method Group Parent() Return parent group
- * @method HasManyList Permissions() List of group permissions
- * @method HasManyList Groups() List of child groups
- * @method ManyManyList Roles() List of PermissionRoles
  * @mixin Hierarchy
+ * @method HasManyList<Group> Groups()
+ * @method ManyManyList<Member> Members()
+ * @method Group Parent()
+ * @method HasManyList<Permission> Permissions()
+ * @method ManyManyList<PermissionRole> Roles()
  */
 class Group extends DataObject
 {
