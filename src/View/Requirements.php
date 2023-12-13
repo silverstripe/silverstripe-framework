@@ -145,7 +145,7 @@ class Requirements implements Flushable
      * Register the given Javascript code into the list of requirements with optional tag
      * attributes.
      *
-     * @param string     $script       The script content as a string (without enclosing `<script>` tag)
+     * @param string $script The script content as a string (without enclosing `<script>` tag)
      * @param array $options List of options. Available options include:
      * - 'type' : Specifies the type of script
      * - 'crossorigin' : Cross-origin policy for the resource
