@@ -842,7 +842,7 @@ class Requirements_Backend
         foreach ($this->getCustomScripts() as $key => $script) {
             // Build html attributes
             $curScriptAttributes = null;
-            if(array_key_exists($key, $this->customScriptAttributes)){
+            if (array_key_exists($key, $this->customScriptAttributes)) {
                 $curScriptAttributes = $this->customScriptAttributes[$key];
             }
             $customHtmlAttributes = [
