@@ -504,7 +504,7 @@ class Requirements_Backend
         if ($uniquenessID) {
             $this->customScript[$uniquenessID]['content'] = $script;
         } else {
-            $this->customScript[]['content'] = $script;
+            $this->customScript[] = $script;
         }
     }
 
@@ -841,19 +841,22 @@ class Requirements_Backend
         // Add all inline JavaScript *after* including external files they might rely on
         foreach ($this->getCustomScripts() as $key => $script) {
             // Build html attributes
-            $curScriptAttributes = $this->customScriptAttributes[$key];
-            $htmlAttributes = [];
+            $curScriptAttributes = null;
+            if(array_key_exists($key, $this->customScriptAttributes)){
+                $curScriptAttributes = $this->customScriptAttributes[$key];
+            }
+            $customHtmlAttributes = [
+                'type' => 'application/javascript'
+            ];
             if (isset($curScriptAttributes)) {
-                $htmlAttributes = [
-                    'type' => $curScriptAttributes['type'] ?? "application/javascript"
-                ];
+                $customHtmlAttributes['type'] = $curScriptAttributes['type'];
                 if (!empty($curScriptAttributes['crossorigin'])) {
-                    $htmlAttributes['crossorigin'] = $curScriptAttributes['crossorigin'];
+                    $customHtmlAttributes['crossorigin'] = $curScriptAttributes['crossorigin'];
                 }
             }
             $jsRequirements .= HTML::createTag(
                 'script',
-                $htmlAttributes,
+                $customHtmlAttributes,
                 "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";
