@@ -830,18 +830,9 @@ class Requirements_Backend
         // Add all inline JavaScript *after* including external files they might rely on
         foreach ($this->getCustomScripts() as $key => $script) {
             // Build html attributes
-            $curScriptAttributes = null;
-            if (array_key_exists($key, $this->customScriptAttributes)) {
-                $curScriptAttributes = $this->customScriptAttributes[$key];
-            }
-            $customHtmlAttributes = [
-                'type' => 'application/javascript'
-            ];
-            if (isset($curScriptAttributes)) {
-                $customHtmlAttributes['type'] = $curScriptAttributes['type'];
-                if (!empty($curScriptAttributes['crossorigin'])) {
-                    $customHtmlAttributes['crossorigin'] = $curScriptAttributes['crossorigin'];
-                }
+            $customHtmlAttributes = ['type' => 'application/javascript'];
+            foreach ($this->customScriptAttributes[$key] as $attrKey => $attrValue) {
+                $customHtmlAttributes[$attrKey] = $attrValue;
             }
             $jsRequirements .= HTML::createTag(
                 'script',
