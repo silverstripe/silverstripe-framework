@@ -520,31 +520,20 @@ class Requirements_Backend
      */
     public function customScriptWithAttributes(string $script, array $attributes = [], string|int|null $uniquenessID = null)
     {
-        // Get type
-        $type = null;
-        if (isset($this->customScriptAttributes[$uniquenessID]['type'])) {
-            $type = $this->customScriptAttributes[$uniquenessID]['type'];
+        $attrs = [];
+        foreach (['type', 'crossorigin'] as $attrKey) {
+            if (isset($attributes[$attrKey])) {
+                $attrs[$attrKey] = strtolower($attributes[$attrKey]);
+            }
         }
-        if (isset($attributes['type'])) {
-            $type = strtolower($attributes['type']);
-        }
-
-        $crossorigin = $attributes['crossorigin'];
-        $crossorigin = isset($crossorigin) ? strtolower($crossorigin) : null;
-
         if ($uniquenessID) {
             $this->customScript[$uniquenessID] = $script;
-            $this->customScriptAttributess[$uniquenessID] = [
-                'type' => $type,
-                'crossorigin' => $crossorigin
-            ];
+            $this->customScriptAttributes[$uniquenessID] = $attrs;
         } else {
             $this->customScript[] = $script;
             $index = count($this->customScript) - 1;
-            $this->customScriptAttributes[$index] = [
-                'type' => $type,
-                'crossorigin' => $crossorigin
-            ];
+            $this->customScriptAttributes[$index] = $attrs;
+        }
         }
     }
 
