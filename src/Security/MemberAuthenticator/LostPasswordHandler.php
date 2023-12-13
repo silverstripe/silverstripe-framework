@@ -2,15 +2,19 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Handle login requests from MemberLoginForm
@@ -173,7 +177,18 @@ class LostPasswordHandler extends RequestHandler
         if ($member) {
             $token = $member->generateAutologinTokenAndStoreHash();
 
-            $this->sendEmail($member, $token);
+            $success = $this->sendEmail($member, $token);
+            if (!$success) {
+                $form->sessionMessage(
+                    _t(
+                        Member::class . '.EMAIL_FAILED',
+                        'There was an error when trying to email you a password reset link.'
+                    ),
+                    'bad'
+                );
+
+                return $this->redirectToLostPassword();
+            }
         }
 
         return $this->redirectToSuccess($data);
@@ -225,20 +240,28 @@ class LostPasswordHandler extends RequestHandler
      */
     protected function sendEmail($member, $token)
     {
-        /** @var Email $email */
-        $email = Email::create()
-            ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
-            ->setData($member)
-            ->setSubject(_t(
-                'SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET',
-                "Your password reset link",
-                'Email subject'
-            ))
-            ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
-            ->setTo($member->Email);
+        try {
+            /** @var Email $email */
+            $email = Email::create()
+                ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
+                ->setData($member)
+                ->setSubject(_t(
+                    'SilverStripe\\Security\\Member.SUBJECTPASSWORDRESET',
+                    "Your password reset link",
+                    'Email subject'
+                ))
+                ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
+                ->setTo($member->Email);
 
-        $member->extend('updateForgotPasswordEmail', $email);
-        return $email->send();
+            $member->extend('updateForgotPasswordEmail', $email);
+            $email->send();
+            return true;
+        } catch (TransportExceptionInterface | RfcComplianceException $e) {
+            /** @var LoggerInterface $logger */
+            $logger = Injector::inst()->get(LoggerInterface::class . '.errorhandler');
+            $logger->error('Error sending email in ' . __FILE__ . ' line ' . __LINE__ . ": {$e->getMessage()}");
+            return false;
+        }
     }
 
     /**

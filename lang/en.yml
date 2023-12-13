@@ -290,6 +290,7 @@ en:
     CURRENT_PASSWORD: 'Current Password'
     EDIT_PASSWORD: 'New Password'
     EMAIL: Email
+    EMAIL_FAILED: 'There was an error when trying to email you a password reset link.'
     EMPTYNEWPASSWORD: "The new password can't be empty, please try again"
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
