@@ -395,12 +395,10 @@ class FieldList extends ArrayList
     public function findTab($tabName)
     {
         $parts = explode('.', $tabName ?? '');
-        $last_idx = count($parts ?? []) - 1;
 
         $currentPointer = $this;
 
         foreach ($parts as $k => $part) {
-            $parentPointer = $currentPointer;
             /** @var FormField $currentPointer */
             $currentPointer = $currentPointer->fieldByName($part);
         }
