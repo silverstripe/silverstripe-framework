@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use IntlDateFormatter;
 use InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Control\Director;
@@ -34,7 +35,9 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * The member class which represents the users of the system
@@ -772,18 +775,24 @@ class Member extends DataObject
             && static::config()->get('notify_password_change')
             && $this->isInDB()
         ) {
-            $email = Email::create()
-                ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
-                ->setData($this)
-                ->setTo($this->Email)
-                ->setSubject(_t(
-                    __CLASS__ . '.SUBJECTPASSWORDCHANGED',
-                    "Your password has been changed",
-                    'Email subject'
-                ));
+            try {
+                $email = Email::create()
+                    ->setHTMLTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
+                    ->setData($this)
+                    ->setTo($this->Email)
+                    ->setSubject(_t(
+                        __CLASS__ . '.SUBJECTPASSWORDCHANGED',
+                        "Your password has been changed",
+                        'Email subject'
+                    ));
 
-            $this->extend('updateChangedPasswordEmail', $email);
-            $email->send();
+                $this->extend('updateChangedPasswordEmail', $email);
+                $email->send();
+            } catch (TransportExceptionInterface | RfcComplianceException $e) {
+                /** @var LoggerInterface $logger */
+                $logger = Injector::inst()->get(LoggerInterface::class . '.errorhandler');
+                $logger->error('Error sending email in ' . __FILE__ . ' line ' . __LINE__ . ": {$e->getMessage()}");
+            }
         }
 
         // The test on $this->ID is used for when records are initially created. Note that this only works with
