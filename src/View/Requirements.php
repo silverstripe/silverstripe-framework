@@ -141,6 +141,7 @@ class Requirements implements Flushable
     {
         self::backend()->customScript($script, $uniquenessID);
     }
+
     /**
      * Register the given Javascript code into the list of requirements with optional tag
      * attributes.
