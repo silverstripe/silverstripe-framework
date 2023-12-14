@@ -141,6 +141,10 @@ en:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: "'{value}' is not a number, only numbers can be accepted for this field"
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: 'Select...'
+    TYPE_TO_SEARCH: 'Type to search...'
+    SELECT_OR_TYPE_TO_SEARCH: 'Select or type to search...'
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
   SilverStripe\Forms\TimeField:

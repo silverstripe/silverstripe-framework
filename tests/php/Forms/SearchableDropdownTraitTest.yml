@@ -1,0 +1,7 @@
+SilverStripe\Forms\Tests\FormTest\Team:
+  team01:
+    Name: Team 01
+  team02:
+    Name: Team 02
+  team03:
+    Name: Team 03
