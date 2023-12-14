@@ -830,8 +830,10 @@ class Requirements_Backend
         foreach ($this->getCustomScripts() as $key => $script) {
             // Build html attributes
             $customHtmlAttributes = ['type' => 'application/javascript'];
-            foreach ($this->customScriptAttributes[$key] as $attrKey => $attrValue) {
-                $customHtmlAttributes[$attrKey] = $attrValue;
+            if (isset($this->customScriptAttributes[$key])) {
+                foreach ($this->customScriptAttributes[$key] as $attrKey => $attrValue) {
+                    $customHtmlAttributes[$attrKey] = $attrValue;
+                }
             }
             $jsRequirements .= HTML::createTag(
                 'script',
