@@ -36,6 +36,8 @@ use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionCheckboxSetField;
 use SilverStripe\Security\PermissionCheckboxSetField_Readonly;
+use SilverStripe\Forms\SearchableMultiDropdownField;
+use SilverStripe\Forms\SearchableDropdownField;
 
 class FormFieldTest extends SapphireTest
 {
@@ -553,6 +555,10 @@ class FormFieldTest extends SapphireTest
                     break;
                 case GridState::class:
                     $args = [GridField::create('GF')];
+                    break;
+                case SearchableDropdownField::class:
+                case SearchableMultiDropdownField::class:
+                    $args = ['Test', 'Test', Group::get()];
                     break;
                 //
                 // Fields from other modules included in the kitchensink recipe
