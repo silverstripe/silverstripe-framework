@@ -9,7 +9,6 @@ use SilverStripe\ORM\DatabaseAdmin;
 /**
  * Hook up static validation to the deb/build process
  *
- * @method DatabaseAdmin getOwner()
  */
 class DatabaseAdminExtension extends Extension
 {
