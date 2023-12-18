@@ -47,7 +47,7 @@ trait SearchableDropdownTrait
 
     private bool $useSearchContext = false;
 
-    private DataList $sourceList;
+    private ?DataList $sourceList = null;
 
     private string $labelField = 'Title';
 
@@ -386,7 +386,7 @@ trait SearchableDropdownTrait
                 /** @var DataObject $record */
                 $classNameField = substr($name, 0, -2) . 'Class';
                 if ($record->hasField($classNameField)) {
-                    $record->$classNameField = $ids ? $this->sourceList->dataClass() : '';
+                    $record->$classNameField = $ids ? $record->ClassName : '';
                 }
             }
             $record->write();

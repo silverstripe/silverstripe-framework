@@ -15,8 +15,8 @@ class SearchableMultiDropdownField extends MultiSelectField
 
     public function __construct(
         string $name,
-        string $title,
-        DataList $source,
+        ?string $title = null,
+        ?DataList $source = null,
         $value = null,
         $labelField = 'Title'
     ) {

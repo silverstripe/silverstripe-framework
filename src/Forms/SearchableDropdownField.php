@@ -15,8 +15,8 @@ class SearchableDropdownField extends DropdownField
 
     public function __construct(
         string $name,
-        string $title,
-        DataList $source,
+        ?string $title = null,
+        ?DataList $source = null,
         mixed $value = null,
         string $labelField = 'Title'
     ) {

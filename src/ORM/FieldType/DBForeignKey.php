@@ -5,9 +5,8 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FileHandleField;
-use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 
@@ -23,16 +22,14 @@ use SilverStripe\ORM\DataObject;
  */
 class DBForeignKey extends DBInt
 {
-
     /**
      * @var DataObject
      */
     protected $object;
 
     /**
-     * This represents the number of related objects to show in a dropdown before it reverts
-     * to a NumericField. If you are tweaking this value, you should also consider constructing
-     * your form field manually rather than allowing it to be scaffolded
+     * Number of related objects to show in a dropdown before it switches to using lazyloading
+     * This will also be used as the lazy load limit
      *
      * @config
      * @var int
@@ -47,6 +44,7 @@ class DBForeignKey extends DBInt
      * Cache for multiple subsequent calls to scaffold form fields with the same foreign key object
      *
      * @var array
+     * @deprecated 5.2.0 Will be removed without equivalent functionality to replace it
      */
     protected static $foreignListCache = [];
 
@@ -77,52 +75,13 @@ class DBForeignKey extends DBInt
             }
             return $field;
         }
-
-        // Build selector / numeric field
-        $titleField = $hasOneSingleton->hasField('Title') ? 'Title' : 'Name';
+        $labelField = $hasOneSingleton->hasField('Title') ? 'Title' : 'Name';
         $list = DataList::create($hasOneClass);
-        // Don't scaffold a dropdown for large tables, as making the list concrete
-        // might exceed the available PHP memory in creating too many DataObject instances
         $threshold = self::config()->get('dropdown_field_threshold');
-
-        // Add the count of the list to a cache for subsequent calls
-        if (!isset(static::$foreignListCache[$hasOneClass])) {
-            // Let the DB do the threshold check as it will be faster - depending on the SQL engine it might only have
-            // to count indexes
-            $dataQuery = $list->dataQuery()->getFinalisedQuery();
-
-            // Clear order-by as it's not relevant for counts
-            $dataQuery->setOrderBy(false);
-            // Remove distinct. Applying distinct shouldn't be required provided relations are not applied.
-            $dataQuery->setDistinct(false);
-
-            $dataQuery->setSelect(['over_threshold' => '(CASE WHEN count(*) > ' . (int)$threshold . ' THEN 1 ELSE 0 END)']);
-            $result = $dataQuery->execute()->column('over_threshold');
-
-            $overThreshold = !empty($result) && ((int) $result[0] === 1);
-
-            static::$foreignListCache[$hasOneClass] = [
-                'overThreshold' => $overThreshold,
-            ];
-        }
-
-        $overThreshold = static::$foreignListCache[$hasOneClass]['overThreshold'];
-
-        if (!$overThreshold) {
-            // Add the mapped list for the cache
-            if (!isset(static::$foreignListCache[$hasOneClass]['map'])) {
-                static::$foreignListCache[$hasOneClass]['map'] = $list->map('ID', $titleField);
-            }
-
-            $field = new DropdownField($this->name, $title, static::$foreignListCache[$hasOneClass]['map']);
-            $field->setEmptyString(' ');
-        } else {
-            $field = new NumericField($this->name, $title);
-            $field->setRightTitle(_t(
-                self::class . '.DROPDOWN_THRESHOLD_FALLBACK_MESSAGE',
-                'Too many related objects; fallback field in use'
-            ));
-        }
+        $overThreshold = $list->count() > $threshold;
+        $field = SearchableDropdownField::create($this->name, $title, $list, $labelField)
+            ->setIsLazyLoaded($overThreshold)
+            ->setLazyLoadLimit($threshold);
         return $field;
     }
 
