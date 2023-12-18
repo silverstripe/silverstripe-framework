@@ -99,7 +99,6 @@ use stdClass;
  * If any public method on this class is prefixed with an underscore,
  * the results are cached in memory through {@link cachedCall()}.
  *
- *
  * @property int $ID ID of the DataObject, 0 if the DataObject doesn't exist in database.
  * @property int $OldID ID of object, if deleted
  * @property string $Title

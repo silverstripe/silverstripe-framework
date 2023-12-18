@@ -10,10 +10,10 @@ use SilverStripe\ORM\ManyManyList;
  *
  * @property string $CanViewType
  * @property string $CanEditType
- * @method ManyManyList ViewerGroups()
- * @method ManyManyList EditorGroups()
- * @method ManyManyList ViewerMembers()
- * @method ManyManyList EditorMembers()
+ * @method ManyManyList<Group> EditorGroups()
+ * @method ManyManyList<Member> EditorMembers()
+ * @method ManyManyList<Group> ViewerGroups()
+ * @method ManyManyList<Member> ViewerMembers()
  */
 class InheritedPermissionsExtension extends DataExtension
 {
