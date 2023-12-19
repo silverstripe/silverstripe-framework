@@ -502,7 +502,7 @@ class Requirements_Backend
     public function customScript($script, $uniquenessID = null)
     {
         if ($uniquenessID) {
-            $this->customScript[$uniquenessID]['content'] = $script;
+            $this->customScript[$uniquenessID] = $script;
         } else {
             $this->customScript[] = $script;
         }

@@ -1428,4 +1428,61 @@ EOS
             'css has correct sri attributes'
         );
     }
+
+    public function testUniquenessID(){
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+
+        // Create requirements that are to be overwritten
+        $backend->customScript("Do Not Display", 42);
+        $backend->customCSS("Do Not Display", 42);
+        $backend->insertHeadTags("<span>Do Not Display</span>", 42);
+
+        // Override
+        $backend->customScriptWithAttributes("Override", ['type' => 'module', 'crossorigin' => 'use-credentials'], 42);
+        $backend->customCSS("Override", 42);
+        $backend->insertHeadTags("<span>Override</span>", 42);
+
+        $html = $backend->includeInHTML(self::$html_template);
+
+        /* customScript is overwritten by customScriptWithAttributes */
+        $this->assertMatchesRegularExpression(
+            "#<script type=\"module\" crossorigin=\"use-credentials\">//<!\[CDATA\[\s*Override\s*//\]\]></script>#s",
+            $html,
+            'customScript is displaying latest write'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            "#<script type=\"application/javascript\">//<!\[CDATA\[\s*Do Not Display\s*//\]\]></script>#s",
+            $html,
+            'customScript is correctly not displaying original write'
+        );
+
+        /* customCSS is overwritten */
+        $this->assertMatchesRegularExpression(
+            "#<style type=\"text/css\">\s*Override\s*</style>#",
+            $html,
+            'customCSS is displaying latest write'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            "#<style type=\"text/css\">\s*Do Not Display\s*</style>#",
+            $html,
+            'customCSS is correctly not displaying original write'
+        );
+
+        /* Head Tags is overwritten */
+        $this->assertMatchesRegularExpression(
+            '#<span>Override</span>#',
+            $html,
+            'Head Tag is displaying latest write'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            '#<span>Do Not Display</span>#',
+            $html,
+            'Head Tag is correctly not displaying original write'
+        );
+    }
 }
