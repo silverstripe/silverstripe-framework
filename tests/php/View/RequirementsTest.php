@@ -1429,7 +1429,7 @@ EOS
         );
     }
 
-    public function testUniquenessID(){
+    public function testUniquenessID() {
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupRequirements($backend);
