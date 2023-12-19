@@ -4,6 +4,7 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\HTML;
@@ -200,7 +201,7 @@ class ConfirmedPasswordField extends FormField
                 }
             }
 
-            $fieldContent .= $field->FieldHolder();
+            $fieldContent .= $field->FieldHolder(['AttributesHTML' => $this->getAttributesHTMLForChild($field)]);
         }
 
         if (!$this->showOnClick) {
@@ -231,6 +232,19 @@ class ConfirmedPasswordField extends FormField
             ['class' => 'showOnClick'],
             $actionLink . "\n" . $container
         );
+    }
+
+    public function Required()
+    {
+        return !$this->canBeEmpty || parent::Required();
+    }
+
+    public function setForm($form)
+    {
+        foreach ($this->getChildren() as $field) {
+            $field->setForm($form);
+        }
+        return parent::setForm($form);
     }
 
     /**
@@ -693,5 +707,19 @@ class ConfirmedPasswordField extends FormField
     public function getRequireStrongPassword()
     {
         return $this->requireStrongPassword;
+    }
+
+    /**
+     * Get the AttributesHTML for a child field.
+     * Includes extra information the child isn't aware of on its own, such as whether
+     * it's required due to this field as a whole being required.
+     */
+    private function getAttributesHTMLForChild(FormField $child): DBField
+    {
+        $attributes = $child->getAttributesHTML();
+        if (strpos($attributes, 'required="required"') === false && $this->Required()) {
+            $attributes .= ' required="required" aria-required="true"';
+        }
+        return DBField::create_field('HTMLFragment', $attributes);
     }
 }
