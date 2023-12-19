@@ -8,13 +8,13 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\ViewableData;
 
 /**
  * Represents a field in a form.
@@ -454,11 +454,11 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Method to save this form field into the given {@link DataObject}.
+     * Method to save this form field into the given record.
      *
      * By default, makes use of $this->dataValue()
      *
-     * @param DataObject|DataObjectInterface $record DataObject to save data into
+     * @param ViewableData|DataObjectInterface $record Record to save data into
      */
     public function saveInto(DataObjectInterface $record)
     {
@@ -697,7 +697,7 @@ class FormField extends RequestHandler
      * or a submitted form value they should override setSubmittedValue() instead.
      *
      * @param mixed $value Either the parent object, or array of source data being loaded
-     * @param array|DataObject $data {@see Form::loadDataFrom}
+     * @param array|ViewableData $data {@see Form::loadDataFrom}
      * @return $this
      */
     public function setValue($value, $data = null)
@@ -712,7 +712,7 @@ class FormField extends RequestHandler
      * data formats.
      *
      * @param mixed $value
-     * @param array|DataObject $data
+     * @param array|ViewableData $data
      * @return $this
      */
     public function setSubmittedValue($value, $data = null)

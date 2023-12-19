@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
@@ -13,6 +14,8 @@ use SilverStripe\View\SSViewer;
  * Adds a "level up" link to a GridField table, which is useful when viewing
  * hierarchical data. Requires the managed record to have a "getParent()"
  * method or has_one relationship called "Parent".
+ *
+ * The modelClass of the GridField this component is in must be a DataObject subclass.
  */
 class GridFieldLevelup extends AbstractGridFieldComponent implements GridField_HTMLProvider
 {
@@ -52,6 +55,10 @@ class GridFieldLevelup extends AbstractGridFieldComponent implements GridField_H
     {
         $modelClass = $gridField->getModelClass();
         $parentID = 0;
+
+        if (!is_a($modelClass, DataObject::class, true)) {
+            throw new LogicException(__CLASS__ . " must be used with DataObject subclasses. Found '$modelClass'");
+        }
 
         if (!$this->currentID) {
             return null;

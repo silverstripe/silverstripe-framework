@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use Closure;
+use LogicException;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -13,10 +14,11 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FieldsValidator;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Filterable;
+use SilverStripe\View\ViewableData;
 
 /**
  * Provides view and edit forms at GridField-specific URLs.
@@ -62,7 +64,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     protected $validator;
 
     /**
-     * @var FieldList Falls back to {@link DataObject->getCMSFields()} if not defined.
+     * @var FieldList Falls back to {@link $record->getCMSFields()} if not defined.
      */
     protected $fields;
 
@@ -143,26 +145,29 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
 
         // if no validator has been set on the GridField then use the Validators from the record.
         if (!$this->getValidator()) {
-            $this->setValidator($record->getCMSCompositeValidator());
+            if ($record->hasMethod('getCMSCompositeValidator')) {
+                $validator = $record->getCMSCompositeValidator();
+            } else {
+                $validator = FieldsValidator::create();
+            }
+            $this->setValidator($validator);
         }
 
         return $handler->handleRequest($request);
     }
 
-    /**
-     * @param GridField $gridField
-     * @param HTTPRequest $request
-     * @return DataObject|null
-     */
-    protected function getRecordFromRequest(GridField $gridField, HTTPRequest $request): ?DataObject
+    protected function getRecordFromRequest(GridField $gridField, HTTPRequest $request): ?ViewableData
     {
-        /** @var DataObject $record */
+        /** @var ViewableData $record */
         if (is_numeric($request->param('ID'))) {
-            /** @var Filterable $dataList */
             $dataList = $gridField->getList();
             $record = $dataList->byID($request->param('ID'));
         } else {
             $record = Injector::inst()->create($gridField->getModelClass());
+        }
+
+        if ($record && !$record->hasField('ID')) {
+            throw new LogicException(get_class($record) . ' must have an ID field.');
         }
 
         return $record;
@@ -174,7 +179,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * This only works when the list passed to the GridField is a {@link DataList}.
      *
      * @param $gridField The current GridField
-     * @param $id The ID of the DataObject to open
+     * @param $id The ID of the record to open
      */
     public function getLostRecordRedirection(GridField $gridField, HTTPRequest $request, ?int $id = null): ?string
     {
@@ -216,7 +221,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * Build a request handler for the given record
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param RequestHandler $requestHandler
      * @return GridFieldDetailForm_ItemRequest
      */
@@ -248,7 +253,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getTemplate()
     {
@@ -266,7 +271,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getName()
     {
@@ -276,8 +281,8 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
     /**
      * Enable redirection to missing records.
      *
-     * If a GridField shows a filtered list, and the DataObject is not in the list but exists in the
-     * database, and the DataObject has a CMSEditLink method, then the system will redirect to the
+     * If a GridField shows a filtered list, and the record is not in the list but exists in the
+     * database, and the record has a CMSEditLink method, then the system will redirect to the
      * URL returned by that method.
      */
     public function setRedirectMissingRecords(bool $redirectMissingRecords): self

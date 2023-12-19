@@ -3,15 +3,18 @@
 namespace SilverStripe\Forms\Tests\GridField;
 
 use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ArrayData;
 use stdClass;
 
 class GridFieldDataColumnsTest extends SapphireTest
 {
-
     /**
      * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
      */
@@ -20,6 +23,19 @@ class GridFieldDataColumnsTest extends SapphireTest
         $obj = new GridField('testfield', 'testfield', Member::get());
         $expected = Member::singleton()->summaryFields();
         $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $this->assertEquals($expected, $columns->getDisplayFields($obj));
+    }
+
+    /**
+     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
+     */
+    public function testGridFieldGetDisplayFieldsWithArrayList()
+    {
+        $list = new ArrayList([new ArrayData(['Title' => 'My Item'])]);
+        $obj = new GridField('testfield', 'testfield', $list);
+        $expected = ['Title' => 'Title'];
+        $columns = $obj->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $columns->setDisplayFields($expected);
         $this->assertEquals($expected, $columns->getDisplayFields($obj));
     }
 
@@ -75,5 +91,23 @@ class GridFieldDataColumnsTest extends SapphireTest
             ["myFieldName" => '<a href=\"custom-admin/$ID\">$ID</a>'],
             $columns->getFieldFormatting()
         );
+    }
+
+    public function testGetDisplayFieldsThrowsException()
+    {
+        $component = new GridFieldDataColumns();
+        $config = new GridFieldConfig_Base();
+        $config->addComponent($component);
+        $gridField = new GridField('dummy', 'dummy', new ArrayList(), $config);
+        $modelClass = ArrayData::class;
+        $gridField->setModelClass($modelClass);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Cannot dynamically determine columns. Pass the column names to setDisplayFields()'
+            . " or implement a summaryFields() method on $modelClass"
+        );
+
+        $component->getDisplayFields($gridField);
     }
 }

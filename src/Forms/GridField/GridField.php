@@ -20,11 +20,14 @@ use SilverStripe\Forms\GridField\FormAction\SessionStore;
 use SilverStripe\Forms\GridField\FormAction\StateStore;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Limitable;
+use SilverStripe\ORM\Sortable;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\HTML;
+use SilverStripe\View\ViewableData;
 
 /**
  * Displays a {@link SS_List} in a grid format.
@@ -83,12 +86,12 @@ class GridField extends FormField
     /**
      * Data source.
      *
-     * @var SS_List
+     * @var SS_List&Filterable&Sortable&Limitable
      */
     protected $list = null;
 
     /**
-     * Class name of the DataObject that the GridField will display.
+     * Class name of the records that the GridField will display.
      *
      * Defaults to the value of $this->list->dataClass.
      *
@@ -205,7 +208,7 @@ class GridField extends FormField
     }
 
     /**
-     * Returns a data class that is a DataObject type that this GridField should look like.
+     * Returns the class name of the record type that this GridField should contain.
      *
      * @return string
      *
@@ -374,7 +377,7 @@ class GridField extends FormField
     /**
      * Set the data source.
      *
-     * @param SS_List $list
+     * @param SS_List&Filterable&Sortable&Limitable $list
      *
      * @return $this
      */
@@ -388,7 +391,7 @@ class GridField extends FormField
     /**
      * Get the data source.
      *
-     * @return SS_List
+     * @return SS_List&Filterable&Sortable&Limitable
      */
     public function getList()
     {
@@ -398,7 +401,7 @@ class GridField extends FormField
     /**
      * Get the data source after applying every {@link GridField_DataManipulator} to it.
      *
-     * @return SS_List
+     * @return SS_List&Filterable&Sortable&Limitable
      */
     public function getManipulatedList()
     {
@@ -461,7 +464,7 @@ class GridField extends FormField
         if (($request instanceof NullHTTPRequest) && Controller::has_curr()) {
             $request = Controller::curr()->getRequest();
         }
-        
+
         $stateStr = $this->getStateManager()->getStateFromRequest($this, $request);
         if ($stateStr) {
             $oldState = $this->getState(false);
@@ -744,7 +747,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param array $attributes
      * @param string $content
      *
@@ -762,7 +765,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param array $attributes
      * @param string $content
      *
@@ -780,7 +783,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param DataObject $record
+     * @param ViewableData $record
      *
      * @return array
      */
@@ -798,7 +801,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param DataObject $record
+     * @param ViewableData $record
      *
      * @return array
      */
@@ -869,7 +872,7 @@ class GridField extends FormField
     /**
      * Get the value from a column.
      *
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param string $column
      *
      * @return string
@@ -922,7 +925,7 @@ class GridField extends FormField
      * Use of this method ensures that any special rules around the data for this gridfield are
      * followed.
      *
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param string $fieldName
      *
      * @return mixed
@@ -949,7 +952,7 @@ class GridField extends FormField
     /**
      * Get extra columns attributes used as HTML attributes.
      *
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param string $column
      *
      * @return array

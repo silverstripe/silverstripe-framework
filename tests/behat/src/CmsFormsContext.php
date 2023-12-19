@@ -12,6 +12,7 @@ use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use SilverStripe\BehatExtension\Utility\StepHelper;
 use Symfony\Component\DomCrawler\Crawler;
 use Behat\Mink\Element\NodeElement;
+use Facebook\WebDriver\WebDriverExpectedCondition;
 use SilverStripe\SiteConfig\SiteConfig;
 
 /**
@@ -443,6 +444,23 @@ JS;
         Assert::assertNotNull($button, sprintf('Button "%s" not found', $buttonLabel));
 
         $button->click();
+    }
+
+    /**
+     * @When /^I click the "([^"]*)" button in the "([^"]*)" gridfield for the "([^"]*)" row, confirming the dialog$/
+     * @param string $buttonLabel
+     * @param string $gridFieldName
+     * @param string $rowName
+     */
+    public function stepIClickTheGridFieldButtonForRowConfirmingDialog($buttonLabel, $gridFieldName, $rowName)
+    {
+        $this->stepIClickTheGridFieldButtonForRow($buttonLabel, $gridFieldName, $rowName);
+        $session = $this->getSession()->getDriver()->getWebDriver();
+        $session->wait()->until(
+            WebDriverExpectedCondition::alertIsPresent(),
+            "Alert is expected"
+        );
+        $session->switchTo()->alert()->accept();
     }
 
     /**

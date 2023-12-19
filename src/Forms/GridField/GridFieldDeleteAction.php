@@ -2,9 +2,12 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\View\ViewableData;
 
 /**
  * This class is a {@link GridField} component that adds a delete action for
@@ -72,13 +75,12 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param DataObjectInterface&ViewableData $record
      * @param string $columnName
      * @return string|null the attribles for the action
      */
     public function getExtraData($gridField, $record, $columnName)
     {
-
         $field = $this->getRemoveAction($gridField, $record, $columnName);
 
         if ($field) {
@@ -105,7 +107,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * Return any special attributes that will be used for FormField::create_tag()
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param DataObjectInterface&ViewableData $record
      * @param string $columnName
      * @return array
      */
@@ -153,7 +155,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param DataObjectInterface&ViewableData $record
      * @param string $columnName
      * @return string|null the HTML for the column
      */
@@ -179,29 +181,39 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      */
     public function handleAction(GridField $gridField, $actionName, $arguments, $data)
     {
+        $list = $gridField->getList();
         if ($actionName == 'deleterecord' || $actionName == 'unlinkrelation') {
-            /** @var DataObject $item */
-            $item = $gridField->getList()->byID($arguments['RecordID']);
+            /** @var DataObjectInterface&ViewableData $item */
+            $item = $list->byID($arguments['RecordID']);
             if (!$item) {
                 return;
             }
 
             if ($actionName == 'deleterecord') {
+                $this->checkForRequiredMethod($item, 'canDelete');
+
                 if (!$item->canDelete()) {
                     throw new ValidationException(
                         _t(__CLASS__ . '.DeletePermissionsFailure', "No delete permissions")
                     );
                 }
 
+                if (!($list instanceof DataList)) {
+                    // We need to make sure to exclude the item since the list items have already been determined.
+                    // This must happen before deletion while the item still has its ID set.
+                    $gridField->setList($list->exclude(['ID' => $item->ID]));
+                }
                 $item->delete();
             } else {
+                $this->checkForRequiredMethod($item, 'canEdit');
+
                 if (!$item->canEdit()) {
                     throw new ValidationException(
                         _t(__CLASS__ . '.EditPermissionsFailure', "No permission to unlink record")
                     );
                 }
 
-                $gridField->getList()->remove($item);
+                $list->remove($item);
             }
         }
     }
@@ -209,16 +221,19 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      *
      * @param GridField $gridField
-     * @param DataObject $record
+     * @param DataObjectInterface&ViewableData $record
      * @param string $columnName
      * @return GridField_FormAction|null
      */
     private function getRemoveAction($gridField, $record, $columnName)
     {
         if ($this->getRemoveRelation()) {
+            $this->checkForRequiredMethod($record, 'canEdit');
+
             if (!$record->canEdit()) {
                 return null;
             }
+
             $title = _t(__CLASS__ . '.UnlinkRelation', "Unlink");
 
             $field = GridField_FormAction::create(
@@ -233,9 +248,12 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
                 ->setDescription($title)
                 ->setAttribute('aria-label', $title);
         } else {
+            $this->checkForRequiredMethod($record, 'canDelete');
+
             if (!$record->canDelete()) {
                 return null;
             }
+
             $title = _t(__CLASS__ . '.Delete', "Delete");
 
             $field = GridField_FormAction::create(
@@ -273,5 +291,21 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     {
         $this->removeRelation = (bool) $removeRelation;
         return $this;
+    }
+
+    /**
+     * Checks if a required method exists - and if not, throws an exception.
+     *
+     * @throws LogicException if the required method doesn't exist
+     */
+    private function checkForRequiredMethod($record, string $method): void
+    {
+        if (!$record->hasMethod($method)) {
+            $modelClass = get_class($record);
+            throw new LogicException(
+                __CLASS__ . " cannot be used with models that don't implement {$method}()."
+                . " Remove this component from your GridField or implement {$method}() on $modelClass"
+            );
+        }
     }
 }

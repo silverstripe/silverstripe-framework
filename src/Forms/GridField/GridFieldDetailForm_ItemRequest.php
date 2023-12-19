@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -17,6 +18,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
@@ -28,6 +30,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\ViewableData;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
 {
@@ -64,7 +67,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     protected $component;
 
     /**
-     * @var DataObject
+     * @var ViewableData
      */
     protected $record;
 
@@ -96,7 +99,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @param GridField $gridField
      * @param GridFieldDetailForm $component
-     * @param DataObject $record
+     * @param ViewableData&DataObjectInterface $record
      * @param RequestHandler $requestHandler
      * @param string $popupFormName
      */
@@ -125,11 +128,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function view($request)
     {
-        if (!$this->record->canView()) {
+        // Assume item can be viewed if canView() isn't implemented
+        if ($this->record->hasMethod('canView') && !$this->record->canView()) {
             $this->httpError(403, _t(
                 __CLASS__ . '.ViewPermissionsFailure',
                 'It seems you don\'t have the necessary permissions to view "{ObjectTitle}"',
-                ['ObjectTitle' => $this->record->singular_name()]
+                ['ObjectTitle' => $this->getModelName()]
             ));
         }
 
@@ -215,17 +219,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             }
         }
 
-        if (!$this->record->canView()) {
+        // Assume item can be viewed if canView() isn't implemented
+        if ($this->record->hasMethod('canView') && !$this->record->canView()) {
             $controller = $this->getToplevelController();
             return $controller->httpError(403, _t(
                 __CLASS__ . '.ViewPermissionsFailure',
                 'It seems you don\'t have the necessary permissions to view "{ObjectTitle}"',
-                ['ObjectTitle' => $this->record->singular_name()]
+                ['ObjectTitle' => $this->getModelName()]
             ));
         }
 
         $fields = $this->component->getFields();
         if (!$fields) {
+            if (!$this->record->hasMethod('getCMSFields')) {
+                $modelClass = get_class($this->record);
+                throw new LogicException(
+                    'Cannot dynamically determine form fields. Pass the fields to GridFieldDetailForm::setFields()'
+                    . " or implement a getCMSFields() method on {$modelClass}"
+                );
+            }
             $fields = $this->record->getCMSFields();
         }
 
@@ -249,15 +261,15 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $form->loadDataFrom($this->record, $this->record->ID == 0 ? Form::MERGE_IGNORE_FALSEISH : Form::MERGE_DEFAULT);
 
-        if ($this->record->ID && !$this->record->canEdit()) {
+        if ($this->record->ID && (!$this->record->hasMethod('canEdit') || !$this->record->canEdit())) {
             // Restrict editing of existing records
             $form->makeReadonly();
             // Hack to re-enable delete button if user can delete
-            if ($this->record->canDelete()) {
+            if ($this->record->hasMethod('canDelete') && $this->record->canDelete()) {
                 $form->Actions()->fieldByName('action_doDelete')->setReadonly(false);
             }
         } elseif (!$this->record->ID
-            && !$this->record->canCreate(null, $this->getCreateContext())
+            && (!$this->record->hasMethod('canCreate') || !$this->record->canCreate(null, $this->getCreateContext()))
         ) {
             // Restrict creation of new records
             $form->makeReadonly();
@@ -367,7 +379,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $rightGroup->push($previousAndNextGroup);
 
-        if ($component && $component->getShowAdd() && $this->record->canCreate()) {
+        if ($component && $component->getShowAdd() && $this->record->hasMethod('canCreate') && $this->record->canCreate()) {
             $rightGroup->push(
                 LiteralField::create(
                     'new-record',
@@ -386,7 +398,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     }
 
     /**
-     * Build the set of form field actions for this DataObject
+     * Build the set of form field actions for the record being handled
      *
      * @return FieldList
      */
@@ -399,8 +411,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $majorActions->setFieldHolderTemplate(get_class($majorActions) . '_holder_buttongroup');
         $actions->push($majorActions);
 
-        if ($this->record->ID !== 0) { // existing record
-            if ($this->record->canEdit()) {
+        if ($this->record->ID !== null && $this->record->ID !== 0) { // existing record
+            if ($this->record->hasMethod('canEdit') && $this->record->canEdit()) {
+                if (!($this->record instanceof DataObjectInterface)) {
+                    throw new LogicException(get_class($this->record) . ' must implement ' . DataObjectInterface::class);
+                }
+
                 $noChangesClasses = 'btn-outline-primary font-icon-tick';
                 $majorActions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
                     ->addExtraClass($noChangesClasses)
@@ -410,7 +426,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     ->setAttribute('data-text-alternate', _t('SilverStripe\\CMS\\Controllers\\CMSMain.SAVEDRAFT', 'Save')));
             }
 
-            if ($this->record->canDelete()) {
+            if ($this->record->hasMethod('canDelete') && $this->record->canDelete()) {
+                if (!($this->record instanceof DataObjectInterface)) {
+                    throw new LogicException(get_class($this->record) . ' must implement ' . DataObjectInterface::class);
+                }
                 $actions->insertAfter('MajorActions', FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
@@ -490,9 +509,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * {@see Form::saveInto()}
      *
      * Handles detection of falsey values explicitly saved into the
-     * DataObject by formfields
+     * record by formfields
      *
-     * @param DataObject $record
+     * @param ViewableData $record
      * @param SS_List $list
      * @return array List of data to write to the relation
      */
@@ -518,11 +537,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $isNewRecord = $this->record->ID == 0;
 
         // Check permission
-        if (!$this->record->canEdit()) {
+        if (!$this->record->hasMethod('canEdit') || !$this->record->canEdit()) {
             $this->httpError(403, _t(
                 __CLASS__ . '.EditPermissionsFailure',
                 'It seems you don\'t have the necessary permissions to edit "{ObjectTitle}"',
-                ['ObjectTitle' => $this->record->singular_name()]
+                ['ObjectTitle' => $this->getModelName()]
             ));
             return null;
         }
@@ -537,7 +556,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Saved',
             'Saved {name} {link}',
             [
-                'name' => $this->record->i18n_singular_name(),
+                'name' => $this->getModelName(),
                 'link' => $link
             ]
         );
@@ -744,12 +763,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     }
 
     /**
-     * Loads the given form data into the underlying dataobject and relation
+     * Loads the given form data into the underlying record and relation
      *
      * @param array $data
      * @param Form $form
      * @throws ValidationException On error
-     * @return DataObject Saved record
+     * @return ViewableData&DataObjectInterface Saved record
      */
     protected function saveFormIntoRecord($data, $form)
     {
@@ -766,7 +785,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             $this->record = $this->record->newClassInstance($newClassName);
         }
 
-        // Save form and any extra saved data into this dataobject.
+        // Save form and any extra saved data into this record.
         // Set writeComponents = true to write has-one relations / join records
         $form->saveInto($this->record);
         // https://github.com/silverstripe/silverstripe-assets/issues/365
@@ -788,7 +807,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     public function doDelete($data, $form)
     {
         $title = $this->record->Title;
-        if (!$this->record->canDelete()) {
+        if (!$this->record->hasMethod('canDelete') || !$this->record->canDelete()) {
             throw new ValidationException(
                 _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions")
             );
@@ -799,7 +818,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Deleted',
             'Deleted {type} "{name}"',
             [
-                'type' => $this->record->i18n_singular_name(),
+                'type' => $this->getModelName(),
                 'name' => htmlspecialchars($title ?? '', ENT_QUOTES)
             ]
         );
@@ -870,7 +889,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     }
 
     /**
-     * @return DataObject
+     * @return ViewableData
      */
     public function getRecord()
     {
@@ -906,7 +925,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             ]));
         } else {
             $items->push(ArrayData::create([
-                'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->record->i18n_singular_name()]),
+                'Title' => _t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New {type}', ['type' => $this->getModelName()]),
                 'Link' => false
             ]));
         }
@@ -919,5 +938,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         $this->extend('updateBreadcrumbs', $items);
         return $items;
+    }
+
+    private function getModelName(): string
+    {
+        if ($this->record->hasMethod('i18n_singular_name')) {
+            return $this->record->i18n_singular_name();
+        }
+        return ClassInfo::shortName($this->record);
     }
 }

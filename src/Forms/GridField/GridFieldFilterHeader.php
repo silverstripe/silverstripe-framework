@@ -7,10 +7,12 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -27,11 +29,12 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     protected $throwExceptionOnBadDataType = true;
 
     /**
-     * @var \SilverStripe\ORM\Search\SearchContext
+     * @var SearchContext
      */
     protected $searchContext = null;
 
@@ -66,17 +69,21 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * {@link GridFieldConfig} subclasses set this to false for flexibility.
      *
      * @param bool $throwExceptionOnBadDataType
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
     }
 
     /**
      * See {@link setThrowExceptionOnBadDataType()}
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function getThrowExceptionOnBadDataType()
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         return $this->throwExceptionOnBadDataType;
     }
 
@@ -103,6 +110,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         if ($dataList instanceof Filterable) {
             return true;
         } else {
+            // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
                     static::class . " expects an SS_Filterable list to be passed to the GridField."
@@ -243,15 +251,33 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * Generate a search context based on the model class of the of the GridField
      *
      * @param GridField $gridfield
-     * @return \SilverStripe\ORM\Search\SearchContext
+     * @return SearchContext
      */
     public function getSearchContext(GridField $gridField)
     {
         if (!$this->searchContext) {
-            $this->searchContext = singleton($gridField->getModelClass())->getDefaultSearchContext();
+            $modelClass = $gridField->getModelClass();
+            $singleton = singleton($modelClass);
+            if (!$singleton->hasMethod('getDefaultSearchContext')) {
+                throw new LogicException(
+                    'Cannot dynamically instantiate SearchContext. Pass the SearchContext to setSearchContext()'
+                    . " or implement a getDefaultSearchContext() method on $modelClass"
+                );
+            }
+            $this->searchContext = $singleton->getDefaultSearchContext();
         }
 
         return $this->searchContext;
+    }
+
+    /**
+     * Sets a specific SearchContext instance for this component to use, instead of the default
+     * context provided by the ModelClass.
+     */
+    public function setSearchContext(SearchContext $context): static
+    {
+        $this->searchContext = $context;
+        return $this;
     }
 
     /**
@@ -280,8 +306,6 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
         }
 
-        $name = $gridField->Title ?: $inst->i18n_plural_name();
-
         // Prefix "Search__" onto the filters for the React component
         $filters = $context->getSearchParams();
         if (!empty($filters)) {
@@ -295,7 +319,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
-            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $name]),
+            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $this->getTitle($gridField, $inst)]),
             'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => $searchAction->getAttribute('name'),
@@ -305,6 +329,19 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         ];
 
         return json_encode($schema);
+    }
+
+    private function getTitle(GridField $gridField, object $inst): string
+    {
+        if ($gridField->Title) {
+            return $gridField->Title;
+        }
+
+        if (ClassInfo::hasMethod($inst, 'i18n_plural_name')) {
+            return $inst->i18n_plural_name();
+        }
+
+        return ClassInfo::shortName($inst);
     }
 
     /**
@@ -350,7 +387,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $field->addExtraClass('stacked no-change-track');
         }
 
-        $name = $gridField->Title ?: singleton($gridField->getModelClass())->i18n_plural_name();
+        $name = $this->getTitle($gridField, singleton($gridField->getModelClass()));
 
         $this->searchForm = $form = new Form(
             $gridField,

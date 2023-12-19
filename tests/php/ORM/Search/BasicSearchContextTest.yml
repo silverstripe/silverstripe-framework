@@ -1,0 +1,28 @@
+SilverStripe\ORM\Tests\Search\SearchContextTest\GeneralSearch:
+  general0:
+    Name: General Zero
+    DoNotUseThisField: omitted
+    HairColor: blue
+    ExcludeThisField: excluded
+    ExactMatchField: Some specific value here
+    PartialMatchField: A partial match is allowed for this field
+    MatchAny1: Some match any field
+    MatchAny2: Another match any field
+  general1:
+    Name: General One
+    DoNotUseThisField: omitted
+    HairColor: brown
+    ExcludeThisField: excluded
+    ExactMatchField: This requires an exact match
+    PartialMatchField: This explicitly allows partial matches
+    MatchAny1: first match
+    MatchAny2: second match
+  general2:
+    Name: MatchNothing
+    DoNotUseThisField: MatchNothing
+    HairColor: MatchNothing
+    ExcludeThisField: MatchNothing
+    ExactMatchField: MatchNothing
+    PartialMatchField: MatchNothing
+    MatchAny1: MatchNothing
+    MatchAny2: MatchNothing

@@ -17,6 +17,7 @@ use SilverStripe\Forms\SelectField;
 use SilverStripe\Forms\CheckboxField;
 use InvalidArgumentException;
 use Exception;
+use LogicException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataQuery;
@@ -104,7 +105,18 @@ class SearchContext
      */
     public function getSearchFields()
     {
-        return ($this->fields) ? $this->fields : singleton($this->modelClass)->scaffoldSearchFields();
+        if ($this->fields?->exists()) {
+            return $this->fields;
+        }
+
+        $singleton = singleton($this->modelClass);
+        if (!$singleton->hasMethod('scaffoldSearchFields')) {
+            throw new LogicException(
+                'Cannot dynamically determine search fields. Pass the fields to setFields()'
+                . " or implement a scaffoldSearchFields() method on {$this->modelClass}"
+            );
+        }
+        return $singleton->scaffoldSearchFields();
     }
 
     protected function applyBaseTableFields()
@@ -431,7 +443,7 @@ class SearchContext
      */
     public function addField($field)
     {
-        $this->fields->push($field);
+        $this->fields?->push($field);
     }
 
     /**
@@ -441,7 +453,7 @@ class SearchContext
      */
     public function removeFieldByName($fieldName)
     {
-        $this->fields->removeByName($fieldName);
+        $this->fields?->removeByName($fieldName);
     }
 
     /**
@@ -488,7 +500,7 @@ class SearchContext
                 continue;
             }
 
-            $field = $this->fields->fieldByName($filter->getFullName());
+            $field = $this->fields?->fieldByName($filter->getFullName());
             if (!$field) {
                 continue;
             }

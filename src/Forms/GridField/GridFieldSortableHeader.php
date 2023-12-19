@@ -11,7 +11,9 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * GridFieldSortableHeader adds column headers to a {@link GridField} that can
@@ -26,6 +28,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     protected $throwExceptionOnBadDataType = true;
 
@@ -45,9 +48,11 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      *
      * @param bool $throwExceptionOnBadDataType
      * @return $this
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
         return $this;
     }
@@ -56,9 +61,11 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @return bool
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     public function getThrowExceptionOnBadDataType()
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         return $this->throwExceptionOnBadDataType;
     }
 
@@ -74,6 +81,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
         if ($dataList instanceof Sortable) {
             return true;
         } else {
+            // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
                     static::class . " expects an SS_Sortable list to be passed to the GridField."
@@ -147,7 +155,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
                     if ($tmpItem instanceof SS_List) {
                         // It's impossible to sort on a HasManyList/ManyManyList
                         break;
-                    } elseif ($tmpItem && method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
+                    } elseif ($tmpItem && ClassInfo::hasMethod($tmpItem, $methodName)) {
                         // The part is a relation name, so get the object/list from it
                         $tmpItem = $tmpItem->$methodName();
                     } elseif ($tmpItem instanceof DataObject

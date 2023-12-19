@@ -12,7 +12,6 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\ValidationResult;
@@ -136,7 +135,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Populated by {@link loadDataFrom()}.
      *
-     * @var DataObject|null
+     * @var ViewableData|null
      */
     protected $record;
 
@@ -1223,10 +1222,10 @@ class Form extends ViewableData implements HasRequestHandler
     }
 
     /**
-     * Returns the DataObject that has given this form its data
+     * Returns the record that has given this form its data
      * through {@link loadDataFrom()}.
      *
-     * @return DataObject
+     * @return ViewableData
      */
     public function getRecord()
     {
@@ -1285,7 +1284,7 @@ class Form extends ViewableData implements HasRequestHandler
     const MERGE_AS_SUBMITTED_VALUE  = 0b1000;
 
     /**
-     * Load data from the given DataObject or array.
+     * Load data from the given record or array.
      *
      * It will call $object->MyField to get the value of MyField.
      * If you passed an array, it will call $object[MyField].
@@ -1306,7 +1305,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @uses FormField::setSubmittedValue()
      * @uses FormField::setValue()
      *
-     * @param array|DataObject $data
+     * @param array|ViewableData $data
      * @param int $mergeStrategy
      *  For every field, {@link $data} is interrogated whether it contains a relevant property/key, and
      *  what that property/key's value is.
@@ -1351,7 +1350,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         // If an object is passed, save it for historical reference through {@link getRecord()}
         // Also use this to determine if we are loading a submitted form, or loading
-        // from a dataobject
+        // from a record
         $submitted = true;
         if (is_object($data)) {
             $this->record = $data;
@@ -1480,7 +1479,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Save the contents of this form into the given data object.
      * It will make use of setCastedField() to do this.
      *
-     * @param DataObjectInterface $dataObject The object to save data into
+     * @param ViewableData&DataObjectInterface $dataObject The object to save data into
      * @param FieldList $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
      */
@@ -1523,7 +1522,7 @@ class Form extends ViewableData implements HasRequestHandler
      * {@link FieldList->dataFields()}, which filters out
      * any form-specific data like form-actions.
      * Calls {@link FormField->dataValue()} on each field,
-     * which returns a value suitable for insertion into a DataObject
+     * which returns a value suitable for insertion into a record
      * property.
      *
      * @return array

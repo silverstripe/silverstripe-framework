@@ -2,16 +2,17 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use LogicException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
+use SilverStripe\View\ViewableData;
 
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
@@ -161,7 +162,15 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
             return $dataCols->getDisplayFields($gridField);
         }
 
-        return DataObject::singleton($gridField->getModelClass())->summaryFields();
+        $modelClass = $gridField->getModelClass();
+        $singleton = singleton($modelClass);
+        if (!$singleton->hasMethod('summaryFields')) {
+            throw new LogicException(
+                'Cannot dynamically determine columns. Add a GridFieldDataColumns component to your GridField'
+                . " or implement a summaryFields() method on $modelClass"
+            );
+        }
+        return $singleton->summaryFields();
     }
 
     /**
@@ -226,8 +235,9 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
         /** @var GridFieldDataColumns $gridFieldColumnsComponent */
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
 
-        /** @var DataObject $item */
+        /** @var ViewableData $item */
         foreach ($items->limit(null) as $item) {
+            // Assume item can be viewed if canView() isn't implemented
             if (!$item->hasMethod('canView') || $item->canView()) {
                 $itemRow = new ArrayList();
 
