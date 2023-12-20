@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security Vulnerability
+    url: https://docs.silverstripe.org/en/contributing/issues_and_bugs/#reporting-security-issues
+    about: ⚠️ We do not use GitHub issues to track security vulnerability reports. Click "open" on the right to see how to report security vulnerabilities.
+  - name: Support Question
+    url: https://www.silverstripe.org/community/
+    about: We use GitHub issues only to discuss bugs and new features. For support questions, please use one of the support options available in our community channels.
