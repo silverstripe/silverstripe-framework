@@ -1437,11 +1437,13 @@ EOS
 
         // Create requirements that are to be overwritten
         $backend->customScript("Do Not Display", 42);
+        $backend->customScriptWithAttributes("Do Not Display", ['type' => 'module', 'crossorigin' => 'use-credentials'], 84);
         $backend->customCSS("Do Not Display", 42);
         $backend->insertHeadTags("<span>Do Not Display</span>", 42);
 
         // Override
         $backend->customScriptWithAttributes("Override", ['type' => 'module', 'crossorigin' => 'use-credentials'], 42);
+        $backend->customScript("Override", 84);
         $backend->customCSS("Override", 42);
         $backend->insertHeadTags("<span>Override</span>", 42);
 
@@ -1458,6 +1460,19 @@ EOS
             "#<script type=\"application/javascript\">//<!\[CDATA\[\s*Do Not Display\s*//\]\]></script>#s",
             $html,
             'customScript is correctly not displaying original write'
+        );
+
+        /* customScriptWithAttributes is overwritten by customScript */
+        $this->assertMatchesRegularExpression(
+            "#<script type=\"application/javascript\">//<!\[CDATA\[\s*Override\s*//\]\]></script>#s",
+            $html,
+            'customScript is displaying latest write and clearing attributes'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            "#<script type=\"module\" crossorigin=\"use-credentials\">//<!\[CDATA\[\s*Do Not Display\s*//\]\]></script>#s",
+            $html,
+            'customScript is displaying latest write'
         );
 
         /* customCSS is overwritten */

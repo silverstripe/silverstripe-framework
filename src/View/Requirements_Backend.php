@@ -502,6 +502,9 @@ class Requirements_Backend
     public function customScript($script, $uniquenessID = null)
     {
         if ($uniquenessID) {
+            if (isset($this->customScriptAttributes[$uniquenessID])) {
+                unset($this->customScriptAttributes[$uniquenessID]);
+            }
             $this->customScript[$uniquenessID] = $script;
         } else {
             $this->customScript[] = $script;
