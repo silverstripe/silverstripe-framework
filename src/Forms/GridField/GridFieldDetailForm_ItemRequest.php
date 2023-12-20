@@ -10,6 +10,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -19,6 +20,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
@@ -27,6 +29,7 @@ use SilverStripe\ORM\RelationList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Versioned\RecursiveStagesInterface;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
@@ -417,7 +420,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     throw new LogicException(get_class($this->record) . ' must implement ' . DataObjectInterface::class);
                 }
 
-                $noChangesClasses = 'btn-outline-primary font-icon-tick';
+                $noChangesClasses = $this->stagesDifferRecursive() ? 'btn-primary font-icon-save' : 'btn-outline-primary font-icon-tick';
                 $majorActions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
                     ->addExtraClass($noChangesClasses)
                     ->setAttribute('data-btn-alternate-add', 'btn-primary font-icon-save')
@@ -936,6 +939,25 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             }
         }
 
+        $status =  $this->getRecordStatus();
+        $badge = null;
+        if ($status) {
+            // Generate badge
+            $badge = DBField::create_field('HTMLFragment', sprintf(
+                '<span class="badge version-status version-status--%s">%s</span>',
+                $status['class'],
+                $status['title']
+            ));
+        }
+
+        $this->extend('updateBadge', $badge);
+
+        if ($badge) {
+            /** @var ArrayData $lastItem */
+            $lastItem = $items->last();
+            $lastItem->setField('Extra', $badge);
+        }
+
         $this->extend('updateBreadcrumbs', $items);
         return $items;
     }
@@ -946,5 +968,26 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return $this->record->i18n_singular_name();
         }
         return ClassInfo::shortName($this->record);
+    }
+
+    private function getRecordStatus(): ?array
+    {
+        if ($this->stagesDifferRecursive()) {
+            return [
+                'class' => 'modified',
+                'title' => _t(__CLASS__ . '.MODIFIED', 'Modified')
+            ];
+        }
+
+        return null;
+    }
+
+
+    private function stagesDifferRecursive(): bool
+    {
+        /** @var RecursiveStagesInterface $service */
+        $service = Injector::inst()->get(RecursiveStagesInterface::class);
+
+        return $service->stagesDifferRecursive($this->record);
     }
 }

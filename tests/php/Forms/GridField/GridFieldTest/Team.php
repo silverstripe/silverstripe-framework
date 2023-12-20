@@ -18,6 +18,10 @@ class Team extends DataObject implements TestOnly
         'Players' => Player::class
     ];
 
+    private static $owns = [
+        'Cheerleaders'
+    ];
+
     private static $has_many = [
         'Cheerleaders' => Cheerleader::class
     ];
