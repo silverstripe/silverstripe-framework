@@ -36,7 +36,7 @@
         "psr/http-message": "^1",
         "sebastian/diff": "^4.0",
         "silverstripe/config": "^2",
-        "silverstripe/assets": "^2",
+        "silverstripe/assets": "^2.2",
         "silverstripe/vendor-plugin": "^2",
         "sminnee/callbacklist": "^0.1.1",
         "symfony/cache": "^6.1",
