@@ -96,6 +96,14 @@ class Requirements_Backend
     protected $customScript = [];
 
     /**
+     * Maintains attributes for each entry in the `$customScript` array, indexed by either a
+     * unique identifier (uniquenessID) or the script's array position.
+     *
+     * @var array
+     */
+    private array $customScriptAttributes = [];
+
+    /**
      * All custom CSS rules which are inserted directly at the bottom of the HTML `<head>` tag
      *
      * @var array
@@ -494,9 +502,40 @@ class Requirements_Backend
     public function customScript($script, $uniquenessID = null)
     {
         if ($uniquenessID) {
+            if (isset($this->customScriptAttributes[$uniquenessID])) {
+                unset($this->customScriptAttributes[$uniquenessID]);
+            }
             $this->customScript[$uniquenessID] = $script;
         } else {
             $this->customScript[] = $script;
+        }
+    }
+
+    /**
+     * Register the given Javascript code into the list of requirements with optional tag
+     * attributes.
+     *
+     * @param string $script The script content as a string (without enclosing `<script>` tag)
+     * @param array $options List of options. Available options include:
+     * - 'type' : Specifies the type of script
+     * - 'crossorigin' : Cross-origin policy for the resource
+     * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+     */
+    public function customScriptWithAttributes(string $script, array $attributes = [], string|int|null $uniquenessID = null)
+    {
+        $attrs = [];
+        foreach (['type', 'crossorigin'] as $attrKey) {
+            if (isset($attributes[$attrKey])) {
+                $attrs[$attrKey] = strtolower($attributes[$attrKey]);
+            }
+        }
+        if ($uniquenessID) {
+            $this->customScript[$uniquenessID] = $script;
+            $this->customScriptAttributes[$uniquenessID] = $attrs;
+        } else {
+            $this->customScript[] = $script;
+            $index = count($this->customScript) - 1;
+            $this->customScriptAttributes[$index] = $attrs;
         }
     }
 
@@ -791,10 +830,17 @@ class Requirements_Backend
         }
 
         // Add all inline JavaScript *after* including external files they might rely on
-        foreach ($this->getCustomScripts() as $script) {
+        foreach ($this->getCustomScripts() as $key => $script) {
+            // Build html attributes
+            $customHtmlAttributes = ['type' => 'application/javascript'];
+            if (isset($this->customScriptAttributes[$key])) {
+                foreach ($this->customScriptAttributes[$key] as $attrKey => $attrValue) {
+                    $customHtmlAttributes[$attrKey] = $attrValue;
+                }
+            }
             $jsRequirements .= HTML::createTag(
                 'script',
-                [ 'type' => 'application/javascript' ],
+                $customHtmlAttributes,
                 "//<![CDATA[\n{$script}\n//]]>"
             );
             $jsRequirements .= "\n";

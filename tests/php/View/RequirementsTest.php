@@ -1403,6 +1403,8 @@ EOS
         $this->setupRequirements($backend);
 
         $backend->javascript('javascript/RequirementsTest_a.js', ['integrity' => 'abc', 'crossorigin' => 'use-credentials']);
+        // Tests attribute appending AND lowercase string conversion
+        $backend->customScriptWithAttributes("//TEST", ['type' => 'module', 'crossorigin' => 'Anonymous']);
         $backend->css('css/RequirementsTest_a.css', null, ['integrity' => 'def', 'crossorigin' => 'anonymous']);
         $html = $backend->includeInHTML(self::$html_template);
 
@@ -1413,11 +1415,90 @@ EOS
             'javascript has correct sri attributes'
         );
 
+        /* Custom Javascript has correct attribute */
+        $this->assertMatchesRegularExpression(
+            '#<script type="module" crossorigin="anonymous"#',
+            $html,
+            'custom javascript has correct sri attributes'
+        );
         /* CSS has correct attributes */
         $this->assertMatchesRegularExpression(
             '#<link .*href=".*/RequirementsTest_a\.css.*" integrity="def" crossorigin="anonymous"#',
             $html,
             'css has correct sri attributes'
+        );
+    }
+
+    public function testUniquenessID()
+    {
+        /** @var Requirements_Backend $backend */
+        $backend = Injector::inst()->create(Requirements_Backend::class);
+        $this->setupRequirements($backend);
+
+        // Create requirements that are to be overwritten
+        $backend->customScript("Do Not Display", 42);
+        $backend->customScriptWithAttributes("Do Not Display", ['type' => 'module', 'crossorigin' => 'use-credentials'], 84);
+        $backend->customCSS("Do Not Display", 42);
+        $backend->insertHeadTags("<span>Do Not Display</span>", 42);
+
+        // Override
+        $backend->customScriptWithAttributes("Override", ['type' => 'module', 'crossorigin' => 'use-credentials'], 42);
+        $backend->customScript("Override", 84);
+        $backend->customCSS("Override", 42);
+        $backend->insertHeadTags("<span>Override</span>", 42);
+
+        $html = $backend->includeInHTML(self::$html_template);
+
+        /* customScript is overwritten by customScriptWithAttributes */
+        $this->assertMatchesRegularExpression(
+            "#<script type=\"module\" crossorigin=\"use-credentials\">//<!\[CDATA\[\s*Override\s*//\]\]></script>#s",
+            $html,
+            'customScript is displaying latest write'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            "#<script type=\"application/javascript\">//<!\[CDATA\[\s*Do Not Display\s*//\]\]></script>#s",
+            $html,
+            'customScript is correctly not displaying original write'
+        );
+
+        /* customScriptWithAttributes is overwritten by customScript */
+        $this->assertMatchesRegularExpression(
+            "#<script type=\"application/javascript\">//<!\[CDATA\[\s*Override\s*//\]\]></script>#s",
+            $html,
+            'customScript is displaying latest write and clearing attributes'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            "#<script type=\"module\" crossorigin=\"use-credentials\">//<!\[CDATA\[\s*Do Not Display\s*//\]\]></script>#s",
+            $html,
+            'customScript is displaying latest write'
+        );
+
+        /* customCSS is overwritten */
+        $this->assertMatchesRegularExpression(
+            "#<style type=\"text/css\">\s*Override\s*</style>#",
+            $html,
+            'customCSS is displaying latest write'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            "#<style type=\"text/css\">\s*Do Not Display\s*</style>#",
+            $html,
+            'customCSS is correctly not displaying original write'
+        );
+
+        /* Head Tags is overwritten */
+        $this->assertMatchesRegularExpression(
+            '#<span>Override</span>#',
+            $html,
+            'Head Tag is displaying latest write'
+        );
+
+        $this->assertDoesNotMatchRegularExpression(
+            '#<span>Do Not Display</span>#',
+            $html,
+            'Head Tag is correctly not displaying original write'
         );
     }
 }
