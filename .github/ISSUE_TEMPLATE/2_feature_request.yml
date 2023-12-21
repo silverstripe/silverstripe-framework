@@ -1,0 +1,35 @@
+name: 🚀 Feature Request
+description: Submit a feature request (but only if you're planning on implementing it)
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please only submit feature requests if you plan on implementing the feature yourself.
+        See the [contributing code documentation](https://docs.silverstripe.org/en/contributing/code/#make-or-find-a-github-issue) for more guidelines about submitting feature requests.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the new feature, and why it belongs in core
+    validations:
+      required: true
+  - type: textarea
+    id: more-info
+    attributes:
+      label: Additional context or points of discussion
+      description: |
+        *Optional: Any additional context, points of discussion, etc that might help validate and refine your idea*
+  - type: checkboxes
+    id: validations
+    attributes:
+      label: Validations
+      description: "Before submitting the issue, please confirm the following:"
+      options:
+        - label: You intend to implement the feature yourself
+          required: true
+        - label: You have read the [contributing guide](https://docs.silverstripe.org/en/contributing/code/)
+          required: true
+        - label: You strongly believe this feature should be in core, rather than being its own community module
+          required: true
+        - label: You have checked for existing issues or pull requests related to this feature (and didn't find any)
+          required: true

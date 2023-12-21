@@ -1,0 +1,72 @@
+name: 🪳 Bug Report
+description: Tell us if something isn't working the way it's supposed to
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We strongly encourage you to [submit a pull request](https://docs.silverstripe.org/en/contributing/code/) which fixes the issue.
+        Bug reports which are accompanied with a pull request are a lot more likely to be resolved quickly.
+  - type: input
+    id: affected-versions
+    attributes:
+      label: Module version(s) affected
+      description: |
+        What version of _this module_ have you reproduced this bug on?
+        Run `composer info` to see the specific version of each module installed in your project.
+        If you don't have access to that, check inside the help menu in the bottom left of the CMS.
+      placeholder: x.y.z
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the problem
+    validations:
+      required: true
+  - type: textarea
+    id: how-to-reproduce
+    attributes:
+      label: How to reproduce
+      description: |
+        ⚠️ This is the most important part of the report ⚠️
+        Without a way to easily reproduce your issue, there is little chance we will be able to help you and work on a fix.
+        - Please, take the time to show us some code and/or configuration that is needed for others to reproduce the problem easily.
+        - If the bug is too complex to reproduce with some short code samples, please reproduce it in a public repository and provide a link to the repository along with steps for setting up and reproducing the bug using that repository.
+        - If part of the bug includes an error or exception, please provide a full stack trace.
+        - If any user interaction is required to reproduce the bug, please add an ordered list of steps that are required to reproduce it.
+        - Be as clear as you can, but don't miss any steps out. Simply saying "create a page" is less useful than guiding us through the steps you're taking to create a page, for example.
+      placeholder: |
+
+        #### Code sample
+        ```php
+
+        ```
+
+        #### Reproduction steps
+        1.
+    validations:
+      required: true
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: Possible Solution
+      description: |
+        *Optional: only if you have suggestions on a fix/reason for the bug*
+        Please consider [submitting a pull request](https://docs.silverstripe.org/en/contributing/code/) with your solution! It helps get faster feedback and greatly increases the chance of the bug being fixed.
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: "*Optional: any other context about the problem: log messages, screenshots, etc.*"
+  - type: checkboxes
+    id: validations
+    attributes:
+      label: Validations
+      description: "Before submitting the issue, please make sure you do the following:"
+      options:
+        - label: Check that there isn't already an issue that reports the same bug
+          required: true
+        - label: Double check that your reproduction steps work in a fresh installation of [`silverstripe/installer`](https://github.com/silverstripe/silverstripe-installer) (with any code examples you've provided)
+          required: true
