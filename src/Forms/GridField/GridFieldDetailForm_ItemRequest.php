@@ -546,7 +546,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         );
 
         $controller = $this->getToplevelController();
-        $controller->getResponse()->addHeader('X-Status', $message);
+        $controller->getResponse()->addHeader('X-Status', rawurlencode($message));
 
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
@@ -807,7 +807,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         //when an item is deleted, redirect to the parent controller
         $controller = $this->getToplevelController();
         $controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
-        $controller->getResponse()->addHeader('X-Status', $message);
+        $controller->getResponse()->addHeader('X-Status', rawurlencode($message));
 
         return $controller->redirect($this->getBackLink(), 302); //redirect back to admin section
     }
