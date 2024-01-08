@@ -282,31 +282,55 @@ class DBTextTest extends SapphireTest
     public function providerSummary()
     {
         return [
-            [
+            'simple test' => [
                 'This is some text. It is a test',
                 3,
                 false,
                 'This is some…',
             ],
-            [
+            'custom ellipses' => [
                 // check custom ellipsis
                 'This is a test text in a longer sentence and a custom ellipsis.',
                 8,
                 '...', // regular dots instead of the ellipsis character
                 'This is a test text in a longer...',
             ],
-            [
+            'umlauts' => [
                 'both schön and können have umlauts',
                 5,
                 false,
                 'both schön and können have…',
             ],
-            [
+            'invalid UTF' => [
                 // check invalid UTF8 handling — input is an invalid UTF sequence, output should be empty string
                 "\xf0\x28\x8c\xbc",
                 50,
                 false,
                 '',
+            ],
+            'treats period as sentence boundary' => [
+                'This is some text. It is a test. There are three sentences.',
+                10,
+                false,
+                'This is some text. It is a test.',
+            ],
+            'treats exclamation mark as sentence boundary' => [
+                'This is some text! It is a test! There are three sentences.',
+                10,
+                false,
+                'This is some text! It is a test!',
+            ],
+            'treats question mark as sentence boundary' => [
+                'This is some text? It is a test? There are three sentences.',
+                10,
+                false,
+                'This is some text? It is a test?',
+            ],
+            'does not treat colon as sentence boundary' => [
+                'This is some text: It is a test: There are three sentences.',
+                10,
+                false,
+                'This is some text: It is a test: There are…',
             ],
         ];
     }
@@ -400,5 +424,16 @@ class DBTextTest extends SapphireTest
         $text = DBField::create_field(DBText::class, $originalValue);
         $result = $text->obj('Summary', [$words, $add])->forTemplate();
         $this->assertEquals($expectedValue, $result);
+    }
+
+    public function testSummaryConfiguration()
+    {
+        $text = DBField::create_field(DBText::class, 'This is some text: It is a test: There are three sentences.');
+        // Doesn't treat colon as a boundary by default
+        $this->assertSame('This is some text: It is a test: There are…', $text->Summary(10));
+
+        DBText::config()->merge('summary_sentence_separators', [':']);
+        // Does treat colon as a boundary if configured to do so
+        $this->assertSame('This is some text: It is a test:', $text->Summary(10));
     }
 }
