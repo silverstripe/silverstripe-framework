@@ -313,9 +313,10 @@ class StandardRelatedDataService implements RelatedDataService
         $tableName = $this->dataObjectSchema->tableName($class);
         $where = sprintf('"%s" = %u', $componentIDField, $record->ID);
 
-        // Polymorphic
-        if ($componentIDField === 'ParentID' && isset($dbFields['ParentClass'])) {
-            $where .= sprintf(' AND "ParentClass" = %s', $this->prepareClassNameLiteral(get_class($record)));
+        // Polymorphic - if $component is "Parent" or "Owner" then usually it will be polymorphic
+        $isPolymorphic = DataObject::getSchema()->hasOneComponent($class, $component) === DataObject::class;
+        if ($isPolymorphic) {
+            $where .= sprintf(' AND "' . $component . 'Class" = %s', $this->prepareClassNameLiteral(get_class($record)));
         }
 
         // Example SQL:
