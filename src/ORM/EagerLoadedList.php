@@ -21,6 +21,13 @@ use Traversable;
  *
  * Note that when this list represents a relation, adding items to or removing items from this list will NOT
  * affect the underlying relation in the database. This list is read-only.
+ *
+ * @template T of DataObject
+ * @implements Relation<T>
+ * @implements SS_List<T>
+ * @implements Filterable<T>
+ * @implements Sortable<T>
+ * @implements Limitable<T>
  */
 class EagerLoadedList extends ViewableData implements Relation, SS_List, Filterable, Sortable, Limitable
 {
@@ -28,11 +35,13 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * List responsible for instantiating the actual DataObject objects from eager-loaded data
+     * @var DataList<T>
      */
     private DataList $dataList;
 
     /**
      * Underlying DataObject class for this list
+     * @var class-string<T>
      */
     private string $dataClass;
 
@@ -65,6 +74,9 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      */
     private array $manyManyComponent = [];
 
+    /**
+     * @param class-string<T> $dataClass
+     */
     public function __construct(string $dataClass, string $dataListClass, int|array|null $foreignID = null, array $manyManyComponent = [])
     {
         if (!is_a($dataListClass, DataList::class, true)) {
@@ -144,6 +156,8 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * Get the dataClass name for this list, ie the DataObject ClassName
+     *
+     * @return class-string<T>
      */
     public function dataClass(): string
     {
@@ -179,6 +193,9 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
         throw new BadMethodCallException("Can't change the foreign ID for an EagerLoadedList");
     }
 
+    /**
+     * @return Traversable<T>
+     */
     public function getIterator(): Traversable
     {
         $limitedRows = $this->getFinalisedRows();
@@ -354,6 +371,8 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * Returns item stored in list with offset $key
+     *
+     * @return T|null
      */
     public function offsetGet(mixed $key): ?DataObject
     {
@@ -493,6 +512,8 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * Return a copy of this list which does not contain any items with any of these params
+     *
+     * @return static<T>
      */
     public function excludeAny(...$args): static
     {
@@ -509,6 +530,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      * Return a new instance of the list with an added filter
      *
      * @param array $filterArray
+     * @return static<T>
      */
     public function addFilter($filterArray): static
     {
@@ -522,6 +544,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      *
      * The $list passed needs to contain the same dataclass as $this
      *
+     * @return static<T>
      * @throws InvalidArgumentException
      */
     public function subtract(DataList $list): static
@@ -577,7 +600,6 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
                 if (is_array($value) && empty($value)) {
                     throw new InvalidArgumentException("Cannot filter $column against an empty set");
                 }
-                /** @var SearchFilter $searchFilter */
                 $searchFilter = $searchFilters[$column];
                 $extractedValue = $this->extractValue($row, $this->standardiseColumn($searchFilter->getFullName()));
                 $doesMatch = $searchFilter->matches($extractedValue);
@@ -612,6 +634,9 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
         return null;
     }
 
+    /**
+     * @return ArrayList<T>
+     */
     public function filterByCallback($callback): ArrayList
     {
         if (!is_callable($callback)) {
@@ -708,6 +733,8 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * Shuffle the items in this list
+     *
+     * @return static<T>
      */
     public function shuffle(): static
     {
@@ -862,6 +889,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      * At a minimum, $row['ID'] must be set. Unsaved records cannot be eager loaded.
      *
      * @param array $row
+     * @return T
      */
     public function createDataObject($row): DataObject
     {

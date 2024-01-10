@@ -335,7 +335,7 @@ class GridField extends FormField
     }
 
     /**
-     * @return ArrayList
+     * @return ArrayList<GridFieldComponent>
      */
     public function getComponents()
     {

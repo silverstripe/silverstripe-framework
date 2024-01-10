@@ -38,7 +38,6 @@ class RequestAuthenticationHandler implements AuthenticationHandler
 
     public function authenticateRequest(HTTPRequest $request)
     {
-        /** @var AuthenticationHandler $handler */
         foreach ($this->getHandlers() as $name => $handler) {
             // in order to add cookies, etc
             $member = $handler->authenticateRequest($request);

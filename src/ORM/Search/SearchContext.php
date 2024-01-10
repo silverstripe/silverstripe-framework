@@ -42,6 +42,8 @@ use SilverStripe\ORM\DataQuery;
  * to include.
  *
  * @see http://doc.silverstripe.com/doku.php?id=searchcontext
+ *
+ * @template T of object
  */
 class SearchContext
 {
@@ -51,7 +53,7 @@ class SearchContext
      * DataObject subclass to which search parameters relate to.
      * Also determines as which object each result is provided.
      *
-     * @var string
+     * @var class-string<T>
      */
     protected $modelClass;
 
@@ -84,7 +86,7 @@ class SearchContext
      * in the form of a $_REQUEST object.
      * CAUTION: All values should be treated as insecure client input.
      *
-     * @param string $modelClass The base {@link DataObject} class that search properties related to.
+     * @param class-string<T> $modelClass The base {@link DataObject} class that search properties related to.
      *                      Also used to generate a set of result objects based on this class.
      * @param FieldList $fields Optional. FormFields mapping to {@link DataObject::$db} properties
      *                      which are to be searched. Derived from modelclass using
@@ -144,7 +146,7 @@ class SearchContext
      *  Falls back to {@link DataObject::$default_sort} if not provided.
      * @param int|array|null $limit
      * @param DataList $existingQuery
-     * @return DataList
+     * @return DataList<T>
      * @throws Exception
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
@@ -163,6 +165,7 @@ class SearchContext
 
     /**
      * Perform a search on the passed DataList based on $this->searchParams.
+     * @return DataList<T>
      */
     private function search(DataList $query): DataList
     {
@@ -185,6 +188,7 @@ class SearchContext
      *
      * @param array|bool|string $sort Database column to sort on.
      * @param int|array|null $limit
+     * @return DataList<T>
      */
     private function prepareQuery($sort, $limit, ?DataList $existingQuery): DataList
     {
@@ -248,6 +252,7 @@ class SearchContext
      * Use the global general search for searching across multiple fields.
      *
      * @param string|array $searchPhrase
+     * @return DataList<T>
      */
     private function generalFieldSearch(DataList $query, array $searchableFields, $searchPhrase): DataList
     {
@@ -293,6 +298,7 @@ class SearchContext
      * Search against a single field
      *
      * @param string|array $searchPhrase
+     * @return DataList<T>
      */
     private function individualFieldSearch(DataList $query, array $searchableFields, string $searchField, $searchPhrase): DataList
     {
@@ -338,7 +344,7 @@ class SearchContext
      * @param array $searchParams
      * @param array|bool|string $sort
      * @param array|null|string $limit
-     * @return DataList
+     * @return DataList<T>
      * @throws Exception
      */
     public function getResults($searchParams, $sort = false, $limit = null)
@@ -365,7 +371,7 @@ class SearchContext
      * Accessor for the filter attached to a named field.
      *
      * @param string $name
-     * @return SearchFilter
+     * @return SearchFilter|null
      */
     public function getFilter($name)
     {
@@ -389,7 +395,7 @@ class SearchContext
     /**
      * Overwrite the current search context filter map.
      *
-     * @param array $filters
+     * @param SearchFilter[] $filters
      */
     public function setFilters($filters)
     {
@@ -486,7 +492,7 @@ class SearchContext
      * for each field. Returns an ArrayList of ArrayData, suitable for
      * rendering on a template.
      *
-     * @return ArrayList
+     * @return ArrayList<ArrayData>
      */
     public function getSummary()
     {

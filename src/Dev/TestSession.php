@@ -208,7 +208,6 @@ class TestSession
      */
     public function submitForm(string $formID, string $button = null, array $data = [], bool $withSecurityToken = true): HTTPResponse
     {
-        /** @var Crawler $page */
         $page = $this->lastPage();
         if ($page) {
             try {

@@ -127,7 +127,6 @@ class PermissionCheckboxSetField extends FormField
                 // Get all permissions from roles
                 if ($record->Roles()->count()) {
                     foreach ($record->Roles() as $role) {
-                        /** @var PermissionRole $role */
                         foreach ($role->Codes() as $code) {
                             if (!isset($inheritedCodes[$code->Code])) {
                                 $inheritedCodes[$code->Code] = [];

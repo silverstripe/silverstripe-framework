@@ -165,7 +165,6 @@ class LostPasswordHandler extends RequestHandler
             return $dataValidation;
         }
 
-        /** @var Member $member */
         $member = $this->getMemberFromData($data);
 
         // Allow vetoing forgot password requests
@@ -241,7 +240,6 @@ class LostPasswordHandler extends RequestHandler
     protected function sendEmail($member, $token)
     {
         try {
-            /** @var Email $email */
             $email = Email::create()
                 ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
                 ->setData($member)

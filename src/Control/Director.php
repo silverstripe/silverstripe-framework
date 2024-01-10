@@ -164,7 +164,6 @@ class Director implements TemplateGlobalProvider
         // Build list of cleanup promises
         $finally = [];
 
-        /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
         $kernel->nest();
         $finally[] = function () use ($kernel) {
@@ -1016,7 +1015,6 @@ class Director implements TemplateGlobalProvider
      */
     public static function get_environment_type()
     {
-        /** @var Kernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
         return $kernel->getEnvironment();
     }

@@ -35,6 +35,12 @@ use SilverStripe\ORM\Filters\SearchFilterable;
  *   - removeAll
  *
  * Subclasses of DataList may add other methods that have the same effect.
+ *
+ * @template T of DataObject
+ * @implements SS_List<T>
+ * @implements Filterable<T>
+ * @implements Sortable<T>
+ * @implements Limitable<T>
  */
 class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
@@ -49,7 +55,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * The DataObject class name that this data list is querying
      *
-     * @var string
+     * @var class-string<T>
      */
     protected $dataClass;
 
@@ -63,7 +69,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * A cached Query to save repeated database calls. {@see DataList::getTemplateIteratorCount()}
      *
-     * @var SilverStripe\ORM\Connect\Query
+     * @var Query
      */
     protected $finalisedQuery;
 
@@ -89,7 +95,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Create a new DataList.
      * No querying is done on construction, but the initial query schema is set up.
      *
-     * @param string $dataClass - The DataObject class to query.
+     * @param class-string<T> $dataClass - The DataObject class to query.
      */
     public function __construct($dataClass)
     {
@@ -102,7 +108,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Get the dataClass name for this DataList, ie the DataObject ClassName
      *
-     * @return string
+     * @return class-string<T>
      */
     public function dataClass()
     {
@@ -150,7 +156,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * alterDataQuery
      *
      * @param callable $callback
-     * @return static
+     * @return static<T>
      * @throws Exception
      */
     public function alterDataQuery($callback)
@@ -187,7 +193,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return a new DataList instance with the underlying {@link DataQuery} object changed
      *
      * @param DataQuery $dataQuery
-     * @return static
+     * @return static<T>
      */
     public function setDataQuery(DataQuery $dataQuery)
     {
@@ -201,7 +207,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string|array $keyOrArray Either the single key to set, or an array of key value pairs to set
      * @param mixed $val If $keyOrArray is not an array, this is the value to set
-     * @return static
+     * @return static<T>
      */
     public function setDataQueryParam($keyOrArray, $val = null)
     {
@@ -242,7 +248,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
      * paramaterised queries
-     * @return static
+     * @return static<T>
      */
     public function where($filter)
     {
@@ -264,7 +270,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
      * paramaterised queries
-     * @return static
+     * @return static<T>
      */
     public function whereAny($filter)
     {
@@ -336,7 +342,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return a new DataList instance with distinct records or not
      *
      * @param bool $value
-     * @return static
+     * @return static<T>
      */
     public function distinct($value)
     {
@@ -446,6 +452,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * This method accepts raw SQL so could be vulnerable to SQL injection attacks if used incorrectly,
      * it's preferable to use sort() instead which does not allow raw SQL
+     * @return static<T>
      */
     public function orderBy(string $orderBy): static
     {
@@ -473,7 +480,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * ->filter('Field:not', null) will generate '"Field" IS NOT NULL'
      *
      * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
-     * @return $this
      */
     public function filter()
     {
@@ -499,7 +505,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return a new instance of the list with an added filter
      *
      * @param array $filterArray
-     * @return $this
+     * @return static<T>
      */
     public function addFilter($filterArray)
     {
@@ -535,7 +541,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
      *
      * @param string|array See {@link filter()}
-     * @return static
      */
     public function filterAny()
     {
@@ -580,7 +585,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
-     * @return ArrayList (this may change in future implementations)
+     * @return ArrayList<T>
      */
     public function filterByCallback($callback)
     {
@@ -590,7 +595,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 gettype($callback)
             ));
         }
-        /** @var ArrayList $output */
         $output = ArrayList::create();
         foreach ($this as $item) {
             if (call_user_func($callback, $item, $this)) {
@@ -620,7 +624,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string $columnName Quoted column name (by reference)
      * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
      * if this relation will be used for sorting, and should not include duplicate rows.
-     * @return $this DataList with this relation applied
+     * @return static<T> DataList with this relation applied
      */
     public function applyRelation($field, &$columnName = null, $linearOnly = false)
     {
@@ -677,8 +681,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string|array
      * @param string [optional]
-     *
-     * @return $this
      */
     public function exclude()
     {
@@ -718,7 +720,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @param string|array
      * @param string [optional]
      *
-     * @return $this
+     * @return static<T>
      */
     public function excludeAny()
     {
@@ -747,8 +749,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * The $list passed needs to contain the same dataclass as $this
      *
-     * @param DataList $list
-     * @return static
+     * @param DataList<DataObject> $list
+     * @return static<T>
      * @throws InvalidArgumentException
      */
     public function subtract(DataList $list)
@@ -772,7 +774,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * will cause the query to appear first. The default is 20, and joins created automatically by the
      * ORM have a value of 10.
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
-     * @return static
+     * @return static<T>
      */
     public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
@@ -791,7 +793,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * will cause the query to appear first. The default is 20, and joins created automatically by the
      * ORM have a value of 10.
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
-     * @return static
+     * @return static<T>
      */
     public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
@@ -810,7 +812,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * will cause the query to appear first. The default is 20, and joins created automatically by the
      * ORM have a value of 10.
      * @param array $parameters Any additional parameters if the join is a parameterised subquery
-     * @return static
+     * @return static<T>
      */
     public function rightJoin($table, $onClause, $alias = null, $order = 20, $parameters = [])
     {
@@ -822,8 +824,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return an array of the actual items that this DataList contains at this stage.
      * This is when the query is actually executed.
-     *
-     * @return array
      */
     public function toArray()
     {
@@ -852,12 +852,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $result;
     }
 
-    /**
-     * Walks the list using the specified callback
-     *
-     * @param callable $callback
-     * @return $this
-     */
     public function each($callback)
     {
         foreach ($this as $row) {
@@ -894,7 +888,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * If called without $row['ID'] set, then a new object will be created rather than rehydrated.
      *
      * @param array $row
-     * @return DataObject
+     * @return T
      */
     public function createDataObject($row)
     {
@@ -946,6 +940,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Returns an Iterator for this DataList.
      * This function allows you to use DataLists in foreach loops
+     * @return Traversable<T>
      */
     public function getIterator(): Traversable
     {
@@ -1048,10 +1043,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         foreach ($this->eagerLoadRelationChains as $relationChain) {
             $parentDataClass = $this->dataClass();
             $parentIDs = $topLevelIDs;
-            /** @var Query|array<DataObject|EagerLoadedList> */
             $parentRelationData = $query;
             $chainToDate = [];
             foreach (explode('.', $relationChain) as $relationName) {
+                /** @var Query|array<DataObject|EagerLoadedList> $parentRelationData */
                 $chainToDate[] = $relationName;
                 list(
                     $relationDataClass,
@@ -1457,6 +1452,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * IMPORTANT: Calling eagerLoad() will cause any relations on DataObjects to be returned as an EagerLoadedList
      * instead of a subclass of DataList such as HasManyList i.e. MyDataObject->MyHasManyRelation() returns an EagerLoadedList
+     *
+     * @return static<T>
      */
     public function eagerLoad(...$relationChains): static
     {
@@ -1548,11 +1545,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
 
     /**
-     * Returns the first item in this DataList (instanceof DataObject)
+     * Returns the first item in this DataList
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
-     *
-     * @return DataObject|null
      */
     public function first()
     {
@@ -1568,11 +1563,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     }
 
     /**
-     * Returns the last item in this DataList (instanceof DataObject)
+     * Returns the last item in this DataList
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
-     *
-     * @return DataObject|null
      */
     public function last()
     {
@@ -1605,7 +1598,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string $key
      * @param string $value
-     * @return DataObject|null
      */
     public function find($key, $value)
     {
@@ -1616,7 +1608,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Restrict the columns to fetch into this DataList
      *
      * @param array $queriedColumns
-     * @return static
+     * @return static<T>
      */
     public function setQueriedColumns($queriedColumns)
     {
@@ -1625,12 +1617,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         });
     }
 
-    /**
-     * Filter this list to only contain the given Primary IDs
-     *
-     * @param array $ids Array of integers
-     * @return $this
-     */
     public function byIDs($ids)
     {
         return $this->filter('ID', $ids);
@@ -1640,9 +1626,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return the first DataObject with the given ID
      *
      * The object returned is not cached, unlike {@link DataObject::get_by_id()}
-     *
-     * @param int $id
-     * @return DataObject|null
      */
     public function byID($id)
     {
@@ -1683,7 +1666,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Sets the ComponentSet to be the given ID list.
      * Records will be added and deleted as appropriate.
      *
-     * @param array $idList List of IDs.
+     * @param array<int> $idList List of IDs.
      */
     public function setByIDList($idList)
     {
@@ -1716,7 +1699,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns an array with both the keys and values set to the IDs of the records in this list.
      * Does not respect sort order. Use ->column("ID") to get an ID list with the current sort.
      *
-     * @return array
+     * @return array<int>
      */
     public function getIDList()
     {
@@ -1734,13 +1717,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *     DataList::Create(\SilverStripe\Security\Group::class)->relation("Members")
      *
      * @param string $relationName
-     * @return HasManyList|ManyManyList
+     * @return RelationList
      */
     public function relation($relationName)
     {
         $ids = $this->column('ID');
         $singleton = DataObject::singleton($this->dataClass);
-        /** @var HasManyList|ManyManyList $relation */
+        /** @var RelationList $relation */
         $relation = $singleton->$relationName($ids);
         return $relation;
     }
@@ -1753,8 +1736,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Add a number of items to the component set.
      *
-     * @param array $items Items to add, as either DataObjects or IDs.
-     * @return $this
+     * @param array<DataObject> $items Items to add, as either DataObjects or IDs.
+     * @return static<T>
      */
     public function addMany($items)
     {
@@ -1767,8 +1750,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Remove the items from this list with the given IDs
      *
-     * @param array $idList
-     * @return $this
+     * @param array<int> $idList
+     * @return static<T>
      */
     public function removeMany($idList)
     {
@@ -1782,7 +1765,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Remove every element in this DataList matching the given $filter.
      *
      * @param string|array $filter - a sql type where filter
-     * @return $this
+     * @return static<T>
      */
     public function removeByFilter($filter)
     {
@@ -1795,7 +1778,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Shuffle the datalist using a random function provided by the SQL engine
      *
-     * @return $this
+     * @return static<T>
      */
     public function shuffle()
     {
@@ -1805,7 +1788,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Remove every element in this DataList.
      *
-     * @return $this
+     * @return static<T>
      */
     public function removeAll()
     {
@@ -1819,7 +1802,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * This method are overloaded by HasManyList and ManyMany list to perform more sophisticated
      * list manipulation
      *
-     * @param mixed $item
+     * @param DataObject|int $item
      */
     public function add($item)
     {
@@ -1831,7 +1814,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return a new item to add to this DataList.
      *
      * @param array $initialFields
-     * @return DataObject
+     * @return T
      */
     public function newObject($initialFields = null)
     {
@@ -1867,7 +1850,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Reverses a list of items.
      *
-     * @return static
+     * @return static<T>
      */
     public function reverse()
     {
@@ -1888,6 +1871,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns item stored in list with index $key
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
+     *
+     * @return T|null
      */
     public function offsetGet(mixed $key): ?DataObject
     {
@@ -1922,7 +1907,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param int $chunkSize
      * @throws InvalidArgumentException If `$chunkSize` has an invalid size.
-     * @return Generator|DataObject[]
+     * @return iterable<T>
      */
     public function chunkedFetch(int $chunkSize = 1000): iterable
     {

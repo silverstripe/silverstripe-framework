@@ -90,7 +90,6 @@ class MemberAuthenticator implements Authenticator
         if (!$member && $email) {
             // Find user by email
             $identifierField = Member::config()->get('unique_identifier_field');
-            /** @var Member $member */
             $member = Member::get()
                 ->filter([$identifierField => $email])
                 ->first();

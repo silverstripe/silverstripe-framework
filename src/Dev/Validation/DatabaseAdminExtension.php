@@ -9,6 +9,7 @@ use SilverStripe\ORM\DatabaseAdmin;
 /**
  * Hook up static validation to the deb/build process
  *
+ * @extends Extension<DatabaseAdmin>
  */
 class DatabaseAdminExtension extends Extension
 {

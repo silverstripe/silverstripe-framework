@@ -46,7 +46,6 @@ class GridFieldPageCount extends AbstractGridFieldComponent implements GridField
      */
     protected function getPaginator($gridField)
     {
-        /** @var GridFieldPaginator $paginator */
         $paginator = $gridField->getConfig()->getComponentByType(GridFieldPaginator::class);
 
         if (!$paginator && GridFieldPageCount::config()->uninherited('require_paginator')) {

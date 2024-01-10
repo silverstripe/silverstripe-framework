@@ -240,8 +240,7 @@ abstract class SelectField extends FormField
 
     public function performReadonlyTransformation()
     {
-        /** @var LookupField $field */
-        $field = $this->castedCopy('SilverStripe\\Forms\\LookupField');
+        $field = $this->castedCopy(LookupField::class);
         $field->setSource($this->getSource());
         $field->setReadonly(true);
 
@@ -255,14 +254,6 @@ abstract class SelectField extends FormField
         return $clone;
     }
 
-    /**
-     * Returns another instance of this field, but "cast" to a different class.
-     *
-     * @see FormField::castedCopy()
-     *
-     * @param string $classOrCopy
-     * @return FormField
-     */
     public function castedCopy($classOrCopy)
     {
         $field = parent::castedCopy($classOrCopy);

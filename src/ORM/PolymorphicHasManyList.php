@@ -10,6 +10,10 @@ use Traversable;
 
 /**
  * Represents a has_many list linked against a polymorphic relationship.
+ *
+ * @template T of DataObject
+ * @template TForeign of DataObject
+ * @extends HasManyList<T>
  */
 class PolymorphicHasManyList extends HasManyList
 {
@@ -30,7 +34,7 @@ class PolymorphicHasManyList extends HasManyList
     /**
      * Retrieve the name of the class this (has_many) relation is filtered by
      *
-     * @return string
+     * @return class-string<TForeign>
      */
     public function getForeignClass()
     {
@@ -80,10 +84,10 @@ class PolymorphicHasManyList extends HasManyList
     /**
      * Create a new PolymorphicHasManyList relation list.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $foreignField The name of the composite foreign (has_one) relation field. Used
      * to generate the ID, Class, and Relation foreign keys.
-     * @param string $foreignClass Name of the class filter this relation is filtered against
+     * @param class-string<TForeign> $foreignClass Name of the class filter this relation is filtered against
      */
     public function __construct($dataClass, $foreignField, $foreignClass)
     {
@@ -104,13 +108,6 @@ class PolymorphicHasManyList extends HasManyList
         ));
     }
 
-    /**
-     * Adds the item to this relation.
-     *
-     * It does so by setting the relationFilters.
-     *
-     * @param DataObject|int $item The DataObject to be added, or its ID
-     */
     public function add($item)
     {
         if (is_numeric($item)) {
@@ -155,12 +152,6 @@ class PolymorphicHasManyList extends HasManyList
         $item->write();
     }
 
-    /**
-     * Remove an item from this relation.
-     * Doesn't actually remove the item, it just clears the foreign key value.
-     *
-     * @param DataObject $item The DataObject to be removed
-     */
     public function remove($item)
     {
         if (!($item instanceof $this->dataClass)) {

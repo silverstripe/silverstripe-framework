@@ -1054,7 +1054,6 @@ class DataQuery
         }
 
         // Join table with associated has_one
-        /** @var DataObject $model */
         $foreignKey = $schema->getRemoteJoinField($localClass, $localField, $type, $polymorphic);
         $localIDColumn = $schema->sqlColumnForField($localClass, 'ID', $localPrefix);
         if ($polymorphic) {

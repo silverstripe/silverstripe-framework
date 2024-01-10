@@ -72,7 +72,6 @@ class SapphireTestState implements TestState
     public function tearDown(SapphireTest $test)
     {
         // Tear down in reverse order
-        /** @var TestState $state */
         foreach (array_reverse($this->states ?? []) as $state) {
             $state->tearDown($test);
         }
@@ -93,7 +92,6 @@ class SapphireTestState implements TestState
     public function tearDownOnce($class)
     {
         // Tear down in reverse order
-        /** @var TestState $state */
         foreach (array_reverse($this->states ?? []) as $state) {
             $state->tearDownOnce($class);
         }

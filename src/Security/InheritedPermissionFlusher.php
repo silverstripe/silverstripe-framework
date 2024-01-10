@@ -8,6 +8,9 @@ use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
 
+/**
+ * @extends DataExtension<Member|Group>
+ */
 class InheritedPermissionFlusher extends DataExtension implements Flushable
 {
     /**

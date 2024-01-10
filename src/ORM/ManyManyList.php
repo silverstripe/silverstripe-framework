@@ -9,9 +9,13 @@ use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\FieldType\DBComposite;
 use InvalidArgumentException;
 use Exception;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Subclass of {@link DataList} representing a many_many relation.
+ *
+ * @template T of DataObject
+ * @extends RelationList<T>
  */
 class ManyManyList extends RelationList
 {
@@ -50,7 +54,7 @@ class ManyManyList extends RelationList
      * the normal {@link DataList} methods. Addition arguments are used to
      * support {@link add()} and {@link remove()} methods.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
      * @param string $localKey The key in the join table that maps to the dataClass' PK.
      * @param string $foreignKey The key in the join table that maps to joined class' PK.
@@ -120,12 +124,6 @@ class ManyManyList extends RelationList
         $this->dataQuery->addSelectFromTable($this->joinTable, $finalized);
     }
 
-    /**
-     * Create a DataObject from the given SQL row.
-     *
-     * @param array $row
-     * @return DataObject
-     */
     public function createDataObject($row)
     {
         // remove any composed fields
@@ -165,8 +163,6 @@ class ManyManyList extends RelationList
      * relationship for some foreign ID
      *
      * @param int|null|string|array $id
-     *
-     * @return array
      */
     protected function foreignIDFilter($id = null)
     {
@@ -285,7 +281,6 @@ class ManyManyList extends RelationList
                 ];
             }
 
-            /** @var DBField[] $fieldObjects */
             $fieldObjects = [];
             if ($extraFields && $this->extraFields) {
                 // Write extra field to manipluation in the same way
@@ -293,6 +288,7 @@ class ManyManyList extends RelationList
                 foreach ($this->extraFields as $fieldName => $fieldSpec) {
                     // Skip fields without an assignment
                     if (array_key_exists($fieldName, $extraFields ?? [])) {
+                        /** @var DBField $fieldObject */
                         $fieldObject = Injector::inst()->create($fieldSpec, $fieldName);
                         $fieldObject->setValue($extraFields[$fieldName]);
                         $fieldObject->writeToManipulation($manipulation[$this->joinTable]);
@@ -462,7 +458,6 @@ class ManyManyList extends RelationList
             ],
         ];
 
-        /** @var DBField[] $fieldObjects */
         $fieldObjects = [];
         // Write extra field to manipluation in the same way
         // that DataObject::prepareManipulationTable writes fields
@@ -470,6 +465,7 @@ class ManyManyList extends RelationList
             if (!array_key_exists($fieldName, $this->extraFields)) {
                 throw new InvalidArgumentException("Field '$fieldName' is not defined in many_many_extraFields for this relationship");
             }
+            /** @var DBField $fieldObject */
             $fieldObject = Injector::inst()->create($this->extraFields[$fieldName], $fieldName);
             // Make sure the field assignment is not an array unless the field allows non-scalar values
             if (is_array($value) && $fieldObject->scalarValueOnly()) {

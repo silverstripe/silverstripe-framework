@@ -198,7 +198,6 @@ class DB
         if (!Injector::inst()->has(HTTPRequest::class)) {
             return;
         }
-        /** @var HTTPRequest $request */
         $request = Injector::inst()->get(HTTPRequest::class);
         if ($name) {
             $request->getSession()->set(self::ALT_DB_KEY, $name);
@@ -226,7 +225,6 @@ class DB
         if (!Injector::inst()->has(HTTPRequest::class)) {
             return null;
         }
-        /** @var HTTPRequest $request */
         $request = Injector::inst()->get(HTTPRequest::class);
         // Skip if the session hasn't been started
         if (!$request->getSession()->isStarted()) {

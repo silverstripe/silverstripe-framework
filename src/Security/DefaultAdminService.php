@@ -152,7 +152,6 @@ class DefaultAdminService
         $this->extend('beforeFindOrCreateAdmin', $email, $name);
 
         // Find member
-        /** @var Member $admin */
         $admin = Member::get()
             ->filter('Email', $email)
             ->first();

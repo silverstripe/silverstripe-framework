@@ -11,6 +11,8 @@ use SilverStripe\ORM\Queries\SQLSelect;
 /**
  * Represents a set of Groups attached to a member.
  * Handles the hierarchy logic.
+ *
+ * @extends ManyManyList<Group>
  */
 class Member_GroupSet extends ManyManyList
 {

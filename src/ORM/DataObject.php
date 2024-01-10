@@ -109,7 +109,6 @@ use stdClass;
  */
 class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider, Resettable
 {
-
     /**
      * Human-readable singular name.
      * @var string
@@ -525,7 +524,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Create unsaved raw duplicate
         $map = $this->toMap();
         unset($map['Created']);
-        /** @var static $clone */
         $clone = Injector::inst()->create(static::class, $map, false, $this->getSourceQueryParams());
         $clone->ID = 0;
 
@@ -628,7 +626,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $source = $sourceObject->getComponents($relation);
         $dest = $destinationObject->getComponents($relation);
 
-        /** @var DataObject $item */
         foreach ($source as $item) {
             // Don't write on duplicate; Wait until ParentID is available later.
             // writeRelations() will eventually write these records when converting
@@ -742,9 +739,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * there is no record, or the record has no ID. In this case, we do have an ID but
      * we still need to repopulate the defaults.
      *
-     * @param string $newClassName The name of the new class
+     * @template T of DataObject
+     * @param class-string<T> $newClassName The name of the new class
      *
-     * @return DataObject The new instance of the new class, The exact type will be of the class name provided.
+     * @return T The new instance of the new class, The exact type will be of the class name provided.
      */
     public function newClassInstance($newClassName)
     {
@@ -963,7 +961,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Returns the associated database record - in this case, the object itself.
      * This is included so that you can call $dataOrController->data() and get a DataObject all the time.
      *
-     * @return DataObject Associated database record
+     * @return static Associated database record
      */
     public function data()
     {
@@ -1012,7 +1010,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * whitelist the allowed keys.
      *
      * @param array $data A map of field name to data values to update.
-     * @return DataObject $this
+     * @return static $this
      */
     public function update($data)
     {
@@ -1021,7 +1019,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (strpos($key ?? '', '.') !== false) {
                 $relations = explode('.', $key ?? '');
                 $fieldName = array_pop($relations);
-                /** @var static $relObj */
                 $relObj = $this;
                 $relation = null;
                 foreach ($relations as $i => $relation) {
@@ -1029,6 +1026,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     // as the updater wouldn't know which object to write to (or create)
                     if ($relObj->$relation() instanceof DataObject) {
                         $parentObj = $relObj;
+                        /** @var static $relObj */
                         $relObj = $relObj->$relation();
                         // If the intermediate relationship objects haven't been created, then write them
                         if ($i < sizeof($relations ?? []) - 1 && !$relObj->ID || (!$relObj->ID && $parentObj !== $this)) {
@@ -1073,7 +1071,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * use the write() method.
      *
      * @param array $data A map of field name to data values to update.
-     * @return DataObject $this
+     * @return static $this
      */
     public function castedUpdate($data)
     {
@@ -1097,7 +1095,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Caution: Does not delete the merged object.
      * Caution: Does now overwrite Created date on the original object.
      *
-     * @param DataObject $rightObj
+     * @param static $rightObj Object to merge in
      * @param string $priority left|right Determines who wins in case of a conflict (optional)
      * @param bool $includeRelations Merge any existing relations (optional)
      * @param bool $overwriteWithEmpty Overwrite existing left values with empty right values.
@@ -1151,7 +1149,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($includeRelations) {
             if ($manyMany = $this->manyMany()) {
                 foreach ($manyMany as $relationship => $class) {
-                    /** @var DataObject $leftComponents */
                     $leftComponents = $leftObj->getManyManyComponents($relationship);
                     $rightComponents = $rightObj->getManyManyComponents($relationship);
                     if ($rightComponents && $rightComponents->exists()) {
@@ -1263,7 +1260,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param bool $recursive True if recursive
      * @param ArrayList $list Optional list to add items to
-     * @return ArrayList list of objects
+     * @return ArrayList<DataObject> list of objects
      */
     public function findCascadeDeletes($recursive = true, $list = null)
     {
@@ -1303,7 +1300,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Called by the constructor when creating new records.
      *
      * @uses DataExtension::populateDefaults()
-     * @return DataObject $this
+     * @return static $this
      */
     public function populateDefaults()
     {
@@ -1654,7 +1651,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param bool $recursive Recursively write components
      * @param array $skip List of DataObject references to skip
-     * @return DataObject $this
+     * @return static $this
      */
     public function writeComponents($recursive = false, $skip = [])
     {
@@ -2339,7 +2336,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Generates a SearchContext to be used for building and processing
      * a generic search form for properties on this object.
      *
-     * @return SearchContext
+     * @return SearchContext<static>
      */
     public function getDefaultSearchContext()
     {
@@ -3306,7 +3303,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
      * @param string $containerClass The container class to return the results in.
      *
-     * @return DataList The objects matching the filter, in the class specified by $containerClass
+     * @return DataList<static> The objects matching the filter, in the class specified by $containerClass
      */
     public static function get(
         $callerClass = null,
@@ -3372,7 +3369,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param boolean $cache Use caching
      * @param string|array|null $sort Passed to DataList::sort() so that DataList::first() returns the desired item
      *
-     * @return DataObject|null The first item matching the query
+     * @return static|null The first item matching the query
      */
     public static function get_one($callerClass = null, $filter = "", $cache = true, $sort = "")
     {
@@ -3423,7 +3420,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
      *                            When false will just clear session-local cached data
-     * @return DataObject $this
+     * @return static $this
      */
     public function flushCache($persistent = true)
     {
@@ -3524,7 +3521,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Get the base class for this object
      *
-     * @return string
+     * @return class-string<DataObject>
      */
     public function baseClass()
     {
@@ -4349,7 +4346,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param bool $recursive True if recursive
      * @param ArrayList $list If specified, items will be added to this list. If not, a new
      * instance of ArrayList will be constructed and returned
-     * @return ArrayList The list of related objects
+     * @return ArrayList<DataObject> The list of related objects
      */
     public function findRelatedObjects($source, $recursive = true, $list = null)
     {
@@ -4384,7 +4381,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             // Recurse if necessary
             if ($recursive) {
                 foreach ($newItems as $item) {
-                    /** @var DataObject $item */
                     $item->findRelatedObjects($source, true, $list);
                 }
             }
@@ -4397,8 +4393,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Items already present in the list will be skipped.
      *
      * @param ArrayList $list Items to merge into
-     * @param mixed $items List of new items to merge
-     * @return ArrayList List of all newly added items that did not already exist in $list
+     * @param iterable<DataObject>|DataObject|null $items List of new items to merge
+     * @return ArrayList<DataObject> List of all newly added items that did not already exist in $list
      */
     public function mergeRelatedObjects($list, $items)
     {
@@ -4410,7 +4406,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $items = [$items];
         }
 
-        /** @var DataObject $item */
         foreach ($items as $item) {
             $this->mergeRelatedObject($list, $added, $item);
         }
@@ -4432,7 +4427,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getUniqueKey(): string
     {
-        /** @var UniqueKeyInterface $service */
         $service = Injector::inst()->get(UniqueKeyInterface::class);
         $keyComponents = $this->getUniqueKeyComponents();
 

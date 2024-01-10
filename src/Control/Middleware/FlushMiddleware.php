@@ -16,7 +16,6 @@ class FlushMiddleware implements HTTPMiddleware
 {
     public function process(HTTPRequest $request, callable $delegate)
     {
-        /** @var BaseKernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
         if ((method_exists($kernel, 'isFlushed') && $kernel->isFlushed())) {
             // Disable cache when flushing

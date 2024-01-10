@@ -84,7 +84,7 @@ class ListboxField extends MultiSelectField
     /**
      * Gets the list of options to render in this formfield
      *
-     * @return ArrayList
+     * @return ArrayList<ArrayData>
      */
     public function getOptions()
     {

@@ -253,7 +253,6 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         $authenticators = $this->getAuthenticators();
 
-        /** @var Authenticator $authenticator */
         foreach ($authenticators as $name => $authenticator) {
             if (!($authenticator->supportedServices() & $service)) {
                 unset($authenticators[$name]);
@@ -937,7 +936,6 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         $handlers = [];
         $authenticators = $this->getApplicableAuthenticators(Authenticator::RESET_PASSWORD);
-        /** @var Authenticator $authenticator */
         foreach ($authenticators as $authenticator) {
             $handlers[] = $authenticator->getLostPasswordHandler(
                 Controller::join_links($this->Link(), 'lostpassword')
@@ -966,7 +964,6 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public function changepassword()
     {
-        /** @var array|Authenticator[] $authenticators */
         $authenticators = $this->getApplicableAuthenticators(Authenticator::CHANGE_PASSWORD);
         $handlers = [];
         foreach ($authenticators as $authenticator) {

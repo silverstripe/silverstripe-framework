@@ -169,7 +169,6 @@ class RememberLoginHash extends DataObject
         if (static::config()->force_single_token) {
             RememberLoginHash::get()->filter('MemberID', $member->ID)->removeAll();
         }
-        /** @var RememberLoginHash $rememberLoginHash */
         $rememberLoginHash = RememberLoginHash::create();
         do {
             $deviceID = $rememberLoginHash->getNewDeviceID();

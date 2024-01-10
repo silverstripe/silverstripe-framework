@@ -18,7 +18,6 @@ class LoggerState implements TestState
 {
     public function setUp(SapphireTest $test)
     {
-        /** @var Logger $userLogger */
         $userLogger = Injector::inst()->get(LoggerInterface::class);
         if ($userLogger && $userLogger instanceof Logger) {
             $userLogger->setHandlers([new NullHandler()]);

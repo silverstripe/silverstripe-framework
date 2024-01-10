@@ -819,7 +819,6 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      */
     public function getScriptURL()
     {
-        /** @var TinyMCEScriptGenerator $generator */
         $generator = Injector::inst()->get(TinyMCEScriptGenerator::class);
         return $generator->getScriptURL($this);
     }

@@ -145,7 +145,6 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         }
 
         // check if autologin token matches
-        /** @var Member $member */
         $member = Member::get()->byID($uid);
         if (!$member) {
             return null;
@@ -153,7 +152,6 @@ class CookieAuthenticationHandler implements AuthenticationHandler
 
         $hash = $member->encryptWithUserSettings($token);
 
-        /** @var RememberLoginHash $rememberLoginHash */
         $rememberLoginHash = RememberLoginHash::get()
             ->filter([
                 'MemberID' => $member->ID,

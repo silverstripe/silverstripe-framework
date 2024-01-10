@@ -340,7 +340,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $previousAndNextGroup->addExtraClass('btn-group--circular mr-2');
         $previousAndNextGroup->setFieldHolderTemplate(CompositeField::class . '_holder_buttongroup');
 
-        /** @var GridFieldDetailForm $component */
         $component = $this->gridField->getConfig()->getComponentByType(GridFieldDetailForm::class);
         $paginator = $this->getGridField()->getConfig()->getComponentByType(GridFieldPaginator::class);
         $gridState = $this->getGridField()->getState();
@@ -902,7 +901,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * see {@link LeftAndMain->Breadcrumbs()} for details.
      *
      * @param boolean $unlinked
-     * @return ArrayList
+     * @return ArrayList<ArrayData>
      */
     public function Breadcrumbs($unlinked = false)
     {
@@ -910,7 +909,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return null;
         }
 
-        /** @var ArrayList $items */
+        /** @var ArrayList<ArrayData> $items */
         $items = $this->popupController->Breadcrumbs($unlinked);
 
         if (!$items) {

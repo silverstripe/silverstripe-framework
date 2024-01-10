@@ -12,6 +12,12 @@ use SilverStripe\ORM\FieldType\DBField;
  * @method Relation relation($relationName)
  * @method Relation forForeignID($id)
  * @method string dataClass()
+ *
+ * @template T
+ * @extends SS_List<T>
+ * @extends Filterable<T>
+ * @extends Sortable<T>
+ * @extends Limitable<T>
  */
 interface Relation extends SS_List, Filterable, Sortable, Limitable
 {
@@ -20,7 +26,7 @@ interface Relation extends SS_List, Filterable, Sortable, Limitable
      * Sets the ComponentSet to be the given ID list.
      * Records will be added and deleted as appropriate.
      *
-     * @param array $idList List of IDs.
+     * @param array<int> $idList List of IDs.
      */
     public function setByIDList($idList);
 
@@ -29,7 +35,7 @@ interface Relation extends SS_List, Filterable, Sortable, Limitable
      *
      * Does not return the IDs for unsaved DataObjects
      *
-     * @return array
+     * @return array<int>
      */
     public function getIDList();
 

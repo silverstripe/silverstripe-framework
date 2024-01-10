@@ -464,10 +464,11 @@ abstract class SapphireTest extends TestCase implements TestOnly
     /**
      * Get an object from the fixture.
      *
-     * @param string $className The data class or table name, as specified in your fixture file. Parent classes won't work
+     * @template T of DataObject
+     * @param class-string<T> $className The data class or table name, as specified in your fixture file. Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
      *
-     * @return DataObject
+     * @return T
      */
     protected function objFromFixture($className, $identifier)
     {
@@ -563,7 +564,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     public function clearEmails()
     {
-        /** @var MailerInterface $mailer */
         $mailer = Injector::inst()->get(MailerInterface::class);
         if ($mailer instanceof TestMailer) {
             $mailer->clearEmails();
@@ -584,7 +584,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     public static function findEmail($to, $from = null, $subject = null, $content = null)
     {
-        /** @var MailerInterface $mailer */
         $mailer = Injector::inst()->get(MailerInterface::class);
         if ($mailer instanceof TestMailer) {
             return $mailer->findEmail($to, $from, $subject, $content);
@@ -1041,7 +1040,6 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     public function logOut()
     {
-        /** @var IdentityStore $store */
         $store = Injector::inst()->get(IdentityStore::class);
         $store->logOut();
     }

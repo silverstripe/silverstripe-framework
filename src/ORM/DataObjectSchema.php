@@ -144,7 +144,7 @@ class DataObjectSchema
      *
      * @param string|object $class
      *
-     * @return string
+     * @return class-string<DataObject>
      * @throws InvalidArgumentException
      */
     public function baseDataClass($class)
@@ -261,7 +261,7 @@ class DataObjectSchema
      *
      * @param string $table
      *
-     * @return string|null The FQN of the class, or null if not found
+     * @return class-string<DataObject>|null The FQN of the class, or null if not found
      */
     public function tableClass($table)
     {
@@ -714,7 +714,7 @@ class DataObjectSchema
      * @param string $candidateClass
      * @param string $fieldName
      *
-     * @return string
+     * @return class-string<DataObject>|null
      */
     public function classForField($candidateClass, $fieldName)
     {

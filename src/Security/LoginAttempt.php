@@ -81,7 +81,7 @@ class LoginAttempt extends DataObject
      * Get all login attempts for the given email address
      *
      * @param string $email
-     * @return DataList|LoginAttempt[]
+     * @return DataList<LoginAttempt>
      */
     public static function getByEmail($email)
     {

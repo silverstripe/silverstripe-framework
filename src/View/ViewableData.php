@@ -18,6 +18,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -644,10 +645,13 @@ class ViewableData implements IteratorAggregate
      * This is useful so you can use a single record inside a <% control %> block in a template - and then use
      * to access individual fields on this object.
      *
+     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     *
      * @return ArrayIterator
      */
     public function getIterator(): Traversable
     {
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
         return new ArrayIterator([$this]);
     }
 

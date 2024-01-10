@@ -156,7 +156,6 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
             return $this->printColumns;
         }
 
-        /** @var GridFieldDataColumns $dataCols */
         $dataCols = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         if ($dataCols) {
             return $dataCols->getDisplayFields($gridField);
@@ -232,7 +231,6 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
         $items = $gridField->getManipulatedList();
         $itemRows = new ArrayList();
 
-        /** @var GridFieldDataColumns $gridFieldColumnsComponent */
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
 
         /** @var ViewableData $item */

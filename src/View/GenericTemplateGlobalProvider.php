@@ -47,8 +47,9 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider
      *    <% end_cached %>
      * </code>
      *
-     * @param string $className
-     * @return DataList
+     * @template T of DataObject
+     * @param class-string<T> $className
+     * @return DataList<T>
      */
     public static function getDataList($className)
     {

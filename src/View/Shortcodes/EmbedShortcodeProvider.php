@@ -242,7 +242,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      *
      * @param array $arguments List of embed arguments
      * @param array $exclude List of attribute names to exclude from the resulting list
-     * @return ArrayList
+     * @return ArrayList<ArrayData>
      */
     private static function buildAttributeListFromArguments(array $arguments, array $exclude = []): ArrayList
     {

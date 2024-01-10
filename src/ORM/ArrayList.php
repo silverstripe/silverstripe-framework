@@ -29,6 +29,12 @@ use Traversable;
  *   - sort
  *   - filter
  *   - exclude
+ *
+ * @template T
+ * @implements SS_List<T>
+ * @implements Filterable<T>
+ * @implements Sortable<T>
+ * @implements Limitable<T>
  */
 class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
@@ -45,13 +51,12 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Holds the items in the list
      *
-     * @var array
+     * @var array<array-key, T>
      */
     protected $items = [];
 
     /**
-     *
-     * @param array $items - an initial array to fill this object with
+     * @param array<array-key, T> $items - an initial array to fill this object with
      */
     public function __construct(array $items = [])
     {
@@ -62,14 +67,14 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Underlying type class for this list
      *
-     * @var string
+     * @var class-string<T>|null
      */
     protected $dataClass = null;
 
     /**
      * Return the class of items in this list, by looking at the first item inside it.
      *
-     * @return string
+     * @return class-string<T>|null
      */
     public function dataClass()
     {
@@ -85,7 +90,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Hint this list to a specific type
      *
-     * @param string $class
+     * @param class-string<T> $class
      * @return $this
      */
     public function setDataClass($class)
@@ -116,6 +121,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Returns an Iterator for this ArrayList.
      * This function allows you to use ArrayList in foreach loops
+     *
+     * @return Traversable<T>
      */
     public function getIterator(): Traversable
     {
@@ -130,8 +137,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Return an array of the actual items that this ArrayList contains.
-     *
-     * @return array
      */
     public function toArray()
     {
@@ -164,8 +169,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Return this list as an array and every object it as an sub array as well
-     *
-     * @return array
      */
     public function toNestedArray()
     {
@@ -263,7 +266,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Merges with another array or list by pushing all the items in it onto the
      * end of this list.
      *
-     * @param array|object $with
+     * @param iterable $with
      */
     public function merge($with)
     {
@@ -342,11 +345,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         return array_shift($this->items);
     }
 
-    /**
-     * Returns the first item in the list
-     *
-     * @return mixed
-     */
     public function first()
     {
         if (empty($this->items)) {
@@ -356,11 +354,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         return reset($this->items);
     }
 
-    /**
-     * Returns the last item in the list
-     *
-     * @return mixed
-     */
     public function last()
     {
         if (empty($this->items)) {
@@ -425,7 +418,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Reverses an {@link ArrayList}
      *
-     * @return ArrayList
+     * @return static<T>
      */
     public function reverse()
     {
@@ -479,7 +472,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * Note that columns may be double quoted as per ANSI sql standard
      *
-     * @return static
      * @see SS_List::sort()
      * @example $list->sort('Name'); // default ASC sorting
      * @example $list->sort('Name DESC'); // DESC sorting
@@ -596,8 +588,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Find the first item of this list where the given key = value
      *
      * @param string $key
-     * @param string $value
-     * @return mixed
+     * @param mixed $value
      */
     public function find($key, $value)
     {
@@ -607,7 +598,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Filter the list to include items with these characteristics
      *
-     * @return ArrayList
      * @see Filterable::filter()
      * @example $list->filter('Name', 'bob'); // only bob in the list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -645,7 +635,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *          $list = $list->filterAny('Name:PartialMatch', 'sam');
      *
      * @param string|array See {@link filter()}
-     * @return static
      */
     public function filterAny()
     {
@@ -656,7 +645,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     /**
      * Exclude the list to not contain items with these characteristics
      *
-     * @return ArrayList
      * @see SS_List::exclude()
      * @example $list->exclude('Name', 'bob'); // exclude bob from list
      * @example $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
@@ -694,6 +682,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *          $list = $list->excludeAny('Name:PartialMatch', 'sam');
      *
      * @param string|array See {@link filter()}
+     * @return static<T>
      */
     public function excludeAny(): static
     {
@@ -703,6 +692,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Apply the appropriate filtering or excluding
+     * @return static<T>
      */
     protected function filterOrExclude(array $filters, bool $inclusive = true, bool $any = false): static
     {
@@ -740,7 +730,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         foreach ($this->items as $item) {
             $matches = [];
             foreach ($filters as $filterKey => $filterValue) {
-                /** @var SearchFilter $searchFilter */
                 $searchFilter = $searchFilters[$filterKey];
                 $extractedValue = $this->extractValue($item, $searchFilter->getFullName());
                 $hasMatch = null;
@@ -840,7 +829,6 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Filter this list to only contain the given Primary IDs
      *
      * @param array $ids Array of integers, will be automatically cast/escaped.
-     * @return ArrayList
      */
     public function byIDs($ids)
     {
@@ -864,7 +852,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
-     * @return ArrayList
+     * @return static<T>
      */
     public function filterByCallback($callback)
     {
@@ -901,6 +889,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Returns item stored in list with index $key
+     * @return T|null
      */
     public function offsetGet(mixed $offset): mixed
     {

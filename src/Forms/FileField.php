@@ -138,7 +138,6 @@ class FileField extends FormField implements FileHandleField
             File::get_file_extension($_FILES[$this->name]['name'])
         );
 
-        /** @var File $file */
         if ($this->relationAutoSetting) {
             // assume that the file is connected via a has-one
             $objectClass = DataObject::getSchema()->hasOneComponent(get_class($record), $this->name);

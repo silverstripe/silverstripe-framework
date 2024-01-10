@@ -584,7 +584,6 @@ class Member extends DataObject
      */
     public static function member_from_autologinhash($hash, $login = false)
     {
-        /** @var Member $member */
         $member = static::get()->filter([
             'AutoLoginHash' => $hash,
             'AutoLoginExpired:GreaterThan' => DBDatetime::now()->getValue(),
@@ -610,7 +609,6 @@ class Member extends DataObject
 
         // Exclude expired
         if (static::config()->get('temp_id_lifetime')) {
-            /** @var DataList|Member[] $members */
             $members = $members->filter('TempIDExpired:GreaterThan', DBDatetime::now()->getValue());
         }
 
@@ -657,7 +655,6 @@ class Member extends DataObject
         $label = $editingPassword
             ? _t(__CLASS__ . '.EDIT_PASSWORD', 'New Password')
             : $this->fieldLabel('Password');
-        /** @var ConfirmedPasswordField $password */
         $password = ConfirmedPasswordField::create(
             'Password',
             $label,
@@ -1176,7 +1173,7 @@ class Member extends DataObject
     }
 
     /**
-     * @return ManyManyList|UnsavedRelationList
+     * @return ManyManyList<Group>|UnsavedRelationList<Group>
      */
     public function DirectGroups()
     {
@@ -1212,7 +1209,6 @@ class Member extends DataObject
 
         $membersList = new ArrayList();
         // This is a bit ineffective, but follow the ORM style
-        /** @var Group $group */
         foreach (Group::get()->byIDs($groupIDList) as $group) {
             $membersList->merge($group->Members());
         }
@@ -1332,7 +1328,6 @@ class Member extends DataObject
             $rootTabSet = $fields->fieldByName("Root");
             /** @var Tab $mainTab */
             $mainTab = $rootTabSet->fieldByName("Main");
-            /** @var FieldList $mainFields */
             $mainFields = $mainTab->getChildren();
 
             // Build change password field
