@@ -383,4 +383,83 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $field->setRequireExistingPassword(false);
         $this->assertCount(2, $field->getChildren(), 'Current password field should not be removed');
     }
+
+    public function provideRequired()
+    {
+        return [
+            'can be empty' => [true],
+            'cannot be empty' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideRequired
+     */
+    public function testRequired(bool $canBeEmpty)
+    {
+        $field = new ConfirmedPasswordField('Test');
+        $field->setCanBeEmpty($canBeEmpty);
+        $this->assertSame(!$canBeEmpty, $field->Required());
+    }
+
+    public function provideChildFieldsAreRequired()
+    {
+        return [
+            'not required' => [
+                'canBeEmpty' => true,
+                'required' => false,
+                'childrenRequired' => false,
+                'expectRequired' => false,
+            ],
+            'required via validator' => [
+                'canBeEmpty' => true,
+                'required' => true,
+                'childrenRequired' => false,
+                'expectRequired' => true,
+            ],
+            'children required directly' => [
+                'canBeEmpty' => true,
+                'required' => false,
+                'childrenRequired' => true,
+                'expectRequired' => true,
+            ],
+            'required because cannot be empty' => [
+                'canBeEmpty' => false,
+                'required' => false,
+                'childrenRequired' => false,
+                'expectRequired' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideChildFieldsAreRequired
+     */
+    public function testChildFieldsAreRequired(bool $canBeEmpty, bool $required, bool $childrenRequired, bool $expectRequired)
+    {
+        $form = new Form();
+        $field = new ConfirmedPasswordField('Test');
+        $field->setForm($form);
+        $field->setCanBeEmpty($canBeEmpty);
+        $requiredFields = [];
+        if ($required) {
+            $requiredFields[] = 'Test';
+        }
+        if ($childrenRequired) {
+            $requiredFields[] = 'Test[_Password]';
+            $requiredFields[] = 'Test[_ConfirmPassword]';
+        }
+        $form->setValidator(new RequiredFields($requiredFields));
+
+        $rendered = $field->Field();
+        $fieldOneRegex = '<input\s+type="password"\s+name="Test\[_Password\]"\s[^>]*?required="required"\s+aria-required="true"\s[^>]*\/>';
+        $fieldTwoRegex = '<input\s+type="password"\s+name="Test\[_ConfirmPassword\]"\s[^>]*?required="required"\s+aria-required="true"\s[^>]*\/>';
+        $regex = '/' . $fieldOneRegex . '.*' . $fieldTwoRegex . '/isu';
+
+        if ($expectRequired) {
+            $this->assertMatchesRegularExpression($regex, $rendered);
+        } else {
+            $this->assertDoesNotMatchRegularExpression($regex, $rendered);
+        }
+    }
 }
