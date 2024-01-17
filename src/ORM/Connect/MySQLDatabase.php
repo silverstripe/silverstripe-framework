@@ -278,7 +278,6 @@ class MySQLDatabase extends Database implements TransactionManager
         $queryParameters = [];
         $totalCount = 0;
         foreach ($lists as $class => $list) {
-            /** @var SQLSelect $query */
             $query = $list->dataQuery()->query();
 
             // There's no need to do all that joining

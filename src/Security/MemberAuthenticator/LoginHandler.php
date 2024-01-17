@@ -115,7 +115,6 @@ class LoginHandler extends RequestHandler
 
         $this->extend('beforeLogin');
         // Successful login
-        /** @var ValidationResult $result */
         if ($member = $this->checkLogin($data, $request, $result)) {
             $this->performLogin($member, $data, $request);
             // Allow operations on the member after successful login
@@ -241,7 +240,6 @@ class LoginHandler extends RequestHandler
     {
         /** IdentityStore */
         $rememberMe = (isset($data['Remember']) && Security::config()->get('autologin_enabled'));
-        /** @var IdentityStore $identityStore */
         $identityStore = Injector::inst()->get(IdentityStore::class);
         $identityStore->logIn($member, $rememberMe, $request);
 

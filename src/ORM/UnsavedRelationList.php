@@ -17,6 +17,10 @@ use Traversable;
  * It can store both saved objects (as IDs) or unsaved objects (as instances
  * of $dataClass). Unsaved objects are then written when the list is saved
  * into an instance of {@link RelationList}.
+ *
+ * @template T of DataObject
+ * @extends ArrayList<T>
+ * @implements Relation<T>
  */
 class UnsavedRelationList extends ArrayList implements Relation
 {
@@ -38,7 +42,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * The DataObject class name that this relation is querying
      *
-     * @var string
+     * @var class-string<T>
      */
     protected $dataClass;
 
@@ -54,7 +58,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      *
      * @param string $baseClass
      * @param string $relationName
-     * @param string $dataClass The DataObject class used in the relation
+     * @param class-string<T> $dataClass The DataObject class used in the relation
      */
     public function __construct($baseClass, $relationName, $dataClass)
     {
@@ -112,7 +116,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Get the dataClass name for this relation, ie the DataObject ClassName
      *
-     * @return string
+     * @return class-string<T>
      */
     public function dataClass()
     {
@@ -130,8 +134,6 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Return an array of the actual items that this relation contains at this stage.
      * This is when the query is actually executed.
-     *
-     * @return array
      */
     public function toArray()
     {
@@ -209,8 +211,6 @@ class UnsavedRelationList extends ArrayList implements Relation
      * Returns an array with both the keys and values set to the IDs of the records in this list.
      * Does not respect sort order. Use ->column("ID") to get an ID list with the current sort.
      * Does not return the IDs for unsaved DataObjects.
-     *
-     * @return array
      */
     public function getIDList()
     {
@@ -230,11 +230,6 @@ class UnsavedRelationList extends ArrayList implements Relation
         return $ids;
     }
 
-    /**
-     * Returns the first item in the list
-     *
-     * @return mixed
-     */
     public function first()
     {
         $item = reset($this->items) ?: null;
@@ -247,11 +242,6 @@ class UnsavedRelationList extends ArrayList implements Relation
         return $item;
     }
 
-    /**
-     * Returns the last item in the list
-     *
-     * @return mixed
-     */
     public function last()
     {
         $item = end($this->items) ?: null;
@@ -291,7 +281,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Returns a copy of this list with the relationship linked to the given foreign ID.
      * @param int|array $id An ID or an array of IDs.
-     * @return Relation
+     * @return Relation<T>
      */
     public function forForeignID($id)
     {

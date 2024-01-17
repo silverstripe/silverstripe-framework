@@ -96,7 +96,6 @@ class BasicAuth
 
         try {
             if ($request->getHeader('PHP_AUTH_USER') && $request->getHeader('PHP_AUTH_PW')) {
-                /** @var MemberAuthenticator $authenticator */
                 $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::LOGIN);
 
                 foreach ($authenticators as $name => $authenticator) {

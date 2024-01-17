@@ -619,7 +619,6 @@ class ShortcodeParser
         $content = $this->getShortcodeReplacementText($tag);
 
         if ($content) {
-            /** @var HTMLValue $parsed */
             $parsed = HTMLValue::create($content);
             $body = $parsed->getBody();
             if ($body) {
@@ -658,7 +657,6 @@ class ShortcodeParser
             // use a proper DOM
             list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
-            /** @var HTMLValue $htmlvalue */
             $htmlvalue = Injector::inst()->create(HTMLValue::class, $content);
 
             // Now parse the result into a DOM
@@ -681,7 +679,7 @@ class ShortcodeParser
             // Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
             $parents = $this->findParentsForMarkers($shortcodes);
 
-        /** @var DOMElement $shortcode */
+            /** @var DOMElement $shortcode */
             foreach ($shortcodes as $shortcode) {
                 $tag = $tags[$shortcode->getAttribute('data-tagid')];
                 $parent = $parents[$shortcode->getAttribute('data-parentid')];

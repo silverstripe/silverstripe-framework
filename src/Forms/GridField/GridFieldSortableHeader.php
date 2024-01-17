@@ -124,7 +124,6 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
         if (!$this->checkDataType($list)) {
             return null;
         }
-        /** @var Sortable $list */
         $forTemplate = new ArrayData([]);
         $forTemplate->Fields = new ArrayList;
 
@@ -247,7 +246,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * {@link DataQuery} first.
      *
      * @param GridField $gridField
-     * @param SS_List $dataList
+     * @param SS_List&Sortable $dataList
      * @return SS_List
      */
     public function getManipulatedData(GridField $gridField, SS_List $dataList)
@@ -256,14 +255,12 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
             return $dataList;
         }
 
-        /** @var Sortable $dataList */
         $state = $this->getState($gridField);
         if ($state->SortColumn == "") {
             return $dataList;
         }
 
         // Prevent SQL Injection by validating that SortColumn exists
-        /** @var GridFieldDataColumns $columns */
         $columns = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $fields = $columns->getDisplayFields($gridField);
         if (!array_key_exists($state->SortColumn, $fields) &&

@@ -175,7 +175,6 @@ class FixtureTestState implements TestState
      */
     protected function loadFixture($fixtureFile, SapphireTest $test)
     {
-        /** @var YamlFixture $fixture */
         $fixture = Injector::inst()->create(YamlFixture::class, $fixtureFile);
         $fixture->writeInto($this->getFixtureFactory(get_class($test)));
     }

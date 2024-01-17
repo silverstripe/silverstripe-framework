@@ -337,7 +337,6 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
 
         $actuals = [];
         if ($items) {
-            /** @var SimpleXMLElement $item */
             foreach ($items as $item) {
                 $actuals[$item->asXML()] = true;
             }
@@ -371,7 +370,6 @@ abstract class FunctionalTest extends SapphireTest implements TestOnly
 
         $actuals = [];
         if ($items) {
-            /** @var SimpleXMLElement $item */
             foreach ($items as $item) {
                 $actuals[] = $item->asXML();
             }

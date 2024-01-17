@@ -167,8 +167,6 @@ abstract class DBSchemaManager
         // Clear update list for client code to mess around with
         $this->schemaUpdateTransaction = [];
 
-        /** @var Exception $error */
-        $error = null;
         try {
             // Yield control to client code
             $callback();
@@ -425,7 +423,6 @@ abstract class DBSchemaManager
                 $fieldObj->setTable($table);
 
                 if ($fieldObj instanceof DBPrimaryKey) {
-                    /** @var DBPrimaryKey $fieldObj */
                     $fieldObj->setAutoIncrement($hasAutoIncPK);
                 }
 

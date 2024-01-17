@@ -13,7 +13,8 @@ use Exception;
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *
- * @property DataObject $owner
+ * @template T of DataObject
+ * @extends Extension<T>
  */
 abstract class DataExtension extends Extension
 {

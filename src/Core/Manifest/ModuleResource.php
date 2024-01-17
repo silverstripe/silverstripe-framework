@@ -88,7 +88,6 @@ class ModuleResource
      */
     public function getURL()
     {
-        /** @var ResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
         return $generator->urlForResource($this);
     }

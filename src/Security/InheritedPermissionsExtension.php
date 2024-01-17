@@ -14,6 +14,8 @@ use SilverStripe\ORM\ManyManyList;
  * @method ManyManyList<Member> EditorMembers()
  * @method ManyManyList<Group> ViewerGroups()
  * @method ManyManyList<Member> ViewerMembers()
+ *
+ * @extends DataExtension<DataObject>
  */
 class InheritedPermissionsExtension extends DataExtension
 {

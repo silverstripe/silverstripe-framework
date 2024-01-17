@@ -76,7 +76,6 @@ class CompositeField extends FormField
         $children = $this->getChildren();
         if ($children && $children->count()) {
             $childSchema = [];
-            /** @var FormField $child */
             foreach ($children as $child) {
                 $childSchema[] = $child->getSchemaData();
             }
@@ -132,7 +131,6 @@ class CompositeField extends FormField
         $fieldList = $this->FieldList();
         $compositeTitle = '';
         $count = 0;
-        /** @var FormField $subfield */
         foreach ($fieldList as $subfield) {
             $compositeTitle .= $subfield->getName();
             if ($subfield->getName()) {
@@ -415,7 +413,6 @@ class CompositeField extends FormField
         $clone = clone $this;
         if ($clone->getChildren()) {
             foreach ($clone->getChildren() as $child) {
-                        /** @var FormField $child */
                 $child = $child->transform(new ReadonlyTransformation());
                 $newChildren->push($child);
             }
@@ -441,7 +438,6 @@ class CompositeField extends FormField
         $clone = clone $this;
         if ($clone->getChildren()) {
             foreach ($clone->getChildren() as $child) {
-                        /** @var FormField $child */
                 $child = $child->transform(new DisabledTransformation());
                 $newChildren->push($child);
             }
@@ -482,7 +478,6 @@ class CompositeField extends FormField
 
         $i = 0;
         foreach ($this->children as $child) {
-            /** @var FormField $child */
             if ($child->getName() == $field->getName()) {
                 return $i;
             }
@@ -540,7 +535,6 @@ class CompositeField extends FormField
     {
         $valid = true;
         foreach ($this->children as $child) {
-            /** @var FormField $child */
             $valid = ($child && $child->validate($validator) && $valid);
         }
         return $this->extendValidationResult($valid, $validator);

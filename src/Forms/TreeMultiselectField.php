@@ -281,7 +281,6 @@ class TreeMultiselectField extends TreeDropdownField
      */
     public function performReadonlyTransformation()
     {
-        /** @var TreeMultiselectField_Readonly $copy */
         $copy = $this->castedCopy(TreeMultiselectField_Readonly::class);
         $copy->setKeyField($this->getKeyField());
         $copy->setLabelField($this->getLabelField());

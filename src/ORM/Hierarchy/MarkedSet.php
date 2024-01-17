@@ -187,7 +187,7 @@ class MarkedSet
      * Get children from this node
      *
      * @param DataObject $node
-     * @return SS_List
+     * @return SS_List<DataObject>
      */
     protected function getChildren(DataObject $node)
     {
@@ -453,7 +453,6 @@ class MarkedSet
         $nodeCountThreshold = $this->getNodeCountThreshold();
 
         // Add root node, not-expanded by default
-        /** @var DataObject|Hierarchy $rootNode */
         $rootNode = $this->rootNode;
         $this->clearMarks();
         $this->markUnexpanded($rootNode);
@@ -464,7 +463,6 @@ class MarkedSet
             $children = $this->markChildren($node);
             if ($nodeCountThreshold && sizeof($this->markedNodes ?? []) > $nodeCountThreshold) {
                 // Undo marking children as opened since they're lazy loaded
-                /** @var DataObject|Hierarchy $child */
                 foreach ($children as $child) {
                     $this->markClosed($child);
                 }
@@ -542,7 +540,7 @@ class MarkedSet
      * Mark all children of the given node that match the marking filter.
      *
      * @param DataObject $node Parent node
-     * @return array List of children marked by this operation
+     * @return array<DataObject> List of children marked by this operation
      */
     protected function markChildren(DataObject $node)
     {

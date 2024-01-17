@@ -97,7 +97,6 @@ class Group extends DataObject
         $doSet = new ArrayList();
 
         $children = Group::get()->filter("ParentID", $this->ID);
-        /** @var Group $child */
         foreach ($children as $child) {
             $doSet->push($child);
             $doSet->merge($child->getAllChildren());
@@ -165,12 +164,10 @@ class Group extends DataObject
             $config->removeComponentsByType(GridFieldDeleteAction::class);
             $config->addComponent(GridFieldGroupDeleteAction::create($this->ID), GridFieldPageCount::class);
 
-            /** @var GridFieldAddExistingAutocompleter $autocompleter */
             $autocompleter = $config->getComponentByType(GridFieldAddExistingAutocompleter::class);
             $autocompleter
                 ->setResultsFormat('$Title ($Email)')
                 ->setSearchFields(['FirstName', 'Surname', 'Email']);
-            /** @var GridFieldDetailForm $detailForm */
             $detailForm = $config->getComponentByType(GridFieldDetailForm::class);
             $detailForm
                 ->setItemEditFormCallback(function ($form) use ($group) {
@@ -307,7 +304,7 @@ class Group extends DataObject
      * See {@link DirectMembers()} for retrieving members without any inheritance.
      *
      * @param string $filter
-     * @return ManyManyList
+     * @return ManyManyList<Member>
      */
     public function Members($filter = '')
     {
@@ -338,6 +335,7 @@ class Group extends DataObject
 
     /**
      * Return only the members directly added to this group
+     * @return ManyManyList<Member>
      */
     public function DirectMembers()
     {
@@ -650,7 +648,7 @@ class Group extends DataObject
      * Returns all of the children for the CMS Tree.
      * Filters to only those groups that the current user can edit
      *
-     * @return ArrayList
+     * @return ArrayList<DataObject>
      */
     public function AllChildrenIncludingDeleted()
     {

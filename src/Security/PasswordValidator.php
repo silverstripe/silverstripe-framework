@@ -227,7 +227,6 @@ class PasswordValidator
                 ->where(['"MemberPassword"."MemberID"' => $member->ID])
                 ->sort('"Created" DESC, "ID" DESC')
                 ->limit($historicCount);
-            /** @var MemberPassword $previousPassword */
             foreach ($previousPasswords as $previousPassword) {
                 if ($previousPassword->checkPassword($password)) {
                     $error = _t(

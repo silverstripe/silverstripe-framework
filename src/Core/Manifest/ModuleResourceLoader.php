@@ -51,7 +51,6 @@ class ModuleResourceLoader implements TemplateGlobalProvider
         $resource = $this->resolveResource($resource);
 
         // Resolve resource to url
-        /** @var ResourceURLGenerator $generator */
         $generator = Injector::inst()->get(ResourceURLGenerator::class);
         return $generator->urlForResource($resource);
     }

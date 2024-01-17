@@ -13,10 +13,13 @@ use Traversable;
 
 /**
  * A decorator that wraps around a data list in order to provide pagination.
+ *
+ * @template TList of SS_List
+ * @template T
+ * @extends ListDecorator<TList, T>
  */
 class PaginatedList extends ListDecorator
 {
-
     protected $request;
     protected $getVar = 'start';
 
@@ -28,7 +31,7 @@ class PaginatedList extends ListDecorator
     /**
      * Constructs a new paginated list instance around a list.
      *
-     * @param SS_List $list The list to paginate. The getRange method will
+     * @param TList<T> $list The list to paginate. The getRange method will
      *        be used to get the subset of objects to show.
      * @param array|ArrayAccess $request Either a map of request parameters or
      *        request object that the pagination offset is read from.

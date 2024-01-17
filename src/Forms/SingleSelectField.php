@@ -175,7 +175,6 @@ abstract class SingleSelectField extends SelectField
      */
     public function performReadonlyTransformation()
     {
-        /** @var SingleLookupField $field */
         $field = $this->castedCopy(SingleLookupField::class);
         $field->setSource($this->getSource());
         $field->setReadonly(true);

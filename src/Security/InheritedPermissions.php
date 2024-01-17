@@ -417,7 +417,6 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             ->execute();
 
         foreach ($potentiallyInherited as $item) {
-            /** @var DataObject|Hierarchy $item */
             if ($item['ParentID']) {
                 if (!isset($groupedByParent[$item['ParentID']])) {
                     $groupedByParent[$item['ParentID']] = [];

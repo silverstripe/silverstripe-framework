@@ -150,7 +150,6 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             return $this->exportColumns;
         }
 
-        /** @var GridFieldDataColumns $dataCols */
         $dataCols = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         if ($dataCols) {
             return $dataCols->getDisplayFields($gridField);
@@ -224,17 +223,15 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             }
         }
 
-        /** @var GridFieldDataColumns|null $gridFieldColumnsComponent */
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
         $columnsHandled = ($gridFieldColumnsComponent)
             ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
             : [];
 
-        /** @var ArrayList|DataList $items */
+        /** @var SS_List<ViewableData> $items */
         // Remove limit as the list may be paginated, we want the full list for the export
         $items = $items->limit(null);
 
-        /** @var ViewableData $item */
         foreach ($items as $item) {
             // Assume item can be viewed if canView() isn't implemented
             if (!$item->hasMethod('canView') || $item->canView()) {

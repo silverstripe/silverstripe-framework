@@ -62,7 +62,6 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         if (!$id) {
             return null;
         }
-        /** @var Member $member */
         $member = DataObject::get_by_id(Member::class, $id);
         return $member;
     }
@@ -86,7 +85,6 @@ class SessionAuthenticationHandler implements AuthenticationHandler
 
         // Activate sudo mode on login so the user doesn't have to reauthenticate for sudo
         // actions until the sudo mode timeout expires
-        /** @var SudoModeServiceInterface $service */
         $service = Injector::inst()->get(SudoModeServiceInterface::class);
         $service->activate($session);
     }

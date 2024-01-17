@@ -30,7 +30,6 @@ trait FlushScheduler
     {
         $flush = array_key_exists('flush', $request->getVars() ?? []) || ($request->getURL() === 'dev/build');
 
-        /** @var BaseKernel $kernel */
         $kernel = Injector::inst()->get(Kernel::class);
         if (!$flush || (method_exists($kernel, 'isFlushed') && $kernel->isFlushed())) {
             return false;

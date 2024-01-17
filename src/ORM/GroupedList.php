@@ -7,6 +7,10 @@ use SilverStripe\View\ArrayData;
 /**
  * A list decorator that allows a list to be grouped into sub-lists by common
  * values of a field.
+ *
+ * @template TList
+ * @template T
+ * @extends ListDecorator<TList, T>
  */
 class GroupedList extends ListDecorator
 {
@@ -40,7 +44,7 @@ class GroupedList extends ListDecorator
      *
      * @param  string $index
      * @param  string $children Name of the control under which children can be iterated on
-     * @return ArrayList
+     * @return ArrayList<ArrayData>
      */
     public function GroupedBy($index, $children = 'Children')
     {

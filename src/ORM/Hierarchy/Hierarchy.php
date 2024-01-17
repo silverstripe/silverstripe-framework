@@ -23,8 +23,8 @@ use SilverStripe\View\ViewableData;
  * obvious example of this is SiteTree.
  *
  * @property int $ParentID
- * @property DataObject|Hierarchy $owner
  * @method DataObject Parent()
+ * @extends DataExtension<DataObject&static>
  */
 class Hierarchy extends DataExtension
 {
@@ -119,7 +119,6 @@ class Hierarchy extends DataExtension
     public function validate(ValidationResult $validationResult)
     {
         // The object is new, won't be looping.
-        /** @var DataObject|Hierarchy $owner */
         $owner = $this->owner;
         if (!$owner->ID) {
             return;
@@ -190,7 +189,7 @@ class Hierarchy extends DataExtension
     /**
      * Get the children for this DataObject filtered by canView()
      *
-     * @return SS_List
+     * @return SS_List<DataObject&static>
      */
     public function Children()
     {
@@ -212,7 +211,7 @@ class Hierarchy extends DataExtension
     /**
      * Return all children, including those 'not in menus'.
      *
-     * @return DataList
+     * @return DataList<DataObject&static>
      */
     public function AllChildren()
     {
@@ -226,7 +225,7 @@ class Hierarchy extends DataExtension
      * - Modified children will be marked as "ModifiedOnStage"
      * - Everything else has "SameOnStage" set, as an indicator that this information has been looked up.
      *
-     * @return ArrayList
+     * @return ArrayList<DataObject&static>
      */
     public function AllChildrenIncludingDeleted()
     {
@@ -252,7 +251,7 @@ class Hierarchy extends DataExtension
     /**
      * Return all the children that this page had, including pages that were deleted from both stage & live.
      *
-     * @return DataList
+     * @return DataList<DataObject&static>
      * @throws Exception
      */
     public function AllHistoricalChildren()
@@ -293,7 +292,6 @@ class Hierarchy extends DataExtension
      */
     public function numChildren($cache = true)
     {
-
         $baseClass = $this->owner->baseClass();
         $cacheType = 'numChildren';
         $id = $this->owner->ID;
@@ -355,7 +353,7 @@ class Hierarchy extends DataExtension
             return;
         }
 
-        /** @var Versioned|DataObject $singleton */
+        /** @var DataObject&static $dummyObject */
         $dummyObject = DataObject::singleton($baseClass);
         $baseTable = $dummyObject->baseTable();
 
@@ -431,11 +429,10 @@ class Hierarchy extends DataExtension
      * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
      *                      extension is applied to {@link SiteTree}.
      * @param bool $skipParentIDFilter Set to true to suppress the ParentID and ID where statements.
-     * @return DataList
+     * @return DataList<DataObject&static>
      */
     public function stageChildren($showAll = false, $skipParentIDFilter = false)
     {
-        /** @var DataObject|Hierarchy $owner */
         $owner = $this->owner;
         $hideFromHierarchy = $owner->config()->hide_from_hierarchy;
         $hideFromCMSTree = $owner->config()->hide_from_cms_tree;
@@ -477,7 +474,7 @@ class Hierarchy extends DataExtension
      * @param bool $showAll              Include all of the elements, even those not shown in the menus. Only
      *                                   applicable when extension is applied to {@link SiteTree}.
      * @param bool $onlyDeletedFromStage Only return items that have been deleted from stage
-     * @return DataList
+     * @return DataList<DataObject&static>
      * @throws Exception
      */
     public function liveChildren($showAll = false, $onlyDeletedFromStage = false)
@@ -515,7 +512,7 @@ class Hierarchy extends DataExtension
      * is returned.
      *
      * @param string $filter
-     * @return DataObject
+     * @return DataObject&static
      */
     public function getParent($filter = null)
     {
@@ -535,7 +532,7 @@ class Hierarchy extends DataExtension
      * Return all the parents of this class in a set ordered from the closest to furtherest parent.
      *
      * @param bool $includeSelf
-     * @return ArrayList
+     * @return ArrayList<DataObject&static>
      */
     public function getAncestors($includeSelf = false)
     {

@@ -18,7 +18,7 @@ class SSListContainsOnlyMatchingItemsTest extends SapphireTest
     }
 
     /**
-     * @return ArrayList|Member[]
+     * @return ArrayList<Member>
      */
     private function getListToMatch()
     {

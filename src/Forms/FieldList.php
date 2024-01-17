@@ -7,7 +7,7 @@ use SilverStripe\ORM\ArrayList;
 /**
  * A list designed to hold form field instances.
  *
- * @method FormField[] getIterator()
+ * @extends ArrayList<FormField>
  */
 class FieldList extends ArrayList
 {
@@ -65,7 +65,6 @@ class FieldList extends ArrayList
     {
         $stack = $this->toArray();
         while (!empty($stack)) {
-            /** @var FormField $field */
             $field = array_shift($stack);
             $callback($field);
             if ($field instanceof CompositeField) {
@@ -399,7 +398,6 @@ class FieldList extends ArrayList
         $currentPointer = $this;
 
         foreach ($parts as $k => $part) {
-            /** @var FormField $currentPointer */
             $currentPointer = $currentPointer->fieldByName($part);
         }
 
@@ -426,7 +424,6 @@ class FieldList extends ArrayList
         $currentPointer = $this;
         foreach ($parts as $k => $part) {
             $parentPointer = $currentPointer;
-            /** @var FormField $currentPointer */
             $currentPointer = $currentPointer->fieldByName($part);
             // Create any missing tabs
             if (!$currentPointer) {

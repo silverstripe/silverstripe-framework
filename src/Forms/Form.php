@@ -1372,7 +1372,6 @@ class Form extends ViewableData implements HasRequestHandler
             return $this;
         }
 
-        /** @var FormField $field */
         foreach ($dataFields as $field) {
             $name = $field->getName();
 
@@ -1533,7 +1532,6 @@ class Form extends ViewableData implements HasRequestHandler
         $data = [];
 
         if ($dataFields) {
-            /** @var FormField $field */
             foreach ($dataFields as $field) {
                 if ($field->getName()) {
                     $data[$field->getName()] = $field->dataValue();

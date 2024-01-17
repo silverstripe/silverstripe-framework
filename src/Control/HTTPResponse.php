@@ -411,7 +411,6 @@ EOT
         // a more specific error description.
         $body = $this->getBody();
         if ($this->isError() && empty($body)) {
-            /** @var HandlerInterface $handler */
             $handler = Injector::inst()->get(HandlerInterface::class);
             $formatter = $handler->getFormatter();
             echo $formatter->format([

@@ -20,7 +20,8 @@ use Exception;
  * CAUTION: Will make all files in your /assets folder searchable by file name
  * unless "File" is excluded from FulltextSearchable::enable().
  *
- * @see http://doc.silverstripe.org/framework/en/tutorials/4-site-search
+ * @template T of SiteTree|File
+ * @extends DataExtension<T>
  */
 class FulltextSearchable extends DataExtension
 {

@@ -66,7 +66,6 @@ class ChangePasswordHandler extends RequestHandler
         $request = $this->getRequest();
 
         // Extract the member from the URL.
-        /** @var Member $member */
         $member = null;
         if ($request->getVar('m') !== null) {
             $member = Member::get()->filter(['ID' => (int)$request->getVar('m')])->first();
@@ -153,7 +152,6 @@ class ChangePasswordHandler extends RequestHandler
     {
         // if there is a current member, they should be logged out
         if ($curMember = Security::getCurrentUser()) {
-            /** @var LogoutHandler $handler */
             Injector::inst()->get(IdentityStore::class)->logOut();
         }
 
@@ -275,7 +273,6 @@ class ChangePasswordHandler extends RequestHandler
         $member->write();
 
         if ($member->canLogin()) {
-            /** @var IdentityStore $identityStore */
             $identityStore = Injector::inst()->get(IdentityStore::class);
             $identityStore->logIn($member, false, $this->getRequest());
         }

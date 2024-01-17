@@ -121,7 +121,7 @@ class FixtureFactory
      *
      * @param string $class The data class, as specified in your fixture file.  Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
-     * @return int
+     * @return int|false
      */
     public function getId($class, $identifier)
     {
@@ -162,9 +162,10 @@ class FixtureFactory
     /**
      * Get an object from the fixture.
      *
-     * @param string $class The data class or table name, as specified in your fixture file.  Parent classes won't work
+     * @template T of DataObject
+     * @param class-string<T> $class The data class or table name, as specified in your fixture file.  Parent classes won't work
      * @param string $identifier The identifier string, as provided in your fixture file
-     * @return DataObject
+     * @return T|null
      */
     public function get($class, $identifier)
     {

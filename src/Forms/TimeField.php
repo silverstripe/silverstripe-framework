@@ -372,7 +372,6 @@ class TimeField extends TextField
      */
     public function performReadonlyTransformation()
     {
-        /** @var TimeField_Readonly $result */
         $result = $this->castedCopy(TimeField_Readonly::class);
         $result
             ->setValue(false)

@@ -168,7 +168,6 @@ class ConfirmedPasswordField extends FormField
 
         // disable auto complete
         foreach ($this->getChildren() as $child) {
-            /** @var FormField $child */
             $child->setAttribute('autocomplete', 'off');
         }
 
@@ -200,7 +199,6 @@ class ConfirmedPasswordField extends FormField
         // Build inner content
         $fieldContent = '';
         foreach ($this->getChildren() as $field) {
-            /** @var FormField $field */
             $field->setDisabled($this->isDisabled());
             $field->setReadonly($this->isReadonly());
 
@@ -321,7 +319,6 @@ class ConfirmedPasswordField extends FormField
     public function setRightTitle($title)
     {
         foreach ($this->getChildren() as $field) {
-            /** @var FormField $field */
             $field->setRightTitle($title);
         }
 
@@ -343,7 +340,6 @@ class ConfirmedPasswordField extends FormField
         if (is_array($titles) && count($titles ?? []) === $expectedChildren) {
             foreach ($this->getChildren() as $field) {
                 if (isset($titles[0])) {
-                    /** @var FormField $field */
                     $field->setTitle($titles[0]);
 
                     array_shift($titles);
@@ -613,7 +609,6 @@ class ConfirmedPasswordField extends FormField
      */
     public function performReadonlyTransformation()
     {
-        /** @var ReadonlyField $field */
         $field = $this->castedCopy(ReadonlyField::class)
             ->setTitle($this->title ? $this->title : _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
             ->setValue('*****');

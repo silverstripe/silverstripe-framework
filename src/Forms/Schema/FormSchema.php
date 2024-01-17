@@ -103,12 +103,10 @@ class FormSchema
             'actions' => []
         ];
 
-        /** @var FormField $action */
         foreach ($form->Actions() as $action) {
             $schema['actions'][] = $action->getSchemaData();
         }
 
-        /** @var FormField $field */
         foreach ($form->Fields() as $field) {
             $schema['fields'][] = $field->getSchemaData();
         }
@@ -197,10 +195,12 @@ class FormSchema
         ];
     }
 
+    /**
+     * @param iterable<FormField> $fields
+     */
     protected function getFieldStates($fields)
     {
         $states = [];
-        /** @var FormField $field */
         foreach ($fields as $field) {
             $states[] = $field->getSchemaState();
 

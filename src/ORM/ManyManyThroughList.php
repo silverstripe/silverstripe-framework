@@ -9,6 +9,9 @@ use SilverStripe\Core\Injector\Injector;
 
 /**
  * ManyManyList backed by a dataobject join table
+ *
+ * @template T of DataObject
+ * @extends RelationList<T>
  */
 class ManyManyThroughList extends RelationList
 {
@@ -21,15 +24,15 @@ class ManyManyThroughList extends RelationList
      * Create a new ManyManyRelationList object. This relation will utilise an intermediary dataobject
      * as a join table, unlike ManyManyList which scaffolds a table automatically.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @example new ManyManyThroughList('Banner', 'PageBanner', 'BannerID', 'PageID');
+     *
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $joinClass Class name of the joined dataobject record
      * @param string $localKey The key in the join table that maps to the dataClass' PK.
      * @param string $foreignKey The key in the join table that maps to joined class' PK.
-     *
      * @param array $extraFields Ignored for ManyManyThroughList
      * @param string $foreignClass 'from' class
      * @param string $parentClass Parent class (should be subclass of 'from')
-     * @example new ManyManyThroughList('Banner', 'PageBanner', 'BannerID', 'PageID');
      */
     public function __construct(
         $dataClass,
@@ -55,10 +58,6 @@ class ManyManyThroughList extends RelationList
 
     /**
      * Don't apply foreign ID filter until getFinalisedQuery()
-     *
-     * @param array|integer $id (optional) An ID or an array of IDs - if not provided, will use the current ids as
-     * per getForeignID
-     * @return array Condition In array(SQL => parameters format)
      */
     protected function foreignIDFilter($id = null)
     {
@@ -134,7 +133,6 @@ class ManyManyThroughList extends RelationList
 
         // Rather than simple un-associating the record (as in has_many list)
         // Delete the actual mapping row as many_many deletions behave.
-        /** @var DataObject $record */
         foreach ($records as $record) {
             $record->delete();
         }
@@ -144,6 +142,9 @@ class ManyManyThroughList extends RelationList
         }
     }
 
+    /**
+     * @return void
+     */
     public function removeAll()
     {
         // Get the IDs of records in the current list
@@ -216,7 +217,6 @@ class ManyManyThroughList extends RelationList
         $foreignKey = $this->manipulator->getForeignIDKey();
         $hasManyList = $this->manipulator->getParentRelationship($this->dataQuery());
         $records = $hasManyList->filter($localKey, $itemID);
-        /** @var DataObject $record */
         foreach ($records as $record) {
             if ($extraFields) {
                 foreach ($extraFields as $field => $value) {

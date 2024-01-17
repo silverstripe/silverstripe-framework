@@ -6,6 +6,9 @@ use InvalidArgumentException;
 
 /**
  * Subclass of {@link DataList} representing a has_many relation.
+ *
+ * @template T of DataObject
+ * @extends RelationList<T>
  */
 class HasManyList extends RelationList
 {
@@ -21,7 +24,7 @@ class HasManyList extends RelationList
      * {@link DataList} methods.  Addition arguments are used to support {@link add()}
      * and {@link remove()} methods.
      *
-     * @param string $dataClass The class of the DataObjects that this will list.
+     * @param class-string<T> $dataClass The class of the DataObjects that this will list.
      * @param string $foreignKey The name of the foreign key field to set the ID filter against.
      */
     public function __construct($dataClass, $foreignKey)
@@ -43,7 +46,7 @@ class HasManyList extends RelationList
 
     /**
      * @param null|int|array|string $id
-     * @return array
+     * @return array|null
      */
     protected function foreignIDFilter($id = null)
     {

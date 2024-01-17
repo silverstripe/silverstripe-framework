@@ -185,7 +185,6 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             return $dataList;
         }
 
-        /** @var Filterable $dataList */
         /** @var array $filterArguments */
         $filterArguments = $this->getState($gridField)->Columns->toArray();
         if (empty($filterArguments)) {

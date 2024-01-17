@@ -177,6 +177,8 @@ trait SearchableDropdownTrait
      * If a search context has been set via setSearchContext() that will be used
      * Will fallback to using the dataobjects default search context if a sourceList has been set
      * Otherwise will return null
+     *
+     * @return SearchContext<DataObject>|null
      */
     public function getSearchContext(): ?SearchContext
     {
@@ -368,7 +370,6 @@ trait SearchableDropdownTrait
         // Don't know what value is, handle gracefully. We should not raise an exception here because
         // of there is a bad data for whatever a content editor will not be able to resolve and it will
         // render part of the CMS unusable
-        // /** @var LoggerInterface $logger */
         $logger = Injector::inst()->get(LoggerInterface::class);
         $logger->warning('Could not determine value in ' . __CLASS__ . '::getValueArray()');
         return [];
@@ -399,7 +400,7 @@ trait SearchableDropdownTrait
             if (!$record->hasMethod($name)) {
                 throw new LogicException("Relation $name does not exist");
             }
-            /** @var Relation $relation */
+            /** @var Relation $relationList */
             $relationList = $record->$name();
             // Use RelationList rather than Relation here since some Relation classes don't allow setting value
             // but RelationList does
@@ -542,9 +543,9 @@ trait SearchableDropdownTrait
     }
 
     /**
-     * @var ArrayList $options The options list being updated that will become <options>
-     * @var DataList|ArrayList $items The items to be turned into options
-     * @var DataList|ArrayList $values The values that have been selected i.e. the value of the Field
+     * @param ArrayList $options The options list being updated that will become <options>
+     * @param DataList|ArrayList $items The items to be turned into options
+     * @param DataList|ArrayList $values The values that have been selected i.e. the value of the Field
      */
     private function updateOptionsForSchema(
         ArrayList $options,

@@ -34,7 +34,6 @@ abstract class LoginForm extends Form
     {
         $this->authenticatorClass = $class;
 
-        /** @var FieldList|null $fields */
         $fields = $this->Fields();
         if (!$fields) {
             return $this;

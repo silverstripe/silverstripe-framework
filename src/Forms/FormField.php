@@ -1352,9 +1352,10 @@ class FormField extends RequestHandler
      *
      * Does not copy custom field templates, since they probably won't apply to the new instance.
      *
-     * @param mixed $classOrCopy Class name for copy, or existing copy instance to update
+     * @template T
+     * @param class-string<T>|T $classOrCopy Class name for copy, or existing copy instance to update
      *
-     * @return FormField
+     * @return T
      */
     public function castedCopy($classOrCopy)
     {
@@ -1397,7 +1398,7 @@ class FormField extends RequestHandler
      * Sets the component type the FormField will be rendered as on the front-end.
      *
      * @param string $componentType
-     * @return FormField
+     * @return static
      */
     public function setSchemaComponent($componentType)
     {
@@ -1422,7 +1423,7 @@ class FormField extends RequestHandler
      * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
      *
      * @param array $schemaData - The data to be merged with $this->schemaData.
-     * @return FormField
+     * @return static
      */
     public function setSchemaData($schemaData = [])
     {
@@ -1494,7 +1495,7 @@ class FormField extends RequestHandler
      * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
      *
      * @param array $schemaState The data to be merged with $this->schemaData.
-     * @return FormField
+     * @return static
      */
     public function setSchemaState($schemaState = [])
     {
