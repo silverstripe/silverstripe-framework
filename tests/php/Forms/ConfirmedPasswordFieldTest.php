@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\ConfirmedPasswordField;
@@ -11,6 +12,7 @@ use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordValidator;
+use SilverStripe\View\SSViewer;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
@@ -437,29 +439,37 @@ class ConfirmedPasswordFieldTest extends SapphireTest
      */
     public function testChildFieldsAreRequired(bool $canBeEmpty, bool $required, bool $childrenRequired, bool $expectRequired)
     {
-        $form = new Form();
-        $field = new ConfirmedPasswordField('Test');
-        $field->setForm($form);
-        $field->setCanBeEmpty($canBeEmpty);
-        $requiredFields = [];
-        if ($required) {
-            $requiredFields[] = 'Test';
-        }
-        if ($childrenRequired) {
-            $requiredFields[] = 'Test[_Password]';
-            $requiredFields[] = 'Test[_ConfirmPassword]';
-        }
-        $form->setValidator(new RequiredFields($requiredFields));
+        // CWP front-end templates break this logic - but there's no easy fix for that.
+        // For the most part we are interested in ensuring this works in the CMS with default templates.
+        $originalThemes = SSViewer::get_themes();
+        SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
+        try {
+            $form = new Form();
+            $field = new ConfirmedPasswordField('Test');
+            $field->setForm($form);
+            $field->setCanBeEmpty($canBeEmpty);
+            $requiredFields = [];
+            if ($required) {
+                $requiredFields[] = 'Test';
+            }
+            if ($childrenRequired) {
+                $requiredFields[] = 'Test[_Password]';
+                $requiredFields[] = 'Test[_ConfirmPassword]';
+            }
+            $form->setValidator(new RequiredFields($requiredFields));
 
-        $rendered = $field->Field();
-        $fieldOneRegex = '<input\s+type="password"\s+name="Test\[_Password\]"\s[^>]*?required="required"\s+aria-required="true"\s[^>]*\/>';
-        $fieldTwoRegex = '<input\s+type="password"\s+name="Test\[_ConfirmPassword\]"\s[^>]*?required="required"\s+aria-required="true"\s[^>]*\/>';
-        $regex = '/' . $fieldOneRegex . '.*' . $fieldTwoRegex . '/isu';
+            $rendered = $field->Field();
+            $fieldOneRegex = '<input\s+type="password"\s+name="Test\[_Password\]"\s[^>]*?required="required"\s+aria-required="true"\s[^>]*\/>';
+            $fieldTwoRegex = '<input\s+type="password"\s+name="Test\[_ConfirmPassword\]"\s[^>]*?required="required"\s+aria-required="true"\s[^>]*\/>';
+            $regex = '/' . $fieldOneRegex . '.*' . $fieldTwoRegex . '/isu';
 
-        if ($expectRequired) {
-            $this->assertMatchesRegularExpression($regex, $rendered);
-        } else {
-            $this->assertDoesNotMatchRegularExpression($regex, $rendered);
+            if ($expectRequired) {
+                $this->assertMatchesRegularExpression($regex, $rendered);
+            } else {
+                $this->assertDoesNotMatchRegularExpression($regex, $rendered);
+            }
+        } finally {
+            SSViewer::set_themes($originalThemes);
         }
     }
 }
