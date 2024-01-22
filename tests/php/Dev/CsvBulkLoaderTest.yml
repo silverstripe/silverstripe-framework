@@ -1,3 +1,19 @@
 SilverStripe\Dev\Tests\CsvBulkLoaderTest\Team:
    team1:
       Title: My Team
+
+SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantDeleteModel:
+  model1:
+    Title: Record 1
+  model2:
+    Title: Record 2
+  model3:
+    Title: Record 3
+
+SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantEditModel:
+  model1:
+    Title: Record 1
+  model2:
+    Title: Record 2
+  model3:
+    Title: Record 3
