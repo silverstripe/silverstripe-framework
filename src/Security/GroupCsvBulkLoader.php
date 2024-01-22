@@ -12,6 +12,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader
 {
 
     public $duplicateChecks = [
+        'ID' => 'ID',
         'Code' => 'Code',
     ];
 
