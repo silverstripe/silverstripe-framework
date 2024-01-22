@@ -16,6 +16,7 @@ use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
+use SilverStripe\Control\HTTPResponse_Exception;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -207,11 +208,14 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
         if (empty($objectID)) {
             return $dataList;
         }
+        $gridField->State->GridFieldAddRelation = null;
         $object = DataObject::get_by_id($dataClass, $objectID);
         if ($object) {
+            if (!$object->canView()) {
+                throw new HTTPResponse_Exception(null, 403);
+            }
             $dataList->add($object);
         }
-        $gridField->State->GridFieldAddRelation = null;
         return $dataList;
     }
 
@@ -281,6 +285,9 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
         SSViewer::config()->set('source_file_comments', false);
         $viewer = SSViewer::fromString($this->resultsFormat);
         foreach ($results as $result) {
+            if (!$result->canView()) {
+                continue;
+            }
             $title = Convert::html2raw($viewer->process($result));
             $json[] = [
                 'label' => $title,

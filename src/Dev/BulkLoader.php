@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Dev;
 
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
@@ -17,6 +18,7 @@ use SilverStripe\View\ViewableData;
  */
 abstract class BulkLoader extends ViewableData
 {
+    private bool $checkPermissions = false;
 
     /**
      * Each row in the imported dataset should map to one instance
@@ -131,6 +133,23 @@ abstract class BulkLoader extends ViewableData
         parent::__construct();
     }
 
+    /**
+     * If true, this bulk loader will respect create/edit/delete permissions.
+     */
+    public function getCheckPermissions(): bool
+    {
+        return $this->checkPermissions;
+    }
+
+    /**
+     * Determine whether this bulk loader should respect create/edit/delete permissions.
+     */
+    public function setCheckPermissions(bool $value): self
+    {
+        $this->checkPermissions = $value;
+        return $this;
+    }
+
     /*
      * Load the given file via {@link self::processAll()} and {@link self::processRecord()}.
      * Optionally truncates (clear) the table before it imports.
@@ -144,6 +163,21 @@ abstract class BulkLoader extends ViewableData
 
         //get all instances of the to be imported data object
         if ($this->deleteExistingRecords) {
+            if ($this->getCheckPermissions()) {
+                // We need to check each record, in case there's some fancy conditional logic in the canDelete method.
+                // If we can't delete even a single record, we should bail because otherwise the result would not be
+                // what the user expects.
+                /** @var DataObject $record */
+                foreach (DataObject::get($this->objectClass) as $record) {
+                    if (!$record->canDelete()) {
+                        $type = $record->i18n_singular_name();
+                        throw new HTTPResponse_Exception(
+                            _t(__CLASS__ . '.CANNOT_DELETE', "Not allowed to delete '$type' records"),
+                            403
+                        );
+                    }
+                }
+            }
             DataObject::get($this->objectClass)->removeAll();
         }
 

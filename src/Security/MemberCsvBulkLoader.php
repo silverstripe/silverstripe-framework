@@ -32,6 +32,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader
      * @var array
      */
     public $duplicateChecks = [
+        'ID' => 'ID',
         'Email' => 'Email',
     ];
 
