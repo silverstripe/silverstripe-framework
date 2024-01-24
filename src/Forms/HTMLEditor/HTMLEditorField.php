@@ -114,20 +114,10 @@ class HTMLEditorField extends TextareaField
 
     public function getAttributes()
     {
-        $config = $this->getEditorConfig();
-        // Fix CSS height based on rows
-        $rowHeight = $this->config()->get('fixed_row_height');
-        $attributes = [];
-        if ($rowHeight && ($config instanceof TinyMCEConfig)) {
-            $height = $this->getRows() * $rowHeight;
-            $attributes['style'] = sprintf('height: %dpx;', $height);
-            $config = clone $config;
-            $config->setOption('height', 'auto');
-        }
+        $config = $this->setEditorHeight($this->getEditorConfig());
 
         // Merge attributes
         return array_merge(
-            $attributes,
             parent::getAttributes(),
             $config->getAttributes()
         );
@@ -190,7 +180,7 @@ class HTMLEditorField extends TextareaField
     public function getSchemaStateDefaults()
     {
         $stateDefaults = parent::getSchemaStateDefaults();
-        $config = $this->getEditorConfig();
+        $config = $this->setEditorHeight($this->getEditorConfig());
         $stateDefaults['data'] = $config->getConfigSchemaData();
         return $stateDefaults;
     }
@@ -203,5 +193,24 @@ class HTMLEditorField extends TextareaField
     public function ValueEntities()
     {
         return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8', false);
+    }
+
+    /**
+     * Set height of editor based on number of rows
+     */
+    private function setEditorHeight(HTMLEditorConfig $config): HTMLEditorConfig
+    {
+        $rowHeight = $this->config()->get('fixed_row_height');
+        if ($rowHeight && ($config instanceof TinyMCEConfig)) {
+            $rows = (int) $this->getRows();
+            $height = $rows * $rowHeight;
+            $config = clone $config;
+            if ($height) {
+                $config->setOption('height', 'auto');
+                $config->setOption('row_height', sprintf('%dpx', $height));
+            }
+        }
+
+        return $config;
     }
 }
