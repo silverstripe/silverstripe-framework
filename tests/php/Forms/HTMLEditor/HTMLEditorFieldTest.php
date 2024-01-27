@@ -267,4 +267,43 @@ EOS
         $editor->saveInto($obj);
         $this->assertEquals($htmlValue, $obj->Content, 'Table is removed');
     }
+
+    public function testGetAttributes()
+    {
+        // Create an editor and set fixed_row_height to 0
+        $editor = HTMLEditorField::create('Content');
+        $editor->config()->set('fixed_row_height', 0);
+        // Get the attributes and config from the editor
+        $attributes = $editor->getAttributes();
+        $data_config = json_decode($attributes['data-config'], true);
+        // If fixed_row_height is 0 then row_height and height config are not set
+        $this->assertArrayNotHasKey('height', $data_config, 'Config height should not be set');
+        $this->assertArrayNotHasKey('row_height', $data_config, 'Config row_height should not be set');
+        // Set the fixed_row_height back to 20px
+        $editor->config()->set('fixed_row_height', 20);
+        // Set the rows to 0
+        $editor->setRows(0);
+        // Get the attributes and config from the editor
+        $attributes = $editor->getAttributes();
+        $data_config = json_decode($attributes['data-config'], true);
+        // If rows is 0 then row_height and height config are not set
+        $this->assertArrayNotHasKey('height', $data_config, 'Config height should not be set');
+        $this->assertArrayNotHasKey('row_height', $data_config, 'Config row_height should not be set');
+        // Set the rows to 5
+        $editor->setRows(5);
+        // Get the attributes and config from the editor
+        $attributes = $editor->getAttributes();
+        $data_config = json_decode($attributes['data-config']);
+        // Check the height is set to auto and the row height is set to 100px (5 rows * 20px)
+        $this->assertEquals("auto", $data_config->height, 'Config height is not set');
+        $this->assertEquals("100px", $data_config->row_height, 'Config row_height is not set');
+        // Change the row height to 60px and set the rows to 3
+        $editor->setRows(3);
+        // Get the attributes and config from the editor
+        $attributes = $editor->getSchemaStateDefaults();
+        $data_config = json_decode($attributes['data']['attributes']['data-config']);
+        // Check the height is set to auto and the row height is set to 60px (3 rows * 20px)
+        $this->assertEquals("auto", $data_config->height, 'Config height is not set');
+        $this->assertEquals("60px", $data_config->row_height, 'Config row_height is not set');
+    }
 }
