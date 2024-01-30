@@ -55,7 +55,7 @@ use SilverStripe\ORM\Hierarchy\MarkedSet;
  * @see CheckboxSetField for multiple selections through checkboxes.
  * @see OptionsetField for single selections via radiobuttons.
  */
-class TreeDropdownField extends FormField
+class TreeDropdownField extends FormField implements HasOneRelationFieldInterface
 {
     protected $schemaDataType = self::SCHEMA_DATA_TYPE_SINGLESELECT;
 

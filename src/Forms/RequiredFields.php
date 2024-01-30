@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\LinkField\Form\LinkField;
 use SilverStripe\ORM\ArrayLib;
 
 /**
@@ -117,7 +118,7 @@ class RequiredFields extends Validator
                 }
             } else {
                 $stringValue = (string) $value;
-                if ($formField instanceof TreeDropdownField) {
+                if (is_a($formField, HasOneRelationFieldInterface::class)) {
                     // test for blank string as well as '0' because older versions of silverstripe/admin FormBuilder
                     // forms created using redux-form would have a value of null for unsaved records
                     // the null value will have been converted to '' by the time it gets to this point
