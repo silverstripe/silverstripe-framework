@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\LinkField\Form\LinkField;
 use SilverStripe\ORM\ArrayLib;
 
 /**
