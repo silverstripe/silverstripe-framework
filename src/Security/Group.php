@@ -49,7 +49,6 @@ use SilverStripe\ORM\UnsavedRelationList;
  *
  * @mixin Hierarchy
  * @method HasManyList<Group> Groups()
- * @method ManyManyList<Member> Members()
  * @method Group Parent()
  * @method HasManyList<Permission> Permissions()
  * @method ManyManyList<PermissionRole> Roles()
