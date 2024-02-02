@@ -46,6 +46,7 @@
         "symfony/mailer": "^6.1",
         "symfony/mime": "^6.1",
         "symfony/translation": "^6.1",
+        "symfony/validator": "^6.1",
         "symfony/yaml": "^6.1",
         "ext-ctype": "*",
         "ext-dom": "*",
