@@ -486,7 +486,9 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         // CWP front-end templates break this logic - but there's no easy fix for that.
         // For the most part we are interested in ensuring this works in the CMS with default templates.
         $originalThemes = SSViewer::get_themes();
-        SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
+        if (class_exists(LeftAndMain::class)) {
+            SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
+        }
         try {
             $form = new Form();
             $field = new ConfirmedPasswordField('Test');
