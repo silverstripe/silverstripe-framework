@@ -32,6 +32,8 @@ hu:
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: View
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Kérjük adjon meg egy működő linket'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Bármely
   SilverStripe\ORM\FieldType\DBEnum:

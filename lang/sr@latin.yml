@@ -89,6 +89,8 @@ sr@latin:
     VALIDATION: '''{value}'' nije broj. Samo brojevi mogu biti prihvaćeni za ovo polje'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Unesite ispravan format vremena ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Molimo Vas da unesete ispravan URL'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Objekti podataka'
     SINGULARNAME: 'Objekat podataka'

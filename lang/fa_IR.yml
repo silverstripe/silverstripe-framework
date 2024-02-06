@@ -98,6 +98,8 @@ fa_IR:
     IsNullLabel: 'خالی است'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'لطفاً یک قالب زمان معتبر وارد نمایید ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'لطفاً نشانی اینترنتی معتبر وارد نمایید'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'داده‌های اشیاء'
     SINGULARNAME: 'داده اشیاء'

@@ -8,13 +8,13 @@ nl:
     REMOVE: Verwijder
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Het wachtwoord voor het account met e-mailadres {email} is zojuist aangepast. Heb je geen wachtwoord aangepast, gebruik van onderstaande knop om uit veiligheidsoverwegingen je wachtwoord opnieuw in te stellen.'
-    CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
+    CHANGEPASSWORDTEXT1: 'Je hebt het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT3: 'Wachtwoord opnieuw instellen'
     HELLO: Hallo
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Hallo
     TEXT1: 'Je hebt aangegeven je wachtwoord te zijn vergeten. Klik op de knop '
-    TEXT2: 'herstel wachtwoord'
+    TEXT2: 'reset wachtwoord'
     TEXT3: ', om je wachtwoord opnieuw in te stellen voor '
   SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
     CONFIRMATION_NAME: '"{key}" GET parameter'
@@ -38,10 +38,11 @@ nl:
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
     BETWEEN: 'Een wachtwoord moet tussen de {min} en {max} karakters hebben'
-    CURRENT_PASSWORD_ERROR: 'Het wachtwoord dat u heeft ingevoerd is niet juist.'
+    CURRENT_PASSWORD_ERROR: 'Het wachtwoord dat je ingevoerd hebt is onjuist.'
     CURRENT_PASSWORD_MISSING: 'Voer je huidige wachtwoord in.'
     LOGGED_IN_ERROR: 'Je moet ingelogd zijn om je wachtwoord te kunnen veranderen!'
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
+    RANDOM_IF_EMPTY: 'Als je dit veld leeg laat, wordt er automatisch een willekeurig wachtwoord gegenereerd.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
   SilverStripe\Forms\DateField:
     NOTSET: 'niet ingesteld'
@@ -119,7 +120,7 @@ nl:
     Search: 'Zoek naar "{name}"'
     SearchFormFaliure: 'Er kon geen zoekformulier worden aangemaakt'
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
-    UnlinkSelfFailure: 'U kunt uzelf niet verwijderen van deze groep, omdat u dan geen admin-rechten meer heeft.'
+    UnlinkSelfFailure: 'Je kan jezelf niet verwijderen van deze groep, omdat je dan geen admin-rechten meer hebt.'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: van
     Page: Pagina
@@ -144,6 +145,8 @@ nl:
     VALIDATEMAXLENGTH: 'De waarde voor {name} mag niet langer zijn dan {maxLength} tekens.'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Vul een geldige URL in'
   SilverStripe\ORM\DataObject:
     GENERALSEARCH: 'Alles doorzoeken'
     PLURALNAME: 'Data objecten'
@@ -221,7 +224,7 @@ nl:
     Description: 'Omschrijving '
     GROUPNAME: 'Groep naam'
     GroupReminder: 'Als u de bovenliggende groep selecteert, neemt deze groep alle rollen over'
-    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "{group}" toe te kennen'
+    HierarchyPermsError: 'Je moet (ADMIN) rechten hebben om de bovenliggende groep "{group}" toe te kennen'
     Locked: 'Gesloten?'
     MEMBERS: Leden
     NEWGROUP: 'Nieuwe groep'
@@ -290,7 +293,7 @@ nl:
     INTERFACELANG: 'Interface taal'
     KEEP_ME_SIGNED_IN: 'Ingelogd blijven gedurende {count} dagen'
     KEEP_ME_SIGNED_IN_TOOLTIP: 'Onthoud gedurende {count} dagen de inloggegevens op dit apparaat. Gebruik dit alleen op vertrouwde apparaten.'
-    LOGGEDINAS: 'U bent ingelogd als {name}.'
+    LOGGEDINAS: 'Je bent ingelogd als {name}.'
     NEWPASSWORD: 'Nieuw wachtwoord'
     PASSWORD: Wachtwoord
     PASSWORDEXPIRED: 'Je wachtwoord is verlopen. Kies een nieuw wachtwoord.'
@@ -301,7 +304,7 @@ nl:
     RequiresPasswordChangeOnNextLogin: 'Vereist wachtwoordwijziging bij volgende aanmelding'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'Je wachtwoord is aangepast'
-    SUBJECTPASSWORDRESET: 'Je wachtwoord opnieuw instellen'
+    SUBJECTPASSWORDRESET: 'Wachtwoord opnieuw instellen'
     SURNAME: Achternaam
     VALIDATIONADMINLOSTACCESS: 'Niet mogelijk om alle admin-groepen te verwijderen van je profiel'
     VALIDATIONMEMBEREXISTS: 'Er bestaat al een gebruiker met dezelfde {identifier}'
@@ -379,7 +382,7 @@ nl:
     PLURALS:
       one: 'Een permissiecode'
       other: '{count} permissiecodes'
-    PermsError: 'U moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
+    PermsError: 'Je moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
     SINGULARNAME: Permissiecode
     db_Code: Code
     has_one_Role: Rol
@@ -392,7 +395,7 @@ nl:
     has_one_LoginSession: inlogsessie
     has_one_Member: Lid
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
+    ALREADYLOGGEDIN: 'Je hebt geen toegang tot deze pagina. Als je een ander account met de nodige rechten hebt, kun je hieronder opnieuw inloggen.'
     BUTTONSEND: 'Nieuw wachtwoord aanmaken'
     CHANGEPASSWORDBELOW: 'Je kan hieronder het wachtwoord veranderen.'
     CHANGEPASSWORDHEADER: 'Wachtwoord veranderen'
@@ -402,7 +405,7 @@ nl:
     LOGIN: Inloggen
     LOGOUT: Uitloggen
     LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
-    NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd.'
+    NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer je gegevens in en je wordt automatisch doorgestuurd.'
     NOTERESETLINKINVALID: '<p>De reset link is ongeldig of verlopen.</p><p>Je kan <a href="{link1}">hier</a> een nieuwe link aanvragen of het wachtwoord veranderen nadat je bent <a href="{link2}">ingelogd</a>.</p>'
     NOTERESETPASSWORD: 'Voer je e-mailadres in en we sturen een link waarmee je een nieuw wachtwoord kunt instellen.'
     PASSWORDRESETSENTHEADER: Verzonden

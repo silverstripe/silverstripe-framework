@@ -67,6 +67,8 @@ hr:
     VIEW: Pregled
   SilverStripe\Forms\MoneyField:
     FIELDLABELCURRENCY: Valuta
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Molimo unesite ispravan link'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Podatkovni objekti'
     SINGULARNAME: 'Podatkovni objekt'
