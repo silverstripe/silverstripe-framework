@@ -282,7 +282,7 @@ TXT;
 
     public static function permissionsCategory(): string
     {
-        return  _t(__CLASS__ . 'PERMISSIONS_CATEGORY', 'Dev permissions');
+        return  _t(__CLASS__ . '.PERMISSIONS_CATEGORY', 'Dev permissions');
     }
 
     protected function canViewAll(): bool
