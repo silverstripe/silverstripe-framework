@@ -298,13 +298,19 @@ class DataQuery
                             $collisionClassColumn = $schema->sqlColumnForField($collisionClass, 'ClassName');
                             $collisionClasses = ClassInfo::subclassesFor($collisionClass);
                             $collisionClassesSQL = implode(', ', Convert::raw2sql($collisionClasses, true));
-                            $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
+                            // Only add clause if this is already joined "Unknown column 'ClassName' error"
+                            $collisionTable = $schema->tableForField($collisionClass, 'ClassName');
+                            if (array_key_exists($collisionTable, $query->getFrom())) {
+                                $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
+                            }
                         }
                     } else {
                         user_error("Bad collision item '$collision'", E_USER_WARNING);
                     }
                 }
-                $query->selectField("CASE " . implode(" ", $caseClauses) . " ELSE NULL END", $collisionField);
+                if (!empty($caseClauses)) {
+                    $query->selectField("CASE " . implode(" ", $caseClauses) . " ELSE NULL END", $collisionField);
+                }
             }
         }
 
