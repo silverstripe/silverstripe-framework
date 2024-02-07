@@ -118,6 +118,8 @@ sv:
     VALIDATEMAXLENGTH: 'Värdet för {name} får inte överstiga {MaxLength} tecken'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Var god att ange tid i ett giltigt format ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Var vänlig och ange en korrekt URL'
   SilverStripe\ORM\DataObject:
     PLURALNAME: Dataobjekt
     PLURALS:

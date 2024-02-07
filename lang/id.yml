@@ -96,6 +96,8 @@ id:
     VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Isikan URL yang valid'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Obyek Data'
     SINGULARNAME: 'Obyek Data'

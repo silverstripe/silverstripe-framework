@@ -116,6 +116,8 @@ fr:
     VALIDATION: "«\_{value}\_» n’est pas un nombre, seul type de donnée acceptée dans ce champ "
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Merci de saisir un format de date valide ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Saisissez une URl valide'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Modèles de donnée'
     PLURALS:

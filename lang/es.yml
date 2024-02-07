@@ -108,6 +108,8 @@ es:
     VALIDATEMAXLENGTH: 'El valor para {name} no puede exceder los {maxLength} caracteres de longitud'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor, introduzca un formato de tiempo válido ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Por favor, ingrese una URL válida'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Objetos de Datos'
     PLURALS:

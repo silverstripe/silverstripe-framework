@@ -144,6 +144,8 @@ de:
     VALIDATEMAXLENGTH: 'Der für {name} eingegebene Wert darf nicht mehr als {maxLength} Zeichen lang sein'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Bitte geben Sie eine gültige URL ein'
   SilverStripe\ORM\DataObject:
     PLURALNAME: DatenObjekte
     PLURALS:

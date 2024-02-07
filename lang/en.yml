@@ -25,9 +25,22 @@ en:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Invalid request'
     REQUEST_ABORTED: 'Request aborted'
+  SilverStripe\Dev\DevBuildController:
+    CAN_DEV_BUILD_DESCRIPTION: 'Can execute /dev/build'
+    CAN_DEV_BUILD_HELP: 'Can execute the build command (/dev/build).'
+  SilverStripe\Dev\DevConfigController:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Can view /dev/config'
+    CAN_DEV_CONFIG_HELP: 'Can view all application configuration (/dev/config).'
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Confirm potentially dangerous operation'
     INFO_TITLE: 'Security Confirmation'
+  SilverStripe\Dev\DevelopmentAdmin:
+    ALL_DEV_ADMIN_DESCRIPTION: 'Can view and execute all /dev endpoints'
+    ALL_DEV_ADMIN_HELP: 'Can view and execute all /dev endpoints'
+    PERMISSIONS_CATEGORY: 'Dev permissions'
+  SilverStripe\Dev\TaskRunner:
+    BUILDTASK_CAN_RUN_DESCRIPTION: 'Can view and execute all /dev/tasks'
+    BUILDTASK_CAN_RUN_HELP: 'Can view and execute all Build Tasks (/dev/tasks). This may still be overriden by individual task view permissions'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -111,9 +124,9 @@ en:
     NEW: 'Add new record'
     NEXT: 'Go to next record'
     PREVIOUS: 'Go to previous record'
-    ViewPermissionsFailure: 'It seems you don''t have the necessary permissions to view "{ObjectTitle}"'
-    SAVETOASTMESSAGE: 'Saved {type} "{title}" successfully.'
     SAVEDUP: 'Saved successfully.'
+    SAVETOASTMESSAGE: 'Saved {type} "{title}" successfully.'
+    ViewPermissionsFailure: 'It seems you don''t have the necessary permissions to view "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldFilterHeader:
@@ -141,10 +154,16 @@ en:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Select...
+    SELECT_OR_TYPE_TO_SEARCH: 'Select or type to search...'
+    TYPE_TO_SEARCH: 'Type to search...'
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'The value for {name} must not exceed {maxLength} characters in length'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Please enter a valid time format ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Please enter a valid URL'
   SilverStripe\ORM\DataObject:
     GENERALSEARCH: 'General Search'
     PLURALNAME: 'Data Objects'
@@ -290,6 +309,7 @@ en:
     CURRENT_PASSWORD: 'Current Password'
     EDIT_PASSWORD: 'New Password'
     EMAIL: Email
+    EMAIL_FAILED: 'There was an error when trying to email you a password reset link.'
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'

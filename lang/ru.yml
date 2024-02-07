@@ -114,6 +114,8 @@ ru:
     VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Пожалуйста, задайте действительный URL-адрес'
   SilverStripe\ORM\DataObject:
     PLURALNAME: Объекты
     PLURALS:
