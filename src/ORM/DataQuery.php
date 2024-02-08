@@ -299,8 +299,8 @@ class DataQuery
                             $collisionClasses = ClassInfo::subclassesFor($collisionClass);
                             $collisionClassesSQL = implode(', ', Convert::raw2sql($collisionClasses, true));
                             // Only add clause if this is already joined "Unknown column 'ClassName' error"
-                            $collisionTable = $schema->tableForField($collisionClass, 'ClassName');
-                            if (array_key_exists($collisionTable, $query->getFrom())) {
+                            $collisionTableForClassName = $schema->tableForField($collisionClass, 'ClassName');
+                            if (array_key_exists($collisionTableForClassName, $query->getFrom())) {
                                 $caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
                             }
                         }
