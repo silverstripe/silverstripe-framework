@@ -3,7 +3,16 @@
 namespace SilverStripe\ORM\Connect;
 
 use InvalidArgumentException;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Environment;
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\ListDecorator;
+use SilverStripe\ORM\Map;
 use SilverStripe\ORM\Queries\SQLExpression;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -16,6 +25,12 @@ use SilverStripe\ORM\Queries\SQLConditionalExpression;
  */
 class DBQueryBuilder
 {
+    use Configurable;
+
+    /**
+     * If true, a comment is added to each query indicating where that query's execution originated.
+     */
+    private static bool $trace_query_origin = false;
 
     /**
      * Determines the line separator to use.
@@ -57,7 +72,131 @@ class DBQueryBuilder
                 "Not implemented: query generation for type " . get_class($query)
             );
         }
+
+        if ($this->shouldBuildTraceComment()) {
+            $sql = $this->buildTraceComment() . $sql;
+        }
+
         return $sql;
+    }
+
+    private function shouldBuildTraceComment(): bool
+    {
+        if (Environment::hasEnv('SS_TRACE_DB_QUERY_ORIGIN')) {
+            return (bool) Environment::getEnv('SS_TRACE_DB_QUERY_ORIGIN');
+        }
+        return static::config()->get('trace_query_origin');
+    }
+
+    /**
+     * Builds an SQL comment indicating where the query was executed from.
+     */
+    protected function buildTraceComment(): string
+    {
+        $comment = '/* ';
+
+        // Skip items in the stack trace that originate from these classes or their subclasses,
+        // we want to know what called these instead
+        $baseClasses = [
+            self::class,
+            DataQuery::class,
+            SQLExpression::class,
+            DB::class,
+            Database::class,
+            DBConnector::class,
+            DBSchemaManager::class,
+            TransactionManager::class,
+            ListDecorator::class,
+            Map::class,
+        ];
+        // Skip items in the stack trace that originate from these methods,
+        // we want to know what called these instead
+        $ignoreMethods = [
+            DataList::class => [
+                // these are used in almost all DataList query executions
+                'executeQuery',
+                'getFinalisedQuery',
+                'getIterator',
+                // these call a method on DataList (e.g. $this->toNestedArray())
+                'debug',
+                'setByIDList',
+            ],
+            DataObject::class => [
+                'get_one',
+                'get_by_id',
+            ]
+        ];
+
+        $line = null;
+        $file = null;
+        $class = null;
+        $function = null;
+
+        // Don't include arguments in the trace (since we don't need them), and only go back 15 levels.
+        // Anything further than that and we've probably over-abstracted things.
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 15);
+        foreach ($trace as $i => $item) {
+            // We need to be able to look ahead one item in the trace, because the class/function values
+            // are talking about what is being *called* on this line, not the function this line lives in.
+            if (!isset($trace[$i+1])) {
+                return '/* Could not identify source of query */' . $this->getSeparator();
+            }
+            $caller = [
+                'file' => $item['file'] ?? null,
+                'line' => $item['line'] ?? null,
+                'class' => $trace[$i + 1]['class'] ?? null,
+                'function' => $trace[$i + 1]['function'] ?? null,
+            ];
+
+            if ($caller['class'] !== null) {
+                // Don't report internal ORM operations for any of these classes
+                foreach ($baseClasses as $baseClass) {
+                    if (is_a($caller['class'], $baseClass, true)) {
+                        // skip for both loops
+                        continue 2;
+                    }
+                }
+                if ($caller['function'] !== null) {
+                    // Don't report internal ORM operations for any of these methods
+                    foreach ($ignoreMethods as $class => $methodsToIgnore) {
+                        if (is_a($caller['class'], $class, true) && in_array($caller['function'], $methodsToIgnore)) {
+                            // skip for both loops
+                            continue 2;
+                        }
+                    }
+                    // Don't report internal ORM operations inside DataList which themselves directly call methods on DataQuery
+                    if ($caller['class'] === DataList::class && is_a($item['class'] ?? '', DataQuery::class, true)) {
+                        continue;
+                    }
+                    // Don't report internal ORM operations inside DataList for eagerloading or for any methods that iterate over the list itself
+                    if ($caller['class'] === DataList::class &&
+                        (str_starts_with($caller['function'], 'fetchEagerLoad')
+                        || is_a($item['class'] ?? '', DataList::class, true) && in_array($item['function'], $ignoreMethods[DataList::class]))
+                    ) {
+                        continue;
+                    }
+                }
+            }
+
+            // Get the relevant trace information if it's available
+            $file = $caller['file'];
+            $line = $caller['line'];
+            $class = $caller['class'];
+            $function = $caller['function'];
+            break;
+        }
+
+        // Indicate where the query was executed from, if we have that information.
+        if ($line && $file) {
+            $comment .= "Query executed from $file line $line";
+        } elseif ($class && $function) {
+            $comment .= "Query executed from {$class}::{$function}()";
+        } else {
+            $comment .= 'Could not identify source of query';
+        }
+
+        $comment .= ' */' . $this->getSeparator();
+        return $comment;
     }
 
     /**
