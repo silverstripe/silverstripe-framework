@@ -106,8 +106,6 @@ bg:
     INVALID_CURRENCY: 'Валутата {currency} не е в списъка с разрешени валути'
   SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: 'Изберете стойност от списъка. {value} не е валидна опция(и)'
-  SilverStripe\Forms\NullableField:
-    IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
   SilverStripe\Forms\TimeField:

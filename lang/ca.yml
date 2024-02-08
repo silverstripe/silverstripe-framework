@@ -1,6 +1,4 @@
 ca:
-  SilverStripe\AssetAdmin\Forms\UploadField:
-    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
     HELLO: Hola
@@ -32,13 +30,8 @@ ca:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Delete: Suprimeix
     Save: Desa
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Pàgina
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Objectes de dades'
     SINGULARNAME: 'Objecte de dades'

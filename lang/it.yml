@@ -31,7 +31,6 @@ it:
     INFO_DESCRIPTION: 'Confermare l''operazione potenzialmente pericolosa'
     INFO_TITLE: 'Conferma di Sicurezza'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'No'
     YESANSWER: Sì
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'Nessuna opzione disponibile'
@@ -150,10 +149,8 @@ it:
       many: '{count} Data Object'
       one: 'Un Data Object'
       other: '{count} Data Object'
-    SINGULARNAME: 'Data Object'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Qualsiasi
-    NOANSWER: 'No'
     YESANSWER: Sì
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
@@ -178,7 +175,6 @@ it:
       one: '{count} secondo'
       other: '{count} secondi'
     TIMEDIFFAGO: '{difference} fa'
-    TIMEDIFFIN: 'in {difference}'
     YEARS_SHORT_PLURALS:
       many: '{count} anni'
       one: '{count} anno'
@@ -187,8 +183,6 @@ it:
     ANY: Qualsiasi
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Troppi oggetti correlati; campo di fallback in uso'
-  SilverStripe\ORM\FieldType\DBString:
-    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Troppi figli ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -276,7 +270,6 @@ it:
     CONFIRMPASSWORD: 'Conferma password'
     CURRENT_PASSWORD: 'Password Attuale'
     EDIT_PASSWORD: 'Nuova password'
-    EMAIL: Email
     EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
     ENTEREMAIL: 'Inserisci un indirizzo e-mail per ricevere il link di azzeramento della password'
     ERRORLOCKEDOUT2: 'Il tuo account è stato temporaneamente disabilitato perchè ci sono stati troppi tentativi di accesso errati. Riprova tra {count} minuti.'
@@ -289,7 +282,6 @@ it:
     KEEP_ME_SIGNED_IN_TOOLTIP: 'Rimarrai autenticato su questo dispositivo per {count} giorni. Usa questa funzionalità solo se il dispositivo che stai usando è sicuro.'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
-    PASSWORD: Password
     PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
     PLURALNAME: Utenti
     PLURALS:
@@ -310,7 +302,6 @@ it:
     db_FirstName: Nome
     db_Locale: 'Localizzazione interfaccia'
     db_LockedOutUntil: 'Bloccato fino al'
-    db_Password: Password
     db_PasswordExpiry: 'Data di scadenza della password'
     db_Surname: Cognome
     db_URLSegment: 'Segmento URL'
@@ -322,8 +313,6 @@ it:
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     NoPassword: 'Manca la password per questo utente.'
-  SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
-    AUTHENTICATORNAME: 'E-mail & Password'
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Password utenti'
     PLURALS:
@@ -331,7 +320,6 @@ it:
       one: 'Una password utente'
       other: '{count} password utente'
     SINGULARNAME: 'Password utente'
-    db_Password: Password
     has_one_Member: Utente
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: {chars}'

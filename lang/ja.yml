@@ -77,9 +77,6 @@ ja:
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: の
     Page: ページ
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨

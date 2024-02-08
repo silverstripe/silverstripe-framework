@@ -57,7 +57,6 @@ sv:
     VALIDATIONPASSWORDSDONTMATCH: 'Lösenorden stämmer inte överrens '
     VALIDATIONPASSWORDSNOTEMPTY: 'Lösenordfältet får inte vara tomt'
     VALIDATIONSTRONGPASSWORD: 'Lösenord måste innehålla minst en siffra och en bokstav.'
-    VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
   SilverStripe\Forms\FormField:
     EXAMPLE: 't.ex. {format}'
@@ -221,8 +220,6 @@ sv:
       one: 'Ett inloggningsförsök'
       other: '{count} inloggningsförsök'
     SINGULARNAME: Inloggningsförsök
-    Status: Status
-    db_Status: Status
     has_one_Member: Medlem
   SilverStripe\Security\Member:
     ADDGROUP: 'Lägg till grupp'

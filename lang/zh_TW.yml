@@ -1,7 +1,6 @@
 zh_TW:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 大小
-    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
     HELLO: 您好
@@ -18,13 +17,8 @@ zh_TW:
     TABMAIN: 主要
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Save: 儲存
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: 網頁
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Security\BasicAuth:
     ENTERINFO: 請輸入帳號密碼。
     ERRORNOTADMIN: 那個使用者不是管理員。

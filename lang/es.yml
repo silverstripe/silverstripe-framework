@@ -17,7 +17,6 @@ es:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Solicitud no válida'
   SilverStripe\Forms\CheckboxField:
-    NOANSWER: 'No'
     YESANSWER: Sí
   SilverStripe\Forms\CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'No hay opciones disponibles'
@@ -119,7 +118,6 @@ es:
     SINGULARNAME: 'Objeto de Dato'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Cualquiera
-    NOANSWER: 'No'
     YESANSWER: Sí
   SilverStripe\ORM\FieldType\DBDate:
     DAYS_SHORT_PLURALS:
@@ -189,7 +187,6 @@ es:
       one: 'Un Grupo'
       other: '{count} Grupos'
     Parent: 'Grupo Padre'
-    ROLES: Roles
     ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
     RolesAddEditLink: 'Gestionar Roles'
     SINGULARNAME: Grupo
@@ -201,7 +198,6 @@ es:
     has_many_Permissions: Permisos
     has_one_Parent: Padre
     many_many_Members: Miembros
-    many_many_Roles: Roles
   SilverStripe\Security\LoginAttempt:
     Email: 'Correo electrónico'
     IP: 'Dirección IP'
@@ -300,7 +296,6 @@ es:
     FromRoleOnGroup: 'heredado desde la regla "{roletitle}" del grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Sólo el administrador puede aplicar'
-    PLURALNAME: Roles
     PLURALS:
       many: '{count} Roles'
       one: 'Un Rol'
