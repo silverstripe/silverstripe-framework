@@ -1,7 +1,6 @@
 es_AR:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensiones
-    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
     HELLO: Hola
@@ -33,13 +32,8 @@ es_AR:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Delete: Eliminar
     Save: Guardar
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Página
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda

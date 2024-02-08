@@ -16,8 +16,6 @@ sk:
     TEXT1: 'Tu je váš'
     TEXT2: 'odkaz na reset hesla'
     TEXT3: pre
-  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
-    CONFIRMATION_NAME: '"{key}" GET parameter'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
     CONFIRMATION_DESCRIPTION: 'URL je: "{url}"'
     CONFIRMATION_NAME: 'URL je chránená'
@@ -80,8 +78,6 @@ sk:
   SilverStripe\Forms\GridField\GridField:
     Add: 'Pridať {name}'
     CSVEXPORT: 'Exportovať do CSV'
-    CSVIMPORT: 'Import CSV'
-    Filter: Filter
     FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
     LinkExisting: 'Prepojenie existujúcich'
@@ -94,7 +90,6 @@ sk:
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     Print: Tlačiť
     RelationSearch: 'Vzťah hľadania'
-    ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
@@ -200,8 +195,6 @@ sk:
     ANY: Každý
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Príliš veľa súvisiacich objektov; používa sa záložné pole'
-  SilverStripe\ORM\FieldType\DBString:
-    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Príliš veľa potomkov ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -259,9 +252,7 @@ sk:
     ValidationIdentifierAlreadyExists: 'Skupina ({group}) už existuje s rovnakým {identifier}'
     db_AccessAllSubsites: 'Prístup na všetky podstránky'
     db_Code: Kód
-    db_DN: DN
     db_Description: Popis
-    db_GUID: GUID
     db_HtmlEditorConfig: 'Konfigurácia editora HTML'
     db_LastSynced: 'Posledná synchronizácia'
     db_Locked: Zamknuté
@@ -295,7 +286,6 @@ sk:
     SINGULARNAME: 'Pokus o prihlásenie'
     Status: Stav
     db_EmailHashed: 'Zamaskovaný E-mail'
-    db_IP: IP
     db_Status: Stav
     has_one_Member: Člen
   SilverStripe\Security\Member:
@@ -351,7 +341,6 @@ sk:
     db_Email: E-mail
     db_FailedLoginCount: 'Počet neúspešných prihlásení'
     db_FirstName: Meno
-    db_GUID: GUID
     db_HasSkippedMFARegistration: 'Vynechal registráciu MFA'
     db_IsExpired: 'Platnosť vypršala'
     db_LastSynced: 'Posledná synchronizácia'
@@ -416,7 +405,6 @@ sk:
       other: '{count} Oprávnení'
     SINGULARNAME: Oprávnenie
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
-    db_Arg: Arg
     db_Code: Kód
     db_Type: Typ
     has_one_Group: Skupina

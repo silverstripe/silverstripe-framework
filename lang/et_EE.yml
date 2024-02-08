@@ -169,7 +169,6 @@ et_EE:
     ValidationIdentifierFailed: 'Olemasolevat kasutajat #{id} ei saa sama identifikaatoriga üle kirjutada ({name} = {value})'
     YOUROLDPASSWORD: 'Sinu vana parool'
     belongs_many_many_Groups: Grupid
-    db_Email: Email
     db_FirstName: Eesnimi
     db_Locale: 'kohalik välimus'
     db_LockedOutUntil: 'Suletud kuni'

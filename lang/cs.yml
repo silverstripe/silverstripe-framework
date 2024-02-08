@@ -163,7 +163,6 @@ cs:
     has_many_Permissions: Oprávnění
     many_many_Members: Členové
     many_many_Roles: Role
-    many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
     Email: 'Emailové adresy'
     IP: 'IP adresy'
@@ -247,7 +246,6 @@ cs:
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Pouze administrátor může použít'
     PLURALNAME: Role
-    SINGULARNAME: Role
     Title: Název
     belongs_many_many_Groups: Skupiny
     db_OnlyAdminCanApply: 'Pouze administrátor může použít'
@@ -256,7 +254,6 @@ cs:
     PLURALNAME: 'Kódy role oprávnění'
     PermsError: 'Nelze připojit kód "{code}" s privilegovanými právy (vyžaduje ADMIN přístup)'
     SINGULARNAME: 'Kód role oprávnění'
-    has_one_Role: Role
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Člen
   SilverStripe\Security\Security:

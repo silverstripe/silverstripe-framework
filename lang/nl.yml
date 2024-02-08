@@ -16,8 +16,6 @@ nl:
     TEXT1: 'Je hebt aangegeven je wachtwoord te zijn vergeten. Klik op de knop '
     TEXT2: 'reset wachtwoord'
     TEXT3: ', om je wachtwoord opnieuw in te stellen voor '
-  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
-    CONFIRMATION_NAME: '"{key}" GET parameter'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
     CONFIRMATION_DESCRIPTION: 'De URL is: "{url}"'
     CONFIRMATION_NAME: 'URL is afgeschermd'
@@ -70,7 +68,6 @@ nl:
     VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
     VALIDATIONPASSWORDSNOTEMPTY: 'Wachtwoorden mogen niet leeg zijn'
     VALIDATIONSTRONGPASSWORD: 'Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter.'
-    VALIDATOR: Validator
     VALIDCURRENCY: 'Vul een geldige munteenheid in'
   SilverStripe\Forms\FormField:
     EXAMPLE: 'bijv. {format}'
@@ -81,7 +78,6 @@ nl:
     Add: '{name} toevoegen'
     CSVEXPORT: 'Exporteer naar CSV'
     CSVIMPORT: 'CSV importeren'
-    Filter: Filter
     FilterBy: Filteren
     Find: Zoeken
     LinkExisting: 'Koppel een bestaand item'
@@ -130,7 +126,6 @@ nl:
   SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
     BEST_FIT: 'Beste pasvorm'
     ORIGINAL: Origineel
-    PIXEL_WIDTH: '{width} pixels'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid
@@ -178,7 +173,6 @@ nl:
       one: '{count} seconde'
       other: '{count} seconden'
     TIMEDIFFAGO: '{difference} geleden'
-    TIMEDIFFIN: 'in {difference}'
     YEARS_SHORT_PLURALS:
       one: '{count} jaar'
       other: '{count} jaren'
@@ -242,22 +236,17 @@ nl:
     Sort: Sorteer-richting
     ValidationIdentifierAlreadyExists: 'Er bestaat al een groep ({group}) met eenzelfde {identifier}'
     db_AccessAllSubsites: 'Toegang tot alle subsites'
-    db_Code: Code
-    db_DN: DN
     db_Description: Omschrijving
-    db_GUID: GUID
     db_HtmlEditorConfig: 'HTML editor config'
     db_LastSynced: 'Laatst gesynchroniseerd'
     db_Locked: Vergrendeld
     db_Sort: Volgorde
     db_Title: Titel
     has_many_Groups: Groepen
-    has_many_LDAPGroupMappings: 'LDAP group mappings'
     has_many_Permissions: Rechten
     has_one_Parent: Bovenliggende
     many_many_Members: Leden
     many_many_Roles: Rollen
-    many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
     Email: 'E-mailadres '
     EmailHashed: 'E-mailadres (versleuteld)'
@@ -267,9 +256,6 @@ nl:
       one: 'Een inlogpoging'
       other: '{count} inlogpogingen'
     SINGULARNAME: Inlogpogingen
-    Status: Status
-    db_IP: IP
-    db_Status: Status
     has_one_Member: Lid
   SilverStripe\Security\Member:
     ADDGROUP: 'Groep toevoegen'
@@ -315,14 +301,12 @@ nl:
     db_AccountResetExpired: 'Het opnieuw instellen van het account is verlopen'
     db_Email: E-mail
     db_FirstName: Voornaam
-    db_GUID: GUID
     db_LastSynced: 'Laatst gesynchroniseerd'
     db_Locale: 'Interface taal'
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
     db_Surname: Achternaam
-    db_URLSegment: 'URL segment'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: Inlogformulier
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten'
@@ -358,7 +342,6 @@ nl:
       other: '{count} rechten'
     SINGULARNAME: Machtiging
     UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
-    db_Code: Code
     db_Type: 'Soort veld'
     has_one_Group: Groep
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -384,7 +367,6 @@ nl:
       other: '{count} permissiecodes'
     PermsError: 'Je moet (ADMIN) rechten hebben om de code "{code}" toe te kennen'
     SINGULARNAME: Permissiecode
-    db_Code: Code
     has_one_Role: Rol
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Versleutelde logins'
