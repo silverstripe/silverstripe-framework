@@ -541,7 +541,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             'Saved {type} "{title}" successfully.',
             [
                 'type' => $this->record->i18n_singular_name(),
-                'title' => Convert::raw2xml($this->record->Title)
+                'title' => $this->record->Title
             ]
         );
 
@@ -779,7 +779,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     public function doDelete($data, $form)
     {
-        $title = $this->record->Title;
         if (!$this->record->canDelete()) {
             throw new ValidationException(
                 _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions")
@@ -792,7 +791,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             'Deleted {type} "{name}"',
             [
                 'type' => $this->record->i18n_singular_name(),
-                'name' => htmlspecialchars($title ?? '', ENT_QUOTES)
+                'name' => $this->record->Title
             ]
         );
 
