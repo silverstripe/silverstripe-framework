@@ -42,6 +42,7 @@ sl:
     CURRENT_PASSWORD_MISSING: 'Vnesti morate vaše trenutno geslo.'
     LOGGED_IN_ERROR: 'Za spremembo gesla morate biti prijavljeni.'
     MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
+    RANDOM_IF_EMPTY: 'Če bo to polje prazno, se bo samodejno ustvarilo naključno geslo.'
     SHOWONCLICKTITLE: 'Spremeni geslo'
   SilverStripe\Forms\DateField:
     NOTSET: 'ni nastavljeno'
@@ -80,7 +81,6 @@ sl:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvozi kot CSV-datoteko'
     CSVIMPORT: 'Uvozi CSV'
-    Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Poišči
     LinkExisting: 'Poveži na'
@@ -145,6 +145,7 @@ sl:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
   SilverStripe\ORM\DataObject:
+    GENERALSEARCH: 'Splošno iskanje'
     PLURALNAME: Objekti
     PLURALS:
       few: '{count} objekti'
@@ -152,6 +153,8 @@ sl:
       other: '{count} objekti'
       two: '{count} objekta'
     SINGULARNAME: Objekt
+    many_many_FileTracking: 'Spremljanje datotek'
+    many_many_LinkTracking: 'Spremljanje povezav'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Katerikoli
     NOANSWER: Ne
@@ -194,8 +197,6 @@ sl:
     ANY: Katerikoli
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Vnosov je preveč, da bi jih lahko ustrezno prikazali, zato je uporabljeno sistemsko polje. '
-  SilverStripe\ORM\FieldType\DBString:
-    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Preveč ({count}) elementov v hierarhiji'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -250,12 +251,32 @@ sl:
     RolesAddEditLink: 'Dodaj in uredi vloge'
     SINGULARNAME: Skupina
     Sort: 'Način razvrščanja'
+    ValidationIdentifierAlreadyExists: 'Skupina ({group}) z istim identifikatorjem ({identifier}) že obstaja.'
+    db_AccessAllSubsites: 'Dostop do vseh podspletišč'
+    db_Code: 'Šifra skupine'
+    db_DN: 'Razpoznavno ime (DN)'
     db_Description: Opis
+    db_GUID: 'Globalni identifikator (GUID)'
+    db_HtmlEditorConfig: 'Konfiguracija urejevalnika HTML'
+    db_LastSynced: 'Nazadnje sinhronizirano'
+    db_Locked: Zaklenjeno
+    db_Sort: Razvrščanje
     db_Title: Naziv
     has_many_Groups: Skupine
+    has_many_LDAPGroupMappings: 'Mapiranje skupin iz imenika LDAP'
     has_many_Permissions: Dovoljenja
+    has_one_Parent: 'Nadrejeno pravilo'
     many_many_Members: Uporabniki
     many_many_Roles: Vloge
+    many_many_SiteTreeContentReview: 'Redakcija drevesne strukture'
+    many_many_Subsites: Podspletišča
+  SilverStripe\Security\InheritedPermissionsExtension:
+    db_CanEditType: 'Lahko ureja'
+    db_CanViewType: 'Lahko ogleduje'
+    many_many_EditorGroups: 'Skupine urednikov'
+    many_many_EditorMembers: Uredniki
+    many_many_ViewerGroups: 'Skupine ogledovalcev'
+    many_many_ViewerMembers: Ogledovalci
   SilverStripe\Security\LoginAttempt:
     Email: E-naslov
     EmailHashed: 'E-naslov (šifriran)'
@@ -268,7 +289,8 @@ sl:
       two: '{count} poskusa prijave'
     SINGULARNAME: 'Poskus prijave'
     Status: Stanje
-    db_Status: Status
+    db_EmailHashed: 'E-naslov je zgoščen'
+    db_IP: 'Naslov IP'
     has_one_Member: Uporabnik
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
@@ -302,6 +324,7 @@ sl:
       one: Uporabnik
       other: '{count} uporabnikov'
       two: '{count} uporabnika'
+    RequiresPasswordChangeOnNextLogin: 'Zahteva spremembo gesla ob naslednji prijavi'
     SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
     SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'
@@ -311,14 +334,41 @@ sl:
     ValidationIdentifierFailed: 'Za obstoječega uporabnika #{id} ne moremo uporabiti identifikatorja, ki že obstaja ({name} = {value})).'
     WELCOMEBACK: 'Ponovno pozdravljeni, {firstname}!'
     YOUROLDPASSWORD: 'Staro geslo'
+    belongs_many_many_BlogPosts: 'Zapisi na blogu'
     belongs_many_many_Groups: Skupine
+    db_AccountResetExpired: 'Ponastavitev za uporabniški račun je potekla'
+    db_AccountResetHash: 'Ključ za ponastavitev uporabniškega računa'
+    db_AutoLoginExpired: 'Samodejna prijava je potekla'
+    db_AutoLoginHash: 'Ključ za samodejno prijavo'
+    db_BlogProfileSummary: 'Povzetek blogerskega profila'
+    db_DefaultRegisteredMethodID: 'Privzeta metoda'
     db_Email: E-pošta
+    db_FailedLoginCount: 'Število neuspešnih prijav'
+    db_FirstName: Ime
+    db_GUID: 'Globalni identifikator (GUID)'
+    db_HasSkippedMFARegistration: 'Večfaktorska avtentikacija (MFA) ni bila vzpostavljena'
+    db_IsExpired: Potekel
+    db_LastSynced: 'Nazadnje sinhronizirano'
     db_Locale: 'Lokalizacija vmesnika'
     db_LockedOutUntil: 'Zaklenjeno do'
     db_Password: Geslo
+    db_PasswordEncryption: 'Šifriranje gesla'
     db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
+    db_Salt: 'Kriptografska sol'
     db_Surname: Priimek
+    db_TempIDExpired: 'Pretečen TempID'
+    db_TempIDHash: 'Zgoščen TempID'
     db_URLSegment: 'Naslov URL'
+    db_Username: 'Uporabniško ime'
+    has_many_LoggedPasswords: 'Zabeležena gesla'
+    has_many_LoginSessions: 'Prijave (seje)'
+    has_many_RegisteredMFAMethods: 'Vzpostavljene metode za večfaktorsko avtentikacijo (MFA)'
+    has_many_RememberLoginHashes: 'Zabeleži prijavne ključe'
+    has_one_AFile: Datoteka
+    has_one_AImage: Slika
+    has_one_BlogProfileImage: 'Osebna podoba'
+    has_one_FavouritePage: 'Priljubljena stran'
+    many_many_SiteTreeContentReview: 'Redakcija drevesne strukture'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Obrazec za prijavo v sistem'
     BUTTONFORGOTPASSWORD: 'Ne poznam gesla'
@@ -338,13 +388,14 @@ sl:
       two: '{count} gesli'
     SINGULARNAME: Geslo
     db_Password: Geslo
+    db_PasswordEncryption: 'Šifriranje gesla'
+    db_Salt: 'Kriptografska sol'
     has_one_Member: Uporabnik
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Izboljšajte geslo tako, da dodate nekaj izmed znakov: {chars}'
     PREVPASSWORD: 'To geslo ste v preteklosti že uporabljali, izberite tako geslo, ki ga še niste.'
     TOOSHORT: 'Geslo je prekratko. Izberite geslo, ki je dolgo vsaj {minimum} znakov.'
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostop do sistema za urejanje'
     CONTENT_CATEGORY: 'Nastavitve dovoljenj za upravljanje z vsebino'
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
@@ -358,6 +409,7 @@ sl:
       two: '{count} dovoljenji'
     SINGULARNAME: Dovoljenje
     UserPermissionsIntro: 'Z dodelitvijo skupine uporabniku boste vplivali na nabor njegovih dovoljenj. Za pregled dovoljenj, ki jih ima posamezna skupina, preverite stran s podrobnejšimi nastavitvami za izbrano skupino.'
+    db_Code: 'Šifra skupine'
     db_Type: Tip
     has_one_Group: Skupina
   SilverStripe\Security\PermissionCheckboxSetField:
@@ -378,6 +430,7 @@ sl:
     belongs_many_many_Groups: Skupine
     db_OnlyAdminCanApply: 'Dodeli jo lahko samo administrator'
     db_Title: Naziv
+    has_many_Codes: Šifre
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Šifra dovoljenja'
     PLURALS:
@@ -387,6 +440,7 @@ sl:
       two: '{count} šifri dovoljenja'
     PermsError: 'Šifri "{code}" ne moremo zagotoviti posebnih dovoljenj (zahteva dovoljenje administratorja).'
     SINGULARNAME: 'Šifra dovoljenja'
+    db_Code: 'Šifra skupine'
     has_one_Role: Vloga
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Kriptirane prijave'
@@ -396,6 +450,10 @@ sl:
       other: '{count} kriptiranih prijav'
       two: '{count} kriptirani prijavi'
     SINGULARNAME: 'Kriptirana prijava'
+    db_DeviceID: 'Identifikator naprave '
+    db_ExpiryDate: 'Rok veljavnosti'
+    db_Hash: 'Zgoščena vrednost'
+    has_one_LoginSession: 'Prijave (seje)'
     has_one_Member: Uporabnik
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'

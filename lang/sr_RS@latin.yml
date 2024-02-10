@@ -46,7 +46,6 @@ sr_RS@latin:
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvezi u CSV'
-    Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Pronađi
     LinkExisting: 'Postojanje linka'
@@ -144,8 +143,6 @@ sr_RS@latin:
     IP: 'IP adresa'
     PLURALNAME: 'Pokušaji prijave'
     SINGULARNAME: 'Pokušaj prijave'
-    Status: Status
-    db_Status: Status
     has_one_Member: Član
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
@@ -198,7 +195,6 @@ sr_RS@latin:
     PREVPASSWORD: 'Već ste koristili navedenu lozinku u prošlosti. Stoga, izaberite drugu lozinku'
     TOOSHORT: 'Lozinka je prekratka. Lozinka mora sadržati bar {minimum} znakova'
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Pristup CMS-u'
     CONTENT_CATEGORY: 'Dozvolje za sadržaj'
     FULLADMINRIGHTS: 'Puna administrativna prava'

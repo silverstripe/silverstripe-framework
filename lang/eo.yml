@@ -42,6 +42,7 @@ eo:
     CURRENT_PASSWORD_MISSING: 'Vi devas enigi vian aktualan pasvorton.'
     LOGGED_IN_ERROR: 'Vi devas ensaluti por ŝanĝi vian pasvorton.'
     MAXIMUM: 'Pasvorto devas esti ne pli ol {min} signojn longa.'
+    RANDOM_IF_EMPTY: 'Se ĉi tiu estas vaka, tiam aŭtomate generiĝos hazarda pasvorto.'
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   SilverStripe\Forms\DateField:
     NOTSET: 'ne sendita'
@@ -144,6 +145,8 @@ eo:
     VALIDATEMAXLENGTH: 'La valoro por {name} devas ne havi longon pli ol {maxLength} signoj'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bonvole enigu validan horan formaton ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Bonvole enigu validan URL-on'
   SilverStripe\ORM\DataObject:
     GENERALSEARCH: 'Ĝenerala serĉo'
     PLURALNAME: 'Datumaj Objektoj'
@@ -183,8 +186,6 @@ eo:
     ANY: Ajna
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Tro multaj rilataj objektoj; retropaŝa kampo uzata'
-  SilverStripe\ORM\FieldType\DBString:
-    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Tro da idoj ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -240,9 +241,7 @@ eo:
     ValidationIdentifierAlreadyExists: 'Jam ekzistas grupo  ({group}) kun la sama {identifier}'
     db_AccessAllSubsites: 'Aliri ĉiujn subretejojn'
     db_Code: Kodo
-    db_DN: DN
     db_Description: Priskribo
-    db_GUID: GUID
     db_HtmlEditorConfig: 'Agordi html-redaktilon'
     db_LastSynced: 'Laste sinkronigita'
     db_Locked: Ŝlosita
@@ -260,7 +259,9 @@ eo:
     db_CanEditType: 'Povas redakti tipon'
     db_CanViewType: 'Povas vidi tipon'
     many_many_EditorGroups: 'Grupoj de redaktantoj'
+    many_many_EditorMembers: 'Redaktantaj membroj'
     many_many_ViewerGroups: 'Grupoj de vidantoj'
+    many_many_ViewerMembers: 'Vidantaj membroj'
   SilverStripe\Security\LoginAttempt:
     Email: 'Retpoŝta adreso'
     EmailHashed: 'Retpoŝta adreso (haketa)'
@@ -272,7 +273,6 @@ eo:
     SINGULARNAME: 'Provo ensaluti'
     Status: Stato
     db_EmailHashed: 'Retpoŝto haketita'
-    db_IP: IP
     db_Status: Stato
     has_one_Member: Membro
   SilverStripe\Security\Member:
@@ -326,7 +326,6 @@ eo:
     db_Email: Retpoŝto
     db_FailedLoginCount: 'Malsukcesis nombri ensaluton'
     db_FirstName: 'Persona nomo'
-    db_GUID: GUID
     db_HasSkippedMFARegistration: 'Registris je skippedMFA'
     db_IsExpired: Eksvalidiĝis
     db_LastSynced: 'Laste sinkronigita'
@@ -387,7 +386,6 @@ eo:
       other: '{count} permesoj'
     SINGULARNAME: Permeso
     UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
-    db_Arg: Arg
     db_Code: Kodo
     db_Type: Tipo
     has_one_Group: Grupo

@@ -98,6 +98,8 @@ lt:
     VALIDATEMAXLENGTH: '''{name}'' reikšmė negali būti ilgesnė nei {maxLength} simbolių ilgio.'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Prašome įvesti teisingą URL adresą'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Duomenų objektai'
     SINGULARNAME: 'Duomenų objektas'

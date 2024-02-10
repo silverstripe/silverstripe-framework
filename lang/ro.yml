@@ -39,9 +39,8 @@ ro:
     EDIT: Editare
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Pagină
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Vă rugăm să introduceți un URL valid'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Obiecte Data'
     SINGULARNAME: 'Obiect Data'

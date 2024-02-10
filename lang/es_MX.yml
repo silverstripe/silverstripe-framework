@@ -108,7 +108,6 @@ es_MX:
     PLURALNAME: Grupos
     Parent: 'Grupo ascendente'
     RolesAddEditLink: 'Agregar/modificar roles'
-    SINGULARNAME: Group
     Sort: 'Orden de Clasificación'
     db_Description: Descripción
     db_Title: Título
@@ -149,7 +148,6 @@ es_MX:
     ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
-    db_Email: Email
     db_FirstName: Nombre
     db_Locale: 'Interfaz Local'
     db_LockedOutUntil: 'Bloqueado hasta'
@@ -171,7 +169,6 @@ es_MX:
     PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
     PLURALNAME: Permisos
     db_Type: Tipo
-    has_one_Group: Group
   SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado del rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
