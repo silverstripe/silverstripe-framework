@@ -1,7 +1,6 @@
 el:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Διαστάσεις
-    EDIT: Edit
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Όχι
     YESANSWER: Ναί
@@ -17,13 +16,8 @@ el:
     Create: Δημιουργία
     Delete: Διαγραφή
     Save: Αποθήκευση
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Σελίδα
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Οποιοδήποτε
     NOANSWER: Όχι
@@ -36,9 +30,7 @@ el:
     db_Title: Τίτλος
   SilverStripe\Security\Member:
     BUTTONLOGOUT: Αποσύνδεση
-    EMAIL: Email
     PASSWORD: Κωδικός
-    db_Email: Email
     db_Password: Κωδικός
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONLOGOUT: Αποσύνδεση

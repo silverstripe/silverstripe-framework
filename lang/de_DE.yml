@@ -85,7 +85,6 @@ de_DE:
       one: '{count} Sekunde'
       other: '{count} Sekunden'
     TIMEDIFFAGO: 'vor {difference}'
-    TIMEDIFFIN: 'in {difference}'
     YEARS_SHORT_PLURALS:
       one: '{count} Jahr'
       other: '{count} Jahre'
@@ -130,8 +129,6 @@ de_DE:
       one: 'Ein Loginversuch'
       other: '{count} Loginversuche'
     SINGULARNAME: Loginversuch
-    Status: Status
-    db_Status: Status
     has_one_Member: Mitglied
   SilverStripe\Security\Member:
     ADDGROUP: 'Gruppe hinzufügen'
@@ -170,7 +167,6 @@ de_DE:
     db_Password: Passwort
     has_one_Member: Mitglied
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     PLURALNAME: Rechte
     db_Type: Typ
     has_one_Group: Gruppe

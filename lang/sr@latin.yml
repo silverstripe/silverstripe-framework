@@ -46,7 +46,6 @@ sr@latin:
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvezi u CSV'
-    Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Pronađi
     LinkExisting: 'Postojanje linka'
@@ -89,6 +88,8 @@ sr@latin:
     VALIDATION: '''{value}'' nije broj. Samo brojevi mogu biti prihvaćeni za ovo polje'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Unesite ispravan format vremena ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Molimo Vas da unesete ispravan URL'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Objekti podataka'
     SINGULARNAME: 'Objekat podataka'
@@ -145,8 +146,6 @@ sr@latin:
     IP: 'IP adresa'
     PLURALNAME: 'Pokušaji prijave'
     SINGULARNAME: 'Pokušaj prijave'
-    Status: Status
-    db_Status: Status
     has_one_Member: Član
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
@@ -199,7 +198,6 @@ sr@latin:
     PREVPASSWORD: 'Već ste koristili navedenu lozinku u prošlosti. Stoga, izaberite drugu lozinku'
     TOOSHORT: 'Lozinka je prekratka. Lozinka mora sadržati bar {minimum} znakova'
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Pristup CMS-u'
     FULLADMINRIGHTS: 'Puna administrativna prava'
     FULLADMINRIGHTS_HELP: 'Nadjačava sve druge dodeljene dozvole.'

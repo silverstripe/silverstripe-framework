@@ -76,7 +76,7 @@ class MySQLQuery extends Query
     public function rewind(): void
     {
         // Check for the method first since $this->handle is a mixed type
-        if (method_exists($this->handle, 'data_seek')) {
+        if (is_object($this->handle) && method_exists($this->handle, 'data_seek')) {
             $this->handle->data_seek(0);
         }
     }

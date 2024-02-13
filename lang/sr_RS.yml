@@ -177,7 +177,6 @@ sr_RS:
     ValidationIdentifierFailed: 'Није могуће преписати преко постојећег члана  #{id} са истим идентификатором ({name} = {value}))'
     YOUROLDPASSWORD: 'Ваша стара лозинка'
     belongs_many_many_Groups: Групе
-    db_Email: Email
     db_Locale: 'Локалитет интерфејса'
     db_LockedOutUntil: 'Zaključan do'
     db_Password: Лозинка

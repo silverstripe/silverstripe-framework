@@ -33,7 +33,6 @@ sl_SI:
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvozi v CSV'
-    Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Najdi
     NewRecord: 'Nov {type}'
@@ -56,9 +55,6 @@ sl_SI:
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: od
     Page: Stran
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\ORM\FieldType\DBBoolean:
     NOANSWER: Ne
     YESANSWER: Da
@@ -120,7 +116,6 @@ sl_SI:
     db_Password: Geslo
     has_one_Member: Uporabnik
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostop do CMS'
     FULLADMINRIGHTS: 'Polne administratorske pravice'
     PLURALNAME: Dovoljenja

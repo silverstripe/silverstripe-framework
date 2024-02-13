@@ -268,8 +268,6 @@ pl:
       one: 'Próba logowania'
       other: 'Próby logowania {count}'
     SINGULARNAME: 'Próba logowania'
-    Status: Status
-    db_Status: Status
     has_one_Member: Użytkownik
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupę'
@@ -313,7 +311,6 @@ pl:
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
     belongs_many_many_Groups: Grupy
-    db_Email: Email
     db_FirstName: Imię
     db_Locale: 'Język Interfejsu'
     db_LockedOutUntil: 'Zablokowany do'
@@ -346,7 +343,6 @@ pl:
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
     TOOSHORT: 'Hasło jest za krótkie, proszę podać {minimum} znaków lub więcej'
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostęp do CMS''a'
     CONTENT_CATEGORY: 'Uprawnienie edycji treści'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
