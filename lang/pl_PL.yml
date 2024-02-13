@@ -25,9 +25,8 @@ pl_PL:
     EDIT: Edytuj
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Strona
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Wprowadź poprawny adres URL'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakikolwiek
     NOANSWER: Nie

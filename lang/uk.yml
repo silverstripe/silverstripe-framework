@@ -1,7 +1,6 @@
 uk:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Розміри
-    EDIT: Edit
     EDITINFO: 'Редагувати цей файл'
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
@@ -39,13 +38,8 @@ uk:
     Delete: Видалити
     Save: Зберегти
     Saved: 'Збережено {name} {link}'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Сторінка
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта

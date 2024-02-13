@@ -80,7 +80,6 @@ de:
     Add: '{name} hinzufügen'
     CSVEXPORT: 'Als CSV-Datei exportieren'
     CSVIMPORT: 'CSV importieren'
-    Filter: Filter
     FilterBy: 'Filtern nach'
     Find: Suchen
     LinkExisting: 'Bestehenden Datensatz verknüpfen'
@@ -128,7 +127,6 @@ de:
     VIEW: Anzeigen
   SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
     BEST_FIT: passend
-    ORIGINAL: Original
     PIXEL_WIDTH: '{width} Pixel'
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Betrag
@@ -144,6 +142,8 @@ de:
     VALIDATEMAXLENGTH: 'Der für {name} eingegebene Wert darf nicht mehr als {maxLength} Zeichen lang sein'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Bitte geben Sie die Uhrzeit im korrekten Format ein ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Bitte geben Sie eine gültige URL ein'
   SilverStripe\ORM\DataObject:
     PLURALNAME: DatenObjekte
     PLURALS:
@@ -172,7 +172,6 @@ de:
       one: '{count} Sekunde'
       other: '{count} Sekunden'
     TIMEDIFFAGO: 'vor {difference}'
-    TIMEDIFFIN: 'in {difference}'
     YEARS_SHORT_PLURALS:
       one: '{count} Jahr'
       other: '{count} Jahre'
@@ -242,7 +241,6 @@ de:
     has_one_Parent: Übergeordnet
     many_many_Members: Mitglieder
     many_many_Roles: Rollen
-    many_many_Subsites: Subsites
   SilverStripe\Security\LoginAttempt:
     Email: E-Mail-Adresse
     EmailHashed: 'E-Mail-Adresse (gehashed)'
@@ -252,8 +250,6 @@ de:
       one: 'Ein Loginversuch'
       other: '{count} Loginversuche'
     SINGULARNAME: Loginversuch
-    Status: Status
-    db_Status: Status
     has_one_Member: Benutzer
   SilverStripe\Security\Member:
     ADDGROUP: 'Gruppe hinzufügen'
@@ -326,7 +322,6 @@ de:
     PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
     TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens {minimum} Zeichen lang sein'
   SilverStripe\Security\Permission:
-    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Zugriff'
     CONTENT_CATEGORY: Inhaltsberechtigungen
     FULLADMINRIGHTS: 'Unbeschränkte Administratorenrechte'
@@ -365,11 +360,9 @@ de:
     SINGULARNAME: Berechtigungsrollencode
     has_one_Role: Rolle
   SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Login Hashes'
     PLURALS:
       one: 'Ein Login Hash'
       other: '{count} Login Hashes'
-    SINGULARNAME: 'Login Hash'
     has_one_Member: Benutzer
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'

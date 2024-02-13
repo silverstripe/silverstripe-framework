@@ -114,6 +114,8 @@ ru:
     VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Пожалуйста, задайте действительный URL-адрес'
   SilverStripe\ORM\DataObject:
     PLURALNAME: Объекты
     PLURALS:
@@ -245,7 +247,6 @@ ru:
     CONFIRMPASSWORD: 'Подтвердить пароль'
     CURRENT_PASSWORD: 'Текущий пароль'
     EDIT_PASSWORD: 'Новый пароль'
-    EMAIL: Email
     EMPTYNEWPASSWORD: 'Поле нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
     ERRORLOCKEDOUT2: 'Ваша учетная запись временно заблокирована из-за слишком большого количества неудачных попыток авторизации. Пожалуйста, попытайтесь снова через {count} минут.'
@@ -272,7 +273,6 @@ ru:
     ValidationIdentifierFailed: 'Невозможно заменить существующего участника #{id} c таким же идентификатором ({name} = {value}))'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
     belongs_many_many_Groups: Группы
-    db_Email: Email
     db_FirstName: Имя
     db_Locale: 'Локаль интерфейса'
     db_LockedOutUntil: 'Заблокировано до'

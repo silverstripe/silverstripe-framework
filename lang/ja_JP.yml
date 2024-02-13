@@ -1,7 +1,6 @@
 ja_JP:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: サイズ
-    EDIT: Edit
     EDITINFO: このファイルを編集
     REMOVE: 削除
   SilverStripe\Control\ChangePasswordEmail_ss:
@@ -54,13 +53,8 @@ ja_JP:
     Delete: 削除
     DeletePermissionsFailure: 削除権限がありません
     Save: 保存
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: ページ
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨

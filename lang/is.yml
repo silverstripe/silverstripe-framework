@@ -38,9 +38,6 @@ is:
     EDIT: Breyta
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Síða
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Reikningur
     FIELDLABELCURRENCY: Gjaldmiðill

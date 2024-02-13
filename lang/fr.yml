@@ -2,7 +2,6 @@ fr:
   SilverStripe\Admin\LeftAndMain:
     VersionUnknown: Inconnu
   SilverStripe\AssetAdmin\Forms\UploadField:
-    Dimensions: Dimensions
     EDIT: Éditer
     EDITINFO: 'Éditer ce fichier'
     REMOVE: Retirer
@@ -100,7 +99,6 @@ fr:
     UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
-    Page: Page
     View: Vue
   SilverStripe\Forms\GridField\GridFieldViewButton:
     VIEW: Vue
@@ -116,6 +114,8 @@ fr:
     VALIDATION: "«\_{value}\_» n’est pas un nombre, seul type de donnée acceptée dans ce champ "
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Merci de saisir un format de date valide ({format})'
+  SilverStripe\Forms\UrlField:
+    INVALID: 'Saisissez une URl valide'
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Modèles de donnée'
     PLURALS:
@@ -186,7 +186,6 @@ fr:
     Code: 'Code du groupe'
     DefaultGroupTitleAdministrators: Administrateur
     DefaultGroupTitleContentAuthors: 'Auteurs du contenu'
-    Description: Description
     GROUPNAME: 'Nom du groupe'
     GroupReminder: 'Si vous choisissez un groupe parent, ce groupe prendra tous ses rôles'
     HierarchyPermsError: 'Impossible d''attribuer des autorisations au groupe parent "{group}" (requiert un accès en tant qu''administrateur)'
@@ -194,7 +193,6 @@ fr:
     MEMBERS: Membres
     NEWGROUP: 'Nouveau groupe'
     NoRoles: 'Aucun rôle trouvé'
-    PERMISSIONS: Permissions
     PLURALNAME: Groupes
     PLURALS:
       many: '{count} groupes'
@@ -206,12 +204,10 @@ fr:
     RolesAddEditLink: 'Ajouter/éditer les rôles'
     SINGULARNAME: Groupe
     Sort: 'Ordre de tri'
-    db_Description: Description
     db_Sort: Tri
     db_Title: Titre
     has_many_Groups: Groupes
     has_many_Permissions: Autorisations
-    has_one_Parent: Parent
     many_many_Members: Membres
     many_many_Roles: Rôles
   SilverStripe\Security\LoginAttempt:
@@ -238,7 +234,6 @@ fr:
     CONFIRMPASSWORD: 'Confirmer Mot De Passe'
     CURRENT_PASSWORD: 'Mot de passe actuel'
     EDIT_PASSWORD: 'Nouveau mot de passe'
-    EMAIL: Email
     EMPTYNEWPASSWORD: 'Le champs nouveau mot de passe ne peut être vide, merci de réessayer'
     ENTEREMAIL: 'Veuillez entrer une adresse email  pour obtenir un lien de réinitialisation du mot de passe.'
     ERRORLOCKEDOUT2: 'Votre compte a été temporairement désactivé en raison d''un nombre trop élevé d''échecs d''identification. Veuillez réessayer dans {count} minutes.'
@@ -264,7 +259,6 @@ fr:
     ValidationIdentifierFailed: 'Impossible de réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
     belongs_many_many_Groups: Groupes
-    db_Email: Email
     db_FirstName: Prénom
     db_Locale: 'Langue de l''Interface'
     db_LockedOutUntil: 'Verrouillé jusqu''à'
@@ -302,14 +296,11 @@ fr:
     FULLADMINRIGHTS: 'Droits d''administration complets'
     FULLADMINRIGHTS_HELP: 'Prévaut sur toutes les autres autorisations assignées.'
     PERMISSIONS_CATEGORY: 'Rôles et autorisations d’accès'
-    PLURALNAME: Permissions
     PLURALS:
       many: '{count} autorisations'
       one: 'Une autorisation'
       other: '{count} autorisations'
-    SINGULARNAME: Permission
     UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
-    db_Type: Type
     has_one_Group: Groupe
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assigné au groupe « {title} »'

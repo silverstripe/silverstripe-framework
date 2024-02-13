@@ -1,7 +1,6 @@
 az:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Ölçülər
-    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
     HELLO: Salam
@@ -32,13 +31,8 @@ az:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Delete: 'Dərc olunmuş saytdan sil'
     Save: 'Yadda saxla'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Səhifə
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Miqdar
     FIELDLABELCURRENCY: Valyuta

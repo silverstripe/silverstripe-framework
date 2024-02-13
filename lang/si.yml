@@ -1,7 +1,6 @@
 si:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: මාන
-    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'අලුත් මුර පදය'
     HELLO: කොහොමද
@@ -22,13 +21,8 @@ si:
     Print: 'මුද්රණය කරන්න'
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Save: 'සේවි කරන්න'
-  SilverStripe\Forms\GridField\GridFieldEditButton:
-    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: පිටුව
-    View: View
-  SilverStripe\Forms\GridField\GridFieldViewButton:
-    VIEW: View
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'දත්ත වස්තු'
     SINGULARNAME: 'දත්ත වස්තුව'
