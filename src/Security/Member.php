@@ -60,7 +60,6 @@ use RuntimeException;
  * @property int $FailedLoginCount
  * @property string $DateFormat
  * @property string $TimeFormat
- * @method ManyManyList<Group> Groups()
  * @method HasManyList<MemberPassword> LoggedPasswords()
  * @method HasManyList<RememberLoginHash> RememberLoginHashes()
  */
