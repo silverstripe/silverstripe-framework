@@ -8,6 +8,7 @@ use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
@@ -270,6 +271,15 @@ EOS
 
     public function testGetAttributes()
     {
+        // If silverstripe/admin isn't installed, we can't get TinyMCEConfig attributes
+        // unless we set up some expected config pointing to expected files.
+        if (!TinyMCEConfig::config()->get('base_dir')) {
+            // Copied from TinyMCECombinedGeneratorTest::setUp()
+            Director::config()->set('alternate_base_folder', __DIR__ . '/TinyMCECombinedGeneratorTest');
+            Director::config()->set('alternate_public_dir', '');
+            TinyMCEConfig::config()->set('base_dir', 'tinymce');
+            TinyMCEConfig::config()->set('editor_css', ['mycode/editor.css']);
+        }
         // Create an editor and set fixed_row_height to 0
         $editor = HTMLEditorField::create('Content');
         $editor->config()->set('fixed_row_height', 0);
