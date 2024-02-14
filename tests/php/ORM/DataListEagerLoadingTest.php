@@ -1254,4 +1254,39 @@ class DataListEagerLoadingTest extends SapphireTest
         $obj = EagerLoadObject::get()->eagerLoad('HasManyEagerLoadObjects')->last();
         $this->assertInstanceOf(EagerLoadedList::class, $obj->HasManyEagerLoadObjects());
     }
+
+    /**
+     * Tests that if the same record exists in multiple relations, its data is
+     * eagerloaded without extra unnecessary queries.
+     */
+    public function testEagerLoadingSharedRelations()
+    {
+        $record1 = EagerLoadObject::create(['Title' => 'My obj1']);
+        $record1->write();
+        $record2 = EagerLoadObject::create(['Title' => 'My obj2']);
+        $record2->write();
+        $manyMany = ManyManyEagerLoadObject::create(['Title' => 'My manymany']);
+        $manyMany->write();
+        $record1->ManyManyEagerLoadObjects()->add($manyMany);
+        $record2->ManyManyEagerLoadObjects()->add($manyMany);
+        $subManyMany = ManyManySubEagerLoadObject::create(['Title' => 'My submanymany']);
+        $subManyMany->write();
+        $manyMany->ManyManySubEagerLoadObjects()->add($subManyMany);
+
+        $eagerLoadQuery = EagerLoadObject::get()
+            ->filter(['ID' => [$record1->ID, $record2->ID]])
+            ->eagerLoad('ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects');
+        $loop1Count = 0;
+        $loop2Count = 0;
+        foreach ($eagerLoadQuery as $record) {
+            $loop1Count++;
+            $eagerLoaded1 = $record->ManyManyEagerLoadObjects();
+            $this->assertInstanceOf(EagerLoadedList::class, $eagerLoaded1);
+            foreach ($eagerLoaded1 as $manyManyRecord) {
+                $loop2Count++;
+                $eagerLoaded2 = $manyManyRecord->ManyManySubEagerLoadObjects();
+                $this->assertInstanceOf(EagerLoadedList::class, $eagerLoaded2);
+            }
+        }
+    }
 }
