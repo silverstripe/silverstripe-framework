@@ -407,6 +407,39 @@ PHP;
         );
     }
 
+    public function testCollectFromTrait()
+    {
+        $c = i18nTextCollector::create();
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
+        $php = <<<PHP
+<?php
+namespace SilverStripe\Framework\Core;
+
+use SilverStripe\ORM\DataObject;
+
+class MyTrait extends Base implements SomeService {
+    public function getNewLines(\$class) {
+        if (
+            !is_subclass_of(\$class, DataObject::class)
+            || !Object::has_extension(\$class, \SilverStripe\Versioned\Versioned::class)
+        ) {
+            return null;
+        }
+        return _t(
+            __TRAIT__.'.NEWLINES',
+            'New Lines'
+        );
+    }
+}
+PHP;
+        $this->assertEquals(
+            [
+                'SilverStripe\\Framework\\Core\\MyTrait.NEWLINES' => "New Lines",
+            ],
+            $c->collectFromCode($php, null, $mymodule)
+        );
+    }
+
     public function testNewlinesInEntityValues()
     {
         $c = i18nTextCollector::create();
