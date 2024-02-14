@@ -968,7 +968,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * Gets the final rows for this list after applying all transformations.
-     * Currently only limit is applied lazily, but others could be done this was as well.
+     * Currently only limit and sort are applied lazily, but filter could be done this was as well in the future.
      */
     private function getFinalisedRows(): array
     {

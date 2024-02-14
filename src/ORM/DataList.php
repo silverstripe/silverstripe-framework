@@ -1386,7 +1386,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 if ($parentData->hasID($parentID)) {
                     $parentData->addEagerLoadedData($relationName, $parentID, $eagerLoadedData);
                     $added = true;
-                    break;
+                    // can't break here, because the parent might be in multiple relation lists
                 }
             } else {
                 throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
