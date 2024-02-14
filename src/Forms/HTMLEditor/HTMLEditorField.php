@@ -145,7 +145,7 @@ class HTMLEditorField extends TextareaField
         // Sanitise if requested
         $htmlValue = HTMLValue::create($this->Value());
         if (HTMLEditorField::config()->sanitise_server_side) {
-            $config = $this->getEditorConfig();
+            $config = HTMLEditorConfig::get(HTMLEditorConfig::config()->get('default_config'));
             $santiser = HTMLEditorSanitiser::create($config);
             $santiser->sanitise($htmlValue);
         }
