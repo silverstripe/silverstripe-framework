@@ -8,6 +8,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\ManyManyThroughList;
@@ -897,7 +898,7 @@ class DataListEagerLoadingTest extends SapphireTest
     {
         $this->createEagerLoadData(5);
         $filter = ['Title:GreaterThan' => 'obj 0'];
-        $dataList = EagerLoadObject::get()->filter($filter)->eagerLoad(...$eagerLoad);
+        $dataList = EagerLoadObject::get()->filter($filter)->eagerLoad($eagerLoad);
 
         // Validate that filtering results still actually works on the base list
         $this->assertListEquals([
@@ -1286,6 +1287,304 @@ class DataListEagerLoadingTest extends SapphireTest
                 $loop2Count++;
                 $eagerLoaded2 = $manyManyRecord->ManyManySubEagerLoadObjects();
                 $this->assertInstanceOf(EagerLoadedList::class, $eagerLoaded2);
+            }
+        }
+        $this->assertGreaterThan(1, $loop1Count);
+        $this->assertGreaterThan(1, $loop2Count);
+    }
+
+    public function testInvalidAssociativeArray(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Value of associative array must be a callable.'
+            . 'If you don\'t want to pre-filter the list, use an indexed array.'
+        );
+        EagerLoadObject::get()->eagerLoad(['HasManyEagerLoadObjects' => 'HasManyEagerLoadObjects']);
+    }
+
+    public function provideNoLimitEagerLoadingQuery(): array
+    {
+        // Note we don't test has_one or belongs_to because those don't accept a callback at all.
+        return [
+            'limit list directly - has_many' => [
+                'relation' => 'HasManyEagerLoadObjects',
+                'relationType' => 'has_many',
+                'callback' => fn (DataList $list) => $list->limit(1),
+            ],
+            'limit list directly - many_many' => [
+                'relation' => 'ManyManyEagerLoadObjects',
+                'relationType' => 'many_many',
+                'callback' => fn (DataList $list) => $list->limit(1),
+            ],
+            'limit underlying dataquery - has_many' => [
+                'relation' => 'HasManyEagerLoadObjects',
+                'relationType' => 'has_many',
+                'callback' => fn (DataList $list) => $list->alterDataQuery(fn (DataQuery $query) => $query->limit(1)),
+            ],
+            'limit underlying dataquery - many_many' => [
+                'relation' => 'ManyManyEagerLoadObjects',
+                'relationType' => 'many_many',
+                'callback' => fn (DataList $list) => $list->alterDataQuery(fn (DataQuery $query) => $query->limit(1)),
+            ],
+        ];
+    }
+
+    /**
+     * Tests that attempting to limit an eagerloading query will throw an exception.
+     *
+     * @dataProvider provideNoLimitEagerLoadingQuery
+     */
+    public function testNoLimitEagerLoadingQuery(string $relation, string $relationType, callable $callback): void
+    {
+        // Need to have at least one record in the main list for eagerloading to even be triggered.
+        $record = new EagerLoadObject();
+        $record->write();
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            "Cannot apply limit to eagerloaded data for $relationType relation $relation."
+        );
+        EagerLoadObject::get()->eagerLoad([$relation => $callback])->toArray();
+    }
+
+    public function provideCannotManipulateUnaryRelationQuery(): array
+    {
+        return [
+            'has_one' => [
+                'relation' => 'HasOneEagerLoadObject',
+                'relationType' => 'has_one',
+            ],
+            'belongs_to' => [
+                'relation' => 'BelongsToEagerLoadObject',
+                'relationType' => 'belongs_to',
+            ],
+        ];
+    }
+
+    /**
+     * Tests that attempting to manipulate a has_one or belongs_to eagerloading query will throw an exception.
+     *
+     * @dataProvider provideCannotManipulateUnaryRelationQuery
+     */
+    public function testCannotManipulateUnaryRelationQuery(string $relation, string $relationType): void
+    {
+        // Need to have at least one record in the main list for eagerloading to even be triggered.
+        $record = new EagerLoadObject();
+        $record->write();
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            "Cannot manipulate eagerloading query for $relationType relation $relation"
+        );
+        EagerLoadObject::get()->eagerLoad([$relation => fn (DataList $list) => $list])->toArray();
+    }
+
+    /**
+     * Tests that attempting to manipulate an eagerloading query without returning the list will throw an exception.
+     */
+    public function testManipulatingEagerloadingQueryNoReturn(): void
+    {
+        // Need to have at least one record in the main list for eagerloading to even be triggered.
+        $record = new EagerLoadObject();
+        $record->write();
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Eagerloading callback for has_many relation HasManyEagerLoadObjects must return a DataList.'
+        );
+        EagerLoadObject::get()->eagerLoad([
+            'HasManyEagerLoadObjects' => function (DataList $list) {
+                $list->filter('ID', 1);
+            }
+        ])->toArray();
+    }
+
+    public function provideManipulatingEagerloadingQuery(): array
+    {
+        return [
+            'nested has_many' => [
+                'relationType' => 'has_many',
+                'relations' => [
+                    'HasManyEagerLoadObjects' => HasManyEagerLoadObject::class,
+                    'HasManySubEagerLoadObjects' => HasManySubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'HasManyEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'HasMany T'])->Sort('Title', 'ASC'),
+                    'HasManyEagerLoadObjects.HasManySubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'DESC']),
+                ],
+                'expected' => [
+                    'first loop' => ['HasMany Three', 'HasMany Two'],
+                    'second loop' => ['Sub B', 'Sub A'],
+                ],
+            ],
+            'nested has_many (reverse sort)' => [
+                'relationType' => 'has_many',
+                'relations' => [
+                    'HasManyEagerLoadObjects' => HasManyEagerLoadObject::class,
+                    'HasManySubEagerLoadObjects' => HasManySubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'HasManyEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'HasMany T'])->Sort('Title', 'DESC'),
+                    'HasManyEagerLoadObjects.HasManySubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'ASC']),
+                ],
+                'expected' => [
+                    'first loop' => ['HasMany Two', 'HasMany Three'],
+                    'second loop' => ['Sub A', 'Sub B'],
+                ],
+            ],
+            'nested many_many' => [
+                'relationType' => 'many_many',
+                'relations' => [
+                    'ManyManyEagerLoadObjects' => ManyManyEagerLoadObject::class,
+                    'ManyManySubEagerLoadObjects' => ManyManySubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'ManyManyEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'ManyMany T'])->Sort('Title', 'ASC'),
+                    'ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'DESC']),
+                ],
+                'expected' => [
+                    'first loop' => ['ManyMany Three', 'ManyMany Two'],
+                    'second loop' => ['Sub B', 'Sub A'],
+                ],
+            ],
+            'nested many_many (reverse sort)' => [
+                'relationType' => 'many_many',
+                'relations' => [
+                    'ManyManyEagerLoadObjects' => ManyManyEagerLoadObject::class,
+                    'ManyManySubEagerLoadObjects' => ManyManySubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'ManyManyEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'ManyMany T'])->Sort('Title', 'DESC'),
+                    'ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'ASC']),
+                ],
+                'expected' => [
+                    'first loop' => ['ManyMany Two', 'ManyMany Three'],
+                    'second loop' => ['Sub A', 'Sub B'],
+                ],
+            ],
+            'nested belongs_many_many' => [
+                'relationType' => 'belongs_many_many',
+                'relations' => [
+                    'BelongsManyManyEagerLoadObjects' => BelongsManyManyEagerLoadObject::class,
+                    'BelongsManyManySubEagerLoadObjects' => BelongsManyManySubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'BelongsManyManyEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'ManyMany T'])->Sort('Title', 'ASC'),
+                    'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'DESC']),
+                ],
+                'expected' => [
+                    'first loop' => ['ManyMany Three', 'ManyMany Two'],
+                    'second loop' => ['Sub B', 'Sub A'],
+                ],
+            ],
+            'nested belongs_many_many (reverse sort)' => [
+                'relationType' => 'belongs_many_many',
+                'relations' => [
+                    'BelongsManyManyEagerLoadObjects' => BelongsManyManyEagerLoadObject::class,
+                    'BelongsManyManySubEagerLoadObjects' => BelongsManyManySubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'BelongsManyManyEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'ManyMany T'])->Sort('Title', 'DESC'),
+                    'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'ASC']),
+                ],
+                'expected' => [
+                    'first loop' => ['ManyMany Two', 'ManyMany Three'],
+                    'second loop' => ['Sub A', 'Sub B'],
+                ],
+            ],
+            'nested many_many_through' => [
+                'relationType' => 'many_many_through',
+                'relations' => [
+                    'ManyManyThroughEagerLoadObjects' => ManyManyThroughEagerLoadObject::class,
+                    'ManyManyThroughSubEagerLoadObjects' => ManyManyThroughSubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'ManyManyThroughEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'ManyMany T'])->Sort('Title', 'ASC'),
+                    'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'DESC']),
+                ],
+                'expected' => [
+                    'first loop' => ['ManyMany Three', 'ManyMany Two'],
+                    'second loop' => ['Sub B', 'Sub A'],
+                ],
+            ],
+            'nested many_many_through (reverse sort)' => [
+                'relationType' => 'many_many_through',
+                'relations' => [
+                    'ManyManyThroughEagerLoadObjects' => ManyManyThroughEagerLoadObject::class,
+                    'ManyManyThroughSubEagerLoadObjects' => ManyManyThroughSubEagerLoadObject::class,
+                ],
+                'eagerLoad' => [
+                    'ManyManyThroughEagerLoadObjects' => fn (DataList $list) => $list->filter(['Title:StartsWith' => 'ManyMany T'])->Sort('Title', 'DESC'),
+                    'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects' => fn (DataList $list) => $list->Sort(['Title' => 'ASC']),
+                ],
+                'expected' => [
+                    'first loop' => ['ManyMany Two', 'ManyMany Three'],
+                    'second loop' => ['Sub A', 'Sub B'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Tests that callbacks can be used to manipulate eagerloading queries
+     *
+     * @dataProvider provideManipulatingEagerloadingQuery
+     */
+    public function testManipulatingEagerloadingQuery(string $relationType, array $relations, array $eagerLoad, array $expected): void
+    {
+        $relationNames = array_keys($relations);
+        $relationOne = $relationNames[0];
+        $relationTwo = $relationNames[1];
+        $classOne = $relations[$relationOne];
+        $classTwo = $relations[$relationTwo];
+        // Prepare fixtures.
+        // Eager loading is different to most tests - we build fixtures at run time per test
+        // to avoid wasting a bunch of CI time building test-specific YAML fixtures.
+        $record = new EagerLoadObject();
+        $record->write();
+        if ($relationType === 'has_many') {
+            $hasMany1 = new $classOne(['Title' => 'HasMany One']);
+            $hasMany2 = new $classOne(['Title' => 'HasMany Two']);
+            $hasMany3 = new $classOne(['Title' => 'HasMany Three']);
+            $hasMany = [$hasMany1, $hasMany2, $hasMany3];
+            foreach ($hasMany as $hasManyRecord) {
+                $hasManyRecord->write();
+                // Since these are has_many they can't share the same records, so build
+                // separate records for each list.
+                $hasManySub1 = new $classTwo(['Title' => 'Sub A']);
+                $hasManySub2 = new $classTwo(['Title' => 'Sub B']);
+                $hasManySub1->write();
+                $hasManySub2->write();
+                $hasManyRecord->$relationTwo()->addMany([$hasManySub1, $hasManySub2]);
+            }
+            $record->$relationOne()->addMany($hasMany);
+        } elseif (str_contains($relationType, 'many_many')) {
+            $manyMany1 = new $classOne(['Title' => 'ManyMany One']);
+            $manyMany2 = new $classOne(['Title' => 'ManyMany Two']);
+            $manyMany3 = new $classOne(['Title' => 'ManyMany Three']);
+            $manyManySub1 = new $classTwo(['Title' => 'Sub A']);
+            $manyManySub2 = new $classTwo(['Title' => 'Sub B']);
+            $manyManySub1->write();
+            $manyManySub2->write();
+            $manyMany = [$manyMany1, $manyMany2, $manyMany3];
+            foreach ($manyMany as $manyManyRecord) {
+                $manyManyRecord->write();
+                $manyManyRecord->$relationTwo()->addMany([$manyManySub1, $manyManySub2]);
+            }
+            $record->$relationOne()->addMany($manyMany);
+        } else {
+            throw new LogicException("Unexpected relation type: $relationType");
+        }
+
+        // Loop through the relations and make assertions
+        foreach (EagerLoadObject::get()->filter(['ID' => $record->ID])->eagerLoad($eagerLoad) as $eagerLoadObject) {
+            $list = $eagerLoadObject->$relationOne();
+            $this->assertInstanceOf(EagerLoadedList::class, $list);
+            $this->assertSame($expected['first loop'], $list->column('Title'));
+            foreach ($list as $relatedObject) {
+                $list = $relatedObject->$relationTwo();
+                $this->assertInstanceOf(EagerLoadedList::class, $list);
+                $this->assertSame($expected['second loop'], $list->column('Title'));
             }
         }
     }
