@@ -216,7 +216,7 @@ class DebugView
     {
         $errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
         $httpRequestEnt = htmlentities($httpRequest ?? '', ENT_COMPAT, 'UTF-8');
-        if (ini_get('html_errors')) {
+        if (filter_var(ini_get('html_errors'), FILTER_VALIDATE_BOOL)) {
             $errstr = strip_tags($errstr ?? '');
         } else {
             $errstr = Convert::raw2xml($errstr);
