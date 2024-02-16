@@ -2,9 +2,13 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object;
 use SilverStripe\Forms\Tests\MoneyFieldTest\TestObject;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\MoneyField;
@@ -126,5 +130,32 @@ class MoneyFieldTest extends SapphireTest
             'Amount' => 123
         ]);
         $this->assertFalse($field->validate($validator));
+    }
+
+    public function testGetCurrencyField(): void
+    {
+        $field = new MoneyField('Money');
+        $field->setAllowedCurrencies(['NZD', 'USD']);
+
+        $this->assertInstanceOf(DropdownField::class, $field->getCurrencyField());
+        $this->assertEquals('Money[Currency]', $field->getCurrencyField()->getName());
+
+        $field->setAllowedCurrencies(['USD']);
+
+        $this->assertInstanceOf(HiddenField::class, $field->getCurrencyField());
+        $this->assertEquals('Money[Currency]', $field->getCurrencyField()->getName());
+
+        $field->setAllowedCurrencies([]);
+
+        $this->assertInstanceOf(TextField::class, $field->getCurrencyField());
+        $this->assertEquals('Money[Currency]', $field->getCurrencyField()->getName());
+    }
+
+    public function testGetAmountField(): void
+    {
+        $field = new MoneyField('Money');
+        $this->assertInstanceOf(NumericField::class, $field->getAmountField());
+        $this->assertEquals(2, $field->getAmountField()->getScale());
+        $this->assertEquals('Money[Amount]', $field->getAmountField()->getName());
     }
 }
