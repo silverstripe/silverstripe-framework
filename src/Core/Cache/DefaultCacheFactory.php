@@ -66,26 +66,16 @@ class DefaultCacheFactory implements CacheFactory
         $apcuSupported = ($this->isAPCUSupported() && $useInMemoryCache);
         $phpFilesSupported = $this->isPHPFilesSupported();
 
-        // If apcu isn't supported, phpfiles is the next best preference
-        if (!$apcuSupported && $phpFilesSupported) {
-            return $this->createCache(PhpFilesAdapter::class, [$namespace, $defaultLifetime, $directory], $useInjector);
-        }
-
-        // Create filesystem cache
-        if (!$apcuSupported) {
-            return $this->createCache(
+        // Create filesystem cache - PhpFilesAdapter is typically faster than raw filesystem.
+        if ($phpFilesSupported) {
+            $fs = $this->instantiateCache(PhpFilesAdapter::class, [$namespace, $defaultLifetime, $directory], $useInjector);
+        } else {
+            $fs = $this->instantiateCache(
                 FilesystemAdapter::class,
                 [$namespace, $defaultLifetime, $directory],
                 $useInjector
             );
         }
-
-        // Create PSR6 filesystem + apcu cache's wrapped in a PSR6 chain adapter, then wrap in a PSR16 class
-        $fs = $this->instantiateCache(
-            FilesystemAdapter::class,
-            [$namespace, $defaultLifetime, $directory],
-            $useInjector
-        );
 
         // Note that the cache lifetime will be shorter there by default, to ensure there's enough
         // resources for "hot cache" items in APCu as a resource constrained in memory cache.
@@ -93,7 +83,19 @@ class DefaultCacheFactory implements CacheFactory
         $lifetime = (int) $defaultLifetime / 5;
         $apcu = $this->instantiateCache(ApcuAdapter::class, [$apcuNamespace, $lifetime, $version], $useInjector);
 
-        return $this->createCache(ChainAdapter::class, [[$apcu, $fs]], $useInjector);
+        // Depending on whether (and why) APCu is supported, it can be ommitted
+        // or included as a fallback instead of as the primary cache.
+        if (!$apcuSupported) {
+            $adaptors = [$fs];
+            // If APCu is generally supported, it can be included to warm that cache.
+            if (ApcuAdapter::isSupported()) {
+                $adaptors[] = $apcu;
+            }
+        } else {
+            $adaptors = [$apcu, $fs];
+        }
+
+        return $this->createCache(ChainAdapter::class, [$adaptors], $useInjector);
     }
 
     /**
