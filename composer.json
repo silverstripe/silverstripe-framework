@@ -35,8 +35,8 @@
         "psr/container": "^1.1 || ^2.0",
         "psr/http-message": "^1",
         "sebastian/diff": "^4.0",
-        "silverstripe/config": "^2",
-        "silverstripe/assets": "^2.2",
+        "silverstripe/config": "^3",
+        "silverstripe/assets": "^3",
         "silverstripe/vendor-plugin": "^2",
         "sminnee/callbacklist": "^0.1.1",
         "symfony/cache": "^6.1",
@@ -61,7 +61,7 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9.6",
-        "silverstripe/versioned": "^2",
+        "silverstripe/versioned": "^3",
         "squizlabs/php_codesniffer": "^3.7",
         "silverstripe/standards": "^1",
         "phpstan/extension-installer": "^1.3"
