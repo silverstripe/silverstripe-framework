@@ -1115,6 +1115,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         string $relationName,
         string $relationType
     ): array {
+        // Throw exception if developers try to manipulate a has_one relation as a list
+        if ($this->eagerLoadAllRelations[$relationChain] !== null) {
+            throw new LogicException("Cannot manipulate eagerloading query for $relationType relation $relationName");
+        }
+
         $fetchedIDs = [];
         $addTo = [];
 
@@ -1182,6 +1187,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         string $relationName,
         string $relationType
     ): array {
+        // Throw exception if developers try to manipulate a belongs_to relation as a list
+        if ($this->eagerLoadAllRelations[$relationChain] !== null) {
+            throw new LogicException("Cannot manipulate eagerloading query for $relationType relation $relationName");
+        }
+
         $belongsToIDField = $component['joinField'];
         // Get ALL of the items for this relation up front, for ALL of the parents
         // Fetched as an array to avoid sporadic additional queries when the DataList is looped directly
@@ -1222,9 +1232,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         string $relationName,
         string $relationType
     ): array {
+        $fetchList = DataObject::get($relationDataClass)->filter([$hasManyIDField => $parentIDs]);
+        $fetchList = $this->manipulateEagerLoadingQuery($fetchList, $relationChain, $relationType);
         // Get ALL of the items for this relation up front, for ALL of the parents
         // Fetched as an array to avoid sporadic additional queries when the DataList is looped directly
-        $fetchedRows = DataObject::get($relationDataClass)->filter([$hasManyIDField => $parentIDs])->getFinalisedQuery();
+        $fetchedRows = $fetchList->getFinalisedQuery();
         $fetchedIDs = [];
         $eagerLoadedLists = [];
 
@@ -1278,10 +1290,6 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $fetchedIDs = [];
         $eagerLoadedLists = [];
 
-        // Get the join records so we can correctly identify which children belong to which parents
-        // This also holds extra fields data
-        $joinRows = DB::query('SELECT * FROM "' . $joinTable . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')');
-
         // Use a real RelationList here so that the extraFields and join record are correctly fetched for all relations
         // There's a lot of special handling for things like DBComposite extra fields, etc.
         if ($joinClass !== null) {
@@ -1308,12 +1316,27 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $relationListClass = get_class($relationList);
 
         // Get ALL of the items for this relation up front, for ALL of the parents
-        $fetchedRows = $relationList->forForeignID($parentIDs)->getFinalisedQuery();
+        $fetchList = $relationList->forForeignID($parentIDs);
+        $fetchList = $this->manipulateEagerLoadingQuery($fetchList, $relationChain, $relationType);
+        $fetchedRows = $fetchList->getFinalisedQuery();
 
         foreach ($fetchedRows as $row) {
             $fetchedRowsArray[$row['ID']] = $row;
             $fetchedIDs[] = $row['ID'];
         }
+
+        // Get the join records so we can correctly identify which children belong to which parents
+        // This also holds extra fields data
+        $fetchedIDsAsString = implode(',', $fetchedIDs);
+        $joinRows = DB::query(
+            'SELECT * FROM "' . $joinTable
+            // Only get joins relevant for the parent list
+            . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
+            // Exclude any children that got filtered out
+            . ' AND ' . $childIDField . ' IN (' . $fetchedIDsAsString . ')'
+            // Respect sort order of fetched items
+            . ' ORDER BY FIELD(' . $childIDField . ', ' . $fetchedIDsAsString . ')'
+        );
 
         // Store the children in an EagerLoadedList against the correct parent
         foreach ($joinRows as $row) {
@@ -1398,6 +1421,33 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
     }
 
+    /**
+     * NOTE: Do not change `DataList` to `static` in this method signature.
+     * Subclasses of DataList must still accept DataList arguments and return DataList!
+     */
+    private function manipulateEagerLoadingQuery(
+        DataList $fetchList,
+        string $relationChain,
+        string $relationType
+    ): DataList {
+        $filterCallback = $this->eagerLoadAllRelations[$relationChain];
+        if ($filterCallback !== null) {
+            $fetchList = $filterCallback($fetchList);
+        }
+        if (!($fetchList instanceof DataList)) {
+            throw new LogicException(
+                "Eagerloading callback for $relationType relation $relationChain must return a DataList."
+            );
+        }
+        $limit = $fetchList->dataQuery->query()->getLimit();
+        if (!empty($limit) && ($limit['start'] !== 0 || $limit['limit'] !== null)) {
+            throw new LogicException(
+                "Cannot apply limit to eagerloaded data for $relationType relation $relationChain."
+            );
+        }
+        return $fetchList;
+    }
+
     private function fillEmptyEagerLoadedRelations(
         Query|array $parents,
         array $missingParentIDs,
@@ -1447,8 +1497,17 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * You can specify nested relations by using dot notation, and you can also pass in multiple relations.
      * When specifying nested relations there is a maximum of 3 levels of relations allowed i.e. 2 dots
      *
-     * Example:
+     * Examples:
+     * <code>
      * $myDataList->eagerLoad('MyRelation.NestedRelation.EvenMoreNestedRelation', 'DifferentRelation')
+     * </code>
+     *
+     * <code>
+     * $myDataList->eagerLoad([
+     *     'MyRelation.NestedRelation.EvenMoreNestedRelation',
+     *     'DifferentRelation' => fn (DataList $list) => $list->filter($filterArgs),
+     * ]);
+     * </code>
      *
      * IMPORTANT: Calling eagerLoad() will cause any relations on DataObjects to be returned as an EagerLoadedList
      * instead of a subclass of DataList such as HasManyList i.e. MyDataObject->MyHasManyRelation() returns an EagerLoadedList
@@ -1458,8 +1517,29 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     public function eagerLoad(...$relationChains): static
     {
         $list = clone $this;
-        foreach ($relationChains as $relationChain) {
-            // Don't add any relations we've added before
+
+        // If an array is passed in directly, treat it as though $relationChains wasn't spread.
+        if (count($relationChains) === 1 && is_array($relationChains[array_key_first($relationChains)])) {
+            $relationChains = $relationChains[array_key_first($relationChains)];
+        }
+
+        foreach ($relationChains as $relationChain => $callback) {
+            // Allow non-associative arrays
+            if (is_numeric($relationChain)) {
+                $relationChain = $callback;
+                $callback = null;
+            }
+
+            // Reject non-callable in associative array
+            if ($callback !== null && !is_callable($callback)) {
+                throw new LogicException(
+                    'Value of associative array must be a callable.'
+                    . 'If you don\'t want to pre-filter the list, use an indexed array.'
+                );
+            }
+
+            // Don't add any relations we've added before.
+            // Note we explicitly cannot use `isset` here, because most of the values are set to `null`.
             if (array_key_exists($relationChain, $list->eagerLoadAllRelations)) {
                 continue;
             }
@@ -1480,8 +1560,11 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 // Keep track of what we've seen before so we don't accidentally add a level 1 relation
                 // (e.g. "Players") to the chains list when we already have it as part of a longer chain
                 // (e.g. "Players.Teams")
-                $list->eagerLoadAllRelations[$item] = $item;
+                $list->eagerLoadAllRelations[$item] ??= null;
             }
+            // Set the callback for this chain
+            $list->eagerLoadAllRelations[$relationChain] = $callback;
+            // Set the relation chain to be loaded
             $list->eagerLoadRelationChains[$relationChain] = $relationChain;
         }
         return $list;
