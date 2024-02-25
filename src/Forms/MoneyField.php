@@ -59,11 +59,7 @@ class MoneyField extends FormField
     public function __construct($name, $title = null, $value = "")
     {
         $this->setName($name);
-        $this->fieldAmount = NumericField::create(
-            "{$name}[Amount]",
-            _t('SilverStripe\\Forms\\MoneyField.FIELDLABELAMOUNT', 'Amount')
-        )
-            ->setScale(2);
+        $this->buildAmountField();
         $this->buildCurrencyField();
 
         parent::__construct($name, $title, $value);
@@ -73,6 +69,18 @@ class MoneyField extends FormField
     {
         $this->fieldAmount = clone $this->fieldAmount;
         $this->fieldCurrency = clone $this->fieldCurrency;
+    }
+
+    /**
+     * Builds a field to input the amount of money
+     */
+    protected function buildAmountField(): void
+    {
+        $this->fieldAmount = NumericField::create(
+            $this->name . '[Amount]',
+            _t('SilverStripe\\Forms\\MoneyField.FIELDLABELAMOUNT', 'Amount')
+        )
+            ->setScale(2);
     }
 
     /**
