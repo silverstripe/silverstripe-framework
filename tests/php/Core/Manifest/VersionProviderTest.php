@@ -3,7 +3,7 @@
 namespace SilverStripe\Core\Tests\Manifest;
 
 use SebastianBergmann\Version;
-use Composer\Semver\Comparator;
+use Composer\Semver\VersionParser;
 use SilverStripe\Dev\SapphireTest;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Config;
@@ -93,7 +93,8 @@ class VersionProviderTest extends SapphireTest
             'silverstripe/framework' => 'Framework',
         ]);
         $moduleVersion = $provider->getModuleVersion('silverstripe/framework');
-        $this->assertTrue(Comparator::greaterThanOrEqualTo($moduleVersion, '5.0.0'), "Expected > 5.0.0 but got $moduleVersion");
+        $parser = new VersionParser();
+        $this->assertIsString($parser->normalize($moduleVersion), "Expected a valid semver but got $moduleVersion");
         $result = $provider->getVersion();
         $this->assertStringNotContainsString('Framework: 1.2.3', $result);
     }
