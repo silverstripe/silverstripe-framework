@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * The version provider will look up configured modules and examine the composer.lock file
@@ -185,21 +186,9 @@ class VersionProvider
      */
     public function getModuleVersionFromComposer($modules = [])
     {
-        if (class_exists(\Composer\InstalledVersions::class)) {
-            $versions = [];
-            foreach ($modules as $module) {
-                $versions[$module] = \Composer\InstalledVersions::getPrettyVersion($module);
-            }
-            return $versions;
-        }
         $versions = [];
-        $lockData = $this->getComposerLock();
-        if ($lockData && !empty($lockData['packages'])) {
-            foreach ($lockData['packages'] as $package) {
-                if (in_array($package['name'], $modules) && isset($package['version'])) {
-                    $versions[$package['name']] = $package['version'];
-                }
-            }
+        foreach ($modules as $module) {
+            $versions[$module] = \Composer\InstalledVersions::getPrettyVersion($module);
         }
         return $versions;
     }
@@ -207,11 +196,13 @@ class VersionProvider
     /**
      * Load composer.lock's contents and return it
      *
+     * @deprecated 5.1 Has been replaced by composer-runtime-api
      * @param bool $cache
      * @return array
      */
     protected function getComposerLock($cache = true)
     {
+        Deprecation::notice("5.1", "Has been replaced by composer-runtime-api", Deprecation::SCOPE_METHOD);
         $composerLockPath = $this->getComposerLockPath();
         if (!file_exists($composerLockPath)) {
             return [];
