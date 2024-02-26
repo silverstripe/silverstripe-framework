@@ -524,8 +524,13 @@ class Member extends DataObject
             return $string;
         }
 
-        // We assume we have PasswordEncryption and Salt available here.
         $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
+
+        // If we don't have a salt, don't allow invalid calls to encrypt method
+        if (!$this->Salt) {
+            $this->Salt = $e->salt($string, $this);
+            $this->write();
+        }
 
         return $e->encrypt($string, $this->Salt);
     }
