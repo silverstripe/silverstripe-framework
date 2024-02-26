@@ -3,12 +3,13 @@
 namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
-use SilverStripe\Core\Config\Config;
+use Composer\InstalledVersions;
+use SilverStripe\Dev\Deprecation;
 use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * The version provider will look up configured modules and examine the composer.lock file
