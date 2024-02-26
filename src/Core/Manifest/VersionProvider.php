@@ -181,7 +181,7 @@ class VersionProvider
      * Tries to obtain version number from composer.lock if it exists
      *
      * @param array<int,string> $modules
-     * @return array<int|string,mixed>
+     * @return array<string|string>
      */
     public function getModuleVersionFromComposer($modules = [])
     {
