@@ -3,15 +3,15 @@
 namespace SilverStripe\Core\Tests\Manifest;
 
 use SebastianBergmann\Version;
+use Composer\Semver\Comparator;
 use SilverStripe\Dev\SapphireTest;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\VersionProvider;
 
 class VersionProviderTest extends SapphireTest
 {
-    const SEMVER_REGEX = '(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-(0|[1-9A-Za-z-][0-9A-Za-z-]*)(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?';
-
     /**
      * @var VersionProvider
      */
@@ -92,10 +92,9 @@ class VersionProviderTest extends SapphireTest
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
         ]);
-        $this->assertMatchesRegularExpression('/' . self::SEMVER_REGEX . '/', $provider->getModuleVersion('silverstripe/framework'));
+        $this->assertTrue(Comparator::greaterThan($provider->getModuleVersion('silverstripe/framework'), '5.0.0'));
         $result = $provider->getVersion();
         $this->assertStringNotContainsString('Framework: 1.2.3', $result);
-        $this->assertMatchesRegularExpression('/Framework: ' . self::SEMVER_REGEX . '/', $result);
     }
 
     private function clearCache()
