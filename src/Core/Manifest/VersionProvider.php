@@ -180,7 +180,7 @@ class VersionProvider
     /**
      * Tries to obtain version number from composer.lock if it exists
      *
-     * @param array<int,string> $modules
+     * @param array<string> $modules
      * @return array<string|string>
      */
     public function getModuleVersionFromComposer($modules = [])
