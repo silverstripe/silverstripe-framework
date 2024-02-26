@@ -208,7 +208,7 @@ class VersionProvider
      * Load composer.lock's contents and return it
      *
      * @param bool $cache
-     * @return array<mixed>
+     * @return array
      */
     protected function getComposerLock($cache = true)
     {
