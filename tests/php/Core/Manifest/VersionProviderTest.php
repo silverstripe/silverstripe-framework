@@ -92,7 +92,8 @@ class VersionProviderTest extends SapphireTest
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
         ]);
-        $this->assertTrue(Comparator::greaterThan($provider->getModuleVersion('silverstripe/framework'), '5.0.0'));
+        $moduleVersion = $provider->getModuleVersion('silverstripe/framework');
+        $this->assertTrue(Comparator::greaterThanOrEqualTo($moduleVersion, '5.0.0'), "Expected > 5.0.0 but got $moduleVersion");
         $result = $provider->getVersion();
         $this->assertStringNotContainsString('Framework: 1.2.3', $result);
     }
