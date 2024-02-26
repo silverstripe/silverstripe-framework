@@ -188,7 +188,7 @@ class VersionProvider
     {
         $versions = [];
         foreach ($modules as $module) {
-            $versions[$module] = \Composer\InstalledVersions::getPrettyVersion($module);
+            $versions[$module] = InstalledVersions::getPrettyVersion($module);
         }
         return $versions;
     }
