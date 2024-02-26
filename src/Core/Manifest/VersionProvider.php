@@ -146,8 +146,8 @@ class VersionProvider
      *   cwp/cwp-core => ['CWP', '4.4.4']
      * ]
      *
-     * @param array<string,mixed> $modules
-     * @return array<string,mixed>
+     * @param array<string,array<int,string>> $modules
+     * @return array<string,array<int,string>>
      */
     private function filterModules(array $modules)
     {
