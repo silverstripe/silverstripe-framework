@@ -7,6 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Config\Config;
 
 /**
  * @uses DBField::scaffoldFormField()
@@ -76,8 +77,18 @@ class FormScaffolder
             $mainTab->setTitle(_t(__CLASS__ . '.TABMAIN', 'Main'));
         }
 
+        // Let's get fields by extension
+        $allFields = $this->obj->config()->get('db');
+        $extensionFields = [];
+        foreach ($this->obj->getExtensionInstances() as $extensionInstance) {
+            $dbFields = Config::inst()->get($extensionInstance::class, 'db') ?? [];
+            $extensionFields = array_merge($extensionFields, $dbFields);
+        }
+        $baseFields = array_diff_key($allFields, $extensionFields);
+        $orderedFields = array_merge($baseFields, $extensionFields);
+
         // Add logical fields directly specified in db config
-        foreach ($this->obj->config()->get('db') as $fieldName => $fieldType) {
+        foreach ($orderedFields as $fieldName => $fieldType) {
             // Skip restricted fields
             if ($this->restrictFields && !in_array($fieldName, $this->restrictFields ?? [])) {
                 continue;
