@@ -23,6 +23,7 @@
     ],
     "require": {
         "php": "^8.1",
+        "composer-runtime-api": "^2.0",
         "composer/installers": "^2.2",
         "guzzlehttp/guzzle": "^7.5.0",
         "guzzlehttp/psr7": "^2.4.0",
@@ -60,6 +61,7 @@
         "ext-xml": "*"
     },
     "require-dev": {
+        "composer/semver": "^3.4",
         "phpunit/phpunit": "^9.6",
         "silverstripe/versioned": "^3",
         "squizlabs/php_codesniffer": "^3.7",
