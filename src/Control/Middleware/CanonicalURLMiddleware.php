@@ -81,6 +81,8 @@ class CanonicalURLMiddleware implements HTTPMiddleware
      * @var array|bool
      */
     protected $enabledEnvs = [
+        CoreKernel::DEV,
+        CoreKernel::TEST,
         CoreKernel::LIVE
     ];
 
