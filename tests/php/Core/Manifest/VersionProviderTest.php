@@ -65,7 +65,7 @@ class VersionProviderTest extends SapphireTest
     public function testGetModuleVersionFromComposer()
     {
         Config::modify()->set(VersionProvider::class, 'modules', [
-            'silverstripe/siteconfig' => 'SiteConfig',
+            'silverstripe/config' => 'Config',
             'silverstripe/framework' => 'Framework',
         ]);
 
@@ -77,17 +77,20 @@ class VersionProviderTest extends SapphireTest
     public function testGetVersion()
     {
         Config::modify()->set(VersionProvider::class, 'modules', [
-            'silverstripe/siteconfig' => 'SiteConfig',
+            'silverstripe/config' => 'Config',
             'silverstripe/framework' => 'Framework'
         ]);
         $result = $this->getProvider()->getVersion();
-        $this->assertStringNotContainsString('SiteConfig: ', $result);
+        $this->assertStringNotContainsString('Config: ', $result);
         $this->assertStringContainsString('Framework: ', $result);
         $this->assertStringNotContainsString(', ', $result);
     }
 
     public function testGetModuleVersion()
     {
+        if (!class_exists(VersionParser::class)) {
+            $this->markTestSkipped('This test requires composer/semver to be installed');
+        }
         $provider = $this->getProvider();
         Config::modify()->set(VersionProvider::class, 'modules', [
             'silverstripe/framework' => 'Framework',
