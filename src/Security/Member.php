@@ -520,13 +520,11 @@ class Member extends DataObject
 
         // If the algorithm or salt is not available, it means we are operating
         // on legacy account with unhashed password. Do not hash the string.
-        if (!$this->PasswordEncryption) {
+        if (!$this->PasswordEncryption || !$this->Salt) {
             return $string;
         }
 
-        // We assume we have PasswordEncryption and Salt available here.
         $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
-
         return $e->encrypt($string, $this->Salt);
     }
 
