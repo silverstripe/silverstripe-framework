@@ -465,7 +465,7 @@ class HTTPRequest implements ArrayAccess
      * @static
      * @param string $fileData
      * @param string $fileName
-     * @param string $mimeType
+     * @param string|null $mimeType
      * @return HTTPResponse
      */
     public static function send_file($fileData, $fileName, $mimeType = null)
