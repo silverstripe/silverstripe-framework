@@ -46,7 +46,7 @@ trait FileUploadReceiver
     /**
      * Parent data record. Will be inferred from parent form or controller if blank.
      *
-     * @var DataObject
+     * @var ?DataObject
      */
     protected $record;
 
@@ -78,7 +78,7 @@ trait FileUploadReceiver
      * Get the record to use as "Parent" for uploaded Files (eg a Page with a has_one to File) If none is set, it will
      * use Form->getRecord() or Form->Controller()->data()
      *
-     * @return DataObject
+     * @return ?DataObject
      */
     public function getRecord()
     {

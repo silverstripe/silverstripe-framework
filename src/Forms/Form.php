@@ -371,7 +371,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Helper to get current request for this form
      *
-     * @return HTTPRequest
+     * @return HTTPRequest|null
      */
     protected function getRequest()
     {
@@ -426,7 +426,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Return any ValidationResult instance stored for this object
      *
-     * @return ValidationResult The ValidationResult object stored in the session
+     * @return ValidationResult|null The ValidationResult object stored in the session
      */
     public function getSessionValidationResult()
     {
@@ -1612,7 +1612,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Return the default button that should be clicked when another one isn't
      * available.
      *
-     * @return FormAction
+     * @return FormAction|null
      */
     public function defaultAction()
     {
