@@ -1480,7 +1480,7 @@ class Form extends ViewableData implements HasRequestHandler
      * It will make use of setCastedField() to do this.
      *
      * @param DataObjectInterface $dataObject The object to save data into
-     * @param FieldList $fieldList An optional list of fields to process.  This can be useful when you have a
+     * @param array<string>|null $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
      */
     public function saveInto(DataObjectInterface $dataObject, $fieldList = null)
