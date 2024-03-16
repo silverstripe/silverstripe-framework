@@ -12,27 +12,6 @@ class NumericFieldTest extends SapphireTest
     protected $usesDatabase = false;
 
     /**
-     * In some cases and locales, validation expects non-breaking spaces.
-     * This homogenises narrow and regular NBSPs to a regular space character
-     *
-     * Duplicates non-public NumericField::clean method
-     *
-     * @param  string $input
-     * @return string The input value, with all non-breaking spaces replaced with spaces
-     */
-    protected function clean($input)
-    {
-        return str_replace(
-            [
-                html_entity_decode('&nbsp;', 0, 'UTF-8'),
-                html_entity_decode('&#8239;', 0, 'UTF-8'), // narrow non-breaking space
-            ],
-            ' ',
-            trim($input ?? '')
-        );
-    }
-
-    /**
      * Test that data loaded in via Form::loadDataFrom(DataObject) will populate the field correctly,
      * and can format the database value appropriately for the frontend
      *
@@ -64,8 +43,8 @@ class NumericFieldTest extends SapphireTest
 
         // Test expected formatted value
         $this->assertEquals(
-            $this->clean($output),
-            $this->clean($field->Value()),
+            (string) $output,
+            $field->Value(),
             "Expected $input to be formatted as $output in locale $locale"
         );
 
@@ -92,11 +71,11 @@ class NumericFieldTest extends SapphireTest
             ['nl_NL', null, '12.1', '12,1'],
             ['nl_NL', 1, '14000.5', "14.000,5"],
             // fr
-            ['fr_FR', 0, '13000', "13 000"],
+            ['fr_FR', 0, '13000', "13 000"], // With a narrow non breaking space
             ['fr_FR', 0, '15', '15'],
             ['fr_FR', null, '12.0', '12,0'],
             ['fr_FR', null, '12.1', '12,1'],
-            ['fr_FR', 1, '14000.5', "14 000,5"],
+            ['fr_FR', 1, '14000.5', "14 000,5"], // With a narrow non breaking space
             // us
             ['en_US', 0, '13000', "13,000"],
             ['en_US', 0, '15', '15'],
@@ -175,15 +154,15 @@ class NumericFieldTest extends SapphireTest
             ['nl_NL', 1, '15,000.5', false],
 
             // fr
-            ['fr_FR', 0, '13000', 13000, '13 000'],
+            ['fr_FR', 0, '13000', 13000, '13 000'], // With a narrow non breaking space
             ['fr_FR', 2, '12,00', 12.0],
             ['fr_FR', 2, '12.00', false],
-            ['fr_FR', 1, '11 000', 11000, '11 000,0'],
-            ['fr_FR', 0, '11.000', 11000, '11 000'],
+            ['fr_FR', 1, '11 000', 11000, '11 000,0'], // With a narrow non breaking space
+            ['fr_FR', 0, '11.000', 11000, '11 000'], // With a narrow non breaking space
             ['fr_FR', null, '11,000', 11.000, '11,0'],
-            ['fr_FR', 1, '15 000,5', 15000.5],
+            ['fr_FR', 1, '15 000,5', 15000.5, '15 000,5'], // With a narrow non breaking space
             ['fr_FR', 1, '15 000.5', false],
-            ['fr_FR', 1, '15.000,5', 15000.5, '15 000,5'],
+            ['fr_FR', 1, '15.000,5', 15000.5, '15 000,5'], // With a narrow non breaking space
             ['fr_FR', 1, '15,000.5', false],
             // us
             ['en_US', 0, '13000', 13000, '13,000'],
@@ -260,8 +239,8 @@ class NumericFieldTest extends SapphireTest
             $cleanedInput = $submittedValue;
         }
         $this->assertEquals(
-            $this->clean($cleanedInput),
-            $this->clean($field->Value()),
+            $cleanedInput,
+            $field->Value(),
             "Expected input $submittedValue to be cleaned up as $cleanedInput in locale $locale"
         );
     }
