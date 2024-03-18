@@ -370,7 +370,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Helper to get current request for this form
      *
-     * @return HTTPRequest
+     * @return HTTPRequest|null
      */
     protected function getRequest()
     {
@@ -425,7 +425,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Return any ValidationResult instance stored for this object
      *
-     * @return ValidationResult The ValidationResult object stored in the session
+     * @return ValidationResult|null The ValidationResult object stored in the session
      */
     public function getSessionValidationResult()
     {
@@ -1479,7 +1479,7 @@ class Form extends ViewableData implements HasRequestHandler
      * It will make use of setCastedField() to do this.
      *
      * @param ViewableData&DataObjectInterface $dataObject The object to save data into
-     * @param FieldList $fieldList An optional list of fields to process.  This can be useful when you have a
+     * @param array<string>|null $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
      */
     public function saveInto(DataObjectInterface $dataObject, $fieldList = null)
@@ -1610,7 +1610,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Return the default button that should be clicked when another one isn't
      * available.
      *
-     * @return FormAction
+     * @return FormAction|null
      */
     public function defaultAction()
     {

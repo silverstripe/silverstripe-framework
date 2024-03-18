@@ -356,7 +356,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * Raw SQL is not accepted, only actual field names can be passed
      *
-     * @param string|array $args
+     * @param string|array|null $args
      * @example $list = $list->sort('Name'); // default ASC sorting
      * @example $list = $list->sort('"Name"'); // field names can have double quotes around them
      * @example $list = $list->sort('Name ASC, Age DESC');
