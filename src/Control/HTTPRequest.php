@@ -463,9 +463,9 @@ class HTTPRequest implements ArrayAccess
      * <code>$this->setResponse(HTTPRequest::send_file('the content', 'filename.txt'));</code>
      *
      * @static
-     * @param $fileData
-     * @param $fileName
-     * @param null $mimeType
+     * @param string $fileData
+     * @param string $fileName
+     * @param string|null $mimeType
      * @return HTTPResponse
      */
     public static function send_file($fileData, $fileName, $mimeType = null)
@@ -497,7 +497,7 @@ class HTTPRequest implements ArrayAccess
      * The pattern can optionally start with an HTTP method and a space.  For example, "POST $Controller/$Action".
      * This is used to define a rule that only matches on a specific HTTP method.
      *
-     * @param $pattern
+     * @param string $pattern
      * @param bool $shiftOnSuccess
      * @return array|bool
      */
@@ -679,7 +679,7 @@ class HTTPRequest implements ArrayAccess
     }
 
     /**
-     * @param $params
+     * @param array $params
      * @return HTTPRequest $this
      */
     public function setRouteParams($params)
@@ -805,7 +805,7 @@ class HTTPRequest implements ArrayAccess
      * Sets the client IP address which originated this request.
      * Use setIPFromHeaderValue if assigning from header value.
      *
-     * @param $ip string
+     * @param string $ip
      * @return $this
      */
     public function setIP($ip)
