@@ -234,8 +234,8 @@ class Group extends DataObject
                     ) . '<br />' .
                     sprintf(
                         '<a href="%s" class="add-role">%s</a>',
-                        SecurityAdmin::singleton()->Link('show/root#Root_Roles'),
-                        _t('SilverStripe\\Security\\Group.RolesAddEditLink', 'Manage roles')
+                        SecurityAdmin::singleton()->Link('roles'),
+                        _t(__CLASS__ . '.RolesAddEditLink', 'Manage roles')
                     ) .
                     "</p>"
                 )
