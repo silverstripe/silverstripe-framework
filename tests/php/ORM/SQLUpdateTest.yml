@@ -10,3 +10,7 @@ SilverStripe\ORM\Tests\SQLUpdateTest\TestChild:
     Title: 'Object 3'
     Description: 'Description 3'
     Details: 'Details 3'
+SilverStripe\ORM\Tests\SQLUpdateTest\TestOther:
+  test3:
+    Title: 'Object 2 mirror'
+    Description: 'Description 2'

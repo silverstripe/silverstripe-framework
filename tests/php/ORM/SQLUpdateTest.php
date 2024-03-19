@@ -12,12 +12,12 @@ use SilverStripe\Dev\SapphireTest;
  */
 class SQLUpdateTest extends SapphireTest
 {
-
     public static $fixture_file = 'SQLUpdateTest.yml';
 
     protected static $extra_dataobjects = [
         SQLUpdateTest\TestBase::class,
-        SQLUpdateTest\TestChild::class
+        SQLUpdateTest\TestChild::class,
+        SQLUpdateTest\TestOther::class,
     ];
 
     public function testEmptyQueryReturnsNothing()
@@ -45,5 +45,26 @@ class SQLUpdateTest extends SapphireTest
         // Check item updated
         $item = DataObject::get_one(SQLUpdateTest\TestBase::class, ['"Title"' => 'Object 1']);
         $this->assertEquals('Description 1a', $item->Description);
+    }
+
+    public function testUpdateWithJoin()
+    {
+        $query = SQLUpdate::create()
+                ->setTable('"SQLUpdateTestBase"')
+                ->assign('"SQLUpdateTestBase"."Description"', 'Description 2a')
+                ->addInnerJoin('SQLUpdateTestOther', '"SQLUpdateTestOther"."Description" = "SQLUpdateTestBase"."Description"');
+        $sql = $query->sql($parameters);
+
+        // Check SQL
+        $this->assertSQLEquals('UPDATE "SQLUpdateTestBase" INNER JOIN "SQLUpdateTestOther" ON "SQLUpdateTestOther"."Description" = "SQLUpdateTestBase"."Description" SET "SQLUpdateTestBase"."Description" = ?', $sql);
+        $this->assertEquals(['Description 2a'], $parameters);
+
+        // Check affected rows
+        $query->execute();
+        $this->assertEquals(1, DB::affected_rows());
+
+        // Check item updated
+        $item = DataObject::get_one(SQLUpdateTest\TestBase::class, ['"Title"' => 'Object 2']);
+        $this->assertEquals('Description 2a', $item->Description);
     }
 }
