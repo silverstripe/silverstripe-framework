@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Connect;
 
 use InvalidArgumentException;
+use LogicException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
@@ -400,8 +401,8 @@ class DBQueryBuilder
      */
     public function buildUpdateFragment(SQLUpdate $query, array &$parameters)
     {
-        $table = $query->getTable();
-        $text = "UPDATE $table";
+        $nl = $this->getSeparator();
+        $text = "{$nl}UPDATE " . $this->getTableWithJoins($query, $parameters);
 
         // Join SET components together, considering parameters
         $parts = [];
@@ -427,26 +428,13 @@ class DBQueryBuilder
      */
     public function buildFromFragment(SQLConditionalExpression $query, array &$parameters)
     {
-        $from = $query->getJoins($joinParameters);
-        $tables = [];
-        $joins = [];
-
-        // E.g. a naive "Select 1" statement is valid SQL
-        if (empty($from)) {
+        $from = $this->getTableWithJoins($query, $parameters, true);
+        if ($from === '') {
             return '';
         }
 
-        foreach ($from as $joinOrTable) {
-            if (preg_match(SQLConditionalExpression::getJoinRegex(), $joinOrTable)) {
-                $joins[] = $joinOrTable;
-            } else {
-                $tables[] = $joinOrTable;
-            }
-        }
-
-        $parameters = array_merge($parameters, $joinParameters);
         $nl = $this->getSeparator();
-        return  "{$nl}FROM " . implode(', ', $tables) . ' ' . implode(' ', $joins);
+        return "{$nl}FROM " . $from;
     }
 
     /**
@@ -600,5 +588,35 @@ class DBQueryBuilder
             $clause .= " OFFSET {$limit['start']}";
         }
         return $clause;
+    }
+
+    /**
+     * Get the name of the table (along with any join clauses) the query will operate on.
+     */
+    private function getTableWithJoins(SQLConditionalExpression $query, array &$parameters, bool $allowEmpty = false): string
+    {
+        $from = $query->getJoins($joinParameters);
+        $tables = [];
+        $joins = [];
+
+        // E.g. a naive "Select 1" statement is valid SQL
+        if (empty($from)) {
+            if ($allowEmpty) {
+                return '';
+            } else {
+                throw new LogicException('Query have at least one table to operate on.');
+            }
+        }
+
+        foreach ($from as $joinOrTable) {
+            if (preg_match(SQLConditionalExpression::getJoinRegex(), $joinOrTable)) {
+                $joins[] = $joinOrTable;
+            } else {
+                $tables[] = $joinOrTable;
+            }
+        }
+
+        $parameters = array_merge($parameters, $joinParameters);
+        return  implode(', ', $tables) . ' ' . implode(' ', $joins);
     }
 }
