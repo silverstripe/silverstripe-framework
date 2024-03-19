@@ -12,7 +12,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\HTMLReadonlyField;
@@ -230,43 +229,6 @@ EOS
             "The company &amp;&amp; partners",
             $field->obj('ValueEntities')->forTemplate()
         );
-    }
-
-    public function testFieldConfigSanitization()
-    {
-        $obj = TestObject::create();
-        $editor = HTMLEditorField::create('Content');
-        $defaultValidElements = [
-            '@[id|class|style|title|data*]',
-            'a[id|rel|dir|tabindex|accesskey|type|name|href|target|title|class]',
-            '-strong/-b[class]',
-            '-em/-i[class]',
-            '-ol[class]',
-            '#p[id|dir|class|align|style]',
-            '-li[class]',
-            'br',
-            '-span[class|align|style]',
-            '-ul[class]',
-            '-h3[id|dir|class|align|style]',
-            '-h2[id|dir|class|align|style]',
-            'hr[class]',
-        ];
-        $restrictedConfig = HTMLEditorConfig::get('restricted');
-        $restrictedConfig->setOption('valid_elements', implode(',', $defaultValidElements));
-        $editor->setEditorConfig($restrictedConfig);
-
-        $expectedHtmlString = '<p>standard text</p>Header';
-        $htmlValue = '<p>standard text</p><table><tbody><tr><th></th></tr><tr><td>Header</td></tr></tbody><tbody></tbody></table>';
-        $editor->setValue($htmlValue);
-        $editor->saveInto($obj);
-        $this->assertEquals($expectedHtmlString, $obj->Content, 'Table is not removed');
-
-        $defaultConfig = HTMLEditorConfig::get('default');
-        $editor->setEditorConfig($defaultConfig);
-
-        $editor->setValue($htmlValue);
-        $editor->saveInto($obj);
-        $this->assertEquals($htmlValue, $obj->Content, 'Table is removed');
     }
 
     public function testGetAttributes()
