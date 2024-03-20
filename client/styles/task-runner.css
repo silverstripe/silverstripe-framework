@@ -1,58 +1,119 @@
 /* This file is manually maintained, it is not generated from SCSS sources */
 
+/**
+ * holder of tasks
+ */
 .task {
-  padding-top: 20px;
+  padding: 15px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.task__panel {
-  padding: 0 15px 15px 15px;
-}
-
-@media (min-width:992px) {
-  .task__list {
-    columns: 2;
-    column-gap: 100px;
-  }
-}
-
+/**
+ * one task item
+ */
 .task__item {
-  padding-bottom: 30px;
+  padding: 7.5px 0;
 }
 
-@media (min-width:992px) {
-  .task__item {
-    display: inline-block;
-    width: 100%;
-  }
+/**
+ * add transition
+ */
+.task__item * {
+  transition: all 0.3s ease;
 }
 
-.task__title {
-  color: #303b4d;
-  margin: 0 0 8px;
+/**
+ * task title
+ */
+.task__item > div:first-child  h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
 }
 
-.task__description {
-  color: #43536d;
-  margin-bottom: 12px;
-}
-
-.task__button {
+/**
+ * task button
+ */
+.task__item > div:last-child .task__button {
   border: 1px solid #ced5e1;
   border-radius: 5px;
   background-color: #f6f7f8;
   color: #43536d;
   display: inline-block;
-  margin-right: 10px;
   padding: 6px 10px;
   text-decoration: none;
-  transition: background-color 0.2s;
 }
 
-.task__button:last-child {
-  margin-right: 0;
+/**
+ * task button hover
+ */
+.task__item > div:last-child .task__button:hover {
+  background-color: #1a5a93;
+  color: #fff;
 }
 
-.task__button:focus,
-.task__button:hover {
-  background-color: #ced5e1;
+/**
+ * desktop view
+ */
+@media (min-width:992px) {
+
+
+  /**
+   * add grid
+   */
+  .task__item {
+    padding: 0;
+    border-top: 1px solid #004e7f;
+
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  /**
+   * show current row
+   */
+  .task__item:hover {
+    background-color: #eee;
+  }
+
+
+  /**
+   * add padding to make it work better with BG colour
+   */
+  .task__item > div {
+    padding: 15px;
+  }
+
+  /**
+   * set first col
+   */
+  .task__item > div:first-child {
+    grid-column: span 5;
+  }
+
+  /**
+   * hide description
+   */
+  .task__item > div:first-child  div.task__description {
+    color: #999;
+    font-size: 0.7rem;
+  }
+
+  /**
+   * show description on hover
+   */
+  .task__item:hover  > div:first-child div.task__description {
+    font-size: 1rem;
+    color: #000;
+  }
+
+  /**
+   * outline button to right
+   */
+  .task__item > div:last-child{
+    text-align: right;
+  }
+
 }
