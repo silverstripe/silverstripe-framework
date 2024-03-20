@@ -112,7 +112,7 @@ class SSViewer implements Flushable
      * @config
      * @var bool
      */
-    private static $rewrite_hash_links = true;
+    private static $rewrite_hash_links = false;
 
     /**
      * Overridden value of rewrite_hash_links config
