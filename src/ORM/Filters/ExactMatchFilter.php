@@ -53,7 +53,7 @@ class ExactMatchFilter extends SearchFilter
     {
         $this->model = $query->applyRelation($this->relation);
         $field = $this->getDbName();
-        $value = $this->getValue();
+        $value = $this->getDbFormattedValue();
 
         // Null comparison check
         if ($value === null) {
@@ -77,7 +77,7 @@ class ExactMatchFilter extends SearchFilter
         }
 
         $clause = [$where => $value];
-        
+
         return $this->aggregate ?
             $this->applyAggregate($query, $clause) :
             $query->where($clause);

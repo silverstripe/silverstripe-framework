@@ -801,6 +801,20 @@ class DataListTest extends SapphireTest
         $this->assertEquals(0, $list->count());
     }
 
+    public function testFilterByBoolean() {
+        $list = Player::get();
+        $list = $list->filter(['IsRetired' => false]);
+        $this->assertEquals(3, $list->count(), 'Some records have IsRetired set to false');
+        $allFalse = $list->column('IsRetired');
+        $this->assertNotContains(true, $allFalse, 'Filter false should filter all true values');
+
+        $list = Player::get();
+        $list = $list->filter(['IsRetired' => true]);
+        $this->assertEquals(1, $list->count(), 'One records has IsRetired set to true');
+        $allTrue = $list->column('IsRetired');
+        $this->assertNotContains(false, $allTrue, 'Filter true should filter all false values');
+    }
+
     /**
      *  $list->filter(['Name'=>'bob, 'Age'=>21]); // bob with the age 21
      */
