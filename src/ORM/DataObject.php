@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
@@ -3625,6 +3626,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             throw new LogicException(
                 "Class " . static::class . " not loaded by manifest, or no database table configured"
             );
+        }
+
+        // Sanity check for fields that conflict with parent
+        foreach (array_keys($fields) as $fieldName) {
+            if (method_exists(get_parent_class($this), $fieldName) && !($this instanceof TestOnly)) {
+                throw new LogicException(sprintf(
+                    '\'%s\' has a $db field named "%s" that coincides with an inherited method of the same name.',
+                    static::class,
+                    $fieldName
+                ));
+            }
         }
 
         if ($fields) {
