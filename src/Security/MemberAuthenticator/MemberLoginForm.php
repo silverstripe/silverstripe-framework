@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
+use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\CheckboxField;
@@ -87,7 +88,13 @@ class MemberLoginForm extends BaseLoginForm
         if ($checkCurrentUser && Security::getCurrentUser()) {
             // @todo find a more elegant way to handle this
             $logoutAction = Security::logout_url();
+            $adminPath = Director::absoluteURL(AdminRootController::config()->get('url_base'), true);
+            $adminText = _t(
+                'SilverStripe\\Security\\Member.TODO_ADD_TO_YML',
+                'Continue to admin area'
+            );
             $fields = FieldList::create(
+                LiteralField::create('AdminLink', '<a href="' . $adminPath . '">' . $adminText . '</a>'),
                 HiddenField::create('AuthenticationMethod', null, $this->getAuthenticatorClass(), $this)
             );
             $actions = FieldList::create(
