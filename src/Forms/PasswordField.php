@@ -84,8 +84,8 @@ class PasswordField extends TextField
         }
 
         return array_merge(
-            parent::getAttributes(),
-            $attributes
+            $attributes,
+            parent::getAttributes()
         );
     }
 
