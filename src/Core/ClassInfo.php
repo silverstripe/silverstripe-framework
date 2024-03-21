@@ -4,12 +4,14 @@ namespace SilverStripe\Core;
 
 use Exception;
 use ReflectionClass;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Control\Director;
-use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Control\Director;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\View\ViewableData;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\ClassLoader;
 
 /**
  * Provides introspection information about the class tree.
@@ -20,14 +22,6 @@ use SilverStripe\View\ViewableData;
  */
 class ClassInfo
 {
-    /**
-     * Cache for {@link hasTable()}
-     *
-     * @internal
-     * @var array
-     */
-    private static $_cache_all_tables = [];
-
     /**
      * @internal
      * @var array Cache for {@link ancestry()}.
@@ -87,16 +81,25 @@ class ClassInfo
      */
     public static function hasTable($tableName)
     {
-        // Cache the list of all table names to reduce on DB traffic
-        if (empty(self::$_cache_all_tables) && DB::is_active()) {
-            self::$_cache_all_tables = DB::get_schema()->tableList();
+        $cache = self::getCache();
+        $cacheKey = 'tableList';
+        $tableList = $cache->get($cacheKey) ?? [];
+        if (empty($tableList) && DB::is_active()) {
+            $tableList = DB::get_schema()->tableList();
+            // Cache the list of all table names to reduce on DB traffic
+            $cache->set($cacheKey, $tableList);
         }
-        return !empty(self::$_cache_all_tables[strtolower($tableName)]);
+        return !empty($tableList[strtolower($tableName)]);
+    }
+
+    private static function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.ClassInfo');
     }
 
     public static function reset_db_cache()
     {
-        self::$_cache_all_tables = null;
+        self::getCache()->clear();
         self::$_cache_ancestry = [];
     }
 
@@ -415,7 +418,8 @@ class ClassInfo
             $tokenName = is_array($token) ? $token[0] : $token;
 
             // Get the class name
-            if (\defined('T_NAME_QUALIFIED') && is_array($token) &&
+            if (
+                \defined('T_NAME_QUALIFIED') && is_array($token) &&
                 ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
             ) {
                 // PHP 8 exposes the FQCN as a single T_NAME_QUALIFIED or T_NAME_FULLY_QUALIFIED token
@@ -433,7 +437,7 @@ class ClassInfo
                 // Found another section of a namespaced class
                 $class .= $token[1];
                 $lastTokenWasNSSeparator = false;
-            // Get arguments
+                // Get arguments
             } elseif (is_array($token)) {
                 switch ($token[0]) {
                     case T_CONSTANT_ENCAPSED_STRING:
@@ -456,7 +460,7 @@ class ClassInfo
                         break;
 
                     case T_DNUMBER:
-                        $result = (double)$token[1];
+                        $result = (float)$token[1];
                         break;
 
                     case T_LNUMBER:
