@@ -418,8 +418,7 @@ class ClassInfo
             $tokenName = is_array($token) ? $token[0] : $token;
 
             // Get the class name
-            if (
-                \defined('T_NAME_QUALIFIED') && is_array($token) &&
+            if (\defined('T_NAME_QUALIFIED') && is_array($token) &&
                 ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
             ) {
                 // PHP 8 exposes the FQCN as a single T_NAME_QUALIFIED or T_NAME_FULLY_QUALIFIED token
@@ -437,7 +436,7 @@ class ClassInfo
                 // Found another section of a namespaced class
                 $class .= $token[1];
                 $lastTokenWasNSSeparator = false;
-                // Get arguments
+            // Get arguments
             } elseif (is_array($token)) {
                 switch ($token[0]) {
                     case T_CONSTANT_ENCAPSED_STRING:
@@ -460,7 +459,7 @@ class ClassInfo
                         break;
 
                     case T_DNUMBER:
-                        $result = (float)$token[1];
+                        $result = (double)$token[1];
                         break;
 
                     case T_LNUMBER:
