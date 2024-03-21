@@ -82,7 +82,8 @@ class ClassInfo
     public static function hasTable($tableName)
     {
         $cache = self::getCache();
-        $cacheKey = 'tableList';
+        $configData = serialize(DB::getConfig());
+        $cacheKey = 'tableList_' . md5($configData);
         $tableList = $cache->get($cacheKey) ?? [];
         if (empty($tableList) && DB::is_active()) {
             $tableList = DB::get_schema()->tableList();
