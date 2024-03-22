@@ -4,14 +4,15 @@ namespace SilverStripe\Core;
 
 use Exception;
 use ReflectionClass;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Control\Director;
-use Psr\SimpleCache\CacheInterface;
-use SilverStripe\View\ViewableData;
 use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\View\ViewableData;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Provides introspection information about the class tree.
@@ -20,7 +21,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
  * class introspection heavily and without the caching it creates an unfortunate
  * performance hit.
  */
-class ClassInfo
+class ClassInfo implements Flushable
 {
     /**
      * @internal
@@ -76,6 +77,8 @@ class ClassInfo
     }
 
     /**
+     * Cached call to see if the table exists in the DB.
+     * For live queries, use DBSchemaManager::hasTable.
      * @param string $tableName
      * @return bool
      */
@@ -102,6 +105,11 @@ class ClassInfo
     {
         self::getCache()->clear();
         self::$_cache_ancestry = [];
+    }
+
+    public static function flush()
+    {
+        self::reset_db_cache();
     }
 
     /**
