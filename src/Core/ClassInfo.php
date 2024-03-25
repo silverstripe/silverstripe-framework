@@ -10,6 +10,9 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\ViewableData;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Provides introspection information about the class tree.
@@ -18,16 +21,8 @@ use SilverStripe\View\ViewableData;
  * class introspection heavily and without the caching it creates an unfortunate
  * performance hit.
  */
-class ClassInfo
+class ClassInfo implements Flushable
 {
-    /**
-     * Cache for {@link hasTable()}
-     *
-     * @internal
-     * @var array
-     */
-    private static $_cache_all_tables = [];
-
     /**
      * @internal
      * @var array Cache for {@link ancestry()}.
@@ -82,22 +77,39 @@ class ClassInfo
     }
 
     /**
+     * Cached call to see if the table exists in the DB.
+     * For live queries, use DBSchemaManager::hasTable.
      * @param string $tableName
      * @return bool
      */
     public static function hasTable($tableName)
     {
-        // Cache the list of all table names to reduce on DB traffic
-        if (empty(self::$_cache_all_tables) && DB::is_active()) {
-            self::$_cache_all_tables = DB::get_schema()->tableList();
+        $cache = self::getCache();
+        $configData = serialize(DB::getConfig());
+        $cacheKey = 'tableList_' . md5($configData);
+        $tableList = $cache->get($cacheKey) ?? [];
+        if (empty($tableList) && DB::is_active()) {
+            $tableList = DB::get_schema()->tableList();
+            // Cache the list of all table names to reduce on DB traffic
+            $cache->set($cacheKey, $tableList);
         }
-        return !empty(self::$_cache_all_tables[strtolower($tableName)]);
+        return !empty($tableList[strtolower($tableName)]);
+    }
+
+    private static function getCache(): CacheInterface
+    {
+        return Injector::inst()->get(CacheInterface::class . '.ClassInfo');
     }
 
     public static function reset_db_cache()
     {
-        self::$_cache_all_tables = null;
+        self::getCache()->clear();
         self::$_cache_ancestry = [];
+    }
+
+    public static function flush()
+    {
+        self::reset_db_cache();
     }
 
     /**
