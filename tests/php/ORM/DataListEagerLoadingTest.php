@@ -1588,4 +1588,72 @@ class DataListEagerLoadingTest extends SapphireTest
             }
         }
     }
+
+    public function testHasOneMultipleAppearance(): void
+    {
+        $this->provideHasOneObjects();
+        $this->validateMultipleAppearance(6, EagerLoadObject::get());
+        $this->validateMultipleAppearance(2, EagerLoadObject::get()->eagerLoad('HasOneEagerLoadObject'));
+    }
+
+    protected function validateMultipleAppearance(int $expected, DataList $list): void
+    {
+        try {
+            $this->startCountingSelectQueries();
+
+            /** @var EagerLoadObject $item */
+            foreach ($list as $item) {
+                $item->HasOneEagerLoadObject()->Title;
+            }
+
+            $this->assertSame($expected, $this->stopCountingSelectQueries());
+        } finally {
+            $this->resetShowQueries();
+        }
+    }
+
+    protected function provideHasOneObjects(): void
+    {
+        $subA = new HasOneEagerLoadObject();
+        $subA->Title = 'A';
+        $subA->write();
+
+        $subB = new HasOneEagerLoadObject();
+        $subB->Title = 'B';
+        $subB->write();
+
+        $subC = new HasOneEagerLoadObject();
+        $subC->Title = 'C';
+        $subC->write();
+
+        $baseA = new EagerLoadObject();
+        $baseA->Title = 'A';
+        $baseA->HasOneEagerLoadObjectID = $subA->ID;
+        $baseA->write();
+
+        $baseB = new EagerLoadObject();
+        $baseB->Title = 'B';
+        $baseB->HasOneEagerLoadObjectID = $subA->ID;
+        $baseB->write();
+
+        $baseC = new EagerLoadObject();
+        $baseC->Title = 'C';
+        $baseC->HasOneEagerLoadObjectID = $subB->ID;
+        $baseC->write();
+
+        $baseD = new EagerLoadObject();
+        $baseD->Title = 'D';
+        $baseD->HasOneEagerLoadObjectID = $subC->ID;
+        $baseD->write();
+
+        $baseE = new EagerLoadObject();
+        $baseE->Title = 'E';
+        $baseE->HasOneEagerLoadObjectID = $subB->ID;
+        $baseE->write();
+
+        $baseF = new EagerLoadObject();
+        $baseF->Title = 'F';
+        $baseF->HasOneEagerLoadObjectID = 0;
+        $baseF->write();
+    }
 }
