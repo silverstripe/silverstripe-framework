@@ -252,6 +252,14 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
+     * Called after the database is created, but before fixtures are loaded.
+     */
+    public function onBeforeLoadFixtures(): void
+    {
+        // no-op - this method is intended to be overridden by subclasses.
+    }
+
+    /**
      * Setup  the test.
      * Always sets up in order:
      *  - Reset php state
