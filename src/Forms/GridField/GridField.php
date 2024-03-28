@@ -319,6 +319,10 @@ class GridField extends FormField
             $this->config->addComponent(GridState_Component::create());
         }
 
+        if (!$this->config->getComponentByType(GridFieldVersionTag::class)) {
+            $this->config->addComponent(GridFieldVersionTag::create());
+        }
+
         return $this;
     }
 

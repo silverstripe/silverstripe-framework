@@ -24,6 +24,7 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridState;
 use SilverStripe\Forms\GridField\GridState_Component;
 use SilverStripe\Forms\GridField\GridState_Data;
+use SilverStripe\Forms\GridField\GridFieldVersionTag;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Component;
@@ -96,6 +97,7 @@ class GridFieldTest extends SapphireTest
             new GridFieldPageCount('toolbar-header-right'),
             $pagination = new GridFieldPaginator(),
             new GridState_Component(),
+            new GridFieldVersionTag(),
         ]);
         $sort->setThrowExceptionOnBadDataType(false);
         $filter->setThrowExceptionOnBadDataType(false);
@@ -122,6 +124,7 @@ class GridFieldTest extends SapphireTest
             0 => new GridFieldSortableHeader,
             1 => new GridFieldDataColumns,
             2 => new GridState_Component,
+            3 => new GridFieldVersionTag,
             ]
         );
 

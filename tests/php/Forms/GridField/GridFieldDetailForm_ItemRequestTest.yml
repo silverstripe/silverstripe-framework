@@ -1,0 +1,8 @@
+SilverStripe\Forms\Tests\GridField\GridFieldTest\Team:
+  team1:
+    Name: Team 1
+    City: Cologne
+SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader:
+  cheerleader1_team1:
+    Name: Heather
+    Team: =>SilverStripe\Forms\Tests\GridField\GridFieldTest\Team.team1
