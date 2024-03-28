@@ -38,7 +38,7 @@ class ControllerExtension extends Extension
      * @param string     $name
      * @param array      $context
      */
-    public function updateFormActions(FieldList &$actions, Controller $controller, $name, $context = [])
+    protected function updateFormActions(FieldList &$actions, Controller $controller, $name, $context = [])
     {
         // Add publish button if record is versioned
         if (empty($context['Record'])) {
@@ -59,7 +59,7 @@ class ControllerExtension extends Extension
      * @param string     $name
      * @param array      $context
      */
-    public function updateFormFields(FieldList &$fields, Controller $controller, $name, $context = [])
+    protected function updateFormFields(FieldList &$fields, Controller $controller, $name, $context = [])
     {
         // Add preview link
         if (empty($context['Record'])) {

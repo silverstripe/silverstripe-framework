@@ -15,7 +15,7 @@ class ExtendTest2 extends Extension implements TestOnly
         $this->constructorArgs = func_get_args();
     }
 
-    public function extendableMethod($argument = null)
+    protected function extendableMethod($argument = null)
     {
         $args = implode(',', array_filter(func_get_args()));
         return "ExtendTest2($args)";

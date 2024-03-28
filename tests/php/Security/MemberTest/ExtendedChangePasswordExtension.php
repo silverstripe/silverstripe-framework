@@ -11,7 +11,7 @@ use SilverStripe\ORM\ValidationResult;
  */
 class ExtendedChangePasswordExtension extends DataExtension implements TestOnly
 {
-    public function onBeforeChangePassword($newPassword, $valid)
+    protected function onBeforeChangePassword($newPassword, $valid)
     {
         $valid->addError('Extension failed to handle Mary changing her password');
     }

@@ -13,7 +13,7 @@ class ArticleExtension extends DataExtension implements TestOnly
         'ExtendedField' => 'Varchar'
     ];
 
-    public function updateCMSFields(FieldList $fields)
+    protected function updateCMSFields(FieldList $fields)
     {
         $fields->addFieldToTab(
             'Root.Main',

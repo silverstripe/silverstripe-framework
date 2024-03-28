@@ -8,17 +8,17 @@ use SilverStripe\ORM\DataExtension;
 class Extension1 extends DataExtension implements TestOnly
 {
 
-    public function canOne($member = null)
+    protected function canOne($member = null)
     {
         return true;
     }
 
-    public function canTwo($member = null)
+    protected function canTwo($member = null)
     {
         return false;
     }
 
-    public function canThree($member = null)
+    protected function canThree($member = null)
     {
     }
 }

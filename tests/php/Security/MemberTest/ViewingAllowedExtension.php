@@ -8,7 +8,7 @@ use SilverStripe\ORM\DataExtension;
 class ViewingAllowedExtension extends DataExtension implements TestOnly
 {
 
-    public function canView($member = null)
+    protected function canView($member = null)
     {
         return true;
     }

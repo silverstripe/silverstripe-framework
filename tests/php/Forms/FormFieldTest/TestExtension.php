@@ -8,7 +8,7 @@ use SilverStripe\Dev\TestOnly;
 class TestExtension extends Extension implements TestOnly
 {
 
-    public function updateAttributes(&$attrs)
+    protected function updateAttributes(&$attrs)
     {
         $attrs['extended'] = true;
     }

@@ -25,7 +25,7 @@ class ControllerExtension extends Extension implements TestOnly
     /**
      * Called whenever there is an HTTP error
      */
-    public function onBeforeHTTPError()
+    protected function onBeforeHTTPError()
     {
         self::$called_error = true;
     }
@@ -33,7 +33,7 @@ class ControllerExtension extends Extension implements TestOnly
     /**
      * Called whenever there is an 404 error
      */
-    public function onBeforeHTTPError404()
+    protected function onBeforeHTTPError404()
     {
         self::$called_404_error = true;
     }
