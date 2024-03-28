@@ -64,7 +64,13 @@ class DBInt extends DBField
     {
         return sprintf('%d', $this->value);
     }
-
+    
+    public function SpelledOut()
+    {
+        $v = $this->prepValueForDB($this->value);
+        return (new NumberFormatter(i18n::get_locale(), NumberFormatter::SPELLOUT))->format($v);
+    }
+    
     public function scaffoldFormField($title = null, $params = null)
     {
         return NumericField::create($this->name, $title);
