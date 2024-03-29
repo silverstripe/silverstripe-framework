@@ -390,7 +390,7 @@ class Member extends DataObject
     /**
      * Returns the default {@link PasswordValidator}
      *
-     * @return PasswordValidator
+     * @return PasswordValidator|null
      */
     public static function password_validator()
     {
