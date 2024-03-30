@@ -46,3 +46,8 @@ SilverStripe\Core\Injector\Injector:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:
       namespace: 'VersionProvider'
+  Psr\SimpleCache\CacheInterface.ClassInfo:
+    factory: SilverStripe\Core\Cache\CacheFactory
+    constructor:
+      namespace: "ClassInfo"
+      disable-container: true
