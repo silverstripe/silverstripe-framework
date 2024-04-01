@@ -63,6 +63,7 @@ class FixtureTestState implements TestState
                     $instance->augmentDefaultRecords();
                 }
             }
+            $test->onBeforeLoadFixtures();
             $this->loadFixtures($test);
         }
 
