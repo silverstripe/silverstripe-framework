@@ -1724,7 +1724,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Delete this data object.
      * $this->onBeforeDelete() gets called.
-     * Note that in Versioned objects, both Stage and Live will be deleted.
+     * Note that in Versioned objects only the record from the draft table will be deleted
+     * If you also wish to delete the record from the live table then use Versioned::doArchive() instead
      * @uses DataExtension::augmentSQL()
      */
     public function delete()
