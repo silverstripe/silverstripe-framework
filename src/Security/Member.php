@@ -391,7 +391,7 @@ class Member extends DataObject
     /**
      * Returns the default {@link PasswordValidator}
      *
-     * @return PasswordValidator
+     * @return PasswordValidator|null
      */
     public static function password_validator()
     {
@@ -576,8 +576,7 @@ class Member extends DataObject
      * @param string $hash The hash key
      * @param bool $login Should the member be logged in?
      *
-     * @return Member the matching member, if valid
-     * @return Member
+     * @return Member|null the matching member, if valid or null
      */
     public static function member_from_autologinhash($hash, $login = false)
     {
@@ -597,7 +596,7 @@ class Member extends DataObject
      * Find a member record with the given TempIDHash value
      *
      * @param string $tempid
-     * @return Member
+     * @return Member|null the matching member, if valid or null
      */
     public static function member_from_tempid($tempid)
     {
