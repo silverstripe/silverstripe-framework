@@ -179,8 +179,8 @@ class DatetimeField extends TextField
      * Assumes the value is in the defined {@link $timezone} (if one is set),
      * and adjusts for server timezone.
      *
-     * @param string $datetime
-     * @return string The formatted date, or null if not a valid date
+     * @param ?string $datetime
+     * @return ?string The formatted date, or null if not a valid date
      */
     public function frontendToInternal($datetime)
     {
@@ -192,6 +192,16 @@ class DatetimeField extends TextField
 
         // Try to parse time with seconds
         $timestamp = $fromFormatter->parse($datetime);
+
+        // Retry with expanded value
+        if ($timestamp === false) {
+            $zeroFormat = $fromFormatter->format(strtotime(date('Y-01-01 00:00:00')));
+            $expectedLength = strlen($zeroFormat);
+            if (strlen($datetime) < $expectedLength) {
+                $expandedValue = $datetime . substr($zeroFormat, strlen($datetime));
+                $timestamp = $fromFormatter->parse($expandedValue);
+            }
+        }
 
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
