@@ -513,8 +513,8 @@ class DateField extends TextField
      * Convert frontend date to the internal representation (ISO 8601).
      * The frontend date is also in ISO 8601 when $html5=true.
      *
-     * @param string $date
-     * @return string The formatted date, or null if not a valid date
+     * @param ?string $date
+     * @return ?string The formatted date, or null if not a valid date
      */
     protected function frontendToInternal($date)
     {
@@ -524,6 +524,17 @@ class DateField extends TextField
         $fromFormatter = $this->getFrontendFormatter();
         $toFormatter = $this->getInternalFormatter();
         $timestamp = $fromFormatter->parse($date);
+
+        // Retry with expanded value
+        if ($timestamp === false) {
+            $zeroFormat = $fromFormatter->format(strtotime(date('Y-01-01 00:00:00')));
+            $expectedLength = strlen($zeroFormat);
+            if (strlen($date) < $expectedLength) {
+                $expandedValue = $date . substr($zeroFormat, strlen($date));
+                $timestamp = $fromFormatter->parse($expandedValue);
+            }
+        }
+        
         if ($timestamp === false) {
             return null;
         }
