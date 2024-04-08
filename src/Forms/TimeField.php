@@ -388,8 +388,8 @@ class TimeField extends TextField
      * Convert frontend time to the internal representation (ISO 8601).
      * The frontend time is also in ISO 8601 when $html5=true.
      *
-     * @param string $time
-     * @return string The formatted time, or null if not a valid time
+     * @param ?string $time
+     * @return ?string The formatted time, or null if not a valid time
      */
     protected function frontendToInternal($time)
     {
@@ -400,6 +400,16 @@ class TimeField extends TextField
         $toFormatter = $this->getInternalFormatter();
         $timestamp = $fromFormatter->parse($time);
 
+        // Retry with expanded value
+        if ($timestamp === false) {
+            $zeroFormat = $fromFormatter->format(strtotime(date('Y-01-01 00:00:00')));
+            $expectedLength = strlen($zeroFormat);
+            if (strlen($time) < $expectedLength) {
+                $expandedValue = $time . substr($zeroFormat, strlen($time));
+                $timestamp = $fromFormatter->parse($expandedValue);
+            }
+        }
+        
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
         if ($timestamp === false && $this->getHTML5()) {
