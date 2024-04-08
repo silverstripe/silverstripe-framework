@@ -90,7 +90,7 @@ class DBDate extends DBField
     /**
      * Returns the standard localised medium date
      *
-     * @return string
+     * @return ?string
      */
     public function Nice()
     {
@@ -263,7 +263,7 @@ class DBDate extends DBField
      *
      * @param string $format Format code string. See https://unicode-org.github.io/icu/userguide/format_parse/datetime
      * @param string $locale Custom locale to use (add to signature in 5.0)
-     * @return string The date in the requested format
+     * @return ?string The date in the requested format
      */
     public function Format($format)
     {
