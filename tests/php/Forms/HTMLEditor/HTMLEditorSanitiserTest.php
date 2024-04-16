@@ -120,7 +120,31 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 'object[data]',
                 '<object data=javascript:alert()>',
                 '<object></object>',
-                'Object with dangerous content in data attribute is completely removed'
+                'Object with dangerous javascript content in data attribute is completely removed'
+            ],
+            [
+                'object[data]',
+                '<object data="javascript:alert()">',
+                '<object></object>',
+                'Object with dangerous javascript content in data attribute with quotes is completely removed'
+            ],
+            [
+                'object[data]',
+                '<object data="data:text/html;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                '<object></object>',
+                'Object with dangerous html content in data attribute is completely removed'
+            ],
+            [
+                'object[data]',
+                '<object data="' . implode("\n", str_split(' DATA:TEXT/HTML;')) . 'base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                '<object></object>',
+                'Object with split upper-case dangerous html content in data attribute is completely removed'
+            ],
+            [
+                'object[data]',
+                '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4="></object>',
+                'Object with safe xml content in data attribute is retained'
             ],
             [
                 'img[src]',
