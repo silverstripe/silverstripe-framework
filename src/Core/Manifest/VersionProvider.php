@@ -189,6 +189,9 @@ class VersionProvider
     {
         $versions = [];
         foreach ($modules as $module) {
+            if (!InstalledVersions::isInstalled($module)) {
+                continue;
+            }
             $versions[$module] = InstalledVersions::getPrettyVersion($module);
         }
         return $versions;

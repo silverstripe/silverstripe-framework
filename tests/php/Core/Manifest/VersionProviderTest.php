@@ -102,6 +102,27 @@ class VersionProviderTest extends SapphireTest
         $this->assertStringNotContainsString('Framework: 1.2.3', $result);
     }
 
+    public function testGetModuleVersionWhenPackageMayNotBeInstalled()
+    {
+        if (!class_exists(VersionParser::class)) {
+            $this->markTestSkipped('This test requires composer/semver to be installed');
+        }
+        $provider = $this->getProvider();
+        // VersionProvider::getModuleVersion() will loop over the modules defined in the "modules" config value, which
+        // may sometimes include packages that are optional (e.g. recipe-core). This tests that the version can still
+        // be found even if non-existent modules are encountered
+        Config::modify()->set(VersionProvider::class, 'modules', [
+            'this/module/cannot/possibly/exist' => 'Oopsies',
+            'silverstripe/framework' => 'Framework',
+            'silverstripe/another-module-that-does-not-exist' => 'Sapphire',
+        ]);
+        $moduleVersion = $provider->getModuleVersion('silverstripe/framework');
+        $parser = new VersionParser();
+        $this->assertIsString($parser->normalize($moduleVersion), "Expected a valid semver but got $moduleVersion");
+        $result = $provider->getVersion();
+        $this->assertStringNotContainsString('Framework: 1.2.3', $result);
+    }
+
     private function clearCache()
     {
         $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider');
