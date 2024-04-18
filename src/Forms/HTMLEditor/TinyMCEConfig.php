@@ -250,13 +250,11 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     private static $image_size_presets = [ ];
 
     /**
-     * TinyMCE JS settings
+     * Default TinyMCE JS options which apply to all new configurations.
      *
      * @link https://www.tiny.cloud/docs/tinymce/6/tinydrive-getting-started/#configure-the-required-tinymce-options
-     *
-     * @var array
      */
-    protected $settings = [
+    private static array $default_options = [
         'fix_list_elements' => true, // https://www.tiny.cloud/docs/tinymce/6/content-filtering/#fix_list_elements
         'formats' => [
             'alignleft' => [
@@ -327,6 +325,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         . "dd[id|class|title|dir],dl[id|class|title|dir],dt[id|class|title|dir],"
     ];
 
+    protected $settings = [];
+
     /**
      * Holder list of enabled plugins
      *
@@ -350,6 +350,11 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @var string
      */
     protected $theme = 'silver';
+
+    public function __construct()
+    {
+        $this->settings = static::config()->get('default_options');
+    }
 
     /**
      * Get the theme
