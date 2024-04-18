@@ -1519,6 +1519,13 @@ class DataObjectTest extends SapphireTest
         $this->assertTrue($validatedObject->isInDB(), "Validated object was not saved to database");
     }
 
+    public function testWriteSkipValidation(): void
+    {
+        $validatedObject = new DataObjectTest\ValidatedObject();
+        $validatedObject->write(skipValidation: true);
+        $this->assertTrue($validatedObject->isInDB(), "Validated object was not saved to database");
+    }
+
     public function testSubclassCreation()
     {
         /* Creating a new object of a subclass should set the ClassName field correctly */

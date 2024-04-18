@@ -33,7 +33,7 @@ class TreeNode extends DataObject implements TestOnly
         'Children' => self::class,
     ];
 
-    public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false)
+    public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false, bool $skipValidation = false)
     {
         // Force the component to fetch its Parent and Cycle relation so we have components to recursively write
         $this->Parent;
@@ -42,7 +42,7 @@ class TreeNode extends DataObject implements TestOnly
         // Count a write attempts
         $this->WriteCount++;
 
-        return parent::write($showDebug, $forceInsert, $forceWrite, $writeComponents);
+        return parent::write($showDebug, $forceInsert, $forceWrite, $writeComponents, $skipValidation);
     }
 
     /**
