@@ -1129,18 +1129,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 // $parentData represents a record in this DataList
                 $hasOneID = $parentData[$hasOneIDField];
                 $fetchedIDs[] = $hasOneID;
-                $addTo[$hasOneID] = $parentData['ID'];
+                $addTo[$hasOneID][] = $parentData['ID'];
             } elseif ($parentData instanceof DataObject) {
                 // $parentData represents another has_one record
                 $hasOneID = $parentData->$hasOneIDField;
                 $fetchedIDs[] = $hasOneID;
-                $addTo[$hasOneID] = $parentData;
+                $addTo[$hasOneID][] = $parentData;
             } elseif ($parentData instanceof EagerLoadedList) {
                 // $parentData represents a has_many or many_many relation
                 foreach ($parentData->getRows() as $parentRow) {
                     $hasOneID = $parentRow[$hasOneIDField];
                     $fetchedIDs[] = $hasOneID;
-                    $addTo[$hasOneID] = ['ID' => $parentRow['ID'], 'list' => $parentData];
+                    $addTo[$hasOneID][] = ['ID' => $parentRow['ID'], 'list' => $parentData];
                 }
             } else {
                 throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
@@ -1151,10 +1151,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
         // Add each fetched record to the appropriate place
         foreach ($fetchedRecords as $fetched) {
-            $fetchedID = $fetched->ID;
-            $added = false;
-            foreach ($addTo as $matchID => $addHere) {
-                if ($matchID === $fetchedID) {
+            if (isset($addTo[$fetched->ID])) {
+                foreach ($addTo[$fetched->ID] as $addHere) {
                     if ($addHere instanceof DataObject) {
                         $addHere->setEagerLoadedData($relationName, $fetched);
                     } elseif (is_array($addHere)) {
@@ -1162,11 +1160,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                     } else {
                         $this->eagerLoadedData[$relationChain][$addHere][$relationName] = $fetched;
                     }
-                    $added = true;
-                    break;
                 }
-            }
-            if (!$added) {
+            } else {
                 throw new LogicException("Couldn't find parent for record $fetchedID on $relationType relation $relationName");
             }
         }
