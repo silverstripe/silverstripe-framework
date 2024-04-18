@@ -287,10 +287,6 @@ class HTMLEditorSanitiser
      */
     public function sanitise(HTMLValue $html)
     {
-        if (!$this->elements && !$this->elementPatterns) {
-            return;
-        }
-
         $linkRelValue = $this->config()->get('link_rel_value');
         $doc = $html->getDocument();
 

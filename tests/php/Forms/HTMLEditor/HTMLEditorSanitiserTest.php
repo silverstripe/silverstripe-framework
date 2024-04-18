@@ -160,4 +160,21 @@ class HTMLEditorSanitiserTest extends FunctionalTest
             $this->assertEquals($output, $htmlValue->getContent(), "{$desc} - using config type: {$configType}");
         }
     }
+
+    /**
+     * Ensure that when there are no valid elements at all for a configuration set,
+     * nothing is allowed.
+     */
+    public function testSanitiseNoValidElements(): void
+    {
+        $config = HTMLEditorConfig::get('htmleditorsanitisertest');
+        $config->setOptions(['valid_elements' => '']);
+        $config->setOptions(['extended_valid_elements' => '']);
+        $sanitiser = new HtmlEditorSanitiser($config);
+
+        $htmlValue = HTMLValue::create('<p>standard text</p><table><tbody><tr><th><a href="some-link">text</a></th></tr><tr><td>Header</td></tr></tbody></table>');
+        $sanitiser->sanitise($htmlValue);
+
+        $this->assertEquals('standard texttextHeader', $htmlValue->getContent());
+    }
 }
