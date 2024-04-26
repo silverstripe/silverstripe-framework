@@ -678,4 +678,15 @@ class RequestHandler extends ViewableData
         $url = Director::absoluteURL((string) $url);
         return $this->redirect($url);
     }
+
+    /**
+     * Convert an array of data to JSON and wrap it in an HTML tag as pjax is used and jQuery will parse this
+     * as an element on the client side in LeftAndMain.js handleAjaxResponse()
+     * The attribute type="application/json" denotes this is a data block and won't be processed by a browser
+     * https://html.spec.whatwg.org/#the-script-element
+     */
+    protected function prepareDataForPjax(array $data): string
+    {
+        return '<script type="application/json">' . json_encode($data) . '</script>';
+    }
 }

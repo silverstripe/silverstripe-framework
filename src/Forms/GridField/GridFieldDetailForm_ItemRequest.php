@@ -7,6 +7,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\ClassInfo;
@@ -170,7 +171,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         ])->renderWith($this->getTemplates());
 
         if ($request->isAjax()) {
-            return $return;
+            return $this->getResponseNegotiator($return)->respond($request);
         } else {
             // If not requested by ajax, we need to render it within the controller context+template
             return $controller->customise([
@@ -298,6 +299,23 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             }
 
             $form->Backlink = $this->getBackLink();
+
+            // Ensure the correct validation response is returned for AJAX requests
+            $form->setValidationResponseCallback(function (ValidationResult $errors) use ($form) {
+                $request = $this->getRequest();
+                if (!$request->isAjax()) {
+                    return null;
+                }
+                $negotiator = $this->getResponseNegotiator($form->forTemplate());
+                return $negotiator->respond($request, [
+                    'ValidationResult' => function () use ($errors) {
+                        return $this->prepareDataForPjax([
+                            'isValid' => $errors->isValid(),
+                            'messages' => $errors->getMessages()
+                        ]);
+                    }
+                ]);
+            });
         }
 
         $cb = $this->component->getItemEditFormCallback();
@@ -944,5 +962,37 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             return $this->record->i18n_singular_name();
         }
         return ClassInfo::shortName($this->record);
+    }
+
+    /**
+     * Get Pjax response negotiator so form submission mirrors other form submission in the CMS.
+     * See LeftAndMain::getResponseNegotiator()
+     */
+    private function getResponseNegotiator(DBHTMLText $renderedForm): PjaxResponseNegotiator
+    {
+        return new PjaxResponseNegotiator([
+            'default' => function () use ($renderedForm) {
+                return $renderedForm;
+            },
+            'Content' => function () use ($renderedForm) {
+                return $renderedForm;
+            },
+            'CurrentForm' => function () use ($renderedForm) {
+                return $renderedForm;
+            },
+            'Breadcrumbs' => function () {
+                return $this->renderWith([
+                    'type' => 'Includes',
+                    'SilverStripe\\Admin\\CMSBreadcrumbs'
+                ]);
+            },
+            'ValidationResult' => function () {
+                // Assume valid by default, mirroring LeftAndMain's response negotiator
+                return $this->prepareDataForPjax([
+                    'isValid' => true,
+                    'messages' => '',
+                ]);
+            }
+        ], $this->getToplevelController()->getResponse());
     }
 }
