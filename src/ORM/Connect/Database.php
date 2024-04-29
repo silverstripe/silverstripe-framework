@@ -11,6 +11,7 @@ use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLInsert;
 use BadMethodCallException;
 use Exception;
+use SilverStripe\Core\Extensible;
 use SilverStripe\Dev\Backtrace;
 
 /**
@@ -19,6 +20,7 @@ use SilverStripe\Dev\Backtrace;
  */
 abstract class Database
 {
+    use Extensible;
 
     const PARTIAL_QUERY = 'partial_query';
     const FULL_QUERY = 'full_query';
@@ -386,6 +388,7 @@ abstract class Database
      */
     public function manipulate($manipulation)
     {
+        $this->extend('onBeforeManipulate', $manipulation);
         if (empty($manipulation)) {
             return;
         }
