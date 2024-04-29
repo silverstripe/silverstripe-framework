@@ -104,6 +104,9 @@ class RequiredFields extends Validator
                 $fieldName = $fieldName->getName();
             } else {
                 $formField = $fields->dataFieldByName($fieldName);
+                if (is_null($formField)) {
+                    $formField = $fields->dataFieldByName($fieldName . 'ID');
+                }
             }
 
             // submitted data for file upload fields come back as an array
