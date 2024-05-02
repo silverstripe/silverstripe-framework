@@ -113,7 +113,12 @@ class RequiredFields extends Validator
                 if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
                     $error = true;
                 } else {
-                    $error = (count($value ?? [])) ? false : true;
+                    if (is_a($formField, HasOneRelationFieldInterface::class) && isset($value['value'])) {
+                        $stringValue = (string) $value['value'];
+                        $error = in_array($stringValue, ['0', '']);
+                    } else {
+                        $error = (count($value ?? [])) ? false : true;
+                    }
                 }
             } else {
                 $stringValue = (string) $value;
