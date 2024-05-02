@@ -105,9 +105,9 @@ trait AttributesHTML
 
         $attributes = (array) $attributes;
 
-        $attributes = array_filter($attributes ?? [], function ($v) {
-            return ($v || $v === 0 || $v === '0');
-        });
+        $attributes = array_filter($attributes ?? [], function ($v, $k) {
+            return ($k === 'alt' || $v || $v === 0 || $v === '0');
+        }, ARRAY_FILTER_USE_BOTH);
 
         if ($exclude) {
             $attributes = array_diff_key(
