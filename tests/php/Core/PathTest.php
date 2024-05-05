@@ -48,6 +48,8 @@ class PathTest extends SapphireTest
             [['\\', '', '/root', '/', ' ', '/', '\\'], '/root'],
             // join blocks of paths
             [['/root/dir', 'another/path\\to/join'], '/root/dir/another/path/to/join'],
+            // Double dot is fine if it's not attempting directory traversal
+            [['/root/my..name/', 'another/path\\to/join'], '/root/my..name/another/path/to/join'],
         ];
 
         // Rewrite tests for other filesystems (output arg only)
@@ -79,6 +81,8 @@ class PathTest extends SapphireTest
             [['/base', '../passwd'], 'Can not collapse relative folders'],
             [['/base/../', 'passwd/path'], 'Can not collapse relative folders'],
             [['../', 'passwd/path'], 'Can not collapse relative folders'],
+            [['..', 'passwd/path'], 'Can not collapse relative folders'],
+            [['base/..', 'passwd/path'], 'Can not collapse relative folders'],
         ];
     }
 
