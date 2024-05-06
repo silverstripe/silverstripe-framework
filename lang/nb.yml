@@ -11,6 +11,7 @@ nb:
     HELLO: Hei
     TEXT1: 'Her er din'
     TEXT2: 'lenke for nullstilling av passord'
+    TEXT3: for
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ugyldig forespørsel'
   SilverStripe\Forms\CheckboxSetField_ss:
@@ -38,6 +39,7 @@ nb:
     VALIDATIONPASSWORDSDONTMATCH: 'Passordene stemmer ikke overens'
     VALIDATIONPASSWORDSNOTEMPTY: 'Passord kan ikke være tomt'
     VALIDATIONSTRONGPASSWORD: 'Passord må inneholde minst ett siffer og en bokstav'
+    VALIDATOR: Validator
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
   SilverStripe\Forms\FormField:
     NONE: ingen
@@ -86,7 +88,7 @@ nb:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Er tom'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
+    VALIDATION: "'{value}' er ikke et tall, kun tall aksepteres i dette feltet"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   SilverStripe\ORM\DataObject:
@@ -144,6 +146,8 @@ nb:
     IP: IP-adresse
     PLURALNAME: Innloggingsforsøk
     SINGULARNAME: Innloggingsforsøk
+    Status: Status
+    db_Status: Status
     has_one_Member: Medlem
   SilverStripe\Security\Member:
     ADDGROUP: 'Legg til en gruppe'

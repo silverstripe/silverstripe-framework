@@ -81,6 +81,7 @@ sl:
     Add: 'Dodaj {name}'
     CSVEXPORT: 'Izvozi kot CSV-datoteko'
     CSVIMPORT: 'Uvozi CSV'
+    Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Poišči
     LinkExisting: 'Poveži na'
@@ -139,7 +140,7 @@ sl:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Prazno polje'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
+    VALIDATION: "'{value}' ni številka. V to polje lahko vnesete samo številke."
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Vrednost za {name} ne sme presegati predpisanega števila znakov ({maxLength}).'
   SilverStripe\Forms\TimeField:
@@ -197,6 +198,8 @@ sl:
     ANY: Katerikoli
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Vnosov je preveč, da bi jih lahko ustrezno prikazali, zato je uporabljeno sistemsko polje. '
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Preveč ({count}) elementov v hierarhiji'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -291,6 +294,7 @@ sl:
     Status: Stanje
     db_EmailHashed: 'E-naslov je zgoščen'
     db_IP: 'Naslov IP'
+    db_Status: Status
     has_one_Member: Uporabnik
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj skupino'
@@ -396,6 +400,7 @@ sl:
     PREVPASSWORD: 'To geslo ste v preteklosti že uporabljali, izberite tako geslo, ki ga še niste.'
     TOOSHORT: 'Geslo je prekratko. Izberite geslo, ki je dolgo vsaj {minimum} znakov.'
   SilverStripe\Security\Permission:
+    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'Dostop do sistema za urejanje'
     CONTENT_CATEGORY: 'Nastavitve dovoljenj za upravljanje z vsebino'
     FULLADMINRIGHTS: 'Popolne administratorske pravice'
@@ -409,6 +414,7 @@ sl:
       two: '{count} dovoljenji'
     SINGULARNAME: Dovoljenje
     UserPermissionsIntro: 'Z dodelitvijo skupine uporabniku boste vplivali na nabor njegovih dovoljenj. Za pregled dovoljenj, ki jih ima posamezna skupina, preverite stran s podrobnejšimi nastavitvami za izbrano skupino.'
+    db_Arg: Arg
     db_Code: 'Šifra skupine'
     db_Type: Tip
     has_one_Group: Skupina

@@ -41,6 +41,7 @@ hr:
     TABMAIN: Osnovno
   SilverStripe\Forms\GridField\GridField:
     Add: 'Dodaj {name}'
+    Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Pronađi
     Print: Ispiši
@@ -117,6 +118,8 @@ hr:
   SilverStripe\Security\LoginAttempt:
     Email: 'Email adresa'
     IP: 'IP adresa'
+    Status: Status
+    db_Status: Status
     has_one_Member: Član
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupu'
@@ -129,6 +132,7 @@ hr:
     CONFIRMPASSWORD: 'Potvrdi lozinku'
     CURRENT_PASSWORD: 'Trenutna lozinka'
     EDIT_PASSWORD: 'Nova lozinka'
+    EMAIL: Email
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu lozinku, pokušajte ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
     FIRSTNAME: Ime
@@ -142,6 +146,7 @@ hr:
     SURNAME: Prezime
     YOUROLDPASSWORD: 'Stara lozinka'
     belongs_many_many_Groups: Grupe
+    db_Email: Email
     db_LockedOutUntil: 'Zaključano do'
     db_Password: Lozinka
     db_PasswordExpiry: 'Lozinka ističe'
@@ -152,6 +157,7 @@ hr:
     db_Password: Lozinka
     has_one_Member: Član
   SilverStripe\Security\Permission:
+    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS pristup'
     CONTENT_CATEGORY: 'Sadržajne dozvole'
     FULLADMINRIGHTS: 'Puna administrativna prava'

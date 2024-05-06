@@ -15,6 +15,7 @@ da:
     HELLO: Hej
     TEXT1: 'Her er din'
     TEXT2: 'link til at nulstille dit kodeord'
+    TEXT3: for
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ugyldig forespørgsel'
     REQUEST_ABORTED: 'Forespørgsel annulleret'
@@ -66,12 +67,15 @@ da:
     CSVIMPORT: 'Importer CSV'
     Filter: Filtrer
     FilterBy: 'Filtrer på'
+    Find: Find
     LinkExisting: 'Link eksisterende'
     NewRecord: 'Ny {type}'
     NoItemsFound: 'Ingen elementer fundet'
     PRINTEDAT: 'Printet d.'
     PRINTEDBY: 'Printet af'
+    PlaceHolder: 'Find {type}'
     PlaceHolderWithLabels: 'Find {type} på {name}'
+    Print: Print
     RelationSearch: Relationssøgning
     ResetFilter: Nulstil
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
@@ -105,7 +109,7 @@ da:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Er Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' er ikke et tal, kun tal accepteres i dette felt'
+    VALIDATION: "'{value}' er ikke et tal, kun tal accepteres i dette felt"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Indtats venligst et gyldigt tidsformat ({format})'
   SilverStripe\ORM\DataObject:
@@ -207,6 +211,8 @@ da:
       one: 'Et loginforsøg'
       other: '{count} loginforsøg'
     SINGULARNAME: 'Login forsøg'
+    Status: Status
+    db_Status: Status
     has_one_Member: Bruger
   SilverStripe\Security\Member:
     ADDGROUP: 'Tilføj gruppe'
@@ -219,6 +225,7 @@ da:
     CONFIRMPASSWORD: 'Bekræft kodeord'
     CURRENT_PASSWORD: 'Nuværende kodeord'
     EDIT_PASSWORD: 'Nyt kodeord'
+    EMAIL: Email
     EMPTYNEWPASSWORD: 'Det nye kodeord kan ikke være tom, prøv venligst igen'
     ENTEREMAIL: 'Indtast venligst en email adresse for at få et nulstillingslink.'
     ERRORLOCKEDOUT2: 'Din konto er blevet midlertidigt deaktiveret pga. for mange fejlslagne loginforsøg. Forsøg venligst igen om {count} minutter.'
@@ -244,6 +251,7 @@ da:
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende bruger #{id} med identisk identifikator ({name} = {value}))'
     YOUROLDPASSWORD: 'Dit gamle kodeord'
     belongs_many_many_Groups: Grupper
+    db_Email: Email
     db_Locale: 'Sprog i brugerfladen'
     db_LockedOutUntil: 'Låst ude indtil'
     db_Password: Kodeord
@@ -273,6 +281,7 @@ da:
     PREVPASSWORD: 'Du har tidligere brugt dette kodeord, vælg venligst et nyt kodeord'
     TOOSHORT: 'Kodeordet er for kort, det skal mindst være {minimum} eller flere tegn langt'
   SilverStripe\Security\Permission:
+    AdminGroup: Administrator
     CMS_ACCESS_CATEGORY: 'CMS Adgang'
     CONTENT_CATEGORY: Indholdsrettigheder
     FULLADMINRIGHTS: 'Fuld administrator rettighed'
@@ -284,6 +293,7 @@ da:
       other: '{count} rettigheder'
     SINGULARNAME: Rettighed
     UserPermissionsIntro: 'Tildeling af grupper til denne bruger, ændrer de rettigheder brugeren har. Se gruppe området for rettigheds detaljer på de individuelle grupper.'
+    db_Type: Type
     has_one_Group: Gruppe
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'tildelt til "{title}"'

@@ -1,6 +1,7 @@
 zh_CN:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: 尺寸
+    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
     HELLO: 嗨
@@ -20,8 +21,13 @@ zh_CN:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Delete: 删除
     Save: 保存
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: 页面
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\ORM\DataObject:
     PLURALNAME: 数据对象
     SINGULARNAME: 数据对象

@@ -1,6 +1,7 @@
 tr:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Boyutlar
+    EDIT: Edit
     EDITINFO: 'Dosyayı düzenle'
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
@@ -41,8 +42,13 @@ tr:
     Create: Oluştur
     Delete: Sil
     Save: Kaydet
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Sayfa
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Boş değer'
   SilverStripe\ORM\DataObject:

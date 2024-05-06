@@ -16,6 +16,8 @@ sk:
     TEXT1: 'Tu je váš'
     TEXT2: 'odkaz na reset hesla'
     TEXT3: pre
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
+    CONFIRMATION_NAME: '"{key}" GET parameter'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
     CONFIRMATION_DESCRIPTION: 'URL je: "{url}"'
     CONFIRMATION_NAME: 'URL je chránená'
@@ -25,9 +27,22 @@ sk:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Neplatná požiadavka'
     REQUEST_ABORTED: 'Požiadavka prerušená'
+  SilverStripe\Dev\DevBuildController:
+    CAN_DEV_BUILD_DESCRIPTION: 'Môže vykonať /dev/build'
+    CAN_DEV_BUILD_HELP: 'Môže vykonať príkaz build (/dev/build).'
+  SilverStripe\Dev\DevConfigController:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Môže vidieť /dev/config'
+    CAN_DEV_CONFIG_HELP: 'Môže zobraziť všetku konfiguráciu aplikácie (/dev/config).'
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Potvrďte potenciálne nebezpečnú operáciu'
     INFO_TITLE: 'Bezpečnostné potvrdenie'
+  SilverStripe\Dev\DevelopmentAdmin:
+    ALL_DEV_ADMIN_DESCRIPTION: 'Môže zobraziť a vykonať všetky koncové body /dev'
+    ALL_DEV_ADMIN_HELP: 'Môže zobraziť a vykonať všetky koncové body /dev'
+    PERMISSIONS_CATEGORY: 'Dev povolenia'
+  SilverStripe\Dev\TaskRunner:
+    BUILDTASK_CAN_RUN_DESCRIPTION: 'Môže zobraziť a vykonať všetky /dev/tasks.'
+    BUILDTASK_CAN_RUN_HELP: 'Môže zobraziť a vykonať všetky úlohy zostavenia (/dev/tasks). Toto môže byť stále prepísané individuálnymi oprávneniami pre zobrazenie úloh.'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Áno
@@ -78,6 +93,8 @@ sk:
   SilverStripe\Forms\GridField\GridField:
     Add: 'Pridať {name}'
     CSVEXPORT: 'Exportovať do CSV'
+    CSVIMPORT: 'Import CSV'
+    Filter: Filter
     FilterBy: 'Filtrovať podľa'
     Find: Vyhľadať
     LinkExisting: 'Prepojenie existujúcich'
@@ -90,6 +107,7 @@ sk:
     PlaceHolderWithLabels: 'Vyhľadať {type} podľa {name}'
     Print: Tlačiť
     RelationSearch: 'Vzťah hľadania'
+    ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
@@ -100,7 +118,7 @@ sk:
     Create: Vytvoriť
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
-    Deleted: 'Zmazané {type} {name}'
+    Deleted: 'Zmazané {type} "{name}"'
     Save: Uložiť
     Saved: 'Uložené {name} {link}'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
@@ -108,6 +126,8 @@ sk:
     NEW: 'Pridať nový záznam'
     NEXT: 'Prejsť na ďalší záznam'
     PREVIOUS: 'Prejsť na predchádzajúci záznam'
+    SAVEDUP: 'Úspešne uložené.'
+    SAVETOASTMESSAGE: '{type} "{title}" úspešne uložené.'
     ViewPermissionsFailure: 'Zdá sa, že nemáte potrebné oprávnenia na zobrazenie "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Editovať
@@ -135,7 +155,11 @@ sk:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Je Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: 'Zadaná hodnota ''{value}'' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!'
+    VALIDATION: "Zadaná hodnota '{value}' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!"
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Vyberte...
+    SELECT_OR_TYPE_TO_SEARCH: 'Vyberte alebo zadajte hľadaný výraz...'
+    TYPE_TO_SEARCH: Hľadať...
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Hodnota pre {name} nesmie prekročiť {maxLength} v dĺžke znakov'
   SilverStripe\Forms\TimeField:
@@ -195,6 +219,8 @@ sk:
     ANY: Každý
   SilverStripe\ORM\FieldType\DBForeignKey:
     DROPDOWN_THRESHOLD_FALLBACK_MESSAGE: 'Príliš veľa súvisiacich objektov; používa sa záložné pole'
+  SilverStripe\ORM\FieldType\DBString:
+    ELLIPSIS: …
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Príliš veľa potomkov ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
@@ -252,7 +278,9 @@ sk:
     ValidationIdentifierAlreadyExists: 'Skupina ({group}) už existuje s rovnakým {identifier}'
     db_AccessAllSubsites: 'Prístup na všetky podstránky'
     db_Code: Kód
+    db_DN: DN
     db_Description: Popis
+    db_GUID: GUID
     db_HtmlEditorConfig: 'Konfigurácia editora HTML'
     db_LastSynced: 'Posledná synchronizácia'
     db_Locked: Zamknuté
@@ -286,6 +314,7 @@ sk:
     SINGULARNAME: 'Pokus o prihlásenie'
     Status: Stav
     db_EmailHashed: 'Zamaskovaný E-mail'
+    db_IP: IP
     db_Status: Stav
     has_one_Member: Člen
   SilverStripe\Security\Member:
@@ -300,12 +329,13 @@ sk:
     CURRENT_PASSWORD: 'Terajšie heslo'
     EDIT_PASSWORD: 'Nové heslo'
     EMAIL: E-mail
+    EMAIL_FAILED: 'Vyskytla sa chyba pri pokuse o odoslanie e-mailu s odkazom na obnovenie hesla.'
     EMPTYNEWPASSWORD: 'Nové heslo nesmie byť prázdne, skúste to prosím znova'
     ENTEREMAIL: 'Prosím zadajte emailovú adresu pre zaslanie odkazu na resetovanie hesla.'
     ERRORLOCKEDOUT2: 'Váš účet bol dočasne zablokovaný, kvôli množstvu neúspešných pokusov o prihlásenie. Prosím skúste to znova za {count} minút.'
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
-    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
+    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím, skúste to znova.'
     FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
     KEEP_ME_SIGNED_IN: 'Zostať prihlásený na {count} dní'
@@ -341,6 +371,7 @@ sk:
     db_Email: E-mail
     db_FailedLoginCount: 'Počet neúspešných prihlásení'
     db_FirstName: Meno
+    db_GUID: GUID
     db_HasSkippedMFARegistration: 'Vynechal registráciu MFA'
     db_IsExpired: 'Platnosť vypršala'
     db_LastSynced: 'Posledná synchronizácia'
@@ -370,7 +401,7 @@ sk:
     BUTTONLOGIN: 'Pustite ma späť'
     BUTTONLOGOUT: 'Odhlásiť sa'
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
-    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
+    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím, skúste to znova.'
     NoPassword: 'Nie je tu heslo pre tohto člena.'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     AUTHENTICATORNAME: 'E-mail & heslo'
@@ -405,6 +436,7 @@ sk:
       other: '{count} Oprávnení'
     SINGULARNAME: Oprávnenie
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
+    db_Arg: Arg
     db_Code: Kód
     db_Type: Typ
     has_one_Group: Skupina

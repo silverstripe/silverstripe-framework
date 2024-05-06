@@ -1,6 +1,7 @@
 id:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensi
+    EDIT: Edit
     EDITINFO: 'Edit berkas ini'
     REMOVE: Buang
   SilverStripe\Control\ChangePasswordEmail_ss:
@@ -31,7 +32,7 @@ id:
     VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Pilih)
-    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
+    SOURCE_VALIDATION: "Mohon pilih nilai dari daftar yang ada. '{value}' bukan pilihan valid"
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Mohon isikan alamat email'
   SilverStripe\Forms\FileUploadReceiver:
@@ -64,10 +65,12 @@ id:
     PlaceHolderWithLabels: 'Cari {type} menurut {name}'
     Print: Cetak
     RelationSearch: 'Cari yang terkait'
+    ResetFilter: Reset
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Hapus
     DeletePermissionsFailure: 'Tidak ada ijin menghapus'
     EditPermissionsFailure: 'Tidak ada ijin membuka tautan'
+    UnlinkRelation: Unlink
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Batal
     Create: Buat
@@ -76,6 +79,8 @@ id:
     Deleted: '{type} {name} dihapus'
     Save: Simpan
     Saved: 'Simpan {name} {link}'
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: dari
     Page: Laman
@@ -88,7 +93,7 @@ id:
   SilverStripe\Forms\NullableField:
     IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
+    VALIDATION: "'{value}' bukan angka, hanya angka yang dapat diterima isian ini"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
   SilverStripe\Forms\UrlField:
@@ -158,6 +163,8 @@ id:
     IP: 'Alamat IP'
     PLURALNAME: 'Upaya Masuk'
     SINGULARNAME: 'Upaya Masuk'
+    Status: Status
+    db_Status: Status
     has_one_Member: Pengguna
   SilverStripe\Security\Member:
     ADDGROUP: 'Tambah kelompok'
@@ -169,6 +176,7 @@ id:
     CONFIRMNEWPASSWORD: 'Konfirmasi Penggantian Kata Kunci'
     CONFIRMPASSWORD: 'Konfirmasi Kata Kunci'
     EDIT_PASSWORD: 'Kata Kunci Baru'
+    EMAIL: Email
     EMPTYNEWPASSWORD: 'Kata kunci baru tidak boleh kosong, mohon coba lagi'
     ENTEREMAIL: 'Mohon isikan alamat email untuk menerima tautan penggantian kata kunci.'
     ERRORLOCKEDOUT2: 'Akun Anda untuk sementara diblok karena terlalu banyak upaya masuk yang gagal. Mohon coba lagi setelah {count} menit.'
@@ -189,6 +197,7 @@ id:
     ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
     YOUROLDPASSWORD: 'Kata kunci lama'
     belongs_many_many_Groups: Kelompok
+    db_Email: Email
     db_Locale: 'Lokal Antarmuka'
     db_LockedOutUntil: 'Kunci sampai'
     db_Password: 'Kata kunci'

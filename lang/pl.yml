@@ -139,7 +139,7 @@ pl:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Jest Pusty'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' nie jest liczbą, to pole przyjmuje tylko liczby'
+    VALIDATION: "'{value}' nie jest liczbą, to pole przyjmuje tylko liczby"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Wartość {name} nie może przekraczać {maxLength} znaków długości'
   SilverStripe\Forms\TimeField:
@@ -252,6 +252,7 @@ pl:
     Sort: 'Kolejność Sortowania'
     ValidationIdentifierAlreadyExists: 'Grupa ({group}) już istnieje z tym samym {identifier}'
     db_Description: Opis
+    db_Sort: Sortuj
     db_Title: Tytuł
     has_many_Groups: Grupy
     has_many_Permissions: Zezwolenia
@@ -268,6 +269,8 @@ pl:
       one: 'Próba logowania'
       other: 'Próby logowania {count}'
     SINGULARNAME: 'Próba logowania'
+    Status: Status
+    db_Status: Status
     has_one_Member: Użytkownik
   SilverStripe\Security\Member:
     ADDGROUP: 'Dodaj grupę'
@@ -311,6 +314,7 @@ pl:
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'
     belongs_many_many_Groups: Grupy
+    db_Email: Email
     db_FirstName: Imię
     db_Locale: 'Język Interfejsu'
     db_LockedOutUntil: 'Zablokowany do'
@@ -343,7 +347,8 @@ pl:
     PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
     TOOSHORT: 'Hasło jest za krótkie, proszę podać {minimum} znaków lub więcej'
   SilverStripe\Security\Permission:
-    CMS_ACCESS_CATEGORY: 'Dostęp do CMS''a'
+    AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: "Dostęp do CMS'a"
     CONTENT_CATEGORY: 'Uprawnienie edycji treści'
     FULLADMINRIGHTS: 'Pełne prawa administracyjne'
     FULLADMINRIGHTS_HELP: 'Zatwierdza i nadpisuje wszystkie istniejące uprawnienia'
@@ -410,6 +415,6 @@ pl:
     NOTERESETLINKINVALID: '<p>Link resetujący hasło wygasł lub jest nieprawidłowy.</p><p>Możesz poprosić o nowy <a href="{link1}">tutaj</a> lub zmień swoje hasło po <a href="{link2}">zalogowaniu się</a>.</p>'
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
     PASSWORDRESETSENTHEADER: 'Link resetowania hasła wysłany'
-    PASSWORDRESETSENTTEXT: 'Dziękujemy! Link resetujący hasło został wysłany do ''{email}'', o ile konto użytkownika dla takiego e-maila istnieje.'
+    PASSWORDRESETSENTTEXT: "Dziękujemy! Link resetujący hasło został wysłany do '{email}', o ile konto użytkownika dla takiego e-maila istnieje."
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Podczas ładowania pliku wystąpił problem.'

@@ -1,6 +1,7 @@
 pt_BR:
   SilverStripe\AssetAdmin\Forms\UploadField:
     Dimensions: Dimensões
+    EDIT: Edit
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
     HELLO: Olá
@@ -34,8 +35,13 @@ pt_BR:
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     Delete: Excluir
     Save: Salvar
+  SilverStripe\Forms\GridField\GridFieldEditButton:
+    EDIT: Edit
   SilverStripe\Forms\GridField\GridFieldPaginator:
     Page: Página
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Dados dos objetos'
     SINGULARNAME: 'Dado do objeto'

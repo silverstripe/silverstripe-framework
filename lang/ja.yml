@@ -9,7 +9,7 @@ ja:
     HELLO: こんにちわ！
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: こんにちわ！
-    TEXT1: 'ここ''貴方の'
+    TEXT1: "ここ'貴方の"
     TEXT2: パスワードリセットのリンク
     TEXT3: は
   SilverStripe\Control\RequestProcessor:
@@ -77,13 +77,16 @@ ja:
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: の
     Page: ページ
+    View: View
+  SilverStripe\Forms\GridField\GridFieldViewButton:
+    VIEW: View
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: 総計
     FIELDLABELCURRENCY: 通貨
   SilverStripe\Forms\NullableField:
     IsNullLabel: NULLである
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
+    VALIDATION: "'{value}'は数値ではありません。このフィールドには数値のみが入力できます。"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   SilverStripe\ORM\DataObject:
