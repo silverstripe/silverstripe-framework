@@ -517,14 +517,6 @@ abstract class DBField extends ViewableData implements DBIndexable
     }
 
     /**
-     * @return string
-     */
-    public function Nice()
-    {
-        return $this->XML();
-    }
-
-    /**
      * Returns the value to be set in the database to blank this field.
      * Usually it's a choice between null, 0, and ''
      *
