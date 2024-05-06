@@ -1162,7 +1162,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                     }
                 }
             } else {
-                throw new LogicException("Couldn't find parent for record $fetchedID on $relationType relation $relationName");
+                throw new LogicException("Couldn't find parent for record {$fetched->ID} on $relationType relation $relationName");
             }
         }
 
@@ -1321,17 +1321,21 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Get the join records so we can correctly identify which children belong to which parents
-        // This also holds extra fields data
-        $fetchedIDsAsString = implode(',', $fetchedIDs);
-        $joinRows = DB::query(
-            'SELECT * FROM "' . $joinTable
-            // Only get joins relevant for the parent list
-            . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
-            // Exclude any children that got filtered out
-            . ' AND ' . $childIDField . ' IN (' . $fetchedIDsAsString . ')'
-            // Respect sort order of fetched items
-            . ' ORDER BY FIELD(' . $childIDField . ', ' . $fetchedIDsAsString . ')'
-        );
+        // If there are no parents and no children, skip this to avoid an error (and to skip an unnecessary DB call)
+        // Note that $joinRows also holds extra fields data
+        $joinRows = [];
+        if (!empty($parentIDs) && !empty($fetchedIDs)) {
+            $fetchedIDsAsString = implode(',', $fetchedIDs);
+            $joinRows = DB::query(
+                'SELECT * FROM "' . $joinTable
+                // Only get joins relevant for the parent list
+                . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
+                // Exclude any children that got filtered out
+                . ' AND ' . $childIDField . ' IN (' . $fetchedIDsAsString . ')'
+                // Respect sort order of fetched items
+                . ' ORDER BY FIELD(' . $childIDField . ', ' . $fetchedIDsAsString . ')'
+            );
+        }
 
         // Store the children in an EagerLoadedList against the correct parent
         foreach ($joinRows as $row) {

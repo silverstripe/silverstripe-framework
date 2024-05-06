@@ -12,6 +12,7 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\ManyManyThroughList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneSubEagerLoadObject;
@@ -752,6 +753,59 @@ class DataListEagerLoadingTest extends SapphireTest
             $this->resetShowQueries();
         }
         return [$results, $selectCount];
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelationsEmpty
+     */
+    public function testEagerLoadRelationsEmpty(string $eagerLoadRelation, int $expectedNumQueries): void
+    {
+        EagerLoadObject::create(['Title' => 'test object'])->write();
+        $dataList = EagerLoadObject::get()->eagerLoad($eagerLoadRelation);
+        $this->startCountingSelectQueries();
+        foreach ($dataList as $record) {
+            $relation = $record->$eagerLoadRelation();
+            if ($relation instanceof SS_List) {
+                // The list should be an empty eagerloaded list
+                $this->assertInstanceOf(EagerLoadedList::class, $relation);
+                $this->assertCount(0, $relation);
+            } elseif ($relation !== null) {
+                // There should be no record here
+                $this->assertSame($relation->ID, 0);
+            }
+        }
+        $numQueries = $this->stopCountingSelectQueries();
+        $this->assertSame($expectedNumQueries, $numQueries);
+    }
+
+    public function provideEagerLoadRelationsEmpty(): array
+    {
+        return [
+            'has_one' => [
+                'eagerLoad' => 'HasOneEagerLoadObject',
+                'expectedNumQueries' => 2,
+            ],
+            'belongs_to' => [
+                'eagerLoad' => 'BelongsToEagerLoadObject',
+                'expectedNumQueries' => 2,
+            ],
+            'has_many' => [
+                'eagerLoad' => 'HasManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'many_many' => [
+                'eagerLoad' => 'ManyManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'many_many through' => [
+                'eagerLoad' => 'ManyManyThroughEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'belongs_many_many' => [
+                'eagerLoad' => 'BelongsManyManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+        ];
     }
 
     public function testEagerLoadFourthLevelException(): void
