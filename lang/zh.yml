@@ -92,7 +92,7 @@ zh:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 为空
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
+    VALIDATION: "'{value}' 不是数字，该区域只接受数字"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: '{name} 的长度必须至多{maxLength} 个字符。'
   SilverStripe\Forms\TimeField:

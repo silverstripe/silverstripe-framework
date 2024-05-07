@@ -29,7 +29,7 @@ id_ID:
     VALIDDATEMINDATE: 'Tanggal Anda harus lebih baru atau sama dengan tanggal minimum ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Pilih)
-    SOURCE_VALIDATION: 'Mohon pilih nilai dari daftar yang ada. ''{value}'' bukan pilihan valid'
+    SOURCE_VALIDATION: "Mohon pilih nilai dari daftar yang ada. '{value}' bukan pilihan valid"
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Mohon isikan alamat email'
   SilverStripe\Forms\FileUploadReceiver:
@@ -86,7 +86,7 @@ id_ID:
   SilverStripe\Forms\NullableField:
     IsNullLabel: N/A
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' bukan angka, hanya angka yang dapat diterima isian ini'
+    VALIDATION: "'{value}' bukan angka, hanya angka yang dapat diterima isian ini"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Isikan format waktu yang benar ({format})'
   SilverStripe\ORM\DataObject:

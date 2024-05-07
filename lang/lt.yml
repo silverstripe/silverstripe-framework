@@ -32,7 +32,7 @@ lt:
     VALIDDATEMINDATE: 'Data privalo būti naujesnė arba lygi anksčiausiai galimai datai ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Pasirinkti)
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
+    SOURCE_VALIDATION: "Prašome pasirinkti reikšmę iš pateikto sąrašo. '{value}' yra negalima reikšmė."
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
   SilverStripe\Forms\FileUploadReceiver:
@@ -93,9 +93,9 @@ lt:
   SilverStripe\Forms\NullableField:
     IsNullLabel: Tuščias
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
+    VALIDATION: "'{value}' nėra skaičius, prašome įvesti skaičių"
   SilverStripe\Forms\TextField:
-    VALIDATEMAXLENGTH: '''{name}'' reikšmė negali būti ilgesnė nei {maxLength} simbolių ilgio.'
+    VALIDATEMAXLENGTH: "'{name}' reikšmė negali būti ilgesnė nei {maxLength} simbolių ilgio."
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
   SilverStripe\Forms\UrlField:

@@ -51,9 +51,9 @@ uk:
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Будь-який
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
+    ENTERINFO: "Будь ласка, введіть ім'я користувача та пароль."
     ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
-    ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
+    ERRORNOTREC: "Таке ім'я користувача / пароль не існує"
   SilverStripe\Security\Confirmation\Form:
     REFUSE: Відмінити
   SilverStripe\Security\Group:
@@ -88,7 +88,7 @@ uk:
     ENTEREMAIL: 'Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю.'
     ERRORNEWPASSWORD: 'Ви ввели новий пароль із відмінностями, спробуйте знову'
     ERRORPASSWORDNOTMATCH: 'Ваш теперішній пароль не збігається, будь ласка, повторіть'
-    FIRSTNAME: 'Ім''я'
+    FIRSTNAME: "Ім'я"
     INTERFACELANG: 'Мова Інтерфейсу'
     NEWPASSWORD: 'Новий пароль'
     PASSWORD: Пароль

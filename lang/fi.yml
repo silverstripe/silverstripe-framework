@@ -117,7 +117,7 @@ fi:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'On nolla'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
+    VALIDATION: "'{value}' ei ole numero: tähän kenttään hyväksytään vain numeroita"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: '{name}-arvo ei voi ylittää {maxLength} merkin määrää.'
   SilverStripe\Forms\TimeField:

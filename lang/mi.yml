@@ -88,7 +88,7 @@ mi:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'He Kore Tēnei'
   SilverStripe\Forms\NumericField:
-    VALIDATION: 'Ehara te ''{value}'' i te tau, ka taea ngā tau anake ki tēnei āpure'
+    VALIDATION: "Ehara te '{value}' i te tau, ka taea ngā tau anake ki tēnei āpure"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Tāurua he hōputu wā tika ({format})'
   SilverStripe\ORM\DataObject:

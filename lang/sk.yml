@@ -25,9 +25,22 @@ sk:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Neplatná požiadavka'
     REQUEST_ABORTED: 'Požiadavka prerušená'
+  SilverStripe\Dev\DevBuildController:
+    CAN_DEV_BUILD_DESCRIPTION: 'Môže vykonať /dev/build'
+    CAN_DEV_BUILD_HELP: 'Môže vykonať príkaz build (/dev/build).'
+  SilverStripe\Dev\DevConfigController:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Môže vidieť /dev/config'
+    CAN_DEV_CONFIG_HELP: 'Môže zobraziť všetku konfiguráciu aplikácie (/dev/config).'
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Potvrďte potenciálne nebezpečnú operáciu'
     INFO_TITLE: 'Bezpečnostné potvrdenie'
+  SilverStripe\Dev\DevelopmentAdmin:
+    ALL_DEV_ADMIN_DESCRIPTION: 'Môže zobraziť a vykonať všetky koncové body /dev'
+    ALL_DEV_ADMIN_HELP: 'Môže zobraziť a vykonať všetky koncové body /dev'
+    PERMISSIONS_CATEGORY: 'Dev povolenia'
+  SilverStripe\Dev\TaskRunner:
+    BUILDTASK_CAN_RUN_DESCRIPTION: 'Môže zobraziť a vykonať všetky /dev/tasks.'
+    BUILDTASK_CAN_RUN_HELP: 'Môže zobraziť a vykonať všetky úlohy zostavenia (/dev/tasks). Toto môže byť stále prepísané individuálnymi oprávneniami pre zobrazenie úloh.'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nie
     YESANSWER: Áno
@@ -100,7 +113,7 @@ sk:
     Create: Vytvoriť
     Delete: Zmazať
     DeletePermissionsFailure: 'Žiadne oprávnenia zmazať'
-    Deleted: 'Zmazané {type} {name}'
+    Deleted: 'Zmazané {type} "{name}"'
     Save: Uložiť
     Saved: 'Uložené {name} {link}'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
@@ -108,6 +121,8 @@ sk:
     NEW: 'Pridať nový záznam'
     NEXT: 'Prejsť na ďalší záznam'
     PREVIOUS: 'Prejsť na predchádzajúci záznam'
+    SAVEDUP: 'Úspešne uložené.'
+    SAVETOASTMESSAGE: '{type} "{title}" úspešne uložené.'
     ViewPermissionsFailure: 'Zdá sa, že nemáte potrebné oprávnenia na zobrazenie "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Editovať
@@ -135,7 +150,11 @@ sk:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Je Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: 'Zadaná hodnota ''{value}'' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!'
+    VALIDATION: "Zadaná hodnota '{value}' nie je číslo. Iba čísla môžu byť akceptované pre toto pole!"
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Vyberte...
+    SELECT_OR_TYPE_TO_SEARCH: 'Vyberte alebo zadajte hľadaný výraz...'
+    TYPE_TO_SEARCH: Hľadať...
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Hodnota pre {name} nesmie prekročiť {maxLength} v dĺžke znakov'
   SilverStripe\Forms\TimeField:
@@ -300,12 +319,13 @@ sk:
     CURRENT_PASSWORD: 'Terajšie heslo'
     EDIT_PASSWORD: 'Nové heslo'
     EMAIL: E-mail
+    EMAIL_FAILED: 'Vyskytla sa chyba pri pokuse o odoslanie e-mailu s odkazom na obnovenie hesla.'
     EMPTYNEWPASSWORD: 'Nové heslo nesmie byť prázdne, skúste to prosím znova'
     ENTEREMAIL: 'Prosím zadajte emailovú adresu pre zaslanie odkazu na resetovanie hesla.'
     ERRORLOCKEDOUT2: 'Váš účet bol dočasne zablokovaný, kvôli množstvu neúspešných pokusov o prihlásenie. Prosím skúste to znova za {count} minút.'
     ERRORNEWPASSWORD: 'Zadali ste rozdielne nové heslo, skúste to znovu'
     ERRORPASSWORDNOTMATCH: 'Vaše súčasné heslo nie je správne, prosím skúste to znovu'
-    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
+    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím, skúste to znova.'
     FIRSTNAME: Meno
     INTERFACELANG: 'Jazyk rozhrania'
     KEEP_ME_SIGNED_IN: 'Zostať prihlásený na {count} dní'
@@ -370,7 +390,7 @@ sk:
     BUTTONLOGIN: 'Pustite ma späť'
     BUTTONLOGOUT: 'Odhlásiť sa'
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
-    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím skúste opäť.'
+    ERRORWRONGCRED: 'Poskytnuté detaily vyzerajú byť nesprávne. Prosím, skúste to znova.'
     NoPassword: 'Nie je tu heslo pre tohto člena.'
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     AUTHENTICATORNAME: 'E-mail & heslo'
