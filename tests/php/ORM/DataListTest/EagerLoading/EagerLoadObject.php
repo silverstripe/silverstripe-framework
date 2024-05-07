@@ -14,7 +14,8 @@ class EagerLoadObject extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        'HasOneEagerLoadObject' => HasOneEagerLoadObject::class
+        'HasOneEagerLoadObject' => HasOneEagerLoadObject::class,
+        'HasOnePolymorphObject' => DataObject::class,
     ];
 
     private static $belongs_to = [
