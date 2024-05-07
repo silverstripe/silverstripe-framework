@@ -112,7 +112,7 @@ sv:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Är NULL'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet'
+    VALIDATION: "'{value}' är inget nummer, bara siffror (utan mellanslag) kan accepteras för det här fältet"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Värdet för {name} får inte överstiga {MaxLength} tecken'
   SilverStripe\Forms\TimeField:

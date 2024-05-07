@@ -86,7 +86,7 @@ nb:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Er tom'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' er ikke et tall, kun tall aksepteres i dette feltet'
+    VALIDATION: "'{value}' er ikke et tall, kun tall aksepteres i dette feltet"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   SilverStripe\ORM\DataObject:

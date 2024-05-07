@@ -7,20 +7,20 @@ it:
     EDITINFO: 'Modifica questo file'
     REMOVE: Elimina
   SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'La password per l''account con l''email {email} è cambiata. Se non l''hai ancora fatto, prego cambiare la password usando il link sottostante'
+    CHANGEPASSWORDFOREMAIL: "La password per l'account con l'email {email} è cambiata. Se non l'hai ancora fatto, prego cambiare la password usando il link sottostante"
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT3: 'Cambia password'
     HELLO: Salve
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: Salve
     TEXT1: 'Questo è il tuo'
-    TEXT2: 'link per l''azzeramento della password'
+    TEXT2: "link per l'azzeramento della password"
     TEXT3: per
   SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
     CONFIRMATION_NAME: '"{key}" parametro GET'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
     CONFIRMATION_DESCRIPTION: 'L''URL è: "{url}"'
-    CONFIRMATION_NAME: 'L''URL è protetto'
+    CONFIRMATION_NAME: "L'URL è protetto"
   SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith:
     CONFIRMATION_DESCRIPTION: 'L''URL completo è: "{url}"'
     CONFIRMATION_NAME: 'L''URL comincia con "{path}"'
@@ -28,7 +28,7 @@ it:
     INVALID_REQUEST: 'Richiesta non valida'
     REQUEST_ABORTED: 'Richiesta annullata'
   SilverStripe\Dev\DevConfirmationController:
-    INFO_DESCRIPTION: 'Confermare l''operazione potenzialmente pericolosa'
+    INFO_DESCRIPTION: "Confermare l'operazione potenzialmente pericolosa"
     INFO_TITLE: 'Conferma di Sicurezza'
   SilverStripe\Forms\CheckboxField:
     YESANSWER: Sì
@@ -55,7 +55,7 @@ it:
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Scegli)
     SEARCH_OR_CHOOSE_MODEL: '(Cercare o scegliere {name})'
-    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
+    SOURCE_VALIDATION: "Per favore selezionare un valore tra quelli forniti. {value} non è un'opzione valida"
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
   SilverStripe\Forms\FileUploadReceiver:
@@ -132,17 +132,17 @@ it:
   SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
-    INVALID_CURRENCY: 'La valuta {currency} non è nell''elenco delle valute disponibili'
+    INVALID_CURRENCY: "La valuta {currency} non è nell'elenco delle valute disponibili"
   SilverStripe\Forms\MultiSelectField:
-    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. È stata fornita l''opzione non valida {value}'
+    SOURCE_VALIDATION: "Per favore selezionare un valore tra quelli forniti. È stata fornita l'opzione non valida {value}"
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'è nullo.'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' non è un numero, solo numeri possono essere accettati per questo campo'
+    VALIDATION: "'{value}' non è un numero, solo numeri possono essere accettati per questo campo"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Il valore di {name} non deve superare i {maxLength} caratteri di lunghezza'
   SilverStripe\Forms\TimeField:
-    VALIDATEFORMAT: 'Inserisci un formato d''ora valido ({format})'
+    VALIDATEFORMAT: "Inserisci un formato d'ora valido ({format})"
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Object'
     PLURALS:
@@ -204,7 +204,7 @@ it:
     SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
     SUCCESS_TITLE: 'Login completato'
   SilverStripe\Security\Confirmation\Form:
-    CONFIRM: 'Esegui l''azione'
+    CONFIRM: "Esegui l'azione"
     EMPTY_TITLE: 'Nulla da confermare'
     REFUSE: Annulla
   SilverStripe\Security\Confirmation\Handler:
@@ -250,12 +250,12 @@ it:
     Email: 'Indirizzo e-mail'
     EmailHashed: 'Indirizzo email (hash)'
     IP: 'Indirizzo IP'
-    PLURALNAME: 'Tentativi d''accesso'
+    PLURALNAME: "Tentativi d'accesso"
     PLURALS:
-      many: '{count} tentativi d''accesso'
-      one: 'Un tentativo d''accesso'
-      other: '{count} tentativi d''accesso'
-    SINGULARNAME: 'Tentativo d''accesso'
+      many: "{count} tentativi d'accesso"
+      one: "Un tentativo d'accesso"
+      other: "{count} tentativi d'accesso"
+    SINGULARNAME: "Tentativo d'accesso"
     Status: Stato
     db_Status: Stato
     has_one_Member: Utente
@@ -277,7 +277,7 @@ it:
     ERRORPASSWORDNOTMATCH: 'La tua password attuale non corrisponde, per favore prova ancora'
     ERRORWRONGCRED: 'I dettagli forniti non sembrano corretti. Per favore riprovare.'
     FIRSTNAME: Nome
-    INTERFACELANG: 'Lingua dell''interfaccia'
+    INTERFACELANG: "Lingua dell'interfaccia"
     KEEP_ME_SIGNED_IN: 'Lasciami autenticato per {count} giorni'
     KEEP_ME_SIGNED_IN_TOOLTIP: 'Rimarrai autenticato su questo dispositivo per {count} giorni. Usa questa funzionalità solo se il dispositivo che stai usando è sicuro.'
     LOGGEDINAS: 'Sei collegato come {name}.'
@@ -294,7 +294,7 @@ it:
     SURNAME: Cognome
     VALIDATIONADMINLOSTACCESS: 'Non è possibile rimuovere tutti i gruppi admin dal tuo profilo'
     VALIDATIONMEMBEREXISTS: 'Esiste già un utente con lo stesso {identifier}'
-    ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
+    ValidationIdentifierFailed: "Non posso sovrascrivere l'utente esistente #{id} con identificatore identico ({name} = {value}))"
     WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'
     belongs_many_many_Groups: Gruppi
@@ -331,7 +331,7 @@ it:
     CONTENT_CATEGORY: 'Permessi sui contenuti'
     FULLADMINRIGHTS: 'Diritti di amministrazione'
     FULLADMINRIGHTS_HELP: 'Implica e annulla tutti gli altri permessi assegnati.'
-    PERMISSIONS_CATEGORY: 'Ruoli e permessi d''accesso'
+    PERMISSIONS_CATEGORY: "Ruoli e permessi d'accesso"
     PLURALNAME: Permessi
     PLURALS:
       many: '{count} Permessi'
@@ -347,7 +347,7 @@ it:
     FromRole: 'ereditato dal ruolo "{title}"'
     FromRoleOnGroup: 'ereditato dal ruolo "{roletitle}" nel gruppo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
-    OnlyAdminCanApply: 'Solo l''amministratore può applicare'
+    OnlyAdminCanApply: "Solo l'amministratore può applicare"
     PLURALNAME: Ruoli
     PLURALS:
       many: '{count} Ruoli'
@@ -356,7 +356,7 @@ it:
     SINGULARNAME: Ruolo
     Title: Titolo
     belongs_many_many_Groups: Gruppi
-    db_OnlyAdminCanApply: 'Solo l''amministratore può applicare'
+    db_OnlyAdminCanApply: "Solo l'amministratore può applicare"
     db_Title: Titolo
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Codici di ruolo'

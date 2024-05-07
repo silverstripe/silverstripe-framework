@@ -73,7 +73,7 @@ es_MX:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Es Nulo'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
+    VALIDATION: "'{value}' no es un número, solo números son aceptados por este campo"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
   SilverStripe\ORM\DataObject:

@@ -27,9 +27,22 @@ eo:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Malvalida peto'
     REQUEST_ABORTED: 'Ĉesigis peton'
+  SilverStripe\Dev\DevBuildController:
+    CAN_DEV_BUILD_DESCRIPTION: 'Povas ruli je /dev/build'
+    CAN_DEV_BUILD_HELP: 'Povas ruli la komandon konstrui (/dev/build)'
+  SilverStripe\Dev\DevConfigController:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Povas vidi je /dev/config'
+    CAN_DEV_CONFIG_HELP: 'Povas vidi la tutan aranĝon (/dev/config)'
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Konfirmi eble danĝeran operacion'
     INFO_TITLE: 'Sekurecon konfirmi'
+  SilverStripe\Dev\DevelopmentAdmin:
+    ALL_DEV_ADMIN_DESCRIPTION: 'Povas vidi kaj ruli ĉiujn finpunktojn /dev'
+    ALL_DEV_ADMIN_HELP: 'Povas vidi kaj ruli ĉiujn finpunktojn /dev'
+    PERMISSIONS_CATEGORY: Dev-permesoj
+  SilverStripe\Dev\TaskRunner:
+    BUILDTASK_CAN_RUN_DESCRIPTION: 'Povas vidi kaj ruli ĉiujn taskojn /dev/tasks'
+    BUILDTASK_CAN_RUN_HELP: 'Povas vidi kaj ruli ĉiujn konstruajn taskojn (/dev/tasks). Unuopaj taskaj vidaj permesoj povas transpasi ĉi tiun permeson.'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Ne
     YESANSWER: Jes
@@ -105,7 +118,7 @@ eo:
     Create: Krei
     Delete: Forigi
     DeletePermissionsFailure: 'Mankas permeso forigi'
-    Deleted: 'Forigita {type} {name}'
+    Deleted: 'Forigita {tipo} "{nomo}"'
     Save: Konservi
     Saved: 'Konservita {name} {link}'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
@@ -113,6 +126,8 @@ eo:
     NEW: 'Aldoni novan rikordon'
     NEXT: 'Iri al la sekva rikordo'
     PREVIOUS: 'Iri al la antaŭa rikordo'
+    SAVEDUP: 'Konservis sukcese'
+    SAVETOASTMESSAGE: 'Konservis {tipo} "{titolo}" sukcese'
     ViewPermissionsFailure: 'Ŝajnas ke vi ne havas la bezonatajn permesojn por vidi je {ObjectTitle}'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Redakti
@@ -140,7 +155,11 @@ eo:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Estas senvalora'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ne estas numero, nur numeroj estas akcepteblaj por ĉi tiu kampo'
+    VALIDATION: "'{value}' ne estas numero, nur numeroj estas akcepteblaj por ĉi tiu kampo"
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Elekti...
+    SELECT_OR_TYPE_TO_SEARCH: 'Elekti aŭ tajpi por serĉi...'
+    TYPE_TO_SEARCH: 'Tajpi por serĉi...'
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'La valoro por {name} devas ne havi longon pli ol {maxLength} signoj'
   SilverStripe\Forms\TimeField:
@@ -287,6 +306,7 @@ eo:
     CURRENT_PASSWORD: 'Aktuala pasvorto'
     EDIT_PASSWORD: 'Nova pasvorto'
     EMAIL: Retpoŝto
+    EMAIL_FAILED: 'Eraro okazis provante retpoŝti al vi pasvortan reagordan ligilon.'
     EMPTYNEWPASSWORD: 'La nova pasvorto ne povas esti nula, bonvole refaru'
     ENTEREMAIL: 'Bonvolu enigi retadreson por atingi ligilon por reagordi pasvorton.'
     ERRORLOCKEDOUT2: 'Via konto estas provizore malvalidigita pro troaj provoj ensaluti. Bonvole reprovu post {count} minutoj.'

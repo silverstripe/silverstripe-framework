@@ -4,7 +4,7 @@ ast:
   SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Camudar contraseña'
   SilverStripe\Forms\DateField:
-    NOTSET: 'nun s''establez'
+    NOTSET: "nun s'establez"
     TODAY: hoi
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Escoyer)
@@ -42,7 +42,7 @@ ast:
     db_Email: Corréu
     db_LockedOutUntil: 'Bloquiáu fasta'
     db_Password: Contraseña
-    db_PasswordExpiry: 'Data d''espiración de la contraseña'
+    db_PasswordExpiry: "Data d'espiración de la contraseña"
   SilverStripe\Security\MemberPassword:
     db_Password: Contraseña
     has_one_Member: Miembru

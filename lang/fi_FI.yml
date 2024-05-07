@@ -136,7 +136,7 @@ fi_FI:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'On nolla'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ei ole numero: tähän kenttään hyväksytään vain numeroita'
+    VALIDATION: "'{value}' ei ole numero: tähän kenttään hyväksytään vain numeroita"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Ole hyvä ja kirjaa päivämäärä sallitussa muodossa ({format})'
   SilverStripe\ORM\DataObject:

@@ -153,7 +153,7 @@ en:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Is Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' is not a number, only numbers can be accepted for this field'
+    VALIDATION: "'{value}' is not a number, only numbers can be accepted for this field"
   SilverStripe\Forms\SearchableDropdownTrait:
     SELECT: Select...
     SELECT_OR_TYPE_TO_SEARCH: 'Select or type to search...'
@@ -310,7 +310,7 @@ en:
     EDIT_PASSWORD: 'New Password'
     EMAIL: Email
     EMAIL_FAILED: 'There was an error when trying to email you a password reset link.'
-    EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
+    EMPTYNEWPASSWORD: "The new password can't be empty, please try again"
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
     ERRORLOCKEDOUT2: 'Your account has been temporarily disabled because of too many failed attempts at logging in. Please try again in {count} minutes.'
     ERRORNEWPASSWORD: 'You have entered your new password differently, try again'

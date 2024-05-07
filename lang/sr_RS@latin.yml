@@ -85,7 +85,7 @@ sr_RS@latin:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'je Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' nije broj. Samo brojevi mogu biti prihvaćeni za ovo polje'
+    VALIDATION: "'{value}' nije broj. Samo brojevi mogu biti prihvaćeni za ovo polje"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Unesite ispravan format vremena ({format})'
   SilverStripe\ORM\DataObject:

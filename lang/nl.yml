@@ -135,7 +135,7 @@ nl:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Is null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' is geen getal, enkel getallen worden door dit veld geaccepteerd'
+    VALIDATION: "'{value}' is geen getal, enkel getallen worden door dit veld geaccepteerd"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'De waarde voor {name} mag niet langer zijn dan {maxLength} tekens.'
   SilverStripe\Forms\TimeField:

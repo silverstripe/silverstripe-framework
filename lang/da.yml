@@ -105,7 +105,7 @@ da:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Er Null'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' er ikke et tal, kun tal accepteres i dette felt'
+    VALIDATION: "'{value}' er ikke et tal, kun tal accepteres i dette felt"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Indtats venligst et gyldigt tidsformat ({format})'
   SilverStripe\ORM\DataObject:

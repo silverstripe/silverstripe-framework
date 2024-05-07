@@ -139,7 +139,7 @@ sl:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Prazno polje'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
+    VALIDATION: "'{value}' ni številka. V to polje lahko vnesete samo številke."
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Vrednost za {name} ne sme presegati predpisanega števila znakov ({maxLength}).'
   SilverStripe\Forms\TimeField:

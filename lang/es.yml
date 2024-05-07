@@ -102,7 +102,7 @@ es:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Es Nulo'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' no es un número, sólo números pueden ser aceptados para este campo'
+    VALIDATION: "'{value}' no es un número, sólo números pueden ser aceptados para este campo"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'El valor para {name} no puede exceder los {maxLength} caracteres de longitud'
   SilverStripe\Forms\TimeField:
