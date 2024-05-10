@@ -276,9 +276,18 @@ class GridField extends FormField
             }
         }
 
-        // If the edit button has been removed, replace it with a view button
+        // If the edit button has been removed, replace it with a view button if one is allowed
         if ($hadEditButton && !$copyConfig->getComponentByType(GridFieldViewButton::class)) {
-            $copyConfig->addComponent(GridFieldViewButton::create());
+            $viewButtonClass = null;
+            foreach ($allowedComponents as $componentClass) {
+                if (is_a($componentClass, GridFieldViewButton::class, true)) {
+                    $viewButtonClass = $componentClass;
+                    break;
+                }
+            }
+            if ($viewButtonClass) {
+                $copyConfig->addComponent($viewButtonClass::create());
+            }
         }
 
         $copy->extend('afterPerformReadonlyTransformation', $this);
