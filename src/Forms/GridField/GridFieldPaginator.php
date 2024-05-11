@@ -177,6 +177,13 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
 
         $startRow = $this->itemsPerPage * ($state->currentPage - 1);
 
+        // if the total list has less than the items per page you need to make sure that you set the items per page to be 
+        // the total number of items otherwise, you still get for example 20 items, in the gridfield, but the paginator info
+        // will say 1 of 1. Basically, the paginator override the limit, but should not do so if the limit is less than the items per page. 
+        if($this->totalItems < $this->itemsPerPage) {
+            $state->currentPage = 1;
+            $this->itemsPerPage = $this->totalItems;
+        }
         // Prevent visiting a page with an offset higher than the total number of items
         if ($startRow >= $this->totalItems) {
             $state->currentPage = 1;
