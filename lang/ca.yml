@@ -36,9 +36,9 @@ ca:
     PLURALNAME: 'Objectes de dades'
     SINGULARNAME: 'Objecte de dades'
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
+    ENTERINFO: "Si us plau, introduïu un nom d'usuari i contrasenya"
     ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
-    ERRORNOTREC: 'Aquest nom d''usuari / contrasenya no es reconeix'
+    ERRORNOTREC: "Aquest nom d'usuari / contrasenya no es reconeix"
   SilverStripe\Security\Group:
     Code: 'Codi de grup'
     Description: Descripció
@@ -79,17 +79,17 @@ ca:
     PASSWORD: Contrasenya
     PLURALNAME: Membres
     SINGULARNAME: Membre
-    SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
+    SUBJECTPASSWORDCHANGED: "La vostra contrasenya s'ha canviat"
     SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
     SURNAME: Cognom
     YOUROLDPASSWORD: 'La vostra contrasenya anterior'
     belongs_many_many_Groups: Grups
     db_Email: 'Correu electrònic'
     db_FirstName: Nom
-    db_Locale: 'Idioma d''interfície'
+    db_Locale: "Idioma d'interfície"
     db_LockedOutUntil: 'Bloquejat fins a'
     db_Password: Contrasenya
-    db_PasswordExpiry: 'Data d''expiració de la contrasenya'
+    db_PasswordExpiry: "Data d'expiració de la contrasenya"
     db_Surname: Cognom
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: 'He oblidat la contrasenya'
@@ -108,11 +108,11 @@ ca:
     has_one_Member: Membre
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
-    BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
+    BUTTONSEND: "Envia'm l'enllaç per reiniciar la contrasenya"
     CHANGEPASSWORDBELOW: 'Podeu canviar la vostra contrasenya a sota.'
     CHANGEPASSWORDHEADER: 'Canviar la vostra contrasenya'
     ENTERNEWPASSWORD: 'Si us plau, introduïu una nova contrasenya.'
-    ERRORPASSWORDPERMISSION: 'Heu d''estar connectat per a canviar la vostra contrasenya!'
+    ERRORPASSWORDPERMISSION: "Heu d'estar connectat per a canviar la vostra contrasenya!"
     LOGIN: Entrar
     NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
     NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'

@@ -107,7 +107,7 @@ bg:
   SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: 'Изберете стойност от списъка. {value} не е валидна опция(и)'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
+    VALIDATION: "'{value}' не е число, само числа могат да се въвеждат в това поле"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   SilverStripe\ORM\DataObject:

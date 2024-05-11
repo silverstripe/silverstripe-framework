@@ -109,7 +109,7 @@ ru:
   SilverStripe\Forms\NullableField:
     IsNullLabel: Недействительно
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' - не числовое значение; для этого поля допустимы только числовые значения'
+    VALIDATION: "'{value}' - не числовое значение; для этого поля допустимы только числовые значения"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
   SilverStripe\Forms\TimeField:

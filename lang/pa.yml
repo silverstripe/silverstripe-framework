@@ -37,7 +37,7 @@ pa:
     db_Email: ਇਮੇਲ
     db_Surname: ਗੋਤ
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in below.'
+    ALREADYLOGGEDIN: "You don't have access to this page. If you have another account that can access that page, you can log in below."
     CHANGEPASSWORDBELOW: 'ਤੁਸੀਂ ਆਪਣਾ password ਹੇਠਾਂ ਬਦਲ ਸਕਦੇ ਹੋ।ੋ'
     CHANGEPASSWORDHEADER: 'password ਬਦਲੋ '
     ENTERNEWPASSWORD: 'ਿਕ੍ਰਪਾ ਕਰਕੇ ਇੱਕ ਨਵਾਂ password ਪਾਉ।'

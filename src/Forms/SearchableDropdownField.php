@@ -5,8 +5,9 @@ namespace SilverStripe\Forms;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\DataList;
+use SilverStripe\Forms\HasOneRelationFieldInterface;
 
-class SearchableDropdownField extends DropdownField
+class SearchableDropdownField extends DropdownField implements HasOneRelationFieldInterface
 {
     use SearchableDropdownTrait;
     

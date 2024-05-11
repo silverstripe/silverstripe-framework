@@ -91,7 +91,7 @@ ar:
   SilverStripe\Forms\NullableField:
     IsNullLabel: باطل
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{قيمة}'' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل'
+    VALIDATION: "'{قيمة}' ليس برقم و الأرقام فقط يمكن قبولها لهذا الحقل"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
   SilverStripe\ORM\DataObject:

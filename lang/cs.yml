@@ -100,7 +100,7 @@ cs:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'Je nulové'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' není číslo, pouze čísla mohou být akceptována pro toto pole'
+    VALIDATION: "'{value}' není číslo, pouze čísla mohou být akceptována pro toto pole"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Hodnota pro {name} nesmí překročit {maxLength} v délce znaků'
   SilverStripe\Forms\TimeField:

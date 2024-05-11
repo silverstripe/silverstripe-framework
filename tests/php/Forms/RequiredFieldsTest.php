@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\Security\Group;
 
@@ -289,16 +290,35 @@ class RequiredFieldsTest extends SapphireTest
         );
     }
 
-    public function testTreedropFieldValidation()
+    public function provideHasOneRelationFieldInterfaceValidation(): array
+    {
+        return [
+            [
+                'className' => TreeDropdownField::class,
+            ],
+            [
+                'className' => SearchableDropdownField::class,
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider provideHasOneRelationFieldInterfaceValidation
+     */
+    public function testHasOneRelationFieldInterfaceValidation(string $className)
     {
         $form = new Form();
-        $field = new TreeDropdownField('TestField', 'TestField', Group::class);
+        $param = $className === TreeDropdownField::class ? Group::class : Group::get();
+        $field = new $className('TestField', 'TestField', $param);
         $form->Fields()->push($field);
         $validator = new RequiredFields('TestField');
         $validator->setForm($form);
-        // blank string and '0' are fail required field validation
+        // blank string and 0 and '0' and array with value of 0 fail required field validation
         $this->assertFalse($validator->php(['TestField' => '']));
+        $this->assertFalse($validator->php(['TestField' => 0]));
         $this->assertFalse($validator->php(['TestField' => '0']));
+        $this->assertFalse($validator->php(['TestField' => ['value' => 0]]));
+        $this->assertFalse($validator->php(['TestField' => ['value' => '0']]));
         // '1' passes required field validation
         $this->assertTrue($validator->php(['TestField' => '1']));
     }
