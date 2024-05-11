@@ -6,8 +6,8 @@ fr:
     EDITINFO: 'Éditer ce fichier'
     REMOVE: Retirer
   SilverStripe\Control\ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: 'Le mot de passe du compte correspondant à l''adresse {email} a été modifié. Si vous n''avez pas modifié votre mot de passe, merci de le changer à l''aide du lien suivant'
-    CHANGEPASSWORDTEXT1: 'Votre mot de passe est maintenant'
+    CHANGEPASSWORDFOREMAIL: "Le mot de passe du compte correspondant à l'adresse {email} a été modifié. Si vous n'avez pas modifié votre mot de passe, merci de le changer à l'aide du lien suivant"
+    CHANGEPASSWORDTEXT1: 'Vous avez modifié votre mot de passe pour'
     CHANGEPASSWORDTEXT3: 'Changer le mot de passe'
     HELLO: Bonjour
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
@@ -15,6 +15,9 @@ fr:
     TEXT1: 'Voici votre'
     TEXT2: 'Lien de réinitialisation de mot de passe'
     TEXT3: pour
+  SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
+    CONFIRMATION_DESCRIPTION: 'L''url est : "{url}"'
+    CONFIRMATION_NAME: "L'url est protégée"
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Requête invalide'
     REQUEST_ABORTED: 'Requête non aboutie'
@@ -26,24 +29,24 @@ fr:
   SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Le mot de passe doit comporter au moins {min} caractères.'
     BETWEEN: 'Le mot de passe doit comporter entre {min} et {max} caractères.'
-    CURRENT_PASSWORD_ERROR: 'Le mot de passe que vous avez saisi n''est pas correct'
+    CURRENT_PASSWORD_ERROR: "Le mot de passe que vous avez saisi n'est pas correct"
     CURRENT_PASSWORD_MISSING: 'Vous devez saisir votre mot de passe actuel.'
     LOGGED_IN_ERROR: 'Vous devez être connecté pour pouvoir changer votre mot de passe'
     MAXIMUM: 'Le mot de passe ne doit pas comporter plus de {max} caractères.'
     SHOWONCLICKTITLE: 'Changer le mot de passe'
   SilverStripe\Forms\DateField:
     NOTSET: 'non renseigné'
-    TODAY: 'aujourd''hui'
+    TODAY: "aujourd'hui"
     VALIDDATEFORMAT2: 'Saisissez une date au format valide ({format})'
     VALIDDATEMAXDATE: 'La date doit être antérieure ou égale à celle autorisée ({date})'
     VALIDDATEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({date})'
   SilverStripe\Forms\DatetimeField:
     VALIDDATEMAXDATETIME: 'La date doit être antérieure ou égale à celle autorisée ({datetime})'
-    VALIDDATETIMEFORMAT: 'Saisissez un format de date et d''heure valide ({format})'
+    VALIDDATETIMEFORMAT: "Saisissez un format de date et d'heure valide ({format})"
     VALIDDATETIMEMINDATE: 'La date doit être postérieure ou égale à celle autorisée ({datetime})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Choisir)
-    SOURCE_VALIDATION: 'Merci de choisir une valeur parmi celles proposées dans la liste. {value} n''est pas une option valide'
+    SOURCE_VALIDATION: "Merci de choisir une valeur parmi celles proposées dans la liste. {value} n'est pas une option valide"
   SilverStripe\Forms\EmailField:
     VALIDATION: 'Merci de saisir une adresse email'
   SilverStripe\Forms\FileUploadReceiver:
@@ -83,7 +86,7 @@ fr:
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
     Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
-    EditPermissionsFailure: 'Pas de permissions pour délier l''enregistrement'
+    EditPermissionsFailure: "Pas de permissions pour délier l'enregistrement"
     UnlinkRelation: Séparer
   SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Annuler
@@ -93,10 +96,13 @@ fr:
     Deleted: '{type} {name} supprimés'
     Save: Enregistrer
     Saved: '{name} {link} sauvegardé'
+  SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
+    SAVEDUP: 'Sauvegardé avec succès.'
+    SAVETOASTMESSAGE: 'Sauvegardé {type} "{title}" avec succès.'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Éditer
   SilverStripe\Forms\GridField\GridFieldGroupDeleteAction:
-    UnlinkSelfFailure: 'Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d''administration'
+    UnlinkSelfFailure: "Impossible de retirer votre propre profil de ce groupe, vous perdriez vos droits d'administration"
   SilverStripe\Forms\GridField\GridFieldPaginator:
     OF: de
     View: Vue
@@ -112,6 +118,8 @@ fr:
     IsNullLabel: 'Est Null'
   SilverStripe\Forms\NumericField:
     VALIDATION: "«\_{value}\_» n’est pas un nombre, seul type de donnée acceptée dans ce champ "
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Choisir...
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Merci de saisir un format de date valide ({format})'
   SilverStripe\Forms\UrlField:
@@ -136,7 +144,7 @@ fr:
       many: '{count} heures'
       one: '{count} heure'
       other: '{count} heures'
-    LessThanMinuteAgo: 'moins d''une minute'
+    LessThanMinuteAgo: "moins d'une minute"
     MINUTES_SHORT_PLURALS:
       many: '{count} min.'
       one: '{count} min.'
@@ -165,14 +173,14 @@ fr:
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Erreur de validation'
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Merci d''entrer un identifiant et un mot de passe.'
-    ERRORNOTADMIN: 'Cet utilisateur n''est pas un administrateur.'
+    ENTERINFO: "Merci d'entrer un identifiant et un mot de passe."
+    ERRORNOTADMIN: "Cet utilisateur n'est pas un administrateur."
     ERRORNOTREC: 'Identifiant et/ou mot de passe non reconnus'
   SilverStripe\Security\CMSMemberLoginForm:
     PASSWORDEXPIRED: '<p>Votre mot de passe a expiré. <a target="_top" href="{link}">Merci d''en choisir un nouveau.</a></p>'
   SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Utilisateur non valide. <a target="_top" href="{link}">Merci de vous authentifier de nouveau ici</a> pour poursuivre.</p>'
-    LOGIN_MESSAGE: '<p>Votre session a expiré pour cause d''inactivité</p>'
+    LOGIN_MESSAGE: "<p>Votre session a expiré pour cause d'inactivité</p>"
     LOGIN_TITLE: 'Retournez là où vous en étiez en vos connectant de nouveau'
     SUCCESS: Succès
     SUCCESSCONTENT: '<p>Connexion réussie. Si vous n''êtes pas automatiquement redirigé <a target="_top" href="{link}">cliquez ici</a></p>'
@@ -229,43 +237,46 @@ fr:
     BUTTONLOGIN: 'Se connecter'
     BUTTONLOGINOTHER: 'Se connecter avec un identifiant différent'
     BUTTONLOGOUT: Déconnexion
-    BUTTONLOSTPASSWORD: 'J''ai perdu mon mot de passe'
+    BUTTONLOSTPASSWORD: "J'ai perdu mon mot de passe"
     CONFIRMNEWPASSWORD: 'Confirmer nouveau mot de passe'
     CONFIRMPASSWORD: 'Confirmer Mot De Passe'
     CURRENT_PASSWORD: 'Mot de passe actuel'
     EDIT_PASSWORD: 'Nouveau mot de passe'
     EMPTYNEWPASSWORD: 'Le champs nouveau mot de passe ne peut être vide, merci de réessayer'
     ENTEREMAIL: 'Veuillez entrer une adresse email  pour obtenir un lien de réinitialisation du mot de passe.'
-    ERRORLOCKEDOUT2: 'Votre compte a été temporairement désactivé en raison d''un nombre trop élevé d''échecs d''identification. Veuillez réessayer dans {count} minutes.'
+    ERRORLOCKEDOUT2: "Votre compte a été temporairement désactivé en raison d'un nombre trop élevé d'échecs d'identification. Veuillez réessayer dans {count} minutes."
     ERRORNEWPASSWORD: 'Vous avez entré votre nouveau mot de passe différemment, réessayez'
     ERRORPASSWORDNOTMATCH: 'Votre actuel mot de passe ne correspond pas, merci de réessayer'
     ERRORWRONGCRED: 'Il semble que ce ne soit pas le bon email ou mot de passe. Merci de réessayer.'
     FIRSTNAME: Prénom
-    INTERFACELANG: 'Langue de l''interface'
+    INTERFACELANG: "Langue de l'interface"
+    KEEP_ME_SIGNED_IN: 'Gardez-moi connecté pendant {count} jours'
     LOGGEDINAS: 'Vous êtes connecté en tant que {name}.'
     NEWPASSWORD: 'Nouveau mot de passe'
     PASSWORD: 'Mot de passe'
-    PASSWORDEXPIRED: 'Votre mot de passe a expiré. Merci d''en choisir un nouveau.'
+    PASSWORDEXPIRED: "Votre mot de passe a expiré. Merci d'en choisir un nouveau."
     PLURALNAME: Membres
     PLURALS:
       many: '{count} membres'
       one: 'Un membre'
       other: '{count} membres'
+    RequiresPasswordChangeOnNextLogin: 'Changement de mot de passe requis lors de la prochaine connexion'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
     SURNAME: 'Nom de famille'
-    VALIDATIONADMINLOSTACCESS: 'Impossible de retirer tous les groupes d''administrateur à partir de votre profil'
+    VALIDATIONADMINLOSTACCESS: "Impossible de retirer tous les groupes d'administrateur à partir de votre profil"
     ValidationIdentifierFailed: 'Impossible de réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
+    WELCOMEBACK: 'Bienvenue, {firstname}'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
     belongs_many_many_Groups: Groupes
     db_FirstName: Prénom
-    db_Locale: 'Langue de l''Interface'
-    db_LockedOutUntil: 'Verrouillé jusqu''à'
+    db_Locale: "Langue de l'Interface"
+    db_LockedOutUntil: "Verrouillé jusqu'à"
     db_Password: 'Mot de passe'
-    db_PasswordExpiry: 'Date d''expiration du mot de passe'
+    db_PasswordExpiry: "Date d'expiration du mot de passe"
     db_Surname: 'Nom de famille'
-    db_URLSegment: 'Segment d''URL'
+    db_URLSegment: "Segment d'URL"
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'Formulaire de connexion pour un utilisateur du CMS'
     BUTTONFORGOTPASSWORD: 'Mot de passe oublié'
@@ -273,7 +284,7 @@ fr:
     BUTTONLOGOUT: 'Se déconnecter'
   SilverStripe\Security\MemberAuthenticator\MemberAuthenticator:
     ERRORWRONGCRED: 'Les renseignements fournis semblent incorrects. Merci de réessayer.'
-    NoPassword: 'Ce membre n''a pas de mot de passe'
+    NoPassword: "Ce membre n'a pas de mot de passe"
   SilverStripe\Security\MemberAuthenticator\MemberLoginForm:
     AUTHENTICATORNAME: 'Email & Mot de passe'
   SilverStripe\Security\MemberPassword:
@@ -293,7 +304,7 @@ fr:
     AdminGroup: Administrateur
     CMS_ACCESS_CATEGORY: 'Accès au CMS'
     CONTENT_CATEGORY: 'Permissions de contenu'
-    FULLADMINRIGHTS: 'Droits d''administration complets'
+    FULLADMINRIGHTS: "Droits d'administration complets"
     FULLADMINRIGHTS_HELP: 'Prévaut sur toutes les autres autorisations assignées.'
     PERMISSIONS_CATEGORY: 'Rôles et autorisations d’accès'
     PLURALS:
@@ -320,13 +331,13 @@ fr:
     db_OnlyAdminCanApply: 'Limité aux administrateurs'
     db_Title: Titre
   SilverStripe\Security\PermissionRoleCode:
-    PLURALNAME: 'Codes d''autorisations liés au rôle'
+    PLURALNAME: "Codes d'autorisations liés au rôle"
     PLURALS:
-      many: '{count} codes d''autorisation liés au rôle'
-      one: 'Un code d''autorisation lié au rôle'
-      other: '{count} codes d''autorisation liés au rôle'
+      many: "{count} codes d'autorisation liés au rôle"
+      one: "Un code d'autorisation lié au rôle"
+      other: "{count} codes d'autorisation liés au rôle"
     PermsError: 'Impossible d''attribuer le code "{code}" (requiert un accès en tant qu''administrateur)'
-    SINGULARNAME: 'Code d''autorisation lié au rôle'
+    SINGULARNAME: "Code d'autorisation lié au rôle"
     has_one_Role: Rôle
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Signatures de mot de passe'
@@ -337,15 +348,17 @@ fr:
     SINGULARNAME: 'Signature de mot de passe'
     has_one_Member: Membre
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'Vous n''avez pas accès à cette page. Si un autre de vos identifiants vous permet d''accéder à cette page, merci de vous reconnecter ci-dessous en l''utilisant.'
+    ALREADYLOGGEDIN: "Vous n'avez pas accès à cette page. Si un autre de vos identifiants vous permet d'accéder à cette page, merci de vous reconnecter ci-dessous en l'utilisant."
     BUTTONSEND: 'Envoyer moi le lien pour modifier le mot de passe'
     CHANGEPASSWORDBELOW: 'Vous pouvez modifier votre mot de passe ci-dessous.'
     CHANGEPASSWORDHEADER: 'Modifier votre mot de passe'
     CONFIRMLOGOUT: 'Merci de cliquer le bouton ci-dessous pour confirmer que vous souhaitez vous déconnecter.'
-    ENTERNEWPASSWORD: 'Entrer un nouveau mot de passe s''il vous plaît.'
+    ENTERNEWPASSWORD: "Entrer un nouveau mot de passe s'il vous plaît."
     ERRORPASSWORDPERMISSION: 'Vous devez être connecté pour modifier votre mot de passe !'
     LOGIN: 'Se connecter'
     LOGOUT: 'Se déconnecter'
     LOSTPASSWORDHEADER: 'Mot de passe oublié'
     NOTEPAGESECURED: 'Cette page est sécurisée. Entrez vos identifiants ci-dessous et vous pourrez y avoir accès.'
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
+    PASSWORDRESETSENTHEADER: 'Le lien de réinitialisation du mot de passe a été envoyé'
+    PASSWORDRESETSENTTEXT: "Nous vous remercions. Un lien de réinitialisation a été envoyé, à condition qu'un compte existe pour cette adresse électronique."

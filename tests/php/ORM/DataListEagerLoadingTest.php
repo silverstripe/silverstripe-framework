@@ -12,7 +12,9 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\ManyManyThroughList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadObject;
+use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadSubClassObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneSubEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneSubSubEagerLoadObject;
@@ -752,6 +754,63 @@ class DataListEagerLoadingTest extends SapphireTest
             $this->resetShowQueries();
         }
         return [$results, $selectCount];
+    }
+
+    /**
+     * @dataProvider provideEagerLoadRelationsEmpty
+     */
+    public function testEagerLoadRelationsEmpty(string $eagerLoadRelation, int $expectedNumQueries): void
+    {
+        EagerLoadObject::create(['Title' => 'test object'])->write();
+        $dataList = EagerLoadObject::get()->eagerLoad($eagerLoadRelation);
+        $this->startCountingSelectQueries();
+        foreach ($dataList as $record) {
+            $relation = $record->$eagerLoadRelation();
+            if ($relation instanceof SS_List) {
+                // The list should be an empty eagerloaded list
+                $this->assertInstanceOf(EagerLoadedList::class, $relation);
+                $this->assertCount(0, $relation);
+            } elseif ($relation !== null) {
+                // There should be no record here
+                $this->assertSame($relation->ID, 0);
+            }
+        }
+        $numQueries = $this->stopCountingSelectQueries();
+        $this->assertSame($expectedNumQueries, $numQueries);
+    }
+
+    public function provideEagerLoadRelationsEmpty(): array
+    {
+        return [
+            'has_one' => [
+                'eagerLoad' => 'HasOneEagerLoadObject',
+                'expectedNumQueries' => 1,
+            ],
+            'polymorph_has_one' => [
+                'eagerLoad' => 'HasOnePolymorphObject',
+                'expectedNumQueries' => 1,
+            ],
+            'belongs_to' => [
+                'eagerLoad' => 'BelongsToEagerLoadObject',
+                'expectedNumQueries' => 2,
+            ],
+            'has_many' => [
+                'eagerLoad' => 'HasManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'many_many' => [
+                'eagerLoad' => 'ManyManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'many_many through' => [
+                'eagerLoad' => 'ManyManyThroughEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'belongs_many_many' => [
+                'eagerLoad' => 'BelongsManyManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+        ];
     }
 
     public function testEagerLoadFourthLevelException(): void
@@ -1591,28 +1650,12 @@ class DataListEagerLoadingTest extends SapphireTest
 
     public function testHasOneMultipleAppearance(): void
     {
-        $this->provideHasOneObjects();
-        $this->validateMultipleAppearance(6, EagerLoadObject::get());
-        $this->validateMultipleAppearance(2, EagerLoadObject::get()->eagerLoad('HasOneEagerLoadObject'));
+        $items = $this->provideHasOneObjects();
+        $this->validateMultipleAppearance($items, 6, EagerLoadObject::get());
+        $this->validateMultipleAppearance($items, 2, EagerLoadObject::get()->eagerLoad('HasOneEagerLoadObject'));
     }
 
-    protected function validateMultipleAppearance(int $expected, DataList $list): void
-    {
-        try {
-            $this->startCountingSelectQueries();
-
-            /** @var EagerLoadObject $item */
-            foreach ($list as $item) {
-                $item->HasOneEagerLoadObject()->Title;
-            }
-
-            $this->assertSame($expected, $this->stopCountingSelectQueries());
-        } finally {
-            $this->resetShowQueries();
-        }
-    }
-
-    protected function provideHasOneObjects(): void
+    protected function provideHasOneObjects(): array
     {
         $subA = new HasOneEagerLoadObject();
         $subA->Title = 'A';
@@ -1655,5 +1698,102 @@ class DataListEagerLoadingTest extends SapphireTest
         $baseF->Title = 'F';
         $baseF->HasOneEagerLoadObjectID = 0;
         $baseF->write();
+
+        return [
+            $baseA->ID => [$subA->ClassName, $subA->ID],
+            $baseB->ID => [$subA->ClassName, $subA->ID],
+            $baseC->ID => [$subB->ClassName, $subB->ID],
+            $baseD->ID => [$subC->ClassName, $subC->ID],
+            $baseE->ID => [$subB->ClassName, $subB->ID],
+            $baseF->ID => [null, 0],
+        ];
+    }
+
+    public function testPolymorphEagerLoading(): void
+    {
+        $items = $this->providePolymorphHasOne();
+        $this->validateMultipleAppearance($items, 5, EagerLoadObject::get(), 'HasOnePolymorphObject');
+        $this->validateMultipleAppearance($items, 4, EagerLoadObject::get()->eagerLoad('HasOnePolymorphObject'), 'HasOnePolymorphObject');
+    }
+
+    protected function providePolymorphHasOne(): array
+    {
+        $subA = new HasOneEagerLoadObject();
+        $subA->Title = 'A';
+        $subA->write();
+
+        $subB = new HasOneEagerLoadObject();
+        $subB->Title = 'B';
+        $subB->write();
+
+        $subC = new HasOneSubSubEagerLoadObject();
+        $subC->Title = 'C';
+        $subC->write();
+
+        $subD = new EagerLoadSubClassObject();
+        $subD->Title = 'D';
+        $subD->write();
+
+        $baseA = new EagerLoadObject();
+        $baseA->Title = 'A';
+        $baseA->HasOnePolymorphObjectClass = $subA->ClassName;
+        $baseA->HasOnePolymorphObjectID = $subA->ID;
+        $baseA->write();
+
+        $baseB = new EagerLoadObject();
+        $baseB->Title = 'B';
+        $baseB->HasOnePolymorphObjectClass = $subB->ClassName;
+        $baseB->HasOnePolymorphObjectID = $subB->ID;
+        $baseB->write();
+
+        $baseC = new EagerLoadObject();
+        $baseC->Title = 'C';
+        $baseC->HasOnePolymorphObjectClass = $subC->ClassName;
+        $baseC->HasOnePolymorphObjectID = $subC->ID;
+        $baseC->write();
+
+        $baseD = new EagerLoadObject();
+        $baseD->Title = 'D';
+        $baseD->HasOnePolymorphObjectClass = $subD->ClassName;
+        $baseD->HasOnePolymorphObjectID = $subD->ID;
+        $baseD->write();
+
+        $baseE = new EagerLoadObject();
+        $baseE->Title = 'E';
+        $baseE->HasOnePolymorphObjectClass = null;
+        $baseE->HasOnePolymorphObjectID = 0;
+        $baseE->write();
+
+        return [
+            $baseA->ID => [$subA->ClassName, $subA->ID],
+            $baseB->ID => [$subB->ClassName, $subB->ID],
+            $baseC->ID => [$subC->ClassName, $subC->ID],
+            $baseD->ID => [$subD->ClassName, $subD->ID],
+            $baseE->ID => [null, 0],
+        ];
+    }
+
+    protected function validateMultipleAppearance(
+        array $expectedRelations,
+        int $expected,
+        DataList $list,
+        string $relation = 'HasOneEagerLoadObject',
+    ): void {
+        try {
+            $this->startCountingSelectQueries();
+
+            /** @var EagerLoadObject $item */
+            foreach ($list as $item) {
+                $rel = $item->{$relation}();
+
+                $this->assertArrayHasKey($item->ID, $expectedRelations, $relation . ' should be loaded');
+                $this->assertEquals($expectedRelations[$item->ID][0], $rel?->ID ? $rel?->ClassName : null);
+                $this->assertEquals($expectedRelations[$item->ID][1], $rel?->ID ?? 0);
+            }
+
+            $this->assertSame($expected, $this->stopCountingSelectQueries());
+        } finally {
+            $this->resetShowQueries();
+        }
     }
 }

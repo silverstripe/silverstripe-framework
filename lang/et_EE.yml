@@ -84,7 +84,7 @@ et_EE:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'On tühi'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ei ole number, sellele väljale võib sisestada ainult numbreid'
+    VALIDATION: "'{value}' ei ole number, sellele väljale võib sisestada ainult numbreid"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
   SilverStripe\ORM\DataObject:

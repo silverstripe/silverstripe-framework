@@ -8,7 +8,7 @@ ja_JP:
     HELLO: こんにちわ！
   SilverStripe\Control\Email\ForgotPasswordEmail_ss:
     HELLO: こんにちわ！
-    TEXT1: 'ここ''貴方の'
+    TEXT1: "ここ'貴方の"
     TEXT2: パスワードリセットのリンク
     TEXT3: は
   SilverStripe\Control\RequestProcessor:
@@ -61,7 +61,7 @@ ja_JP:
   SilverStripe\Forms\NullableField:
     IsNullLabel: NULLである
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}''は数値ではありません。このフィールドには数値のみが入力できます。'
+    VALIDATION: "'{value}'は数値ではありません。このフィールドには数値のみが入力できます。"
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   SilverStripe\ORM\DataObject:

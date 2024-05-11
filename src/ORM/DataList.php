@@ -979,7 +979,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             return [
                 $hasOneComponent,
                 'has_one',
-                $relationName . 'ID',
+                [
+                    'joinField' => $relationName . 'ID',
+                    'joinClass' => $hasOneComponent == DataObject::class ? $relationName . 'Class' : null,
+                ],
             ];
         }
         $belongsToComponent = $schema->belongsToComponent($parentDataClass, $relationName);
@@ -1109,7 +1112,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     private function fetchEagerLoadHasOne(
         Query|array $parents,
-        string $hasOneIDField,
+        array $hasOneRelation,
         string $relationDataClass,
         string $relationChain,
         string $relationName,
@@ -1120,6 +1123,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             throw new LogicException("Cannot manipulate eagerloading query for $relationType relation $relationName");
         }
 
+        $hasOneIDField = $hasOneRelation['joinField'];
+        $hasOneClassField = $hasOneRelation['joinClass'];
+
         $fetchedIDs = [];
         $addTo = [];
 
@@ -1128,41 +1134,63 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             if (is_array($parentData)) {
                 // $parentData represents a record in this DataList
                 $hasOneID = $parentData[$hasOneIDField];
-                $fetchedIDs[] = $hasOneID;
-                $addTo[$hasOneID][] = $parentData['ID'];
+
+                if ($hasOneID) {
+                    // Class field is only set for polymorphic has_one relations
+                    $hasOneClass = $hasOneClassField ? $parentData[$hasOneClassField] : $relationDataClass;
+
+                    $fetchedIDs[$hasOneClass][$hasOneID] = $hasOneID;
+                    $addTo[$hasOneClass][$hasOneID][] = $parentData['ID'];
+                }
             } elseif ($parentData instanceof DataObject) {
                 // $parentData represents another has_one record
                 $hasOneID = $parentData->$hasOneIDField;
-                $fetchedIDs[] = $hasOneID;
-                $addTo[$hasOneID][] = $parentData;
+
+                if ($hasOneID) {
+                    // Class field is only set for polymorphic has_one relations
+                    $hasOneClass = $hasOneClassField ? $parentData->$hasOneClassField : $relationDataClass;
+
+                    $fetchedIDs[$hasOneClass][$hasOneID] = $hasOneID;
+                    $addTo[$hasOneClass][$hasOneID][] = $parentData;
+                }
             } elseif ($parentData instanceof EagerLoadedList) {
                 // $parentData represents a has_many or many_many relation
                 foreach ($parentData->getRows() as $parentRow) {
+                    // $parentData represents another has_one record
                     $hasOneID = $parentRow[$hasOneIDField];
-                    $fetchedIDs[] = $hasOneID;
-                    $addTo[$hasOneID][] = ['ID' => $parentRow['ID'], 'list' => $parentData];
+
+                    if ($hasOneID) {
+                        // Class field is only set for polymorphic has_one relations
+                        $hasOneClass = $hasOneClassField ? $parentRow[$hasOneClassField] : $relationDataClass;
+
+                        $fetchedIDs[$hasOneClass][$hasOneID] = $hasOneID;
+                        $addTo[$hasOneClass][$hasOneID][] = ['ID' => $parentRow['ID'], 'list' => $parentData];
+                    }
                 }
             } else {
                 throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
             }
         }
 
-        $fetchedRecords = DataObject::get($relationDataClass)->byIDs($fetchedIDs)->toArray();
+        $fetchedRecords = [];
 
-        // Add each fetched record to the appropriate place
-        foreach ($fetchedRecords as $fetched) {
-            if (isset($addTo[$fetched->ID])) {
-                foreach ($addTo[$fetched->ID] as $addHere) {
-                    if ($addHere instanceof DataObject) {
-                        $addHere->setEagerLoadedData($relationName, $fetched);
-                    } elseif (is_array($addHere)) {
-                        $addHere['list']->addEagerLoadedData($relationName, $addHere['ID'], $fetched);
-                    } else {
-                        $this->eagerLoadedData[$relationChain][$addHere][$relationName] = $fetched;
+        foreach ($fetchedIDs as $class => $ids) {
+            foreach (DataObject::get($class)->byIDs($ids) as $fetched) {
+                $fetchedRecords[] = $fetched;
+
+                if (isset($addTo[$class][$fetched->ID])) {
+                    foreach ($addTo[$class][$fetched->ID] as $addHere) {
+                        if ($addHere instanceof DataObject) {
+                            $addHere->setEagerLoadedData($relationName, $fetched);
+                        } elseif (is_array($addHere)) {
+                            $addHere['list']->addEagerLoadedData($relationName, $addHere['ID'], $fetched);
+                        } else {
+                            $this->eagerLoadedData[$relationChain][$addHere][$relationName] = $fetched;
+                        }
                     }
+                } else {
+                    throw new LogicException("Couldn't find parent for record $class on $relationType relation $relationName");
                 }
-            } else {
-                throw new LogicException("Couldn't find parent for record $fetchedID on $relationType relation $relationName");
             }
         }
 
@@ -1321,17 +1349,21 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         }
 
         // Get the join records so we can correctly identify which children belong to which parents
-        // This also holds extra fields data
-        $fetchedIDsAsString = implode(',', $fetchedIDs);
-        $joinRows = DB::query(
-            'SELECT * FROM "' . $joinTable
-            // Only get joins relevant for the parent list
-            . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
-            // Exclude any children that got filtered out
-            . ' AND ' . $childIDField . ' IN (' . $fetchedIDsAsString . ')'
-            // Respect sort order of fetched items
-            . ' ORDER BY FIELD(' . $childIDField . ', ' . $fetchedIDsAsString . ')'
-        );
+        // If there are no parents and no children, skip this to avoid an error (and to skip an unnecessary DB call)
+        // Note that $joinRows also holds extra fields data
+        $joinRows = [];
+        if (!empty($parentIDs) && !empty($fetchedIDs)) {
+            $fetchedIDsAsString = implode(',', $fetchedIDs);
+            $joinRows = DB::query(
+                'SELECT * FROM "' . $joinTable
+                // Only get joins relevant for the parent list
+                . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
+                // Exclude any children that got filtered out
+                . ' AND ' . $childIDField . ' IN (' . $fetchedIDsAsString . ')'
+                // Respect sort order of fetched items
+                . ' ORDER BY FIELD(' . $childIDField . ', ' . $fetchedIDsAsString . ')'
+            );
+        }
 
         // Store the children in an EagerLoadedList against the correct parent
         foreach ($joinRows as $row) {

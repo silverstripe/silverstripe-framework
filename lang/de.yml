@@ -137,7 +137,7 @@ de:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'ist NULL'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}'' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt'
+    VALIDATION: "'{value}' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt"
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Der für {name} eingegebene Wert darf nicht mehr als {maxLength} Zeichen lang sein'
   SilverStripe\Forms\TimeField:

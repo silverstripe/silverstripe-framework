@@ -17,13 +17,13 @@ af:
   SilverStripe\Forms\DateField:
     NOTSET: 'Nie gestel nie'
     TODAY: vandag
-    VALIDDATEFORMAT2: 'Sleutel asseblief ''n geldige datum formaat in ({format})'
+    VALIDDATEFORMAT2: "Sleutel asseblief 'n geldige datum formaat in ({format})"
     VALIDDATEMAXDATE: 'Jou datum moet gelykstaande of ouer wees as die maksimum toelaatbare datum ({date})'
     VALIDDATEMINDATE: 'Jou datum moet net so out of nuwer wees as die minimum toelaatbare datum ({date})'
   SilverStripe\Forms\DropdownField:
     CHOOSE: (Kies)
   SilverStripe\Forms\EmailField:
-    VALIDATION: 'Verskaf asseblief  ''n epos adres '
+    VALIDATION: "Verskaf asseblief  'n epos adres "
   SilverStripe\Forms\FileUploadReceiver:
     FIELDNOTSET: 'Die lêer informasie kan nie gevind word nie'
   SilverStripe\Forms\Form:
@@ -31,7 +31,7 @@ af:
     VALIDATIONPASSWORDSNOTEMPTY: 'Wagwoorde kan nie leeg wees nie'
     VALIDATIONSTRONGPASSWORD: 'Wagwoorde moet minstens een nommer en een alfa-numeriese karaketer bevat'
     VALIDATOR: Vergeldiger
-    VALIDCURRENCY: 'Tik asseblief ''n geldige geldeenheid in '
+    VALIDCURRENCY: "Tik asseblief 'n geldige geldeenheid in "
   SilverStripe\Forms\FormField:
     NONE: geen
   SilverStripe\Forms\FormScaffolder:
@@ -74,9 +74,9 @@ af:
     FIELDLABELAMOUNT: Bedrag
     FIELDLABELCURRENCY: 'Geld eenheid'
   SilverStripe\Forms\NumericField:
-    VALIDATION: '''{value}''is nie ''n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld'
+    VALIDATION: "'{value}'is nie 'n nommer nie, slegs die nommers kan aanvaar word vir hierdie veld"
   SilverStripe\Forms\TimeField:
-    VALIDATEFORMAT: 'Sleutel asseblief ''n geldige tyd formaat ({format})'
+    VALIDATEFORMAT: "Sleutel asseblief 'n geldige tyd formaat ({format})"
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Voorwerpe'
     SINGULARNAME: 'Data Voorwerp'
@@ -87,8 +87,8 @@ af:
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Enige
   SilverStripe\Security\BasicAuth:
-    ENTERINFO: 'Tik asseblief ''n verbruikersnaam en wagwoord in'
-    ERRORNOTADMIN: 'Daardie verbruiker is nie ''n administreerder nie'
+    ENTERINFO: "Tik asseblief 'n verbruikersnaam en wagwoord in"
+    ERRORNOTADMIN: "Daardie verbruiker is nie 'n administreerder nie"
     ERRORNOTREC: 'Daar die verbruikersnaam / wagwoord is nie herken nie'
   SilverStripe\Security\Confirmation\Form:
     REFUSE: 'Kanselleer '
@@ -100,7 +100,7 @@ af:
     DefaultGroupTitleContentAuthors: 'Inhouds Outeurs'
     Description: Beskrywing
     GROUPNAME: 'Groep naam'
-    GroupReminder: 'As jy ''n ouer groep kies sal hierdie groep al daardie rolle aanneem'
+    GroupReminder: "As jy 'n ouer groep kies sal hierdie groep al daardie rolle aanneem"
     Locked: 'Gesluit?'
     MEMBERS: Lidde
     NoRoles: 'Geen rolle gevind nie'
@@ -137,7 +137,7 @@ af:
     EDIT_PASSWORD: 'Nuwe wagwoord'
     EMAIL: Epos
     EMPTYNEWPASSWORD: 'Die nuwe wagwoord kan nie leeg wees nie. Probeer asseblief weer'
-    ENTEREMAIL: 'Verskaf asseblief  ''n epos adres sodat ons vir u ''n wagwoord herstel skakel kan epos'
+    ENTEREMAIL: "Verskaf asseblief  'n epos adres sodat ons vir u 'n wagwoord herstel skakel kan epos"
     ERRORNEWPASSWORD: 'Jy het jou nuwe wagwoord anders ingetik. Probeer weer'
     ERRORPASSWORDNOTMATCH: 'U huidige wagwoord pas nie, probeer asseblief weer'
     FIRSTNAME: Voornaam
@@ -194,13 +194,13 @@ af:
   SilverStripe\Security\RememberLoginHash:
     has_one_Member: Lid
   SilverStripe\Security\Security:
-    ALREADYLOGGEDIN: 'U het nie toegang tot hierdie bladsy nie. As u n'' ander rekening het wat toegang tot hierdie bladsy het, kan u weer inteken.'
+    ALREADYLOGGEDIN: "U het nie toegang tot hierdie bladsy nie. As u n' ander rekening het wat toegang tot hierdie bladsy het, kan u weer inteken."
     BUTTONSEND: 'Stuur vir my die wagwoord herstel skakel'
     CHANGEPASSWORDBELOW: 'Jy kan jou wagwoord onder verander'
     CHANGEPASSWORDHEADER: 'Verander jou wagwoord'
-    ENTERNEWPASSWORD: 'Sleutel asseblief ''n nuwe wagwoord in'
+    ENTERNEWPASSWORD: "Sleutel asseblief 'n nuwe wagwoord in"
     ERRORPASSWORDPERMISSION: 'Jy moet ingeteken wees om jou wagwoord te verander'
     LOGIN: 'Teken in'
     LOGOUT: 'Teken af'
     NOTEPAGESECURED: 'Daai bladsy is beveilig. Sleutel jou informasie onder in sodat ons jou op jou pad kan stuur'
-    NOTERESETPASSWORD: 'Sleutel you epos adres in sodat ons vir jou ''n herstel skakel kan epos'
+    NOTERESETPASSWORD: "Sleutel you epos adres in sodat ons vir jou 'n herstel skakel kan epos"
