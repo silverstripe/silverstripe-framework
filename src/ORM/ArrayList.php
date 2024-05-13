@@ -126,9 +126,13 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function getIterator(): Traversable
     {
-        foreach ($this->items as $i => $item) {
+        foreach ($this->items as $item) {
             if (is_array($item)) {
-                yield new ArrayData($item);
+                if (array_is_list($item)) {
+                    yield new ArrayList($item);
+                } else {
+                    yield new ArrayData($item);
+                }
             } else {
                 yield $item;
             }

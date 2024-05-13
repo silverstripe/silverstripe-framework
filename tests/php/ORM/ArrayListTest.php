@@ -1868,4 +1868,34 @@ class ArrayListTest extends SapphireTest
         $this->assertSame('new value', $list->offsetGet(0));
         $this->assertSame('second value', $list->offsetGet(1));
     }
+
+    public function testGetIterator()
+    {
+        $list = new ArrayList([
+            'one',
+            [
+                'two' => 'b',
+                'three' => 'c'
+            ],
+            [
+                'four',
+                'five'
+            ]
+        ]);
+        foreach ($list as $i => $value) {
+            if ($i === 0) {
+                $this->assertSame('one', $value);
+            }
+            if ($i === 1) {
+                $this->assertSame(ArrayData::class, get_class($value));
+                $this->assertSame('b', $value->two);
+                $this->assertSame('c', $value->three);
+            }
+            if ($i === 2) {
+                $this->assertSame(ArrayList::class, get_class($value));
+                $this->assertSame('four', $value->first());
+                $this->assertSame('five', $value->last());
+            }
+        }
+    }
 }

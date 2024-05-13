@@ -10,6 +10,11 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestExtension;
 use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestObject;
 use SilverStripe\View\ViewableData;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBFloat;
+use SilverStripe\ORM\FieldType\DBInt;
+use SilverStripe\ORM\FieldType\DBText;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
@@ -277,5 +282,30 @@ class ViewableDataTest extends SapphireTest
         $this->assertTrue($viewableData->hasDynamicData('abc'));
         $this->assertSame($obj, $viewableData->getDynamicData('abc'));
         $this->assertSame($obj, $viewableData->abc);
+    }
+
+    public function testObjArrayAndPrimitiveCast()
+    {
+        $viewableData = new class extends ViewableData {
+            public function Something(): array
+            {
+                return ['abc', 1, 2.3, true, null, [4,5,6]];
+            }
+        };
+        /** @var ArrayList $result */
+        $result = $viewableData->obj('Something');
+        $this->assertSame(ArrayList::class, get_class($result));
+        $this->assertSame(DBText::class, get_class($result->toArray()[0]));
+        $this->assertSame('abc', $result->toArray()[0]->getValue());
+        $this->assertSame(DBInt::class, get_class($result->toArray()[1]));
+        $this->assertSame(1, $result->toArray()[1]->getValue());
+        $this->assertSame(DBFloat::class, get_class($result->toArray()[2]));
+        $this->assertSame(2.3, $result->toArray()[2]->getValue());
+        $this->assertSame(DBBoolean::class, get_class($result->toArray()[3]));
+        $this->assertSame(true, $result->toArray()[3]->getValue());
+        $this->assertSame(DBText::class, get_class($result->toArray()[4]));
+        $this->assertSame('NULL', $result->toArray()[4]->getValue());
+        // nested arrays are not converted
+        $this->assertSame([4,5,6], $result->toArray()[5]);
     }
 }

@@ -25,6 +25,11 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\SSViewer;
 use Traversable;
 use UnexpectedValueException;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBFloat;
+use SilverStripe\ORM\FieldType\DBInt;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
@@ -562,9 +567,18 @@ class ViewableData implements IteratorAggregate
         if (!is_object($value)) {
             // Force cast
             $castingHelper = $this->castingHelper($fieldName);
-            $valueObject = Injector::inst()->create($castingHelper, $fieldName);
-            $valueObject->setValue($value, $this);
-            $value = $valueObject;
+            // Cast arrays to ArrayList by default
+            if (is_array($value) && $castingHelper === $this->config()->get('default_cast')) {
+                $value = ArrayList::create($value);
+            } else {
+                $valueObject = Injector::inst()->create($castingHelper, $fieldName);
+                $valueObject->setValue($value, $this);
+                $value = $valueObject;
+            }
+        }
+
+        if (is_a($value, ArrayList::class)) {
+            $this->convertArrayListItemsToViewableData($value);
         }
 
         // Record in cache
@@ -635,6 +649,24 @@ class ViewableData implements IteratorAggregate
         }
 
         return $result;
+    }
+
+    private function convertArrayListItemsToViewableData(ArrayList $list): void
+    {
+        foreach ($list as $item) {
+            if (!is_scalar($item) && !is_null($item)) {
+                continue;
+            }
+            $newItem = match (gettype($item)) {
+                'boolean' => DBBoolean::create()->setValue($item),
+                'string' => DBText::create()->setValue($item),
+                'double' => DBFloat::create()->setValue($item),
+                'integer' => DBInt::create()->setValue($item),
+                'NULL' => DBText::create()->setValue('NULL'),
+                default => throw new InvalidArgumentException('Invalid primitive type'),
+            };
+            $list->replace($item, $newItem);
+        }
     }
 
     // ITERATOR SUPPORT ------------------------------------------------------------------------------------------------
