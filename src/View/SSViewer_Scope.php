@@ -5,6 +5,11 @@ namespace SilverStripe\View;
 use ArrayIterator;
 use Countable;
 use Iterator;
+use SilverStripe\ORM\FieldType\DBBoolean;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBFloat;
+use SilverStripe\ORM\FieldType\DBInt;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * This tracks the current scope for an SSViewer instance. It has three goals:
@@ -121,7 +126,11 @@ class SSViewer_Scope
      */
     public function getItem()
     {
-        return $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        $item = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        if (is_scalar($item)) {
+            $item = $this->convertScalarToDBField($item);
+        }
+        return $item;
     }
 
     /**
@@ -176,7 +185,7 @@ class SSViewer_Scope
      */
     public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
     {
-        $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        $on = $this->getItem();
         return $on->obj($name, $arguments, $cache, $cacheName);
     }
 
@@ -240,7 +249,7 @@ class SSViewer_Scope
      */
     public function self()
     {
-        $result = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        $result = $this->getItem();
         $this->resetLocalScope();
 
         return $result;
@@ -338,7 +347,7 @@ class SSViewer_Scope
      */
     public function __call($name, $arguments)
     {
-        $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        $on = $this->getItem();
         $retval = $on ? $on->$name(...$arguments) : null;
 
         $this->resetLocalScope();
@@ -367,5 +376,15 @@ class SSViewer_Scope
     protected function getUpIndex()
     {
         return $this->upIndex;
+    }
+
+    private function convertScalarToDBField(bool|string|float|int $value): DBField
+    {
+        return match (gettype($value)) {
+            'boolean' => DBBoolean::create()->setValue($value),
+            'string' => DBText::create()->setValue($value),
+            'double' => DBFloat::create()->setValue($value),
+            'integer' => DBInt::create()->setValue($value),
+        };
     }
 }
