@@ -2218,4 +2218,16 @@ EOC;
         $this->assertTrue(file_exists($cacheFile ?? ''), 'Cache file wasn\'t created when it was meant to');
         unlink($cacheFile ?? '');
     }
+
+    public function testPrimitivesConvertedToDBFields()
+    {
+        $data = new ArrayData([
+            // null value should not be rendered, though should also not throw exception
+            'Foo' => new ArrayList(['hello', true, 456, 7.89, null])
+        ]);
+        $this->assertEqualIgnoringWhitespace(
+            'hello 1 456 7.89',
+            $this->render('<% loop $Foo %>$Me<% end_loop %>', $data)
+        );
+    }
 }
