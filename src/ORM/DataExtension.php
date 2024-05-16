@@ -35,7 +35,7 @@ abstract class DataExtension extends Extension
      * @param SQLSelect $query Query to augment.
      * @param DataQuery $dataQuery Container DataQuery for this SQLSelect
      */
-    public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null)
+    protected function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null)
     {
     }
 
@@ -45,7 +45,7 @@ abstract class DataExtension extends Extension
      * When duplicating a table's structure, remember to duplicate the create options
      * as well. See {@link Versioned->augmentDatabase} for an example.
      */
-    public function augmentDatabase()
+    protected function augmentDatabase()
     {
     }
 
@@ -54,7 +54,7 @@ abstract class DataExtension extends Extension
      *
      * @param array $manipulation Array of operations to augment.
      */
-    public function augmentWrite(&$manipulation)
+    protected function augmentWrite(&$manipulation)
     {
     }
 
@@ -206,7 +206,7 @@ abstract class DataExtension extends Extension
      *
      * @param FieldList $fields FieldList with a contained TabSet
      */
-    public function updateCMSFields(FieldList $fields)
+    protected function updateCMSFields(FieldList $fields)
     {
     }
 
@@ -217,7 +217,7 @@ abstract class DataExtension extends Extension
      *
      * @param CompositeValidator $compositeValidator
      */
-    public function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
+    protected function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
     {
     }
 
@@ -229,7 +229,7 @@ abstract class DataExtension extends Extension
      *
      * @param FieldList $fields FieldList without TabSet nesting
      */
-    public function updateFrontEndFields(FieldList $fields)
+    protected function updateFrontEndFields(FieldList $fields)
     {
     }
 
@@ -239,7 +239,7 @@ abstract class DataExtension extends Extension
      *
      * @param FieldList $actions FieldList
      */
-    public function updateCMSActions(FieldList $actions)
+    protected function updateCMSActions(FieldList $actions)
     {
     }
 
@@ -251,7 +251,7 @@ abstract class DataExtension extends Extension
      *
      * @param array $fields Array of field names
      */
-    public function updateSummaryFields(&$fields)
+    protected function updateSummaryFields(&$fields)
     {
         $summary_fields = Config::inst()->get(static::class, 'summary_fields');
         if ($summary_fields) {
@@ -274,7 +274,7 @@ abstract class DataExtension extends Extension
      *
      * @param array $labels Array of field labels
      */
-    public function updateFieldLabels(&$labels)
+    protected function updateFieldLabels(&$labels)
     {
         $field_labels = Config::inst()->get(static::class, 'field_labels');
         if ($field_labels) {
