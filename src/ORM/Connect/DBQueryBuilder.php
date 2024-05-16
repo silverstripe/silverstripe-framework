@@ -86,7 +86,7 @@ class DBQueryBuilder
         if (Environment::hasEnv('SS_TRACE_DB_QUERY_ORIGIN')) {
             return (bool) Environment::getEnv('SS_TRACE_DB_QUERY_ORIGIN');
         }
-        return static::config()->get('trace_query_origin');
+        return static::config()->get('trace_query_origin') ?? false;
     }
 
     /**
