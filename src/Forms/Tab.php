@@ -66,6 +66,9 @@ class Tab extends CompositeField
             $title = static::name_to_label($name);
         }
 
+        // Remove any blank strings from fields
+        $fields = array_filter($fields);
+
         // Remaining arguments are child fields
         parent::__construct($fields);
 

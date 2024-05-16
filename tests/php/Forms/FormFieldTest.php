@@ -683,4 +683,11 @@ class FormFieldTest extends SapphireTest
         $this->assertInstanceOf(Tip::class, $field->getTitleTip());
         $this->assertSame('Test tip', $field->getTitleTip()->getMessage());
     }
+
+    public function testCastedCopy()
+    {
+        $field = new FormField('MyField');
+        $this->assertTrue(is_a($field->castedCopy(TextField::class), TextField::class));
+        $this->assertTrue(is_a($field->castedCopy(CompositeField::class), CompositeField::class));
+    }
 }
