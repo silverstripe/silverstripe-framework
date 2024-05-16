@@ -74,7 +74,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         $inputText = "These are some unicodes: ä, ö, & ü";
         $field = new HTMLEditorField("Test", "Test");
         $field->setValue($inputText);
-        $this->assertStringContainsString('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+        $this->assertStringContainsString('These are some unicodes: ä, ö, & ü', $field->Field());
         // Test shortcodes
         $inputText = "Shortcode: [file_link id=4]";
         $field = new HTMLEditorField("Test", "Test");
@@ -210,23 +210,34 @@ EOS
         );
     }
 
-    public function testValueEntities()
+    public function provideTestValueEntities()
     {
-        $inputText = "The company &amp; partners";
+        return [
+            "ampersand" => [
+                "The company &amp; partners",
+                "The company &amp; partners"
+            ],
+            "double ampersand" => [
+                "The company &amp;amp; partners",
+                "The company &amp;amp; partners"
+            ],
+            "left arrow and right arrow" => [
+                "<p>&lt;strong&gt;The company &amp;amp; partners&lt;/strong&gt;</p>",
+                "<p>&amp;lt;strong&amp;gt;The company &amp;amp; partners&amp;lt;/strong&amp;gt;</p>"
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTestValueEntities
+     */
+    public function testValueEntities(string $input, string $result)
+    {
         $field = new HTMLEditorField("Content");
-        $field->setValue($inputText);
+        $field->setValue($input);
 
         $this->assertEquals(
-            "The company &amp; partners",
-            $field->obj('ValueEntities')->forTemplate()
-        );
-
-        $inputText = "The company &amp;&amp; partners";
-        $field = new HTMLEditorField("Content");
-        $field->setValue($inputText);
-
-        $this->assertEquals(
-            "The company &amp;&amp; partners",
+            $result,
             $field->obj('ValueEntities')->forTemplate()
         );
     }
