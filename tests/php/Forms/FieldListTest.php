@@ -2,6 +2,9 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use stdClass;
+use InvalidArgumentException;
+use RuntimeException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\FieldList;
@@ -23,6 +26,13 @@ use SilverStripe\Forms\HiddenField;
  */
 class FieldListTest extends SapphireTest
 {
+    public function testInvalidArrayConstructorArg()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Item is not a FormField, is of class stdClass');
+        new FieldList([new stdClass()]);
+    }
+
     public function testRecursiveWalk()
     {
         $fields = [
@@ -259,6 +269,32 @@ class FieldListTest extends SapphireTest
         $this->assertNull($fields->findTab('More'));
         $this->assertEquals($fields->findTab('Root.More'), $more);
         $this->assertEquals($fields->findTab('Root.More.Tab4'), $tab4);
+
+        $fields->addFieldToTab('Root.Tab1', new TextField('Field1'));
+        $this->expectException(RuntimeException::class);
+        $message = "Root.Tab1.Field1 is an instance of 'SilverStripe\Forms\TextField', not Tab or TabSet";
+        $this->expectExceptionMessage($message);
+        $fields->findTab('Root.Tab1.Field1');
+    }
+
+    public function testFindOrMakeTab()
+    {
+        $fields = new FieldList(
+            $root = new TabSet(
+                'Root',
+                $tab1 = new Tab('Tab1'),
+            )
+        );
+        $this->assertEquals($fields->findTab('Root'), $root);
+        $this->assertEquals($fields->findOrMakeTab('Root.Tab1'), $tab1);
+        $tab2 = $fields->findOrMakeTab('Root.Tab2');
+        $this->assertEquals(Tab::class, get_class($tab2));
+
+        $fields->addFieldToTab('Root.Tab1', new TextField('Field1'));
+        $this->expectException(RuntimeException::class);
+        $message = "Root.Tab1.Field1 is an instance of 'SilverStripe\Forms\TextField', not Tab or TabSet";
+        $this->expectExceptionMessage($message);
+        $fields->findOrMakeTab('Root.Tab1.Field1');
     }
 
     /**

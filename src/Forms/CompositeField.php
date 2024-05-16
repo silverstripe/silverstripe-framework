@@ -340,7 +340,7 @@ class CompositeField extends FormField
      * @param string $insertBefore
      * @param FormField $field
      * @param bool $appendIfMissing
-     * @return false|FormField
+     * @return FormField|null
      */
     public function insertBefore($insertBefore, $field, $appendIfMissing = true)
     {
@@ -352,7 +352,7 @@ class CompositeField extends FormField
      * @param string $insertAfter
      * @param FormField $field
      * @param bool $appendIfMissing
-     * @return false|FormField
+     * @return FormField|null
      */
     public function insertAfter($insertAfter, $field, $appendIfMissing = true)
     {

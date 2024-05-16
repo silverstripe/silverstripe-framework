@@ -1362,7 +1362,11 @@ class FormField extends RequestHandler
         $field = $classOrCopy;
 
         if (!is_object($field)) {
-            $field = $classOrCopy::create($this->name);
+            if (is_a($classOrCopy, CompositeField::class, true)) {
+                $field = $classOrCopy::create([]);
+            } else {
+                $field = $classOrCopy::create($this->name);
+            }
         }
 
         $extraClasses = $this->extraClasses ? array_values($this->extraClasses) : [];
