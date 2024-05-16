@@ -26,7 +26,7 @@ use SilverStripe\ORM\ValidationResult;
  *
  * Or by implementing the updateCMSCompositeValidator() method in a DataExtension:
  *
- * public function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
+ * protected function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
  * {
  *   $compositeValidator->addValidator(RequiredFields::create(['AdditionalContent']));
  * }

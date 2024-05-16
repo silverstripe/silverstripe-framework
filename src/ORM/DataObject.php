@@ -4476,7 +4476,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * The framework extend method will return combined values from DataExtension method(s) as an array
      * The method on your DataExtension class should return a single scalar value. For example:
      *
-     * public function cacheKeyComponent()
+     * protected function cacheKeyComponent()
      * {
      *      return (string) $this->owner->MyColumn;
      * }
