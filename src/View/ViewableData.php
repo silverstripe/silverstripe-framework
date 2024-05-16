@@ -20,6 +20,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\SSViewer;
@@ -537,7 +538,7 @@ class ViewableData implements IteratorAggregate
      * @param array $arguments
      * @param bool $cache Cache this object
      * @param string $cacheName a custom cache name
-     * @return Object|DBField
+     * @return object|DBField
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
@@ -556,6 +557,11 @@ class ViewableData implements IteratorAggregate
             $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
         } else {
             $value = $this->$fieldName;
+        }
+
+        // Wrap list arrays in ViewableData so templates can handle them
+        if (is_array($value) && array_is_list($value)) {
+            $value = ArrayList::create($value);
         }
 
         // Cast object
@@ -601,7 +607,10 @@ class ViewableData implements IteratorAggregate
     public function hasValue($field, $arguments = [], $cache = true)
     {
         $result = $this->obj($field, $arguments, $cache);
-        return $result->exists();
+        if ($result instanceof ViewableData) {
+            return $result->exists();
+        }
+        return (bool) $result;
     }
 
     /**
@@ -671,10 +680,8 @@ class ViewableData implements IteratorAggregate
     /**
      * When rendering some objects it is necessary to iterate over the object being rendered, to do this, you need
      * access to itself.
-     *
-     * @return ViewableData
      */
-    public function Me()
+    public function Me(): static
     {
         return $this;
     }
