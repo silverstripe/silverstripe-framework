@@ -500,6 +500,15 @@ SS;
         );
     }
 
+    public function testCurrentScopeLoop(): void
+    {
+        $data = new ArrayList([['Val' => 'one'], ['Val' => 'two'], ['Val' => 'three']]);
+        $this->assertEqualIgnoringWhitespace(
+            'one two three',
+            $this->render('<% loop %>$Val<% end_loop %>', $data)
+        );
+    }
+
     public function testCurrentScopeLoopWith()
     {
         // Data to run the loop tests on - one sequence of three items, each with a subitem

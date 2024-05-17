@@ -1031,13 +1031,13 @@ class SSTemplateParser extends Parser implements TemplateParser
     function ClosedBlock_Handle_Loop(&$res)
     {
         if ($res['ArgumentCount'] > 1) {
-            throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one ' .
-                'argument only.', $this);
+            throw new SSTemplateParseException('Too many arguments in control block. Must be one or no' .
+                'arguments only.', $this);
         }
 
         //loop without arguments loops on the current scope
         if ($res['ArgumentCount'] == 0) {
-            $on = '$scope->obj(\'Up\', null)->obj(\'Foo\', null)';
+            $on = '$scope->locally()->obj(\'Me\', null, true)';
         } else {    //loop in the normal way
             $arg = $res['Arguments'][0];
             if ($arg['ArgumentMode'] == 'string') {
