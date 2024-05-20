@@ -191,7 +191,13 @@ class HTMLEditorField extends TextareaField
      */
     public function ValueEntities()
     {
-        return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8', false);
+        $value = htmlentities($this->Value(), ENT_COMPAT, 'UTF-8', false);
+
+        $value = preg_replace_callback('/(?:&lt;pre.*?&gt;(?<replace>.*?)&lt;\/pre&gt;)/imsu', function ($matches) {
+            return str_replace($matches['replace'], htmlentities($matches['replace'], ENT_COMPAT, 'UTF-8', true), $matches[0]);
+        }, $value);
+
+        return $value;
     }
 
     /**

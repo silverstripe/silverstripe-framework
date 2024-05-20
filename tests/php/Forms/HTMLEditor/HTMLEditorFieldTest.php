@@ -210,23 +210,34 @@ EOS
         );
     }
 
-    public function testValueEntities()
+    public function provideTestValueEntities()
     {
-        $inputText = "The company &amp; partners";
+        return [
+            "ampersand" => [
+                "The company &amp; partners",
+                "The company &amp; partners"
+            ],
+            "double ampersand" => [
+                "The company &amp;amp; partners",
+                "The company &amp;amp; partners"
+            ],
+            "left arrow and right arrow" => [
+                "<p><pre>&lt;strong&gt;The company and partners&lt;/strong&gt;</pre></p>",
+                "&lt;p&gt;&lt;pre&gt;&amp;lt;strong&amp;gt;The company and partners&amp;lt;/strong&amp;gt;&lt;/pre&gt;&lt;/p&gt;"
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTestValueEntities
+     */
+    public function testValueEntities(string $input, string $result)
+    {
         $field = new HTMLEditorField("Content");
-        $field->setValue($inputText);
+        $field->setValue($input);
 
         $this->assertEquals(
-            "The company &amp; partners",
-            $field->obj('ValueEntities')->forTemplate()
-        );
-
-        $inputText = "The company &amp;&amp; partners";
-        $field = new HTMLEditorField("Content");
-        $field->setValue($inputText);
-
-        $this->assertEquals(
-            "The company &amp;&amp; partners",
+            $result,
             $field->obj('ValueEntities')->forTemplate()
         );
     }
