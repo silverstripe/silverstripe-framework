@@ -34,6 +34,7 @@ use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
 use SilverStripe\SessionManager\Models\LoginSession;
+use ReflectionMethod;
 
 class MemberTest extends FunctionalTest
 {
@@ -1605,7 +1606,9 @@ class MemberTest extends FunctionalTest
         $this->assertFalse($fail, 'Missing FirstName');
 
         $ext = new MemberTest\ValidatorExtension();
-        $ext->updateValidator($validator);
+        $method = new ReflectionMethod(MemberTest\ValidatorExtension::class, 'updateValidator');
+        $method->setAccessible(true);
+        $method->invokeArgs($ext, [$validator]);
 
         $pass = $validator->php(
             [

@@ -25,7 +25,7 @@ class ControllerExtension extends Extension implements TestOnly
     /**
      * Called whenever there is an HTTP error
      */
-    public function onBeforeHTTPError()
+    protected function onBeforeHTTPError()
     {
         self::$called_error = true;
     }

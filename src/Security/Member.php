@@ -733,7 +733,7 @@ class Member extends DataObject
     /**
      * Event handler called before writing to the database.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         // Remove any line-break or space characters accidentally added during a copy-paste operation
         if ($this->Email) {
@@ -818,7 +818,7 @@ class Member extends DataObject
         parent::onBeforeWrite();
     }
 
-    public function onAfterWrite()
+    protected function onAfterWrite()
     {
         parent::onAfterWrite();
 
@@ -829,7 +829,7 @@ class Member extends DataObject
         }
     }
 
-    public function onAfterDelete()
+    protected function onAfterDelete()
     {
         parent::onAfterDelete();
 

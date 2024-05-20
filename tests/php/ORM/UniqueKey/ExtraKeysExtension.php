@@ -7,7 +7,7 @@ use SilverStripe\Dev\TestOnly;
 
 class ExtraKeysExtension extends Extension implements TestOnly
 {
-    public function cacheKeyComponent(): string
+    protected function cacheKeyComponent(): string
     {
         return 'extra-key';
     }

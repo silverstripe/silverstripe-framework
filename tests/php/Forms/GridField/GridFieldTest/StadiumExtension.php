@@ -9,7 +9,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\StadiumExtension;
 
 class StadiumExtension extends DataExtension implements TestOnly
 {
-    public function updateSearchableFields(&$fields)
+    protected function updateSearchableFields(&$fields)
     {
         $fields['Type']['filter'] = new FulltextFilter();
     }

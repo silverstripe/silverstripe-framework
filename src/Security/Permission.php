@@ -636,7 +636,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
     }
 
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
 

@@ -63,7 +63,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onBeforeWrite()} for context.
      */
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
     }
 
@@ -72,7 +72,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onAfterWrite()} for context.
      */
-    public function onAfterWrite()
+    protected function onAfterWrite()
     {
     }
 
@@ -81,7 +81,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onBeforeDelete()} for context.
      */
-    public function onBeforeDelete()
+    protected function onBeforeDelete()
     {
     }
 
@@ -90,7 +90,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onAfterDelete()} for context.
      */
-    public function onAfterDelete()
+    protected function onAfterDelete()
     {
     }
 
