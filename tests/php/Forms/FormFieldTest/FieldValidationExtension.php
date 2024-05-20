@@ -12,7 +12,7 @@ class FieldValidationExtension extends Extension implements TestOnly
 
     protected bool $triggerTestValidationError = false;
 
-    public function updateValidationResult(bool &$result, Validator $validator)
+    protected function updateValidationResult(bool &$result, Validator $validator)
     {
         if ($this->excludeFromValidation) {
             $result = true;

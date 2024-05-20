@@ -8,7 +8,7 @@ use SilverStripe\ORM\DataExtension;
 class ValidatorExtension extends DataExtension implements TestOnly
 {
 
-    public function updateValidator(&$validator)
+    protected function updateValidator($validator)
     {
         $validator->addRequiredField('Surname');
         $validator->removeRequiredField('FirstName');

@@ -69,7 +69,7 @@ class PermissionRole extends DataObject
         return $fields;
     }
 
-    public function onAfterDelete()
+    protected function onAfterDelete()
     {
         parent::onAfterDelete();
 

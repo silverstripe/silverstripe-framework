@@ -532,7 +532,7 @@ class Group extends DataObject
         return $validator;
     }
 
-    public function onBeforeWrite()
+    protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
 
@@ -547,7 +547,7 @@ class Group extends DataObject
         $this->dedupeCode();
     }
 
-    public function onBeforeDelete()
+    protected function onBeforeDelete()
     {
         parent::onBeforeDelete();
 

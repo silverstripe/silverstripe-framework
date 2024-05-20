@@ -10,7 +10,7 @@ use SilverStripe\ORM\DataExtension;
  */
 class AlwaysFailExtension extends DataExtension implements TestOnly
 {
-    public function updatePHP($data, $form)
+    protected function updatePHP($data, $form)
     {
         return false;
     }
