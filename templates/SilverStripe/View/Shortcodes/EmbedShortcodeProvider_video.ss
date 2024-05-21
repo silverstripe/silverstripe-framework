@@ -3,6 +3,6 @@
 >
     {$Content}
     <% if $Arguments.caption %>
-        <p class="caption">{$Arguments.caption}</p>
+        <p class="caption">{$Arguments.caption.RAW}</p>
     <% end_if %>
 </div>
