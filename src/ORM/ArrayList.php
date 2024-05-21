@@ -64,6 +64,33 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         parent::__construct();
     }
 
+    public static function createFromArray(array $items): ArrayList|ArrayData
+    {
+        return self::recursiveCreateFromArray($items);
+    }
+
+    private static function recursiveCreateFromArray(mixed $itemOrItems): mixed
+    {
+        // $item
+        if (!is_array($itemOrItems)) {
+            return $itemOrItems;
+        }
+        // $items
+        if (array_is_list($itemOrItems)) {
+            $list = new ArrayList();
+            foreach ($itemOrItems as $item) {
+                $list->add(new ArrayData(['_index' => self::recursiveCreateFromArray($item)]));
+            }
+            return $list;
+        }
+        // assoc array
+        $data = [];
+        foreach ($itemOrItems as $key => $item) {
+            $data[$key] = self::recursiveCreateFromArray($item);
+        }
+        return new ArrayData($data);
+    }
+
     /**
      * Underlying type class for this list
      *

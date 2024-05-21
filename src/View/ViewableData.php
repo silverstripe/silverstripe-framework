@@ -25,6 +25,7 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\SSViewer;
 use Traversable;
 use UnexpectedValueException;
+use SilverStripe\ORM\ArrayList;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
@@ -558,6 +559,10 @@ class ViewableData implements IteratorAggregate
             $value = $this->$fieldName;
         }
 
+        if (is_array($value)) {
+            $value = ArrayList::createFromArray($value);
+        }
+
         // Cast object
         if (!is_object($value)) {
             // Force cast
@@ -676,6 +681,12 @@ class ViewableData implements IteratorAggregate
      */
     public function Me()
     {
+        if (is_a($this, ArrayData::class)) {
+            $keys = array_keys($this->toMap());
+            if (count($keys) === 1 && $keys[0] == '_index') {
+                return $this->_index;
+            }
+        }
         return $this;
     }
 
