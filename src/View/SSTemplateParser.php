@@ -1886,6 +1886,8 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['php'] .= '((bool)'.$sub['php'].')';
         } else {
             $php = ($sub['ArgumentMode'] == 'default' ? $sub['lookup_php'] : $sub['php']);
+            // TODO: kinda hacky - maybe we need a way to pass state down the parse chain so
+            // Lookup_LastLookupStep and Argument_BareWord can produce hasValue instead of XML_val
             $res['php'] .= str_replace('$$FINAL', 'hasValue', $php ?? '');
         }
     }
@@ -4257,13 +4259,13 @@ class SSTemplateParser extends Parser implements TemplateParser
     function ClosedBlock_Handle_Loop(&$res)
     {
         if ($res['ArgumentCount'] > 1) {
-            throw new SSTemplateParseException('Either no or too many arguments in control block. Must be one ' .
-                'argument only.', $this);
+            throw new SSTemplateParseException('Too many arguments in control block. Must be one or no' .
+                'arguments only.', $this);
         }
 
         //loop without arguments loops on the current scope
         if ($res['ArgumentCount'] == 0) {
-            $on = '$scope->obj(\'Up\', null)->obj(\'Foo\', null)';
+            $on = '$scope->locally()->obj(\'Me\', null, true)';
         } else {    //loop in the normal way
             $arg = $res['Arguments'][0];
             if ($arg['ArgumentMode'] == 'string') {
@@ -5290,6 +5292,8 @@ class SSTemplateParser extends Parser implements TemplateParser
         $text = stripslashes($text ?? '');
         $text = addcslashes($text ?? '', '\'\\');
 
+        // TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
+        // non-dynamically calculated
         $code = <<<'EOC'
 (\SilverStripe\View\SSViewer::getRewriteHashLinksDefault()
     ? \SilverStripe\Core\Convert::raw2att( preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI'] ) )
@@ -5328,7 +5332,8 @@ EOC;
 
             $this->includeDebuggingComments = $includeDebuggingComments;
 
-            // Ignore UTF8 BOM at beginning of string.
+            // Ignore UTF8 BOM at beginning of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
+            // (and other encodings) properly
             if (substr($string ?? '', 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
                 $this->pos = 3;
             }

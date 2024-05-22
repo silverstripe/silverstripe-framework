@@ -20,6 +20,8 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldViewButton;
+use SilverStripe\Forms\Tests\GridField\GridFieldReadonlyTest\GridFieldViewButtonReplacement;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
 
 class GridFieldReadonlyTest extends SapphireTest
@@ -31,11 +33,28 @@ class GridFieldReadonlyTest extends SapphireTest
         Cheerleader::class,
     ];
 
+    public function provideReadOnlyTransformation(): array
+    {
+        return [
+            [
+                'viewButtonClass' => null,
+            ],
+            [
+                'viewButtonClass' => GridFieldViewButton::class,
+            ],
+            [
+                'viewButtonClass' => GridFieldViewButtonReplacement::class,
+            ],
+        ];
+    }
+
     /**
      * The CMS can set the value of a GridField to be a hasMany relation, which needs a readonly state.
      * This test ensures GridField has a readonly transformation.
+     *
+     * @dataProvider provideReadOnlyTransformation
      */
-    public function testReadOnlyTransformation()
+    public function testReadOnlyTransformation(?string $viewButtonClass)
     {
         // Build a hasMany Relation via getComponents like ModelAdmin does.
         $components = Team::get_one(Team::class)
@@ -66,6 +85,18 @@ class GridFieldReadonlyTest extends SapphireTest
             $components,
             $gridConfig
         );
+
+        if ($viewButtonClass !== GridFieldViewButton::class) {
+            $allowedComponents = $gridField->getReadonlyComponents();
+            $viewButtonIndex = array_search(GridFieldViewButton::class, $allowedComponents);
+            if ($viewButtonIndex !== false) {
+                unset($allowedComponents[$viewButtonIndex]);
+            }
+            if ($viewButtonClass !== null) {
+                $allowedComponents[] = $viewButtonClass;
+            }
+            $gridField->setReadonlyComponents($allowedComponents);
+        }
 
         // Model Admin sets the value of the GridField directly to the relation, which doesn't have a forTemplate()
         // function, if we rely on FormField to render into a ReadonlyField we'll get an error as HasManyRelation

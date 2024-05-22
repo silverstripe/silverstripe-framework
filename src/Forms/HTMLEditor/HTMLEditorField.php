@@ -192,7 +192,19 @@ class HTMLEditorField extends TextareaField
      */
     public function ValueEntities()
     {
-        return htmlentities($this->Value() ?? '', ENT_COMPAT, 'UTF-8', false);
+        $entities = get_html_translation_table(HTML_ENTITIES);
+
+        foreach ($entities as $key => $value) {
+            $entities[$key] = "/" . $value . "/";
+        }
+
+        $value = preg_replace_callback($entities, function ($matches) {
+            // Don't apply double encoding to ampersand
+            $doubleEncoding = $matches[0] != '&amp;';
+            return htmlentities($matches[0], ENT_COMPAT, 'UTF-8', $doubleEncoding);
+        }, $this->Value() ?? '');
+
+        return $value;
     }
 
     /**
