@@ -171,6 +171,10 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             $arguments['style'] = 'width: ' . intval($arguments['width']) . 'px;';
         }
 
+        if (!empty($arguments['caption'])) {
+            $arguments['caption'] = htmlentities($arguments['caption'], ENT_QUOTES, 'UTF-8', false);
+        }
+
         // override iframe dimension attributes provided by webservice with ones specified in shortcode arguments
         foreach (['width', 'height'] as $attr) {
             if (!($value = $arguments[$attr] ?? false)) {
