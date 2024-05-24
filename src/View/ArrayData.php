@@ -77,7 +77,7 @@ class ArrayData extends ViewableData
     public function getField($field)
     {
         $value = $this->array[$field];
-        if (is_object($value) && !$value instanceof ViewableData) {
+        if (is_object($value) && !($value instanceof ViewableData) && !is_iterable($value)) {
             return new ArrayData($value);
         } elseif (ArrayLib::is_associative($value)) {
             return new ArrayData($value);

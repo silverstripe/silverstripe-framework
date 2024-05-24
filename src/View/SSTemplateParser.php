@@ -1886,8 +1886,6 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['php'] .= '((bool)'.$sub['php'].')';
         } else {
             $php = ($sub['ArgumentMode'] == 'default' ? $sub['lookup_php'] : $sub['php']);
-            // TODO: kinda hacky - maybe we need a way to pass state down the parse chain so
-            // Lookup_LastLookupStep and Argument_BareWord can produce hasValue instead of XML_val
             $res['php'] .= str_replace('$$FINAL', 'hasValue', $php ?? '');
         }
     }
@@ -5292,8 +5290,6 @@ class SSTemplateParser extends Parser implements TemplateParser
         $text = stripslashes($text ?? '');
         $text = addcslashes($text ?? '', '\'\\');
 
-        // TODO: This is pretty ugly & gets applied on all files not just html. I wonder if we can make this
-        // non-dynamically calculated
         $code = <<<'EOC'
 (\SilverStripe\View\SSViewer::getRewriteHashLinksDefault()
     ? \SilverStripe\Core\Convert::raw2att( preg_replace("/^(\\/)+/", "/", $_SERVER['REQUEST_URI'] ) )
@@ -5332,8 +5328,7 @@ EOC;
 
             $this->includeDebuggingComments = $includeDebuggingComments;
 
-            // Ignore UTF8 BOM at beginning of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
-            // (and other encodings) properly
+            // Ignore UTF8 BOM at beginning of string.
             if (substr($string ?? '', 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
                 $this->pos = 3;
             }

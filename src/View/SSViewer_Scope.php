@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use ArrayIterator;
 use Countable;
 use Iterator;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBFloat;
@@ -130,6 +131,12 @@ class SSViewer_Scope
         if (is_scalar($item)) {
             $item = $this->convertScalarToDBField($item);
         }
+
+        // Wrap list arrays in ViewableData so templates can handle them
+        if (is_array($item) && array_is_list($item)) {
+            $item = ArrayList::create($item);
+        }
+
         return $item;
     }
 
@@ -308,6 +315,8 @@ class SSViewer_Scope
             // Item may be an array or a regular IteratorAggregate
             if (is_array($this->item)) {
                 $this->itemIterator = new ArrayIterator($this->item);
+            } elseif ($this->item instanceof Iterator) {
+                $this->itemIterator = $this->item;
             } else {
                 $this->itemIterator = $this->item->getIterator();
 

@@ -5,6 +5,7 @@ namespace SilverStripe\View\Tests;
 use ReflectionMethod;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestExtension;
@@ -277,5 +278,32 @@ class ViewableDataTest extends SapphireTest
         $this->assertTrue($viewableData->hasDynamicData('abc'));
         $this->assertSame($obj, $viewableData->getDynamicData('abc'));
         $this->assertSame($obj, $viewableData->abc);
+    }
+
+    public function provideWrapArrayInObj(): array
+    {
+        return [
+            'empty array' => [
+                'arr' => [],
+                'expectedClass' => ArrayList::class,
+            ],
+            'fully indexed array' => [
+                'arr' => [
+                    'value1',
+                    'value2',
+                ],
+                'expectedClass' => ArrayList::class,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideWrapArrayInObj
+     */
+    public function testWrapArrayInObj(array $arr, string $expectedClass): void
+    {
+        $viewableData = new ViewableData();
+        $viewableData->arr = $arr;
+        $this->assertInstanceOf($expectedClass, $viewableData->obj('arr'));
     }
 }

@@ -1025,6 +1025,44 @@ after'
         );
     }
 
+    public function provideIfBlockWithIterable(): array
+    {
+        $scenarios = [
+            'empty array' => [
+                'iterable' => [],
+                'inScope' => false,
+            ],
+            'array' => [
+                'iterable' => [1, 2, 3],
+                'inScope' => false,
+            ],
+            'ArrayList' => [
+                'iterable' => new ArrayList([['Val' => 1], ['Val' => 2], ['Val' => 3]]),
+                'inScope' => false,
+            ],
+        ];
+        foreach ($scenarios as $name => $scenario) {
+            $scenario['inScope'] = true;
+            $scenarios[$name . ' in scope'] = $scenario;
+        }
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideIfBlockWithIterable
+     */
+    public function testIfBlockWithIterable(iterable $iterable, bool $inScope): void
+    {
+        $expected = count($iterable) ? 'has value' : 'no value';
+        $data = new ArrayData(['Iterable' => $iterable]);
+        if ($inScope) {
+            $template = '<% with $Iterable %><% if $Me %>has value<% else %>no value<% end_if %><% end_with %>';
+        } else {
+            $template = '<% if $Iterable %>has value<% else %>no value<% end_if %>';
+        }
+        $this->assertEqualIgnoringWhitespace($expected, $this->render($template, $data));
+    }
+
     public function testBaseTagGeneration()
     {
         // XHTML will have a closed base tag
@@ -1338,6 +1376,88 @@ after'
             '&lt;b&gt;html&lt;/b&gt;',
             $t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
         );
+    }
+
+    public function provideLoop(): array
+    {
+        return [
+            'nested array and iterator' => [
+                'iterable' => [
+                    [
+                        'value 1',
+                        'value 2',
+                    ],
+                    new ArrayList([
+                        'value 3',
+                        'value 4',
+                    ]),
+                ],
+                'template' => '<% loop $Iterable %><% loop $Me %>$Me<% end_loop %><% end_loop %>',
+                'expected' => 'value 1 value 2 value 3 value 4',
+            ],
+            'nested associative arrays' => [
+                'iterable' => [
+                    [
+                        'Foo' => 'one',
+                    ],
+                    [
+                        'Foo' => 'two',
+                    ],
+                    [
+                        'Foo' => 'three',
+                    ],
+                ],
+                'template' => '<% loop $Iterable %>$Foo<% end_loop %>',
+                'expected' => 'one two three',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideLoop
+     */
+    public function testLoop(iterable $iterable, string $template, string $expected): void
+    {
+        $data = new ArrayData(['Iterable' => $iterable]);
+        $this->assertEqualIgnoringWhitespace($expected, $this->render($template, $data));
+    }
+
+    public function provideCountIterable(): array
+    {
+        $scenarios = [
+            'empty array' => [
+                'iterable' => [],
+                'inScope' => false,
+            ],
+            'array' => [
+                'iterable' => [1, 2, 3],
+                'inScope' => false,
+            ],
+            'ArrayList' => [
+                'iterable' => new ArrayList([['Val' => 1], ['Val' => 2], ['Val' => 3]]),
+                'inScope' => false,
+            ],
+        ];
+        foreach ($scenarios as $name => $scenario) {
+            $scenario['inScope'] = true;
+            $scenarios[$name . ' in scope'] = $scenario;
+        }
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideCountIterable
+     */
+    public function testCountIterable(iterable $iterable, bool $inScope): void
+    {
+        $expected = count($iterable);
+        $data = new ArrayData(['Iterable' => $iterable]);
+        if ($inScope) {
+            $template = '<% with $Iterable %>$Count<% end_with %>';
+        } else {
+            $template = '$Iterable.Count';
+        }
+        $this->assertEqualIgnoringWhitespace($expected, $this->render($template, $data));
     }
 
     public function testSSViewerBasicIteratorSupport()
@@ -2238,5 +2358,12 @@ EOC;
             'hello 1 456 7.89',
             $this->render('<% loop $Foo %>$Me<% end_loop %>', $data)
         );
+    }
+
+    public function testMe(): void
+    {
+        $mockArrayData = $this->getMockBuilder(ArrayData::class)->addMethods(['forTemplate'])->getMock();
+        $mockArrayData->expects($this->once())->method('forTemplate');
+        $this->render('$Me', $mockArrayData);
     }
 }
