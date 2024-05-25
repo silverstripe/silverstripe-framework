@@ -139,7 +139,7 @@ class Deprecation
         $newLevel = $level;
         // handle closures inside withNoReplacement()
         if (self::$insideWithNoReplacement
-            && substr($backtrace[$newLevel]['function'], -strlen('{closure}')) === '{closure}'
+            && substr($backtrace[$newLevel]['function'], -strlen('{closure')) === '{closure'
         ) {
             $newLevel = $newLevel + 2;
         }
