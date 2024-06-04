@@ -138,27 +138,37 @@ class FormScaffolder
                 && ($this->includeRelations === true || isset($this->includeRelations['has_many']))
             ) {
                 foreach ($this->obj->hasMany() as $relationship => $component) {
-                    if ($this->tabbed) {
-                        $fields->findOrMakeTab(
-                            "Root.$relationship",
-                            $this->obj->fieldLabel($relationship)
-                        );
-                    }
+                    $includeInOwnTab = true;
+                    $fieldLabel = $this->obj->fieldLabel($relationship);
                     $fieldClass = (isset($this->fieldClasses[$relationship]))
                         ? $this->fieldClasses[$relationship]
-                        : 'SilverStripe\\Forms\\GridField\\GridField';
-                    /** @var GridField $grid */
-                    $grid = Injector::inst()->create(
-                        $fieldClass,
-                        $relationship,
-                        $this->obj->fieldLabel($relationship),
-                        $this->obj->$relationship(),
-                        GridFieldConfig_RelationEditor::create()
-                    );
-                    if ($this->tabbed) {
-                        $fields->addFieldToTab("Root.$relationship", $grid);
+                        : null;
+                    if ($fieldClass) {
+                        /** @var GridField */
+                        $hasManyField = Injector::inst()->create(
+                            $fieldClass,
+                            $relationship,
+                            $fieldLabel,
+                            $this->obj->$relationship(),
+                            GridFieldConfig_RelationEditor::create()
+                        );
                     } else {
-                        $fields->push($grid);
+                        /** @var DataObject */
+                        $hasManySingleton = singleton($component);
+                        $hasManyField = $hasManySingleton->scaffoldFormFieldForHasMany($relationship, $fieldLabel, $this->obj, $includeInOwnTab);
+                    }
+                    if ($this->tabbed) {
+                        if ($includeInOwnTab) {
+                            $fields->findOrMakeTab(
+                                "Root.$relationship",
+                                $fieldLabel
+                            );
+                            $fields->addFieldToTab("Root.$relationship", $hasManyField);
+                        } else {
+                            $fields->addFieldToTab('Root.Main', $hasManyField);
+                        }
+                    } else {
+                        $fields->push($hasManyField);
                     }
                 }
             }
@@ -187,7 +197,7 @@ class FormScaffolder
      *
      * @param FieldList $fields Reference to the @FieldList to add fields to.
      * @param string $relationship The relationship identifier.
-     * @param mixed $overrideFieldClass Specify the field class to use here or leave as null to use default.
+     * @param string|null $overrideFieldClass Specify the field class to use here or leave as null to use default.
      * @param bool $tabbed Whether this relationship has it's own tab or not.
      * @param DataObject $dataObject The @DataObject that has the relation.
      */
@@ -198,28 +208,37 @@ class FormScaffolder
         $tabbed,
         DataObject $dataObject
     ) {
-        if ($tabbed) {
-            $fields->findOrMakeTab(
-                "Root.$relationship",
-                $dataObject->fieldLabel($relationship)
+        $includeInOwnTab = true;
+        $fieldLabel = $dataObject->fieldLabel($relationship);
+
+        if ($overrideFieldClass) {
+            /** @var GridField */
+            $manyManyField = Injector::inst()->create(
+                $overrideFieldClass,
+                $relationship,
+                $fieldLabel,
+                $dataObject->$relationship(),
+                GridFieldConfig_RelationEditor::create()
             );
+        } else {
+            $manyManyComponent = DataObject::getSchema()->manyManyComponent(get_class($dataObject), $relationship);
+            /** @var DataObject */
+            $manyManySingleton = singleton($manyManyComponent['childClass']);
+            $manyManyField = $manyManySingleton->scaffoldFormFieldForManyMany($relationship, $fieldLabel, $dataObject, $includeInOwnTab);
         }
 
-        $fieldClass = $overrideFieldClass ?: GridField::class;
-
-        /** @var GridField $grid */
-        $grid = Injector::inst()->create(
-            $fieldClass,
-            $relationship,
-            $dataObject->fieldLabel($relationship),
-            $dataObject->$relationship(),
-            GridFieldConfig_RelationEditor::create()
-        );
-
         if ($tabbed) {
-            $fields->addFieldToTab("Root.$relationship", $grid);
+            if ($includeInOwnTab) {
+                $fields->findOrMakeTab(
+                    "Root.$relationship",
+                    $fieldLabel
+                );
+                $fields->addFieldToTab("Root.$relationship", $manyManyField);
+            } else {
+                $fields->addFieldToTab('Root.Main', $manyManyField);
+            }
         } else {
-            $fields->push($grid);
+            $fields->push($manyManyField);
         }
     }
 

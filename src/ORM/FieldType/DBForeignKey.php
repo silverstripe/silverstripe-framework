@@ -28,7 +28,8 @@ class DBForeignKey extends DBInt
     protected $object;
 
     /**
-     * Number of related objects to show in a dropdown before it switches to using lazyloading
+     * Number of related objects to show in a scaffolded searchable dropdown field before it
+     * switches to using lazyloading.
      * This will also be used as the lazy load limit
      *
      * @config
@@ -65,23 +66,7 @@ class DBForeignKey extends DBInt
             return null;
         }
         $hasOneSingleton = singleton($hasOneClass);
-        if ($hasOneSingleton instanceof File) {
-            $field = Injector::inst()->create(FileHandleField::class, $relationName, $title);
-            if ($hasOneSingleton instanceof Image) {
-                $field->setAllowedFileCategories('image/supported');
-            }
-            if ($field->hasMethod('setAllowedMaxFileNumber')) {
-                $field->setAllowedMaxFileNumber(1);
-            }
-            return $field;
-        }
-        $labelField = $hasOneSingleton->hasField('Title') ? 'Title' : 'Name';
-        $list = DataList::create($hasOneClass);
-        $threshold = self::config()->get('dropdown_field_threshold');
-        $overThreshold = $list->count() > $threshold;
-        $field = SearchableDropdownField::create($this->name, $title, $list, $labelField)
-            ->setIsLazyLoaded($overThreshold)
-            ->setLazyLoadLimit($threshold);
+        $field = $hasOneSingleton->scaffoldFormFieldForHasOne($this->name, $title, $relationName, $this->object);
         return $field;
     }
 
