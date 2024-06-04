@@ -137,6 +137,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Return an array of the actual items that this ArrayList contains.
+     *
+     * @return array<T>
      */
     public function toArray()
     {
@@ -477,6 +479,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * @example $list->sort('Name DESC'); // DESC sorting
      * @example $list->sort('Name', 'ASC');
      * @example $list->sort(array('Name'=>'ASC,'Age'=>'DESC'));
+     *
+     * @return static<T>
      */
     public function sort()
     {
@@ -589,6 +593,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *
      * @param string $key
      * @param mixed $value
+     * @return T|null
      */
     public function find($key, $value)
     {
@@ -609,6 +614,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Also supports SearchFilter syntax
      * @example // include anyone with "sam" anywhere in their name
      *          $list = $list->filter('Name:PartialMatch', 'sam');
+     *
+     * @return static<T>
      */
     public function filter()
     {
@@ -635,6 +642,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      *          $list = $list->filterAny('Name:PartialMatch', 'sam');
      *
      * @param string|array See {@link filter()}
+     * @return static<T>
      */
     public function filterAny()
     {
@@ -656,6 +664,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Also supports SearchFilter syntax
      * @example // everyone except anyone with "sam" anywhere in their name
      *          $list = $list->exclude('Name:PartialMatch', 'sam');
+     *
+     * @return static<T>
      */
     public function exclude()
     {
@@ -829,6 +839,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      * Filter this list to only contain the given Primary IDs
      *
      * @param array $ids Array of integers, will be automatically cast/escaped.
+     *
+     * @return static<T>
      */
     public function byIDs($ids)
     {
