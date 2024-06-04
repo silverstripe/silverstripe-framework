@@ -322,6 +322,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return a new DataList instance with the records returned in this query
      * restricted by a limit clause.
+     * @return static<T>
      */
     public function limit(?int $length, int $offset = 0): static
     {
@@ -364,6 +365,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * @example $list = $list->sort(['Name' => 'ASC', 'Age' => 'DESC']);
      * @example $list = $list->sort('MyRelation.MyColumn ASC')
      * @example $list->sort(null); // wipe any existing sort
+     *
+     * @return static<T>
      */
     public function sort(...$args): static
     {
@@ -480,6 +483,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * ->filter('Field:not', null) will generate '"Field" IS NOT NULL'
      *
      * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
+     * @return static<T>
      */
     public function filter()
     {
@@ -541,6 +545,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
      *
      * @param string|array See {@link filter()}
+     * @return static<T>
      */
     public function filterAny()
     {
@@ -681,6 +686,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string|array
      * @param string [optional]
+     * @return static<T>
      */
     public function exclude()
     {
@@ -824,6 +830,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     /**
      * Return an array of the actual items that this DataList contains at this stage.
      * This is when the query is actually executed.
+     * @return array<T>
      */
     public function toArray()
     {
@@ -1658,6 +1665,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns the first item in this DataList
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
+     * @return T|null
      */
     public function first()
     {
@@ -1676,6 +1684,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns the last item in this DataList
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
+     * @return T|null
      */
     public function last()
     {
@@ -1708,6 +1717,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      *
      * @param string $key
      * @param string $value
+     * @return T|null
      */
     public function find($key, $value)
     {
@@ -1736,6 +1746,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Return the first DataObject with the given ID
      *
      * The object returned is not cached, unlike {@link DataObject::get_by_id()}
+     * @return T|null
      */
     public function byID($id)
     {
