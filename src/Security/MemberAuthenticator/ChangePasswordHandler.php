@@ -13,6 +13,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
+use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 
@@ -267,6 +268,21 @@ class ChangePasswordHandler extends RequestHandler
         // Clear locked out status
         $member->LockedOutUntil = null;
         $member->FailedLoginCount = null;
+
+        // Create a successful 'LoginAttempt' as the password is reset
+        if (Security::config()->get('login_recording')) {
+            $loginAttempt = LoginAttempt::create();
+            $loginAttempt->Status = LoginAttempt::SUCCESS;
+            $loginAttempt->MemberID = $member->ID;
+
+            if ($member->Email) {
+                $loginAttempt->setEmail($member->Email);
+            }
+
+            $loginAttempt->IP = $this->getRequest()->getIP();
+            $loginAttempt->write();
+        }
+
         // Clear the members login hashes
         $member->AutoLoginHash = null;
         $member->AutoLoginExpired = DBDatetime::create()->now();
