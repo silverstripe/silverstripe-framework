@@ -5,12 +5,18 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Tests\FormScaffolderTest\Article;
 use SilverStripe\Forms\Tests\FormScaffolderTest\ArticleExtension;
 use SilverStripe\Forms\Tests\FormScaffolderTest\Author;
+use SilverStripe\Forms\Tests\FormScaffolderTest\Child;
+use SilverStripe\Forms\Tests\FormScaffolderTest\ParentModel;
+use SilverStripe\Forms\Tests\FormScaffolderTest\ParentChildJoin;
 use SilverStripe\Forms\Tests\FormScaffolderTest\Tag;
+use SilverStripe\Forms\TimeField;
 
 /**
  * Tests for DataObject FormField scaffolding
@@ -30,8 +36,10 @@ class FormScaffolderTest extends SapphireTest
         Article::class,
         Tag::class,
         Author::class,
+        ParentModel::class,
+        Child::class,
+        ParentChildJoin::class,
     ];
-
 
     public function testGetCMSFieldsSingleton()
     {
@@ -161,5 +169,48 @@ class FormScaffolderTest extends SapphireTest
         $form->loadDataFrom(singleton(Article::class));
 
         $this->assertFalse($fields->hasTabSet(), 'getFrontEndFields() doesnt produce a TabSet by default');
+    }
+
+    public function provideScaffoldRelationFormFields()
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    /**
+     * @dataProvider provideScaffoldRelationFormFields
+     */
+    public function testScaffoldRelationFormFields(bool $includeInOwnTab)
+    {
+        $parent = $this->objFromFixture(ParentModel::class, 'parent1');
+        Child::$includeInOwnTab = $includeInOwnTab;
+        $fields = $parent->scaffoldFormFields(['includeRelations' => true, 'tabbed' => true]);
+
+        foreach (array_keys(ParentModel::config()->uninherited('has_one')) as $hasOneName) {
+            $scaffoldedFormField = $fields->dataFieldByName($hasOneName . 'ID');
+            if ($hasOneName === 'ChildPolymorphic') {
+                $this->assertNull($scaffoldedFormField, "$hasOneName should be null");
+            } else {
+                $this->assertInstanceOf(DateField::class, $scaffoldedFormField, "$hasOneName should be a DateField");
+            }
+        }
+        foreach (array_keys(ParentModel::config()->uninherited('has_many')) as $hasManyName) {
+            $this->assertInstanceOf(CurrencyField::class, $fields->dataFieldByName($hasManyName), "$hasManyName should be a CurrencyField");
+            if ($includeInOwnTab) {
+                $this->assertNotNull($fields->findTab("Root.$hasManyName"));
+            } else {
+                $this->assertNull($fields->findTab("Root.$hasManyName"));
+            }
+        }
+        foreach (array_keys(ParentModel::config()->uninherited('many_many')) as $manyManyName) {
+            $this->assertInstanceOf(TimeField::class, $fields->dataFieldByName($manyManyName), "$manyManyName should be a TimeField");
+            if ($includeInOwnTab) {
+                $this->assertNotNull($fields->findTab("Root.$manyManyName"));
+            } else {
+                $this->assertNull($fields->findTab("Root.$manyManyName"));
+            }
+        }
     }
 }
