@@ -27,7 +27,6 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
 use Exception;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Simple Kernel container
@@ -302,31 +301,6 @@ abstract class BaseKernel implements Kernel
 
         // Raise error
         $response = new HTTPResponse($body, 500);
-        throw new HTTPResponse_Exception($response);
-    }
-
-    /**
-     * If missing configuration, redirect to install.php if it exists.
-     * Otherwise show a server error to the user.
-     *
-     * @deprecated 5.3.0 Will be removed without equivalent functionality
-     *
-     * @param string $msg Optional message to show to the user on an installed project (install.php missing).
-     */
-    protected function redirectToInstaller($msg = '')
-    {
-        Deprecation::notice('5.3.0', 'Will be removed without equivalent functionality');
-        // Error if installer not available
-        if (!file_exists(Director::publicFolder() . '/install.php')) {
-            throw new HTTPResponse_Exception(
-                $msg,
-                500
-            );
-        }
-
-        // Redirect to installer
-        $response = new HTTPResponse();
-        $response->redirect(Director::absoluteURL('install.php'));
         throw new HTTPResponse_Exception($response);
     }
 

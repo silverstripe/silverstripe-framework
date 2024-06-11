@@ -18,8 +18,6 @@
         "public-files-installed": [
             ".htaccess",
             "index.php",
-            "install-frameworkmissing.html",
-            "install.php",
             "web.config"
         ]
     },
