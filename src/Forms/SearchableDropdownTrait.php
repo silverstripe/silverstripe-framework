@@ -262,6 +262,10 @@ trait SearchableDropdownTrait
      */
     public function getSource(): array
     {
+        // Source will be unused when lazy-loading so just return an empty array
+        if ($this->getIsLazyLoaded()) {
+            return [];
+        }
         return $this->getListMap($this->sourceList);
     }
 

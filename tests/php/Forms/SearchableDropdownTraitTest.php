@@ -217,4 +217,28 @@ class SearchableDropdownTraitTest extends SapphireTest
         $this->assertSame('My placeholder', $schema['placeholder']);
         $this->assertFalse($schema['searchable']);
     }
+
+    public function provideGetSource(): array
+    {
+        return [
+            'lazyLoad' => [
+                'isLazyLoaded' => true,
+                'expected' => 0,
+            ],
+            'not lazyLoad' => [
+                'isLazyLoaded' => false,
+                'expected' => 3,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideGetSource
+     */
+    public function testGetSource(bool $isLazyLoaded, int $expected): void
+    {
+        $field = new SearchableDropdownField('MyField', 'MyField', Team::get());
+        $field->setIsLazyLoaded($isLazyLoaded);
+        $this->assertCount($expected, $field->getSource());
+    }
 }
