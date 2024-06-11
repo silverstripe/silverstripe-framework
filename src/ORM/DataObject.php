@@ -18,7 +18,10 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\FieldsValidator;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -26,6 +29,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBForeignKey;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -2488,6 +2492,70 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->extend('updateFormScaffolder', $fs, $this);
 
         return $fs->getFieldList();
+    }
+
+    /**
+     * Scaffold a form field for selecting records of this model type in a has_one relation.
+     *
+     * @param string $fieldName The name we usually expect the field to have. This is often the has_one relation
+     * name with "ID" suffixed to it.
+     * @param string $relationName The name of the actual has_one relation, without "ID" suffixed to it.
+     * Some form fields such as UploadField use this instead of the usual field name.
+     */
+    public function scaffoldFormFieldForHasOne(
+        string $fieldName,
+        ?string $fieldTitle,
+        string $relationName,
+        DataObject $ownerRecord
+    ): FormField {
+        $labelField = $this->hasField('Title') ? 'Title' : 'Name';
+        $list = DataList::create(static::class);
+        $threshold = DBForeignKey::config()->get('dropdown_field_threshold');
+        $overThreshold = $list->count() > $threshold;
+        $field = SearchableDropdownField::create($fieldName, $fieldTitle, $list, $labelField)
+            ->setIsLazyLoaded($overThreshold)
+            ->setLazyLoadLimit($threshold);
+        return $field;
+    }
+
+    /**
+     * Scaffold a form field for selecting records of this model type in a has_many relation.
+     *
+     * @param bool &$includeInTab Set this to true if the field should be in its own tab. False otherwise.
+     */
+    public function scaffoldFormFieldForHasMany(
+        string $relationName,
+        ?string $fieldTitle,
+        DataObject $ownerRecord,
+        bool &$includeInOwnTab
+    ): FormField {
+        $includeInOwnTab = true;
+        return GridField::create(
+            $relationName,
+            $fieldTitle,
+            $ownerRecord->$relationName(),
+            GridFieldConfig_RelationEditor::create()
+        );
+    }
+
+    /**
+     * Scaffold a form field for selecting records of this model type in a many_many relation.
+     *
+     * @param bool &$includeInTab Set this to true if the field should be in its own tab. False otherwise.
+     */
+    public function scaffoldFormFieldForManyMany(
+        string $relationName,
+        ?string $fieldTitle,
+        DataObject $ownerRecord,
+        bool &$includeInOwnTab
+    ): FormField {
+        $includeInOwnTab = true;
+        return GridField::create(
+            $relationName,
+            $fieldTitle,
+            $ownerRecord->$relationName(),
+            GridFieldConfig_RelationEditor::create()
+        );
     }
 
     /**
