@@ -385,10 +385,11 @@ class ViewableData implements IteratorAggregate
      * for a field on this object. This helper will be a subclass of DBField.
      *
      * @param string $field
-     * @return string Casting helper As a constructor pattern, and may include arguments.
+     * @param bool $useFallback If true, fall back on the default casting helper if there isn't an explicit one.
+     * @return string|null Casting helper As a constructor pattern, and may include arguments.
      * @throws Exception
      */
-    public function castingHelper($field)
+    public function castingHelper($field, bool $useFallback = true)
     {
         // Get casting if it has been configured.
         // DB fields and PHP methods are all case insensitive so we normalise casing before checking.
@@ -399,20 +400,41 @@ class ViewableData implements IteratorAggregate
         }
 
         // If no specific cast is declared, fall back to failover.
-        // Note that if there is a failover, the default_cast will always
-        // be drawn from this object instead of the top level object.
         $failover = $this->getFailover();
         if ($failover) {
-            $cast = $failover->castingHelper($field);
+            $cast = $failover->castingHelper($field, $useFallback);
             if ($cast) {
                 return $cast;
             }
         }
 
-        // Fall back to default_cast
+        if ($useFallback) {
+            return $this->defaultCastingHelper($field);
+        }
+
+        return null;
+    }
+
+    /**
+     * Return the default "casting helper" for use when no explicit casting helper is defined.
+     * This helper will be a subclass of DBField. See castingHelper()
+     */
+    protected function defaultCastingHelper(string $field): string
+    {
+        // If there is a failover, the default_cast will always
+        // be drawn from this object instead of the top level object.
+        $failover = $this->getFailover();
+        if ($failover) {
+            $cast = $failover->defaultCastingHelper($field);
+            if ($cast) {
+                return $cast;
+            }
+        }
+
+        // Fall back to raw default_cast
         $default = $this->config()->get('default_cast');
         if (empty($default)) {
-            throw new Exception("No default_cast");
+            throw new Exception('No default_cast');
         }
         return $default;
     }
@@ -559,15 +581,25 @@ class ViewableData implements IteratorAggregate
             $value = $this->$fieldName;
         }
 
+        // Try to cast object if we have an explicit cast set
+        if (!is_object($value)) {
+            $castingHelper = $this->castingHelper($fieldName, false);
+            if ($castingHelper !== null) {
+                $valueObject = Injector::inst()->create($castingHelper, $fieldName);
+                $valueObject->setValue($value, $this);
+                $value = $valueObject;
+            }
+        }
+
         // Wrap list arrays in ViewableData so templates can handle them
         if (is_array($value) && array_is_list($value)) {
             $value = ArrayList::create($value);
         }
 
-        // Cast object
+        // Fallback on default casting
         if (!is_object($value)) {
             // Force cast
-            $castingHelper = $this->castingHelper($fieldName);
+            $castingHelper = $this->defaultCastingHelper($fieldName);
             $valueObject = Injector::inst()->create($castingHelper, $fieldName);
             $valueObject->setValue($value, $this);
             $value = $valueObject;

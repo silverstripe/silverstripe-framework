@@ -521,13 +521,13 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    public function castingHelper($field)
+    public function castingHelper($field, bool $useFallback = true)
     {
         // Override casting for field message
         if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
             return $helper;
         }
-        return parent::castingHelper($field);
+        return parent::castingHelper($field, $useFallback);
     }
 
     /**

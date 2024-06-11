@@ -319,14 +319,14 @@ abstract class DBComposite extends DBField
         return $fieldObject;
     }
 
-    public function castingHelper($field)
+    public function castingHelper($field, bool $useFallback = true)
     {
         $fields = $this->compositeDatabaseFields();
         if (isset($fields[$field])) {
             return $fields[$field];
         }
 
-        return parent::castingHelper($field);
+        return parent::castingHelper($field, $useFallback);
     }
 
     public function getIndexSpecs()
