@@ -3015,7 +3015,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * {@inheritdoc}
      */
-    public function castingHelper($field)
+    public function castingHelper($field, bool $useFallback = true)
     {
         $fieldSpec = static::getSchema()->fieldSpec(static::class, $field);
         if ($fieldSpec) {
@@ -3033,7 +3033,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        return parent::castingHelper($field);
+        return parent::castingHelper($field, $useFallback);
     }
 
     /**

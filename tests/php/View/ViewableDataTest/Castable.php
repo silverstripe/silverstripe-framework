@@ -7,13 +7,13 @@ use SilverStripe\View\ViewableData;
 
 class Castable extends ViewableData implements TestOnly
 {
-
     private static $default_cast = Caster::class;
 
     private static $casting = [
         'alwaysCasted' => RequiresCasting::class,
         'castedUnsafeXML' => UnescapedCaster::class,
         'test' => 'Text',
+        'arrayOne' => 'Text',
     ];
 
     public $test = 'test';
@@ -23,6 +23,16 @@ class Castable extends ViewableData implements TestOnly
     public function alwaysCasted()
     {
         return 'alwaysCasted';
+    }
+
+    public function arrayOne()
+    {
+        return ['value1', 'value2'];
+    }
+
+    public function arrayTwo()
+    {
+        return ['value1', 'value2'];
     }
 
     public function noCastingInformation()

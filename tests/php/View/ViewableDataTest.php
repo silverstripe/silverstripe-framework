@@ -6,6 +6,7 @@ use ReflectionMethod;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestExtension;
@@ -59,6 +60,9 @@ class ViewableDataTest extends SapphireTest
 
         $this->assertInstanceOf(ViewableDataTest\RequiresCasting::class, $caster->obj('alwaysCasted'));
         $this->assertInstanceOf(ViewableDataTest\Caster::class, $caster->obj('noCastingInformation'));
+
+        $this->assertInstanceOf(DBText::class, $caster->obj('arrayOne'));
+        $this->assertInstanceOf(ArrayList::class, $caster->obj('arrayTwo'));
     }
 
     public function testFailoverRequiresCasting()

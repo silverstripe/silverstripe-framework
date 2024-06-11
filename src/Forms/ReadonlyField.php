@@ -56,7 +56,7 @@ class ReadonlyField extends FormField
         return 'readonly';
     }
 
-    public function castingHelper($field)
+    public function castingHelper($field, bool $useFallback = true)
     {
         // Get dynamic cast for 'Value' field
         if (strcasecmp($field ?? '', 'Value') === 0) {
@@ -64,7 +64,7 @@ class ReadonlyField extends FormField
         }
 
         // Fall back to default casting
-        return parent::castingHelper($field);
+        return parent::castingHelper($field, $useFallback);
     }
 
     public function getSchemaStateDefaults()
