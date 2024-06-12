@@ -7,6 +7,7 @@ use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\ORM\DB;
 use Exception;
 use LogicException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Simple Kernel container
@@ -52,7 +53,7 @@ class CoreKernel extends BaseKernel
             $msg = 'Silverstripe Framework requires a "database" key in DB::getConfig(). ' .
                 'Did you forget to set SS_DATABASE_NAME or SS_DATABASE_CHOOSE_NAME in your environment?';
             $this->detectLegacyEnvironment();
-            $this->redirectToInstaller($msg);
+            Deprecation::withNoReplacement(fn() => $this->redirectToInstaller($msg));
         }
     }
 
