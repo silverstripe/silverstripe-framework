@@ -265,6 +265,13 @@ trait SearchableDropdownTrait
         return $this->getListMap($this->sourceList);
     }
 
+    public function Field($properties = [])
+    {
+        $context = $this;
+        $this->extend('onBeforeRender', $context, $properties);
+        return $context->customise($properties)->renderWith($context->getTemplates());
+    }
+
     /*
      * @param mixed $source
      */
@@ -450,9 +457,16 @@ trait SearchableDropdownTrait
 
     public function getSchemaStateDefaults(): array
     {
-        $data = parent::getSchemaStateDefaults();
-        $data = $this->updateDataForSchema($data);
-        return $data;
+        $state = [
+            'name' => $this->getName(),
+            'id' => $this->ID(),
+            'value' => $this->getDefaultSchemaValue(),
+            'message' => $this->getSchemaMessage(),
+            'data' => [],
+        ];
+
+        $state = $this->updateDataForSchema($state);
+        return $state;
     }
 
     /**
@@ -465,6 +479,14 @@ trait SearchableDropdownTrait
     {
         $this->isMultiple = $isMultiple;
         return $this;
+    }
+
+    private function getDefaultSchemaValue()
+    {
+        if (!$this->getIsLazyLoaded() && $this->hasMethod('getDefaultValue')) {
+            return $this->getDefaultValue();
+        }
+        return $this->Value();
     }
 
     private function getOptionsForSearchRequest(string $term): array
