@@ -18,7 +18,7 @@ class SessionGridFieldStateManager implements GridFieldStateManagerInterface, Gr
     protected function getStateID(GridField $gridField, $create = false): ?string
     {
         $requestVar = $this->getStateRequestVar();
-        $sessionStateID = $gridField->getForm()->getRequestHandler()->getRequest()->requestVar($requestVar);
+        $sessionStateID = $gridField->getForm()?->getRequestHandler()->getRequest()->requestVar($requestVar);
         if (!$sessionStateID) {
             $sessionStateID = Controller::curr()->getRequest()->requestVar($requestVar);
         }
@@ -63,7 +63,7 @@ class SessionGridFieldStateManager implements GridFieldStateManagerInterface, Gr
      */
     public function getStateKey(GridField $gridField): string
     {
-        $record = $gridField->getForm()->getRecord();
+        $record = $gridField->getForm()?->getRecord();
         return $gridField->getName() . '-' . ($record ? $record->ID : 0);
     }
 
