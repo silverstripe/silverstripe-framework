@@ -1,0 +1,18 @@
+name: Add new pull requests to a github project
+
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+
+permissions: {}
+
+jobs:
+  addprtoproject:
+    # Only run on the silverstripe account
+    if: github.repository_owner == 'silverstripe'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add PR to github project
+        uses: silverstripe/add-pr-to-project@v1
