@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\SearchableDropdownField;
@@ -216,5 +217,48 @@ class SearchableDropdownTraitTest extends SapphireTest
         $this->assertTrue($schema['clearable']);
         $this->assertSame('My placeholder', $schema['placeholder']);
         $this->assertFalse($schema['searchable']);
+    }
+
+    public function provideLazyLoadedDoesntCallGetSource()
+    {
+        $methodsToCall = [
+            'Field',
+            'getSchemaStateDefaults',
+            'getSchemaState',
+            'getSchemaDataDefaults',
+            'getSchemaData',
+        ];
+        $classes = [
+            SearchableMultiDropdownField::class,
+            SearchableDropdownField::class,
+        ];
+        $scenarios = [];
+        foreach ($classes as $class) {
+            foreach ($methodsToCall as $method) {
+                $scenarios[] = [
+                    'fieldClass' => $class,
+                    'methodToCall' => $method,
+                ];
+            }
+        }
+        return $scenarios;
+    }
+
+    /**
+     * @dataProvider provideLazyLoadedDoesntCallGetSource
+     */
+    public function testLazyLoadedDoesntCallGetSource(string $fieldClass, string $methodToCall)
+    {
+        // Some methods aren't shared between the two form fields.
+        if (!ClassInfo::hasMethod($fieldClass, $methodToCall)) {
+            $this->markTestSkipped("$fieldClass doesn't have method $methodToCall - skipping");
+        }
+        // We have to disable the constructor because it ends up calling a static method, and we can't call static methods on mocks.
+        $mockField = $this->getMockBuilder($fieldClass)->onlyMethods(['getSource'])->disableOriginalConstructor()->getMock();
+        $mockField->expects($this->never())->method('getSource');
+        $mockField->setIsLazyLoaded(true);
+        $mockField->setSource(Team::get());
+        $mockField->setForm(new Form());
+        $mockField->$methodToCall();
     }
 }
