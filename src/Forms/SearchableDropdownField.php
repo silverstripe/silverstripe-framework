@@ -10,7 +10,7 @@ use SilverStripe\Forms\HasOneRelationFieldInterface;
 class SearchableDropdownField extends DropdownField implements HasOneRelationFieldInterface
 {
     use SearchableDropdownTrait;
-    
+
     // This needs to be defined on the class, not the trait, otherwise there is a PHP error
     protected $schemaComponent = 'SearchableDropdownField';
 
