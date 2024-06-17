@@ -23,8 +23,8 @@ class MySQLSchemaManager extends DBSchemaManager
     {
         $fieldSchemas = $indexSchemas = "";
 
-        if (!empty($options[self::ID])) {
-            $addOptions = $options[self::ID];
+        if (!empty($options[MySQLSchemaManager::ID])) {
+            $addOptions = $options[MySQLSchemaManager::ID];
         } else {
             $addOptions = "ENGINE=InnoDB";
         }
@@ -97,7 +97,7 @@ class MySQLSchemaManager extends DBSchemaManager
             }
         }
 
-        $dbID = self::ID;
+        $dbID = MySQLSchemaManager::ID;
         if ($alteredOptions && isset($alteredOptions[$dbID])) {
             $this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$dbID]));
             $this->alterationMessage(
@@ -232,7 +232,7 @@ class MySQLSchemaManager extends DBSchemaManager
         // MySQL 8.0.17 stopped reporting the width attribute for integers
         // https://github.com/silverstripe/silverstripe-framework/issues/9453
         // Note: MariaDB did not change its behaviour
-        $forceWidth = Config::inst()->get(self::class, 'schema_use_int_width');
+        $forceWidth = Config::inst()->get(MySQLSchemaManager::class, 'schema_use_int_width');
         if ($forceWidth !== null) {
             return $forceWidth;
         }
@@ -256,11 +256,11 @@ class MySQLSchemaManager extends DBSchemaManager
 
             if ($field['Collation'] && $field['Collation'] != 'NULL') {
                 // Cache collation info to cut down on database traffic
-                if (!isset(self::$_cache_collation_info[$field['Collation']])) {
-                    self::$_cache_collation_info[$field['Collation']]
+                if (!isset(MySQLSchemaManager::$_cache_collation_info[$field['Collation']])) {
+                    MySQLSchemaManager::$_cache_collation_info[$field['Collation']]
                         = $this->query("SHOW COLLATION LIKE '{$field['Collation']}'")->record();
                 }
-                $collInfo = self::$_cache_collation_info[$field['Collation']];
+                $collInfo = MySQLSchemaManager::$_cache_collation_info[$field['Collation']];
                 $fieldSpec .= " character set $collInfo[Charset] collate $field[Collation]";
             }
 

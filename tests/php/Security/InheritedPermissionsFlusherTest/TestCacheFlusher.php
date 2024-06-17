@@ -47,7 +47,7 @@ class TestCacheFlusher implements MemberCacheFlusher
         }
 
         if ($memberIDs && is_array($memberIDs)) {
-            foreach (self::$categories as $category) {
+            foreach (TestCacheFlusher::$categories as $category) {
                 foreach ($memberIDs as $memberID) {
                     $key = $this->generateCacheKey($category, $memberID);
                     $this->cache->delete($key);

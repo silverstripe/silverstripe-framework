@@ -88,16 +88,16 @@ class ClassInfo
     public static function hasTable($tableName)
     {
         // Cache the list of all table names to reduce on DB traffic
-        if (empty(self::$_cache_all_tables) && DB::is_active()) {
-            self::$_cache_all_tables = DB::get_schema()->tableList();
+        if (empty(ClassInfo::$_cache_all_tables) && DB::is_active()) {
+            ClassInfo::$_cache_all_tables = DB::get_schema()->tableList();
         }
-        return !empty(self::$_cache_all_tables[strtolower($tableName)]);
+        return !empty(ClassInfo::$_cache_all_tables[strtolower($tableName)]);
     }
 
     public static function reset_db_cache()
     {
-        self::$_cache_all_tables = null;
-        self::$_cache_ancestry = [];
+        ClassInfo::$_cache_all_tables = null;
+        ClassInfo::$_cache_ancestry = [];
     }
 
     /**
@@ -114,7 +114,7 @@ class ClassInfo
             return [];
         }
 
-        $class = self::class_name($class);
+        $class = ClassInfo::class_name($class);
         if ($includeUnbacked) {
             $table = DataObject::getSchema()->tableName($class);
             $classes = DB::get_schema()->enumValuesForField($table, 'ClassName');
@@ -138,10 +138,10 @@ class ClassInfo
         }
 
         // Get all classes
-        $class = self::class_name($nameOrObject);
+        $class = ClassInfo::class_name($nameOrObject);
         $classes = array_merge(
-            self::ancestry($class),
-            self::subclassesFor($class)
+            ClassInfo::ancestry($class),
+            ClassInfo::subclassesFor($class)
         );
 
         // Filter by table
@@ -178,7 +178,7 @@ class ClassInfo
         }
 
         // Get class names
-        $className = self::class_name($nameOrObject);
+        $className = ClassInfo::class_name($nameOrObject);
         $lowerClassName = strtolower($className ?? '');
 
         // Merge with descendants
@@ -192,7 +192,7 @@ class ClassInfo
     /**
      * Convert a class name in any case and return it as it was defined in PHP
      *
-     * eg: self::class_name('dataobJEct'); //returns 'DataObject'
+     * eg: ClassInfo::class_name('dataobJEct'); //returns 'DataObject'
      *
      * @param string|object $nameOrObject The classname or object you want to normalise
      * @throws \ReflectionException
@@ -234,23 +234,23 @@ class ClassInfo
             return [];
         }
 
-        $class = self::class_name($nameOrObject);
+        $class = ClassInfo::class_name($nameOrObject);
 
         $lowerClass = strtolower($class ?? '');
 
         $cacheKey = $lowerClass . '_' . (string)$tablesOnly;
         $parent = $class;
-        if (!isset(self::$_cache_ancestry[$cacheKey])) {
+        if (!isset(ClassInfo::$_cache_ancestry[$cacheKey])) {
             $ancestry = [];
             do {
                 if (!$tablesOnly || DataObject::getSchema()->classHasTable($parent)) {
                     $ancestry[strtolower($parent)] = $parent;
                 }
             } while ($parent = get_parent_class($parent ?? ''));
-            self::$_cache_ancestry[$cacheKey] = array_reverse($ancestry ?? []);
+            ClassInfo::$_cache_ancestry[$cacheKey] = array_reverse($ancestry ?? []);
         }
 
-        return self::$_cache_ancestry[$cacheKey];
+        return ClassInfo::$_cache_ancestry[$cacheKey];
     }
 
     /**
@@ -273,7 +273,7 @@ class ClassInfo
     public static function classImplements($className, $interfaceName)
     {
         $lowerClassName = strtolower($className ?? '');
-        $implementors = self::implementorsOf($interfaceName);
+        $implementors = ClassInfo::implementorsOf($interfaceName);
         return isset($implementors[$lowerClassName]);
     }
 
@@ -336,22 +336,22 @@ class ClassInfo
         $lClass = strtolower($class ?? '');
         $lMethod = strtolower($method ?? '');
         $lCompclass = strtolower($compclass ?? '');
-        if (!isset(self::$_cache_methods[$lClass])) {
-            self::$_cache_methods[$lClass] = [];
+        if (!isset(ClassInfo::$_cache_methods[$lClass])) {
+            ClassInfo::$_cache_methods[$lClass] = [];
         }
 
-        if (!array_key_exists($lMethod, self::$_cache_methods[$lClass] ?? [])) {
-            self::$_cache_methods[$lClass][$lMethod] = false;
+        if (!array_key_exists($lMethod, ClassInfo::$_cache_methods[$lClass] ?? [])) {
+            ClassInfo::$_cache_methods[$lClass][$lMethod] = false;
 
             $classRef = new ReflectionClass($class);
 
             if ($classRef->hasMethod($method)) {
                 $methodRef = $classRef->getMethod($method);
-                self::$_cache_methods[$lClass][$lMethod] = $methodRef->getDeclaringClass()->getName();
+                ClassInfo::$_cache_methods[$lClass][$lMethod] = $methodRef->getDeclaringClass()->getName();
             }
         }
 
-        return strtolower(self::$_cache_methods[$lClass][$lMethod] ?? '') === $lCompclass;
+        return strtolower(ClassInfo::$_cache_methods[$lClass][$lMethod] ?? '') === $lCompclass;
     }
 
     /**
@@ -561,7 +561,7 @@ class ClassInfo
         bool $includeBaseClass = false
     ): array {
         // get class names
-        $baseClass = self::class_name($baseClassOrObject);
+        $baseClass = ClassInfo::class_name($baseClassOrObject);
 
         // get a list of all subclasses for a given class
         $classes = ClassInfo::subclassesFor($baseClass, $includeBaseClass);

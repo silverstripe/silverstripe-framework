@@ -264,7 +264,7 @@ class i18n implements TemplateGlobalProvider
     public static function get_closest_translation($locale)
     {
         // Check if exact match
-        $pool = self::getSources()->getKnownLocales();
+        $pool = i18n::getSources()->getKnownLocales();
         if (isset($pool[$locale])) {
             return $locale;
         }
@@ -308,7 +308,7 @@ class i18n implements TemplateGlobalProvider
     public static function set_locale($locale)
     {
         if ($locale) {
-            self::$current_locale = $locale;
+            i18n::$current_locale = $locale;
         }
     }
 
@@ -321,7 +321,7 @@ class i18n implements TemplateGlobalProvider
      */
     public static function with_locale($locale, $callback)
     {
-        $oldLocale = self::$current_locale;
+        $oldLocale = i18n::$current_locale;
         static::set_locale($locale);
         try {
             return $callback();
@@ -338,10 +338,10 @@ class i18n implements TemplateGlobalProvider
      */
     public static function get_locale()
     {
-        if (!self::$current_locale) {
-            self::$current_locale = i18n::config()->uninherited('default_locale');
+        if (!i18n::$current_locale) {
+            i18n::$current_locale = i18n::config()->uninherited('default_locale');
         }
-        return self::$current_locale;
+        return i18n::$current_locale;
     }
 
     /**

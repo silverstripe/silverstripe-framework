@@ -62,7 +62,7 @@ class RequirementsTest extends SapphireTest
         $backend->css('//scheme-relative.example.com/test.css');
         $backend->css('http://www.mydomain.com:3000/test.css');
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         $this->assertStringContainsString('http://www.mydomain.com/test.js', $html, 'Load external javascript URL');
         $this->assertStringContainsString('https://www.mysecuredomain.com/test.js', $html, 'Load external secure javascript URL');
@@ -89,7 +89,7 @@ class RequirementsTest extends SapphireTest
             ]
         );
 
-        $backend->includeInHTML(self::$html_template);
+        $backend->includeInHTML(RequirementsTest::$html_template);
 
         // we get the file path here
         $allCSS = $backend->getCSS();
@@ -137,7 +137,7 @@ class RequirementsTest extends SapphireTest
             ]
         );
 
-        $backend->includeInHTML(self::$html_template);
+        $backend->includeInHTML(RequirementsTest::$html_template);
 
         // we get the file path here
         $allCSS = $backend->getCSS();
@@ -389,7 +389,7 @@ class RequirementsTest extends SapphireTest
             [ 'type' => 'application/json' ]
         );
         $backend->javascript('javascript/RequirementsTest_b.js');
-        $result = $backend->includeInHTML(self::$html_template);
+        $result = $backend->includeInHTML(RequirementsTest::$html_template);
         $this->assertMatchesRegularExpression(
             '#<script type="application/json" src=".*/javascript/RequirementsTest_a.js#',
             $result
@@ -410,7 +410,7 @@ class RequirementsTest extends SapphireTest
         $combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
         $combinedFilePath = TestAssetStore::base_path() . $combinedFileName;
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
         $this->assertMatchesRegularExpression(
@@ -461,7 +461,7 @@ class RequirementsTest extends SapphireTest
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
         $this->setupCombinedNonrequiredRequirements($backend);
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* COMBINED JAVASCRIPT FILE IS INCLUDED IN HTML HEADER */
         $this->assertMatchesRegularExpression(
@@ -511,7 +511,7 @@ class RequirementsTest extends SapphireTest
         $combinedFileName = '/_combinedfiles/RequirementsTest_bc-2a55d56.js';
         $combinedFilePath = TestAssetStore::base_path() . $combinedFileName;
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* ASYNC IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(
@@ -585,7 +585,7 @@ class RequirementsTest extends SapphireTest
 
         $this->setupCombinedRequirementsJavascriptAsyncDefer($backend, false, true);
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* DEFER IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(
@@ -659,7 +659,7 @@ class RequirementsTest extends SapphireTest
 
         $this->setupCombinedRequirementsJavascriptAsyncDefer($backend, true, true);
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* ASYNC/DEFER IS INCLUDED IN SCRIPT TAG */
         $this->assertMatchesRegularExpression(
@@ -745,7 +745,7 @@ class RequirementsTest extends SapphireTest
             ]
         );
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         $this->assertMatchesRegularExpression(
             '/href=".*\/print\-69ce614\.css/',
@@ -781,7 +781,7 @@ class RequirementsTest extends SapphireTest
             ]
         );
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
         $this->assertMatchesRegularExpression(
             '/href=".*\/style\-8011538\.css/',
             $html,
@@ -801,7 +801,7 @@ class RequirementsTest extends SapphireTest
         $backend->block('RequirementsTest_bc.js');
 
         clearstatcache(); // needed to get accurate file_exists() results
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
         $this->assertFileDoesNotExist($combinedFilePath);
         $this->assertDoesNotMatchRegularExpression(
             '/src=".*\/RequirementsTest_bc\.js/',
@@ -816,7 +816,7 @@ class RequirementsTest extends SapphireTest
         $combinedFileName2 = '/_combinedfiles/RequirementsTest_bc-3748f67.js'; // SHA1 without file b included
         $combinedFilePath2 = TestAssetStore::base_path() . $combinedFileName2;
         clearstatcache(); // needed to get accurate file_exists() results
-        $backend->includeInHTML(self::$html_template);
+        $backend->includeInHTML(RequirementsTest::$html_template);
         $this->assertFileExists($combinedFilePath2);
         $this->assertStringNotContainsString(
             "alert('b')",
@@ -856,7 +856,7 @@ class RequirementsTest extends SapphireTest
 
         $backend->javascript('javascript/RequirementsTest_a.js?test=1&test=2&test=3');
         $backend->css('css/RequirementsTest_a.css?test=1&test=2&test=3');
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* Javascript has correct path */
         $this->assertMatchesRegularExpression(
@@ -1406,7 +1406,7 @@ EOS
         // Tests attribute appending AND lowercase string conversion
         $backend->customScriptWithAttributes("//TEST", ['type' => 'module', 'crossorigin' => 'Anonymous']);
         $backend->css('css/RequirementsTest_a.css', null, ['integrity' => 'def', 'crossorigin' => 'anonymous']);
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* Javascript has correct attributes */
         $this->assertMatchesRegularExpression(
@@ -1447,7 +1447,7 @@ EOS
         $backend->customCSS("Override", 42);
         $backend->insertHeadTags("<span>Override</span>", 42);
 
-        $html = $backend->includeInHTML(self::$html_template);
+        $html = $backend->includeInHTML(RequirementsTest::$html_template);
 
         /* customScript is overwritten by customScriptWithAttributes */
         $this->assertMatchesRegularExpression(

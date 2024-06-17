@@ -82,7 +82,7 @@ class ArrayLib
      */
     public static function array_values_recursive($array)
     {
-        return self::flatten($array, false);
+        return ArrayLib::flatten($array, false);
     }
 
     /**
@@ -146,7 +146,7 @@ class ArrayLib
             return true;
         } else {
             foreach ($haystack as $obj) {
-                if (self::in_array_recursive($needle, $obj, $strict)) {
+                if (ArrayLib::in_array_recursive($needle, $obj, $strict)) {
                     return true;
                 }
             }

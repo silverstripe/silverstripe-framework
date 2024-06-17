@@ -77,7 +77,7 @@ class FulltextSearchable extends DataExtension
                 );
             }
         }
-        self::$searchable_classes = $searchableClasses;
+        FulltextSearchable::$searchable_classes = $searchableClasses;
         if (class_exists("SilverStripe\\CMS\\Controllers\\ContentController")) {
             ContentController::add_extension("SilverStripe\\CMS\\Search\\ContentControllerSearchExtension");
         }
@@ -120,6 +120,6 @@ class FulltextSearchable extends DataExtension
      */
     public static function get_searchable_classes()
     {
-        return self::$searchable_classes;
+        return FulltextSearchable::$searchable_classes;
     }
 }

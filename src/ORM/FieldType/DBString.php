@@ -237,6 +237,6 @@ abstract class DBString extends DBField
      */
     public function defaultEllipsis(): string
     {
-        return _t(self::class . '.ELLIPSIS', '…');
+        return _t(DBString::class . '.ELLIPSIS', '…');
     }
 }

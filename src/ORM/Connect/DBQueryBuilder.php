@@ -98,7 +98,7 @@ class DBQueryBuilder
         // Skip items in the stack trace that originate from these classes or their subclasses,
         // we want to know what called these instead
         $baseClasses = [
-            self::class,
+            DBQueryBuilder::class,
             DataQuery::class,
             SQLExpression::class,
             DB::class,

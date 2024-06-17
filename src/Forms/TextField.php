@@ -78,7 +78,7 @@ class TextField extends FormField implements TippableFieldInterface
      * @param Tip|null $tip The Tip to apply, or null to remove an existing one
      * @return $this
      */
-    public function setTip(?Tip $tip = null): self
+    public function setTip(?Tip $tip = null): TextField
     {
         $this->tip = $tip;
 

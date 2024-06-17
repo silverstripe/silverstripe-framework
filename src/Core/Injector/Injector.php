@@ -262,7 +262,7 @@ class Injector implements ContainerInterface
     public static function nest()
     {
         // Clone current injector and nest
-        $new = clone self::inst();
+        $new = clone Injector::inst();
         InjectorLoader::inst()->pushManifest($new);
         return $new;
     }
@@ -597,7 +597,7 @@ class Injector implements ContainerInterface
 
         // If we're dealing with a DataObject singleton without specific constructor params, pass through Singleton
         // flag as second argument
-        if ((!$type || $type !== self::PROTOTYPE)
+        if ((!$type || $type !== Injector::PROTOTYPE)
             && empty($constructorParams)
             && is_subclass_of($class, DataObject::class)) {
             $constructorParams = [null, DataObject::CREATE_SINGLETON];
@@ -651,7 +651,7 @@ class Injector implements ContainerInterface
             $type = isset($spec['type']) ? $spec['type'] : null;
         }
 
-        if ($id && (!$type || $type !== self::PROTOTYPE)) {
+        if ($id && (!$type || $type !== Injector::PROTOTYPE)) {
             // this ABSOLUTELY must be set before the object is injected.
             // This prevents circular reference errors down the line
             $this->serviceCache[$id] = $object;
@@ -1006,16 +1006,16 @@ class Injector implements ContainerInterface
 
         // Check if we are getting a prototype or singleton
         $type = $asSingleton
-            ? (isset($spec['type']) ? $spec['type'] : self::SINGLETON)
-            : self::PROTOTYPE;
+            ? (isset($spec['type']) ? $spec['type'] : Injector::SINGLETON)
+            : Injector::PROTOTYPE;
 
         // Return existing instance for singletons
-        if ($type === self::SINGLETON && isset($this->serviceCache[$name])) {
+        if ($type === Injector::SINGLETON && isset($this->serviceCache[$name])) {
             return $this->serviceCache[$name];
         }
 
         // Update constructor args
-        if ($type === self::PROTOTYPE && $constructorArgs) {
+        if ($type === Injector::PROTOTYPE && $constructorArgs) {
             // Passed in args are expected to already be normalised (no service references)
             $spec['constructor'] = $constructorArgs;
         } else {

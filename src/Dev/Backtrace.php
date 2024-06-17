@@ -31,7 +31,7 @@ class Backtrace
      */
     public static function filtered_backtrace($ignoredFunctions = null)
     {
-        return self::filter_backtrace(debug_backtrace(), $ignoredFunctions);
+        return Backtrace::filter_backtrace(debug_backtrace(), $ignoredFunctions);
     }
 
     /**
@@ -70,7 +70,7 @@ class Backtrace
             }
         }
 
-        while ($bt && in_array(self::full_func_name($bt[0]), $defaultIgnoredFunctions ?? [])) {
+        while ($bt && in_array(Backtrace::full_func_name($bt[0]), $defaultIgnoredFunctions ?? [])) {
             array_shift($bt);
         }
 
@@ -82,7 +82,7 @@ class Backtrace
             if (!empty($frame['class'])) {
                 foreach ($ignoredArgs as $fnSpec) {
                     if (is_array($fnSpec)
-                        && self::matchesFilterableClass($frame['class'], $fnSpec[0])
+                        && Backtrace::matchesFilterableClass($frame['class'], $fnSpec[0])
                         && $frame['function'] == $fnSpec[1]
                     ) {
                         $match = true;
@@ -115,7 +115,7 @@ class Backtrace
     public static function backtrace($returnVal = false, $ignoreAjax = false, $ignoredFunctions = null)
     {
         $plainText = Director::is_cli() || (Director::is_ajax() && !$ignoreAjax);
-        $result = self::get_rendered_backtrace(debug_backtrace(), $plainText, $ignoredFunctions);
+        $result = Backtrace::get_rendered_backtrace(debug_backtrace(), $plainText, $ignoredFunctions);
         if ($returnVal) {
             return $result;
         } else {
@@ -176,11 +176,11 @@ class Backtrace
         if (empty($bt)) {
             return '';
         }
-        $bt = self::filter_backtrace($bt, $ignoredFunctions);
+        $bt = Backtrace::filter_backtrace($bt, $ignoredFunctions);
         $result = ($plainText) ? '' : '<ul>';
         foreach ($bt as $item) {
             if ($plainText) {
-                $result .= self::full_func_name($item, true) . "\n";
+                $result .= Backtrace::full_func_name($item, true) . "\n";
                 if (isset($item['line']) && isset($item['file'])) {
                     $result .= basename($item['file'] ?? '') . ":$item[line]\n";
                 }
@@ -189,7 +189,7 @@ class Backtrace
                 if ($item['function'] == 'user_error') {
                     $name = $item['args'][0];
                 } else {
-                    $name = self::full_func_name($item, true);
+                    $name = Backtrace::full_func_name($item, true);
                 }
                 $result .= "<li><b>" . htmlentities($name ?? '', ENT_COMPAT, 'UTF-8') . "</b>\n<br />\n";
                 $result .=  isset($item['file']) ? htmlentities(basename($item['file']), ENT_COMPAT, 'UTF-8') : '';

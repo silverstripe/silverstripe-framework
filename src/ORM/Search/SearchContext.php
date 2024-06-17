@@ -81,7 +81,7 @@ class SearchContext
 
     /**
      * A key value pair of values that should be searched for.
-     * The keys should match the field names specified in {@link self::$fields}.
+     * The keys should match the field names specified in {@link SearchContext::$fields}.
      * Usually these values come from a submitted searchform
      * in the form of a $_REQUEST object.
      * CAUTION: All values should be treated as insecure client input.

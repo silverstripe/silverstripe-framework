@@ -34,7 +34,7 @@ class NullDatabase extends Database
     /**
      * @param string $msg
      */
-    public function setErrorMessage(string $msg): self
+    public function setErrorMessage(string $msg): NullDatabase
     {
         $this->errorMessage = $msg;
         return $this;
@@ -43,7 +43,7 @@ class NullDatabase extends Database
     /**
      * @param string $msg
      */
-    public function setQueryErrorMessage(string $msg): self
+    public function setQueryErrorMessage(string $msg): NullDatabase
     {
         $this->queryErrorMessage = $msg;
         return $this;

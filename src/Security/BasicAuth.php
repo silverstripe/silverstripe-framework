@@ -43,7 +43,7 @@ class BasicAuth
 
     /**
      * @config
-     * @var Boolean Flag set by {@link self::protect_entire_site()}
+     * @var Boolean Flag set by {@link BasicAuth::protect_entire_site()}
      */
     private static $entire_site_protected = false;
 
@@ -187,7 +187,7 @@ class BasicAuth
      *  of the permission codes a user has.
      * @param string $message
      */
-    public static function protect_entire_site($protect = true, $code = self::AUTH_PERMISSION, $message = null)
+    public static function protect_entire_site($protect = true, $code = BasicAuth::AUTH_PERMISSION, $message = null)
     {
         static::config()
             ->set('entire_site_protected', $protect)
@@ -214,11 +214,11 @@ class BasicAuth
         // Check if site is protected
         if ($config->get('entire_site_protected')) {
             $permissionCode = $config->get('entire_site_protected_code');
-        } elseif (Environment::getEnv(self::USE_BASIC_AUTH)) {
+        } elseif (Environment::getEnv(BasicAuth::USE_BASIC_AUTH)) {
             // Convert legacy 1 / true to ADMIN permissions
-            $permissionCode = Environment::getEnv(self::USE_BASIC_AUTH);
+            $permissionCode = Environment::getEnv(BasicAuth::USE_BASIC_AUTH);
             if (!is_string($permissionCode) || is_numeric($permissionCode)) {
-                $permissionCode = self::AUTH_PERMISSION;
+                $permissionCode = BasicAuth::AUTH_PERMISSION;
             }
         } else {
             // Not enabled

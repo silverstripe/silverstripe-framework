@@ -92,7 +92,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         return $this->searchField;
     }
 
-    public function setSearchField(string $field): self
+    public function setSearchField(string $field): GridFieldFilterHeader
     {
         $this->searchField = $field;
         return $this;

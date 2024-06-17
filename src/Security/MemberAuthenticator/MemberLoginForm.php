@@ -111,7 +111,7 @@ class MemberLoginForm extends BaseLoginForm
         if (isset($logoutAction)) {
             $this->setFormAction($logoutAction);
         }
-        $this->setValidator(RequiredFields::create(self::config()->get('required_fields')));
+        $this->setValidator(RequiredFields::create(static::config()->get('required_fields')));
     }
 
     /**
@@ -225,6 +225,6 @@ class MemberLoginForm extends BaseLoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t(self::class . '.AUTHENTICATORNAME', "E-mail & Password");
+        return _t(MemberLoginForm::class . '.AUTHENTICATORNAME', "E-mail & Password");
     }
 }

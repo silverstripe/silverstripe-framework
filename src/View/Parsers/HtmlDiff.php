@@ -31,21 +31,21 @@ class HtmlDiff
     {
         // Get HTML chunks even if we're going to escape it later
         // The diff algorithm sees "<span>some" as a single piece rather than "<span>" and "some" being separate
-        $from = self::explodeToHtmlChunks($from);
-        $to = self::explodeToHtmlChunks($to);
+        $from = HtmlDiff::explodeToHtmlChunks($from);
+        $to = HtmlDiff::explodeToHtmlChunks($to);
 
         // Diff the chunks
-        $differ = self::getDiffer();
+        $differ = HtmlDiff::getDiffer();
         $diff = $differ->diffToArray($from, $to);
 
         // If we aren't escaping the HTML, convert the first diff into clean HTML blocks and then run a new diff
         // on the blocks to get an end result that doesn't have broken HTML
         if (!$escape) {
-            $diifAsBlocks = self::convertDiffToHtmlBlocks($diff);
-            $diff = $differ->diffToArray($diifAsBlocks[self::OLD_VAL], $diifAsBlocks[self::NEW_VAL]);
+            $diifAsBlocks = HtmlDiff::convertDiffToHtmlBlocks($diff);
+            $diff = $differ->diffToArray($diifAsBlocks[HtmlDiff::OLD_VAL], $diifAsBlocks[HtmlDiff::NEW_VAL]);
         }
 
-        $diff = self::createFinalDiffBlocks($diff, $escape);
+        $diff = HtmlDiff::createFinalDiffBlocks($diff, $escape);
 
         // Take the diff and slap the appropriate <ins> and <del> tags in place
         $content = '';
@@ -76,7 +76,7 @@ class HtmlDiff
             }
         }
 
-        return self::cleanHTML($content);
+        return HtmlDiff::cleanHTML($content);
     }
 
     /**
@@ -94,7 +94,7 @@ class HtmlDiff
         foreach ($diff as $edit) {
             list($value, $type) = $edit;
             $isClosingTag = !$escaped && str_starts_with($value, '</');
-            $isOpeningNonVoidTag = !$escaped && self::isOpeningNonVoidTag($value);
+            $isOpeningNonVoidTag = !$escaped && HtmlDiff::isOpeningNonVoidTag($value);
 
             // If we were building a DIFFERENT type of block, or we've run out of open tags and are closing something
             // earlier in the chain, close the previous block and start a new one
@@ -139,8 +139,8 @@ class HtmlDiff
      */
     private static function convertDiffToHtmlBlocks(array $diff): array
     {
-        $openTagsInBlock[self::OLD_VAL] = $openTagsInBlock[self::NEW_VAL] = 0;
-        $htmlBlocks[self::OLD_VAL] = $htmlBlocks[self::NEW_VAL] = [];
+        $openTagsInBlock[HtmlDiff::OLD_VAL] = $openTagsInBlock[HtmlDiff::NEW_VAL] = 0;
+        $htmlBlocks[HtmlDiff::OLD_VAL] = $htmlBlocks[HtmlDiff::NEW_VAL] = [];
 
         foreach ($diff as $edit) {
             list($value, $type) = $edit;
@@ -149,16 +149,16 @@ class HtmlDiff
                     if ($value === '') {
                         break;
                     }
-                    self::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, self::OLD_VAL, false, $value);
-                    self::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, self::NEW_VAL, false, $value);
+                    HtmlDiff::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, HtmlDiff::OLD_VAL, false, $value);
+                    HtmlDiff::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, HtmlDiff::NEW_VAL, false, $value);
                     break;
 
                 case Differ::ADDED:
-                    self::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, self::NEW_VAL, true, $value);
+                    HtmlDiff::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, HtmlDiff::NEW_VAL, true, $value);
                     break;
 
                 case Differ::REMOVED:
-                    self::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, self::OLD_VAL, true, $value);
+                    HtmlDiff::addToHtmlBlocks($htmlBlocks, $openTagsInBlock, HtmlDiff::OLD_VAL, true, $value);
                     break;
             }
         }
@@ -186,7 +186,7 @@ class HtmlDiff
             $htmlBlocks[$oldOrNew][] = $value;
         }
 
-        if ($canAddTagsToBlock && self::isOpeningNonVoidTag($value)) {
+        if ($canAddTagsToBlock && HtmlDiff::isOpeningNonVoidTag($value)) {
             // If we're mid block or explicitly looking for new tags, we should add any new non-void tags to the block
             $openTagsInBlock[$oldOrNew]++;
         } elseif ($alreadyMidBlock && str_starts_with($value, '</')) {
@@ -254,13 +254,13 @@ class HtmlDiff
      *  This cleans code if possible, using an instance of HTMLCleaner
      *
      * @param ?HTMLCleaner $cleaner Optional instance of a HTMLCleaner class to
-     *    use, overriding self::$html_cleaner_class
+     *    use, overriding HtmlDiff::$html_cleaner_class
      */
     private static function cleanHTML(string $content, ?HTMLCleaner $cleaner = null): string
     {
         if (!$cleaner) {
-            if (self::$html_cleaner_class && class_exists(self::$html_cleaner_class)) {
-                $cleaner = Injector::inst()->create(self::$html_cleaner_class);
+            if (HtmlDiff::$html_cleaner_class && class_exists(HtmlDiff::$html_cleaner_class)) {
+                $cleaner = Injector::inst()->create(HtmlDiff::$html_cleaner_class);
             } else {
                 //load cleaner if the dependent class is available
                 $cleaner = HTMLCleaner::inst();
@@ -284,9 +284,9 @@ class HtmlDiff
 
     private static function getDiffer(): Differ
     {
-        if (!self::$differ) {
-            self::$differ = new Differ();
+        if (!HtmlDiff::$differ) {
+            HtmlDiff::$differ = new Differ();
         }
-        return self::$differ;
+        return HtmlDiff::$differ;
     }
 }

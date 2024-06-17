@@ -23,7 +23,7 @@ class UnstagedNode extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        "Parent" => self::class,
+        "Parent" => UnstagedNode::class,
     ];
 
     private static $table_name = 'InheritedPermissionsTest_UnstagedNode';

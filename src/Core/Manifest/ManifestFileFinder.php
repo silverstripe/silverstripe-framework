@@ -41,7 +41,7 @@ class ManifestFileFinder extends FileFinder
         $inVendor = $this->isInsideVendor($basename, $pathname, $depth);
         if ($inVendor) {
             // Skip nested vendor folders (e.g. vendor/silverstripe/framework/vendor)
-            if ($depth == 4 && basename($pathname ?? '') === self::VENDOR_DIR) {
+            if ($depth == 4 && basename($pathname ?? '') === ManifestFileFinder::VENDOR_DIR) {
                 return false;
             }
 
@@ -82,7 +82,7 @@ class ManifestFileFinder extends FileFinder
     public function isInsideVendor($basename, $pathname, $depth)
     {
         $base = basename($this->upLevels($pathname, $depth - 1) ?? '');
-        return $base === self::VENDOR_DIR;
+        return $base === ManifestFileFinder::VENDOR_DIR;
     }
 
     /**
@@ -170,12 +170,12 @@ class ManifestFileFinder extends FileFinder
         }
 
         // True if config file exists
-        if (file_exists($pathname . '/' . self::CONFIG_FILE)) {
+        if (file_exists($pathname . '/' . ManifestFileFinder::CONFIG_FILE)) {
             return true;
         }
 
         // True if config dir exists
-        if (file_exists($pathname . '/' . self::CONFIG_DIR)) {
+        if (file_exists($pathname . '/' . ManifestFileFinder::CONFIG_DIR)) {
             return true;
         }
 
@@ -207,9 +207,9 @@ class ManifestFileFinder extends FileFinder
      */
     protected function getIgnoredDirs()
     {
-        $ignored = [self::LANG_DIR, 'node_modules'];
+        $ignored = [ManifestFileFinder::LANG_DIR, 'node_modules'];
         if ($this->getOption('ignore_tests')) {
-            $ignored[] = self::TESTS_DIR;
+            $ignored[] = ManifestFileFinder::TESTS_DIR;
         }
         return $ignored;
     }
@@ -229,7 +229,7 @@ class ManifestFileFinder extends FileFinder
         }
 
         // Check if manifest-ignored is present
-        if (file_exists($pathname . '/' . self::EXCLUDE_FILE)) {
+        if (file_exists($pathname . '/' . ManifestFileFinder::EXCLUDE_FILE)) {
             return true;
         }
 

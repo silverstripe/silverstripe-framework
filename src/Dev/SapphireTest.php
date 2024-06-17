@@ -206,7 +206,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     protected static function is_running_test()
     {
-        return self::$is_running_test;
+        return SapphireTest::$is_running_test;
     }
 
     /**
@@ -216,7 +216,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     protected static function set_is_running_test($bool)
     {
-        self::$is_running_test = $bool;
+        SapphireTest::$is_running_test = $bool;
     }
 
     /**
@@ -653,7 +653,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
     public static function assertListContains($matches, SS_List $list, $message = '')
     {
         if (!is_array($matches)) {
-            throw self::createInvalidArgumentException(
+            throw SapphireTest::createInvalidArgumentException(
                 1,
                 'array'
             );
@@ -691,7 +691,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
     public static function assertListNotContains($matches, SS_List $list, $message = '')
     {
         if (!is_array($matches)) {
-            throw self::createInvalidArgumentException(
+            throw SapphireTest::createInvalidArgumentException(
                 1,
                 'array'
             );
@@ -731,7 +731,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
     public static function assertListEquals($matches, SS_List $list, $message = '')
     {
         if (!is_array($matches)) {
-            throw self::createInvalidArgumentException(
+            throw SapphireTest::createInvalidArgumentException(
                 1,
                 'array'
             );
@@ -762,7 +762,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
     public static function assertListAllMatch($match, SS_List $list, $message = '')
     {
         if (!is_array($match)) {
-            throw self::createInvalidArgumentException(
+            throw SapphireTest::createInvalidArgumentException(
                 1,
                 'array'
             );

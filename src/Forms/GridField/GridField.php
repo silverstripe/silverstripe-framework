@@ -558,11 +558,11 @@ class GridField extends FormField
 
         // Continue looping if any placeholders exist
         while (array_filter($content ?? [], function ($value) {
-            return preg_match(self::FRAGMENT_REGEX ?? '', $value ?? '');
+            return preg_match(GridField::FRAGMENT_REGEX ?? '', $value ?? '');
         })) {
             foreach ($content as $contentKey => $contentValue) {
                 // Skip if this specific content has no placeholders
-                if (!preg_match_all(self::FRAGMENT_REGEX ?? '', $contentValue ?? '', $matches)) {
+                if (!preg_match_all(GridField::FRAGMENT_REGEX ?? '', $contentValue ?? '', $matches)) {
                     continue;
                 }
                 foreach ($matches[1] as $match) {
@@ -578,7 +578,7 @@ class GridField extends FormField
                     // If the fragment still has a fragment definition in it, when we should defer
                     // this item until later.
 
-                    if (preg_match(self::FRAGMENT_REGEX ?? '', $fragment ?? '', $matches)) {
+                    if (preg_match(GridField::FRAGMENT_REGEX ?? '', $fragment ?? '', $matches)) {
                         if (isset($fragmentDeferred[$contentKey]) && $fragmentDeferred[$contentKey] > 5) {
                             throw new LogicException(sprintf(
                                 'GridField HTML fragment "%s" and "%s" appear to have a circular dependency.',

@@ -9,6 +9,7 @@ use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Task;
 use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project;
 use SilverStripe\ORM\DataList;
 use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\Filters\SearchFilter;
 
 class ExactMatchFilterTest extends SapphireTest
 {
@@ -313,7 +314,7 @@ class ExactMatchFilterTest extends SapphireTest
                 }
             }
 
-            ExactMatchFilter::config()->set('default_case_sensitive', $caseSensitive);
+            SearchFilter::config()->set('default_case_sensitive', $caseSensitive);
             $filter = new ExactMatchFilter();
             $filter->setValue($filterValue);
             $filter->setModifiers($modifiers);

@@ -394,7 +394,7 @@ EOT;
             $xpath .= '/ul/li[@data-id="' . $node->ID . '"]';
         }
         $match = $parser->getByXpath($xpath);
-        self::assertThat((bool)$match, self::isTrue(), $message);
+        MarkedSetTest::assertThat((bool)$match, MarkedSetTest::isTrue(), $message);
     }
 
     /**
@@ -410,7 +410,7 @@ EOT;
             $xpath .= '/ul/li[@data-id="' . $node->ID . '"]';
         }
         $match = $parser->getByXpath($xpath);
-        self::assertThat((bool)$match, self::isFalse(), $message);
+        MarkedSetTest::assertThat((bool)$match, MarkedSetTest::isFalse(), $message);
     }
 
     /**

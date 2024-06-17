@@ -11,7 +11,7 @@ class TestKernel extends CoreKernel
 {
     public function __construct($basePath)
     {
-        $this->setEnvironment(self::DEV);
+        $this->setEnvironment(TestKernel::DEV);
         parent::__construct($basePath);
     }
 
@@ -23,7 +23,7 @@ class TestKernel extends CoreKernel
      */
     public function reset()
     {
-        $this->setEnvironment(self::DEV);
+        $this->setEnvironment(TestKernel::DEV);
         $this->bootPHP();
         return $this;
     }
