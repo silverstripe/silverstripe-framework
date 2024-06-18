@@ -1,0 +1,22 @@
+name: Add new PRs to github project
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - ready_for_review
+
+permissions: {}
+
+jobs:
+  addprtoproject:
+    name: Add PR to GitHub Project
+    # Only run on the silverstripe account
+    if: github.repository_owner == 'silverstripe'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add PR to github project
+        uses: silverstripe/gha-add-pr-to-project@v1
+        with:
+          app_id: ${{ vars.PROJECT_PERMISSIONS_APP_ID }}
+          private_key: ${{ secrets.PROJECT_PERMISSIONS_APP_PRIVATE_KEY }}
