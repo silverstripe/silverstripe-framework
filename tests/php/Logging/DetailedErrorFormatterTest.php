@@ -43,7 +43,7 @@ class DetailedErrorFormatterTest extends SapphireTest
         $this->assertStringContainsString('ERRNO 401', $result, 'Status code was not found in trace');
         $this->assertStringContainsString('Denied', $result, 'Message was not found in trace');
         $this->assertStringContainsString('Line 4 in index.php', $result, 'Line or filename were not found in trace');
-        $this->assertStringContainsString(self::class, $result, 'Backtrace doesn\'t show current test class');
+        $this->assertStringContainsString(DetailedErrorFormatterTest::class, $result, 'Backtrace doesn\'t show current test class');
     }
 
     public function testFormatBatch()

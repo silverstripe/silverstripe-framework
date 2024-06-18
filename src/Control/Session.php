@@ -235,7 +235,7 @@ class Session
         }
 
         // Funny business detected!
-        if (self::config()->get('strict_user_agent_check') && isset($this->data['HTTP_USER_AGENT'])) {
+        if (static::config()->get('strict_user_agent_check') && isset($this->data['HTTP_USER_AGENT'])) {
             if ($this->data['HTTP_USER_AGENT'] !== $this->userAgent($request)) {
                 $this->clearAll();
                 $this->restart($request);

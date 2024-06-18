@@ -26,7 +26,7 @@ class LiteralField extends DatalessField
      */
     protected $content;
 
-    protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+    protected $schemaDataType = LiteralField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
     /**
      * @var string

@@ -573,7 +573,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     {
         // Ensure this controller has a valid session
         $this->getRequest()->getSession();
-        array_unshift(self::$controller_stack, $this);
+        array_unshift(Controller::$controller_stack, $this);
     }
 
     /**
@@ -581,8 +581,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public function popCurrent()
     {
-        if ($this === self::$controller_stack[0]) {
-            array_shift(self::$controller_stack);
+        if ($this === Controller::$controller_stack[0]) {
+            array_shift(Controller::$controller_stack);
         } else {
             $class = static::class;
             user_error(
@@ -693,7 +693,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         // Normlise trailing slash
-        $shouldHaveTrailingSlash = self::config()->uninherited('add_trailing_slash');
+        $shouldHaveTrailingSlash = Controller::config()->uninherited('add_trailing_slash');
         if ($shouldHaveTrailingSlash
             && !str_ends_with($url, '/')
             && !preg_match('/^(.*)\.([^\/]*)$/', Director::makeRelative($url))

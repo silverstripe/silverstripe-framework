@@ -57,7 +57,7 @@ use SilverStripe\ORM\Hierarchy\MarkedSet;
  */
 class TreeDropdownField extends FormField implements HasOneRelationFieldInterface
 {
-    protected $schemaDataType = self::SCHEMA_DATA_TYPE_SINGLESELECT;
+    protected $schemaDataType = TreeDropdownField::SCHEMA_DATA_TYPE_SINGLESELECT;
 
     protected $schemaComponent = 'TreeDropdownField';
 
@@ -561,7 +561,7 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
         } else {
             // Return basic html
             $html = $markingSet->renderChildren(
-                [self::class . '_HTML', 'type' => 'Includes'],
+                [TreeDropdownField::class . '_HTML', 'type' => 'Includes'],
                 $customised
             );
             return HTTPResponse::create()
@@ -894,10 +894,10 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
     protected function getCacheKey()
     {
         $target = $this->getSourceObject();
-        if (!isset(self::$cacheKeyCache[$target])) {
-            self::$cacheKeyCache[$target] = DataList::create($target)->max('LastEdited');
+        if (!isset(TreeDropdownField::$cacheKeyCache[$target])) {
+            TreeDropdownField::$cacheKeyCache[$target] = DataList::create($target)->max('LastEdited');
         }
-        return self::$cacheKeyCache[$target];
+        return TreeDropdownField::$cacheKeyCache[$target];
     }
 
     public function getSchemaDataDefaults()
@@ -917,7 +917,7 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
 
     /**
      * @param boolean $bool
-     * @return self Self reference
+     * @return TreeDropdownField Self reference
      */
     public function setHasEmptyDefault($bool)
     {

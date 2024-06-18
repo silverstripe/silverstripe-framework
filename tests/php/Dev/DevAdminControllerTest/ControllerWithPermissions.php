@@ -22,7 +22,7 @@ class ControllerWithPermissions extends Controller implements PermissionProvider
 
     public function index()
     {
-        echo self::OK_MSG;
+        echo ControllerWithPermissions::OK_MSG;
     }
 
     public function canInit()

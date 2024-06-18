@@ -14,7 +14,7 @@ class HTMLReadonlyField extends ReadonlyField
         'ValueEntities' => 'HTMLFragment',
     ];
 
-    protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+    protected $schemaDataType = HTMLReadonlyField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
     /**
      * @var string

@@ -81,11 +81,11 @@ abstract class HTMLEditorConfig
             return static::get_active();
         }
         // Create new instance if unconfigured
-        if (!isset(self::$configs[$identifier])) {
-            self::$configs[$identifier] = static::create();
-            self::$configs[$identifier]->setOption('editorIdentifier', $identifier);
+        if (!isset(HTMLEditorConfig::$configs[$identifier])) {
+            HTMLEditorConfig::$configs[$identifier] = static::create();
+            HTMLEditorConfig::$configs[$identifier]->setOption('editorIdentifier', $identifier);
         }
-        return self::$configs[$identifier];
+        return HTMLEditorConfig::$configs[$identifier];
     }
 
     /**
@@ -98,10 +98,10 @@ abstract class HTMLEditorConfig
     public static function set_config($identifier, HTMLEditorConfig $config = null)
     {
         if ($config) {
-            self::$configs[$identifier] = $config;
-            self::$configs[$identifier]->setOption('editorIdentifier', $identifier);
+            HTMLEditorConfig::$configs[$identifier] = $config;
+            HTMLEditorConfig::$configs[$identifier]->setOption('editorIdentifier', $identifier);
         } else {
-            unset(self::$configs[$identifier]);
+            unset(HTMLEditorConfig::$configs[$identifier]);
         }
         return $config;
     }
@@ -136,7 +136,7 @@ abstract class HTMLEditorConfig
      */
     public static function set_active_identifier($identifier)
     {
-        self::$current = $identifier;
+        HTMLEditorConfig::$current = $identifier;
     }
 
     /**
@@ -147,7 +147,7 @@ abstract class HTMLEditorConfig
      */
     public static function get_active_identifier()
     {
-        $identifier = self::$current ?: static::config()->get('default_config');
+        $identifier = HTMLEditorConfig::$current ?: static::config()->get('default_config');
         return $identifier;
     }
 
@@ -158,8 +158,8 @@ abstract class HTMLEditorConfig
      */
     public static function get_active()
     {
-        $identifier = self::get_active_identifier();
-        return self::get($identifier);
+        $identifier = HTMLEditorConfig::get_active_identifier();
+        return HTMLEditorConfig::get($identifier);
     }
 
     /**
@@ -184,7 +184,7 @@ abstract class HTMLEditorConfig
     {
         $configs = [];
 
-        foreach (self::$configs as $identifier => $config) {
+        foreach (HTMLEditorConfig::$configs as $identifier => $config) {
             $configs[$identifier] = $config->getOption('friendly_name');
         }
 

@@ -8,7 +8,7 @@ namespace SilverStripe\Core\Manifest;
 class ModuleLoader
 {
     /**
-     * @var self
+     * @var ModuleLoader
      */
     private static $instance;
 
@@ -18,11 +18,11 @@ class ModuleLoader
     protected $manifests = [];
 
     /**
-     * @return self
+     * @return ModuleLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return ModuleLoader::$instance ? ModuleLoader::$instance : ModuleLoader::$instance = new static();
     }
 
     /**

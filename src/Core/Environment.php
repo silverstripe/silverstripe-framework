@@ -217,7 +217,7 @@ class Environment
         // Parse name-value pairs
         $envVars = parse_ini_string($string ?? '') ?: [];
         foreach ($envVars as $name => $value) {
-            self::setEnv($name, $value);
+            Environment::setEnv($name, $value);
         }
     }
 

@@ -32,7 +32,7 @@ class DataProvider implements TestOnly
                     [],
                 ],
             ],
-            self::provideEqualLists()
+            DataProvider::provideEqualLists()
         );
     }
 
@@ -46,34 +46,34 @@ class DataProvider implements TestOnly
                 [
                     ['FirstName' => 'Ingo'],
                 ],
-                self::$oneItemList,
+                DataProvider::$oneItemList,
             ],
             'twoParametersOneItem' => [
                 [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                 ],
-                self::$oneItemList,
+                DataProvider::$oneItemList,
             ],
             'oneParameterTwoItems' => [
                 [
                     ['FirstName' => 'Ingo'],
                     ['FirstName' => 'Sam'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
             'twoParametersTwoItems' => [
                 [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'Minnee'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
             'mixedParametersTwoItems' => [
                 [
                     ['FirstName' => 'Ingo', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
         ];
     }
@@ -95,28 +95,28 @@ class DataProvider implements TestOnly
                 [
                     ['FirstName' => 'Ingo'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
             'oneExpectationHasWrontParamter' => [
                 [
                     ['FirstName' => 'IngoXX'],
                     ['FirstName' => 'Sam'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
             'differentParametersInDifferentItemsAreWrong' => [
                 [
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
             'differentParametersNotMatching' => [
                 [
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
                     ['FirstName' => 'Dan'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
         ];
     }
@@ -137,21 +137,21 @@ class DataProvider implements TestOnly
                 [
                     ['FirstName' => 'Sam'],
                 ],
-                self::$oneItemList,
+                DataProvider::$oneItemList,
             ],
             'twoParametersAreWrong' => [
                 [
                     ['FirstName' => 'IngoXXX', 'Surname' => 'Schommer'],
                     ['FirstName' => 'Sam', 'Surname' => 'MinneeXXX'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
             'mixedList' => [
                 [
                     ['FirstName' => 'Daniel', 'Surname' => 'Foo'],
                     ['FirstName' => 'Dan'],
                 ],
-                self::$twoItemList,
+                DataProvider::$twoItemList,
             ],
         ];
     }
@@ -164,12 +164,12 @@ class DataProvider implements TestOnly
         return [
             'emptyMatch' => [
                 [],
-                self::$memberList,
+                DataProvider::$memberList,
                 'empty list did not match',
             ],
             'allItemsWithLocaleSet' => [
                 ['Locale' => 'en_US'],
-                self::$memberList,
+                DataProvider::$memberList,
                 'list with Locale set in all items did not match',
             ],
         ];
@@ -181,7 +181,7 @@ class DataProvider implements TestOnly
     public static function provideNotMatchingList()
     {
         return [
-            'notAllItemsHaveLocaleSet' => [['FirstName' => 'Ingo'], self::$memberList],
+            'notAllItemsHaveLocaleSet' => [['FirstName' => 'Ingo'], DataProvider::$memberList],
         ];
     }
 }

@@ -226,7 +226,7 @@ class HTTP
      */
     public static function RAW_setGetVar($varname, $varvalue, $currentURL = null)
     {
-        $url = self::setGetVar($varname, $varvalue, $currentURL);
+        $url = HTTP::setGetVar($varname, $varvalue, $currentURL);
         return Convert::xml2raw($url);
     }
 
@@ -268,7 +268,7 @@ class HTTP
      */
     public static function getLinksIn($content)
     {
-        return self::findByTagAndAttribute($content, ["a" => "href"]);
+        return HTTP::findByTagAndAttribute($content, ["a" => "href"]);
     }
 
     /**
@@ -278,7 +278,7 @@ class HTTP
      */
     public static function getImagesIn($content)
     {
-        return self::findByTagAndAttribute($content, ["img" => "src"]);
+        return HTTP::findByTagAndAttribute($content, ["img" => "src"]);
     }
 
     /**

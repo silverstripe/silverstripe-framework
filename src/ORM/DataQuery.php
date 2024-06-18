@@ -743,7 +743,7 @@ class DataQuery
         $schema = DataObject::getSchema();
 
         // If the query is a DataQuery, make sure all manipulators, joins, etc are applied
-        if ($query instanceof self) {
+        if ($query instanceof DataQuery) {
             $cteDataClass = $query->dataClass();
             $query = $query->query();
             // DataQuery wants to select ALL columns by default,

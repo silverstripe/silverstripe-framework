@@ -47,7 +47,7 @@ class MySQLQueryBuilder extends DBQueryBuilder
         }
 
         if ($limit['limit'] === null) {
-            $limit['limit'] = self::MAX_ROWS;
+            $limit['limit'] = MySQLQueryBuilder::MAX_ROWS;
         }
 
         // Format the array limit, given an optional start key

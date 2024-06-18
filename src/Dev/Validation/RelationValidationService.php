@@ -82,7 +82,7 @@ class RelationValidationService implements Resettable
 
     public static function reset(): void
     {
-        $service = self::singleton();
+        $service = RelationValidationService::singleton();
         $service->clearErrors();
         $service->ignoreConfig = false;
     }
@@ -98,7 +98,7 @@ class RelationValidationService implements Resettable
      */
     public function validateRelations(): array
     {
-        self::reset();
+        RelationValidationService::reset();
         $classes = ClassInfo::subclassesFor(DataObject::class);
 
         return $this->validateClasses($classes);
@@ -139,7 +139,7 @@ class RelationValidationService implements Resettable
      */
     public function inspectClasses(array $classes): array
     {
-        self::reset();
+        RelationValidationService::reset();
         $this->ignoreConfig = true;
 
         return $this->validateClasses($classes);

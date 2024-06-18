@@ -241,7 +241,7 @@ class ModuleManifest
         );
 
         if ($project) {
-            $sorter->setVariable(self::PROJECT_KEY, $project);
+            $sorter->setVariable(ModuleManifest::PROJECT_KEY, $project);
         }
 
         $this->modules = $sorter->getSortedList();

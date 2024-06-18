@@ -11,6 +11,6 @@ class TestFlushable implements Flushable, TestOnly
 
     public static function flush()
     {
-        self::$flushed = true;
+        TestFlushable::$flushed = true;
     }
 }

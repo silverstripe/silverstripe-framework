@@ -275,7 +275,7 @@ class MarkedSet
         if (!$template) {
             $template = [
                 'type' => 'Includes',
-                self::class . '_HTML'
+                MarkedSet::class . '_HTML'
             ];
         }
         $tree = $this->getSubtree($this->rootNode, 0);

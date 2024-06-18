@@ -44,7 +44,7 @@ class IPUtils
         $method = substr_count($requestIP ?? '', ':') > 1 ? 'checkIP6' : 'checkIP4';
 
         foreach ($ips as $ip) {
-            if (self::$method($requestIP, trim($ip ?? ''))) {
+            if (IPUtils::$method($requestIP, trim($ip ?? ''))) {
                 return true;
             }
         }

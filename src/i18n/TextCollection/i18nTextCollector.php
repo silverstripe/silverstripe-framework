@@ -474,7 +474,7 @@ class i18nTextCollector
             if (!empty($themes)) {
                 foreach ($themes as $theme) {
                     if (is_dir(Path::join(THEMES_PATH, $theme))) {
-                        $modules[self::THEME_PREFIX . $theme] = new Module(Path::join(THEMES_PATH, $theme), BASE_PATH);
+                        $modules[i18nTextCollector::THEME_PREFIX . $theme] = new Module(Path::join(THEMES_PATH, $theme), BASE_PATH);
                     }
                 }
             }
@@ -488,7 +488,7 @@ class i18nTextCollector
      */
     private function getModuleName(string $origName, Module $module): string
     {
-        return strpos($origName, self::THEME_PREFIX) === 0 ? $origName : $module->getName();
+        return strpos($origName, i18nTextCollector::THEME_PREFIX) === 0 ? $origName : $module->getName();
     }
 
     /**
@@ -558,7 +558,7 @@ class i18nTextCollector
         $modulePath = $module->getPath();
 
         // Search all .ss files in themes
-        if (stripos($module->getRelativePath() ?? '', self::THEME_PREFIX) === 0) {
+        if (stripos($module->getRelativePath() ?? '', i18nTextCollector::THEME_PREFIX) === 0) {
             return $this->getFilesRecursive($modulePath, null, 'ss');
         }
 
@@ -608,7 +608,7 @@ class i18nTextCollector
         $inClass = false; // after `class` but before `{`
         $inUse = false; // pulling in classes from other namespaces
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
-        $inSelf = false; // Tracks progress of collecting self::class
+        $inSelf = false; // Tracks progress of collecting i18nTextCollector::class
         $currentEntity = [];
         $currentNameSpace = []; // The actual namespace for the current class
         $currentClass = []; // Class components
@@ -677,7 +677,7 @@ class i18nTextCollector
                     // Skip if previous token was '::'. E.g. 'Object::class'
                     if (is_array($previousToken) && $previousToken[0] === T_DOUBLE_COLON) {
                         if ($inSelf) {
-                            // Handle self::class by allowing logic further down
+                            // Handle i18nTextCollector::class by allowing logic further down
                             // for __CLASS__/__TRAIT__ to handle an array of class parts
                             $id = $id === T_TRAIT ? T_TRAIT_C : T_CLASS_C;
                             $inSelf = false;
@@ -741,7 +741,7 @@ class i18nTextCollector
                     continue;
                 }
 
-                // Start collecting self::class declarations
+                // Start collecting i18nTextCollector::class declarations
                 if ($id === T_STRING && $text === 'self') {
                     $inSelf = true;
                     continue;
@@ -770,7 +770,7 @@ class i18nTextCollector
                         throw new LogicException("Invalid string escape: " . $text);
                     }
                 } elseif ($id === T_CLASS_C || $id === T_TRAIT_C) {
-                    // Evaluate __CLASS__ . '.KEY' and self::class concatenation
+                    // Evaluate __CLASS__ . '.KEY' and i18nTextCollector::class concatenation
                     $text = implode('\\', $currentClass);
                 } else {
                     continue;

@@ -214,7 +214,7 @@ class DebugView
      */
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
     {
-        $errorType = isset(self::$error_types[$errno]) ? self::$error_types[$errno] : self::$unknown_error;
+        $errorType = isset(DebugView::$error_types[$errno]) ? DebugView::$error_types[$errno] : DebugView::$unknown_error;
         $httpRequestEnt = htmlentities($httpRequest ?? '', ENT_COMPAT, 'UTF-8');
         if (filter_var(ini_get('html_errors'), FILTER_VALIDATE_BOOL)) {
             $errstr = strip_tags($errstr ?? '');
@@ -308,7 +308,7 @@ class DebugView
         $output = '<pre style="background-color:#ccc;padding:5px;font-size:14px;line-height:18px;">';
         $output .= "<span style=\"font-size: 12px;color:#666;\">" . $this->formatCaller($caller) . " - </span>\n";
         if (is_string($val)) {
-            $output .= wordwrap($val ?? '', self::config()->columns ?? 0);
+            $output .= wordwrap($val ?? '', static::config()->columns ?? 0);
         } else {
             $output .= var_export($val, true);
         }

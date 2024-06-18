@@ -79,11 +79,11 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      */
     protected function cacheGlobalProperties()
     {
-        if (self::$globalProperties !== null) {
+        if (SSViewer_DataPresenter::$globalProperties !== null) {
             return;
         }
 
-        self::$globalProperties = $this->getPropertiesFromProvider(
+        SSViewer_DataPresenter::$globalProperties = $this->getPropertiesFromProvider(
             TemplateGlobalProvider::class,
             'get_template_global_variables'
         );
@@ -94,11 +94,11 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      */
     protected function cacheIteratorProperties()
     {
-        if (self::$iteratorProperties !== null) {
+        if (SSViewer_DataPresenter::$iteratorProperties !== null) {
             return;
         }
 
-        self::$iteratorProperties = $this->getPropertiesFromProvider(
+        SSViewer_DataPresenter::$iteratorProperties = $this->getPropertiesFromProvider(
             TemplateIteratorProvider::class,
             'get_template_iterator_variables',
             true // Call non-statically
@@ -388,8 +388,8 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         }
 
         // Then for iterator-specific overrides
-        if (array_key_exists($property, self::$iteratorProperties)) {
-            $source = self::$iteratorProperties[$property];
+        if (array_key_exists($property, SSViewer_DataPresenter::$iteratorProperties)) {
+            $source = SSViewer_DataPresenter::$iteratorProperties[$property];
             /** @var TemplateIteratorProvider $implementor */
             $implementor = $source['implementor'];
             if ($this->itemIterator) {
@@ -408,9 +408,9 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         }
 
         // And finally for global overrides
-        if (array_key_exists($property, self::$globalProperties)) {
+        if (array_key_exists($property, SSViewer_DataPresenter::$globalProperties)) {
             return [
-                'source' => self::$globalProperties[$property] // get the method call
+                'source' => SSViewer_DataPresenter::$globalProperties[$property] // get the method call
             ];
         }
 

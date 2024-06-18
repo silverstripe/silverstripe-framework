@@ -54,7 +54,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
      * @param TListA<TA> $list
      * @return static<TListA, TA>
      */
-    public function setList(SS_List&Sortable&Filterable&Limitable $list): self
+    public function setList(SS_List&Sortable&Filterable&Limitable $list): ListDecorator
     {
         $this->list = $list;
         $this->failover = $this->list;

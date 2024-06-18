@@ -122,7 +122,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             $member = Security::getCurrentUser();
         }
 
-        return self::checkMember($member, $code, $arg, $strict);
+        return Permission::checkMember($member, $code, $arg, $strict);
     }
 
     /**
@@ -136,7 +136,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function reset()
     {
-        self::$cache_permissions = [];
+        Permission::$cache_permissions = [];
     }
 
     /**
@@ -173,12 +173,12 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         if ($arg == 'any') {
             // Cache the permissions in memory
-            if (!isset(self::$cache_permissions[$memberID])) {
-                self::$cache_permissions[$memberID] = self::permissions_for_member($memberID);
+            if (!isset(Permission::$cache_permissions[$memberID])) {
+                Permission::$cache_permissions[$memberID] = Permission::permissions_for_member($memberID);
             }
             foreach ($code as $permCode) {
                 if ($permCode === 'CMS_ACCESS') {
-                    foreach (self::$cache_permissions[$memberID] as $perm) {
+                    foreach (Permission::$cache_permissions[$memberID] as $perm) {
                         //if they have admin rights OR they have an explicit access to the CMS then give permission
                         if (($adminImpliesAll && $perm == 'ADMIN') || substr($perm ?? '', 0, 11) === 'CMS_ACCESS_') {
                             return true;
@@ -196,7 +196,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             }
 
             // Multiple $code values - return true if at least one matches, ie, intersection exists
-            return (bool)array_intersect($code ?? [], self::$cache_permissions[$memberID]);
+            return (bool)array_intersect($code ?? [], Permission::$cache_permissions[$memberID]);
         }
 
         // Code filters
@@ -207,7 +207,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         // The following code should only be used if you're not using the "any" arg.  This is kind
         // of obsolete functionality and could possibly be deprecated.
-        $groupParams = self::groupList($memberID);
+        $groupParams = Permission::groupList($memberID);
         if (empty($groupParams)) {
             return false;
         }
@@ -245,7 +245,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             array_merge(
                 $codeParams,
                 $adminParams,
-                [self::GRANT_PERMISSION],
+                [Permission::GRANT_PERMISSION],
                 $groupParams,
                 $argParams
             )
@@ -264,7 +264,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 					\"Code\" IN ($codeClause) AND
 					\"Type\" = ?
 				)",
-                array_merge($codeParams, [self::GRANT_PERMISSION])
+                array_merge($codeParams, [Permission::GRANT_PERMISSION])
             )->value();
 
             if (!$hasPermission) {
@@ -283,7 +283,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function permissions_for_member($memberID)
     {
-        $groupList = self::groupList($memberID);
+        $groupList = Permission::groupList($memberID);
 
         if ($groupList) {
             $groupCSV = implode(", ", $groupList);
@@ -291,7 +291,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             $allowed = array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
-				WHERE \"Type\" = " . self::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+				WHERE \"Type\" = " . Permission::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
 
 				UNION
 
@@ -305,7 +305,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             $denied = array_unique(DB::query("
 				SELECT \"Code\"
 				FROM \"Permission\"
-				WHERE \"Type\" = " . self::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+				WHERE \"Type\" = " . Permission::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
 			")->column() ?? []);
 
             return array_diff($allowed ?? [], $denied);
@@ -384,7 +384,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             $perm->Code = $code;
         }
 
-        $perm->Type = self::GRANT_PERMISSION;
+        $perm->Type = Permission::GRANT_PERMISSION;
 
         // Arg component
         switch ($arg) {
@@ -426,7 +426,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
             $perm->Code = $code;
         }
 
-        $perm->Type = self::DENY_PERMISSION;
+        $perm->Type = Permission::DENY_PERMISSION;
 
         // Arg component
         switch ($arg) {
@@ -456,7 +456,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      */
     public static function get_members_by_permission($code)
     {
-        $toplevelGroups = self::get_groups_by_permission($code);
+        $toplevelGroups = Permission::get_groups_by_permission($code);
         if (!$toplevelGroups) {
             return new ArrayList();
         }

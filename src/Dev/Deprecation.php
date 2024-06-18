@@ -111,14 +111,14 @@ class Deprecation
      */
     public static function withNoReplacement(callable $func)
     {
-        if (self::$insideWithNoReplacement) {
+        if (Deprecation::$insideWithNoReplacement) {
             return $func();
         }
-        self::$insideWithNoReplacement = true;
+        Deprecation::$insideWithNoReplacement = true;
         try {
             return $func();
         } finally {
-            self::$insideWithNoReplacement = false;
+            Deprecation::$insideWithNoReplacement = false;
         }
     }
 
@@ -138,7 +138,7 @@ class Deprecation
         }
         $newLevel = $level;
         // handle closures inside withNoReplacement()
-        if (self::$insideWithNoReplacement
+        if (Deprecation::$insideWithNoReplacement
             && substr($backtrace[$newLevel]['function'], -strlen('{closure}')) === '{closure}'
         ) {
             $newLevel = $newLevel + 2;
@@ -184,7 +184,7 @@ class Deprecation
      */
     public static function isTriggeringError(): bool
     {
-        return self::$isTriggeringError;
+        return Deprecation::$isTriggeringError;
     }
 
     /**
@@ -195,7 +195,7 @@ class Deprecation
      */
     public static function setShouldShowForHttp(bool $value): void
     {
-        self::$shouldShowForHttp = $value;
+        Deprecation::$shouldShowForHttp = $value;
     }
 
     /**
@@ -206,7 +206,7 @@ class Deprecation
      */
     public static function setShouldShowForCli(bool $value): void
     {
-        self::$shouldShowForCli = $value;
+        Deprecation::$shouldShowForCli = $value;
     }
 
     /**
@@ -217,9 +217,9 @@ class Deprecation
     {
         if (Environment::hasEnv('SS_DEPRECATION_SHOW_HTTP')) {
             $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_HTTP');
-            return self::varAsBoolean($envVar);
+            return Deprecation::varAsBoolean($envVar);
         }
-        return self::$shouldShowForHttp;
+        return Deprecation::$shouldShowForHttp;
     }
 
     /**
@@ -230,34 +230,34 @@ class Deprecation
     {
         if (Environment::hasEnv('SS_DEPRECATION_SHOW_CLI')) {
             $envVar = Environment::getEnv('SS_DEPRECATION_SHOW_CLI');
-            return self::varAsBoolean($envVar);
+            return Deprecation::varAsBoolean($envVar);
         }
-        return self::$shouldShowForCli;
+        return Deprecation::$shouldShowForCli;
     }
 
     public static function outputNotices(): void
     {
-        if (!self::isEnabled()) {
+        if (!Deprecation::isEnabled()) {
             return;
         }
 
         $count = 0;
-        $origCount = count(self::$userErrorMessageBuffer);
+        $origCount = count(Deprecation::$userErrorMessageBuffer);
         while ($origCount > $count) {
             $count++;
-            $arr = array_shift(self::$userErrorMessageBuffer);
+            $arr = array_shift(Deprecation::$userErrorMessageBuffer);
             $message = $arr['message'];
             $calledInsideWithNoReplacement = $arr['calledInsideWithNoReplacement'];
-            if ($calledInsideWithNoReplacement && !self::$showNoReplacementNotices) {
+            if ($calledInsideWithNoReplacement && !Deprecation::$showNoReplacementNotices) {
                 continue;
             }
-            self::$isTriggeringError = true;
+            Deprecation::$isTriggeringError = true;
             user_error($message, E_USER_DEPRECATED);
-            self::$isTriggeringError = false;
+            Deprecation::$isTriggeringError = false;
         }
         // Make absolutely sure the buffer is empty - array_shift seems to leave an item in the array
         // if we're not using numeric keys.
-        self::$userErrorMessageBuffer = [];
+        Deprecation::$userErrorMessageBuffer = [];
     }
 
     /**
@@ -278,17 +278,17 @@ class Deprecation
         // calls something else that calls Deprecation::notice()
         try {
             $data = null;
-            if ($scope === self::SCOPE_CONFIG) {
+            if ($scope === Deprecation::SCOPE_CONFIG) {
                 // Deprecated config set via yaml will only be shown in the browser when using ?flush=1
                 // It will not show in CLI when running dev/build flush=1
                 $data = [
                     'key' => sha1($string),
                     'message' => $string,
-                    'calledInsideWithNoReplacement' => self::$insideWithNoReplacement
+                    'calledInsideWithNoReplacement' => Deprecation::$insideWithNoReplacement
                 ];
             } else {
-                if (!self::isEnabled()) {
-                    // Do not add to self::$userErrorMessageBuffer, as the backtrace is too expensive
+                if (!Deprecation::isEnabled()) {
+                    // Do not add to Deprecation::$userErrorMessageBuffer, as the backtrace is too expensive
                     return;
                 }
 
@@ -298,7 +298,7 @@ class Deprecation
                 // Get the calling scope
                 if ($scope == Deprecation::SCOPE_METHOD) {
                     $backtrace = debug_backtrace(0);
-                    $caller = self::get_called_method_from_trace($backtrace, 1);
+                    $caller = Deprecation::get_called_method_from_trace($backtrace, 1);
                 } elseif ($scope == Deprecation::SCOPE_CLASS) {
                     $backtrace = debug_backtrace(0);
                     $caller = isset($backtrace[1]['class']) ? $backtrace[1]['class'] : '(unknown)';
@@ -310,8 +310,8 @@ class Deprecation
                     $string .= ".";
                 }
 
-                $level = self::$insideWithNoReplacement ? 4 : 2;
-                $string .= " Called from " . self::get_called_method_from_trace($backtrace, $level) . '.';
+                $level = Deprecation::$insideWithNoReplacement ? 4 : 2;
+                $string .= " Called from " . Deprecation::get_called_method_from_trace($backtrace, $level) . '.';
 
                 if ($caller) {
                     $string = $caller . ' is deprecated.' . ($string ? ' ' . $string : '');
@@ -319,22 +319,22 @@ class Deprecation
                 $data = [
                     'key' => sha1($string),
                     'message' => $string,
-                    'calledInsideWithNoReplacement' => self::$insideWithNoReplacement
+                    'calledInsideWithNoReplacement' => Deprecation::$insideWithNoReplacement
                 ];
             }
-            if ($data && !array_key_exists($data['key'], self::$userErrorMessageBuffer)) {
+            if ($data && !array_key_exists($data['key'], Deprecation::$userErrorMessageBuffer)) {
                 // Store de-duplicated data in a buffer to be outputted when outputNotices() is called
-                self::$userErrorMessageBuffer[$data['key']] = $data;
+                Deprecation::$userErrorMessageBuffer[$data['key']] = $data;
 
                 // Use a shutdown function rather than immediately calling user_error() so that notices
                 // do not interfere with setting session varibles i.e. headers already sent error
                 // it also means the deprecation notices appear below all phpunit output in CI
                 // which is far nicer than having it spliced between phpunit output
-                if (!self::$haveSetShutdownFunction && self::isEnabled()) {
+                if (!Deprecation::$haveSetShutdownFunction && Deprecation::isEnabled()) {
                     register_shutdown_function(function () {
-                        self::outputNotices();
+                        Deprecation::outputNotices();
                     });
-                    self::$haveSetShutdownFunction = true;
+                    Deprecation::$haveSetShutdownFunction = true;
                 }
             }
         } catch (BadMethodCallException $e) {

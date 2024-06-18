@@ -200,7 +200,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             'Content' => DBField::create_field('HTMLFragment', $content)
         ];
 
-        return ArrayData::create($data)->renderWith(self::class . '_video')->forTemplate();
+        return ArrayData::create($data)->renderWith(EmbedShortcodeProvider::class . '_video')->forTemplate();
     }
 
     /**
@@ -220,7 +220,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             'Title' => !empty($arguments['caption']) ? ($arguments['caption']) : $title
         ];
 
-        return ArrayData::create($data)->renderWith(self::class . '_link')->forTemplate();
+        return ArrayData::create($data)->renderWith(EmbedShortcodeProvider::class . '_link')->forTemplate();
     }
 
     /**
@@ -238,7 +238,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             'Src' => $src
         ];
 
-        return ArrayData::create($data)->renderWith(self::class . '_photo')->forTemplate();
+        return ArrayData::create($data)->renderWith(EmbedShortcodeProvider::class . '_photo')->forTemplate();
     }
 
     /**
@@ -327,10 +327,10 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     {
         return implode('-', array_filter([
             'embed-shortcode',
-            self::cleanKeySegment($url),
-            self::cleanKeySegment($class),
-            self::cleanKeySegment($width),
-            self::cleanKeySegment($height)
+            EmbedShortcodeProvider::cleanKeySegment($url),
+            EmbedShortcodeProvider::cleanKeySegment($class),
+            EmbedShortcodeProvider::cleanKeySegment($width),
+            EmbedShortcodeProvider::cleanKeySegment($height)
         ]));
     }
 

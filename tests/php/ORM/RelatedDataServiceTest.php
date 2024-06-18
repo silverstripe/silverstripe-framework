@@ -109,7 +109,7 @@ class RelatedDataServiceTest extends SapphireTest
         // Add DataExtension and reset database so that tables + columns get added
         Hub::add_extension(HubExtension::class);
         DataObject::reset();
-        self::resetDBSchema(true, true);
+        RelatedDataServiceTest::resetDBSchema(true, true);
         //
         $pageTitle = 'My Page that has_one File using HubExtension';
         $myFile = new Node();
@@ -215,7 +215,7 @@ class RelatedDataServiceTest extends SapphireTest
         // Add DataExtension and reset database so that tables + columns get added
         Hub::add_extension(HubExtension::class);
         DataObject::reset();
-        self::resetDBSchema(true, true);
+        RelatedDataServiceTest::resetDBSchema(true, true);
         //
         $pageTitle = 'My Page that many_many File without belong_many_many Page using HubExtension';
         $myPage = new Hub();

@@ -104,10 +104,10 @@ class Email extends SymfonyEmail
     {
         $addresses = [];
         $config = (array) static::config()->get($configKey);
-        $addresses = self::convertConfigToAddreses($config);
+        $addresses = Email::convertConfigToAddreses($config);
         $env = Environment::getEnv($envKey);
         if ($env) {
-            $addresses = array_merge($addresses, self::convertConfigToAddreses($env));
+            $addresses = array_merge($addresses, Email::convertConfigToAddreses($env));
         }
         return $addresses;
     }
@@ -403,7 +403,7 @@ class Email extends SymfonyEmail
         }
 
         return ThemeResourceLoader::inst()->findTemplate(
-            SSViewer::get_templates_by_class(static::class, '', self::class),
+            SSViewer::get_templates_by_class(static::class, '', Email::class),
             SSViewer::get_themes()
         );
     }

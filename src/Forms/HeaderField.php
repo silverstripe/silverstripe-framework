@@ -17,7 +17,7 @@ class HeaderField extends DatalessField
      */
     protected $headingLevel = 2;
 
-    protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+    protected $schemaDataType = HeaderField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
     /**
      * @var string

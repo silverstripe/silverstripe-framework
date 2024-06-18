@@ -127,7 +127,7 @@ class SSViewer_Scope
     /**
      * Called at the start of every lookup chain by SSTemplateParser to indicate a new lookup from local scope
      *
-     * @return self
+     * @return SSViewer_Scope
      */
     public function locally()
     {
@@ -249,7 +249,7 @@ class SSViewer_Scope
     /**
      * Jump to the last item in the stack, called when a new item is added before a loop/with
      *
-     * @return self
+     * @return SSViewer_Scope
      */
     public function pushScope()
     {
@@ -271,7 +271,7 @@ class SSViewer_Scope
     /**
      * Jump back to "previous" item in the stack, called after a loop/with block
      *
-     * @return self
+     * @return SSViewer_Scope
      */
     public function popScope()
     {

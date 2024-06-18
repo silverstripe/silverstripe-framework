@@ -77,7 +77,7 @@ class DBForeignKey extends DBInt
         }
         $labelField = $hasOneSingleton->hasField('Title') ? 'Title' : 'Name';
         $list = DataList::create($hasOneClass);
-        $threshold = self::config()->get('dropdown_field_threshold');
+        $threshold = static::config()->get('dropdown_field_threshold');
         $overThreshold = $list->count() > $threshold;
         $field = SearchableDropdownField::create($this->name, $title, $list, $labelField)
             ->setIsLazyLoaded($overThreshold)
