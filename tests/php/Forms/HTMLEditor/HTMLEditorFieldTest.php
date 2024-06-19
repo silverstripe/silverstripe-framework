@@ -182,7 +182,9 @@ class HTMLEditorFieldTest extends FunctionalTest
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20" loading="lazy">
+	<img width="10" height="20" alt="" src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" loading="lazy">
+
+
 </span>
 
 
@@ -199,7 +201,9 @@ EOS
         $this->assertEquals(
             <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" alt="" width="10" height="20" loading="lazy">
+	<img width="10" height="20" alt="" src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWzEwLDIwXQ.jpg" loading="lazy">
+
+
 </span>
 
 	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />
