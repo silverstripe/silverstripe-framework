@@ -454,7 +454,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
             $gridState = $this->gridField->getState(false);
             $actions->push(HiddenField::create($manager->getStateKey($this->gridField), null, $gridState));
-            if ($manager instanceof GridFieldStateStoreInterface) {
+            if (ClassInfo::hasMethod($manager, 'getStateRequestVar')) {
                 $stateRequestVar = $manager->getStateRequestVar();
                 $stateValue = $this->getRequest()->requestVar($stateRequestVar);
                 if ($stateValue) {

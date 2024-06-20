@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\ClassInfo;
+
 /**
  * Simple set of data, similar to stdClass, but without the notice-level
  * errors.
@@ -86,7 +88,7 @@ class GridState_Data
     public function storeData()
     {
         $stateManager = $this->getStateManager();
-        if ($stateManager instanceof GridFieldStateStoreInterface) {
+        if (ClassInfo::hasMethod($stateManager, 'storeState')) {
             $stateManager->storeState($this->state->getGridField(), $this->state->Value());
         }
     }

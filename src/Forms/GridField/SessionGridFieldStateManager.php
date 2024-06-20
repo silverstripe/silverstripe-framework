@@ -11,7 +11,7 @@ use SilverStripe\Control\HTTPRequest;
  * (i.e. the state is changed from the default).
  * If a session state key is present in the request, it will always be used instead of generating a new one.
  */
-class SessionGridFieldStateManager implements GridFieldStateManagerInterface, GridFieldStateStoreInterface
+class SessionGridFieldStateManager implements GridFieldStateManagerInterface
 {
     protected static $state_ids = [];
 
