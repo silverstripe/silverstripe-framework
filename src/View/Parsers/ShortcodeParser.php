@@ -58,11 +58,11 @@ class ShortcodeParser
      */
     public static function get($identifier = 'default')
     {
-        if (!array_key_exists($identifier, self::$instances)) {
-            self::$instances[$identifier] = static::create();
+        if (!array_key_exists($identifier, ShortcodeParser::$instances)) {
+            ShortcodeParser::$instances[$identifier] = static::create();
         }
 
-        return self::$instances[$identifier];
+        return ShortcodeParser::$instances[$identifier];
     }
 
     /**
@@ -72,7 +72,7 @@ class ShortcodeParser
      */
     public static function get_active()
     {
-        return static::get(self::$active_instance);
+        return static::get(ShortcodeParser::$active_instance);
     }
 
     /**
@@ -82,7 +82,7 @@ class ShortcodeParser
      */
     public static function set_active($identifier)
     {
-        self::$active_instance = (string) $identifier;
+        ShortcodeParser::$active_instance = (string) $identifier;
     }
 
     // --------------------------------------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ class ShortcodeParser
         if ($content === false) {
             if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
                 throw new \InvalidArgumentException('Unknown shortcode tag ' . $tag['open']);
-            } elseif (self::$error_behavior == self::WARN && $isHTMLAllowed) {
+            } elseif (ShortcodeParser::$error_behavior == ShortcodeParser::WARN && $isHTMLAllowed) {
                 $content = '<strong class="warning">' . $tag['text'] . '</strong>';
             } elseif (ShortcodeParser::$error_behavior == ShortcodeParser::STRIP) {
                 return '';
@@ -271,7 +271,7 @@ class ShortcodeParser
 
     protected static function attrrx()
     {
-        return '/' . self::$attrrx . '/xS';
+        return '/' . ShortcodeParser::$attrrx . '/xS';
     }
 
     protected static $tagrx = '
@@ -296,7 +296,7 @@ class ShortcodeParser
 
     protected static function tagrx()
     {
-        return '/' . sprintf(self::$tagrx, self::$attrrx) . '/xS';
+        return '/' . sprintf(ShortcodeParser::$tagrx, ShortcodeParser::$attrrx) . '/xS';
     }
 
     const WARN = 'warn';
@@ -304,7 +304,7 @@ class ShortcodeParser
     const LEAVE = 'leave';
     const ERROR = 'error';
 
-    public static $error_behavior = self::LEAVE;
+    public static $error_behavior = ShortcodeParser::LEAVE;
 
 
     /**
@@ -380,7 +380,7 @@ class ShortcodeParser
                 }
 
                 if ($err) {
-                    if (self::$error_behavior == self::ERROR) {
+                    if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
                         throw new \Exception($err);
                     }
                 } else {
@@ -407,9 +407,9 @@ class ShortcodeParser
         }
 
         // Step 3: remove any tags that don't have handlers registered
-        // Only do this if self::$error_behavior == self::LEAVE
+        // Only do this if ShortcodeParser::$error_behavior == ShortcodeParser::LEAVE
         // This is optional but speeds things up.
-        if (self::$error_behavior == self::LEAVE) {
+        if (ShortcodeParser::$error_behavior == ShortcodeParser::LEAVE) {
             foreach ($tags as $i => $tag) {
                 if (empty($this->shortcodes[$tag['open']])) {
                     unset($tags[$i]);
@@ -497,7 +497,7 @@ class ShortcodeParser
         $tags = $this->extractTags($content);
 
         if ($tags) {
-            $markerClass = self::$marker_class;
+            $markerClass = ShortcodeParser::$marker_class;
 
             $content = $this->replaceTagsWithText($content, $tags, function ($idx, $tag) use ($markerClass) {
                 return '<img class="' . $markerClass . '" data-tagid="' . $idx . '" />';
@@ -522,7 +522,7 @@ class ShortcodeParser
             do {
                 $parent = $parent->parentNode;
             } while ($parent instanceof DOMElement &&
-                !in_array(strtolower($parent->tagName ?? ''), self::$block_level_elements)
+                !in_array(strtolower($parent->tagName ?? ''), ShortcodeParser::$block_level_elements)
             );
 
             $node->setAttribute('data-parentid', count($parents ?? []));
@@ -566,14 +566,14 @@ class ShortcodeParser
     protected function moveMarkerToCompliantHome($node, $parent, $location)
     {
         // Move before block parent
-        if ($location == self::BEFORE) {
+        if ($location == ShortcodeParser::BEFORE) {
             if (isset($parent->parentNode)) {
                 $parent->parentNode->insertBefore($node, $parent);
             }
-        } elseif ($location == self::AFTER) {
+        } elseif ($location == ShortcodeParser::AFTER) {
             // Move after block parent
             $this->insertAfter($node, $parent);
-        } elseif ($location == self::SPLIT) {
+        } elseif ($location == ShortcodeParser::SPLIT) {
             // Split parent at node
             $at = $node;
             $splitee = $node->parentNode;
@@ -593,9 +593,9 @@ class ShortcodeParser
             }
 
             $this->insertAfter($node, $parent);
-        } elseif ($location == self::INLINE) {
+        } elseif ($location == ShortcodeParser::INLINE) {
             // Do nothing
-            if (in_array(strtolower($node->tagName ?? ''), self::$block_level_elements)) {
+            if (in_array(strtolower($node->tagName ?? ''), ShortcodeParser::$block_level_elements)) {
                 user_error(
                     'Requested to insert block tag ' . $node->tagName . ' inline - probably this will break HTML compliance',
                     E_USER_WARNING
@@ -661,7 +661,7 @@ class ShortcodeParser
 
             // Now parse the result into a DOM
             if (!$htmlvalue->isValid()) {
-                if (self::$error_behavior == self::ERROR) {
+                if (ShortcodeParser::$error_behavior == ShortcodeParser::ERROR) {
                     throw new \Exception('Couldn\'t decode HTML when processing short codes');
                 } else {
                     $continue = false;
@@ -674,7 +674,7 @@ class ShortcodeParser
             $this->replaceAttributeTagsWithContent($htmlvalue);
 
             // Find all the element scoped shortcode markers
-            $shortcodes = $htmlvalue->query('//img[@class="' . self::$marker_class . '"]');
+            $shortcodes = $htmlvalue->query('//img[@class="' . ShortcodeParser::$marker_class . '"]');
 
             // Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
             $parents = $this->findParentsForMarkers($shortcodes);
@@ -691,19 +691,19 @@ class ShortcodeParser
                     $class = $tag['attrs']['class'];
                 }
 
-                $location = self::INLINE;
+                $location = ShortcodeParser::INLINE;
                 if ($class == 'left' || $class == 'right') {
-                    $location = self::BEFORE;
+                    $location = ShortcodeParser::BEFORE;
                 }
                 /**
                  * Below code disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987
                 if ($class == 'center' || $class == 'leftAlone') {
-                    $location = self::SPLIT;
+                    $location = ShortcodeParser::SPLIT;
                 }
                  */
 
                 if (!$parent) {
-                    if ($location !== self::INLINE) {
+                    if ($location !== ShortcodeParser::INLINE) {
                         throw new \RuntimeException(
                             "Parent block for shortcode couldn't be found, but location wasn't INLINE"
                         );
@@ -722,7 +722,7 @@ class ShortcodeParser
             $content = preg_replace_callback(
                 // Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
                 // hasn't been heavily modified
-                '/<img[^>]+class="' . preg_quote(self::$marker_class) . '"[^>]+data-tagid="([^"]+)"[^>]*>/i',
+                '/<img[^>]+class="' . preg_quote(ShortcodeParser::$marker_class) . '"[^>]+data-tagid="([^"]+)"[^>]*>/i',
                 function ($matches) use ($tags, $parser) {
                     $tag = $tags[$matches[1]];
                     return $parser->getShortcodeReplacementText($tag);

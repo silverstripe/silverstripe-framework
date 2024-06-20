@@ -14,10 +14,10 @@ class CteRecursiveObject extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        'Parent' => self::class,
+        'Parent' => CteRecursiveObject::class,
     ];
 
     private static $has_many = [
-        'Children' => self::class . '.Parent',
+        'Children' => CteRecursiveObject::class . '.Parent',
     ];
 }

@@ -325,7 +325,7 @@ class CsvBulkLoader extends BulkLoader
 
     /**
      * Find an existing objects based on one or more uniqueness columns
-     * specified via {@link self::$duplicateChecks}.
+     * specified via {@link CsvBulkLoader::$duplicateChecks}.
      *
      * @param array $record CSV data column
      * @param array $columnMap
@@ -380,7 +380,7 @@ class CsvBulkLoader extends BulkLoader
 
     /**
      * Determine whether any loaded files should be parsed with a
-     * header-row (otherwise we rely on {@link self::$columnMap}.
+     * header-row (otherwise we rely on {@link CsvBulkLoader::$columnMap}.
      *
      * @return boolean
      */

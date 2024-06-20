@@ -68,20 +68,20 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @var array
      */
     protected $stateDirectives = [
-        self::STATE_DISABLED => [
+        HTTPCacheControlMiddleware::STATE_DISABLED => [
             'no-cache' => true,
             'no-store' => true,
             'must-revalidate' => true,
         ],
-        self::STATE_PRIVATE => [
+        HTTPCacheControlMiddleware::STATE_PRIVATE => [
             'private' => true,
             'must-revalidate' => true,
         ],
-        self::STATE_PUBLIC => [
+        HTTPCacheControlMiddleware::STATE_PUBLIC => [
             'public' => true,
             'must-revalidate' => true,
         ],
-        self::STATE_ENABLED => [
+        HTTPCacheControlMiddleware::STATE_ENABLED => [
             'no-cache' => true,
             'must-revalidate' => true,
         ]
@@ -93,7 +93,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      * @config
      * @var string
      */
-    private static $defaultState = self::STATE_ENABLED;
+    private static $defaultState = HTTPCacheControlMiddleware::STATE_ENABLED;
 
     /**
      * Current state
@@ -307,7 +307,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     protected function applyChangeLevel($level, $force)
     {
-        $forcingLevel = $level + ($force ? self::LEVEL_FORCED : 0);
+        $forcingLevel = $level + ($force ? HTTPCacheControlMiddleware::LEVEL_FORCED : 0);
         if ($forcingLevel < $this->getForcingLevel()) {
             return false;
         }
@@ -465,7 +465,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setNoStore($noStore = true)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [HTTPCacheControlMiddleware::STATE_ENABLED, HTTPCacheControlMiddleware::STATE_PRIVATE, HTTPCacheControlMiddleware::STATE_PUBLIC];
         if ($noStore) {
             $this->setStateDirective($applyTo, 'no-store');
             $this->removeStateDirective($applyTo, 'max-age');
@@ -486,7 +486,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setNoCache($noCache = true)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [HTTPCacheControlMiddleware::STATE_ENABLED, HTTPCacheControlMiddleware::STATE_PRIVATE, HTTPCacheControlMiddleware::STATE_PUBLIC];
         if ($noCache) {
             $this->setStateDirective($applyTo, 'no-cache');
             $this->removeStateDirective($applyTo, 'max-age');
@@ -509,7 +509,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setMaxAge($age)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [HTTPCacheControlMiddleware::STATE_ENABLED, HTTPCacheControlMiddleware::STATE_PRIVATE, HTTPCacheControlMiddleware::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 'max-age', $age);
         if ($age) {
             $this->removeStateDirective($applyTo, 'no-cache');
@@ -529,7 +529,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function setSharedMaxAge($age)
     {
         // Affect all non-disabled states
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [HTTPCacheControlMiddleware::STATE_ENABLED, HTTPCacheControlMiddleware::STATE_PRIVATE, HTTPCacheControlMiddleware::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 's-maxage', $age);
         if ($age) {
             $this->removeStateDirective($applyTo, 'no-cache');
@@ -547,7 +547,7 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function setMustRevalidate($mustRevalidate = true)
     {
-        $applyTo = [self::STATE_ENABLED, self::STATE_PRIVATE, self::STATE_PUBLIC];
+        $applyTo = [HTTPCacheControlMiddleware::STATE_ENABLED, HTTPCacheControlMiddleware::STATE_PRIVATE, HTTPCacheControlMiddleware::STATE_PUBLIC];
         $this->setStateDirective($applyTo, 'must-revalidate', $mustRevalidate);
         return $this;
     }
@@ -569,8 +569,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function enableCache($force = false, $maxAge = null)
     {
         // Only execute this if its forcing level is high enough
-        if ($this->applyChangeLevel(self::LEVEL_ENABLED, $force)) {
-            $this->setState(self::STATE_ENABLED);
+        if ($this->applyChangeLevel(HTTPCacheControlMiddleware::LEVEL_ENABLED, $force)) {
+            $this->setState(HTTPCacheControlMiddleware::STATE_ENABLED);
         }
 
         if (!is_null($maxAge)) {
@@ -600,8 +600,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function disableCache($force = false)
     {
         // Only execute this if its forcing level is high enough
-        if ($this->applyChangeLevel(self::LEVEL_DISABLED, $force)) {
-            $this->setState(self::STATE_DISABLED);
+        if ($this->applyChangeLevel(HTTPCacheControlMiddleware::LEVEL_DISABLED, $force)) {
+            $this->setState(HTTPCacheControlMiddleware::STATE_DISABLED);
         }
         return $this;
     }
@@ -620,8 +620,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function privateCache($force = false)
     {
         // Only execute this if its forcing level is high enough
-        if ($this->applyChangeLevel(self::LEVEL_PRIVATE, $force)) {
-            $this->setState(self::STATE_PRIVATE);
+        if ($this->applyChangeLevel(HTTPCacheControlMiddleware::LEVEL_PRIVATE, $force)) {
+            $this->setState(HTTPCacheControlMiddleware::STATE_PRIVATE);
         }
         return $this;
     }
@@ -641,8 +641,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
     public function publicCache($force = false, $maxAge = null)
     {
         // Only execute this if its forcing level is high enough
-        if ($this->applyChangeLevel(self::LEVEL_PUBLIC, $force)) {
-            $this->setState(self::STATE_PUBLIC);
+        if ($this->applyChangeLevel(HTTPCacheControlMiddleware::LEVEL_PUBLIC, $force)) {
+            $this->setState(HTTPCacheControlMiddleware::STATE_PUBLIC);
         }
 
         if (!is_null($maxAge)) {

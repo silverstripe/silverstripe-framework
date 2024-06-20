@@ -119,7 +119,7 @@ class EmbedContainer implements Embeddable
         return $this->options;
     }
 
-    public function setOptions(array $options): self
+    public function setOptions(array $options): EmbedContainer
     {
         $this->options = $options;
         return $this;

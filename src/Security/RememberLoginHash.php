@@ -217,9 +217,9 @@ class RememberLoginHash extends DataObject
         }
 
         if (static::getLogoutAcrossDevices()) {
-            self::get()->filter(['MemberID' => $member->ID])->removeAll();
+            RememberLoginHash::get()->filter(['MemberID' => $member->ID])->removeAll();
         } elseif ($alcDevice) {
-            self::get()->filter([
+            RememberLoginHash::get()->filter([
                 'MemberID' => $member->ID,
                 'DeviceID' => $alcDevice
             ])->removeAll();

@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests\Filters;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\Filters\SearchFilter;
 
 class PartialMatchFilterTest extends SapphireTest
 {
@@ -267,7 +268,7 @@ class PartialMatchFilterTest extends SapphireTest
                 }
             }
 
-            PartialMatchFilter::config()->set('default_case_sensitive', $caseSensitive);
+            SearchFilter::config()->set('default_case_sensitive', $caseSensitive);
             $filter = new PartialMatchFilter();
             $filter->setValue($filterValue);
             $filter->setModifiers($modifiers);

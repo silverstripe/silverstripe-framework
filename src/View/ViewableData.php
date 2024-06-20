@@ -267,7 +267,7 @@ class ViewableData implements IteratorAggregate
             return $this->hasCustomMethod($method);
         }
         // All methods defined on ViewableData are accessible to ViewableData
-        if (static::class === self::class) {
+        if (static::class === ViewableData::class) {
             return true;
         }
         // Private methods defined on subclasses are not accessible to ViewableData
@@ -284,7 +284,7 @@ class ViewableData implements IteratorAggregate
         if (!property_exists($this, $property)) {
             return false;
         }
-        if (static::class === self::class) {
+        if (static::class === ViewableData::class) {
             return true;
         }
         $reflectionProperty = new ReflectionProperty($this, $property);
@@ -665,7 +665,7 @@ class ViewableData implements IteratorAggregate
      */
     public function getViewerTemplates($suffix = '')
     {
-        return SSViewer::get_templates_by_class(static::class, $suffix, self::class);
+        return SSViewer::get_templates_by_class(static::class, $suffix, ViewableData::class);
     }
 
     /**
@@ -689,7 +689,7 @@ class ViewableData implements IteratorAggregate
      * @return string
      * @uses ClassInfo
      */
-    public function CSSClasses($stopAtClass = self::class)
+    public function CSSClasses($stopAtClass = ViewableData::class)
     {
         $classes       = [];
         $classAncestry = array_reverse(ClassInfo::ancestry(static::class) ?? []);

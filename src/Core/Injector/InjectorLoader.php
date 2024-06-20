@@ -13,7 +13,7 @@ class InjectorLoader
 
     /**
      * @internal
-     * @var self
+     * @var InjectorLoader
      */
     private static $instance;
 
@@ -23,11 +23,11 @@ class InjectorLoader
     protected $manifests = [];
 
     /**
-     * @return self
+     * @return InjectorLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return InjectorLoader::$instance ? InjectorLoader::$instance : InjectorLoader::$instance = new static();
     }
 
     /**
@@ -38,13 +38,13 @@ class InjectorLoader
      */
     public function getManifest()
     {
-        if ($this !== self::$instance) {
+        if ($this !== InjectorLoader::$instance) {
             throw new BadMethodCallException(
                 "Non-current injector manifest cannot be accessed. Please call ->activate() first"
             );
         }
         if (empty($this->manifests)) {
-            throw new BadMethodCallException(self::NO_MANIFESTS_AVAILABLE);
+            throw new BadMethodCallException(InjectorLoader::NO_MANIFESTS_AVAILABLE);
         }
         return $this->manifests[count($this->manifests) - 1];
     }

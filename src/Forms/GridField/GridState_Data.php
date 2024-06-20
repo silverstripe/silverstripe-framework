@@ -25,14 +25,14 @@ class GridState_Data
 
     public function __get($name)
     {
-        return $this->getData($name, new self());
+        return $this->getData($name, new GridState_Data());
     }
 
     public function __call($name, $arguments)
     {
         // Assume first parameter is default value
         if (empty($arguments)) {
-            $default = new self();
+            $default = new GridState_Data();
         } else {
             $default = $arguments[0];
         }
@@ -72,7 +72,7 @@ class GridState_Data
             $this->data[$name] = $default;
         } else {
             if (is_array($this->data[$name])) {
-                $this->data[$name] = new self($this->data[$name]);
+                $this->data[$name] = new GridState_Data($this->data[$name]);
             }
         }
 

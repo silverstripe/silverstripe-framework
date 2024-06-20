@@ -298,9 +298,9 @@ class Hierarchy extends DataExtension
 
         // cached call
         if ($cache) {
-            if (isset(self::$cache_numChildren[$baseClass][$cacheType][$id])) {
-                return self::$cache_numChildren[$baseClass][$cacheType][$id];
-            } elseif (isset(self::$cache_numChildren[$baseClass][$cacheType]['_complete'])) {
+            if (isset(Hierarchy::$cache_numChildren[$baseClass][$cacheType][$id])) {
+                return Hierarchy::$cache_numChildren[$baseClass][$cacheType][$id];
+            } elseif (isset(Hierarchy::$cache_numChildren[$baseClass][$cacheType]['_complete'])) {
                 // If the cache is complete and we didn't find our ID in the cache, it means this object is childless.
                 return 0;
             }
@@ -311,7 +311,7 @@ class Hierarchy extends DataExtension
 
         // Save if caching
         if ($cache) {
-            self::$cache_numChildren[$baseClass][$cacheType][$id] = $numChildren;
+            Hierarchy::$cache_numChildren[$baseClass][$cacheType][$id] = $numChildren;
         }
 
         return $numChildren;
@@ -333,7 +333,7 @@ class Hierarchy extends DataExtension
         if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
             $idList = is_array($recordList) ? $recordList :
                 ($recordList instanceof DataList ? $recordList->column('ID') : null);
-            self::prepopulate_numchildren_cache($this->getHierarchyBaseClass(), $idList);
+            Hierarchy::prepopulate_numchildren_cache($this->getHierarchyBaseClass(), $idList);
         }
 
         $this->owner->extend('onPrepopulateTreeDataCache', $recordList, $options);
@@ -384,11 +384,11 @@ class Hierarchy extends DataExtension
         $query->setGroupBy([Convert::symbol2sql("ParentID")]);
 
         $numChildren = $query->execute()->map();
-        self::$cache_numChildren[$baseClass]['numChildren'] = $numChildren;
+        Hierarchy::$cache_numChildren[$baseClass]['numChildren'] = $numChildren;
         if (!$idList) {
             // If all objects are being cached, mark this cache as complete
             // to avoid counting children of childless object.
-            self::$cache_numChildren[$baseClass]['numChildren']['_complete'] = true;
+            Hierarchy::$cache_numChildren[$baseClass]['numChildren']['_complete'] = true;
         }
     }
 
@@ -416,7 +416,7 @@ class Hierarchy extends DataExtension
     {
         $ancestry = ClassInfo::ancestry($this->owner);
         $ancestorClass = array_shift($ancestry);
-        while ($ancestorClass && !ViewableData::has_extension($ancestorClass, self::class)) {
+        while ($ancestorClass && !ViewableData::has_extension($ancestorClass, Hierarchy::class)) {
             $ancestorClass = array_shift($ancestry);
         }
 
@@ -575,6 +575,6 @@ class Hierarchy extends DataExtension
     public function flushCache()
     {
         $this->owner->_cache_children = null;
-        self::$cache_numChildren = [];
+        Hierarchy::$cache_numChildren = [];
     }
 }

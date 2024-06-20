@@ -100,8 +100,8 @@ class RSSFeedTest extends SapphireTest
     {
         parent::setUp();
         Config::modify()->set(Director::class, 'alternate_base_url', '/');
-        if (!self::$original_host) {
-            self::$original_host = $_SERVER['HTTP_HOST'];
+        if (!RSSFeedTest::$original_host) {
+            RSSFeedTest::$original_host = $_SERVER['HTTP_HOST'];
         }
         $_SERVER['HTTP_HOST'] = 'www.example.org';
 
@@ -116,6 +116,6 @@ class RSSFeedTest extends SapphireTest
     protected function tearDown(): void
     {
         parent::tearDown();
-        $_SERVER['HTTP_HOST'] = self::$original_host;
+        $_SERVER['HTTP_HOST'] = RSSFeedTest::$original_host;
     }
 }

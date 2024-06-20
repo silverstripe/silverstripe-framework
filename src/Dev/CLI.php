@@ -37,13 +37,13 @@ class CLI
      */
     public static function text($text, $fgColour = null, $bgColour = null, $bold = false)
     {
-        if (!self::supports_colour()) {
+        if (!CLI::supports_colour()) {
             return $text;
         }
 
         if ($fgColour || $bgColour || $bold) {
-            $prefix = self::start_colour($fgColour, $bgColour, $bold);
-            $suffix = self::end_colour();
+            $prefix = CLI::start_colour($fgColour, $bgColour, $bold);
+            $suffix = CLI::end_colour();
         } else {
             $prefix = $suffix = "";
         }
@@ -62,7 +62,7 @@ class CLI
      */
     public static function start_colour($fgColour = null, $bgColour = null, $bold = false)
     {
-        if (!self::supports_colour()) {
+        if (!CLI::supports_colour()) {
             return "";
         }
         $colours = [
@@ -98,6 +98,6 @@ class CLI
      */
     public static function end_colour()
     {
-        return self::supports_colour() ? "\033[0m" : "";
+        return CLI::supports_colour() ? "\033[0m" : "";
     }
 }

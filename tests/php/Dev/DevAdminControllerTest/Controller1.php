@@ -22,11 +22,11 @@ class Controller1 extends Controller
 
     public function index()
     {
-        echo self::OK_MSG;
+        echo Controller1::OK_MSG;
     }
 
     public function y1Action()
     {
-        echo self::OK_MSG;
+        echo Controller1::OK_MSG;
     }
 }

@@ -79,7 +79,7 @@ abstract class Config
     public static function nest()
     {
         // Clone current config and nest
-        $new = self::inst()->nest();
+        $new = Config::inst()->nest();
         ConfigLoader::inst()->pushManifest($new);
         return $new;
     }

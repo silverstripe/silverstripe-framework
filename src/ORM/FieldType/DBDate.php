@@ -45,7 +45,7 @@ class DBDate extends DBField
         $value = $this->parseDate($value);
         if ($value === false) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
             );
         }
         $this->value = $value;
@@ -254,7 +254,7 @@ class DBDate extends DBField
      */
     public function getISOFormat()
     {
-        return self::ISO_DATE;
+        return DBDate::ISO_DATE;
     }
 
     /**
@@ -543,7 +543,7 @@ class DBDate extends DBField
      */
     public function IsToday()
     {
-        return $this->Format(self::ISO_DATE) === DBDatetime::now()->Format(self::ISO_DATE);
+        return $this->Format(DBDate::ISO_DATE) === DBDatetime::now()->Format(DBDate::ISO_DATE);
     }
 
     /**
@@ -559,7 +559,7 @@ class DBDate extends DBField
      * @param string $adjustment PHP strtotime style
      * @return $this
      */
-    public function modify(string $adjustment): self
+    public function modify(string $adjustment): DBDate
     {
         $modifiedTime = strtotime($adjustment ?? '', $this->getTimestamp());
         return $this->setValue($modifiedTime);
@@ -572,7 +572,7 @@ class DBDate extends DBField
      */
     public function URLDate()
     {
-        return rawurlencode($this->Format(self::ISO_DATE, self::ISO_LOCALE) ?? '');
+        return rawurlencode($this->Format(DBDate::ISO_DATE, DBDate::ISO_LOCALE) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
@@ -600,7 +600,7 @@ class DBDate extends DBField
         // Validate date
         if (!checkdate($month ?? 0, $day ?? 0, $year ?? 0)) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
             );
         }
 
@@ -623,7 +623,7 @@ class DBDate extends DBField
             $matches
         )) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
             );
         }
 
@@ -638,7 +638,7 @@ class DBDate extends DBField
         }
         if ($parts[0] < 1000 && (int)$parts[0] !== 0) {
             throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
             );
         }
         $parts[] = $matches['time'];

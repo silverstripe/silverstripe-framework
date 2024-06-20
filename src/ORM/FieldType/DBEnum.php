@@ -45,7 +45,7 @@ class DBEnum extends DBString
      */
     public static function flushCache()
     {
-        self::$enum_cache = [];
+        DBEnum::$enum_cache = [];
     }
 
     /**
@@ -209,13 +209,13 @@ class DBEnum extends DBString
         }
 
         // Ensure the table level cache exists
-        if (empty(self::$enum_cache[$table])) {
-            self::$enum_cache[$table] = [];
+        if (empty(DBEnum::$enum_cache[$table])) {
+            DBEnum::$enum_cache[$table] = [];
         }
 
         // Check existing cache
-        if (!empty(self::$enum_cache[$table][$name])) {
-            return self::$enum_cache[$table][$name];
+        if (!empty(DBEnum::$enum_cache[$table][$name])) {
+            return DBEnum::$enum_cache[$table][$name];
         }
 
         // Get all enum values
@@ -226,7 +226,7 @@ class DBEnum extends DBString
         }
 
         // Cache and return
-        self::$enum_cache[$table][$name] = $enumValues;
+        DBEnum::$enum_cache[$table][$name] = $enumValues;
         return $enumValues;
     }
 

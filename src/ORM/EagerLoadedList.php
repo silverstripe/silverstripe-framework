@@ -59,7 +59,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
 
     /**
      * Nested eager-loaded data which applies to relations on records contained in this list
-     * @var array<int,self|DataObject>
+     * @var array<int,EagerLoadedList|DataObject>
      */
     private array $eagerLoadedData = [];
 
@@ -148,7 +148,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
      *
      * @return $this
      */
-    public function addEagerLoadedData(string $relation, int $id, self|DataObject $data): static
+    public function addEagerLoadedData(string $relation, int $id, EagerLoadedList|DataObject $data): static
     {
         $this->eagerLoadedData[$id][$relation] = $data;
         return $this;
@@ -856,7 +856,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
                 continue;
             }
             $data = $this->eagerLoadedData[$id][$relationName];
-            if (!($data instanceof self)) {
+            if (!($data instanceof EagerLoadedList)) {
                 // There's no clean way to get the rows back out of DataObject records,
                 // and if it's not a DataObject then we don't know how to handle it,
                 // so fall back to a new DB query

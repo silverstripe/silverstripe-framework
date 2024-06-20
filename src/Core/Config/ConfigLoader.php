@@ -12,7 +12,7 @@ class ConfigLoader
 {
     /**
      * @internal
-     * @var self
+     * @var ConfigLoader
      */
     private static $instance;
 
@@ -22,11 +22,11 @@ class ConfigLoader
     protected $manifests = [];
 
     /**
-     * @return self
+     * @return ConfigLoader
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new static();
+        return ConfigLoader::$instance ? ConfigLoader::$instance : ConfigLoader::$instance = new static();
     }
 
     /**
@@ -37,7 +37,7 @@ class ConfigLoader
      */
     public function getManifest()
     {
-        if ($this !== self::$instance) {
+        if ($this !== ConfigLoader::$instance) {
             throw new BadMethodCallException(
                 "Non-current config manifest cannot be accessed. Please call ->activate() first"
             );

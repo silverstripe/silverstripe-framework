@@ -108,7 +108,7 @@ class MySQLiConnector extends DBConnector
                 dirname($parameters['ssl_ca'] ?? ''),
                 array_key_exists('ssl_cipher', $parameters ?? [])
                     ? $parameters['ssl_cipher']
-                    : self::config()->get('ssl_cipher_default')
+                    : static::config()->get('ssl_cipher_default')
             );
         }
 

@@ -740,7 +740,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     private function initImageSizePresets(array &$settings): void
     {
         if (empty($settings['image_size_presets'])) {
-            $settings['image_size_presets'] = self::config()->get('image_size_presets');
+            $settings['image_size_presets'] = static::config()->get('image_size_presets');
         }
 
         foreach ($settings['image_size_presets'] as &$preset) {
@@ -755,7 +755,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
                 );
             } elseif (empty($preset['text']) && isset($preset['width'])) {
                 $preset['text'] = _t(
-                    self::class . '.PIXEL_WIDTH',
+                    TinyMCEConfig::class . '.PIXEL_WIDTH',
                     '{width} pixels',
                     $preset
                 );
@@ -945,7 +945,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
      * @param string $folderName
      * @return $this
      */
-    public function setFolderName(string $folderName): self
+    public function setFolderName(string $folderName): TinyMCEConfig
     {
         $folder = Folder::find_or_make($folderName);
         $folderID = $folder ? $folder->ID : null;
@@ -956,9 +956,9 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     public function provideI18nEntities()
     {
         $entities = [
-            self::class . '.PIXEL_WIDTH' => '{width} pixels',
+            TinyMCEConfig::class . '.PIXEL_WIDTH' => '{width} pixels',
         ];
-        foreach (self::config()->get('image_size_presets') as $preset) {
+        foreach (static::config()->get('image_size_presets') as $preset) {
             if (empty($preset['i18n']) || empty($preset['text'])) {
                 continue;
             }

@@ -96,10 +96,10 @@ class DatabaseAdapterRegistry implements Flushable
 
         // set default fields if none are defined already
         if (!isset($config['fields'])) {
-            $config['fields'] = self::$default_fields;
+            $config['fields'] = DatabaseAdapterRegistry::$default_fields;
         }
 
-        self::$adapters[$config['class']] = $config;
+        DatabaseAdapterRegistry::$adapters[$config['class']] = $config;
     }
 
     /**
@@ -109,7 +109,7 @@ class DatabaseAdapterRegistry implements Flushable
      */
     public static function unregister($class)
     {
-        unset(self::$adapters[$class]);
+        unset(DatabaseAdapterRegistry::$adapters[$class]);
     }
 
     /**
@@ -204,7 +204,7 @@ class DatabaseAdapterRegistry implements Flushable
      */
     public static function get_adapters()
     {
-        return self::$adapters;
+        return DatabaseAdapterRegistry::$adapters;
     }
 
     /**
@@ -215,8 +215,8 @@ class DatabaseAdapterRegistry implements Flushable
      */
     public static function get_adapter($class)
     {
-        if (isset(self::$adapters[$class])) {
-            return self::$adapters[$class];
+        if (isset(DatabaseAdapterRegistry::$adapters[$class])) {
+            return DatabaseAdapterRegistry::$adapters[$class];
         }
         return null;
     }
@@ -228,7 +228,7 @@ class DatabaseAdapterRegistry implements Flushable
      */
     public static function get_default_fields()
     {
-        return self::$default_fields;
+        return DatabaseAdapterRegistry::$default_fields;
     }
 
     /**

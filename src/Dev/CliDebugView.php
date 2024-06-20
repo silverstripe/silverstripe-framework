@@ -43,10 +43,10 @@ class CliDebugView extends DebugView
      */
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
     {
-        if (!isset(self::$error_types[$errno])) {
+        if (!isset(CliDebugView::$error_types[$errno])) {
             $errorTypeTitle = "UNKNOWN TYPE, ERRNO $errno";
         } else {
-            $errorTypeTitle = self::$error_types[$errno]['title'];
+            $errorTypeTitle = CliDebugView::$error_types[$errno]['title'];
         }
         $output = CLI::text("ERROR [" . $errorTypeTitle . "]: $errstr\nIN $httpRequest\n", "red", null, true);
         $output .= CLI::text("Line $errline in $errfile\n\n", "red");
@@ -67,7 +67,7 @@ class CliDebugView extends DebugView
         foreach ($lines as $offset => $line) {
             $output .= ($offset == $errline) ? "* " : "  ";
             $output .= str_pad("$offset:", 5);
-            $output .= wordwrap($line ?? '', self::config()->columns ?? 0, "\n       ");
+            $output .= wordwrap($line ?? '', static::config()->columns ?? 0, "\n       ");
         }
         $output .= "\n";
 
@@ -90,7 +90,7 @@ class CliDebugView extends DebugView
 
     public function renderParagraph($text)
     {
-        return wordwrap($text ?? '', self::config()->columns ?? 0) . "\n\n";
+        return wordwrap($text ?? '', static::config()->columns ?? 0) . "\n\n";
     }
 
     /**
@@ -103,10 +103,10 @@ class CliDebugView extends DebugView
      */
     public function renderInfo($title, $subtitle, $description = null)
     {
-        $output = wordwrap(strtoupper($title ?? ''), self::config()->columns ?? 0) . "\n";
-        $output .= wordwrap($subtitle ?? '', self::config()->columns ?? 0) . "\n";
-        $output .= str_repeat('-', min(self::config()->columns, max(strlen($title ?? ''), strlen($subtitle ?? ''))) ?? 0) . "\n";
-        $output .= wordwrap($description ?? '', self::config()->columns ?? 0) . "\n\n";
+        $output = wordwrap(strtoupper($title ?? ''), static::config()->columns ?? 0) . "\n";
+        $output .= wordwrap($subtitle ?? '', static::config()->columns ?? 0) . "\n";
+        $output .= str_repeat('-', min(static::config()->columns, max(strlen($title ?? ''), strlen($subtitle ?? ''))) ?? 0) . "\n";
+        $output .= wordwrap($description ?? '', static::config()->columns ?? 0) . "\n\n";
 
         return $output;
     }
@@ -114,17 +114,17 @@ class CliDebugView extends DebugView
     public function renderVariable($val, $caller)
     {
         $output = PHP_EOL;
-        $output .= CLI::text(str_repeat('=', self::config()->columns ?? 0), 'green');
+        $output .= CLI::text(str_repeat('=', static::config()->columns ?? 0), 'green');
         $output .= PHP_EOL;
         $output .= CLI::text($this->formatCaller($caller), 'blue', null, true);
         $output .= PHP_EOL . PHP_EOL;
         if (is_string($val)) {
-            $output .= wordwrap($val ?? '', self::config()->columns ?? 0);
+            $output .= wordwrap($val ?? '', static::config()->columns ?? 0);
         } else {
             $output .= var_export($val, true);
         }
         $output .= PHP_EOL;
-        $output .= CLI::text(str_repeat('=', self::config()->columns ?? 0), 'green');
+        $output .= CLI::text(str_repeat('=', static::config()->columns ?? 0), 'green');
         $output .= PHP_EOL;
 
         return $output;
@@ -184,7 +184,7 @@ class CliDebugView extends DebugView
 
         // Format text
         if (is_string($val)) {
-            return wordwrap($val ?? '', self::config()->columns ?? 0);
+            return wordwrap($val ?? '', static::config()->columns ?? 0);
         }
 
         // Other

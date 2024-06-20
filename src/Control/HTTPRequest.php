@@ -850,7 +850,7 @@ class HTTPRequest implements ArrayAccess
      */
     public function setHttpMethod($method)
     {
-        if (!self::isValidHttpMethod($method)) {
+        if (!HTTPRequest::isValidHttpMethod($method)) {
             throw new \InvalidArgumentException('HTTPRequest::setHttpMethod: Invalid HTTP method');
         }
 

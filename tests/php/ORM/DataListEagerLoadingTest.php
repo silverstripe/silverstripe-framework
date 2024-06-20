@@ -46,7 +46,7 @@ class DataListEagerLoadingTest extends SapphireTest
 
     private const SHOW_QUERIES_RESET = 'SET_TO_THIS_VALUE_WHEN_FINISHED';
 
-    private $showQueries = self::SHOW_QUERIES_RESET;
+    private $showQueries = DataListEagerLoadingTest::SHOW_QUERIES_RESET;
 
     public static function getExtraDataObjects()
     {
@@ -122,7 +122,7 @@ class DataListEagerLoadingTest extends SapphireTest
      */
     private function startCountingSelectQueries(): void
     {
-        if ($this->showQueries !== self::SHOW_QUERIES_RESET) {
+        if ($this->showQueries !== DataListEagerLoadingTest::SHOW_QUERIES_RESET) {
             throw new LogicException('showQueries wasnt reset, you did something wrong');
         }
         $this->showQueries = $_REQUEST['showqueries'] ?? null;
@@ -151,7 +151,7 @@ class DataListEagerLoadingTest extends SapphireTest
      */
     private function resetShowQueries(): void
     {
-        if ($this->showQueries === self::SHOW_QUERIES_RESET) {
+        if ($this->showQueries === DataListEagerLoadingTest::SHOW_QUERIES_RESET) {
             return;
         }
         if ($this->showQueries) {
@@ -159,7 +159,7 @@ class DataListEagerLoadingTest extends SapphireTest
         } else {
             unset($_REQUEST['showqueries']);
         }
-        $this->showQueries = self::SHOW_QUERIES_RESET;
+        $this->showQueries = DataListEagerLoadingTest::SHOW_QUERIES_RESET;
     }
 
     /**

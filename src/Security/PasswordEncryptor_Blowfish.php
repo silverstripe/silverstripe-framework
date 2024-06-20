@@ -30,7 +30,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
      */
     public static function set_cost($cost)
     {
-        self::$cost = max(min(31, $cost), 4);
+        PasswordEncryptor_Blowfish::$cost = max(min(31, $cost), 4);
     }
 
     /**
@@ -40,7 +40,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
      */
     public static function get_cost()
     {
-        return self::$cost;
+        return PasswordEncryptor_Blowfish::$cost;
     }
 
     public function encrypt($password, $salt = null, $member = null)
@@ -153,7 +153,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
     }
 
     /**
-     * self::$cost param is forced to be two digits with leading zeroes for ints 4-9
+     * PasswordEncryptor_Blowfish::$cost param is forced to be two digits with leading zeroes for ints 4-9
      *
      * @param string $password
      * @param Member $member
@@ -162,7 +162,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor
     public function salt($password, $member = null)
     {
         $generator = new RandomGenerator();
-        return sprintf('%02d', self::$cost) . '$' . substr($generator->randomToken('sha1') ?? '', 0, 22);
+        return sprintf('%02d', PasswordEncryptor_Blowfish::$cost) . '$' . substr($generator->randomToken('sha1') ?? '', 0, 22);
     }
 
     public function check($hash, $password, $salt = null, $member = null)

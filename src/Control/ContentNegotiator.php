@@ -116,7 +116,7 @@ class ContentNegotiator
      */
     public static function process(HTTPResponse $response)
     {
-        if (!self::enabled_for($response)) {
+        if (!ContentNegotiator::enabled_for($response)) {
             return;
         }
 

@@ -67,7 +67,7 @@ abstract class SingleSelectField extends SelectField
 
     /**
      * @param boolean $bool
-     * @return self Self reference
+     * @return SingleSelectField Self reference
      */
     public function setHasEmptyDefault($bool)
     {

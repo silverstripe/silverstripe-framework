@@ -285,7 +285,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * database, and the record has a CMSEditLink method, then the system will redirect to the
      * URL returned by that method.
      */
-    public function setRedirectMissingRecords(bool $redirectMissingRecords): self
+    public function setRedirectMissingRecords(bool $redirectMissingRecords): GridFieldDetailForm
     {
         $this->redirectMissingRecords = $redirectMissingRecords;
         return $this;

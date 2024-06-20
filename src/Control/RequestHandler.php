@@ -130,7 +130,7 @@ class RequestHandler extends ViewableData
     /**
      * Handles URL requests.
      *
-     *  - ViewableData::handleRequest() iterates through each rule in {@link self::$url_handlers}.
+     *  - ViewableData::handleRequest() iterates through each rule in {@link RequestHandler::$url_handlers}.
      *  - If the rule matches, the named method will be called.
      *  - If there is still more URL to be processed, then handleRequest()
      *    is called on the object that that method returns.
@@ -445,7 +445,7 @@ class RequestHandler extends ViewableData
 
     /**
      * Check that the given action is allowed to be called from a URL.
-     * It will interrogate {@link self::$allowed_actions} to determine this.
+     * It will interrogate {@link RequestHandler::$allowed_actions} to determine this.
      *
      * @param string $action
      * @return bool

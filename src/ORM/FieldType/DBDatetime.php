@@ -58,7 +58,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * @param bool $immutable
      * @return $this
      */
-    public function setImmutable(bool $immutable): self
+    public function setImmutable(bool $immutable): DBDatetime
     {
         $this->immutable = $immutable;
 
@@ -172,7 +172,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function URLDatetime()
     {
-        return rawurlencode($this->Format(self::ISO_DATETIME, self::ISO_LOCALE) ?? '');
+        return rawurlencode($this->Format(DBDatetime::ISO_DATETIME, DBDatetime::ISO_LOCALE) ?? '');
     }
 
     public function scaffoldFormField($title = null, $params = null)
@@ -208,7 +208,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function now()
     {
-        $time = self::$mock_now ? self::$mock_now->Value : time();
+        $time = DBDatetime::$mock_now ? DBDatetime::$mock_now->Value : time();
 
         /** @var DBDatetime $now */
         $now = DBField::create_field('Datetime', $time);
@@ -233,7 +233,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
                 throw new InvalidArgumentException('DBDatetime::set_mock_now(): Wrong format: ' . $value);
             }
         }
-        self::$mock_now = $datetime;
+        DBDatetime::$mock_now = $datetime;
     }
 
     /**
@@ -242,7 +242,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function clear_mock_now()
     {
-        self::$mock_now = null;
+        DBDatetime::$mock_now = null;
     }
 
     /**
@@ -255,14 +255,14 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function withFixedNow($time, $callback)
     {
-        $original = self::$mock_now;
+        $original = DBDatetime::$mock_now;
 
         try {
-            self::set_mock_now($time);
+            DBDatetime::set_mock_now($time);
 
             return $callback();
         } finally {
-            self::$mock_now = $original;
+            DBDatetime::$mock_now = $original;
         }
     }
 
@@ -324,6 +324,6 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function getISOFormat()
     {
-        return self::ISO_DATETIME;
+        return DBDatetime::ISO_DATETIME;
     }
 }

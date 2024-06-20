@@ -175,7 +175,7 @@ class VersionProvider
      */
     public function getModules()
     {
-        $modules = Config::inst()->get(self::class, 'modules');
+        $modules = Config::inst()->get(VersionProvider::class, 'modules');
         return !empty($modules) ? $modules : ['silverstripe/framework' => 'Framework'];
     }
 

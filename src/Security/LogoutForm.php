@@ -23,7 +23,7 @@ class LogoutForm extends Form
      */
     public function __construct(
         RequestHandler $controller = null,
-        $name = self::DEFAULT_NAME,
+        $name = LogoutForm::DEFAULT_NAME,
         FieldList $fields = null,
         FieldList $actions = null,
         Validator $validator = null
