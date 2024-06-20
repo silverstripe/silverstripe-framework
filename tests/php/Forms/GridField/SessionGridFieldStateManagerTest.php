@@ -5,15 +5,24 @@ namespace SilverStripe\Forms\Tests\GridField;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldStateManagerInterface;
 use SilverStripe\Forms\GridField\SessionGridFieldStateManager;
 use SilverStripe\Forms\Tests\GridField\GridFieldPrintButtonTest\TestObject;
 
 class SessionGridFieldStateManagerTest extends SapphireTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // configure the injector to use the session grid field state manager
+        Injector::inst()->registerService(new SessionGridFieldStateManager(), GridFieldStateManagerInterface::class);
+    }
+
     public function testStateKey()
     {
         $manager = new SessionGridFieldStateManager();
