@@ -478,7 +478,7 @@ class Member extends DataObject
     public function regenerateTempID()
     {
         $generator = new RandomGenerator();
-        $lifetime = self::config()->get('temp_id_lifetime');
+        $lifetime = static::config()->get('temp_id_lifetime');
         $this->TempIDHash = $generator->randomToken('sha1');
         $this->TempIDExpired = $lifetime
             ? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + $lifetime)
@@ -565,7 +565,7 @@ class Member extends DataObject
     public function validateAutoLoginToken($autologinToken)
     {
         $hash = $this->encryptWithUserSettings($autologinToken);
-        $member = self::member_from_autologinhash($hash, false);
+        $member = Member::member_from_autologinhash($hash, false);
 
         return (bool)$member;
     }
@@ -1615,7 +1615,7 @@ class Member extends DataObject
     protected function encryptPassword()
     {
         // reset salt so that it gets regenerated - this will invalidate any persistent login cookies
-        // or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
+        // or other information encrypted with this Member's settings (see Member::encryptWithUserSettings)
         $this->Salt = '';
 
         // Password was changed: encrypt the password according the settings
@@ -1650,13 +1650,13 @@ class Member extends DataObject
      */
     public function registerFailedLogin()
     {
-        $lockOutAfterCount = self::config()->get('lock_out_after_incorrect_logins');
+        $lockOutAfterCount = static::config()->get('lock_out_after_incorrect_logins');
         if ($lockOutAfterCount) {
             // Keep a tally of the number of failed log-ins so that we can lock people out
             ++$this->FailedLoginCount;
 
             if ($this->FailedLoginCount >= $lockOutAfterCount) {
-                $lockoutMins = self::config()->get('lock_out_delay_mins');
+                $lockoutMins = static::config()->get('lock_out_delay_mins');
                 $this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->getTimestamp() + $lockoutMins * 60);
                 $this->FailedLoginCount = 0;
             }
@@ -1670,7 +1670,7 @@ class Member extends DataObject
      */
     public function registerSuccessfulLogin()
     {
-        if (self::config()->get('lock_out_after_incorrect_logins')) {
+        if (static::config()->get('lock_out_after_incorrect_logins')) {
             // Forgive all past login failures
             $this->FailedLoginCount = 0;
             $this->LockedOutUntil = null;
@@ -1714,7 +1714,7 @@ class Member extends DataObject
     public function generateRandomPassword(int $length = 0): string
     {
         $password = '';
-        $validator = self::password_validator();
+        $validator = Member::password_validator();
         if ($length && $validator && $length < $validator->getMinLength()) {
             throw new InvalidArgumentException('length argument is less than password validator minLength');
         }

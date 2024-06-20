@@ -241,7 +241,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         foreach ($this->from as $key => $tableClause) {
             if (is_array($tableClause)) {
                 $table = '"' . $tableClause['table'] . '"';
-            } elseif (is_string($tableClause) && preg_match(self::getJoinRegex(), $tableClause ?? '', $matches)) {
+            } elseif (is_string($tableClause) && preg_match(SQLConditionalExpression::getJoinRegex(), $tableClause ?? '', $matches)) {
                 $table = $matches[1];
             } else {
                 $table = $tableClause;
@@ -341,7 +341,7 @@ abstract class SQLConditionalExpression extends SQLExpression
         // Remove the regular FROM tables out so we only deal with the JOINs
         $regularTables = [];
         foreach ($from as $alias => $tableClause) {
-            if (is_string($tableClause) && !preg_match(self::getJoinRegex(), $tableClause)) {
+            if (is_string($tableClause) && !preg_match(SQLConditionalExpression::getJoinRegex(), $tableClause)) {
                 $regularTables[$alias] = $tableClause;
                 unset($from[$alias]);
             }

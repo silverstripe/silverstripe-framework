@@ -48,7 +48,7 @@ class ConfirmedPasswordField extends FormField
     /**
      * Allow empty fields when entering the password for the first time
      * If this is set to true then a random password may be generated if the field is empty
-     * depending on the value of $self::generateRandomPasswordOnEmtpy
+     * depending on the value of $ConfirmedPasswordField::generateRandomPasswordOnEmtpy
      *
      * @var boolean
      */

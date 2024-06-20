@@ -53,9 +53,9 @@ class Path
     {
         $path = trim(Convert::slashes($path) ?? '');
         if ($relative) {
-            return trim($path ?? '', self::TRIM_CHARS ?? '');
+            return trim($path ?? '', Path::TRIM_CHARS ?? '');
         } else {
-            return rtrim($path ?? '', self::TRIM_CHARS ?? '');
+            return rtrim($path ?? '', Path::TRIM_CHARS ?? '');
         }
     }
 }

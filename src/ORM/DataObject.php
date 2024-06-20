@@ -343,10 +343,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public static function getSchema()
     {
-        if (is_null(self::$schema)) {
-            self::$schema = Injector::inst()->get(DataObjectSchema::class);
+        if (is_null(DataObject::$schema)) {
+            DataObject::$schema = Injector::inst()->get(DataObjectSchema::class);
         }
-        return self::$schema;
+        return DataObject::$schema;
     }
 
     /**
@@ -358,7 +358,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *   left as the default by regular users.
      * @param array $queryParams List of DataQuery params necessary to lazy load, or load related objects.
      */
-    public function __construct($record = [], $creationType = self::CREATE_OBJECT, $queryParams = [])
+    public function __construct($record = [], $creationType = DataObject::CREATE_OBJECT, $queryParams = [])
     {
         parent::__construct();
 
@@ -372,7 +372,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if (!is_bool($creationType)) {
                 user_error('Creation type is neither boolean (old isSingleton arg) nor integer (new arg), please review your code', E_USER_WARNING);
             }
-            $creationType = $creationType ? self::CREATE_SINGLETON : self::CREATE_OBJECT;
+            $creationType = $creationType ? DataObject::CREATE_SINGLETON : DataObject::CREATE_OBJECT;
         }
 
         // Set query params on the DataObject to tell the lazy loading mechanism the context the object creation context
@@ -383,13 +383,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         switch ($creationType) {
             // Hydrate a record
-            case self::CREATE_HYDRATED:
-            case self::CREATE_MEMORY_HYDRATED:
-                $this->hydrate($record, $creationType === self::CREATE_HYDRATED);
+            case DataObject::CREATE_HYDRATED:
+            case DataObject::CREATE_MEMORY_HYDRATED:
+                $this->hydrate($record, $creationType === DataObject::CREATE_HYDRATED);
                 break;
 
             // Create a new object, using the constructor argument as the initial content
-            case self::CREATE_OBJECT:
+            case DataObject::CREATE_OBJECT:
                 if ($record instanceof stdClass) {
                     $record = (array)$record;
                 }
@@ -429,7 +429,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 }
                 break;
 
-            case self::CREATE_SINGLETON:
+            case DataObject::CREATE_SINGLETON:
                 // No setting happens for a singleton
                 $this->record['ID'] = 0;
                 $this->record['ClassName'] = static::class;
@@ -722,7 +722,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function setClassName($className)
     {
         $className = trim($className ?? '');
-        if (!$className || !is_subclass_of($className, self::class)) {
+        if (!$className || !is_subclass_of($className, DataObject::class)) {
             return $this;
         }
 
@@ -750,14 +750,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function newClassInstance($newClassName)
     {
-        if (!is_subclass_of($newClassName, self::class)) {
+        if (!is_subclass_of($newClassName, DataObject::class)) {
             throw new InvalidArgumentException("$newClassName is not a valid subclass of DataObject");
         }
 
         $originalClass = $this->ClassName;
 
         /** @var DataObject $newInstance */
-        $newInstance = Injector::inst()->create($newClassName, $this->record, self::CREATE_MEMORY_HYDRATED);
+        $newInstance = Injector::inst()->create($newClassName, $this->record, DataObject::CREATE_MEMORY_HYDRATED);
 
         // Modify ClassName
         if ($newClassName != $originalClass) {
@@ -777,7 +777,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         parent::defineMethods();
 
-        if (static::class === self::class) {
+        if (static::class === DataObject::class) {
             return;
         }
 
@@ -1299,7 +1299,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * Load the default values in from the self::$defaults array.
+     * Load the default values in from the DataObject::$defaults array.
      * Will traverse the defaults of the current class and all its parent classes.
      * Called by the constructor when creating new records.
      *
@@ -1335,7 +1335,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     }
                 }
             }
-            if ($class == self::class) {
+            if ($class == DataObject::class) {
                 break;
             }
         }
@@ -1500,7 +1500,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $this->prepareManipulationTable($baseTable, $now, true, $manipulation, $this->baseClass());
         DB::manipulate($manipulation);
 
-        $this->changed['ID'] = self::CHANGE_VALUE;
+        $this->changed['ID'] = DataObject::CHANGE_VALUE;
         $this->record['ID'] = DB::get_generated_id($baseTable);
     }
 
@@ -1828,7 +1828,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $joinID = $this->getField($joinField);
 
             // Extract class name for polymorphic relations
-            if ($class === self::class) {
+            if ($class === DataObject::class) {
                 $class = $this->getField($componentName . 'Class');
                 if (empty($class)) {
                     return null;
@@ -1911,7 +1911,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $this->setField($joinField, $item ? $item->ID : null);
             // Update Class (Polymorphic has_one)
             // Extract class name for polymorphic relations
-            if ($class === self::class) {
+            if ($class === DataObject::class) {
                 $this->setField($componentName . 'Class', $item ? get_class($item) : null);
             }
         } elseif ($class = $schema->belongsToComponent(static::class, $componentName)) {
@@ -2090,7 +2090,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             ));
         }
         // If relation is polymorphic, do not infer recriprocal relationship
-        if ($class === self::class) {
+        if ($class === DataObject::class) {
             return null;
         }
         if (!is_a($this, $class ?? '', true)) {
@@ -2453,7 +2453,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             if ($fields->fieldByName($generalSearch) || $fields->dataFieldByName($generalSearch)) {
                 throw new LogicException('General search field name must be unique.');
             }
-            $fields->unshift(HiddenField::create($generalSearch, _t(self::class . '.GENERALSEARCH', 'General Search')));
+            $fields->unshift(HiddenField::create($generalSearch, _t(DataObject::class . '.GENERALSEARCH', 'General Search')));
         }
 
         return $fields;
@@ -2815,7 +2815,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param int $changeLevel The strictness of what is defined as change. Defaults to strict
      * @return array
      */
-    public function getChangedFields($databaseFieldsOnly = false, $changeLevel = self::CHANGE_STRICT)
+    public function getChangedFields($databaseFieldsOnly = false, $changeLevel = DataObject::CHANGE_STRICT)
     {
         $changedFields = [];
 
@@ -2826,15 +2826,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 continue;
             }
             if (is_object($v) && method_exists($v, 'isChanged') && $v->isChanged()) {
-                $this->changed[$k] = self::CHANGE_VALUE;
+                $this->changed[$k] = DataObject::CHANGE_VALUE;
             }
         }
 
         // If change was forced, then derive change data from $this->record
-        if ($this->changeForced && $changeLevel <= self::CHANGE_STRICT) {
+        if ($this->changeForced && $changeLevel <= DataObject::CHANGE_STRICT) {
             $changed = array_combine(
                 array_keys($this->record ?? []),
-                array_fill(0, count($this->record ?? []), self::CHANGE_STRICT)
+                array_fill(0, count($this->record ?? []), DataObject::CHANGE_STRICT)
             );
             unset($changed['Version']);
         } else {
@@ -2851,7 +2851,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Filter the list to those of a certain change level
-        if ($changeLevel > self::CHANGE_STRICT) {
+        if ($changeLevel > DataObject::CHANGE_STRICT) {
             if ($fields) {
                 foreach ($fields as $name => $level) {
                     if ($level < $changeLevel) {
@@ -2882,7 +2882,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param int $changeLevel See {@link getChangedFields()}
      * @return boolean
      */
-    public function isChanged($fieldName = null, $changeLevel = self::CHANGE_STRICT)
+    public function isChanged($fieldName = null, $changeLevel = DataObject::CHANGE_STRICT)
     {
         $fields = $fieldName ? [$fieldName] : true;
         $changed = $this->getChangedFields($fields, $changeLevel);
@@ -2970,13 +2970,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // if a field is not existing or has strictly changed
         if (!array_key_exists($fieldName, $this->original ?? []) || $this->original[$fieldName] !== $val) {
             // At the very least, the type has changed
-            $this->changed[$fieldName] = self::CHANGE_STRICT;
+            $this->changed[$fieldName] = DataObject::CHANGE_STRICT;
 
             if ((!array_key_exists($fieldName, $this->original ?? []) && $val)
                 || (array_key_exists($fieldName, $this->original ?? []) && $this->original[$fieldName] != $val)
             ) {
                 // Value has changed as well, not just the type
-                $this->changed[$fieldName] = self::CHANGE_VALUE;
+                $this->changed[$fieldName] = DataObject::CHANGE_VALUE;
             }
         // Value has been restored to its original, remove any record of the change
         } elseif (isset($this->changed[$fieldName])) {
@@ -3371,7 +3371,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @param string|array $filter A filter to be inserted into the WHERE clause.
      * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
      * @param string|array|null $sort Passed to DataList::sort()
-     * BY clause.  If omitted, self::$default_sort will be used.
+     * BY clause.  If omitted, DataObject::$default_sort will be used.
      * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
      * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
      * @param string $containerClass The container class to return the results in.
@@ -3389,14 +3389,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         // Validate arguments
         if ($callerClass == null) {
             $callerClass = get_called_class();
-            if ($callerClass === self::class) {
+            if ($callerClass === DataObject::class) {
                 throw new InvalidArgumentException('Call <classname>::get() instead of DataObject::get()');
             }
             if ($filter || $sort || $join || $limit || ($containerClass !== DataList::class)) {
                 throw new InvalidArgumentException('If calling <classname>::get() then you shouldn\'t pass any other'
                     . ' arguments');
             }
-        } elseif ($callerClass === self::class) {
+        } elseif ($callerClass === DataObject::class) {
             throw new InvalidArgumentException('DataObject::get() cannot query non-subclass DataObject directly');
         }
         if ($join) {
@@ -3451,7 +3451,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Validate class
-        if ($callerClass === self::class) {
+        if ($callerClass === DataObject::class) {
             throw new InvalidArgumentException('DataObject::get_one() cannot query non-subclass DataObject directly');
         }
 
@@ -3462,7 +3462,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $cacheKey = md5(serialize($cacheComponents));
 
         $item = null;
-        if (!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
+        if (!$cache || !isset(DataObject::$_cache_get_one[$callerClass][$cacheKey])) {
             $dl = DataObject::get($callerClass);
             if (!empty($filter)) {
                 $dl = $dl->where($filter);
@@ -3473,15 +3473,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $item = $dl->first();
 
             if ($cache) {
-                self::$_cache_get_one[$callerClass][$cacheKey] = $item;
-                if (!self::$_cache_get_one[$callerClass][$cacheKey]) {
-                    self::$_cache_get_one[$callerClass][$cacheKey] = false;
+                DataObject::$_cache_get_one[$callerClass][$cacheKey] = $item;
+                if (!DataObject::$_cache_get_one[$callerClass][$cacheKey]) {
+                    DataObject::$_cache_get_one[$callerClass][$cacheKey] = false;
                 }
             }
         }
 
         if ($cache) {
-            return self::$_cache_get_one[$callerClass][$cacheKey] ?: null;
+            return DataObject::$_cache_get_one[$callerClass][$cacheKey] ?: null;
         }
 
         return $item;
@@ -3497,15 +3497,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function flushCache($persistent = true)
     {
-        if (static::class == self::class) {
-            self::$_cache_get_one = [];
+        if (static::class == DataObject::class) {
+            DataObject::$_cache_get_one = [];
             return $this;
         }
 
         $classes = ClassInfo::ancestry(static::class);
         foreach ($classes as $class) {
-            if (isset(self::$_cache_get_one[$class])) {
-                unset(self::$_cache_get_one[$class]);
+            if (isset(DataObject::$_cache_get_one[$class])) {
+                unset(DataObject::$_cache_get_one[$class]);
             }
         }
 
@@ -3521,8 +3521,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public static function flush_and_destroy_cache()
     {
-        if (self::$_cache_get_one) {
-            foreach (self::$_cache_get_one as $class => $items) {
+        if (DataObject::$_cache_get_one) {
+            foreach (DataObject::$_cache_get_one as $class => $items) {
                 if (is_array($items)) {
                     foreach ($items as $item) {
                         if ($item) {
@@ -3532,7 +3532,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 }
             }
         }
-        self::$_cache_get_one = [];
+        DataObject::$_cache_get_one = [];
     }
 
     /**
@@ -3543,8 +3543,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         DBEnum::flushCache();
         ClassInfo::reset_db_cache();
         static::getSchema()->reset();
-        self::$_cache_get_one = [];
-        self::$_cache_field_labels = [];
+        DataObject::$_cache_get_one = [];
+        DataObject::$_cache_field_labels = [];
     }
 
     /**
@@ -3572,7 +3572,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Validate class
-        if ($class === self::class) {
+        if ($class === DataObject::class) {
             throw new InvalidArgumentException('DataObject::get_by_id() cannot query non-subclass DataObject directly');
         }
 
@@ -3675,7 +3675,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $table = $schema->tableName(static::class);
         $fields = $schema->databaseFields(static::class, false);
         $indexes = $schema->databaseIndexes(static::class, false);
-        $extensions = self::database_extensions(static::class);
+        $extensions = DataObject::database_extensions(static::class);
 
         if (empty($table)) {
             throw new LogicException(
@@ -3684,7 +3684,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         if ($fields) {
-            $hasAutoIncPK = get_parent_class($this ?? '') === self::class;
+            $hasAutoIncPK = get_parent_class($this ?? '') === DataObject::class;
             DB::require_table(
                 $table,
                 $fields,
@@ -3916,7 +3916,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * between data object being required in the search interface.
      *
      * Generates labels based on name of the field itself, if no static property
-     * {@link self::field_labels} exists.
+     * {@link DataObject::field_labels} exists.
      *
      * @uses $field_labels
      * @uses FormField::name_to_label()
@@ -3929,7 +3929,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         $cacheKey = static::class . '_' . $includerelations;
 
-        if (!isset(self::$_cache_field_labels[$cacheKey])) {
+        if (!isset(DataObject::$_cache_field_labels[$cacheKey])) {
             $customLabels = $this->config()->get('field_labels');
             $autoLabels = [];
 
@@ -3975,10 +3975,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             $labels = array_merge((array)$autoLabels, (array)$customLabels);
             $this->extend('updateFieldLabels', $labels);
-            self::$_cache_field_labels[$cacheKey] = $labels;
+            DataObject::$_cache_field_labels[$cacheKey] = $labels;
         }
 
-        return self::$_cache_field_labels[$cacheKey];
+        return DataObject::$_cache_field_labels[$cacheKey];
     }
 
     /**
@@ -4097,7 +4097,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public static function disable_subclass_access()
     {
         Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
-        self::$subclass_access = false;
+        DataObject::$subclass_access = false;
     }
 
     /**
@@ -4106,7 +4106,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public static function enable_subclass_access()
     {
         Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
-        self::$subclass_access = true;
+        DataObject::$subclass_access = true;
     }
 
     //-------------------------------------------------------------------------------------------//

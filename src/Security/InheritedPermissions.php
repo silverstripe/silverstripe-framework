@@ -147,7 +147,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         }
 
         if ($memberIDs && is_array($memberIDs)) {
-            foreach ([self::VIEW, self::EDIT, self::DELETE] as $type) {
+            foreach ([InheritedPermissions::VIEW, InheritedPermissions::EDIT, InheritedPermissions::DELETE] as $type) {
                 foreach ($memberIDs as $memberID) {
                     $key = $this->generateCacheKey($type, $memberID);
                     $this->cacheService->delete($key);
@@ -215,13 +215,13 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     public function prePopulatePermissionCache($permission = 'edit', $ids = [])
     {
         switch ($permission) {
-            case self::EDIT:
+            case InheritedPermissions::EDIT:
                 $this->canEditMultiple($ids, Security::getCurrentUser(), false);
                 break;
-            case self::VIEW:
+            case InheritedPermissions::VIEW:
                 $this->canViewMultiple($ids, Security::getCurrentUser(), false);
                 break;
-            case self::DELETE:
+            case InheritedPermissions::DELETE:
                 $this->canDeleteMultiple($ids, Security::getCurrentUser(), false);
                 break;
             default:
@@ -265,7 +265,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         // Validate member permission
         // Only VIEW allows anonymous (Anyone) permissions
         $memberID = $member ? (int)$member->ID : 0;
-        if (!$memberID && $type !== self::VIEW) {
+        if (!$memberID && $type !== InheritedPermissions::VIEW) {
             return $result;
         }
 
@@ -374,10 +374,10 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                         . " OR (\"$typeField\" = ? AND \"$memberJoinTable\".\"{$baseTable}ID\" IS NOT NULL)"
                         . ")"
                         => [
-                            self::ANYONE,
-                            self::LOGGED_IN_USERS,
-                            self::ONLY_THESE_USERS,
-                            self::ONLY_THESE_MEMBERS,
+                            InheritedPermissions::ANYONE,
+                            InheritedPermissions::LOGGED_IN_USERS,
+                            InheritedPermissions::ONLY_THESE_USERS,
+                            InheritedPermissions::ONLY_THESE_MEMBERS,
                         ]
                     ])
                     ->leftJoin(
@@ -393,7 +393,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         } else {
             // Only view pages with ViewType = Anyone if not logged in
             $uninheritedPermissions = $stageRecords
-                ->filter($typeField, self::ANYONE)
+                ->filter($typeField, InheritedPermissions::ANYONE)
                 ->column('ID');
         }
 
@@ -406,7 +406,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         // We group these and run a batch permission check on all parents. This gives us the result
         // of whether the user has permission to edit this object.
         $groupedByParent = [];
-        $potentiallyInherited = $stageRecords->filter($typeField, self::INHERIT)
+        $potentiallyInherited = $stageRecords->filter($typeField, InheritedPermissions::INHERIT)
             ->orderBy("\"{$baseTable}\".\"ID\"")
             ->dataQuery()
             ->query()
@@ -456,7 +456,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     public function canEditMultiple($ids, Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(
-            self::EDIT,
+            InheritedPermissions::EDIT,
             $ids,
             $member,
             $this->getGlobalEditPermissions(),
@@ -472,7 +472,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      */
     public function canViewMultiple($ids, Member $member = null, $useCached = true)
     {
-        return $this->batchPermissionCheck(self::VIEW, $ids, $member, [], $useCached);
+        return $this->batchPermissionCheck(InheritedPermissions::VIEW, $ids, $member, [], $useCached);
     }
 
     /**
@@ -559,7 +559,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     {
         // No ID: Check default permission
         if (!$id) {
-            return $this->checkDefaultPermissions(self::DELETE, $member);
+            return $this->checkDefaultPermissions(InheritedPermissions::DELETE, $member);
         }
 
         // Regular canEdit logic is handled by canEditMultiple
@@ -581,7 +581,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     {
         // No ID: Check default permission
         if (!$id) {
-            return $this->checkDefaultPermissions(self::EDIT, $member);
+            return $this->checkDefaultPermissions(InheritedPermissions::EDIT, $member);
         }
 
         // Regular canEdit logic is handled by canEditMultiple
@@ -603,7 +603,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     {
         // No ID: Check default permission
         if (!$id) {
-            return $this->checkDefaultPermissions(self::VIEW, $member);
+            return $this->checkDefaultPermissions(InheritedPermissions::VIEW, $member);
         }
 
         // Regular canView logic is handled by canViewMultiple
@@ -626,11 +626,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     protected function getPermissionField($type)
     {
         switch ($type) {
-            case self::DELETE:
+            case InheritedPermissions::DELETE:
                 // Delete uses edit type - Drop through
-            case self::EDIT:
+            case InheritedPermissions::EDIT:
                 return 'CanEditType';
-            case self::VIEW:
+            case InheritedPermissions::VIEW:
                 return 'CanViewType';
             default:
                 throw new InvalidArgumentException("Invalid argument type $type");
@@ -661,11 +661,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     protected function getGroupJoinTable($type)
     {
         switch ($type) {
-            case self::DELETE:
+            case InheritedPermissions::DELETE:
                 // Delete uses edit type - Drop through
-            case self::EDIT:
+            case InheritedPermissions::EDIT:
                 return $this->getEditorGroupsTable();
-            case self::VIEW:
+            case InheritedPermissions::VIEW:
                 return $this->getViewerGroupsTable();
             default:
                 throw new InvalidArgumentException("Invalid argument type $type");
@@ -682,11 +682,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     protected function getMemberJoinTable($type)
     {
         switch ($type) {
-            case self::DELETE:
+            case InheritedPermissions::DELETE:
                 // Delete uses edit type - Drop through
-            case self::EDIT:
+            case InheritedPermissions::EDIT:
                 return $this->getEditorMembersTable();
-            case self::VIEW:
+            case InheritedPermissions::VIEW:
                 return $this->getViewerMembersTable();
             default:
                 throw new InvalidArgumentException("Invalid argument type $type");
@@ -707,11 +707,11 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             return false;
         }
         switch ($type) {
-            case self::VIEW:
+            case InheritedPermissions::VIEW:
                 return $defaultPermissions->canView($member);
-            case self::EDIT:
+            case InheritedPermissions::EDIT:
                 return $defaultPermissions->canEdit($member);
-            case self::DELETE:
+            case InheritedPermissions::DELETE:
                 return $defaultPermissions->canDelete($member);
             default:
                 return false;

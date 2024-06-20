@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests\Filters;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Filters\StartsWithFilter;
 use SilverStripe\View\ArrayData;
+use SilverStripe\ORM\Filters\SearchFilter;
 
 class StartsWithFilterTest extends SapphireTest
 {
@@ -267,7 +268,7 @@ class StartsWithFilterTest extends SapphireTest
                 }
             }
 
-            StartsWithFilter::config()->set('default_case_sensitive', $caseSensitive);
+            SearchFilter::config()->set('default_case_sensitive', $caseSensitive);
             $filter = new StartsWithFilter();
             $filter->setValue($filterValue);
             $filter->setModifiers($modifiers);

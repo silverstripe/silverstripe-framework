@@ -62,7 +62,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
 
         // Note: we do not need to update the utf charset here because mysqli with newer
         // version of mysql/mariadb still self-reports as 'utf8' rather than 'utf8mb3'
-        // This is unlike self::testConnectionCollationControl()
+        // This is unlike MySQLiConnectorTest::testConnectionCollationControl()
         $this->assertEquals($charset, $cset->charset);
         $this->assertEquals($defaultCollation, $cset->collation);
 

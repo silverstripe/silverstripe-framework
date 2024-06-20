@@ -368,7 +368,7 @@ class Storage
     }
 
     /**
-     * Returns the URL registered by {@see self::setSuccessUrl} as a success redirect target
+     * Returns the URL registered by {@see Storage::setSuccessUrl} as a success redirect target
      *
      * @return string
      */
@@ -391,7 +391,7 @@ class Storage
     }
 
     /**
-     * Returns the URL registered by {@see self::setFailureUrl} as a success redirect target
+     * Returns the URL registered by {@see Storage::setFailureUrl} as a success redirect target
      *
      * @return string
      */

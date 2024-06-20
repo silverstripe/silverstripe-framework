@@ -66,7 +66,7 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public function __construct($name = null)
     {
-        $this->name = $name ?: self::get_default_name();
+        $this->name = $name ?: SecurityToken::get_default_name();
     }
 
     /**
@@ -76,11 +76,11 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public static function inst()
     {
-        if (!self::$inst) {
-            self::$inst = new SecurityToken();
+        if (!SecurityToken::$inst) {
+            SecurityToken::$inst = new SecurityToken();
         }
 
-        return self::$inst;
+        return SecurityToken::$inst;
     }
 
     /**
@@ -89,8 +89,8 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public static function disable()
     {
-        self::$enabled = false;
-        self::$inst = new NullSecurityToken();
+        SecurityToken::$enabled = false;
+        SecurityToken::$inst = new NullSecurityToken();
     }
 
     /**
@@ -98,8 +98,8 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public static function enable()
     {
-        self::$enabled = true;
-        self::$inst = new SecurityToken();
+        SecurityToken::$enabled = true;
+        SecurityToken::$inst = new SecurityToken();
     }
 
     /**
@@ -107,7 +107,7 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public static function is_enabled()
     {
-        return self::$enabled;
+        return SecurityToken::$enabled;
     }
 
     /**
@@ -115,7 +115,7 @@ class SecurityToken implements TemplateGlobalProvider
      */
     public static function get_default_name()
     {
-        return self::$default_name;
+        return SecurityToken::$default_name;
     }
 
     /**

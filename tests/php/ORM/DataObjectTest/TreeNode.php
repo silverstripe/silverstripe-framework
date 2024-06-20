@@ -25,12 +25,12 @@ class TreeNode extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        'Parent' => self::class,
-        'Cycle' => self::class,
+        'Parent' => TreeNode::class,
+        'Cycle' => TreeNode::class,
     ];
 
     private static $has_many = [
-        'Children' => self::class,
+        'Children' => TreeNode::class,
     ];
 
     public function write($showDebug = false, $forceInsert = false, $forceWrite = false, $writeComponents = false, bool $skipValidation = false)
@@ -51,7 +51,7 @@ class TreeNode extends DataObject implements TestOnly
     public function resetCounts()
     {
         $update = new SQLUpdate(
-            sprintf('"%s"', self::baseTable()),
+            sprintf('"%s"', TreeNode::baseTable()),
             ['"WriteCount"' => 0]
         );
         $results = $update->execute();

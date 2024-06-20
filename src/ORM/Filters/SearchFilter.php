@@ -474,7 +474,7 @@ abstract class SearchFilter
         } elseif (in_array('nocase', $modifiers ?? [])) {
             return false;
         } else {
-            $sensitive = self::config()->get('default_case_sensitive');
+            $sensitive = SearchFilter::config()->get('default_case_sensitive');
             if ($sensitive !== null) {
                 return $sensitive;
             }
@@ -488,13 +488,13 @@ abstract class SearchFilter
      */
     protected function getCaseSensitiveByCollation(): ?bool
     {
-        if (!self::$caseSensitiveByCollation) {
+        if (!SearchFilter::$caseSensitiveByCollation) {
             if (!DB::is_active()) {
                 return null;
             }
-            self::$caseSensitiveByCollation = DB::query("SELECT 'CASE' = 'case'")->record() === 0;
+            SearchFilter::$caseSensitiveByCollation = DB::query("SELECT 'CASE' = 'case'")->record() === 0;
         }
 
-        return self::$caseSensitiveByCollation;
+        return SearchFilter::$caseSensitiveByCollation;
     }
 }

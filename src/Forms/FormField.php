@@ -238,7 +238,7 @@ class FormField extends RequestHandler
      *     or simply be a block of stand-alone content. As with 'Custom',
      *     the component property is mandatory if this is assigned.
      *
-     * Each value has an equivalent constant, e.g. {@link self::SCHEMA_DATA_TYPE_STRING}.
+     * Each value has an equivalent constant, e.g. {@link FormField::SCHEMA_DATA_TYPE_STRING}.
      *
      * @var string
      */
@@ -333,7 +333,7 @@ class FormField extends RequestHandler
         $this->setName($name);
 
         if ($title === null) {
-            $this->title = self::name_to_label($name);
+            $this->title = FormField::name_to_label($name);
         } else {
             $this->title = $title;
         }
@@ -1570,7 +1570,7 @@ class FormField extends RequestHandler
      * @param Tip|null $tip
      * @return $this
      */
-    public function setTitleTip(?Tip $tip): self
+    public function setTitleTip(?Tip $tip): FormField
     {
         $this->titleTip = $tip;
         return $this;

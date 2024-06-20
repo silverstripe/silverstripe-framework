@@ -174,7 +174,7 @@ class DBTime extends DBField
      */
     public function getISOFormat()
     {
-        return self::ISO_TIME;
+        return DBTime::ISO_TIME;
     }
 
     /**

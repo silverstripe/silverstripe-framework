@@ -23,7 +23,7 @@ class TestPermissionNode extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        "Parent" => self::class,
+        "Parent" => TestPermissionNode::class,
     ];
 
     private static $table_name = 'InheritedPermissionsTest_TestPermissionNode';

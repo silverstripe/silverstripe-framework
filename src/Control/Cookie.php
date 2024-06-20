@@ -31,7 +31,7 @@ class Cookie
      * Must be "Strict", "Lax", or "None"
      * @config
      */
-    private static string $default_samesite = self::SAMESITE_LAX;
+    private static string $default_samesite = Cookie::SAMESITE_LAX;
 
     /**
      * Fetch the current instance of the cookie backend.
@@ -67,7 +67,7 @@ class Cookie
         $secure = false,
         $httpOnly = true
     ) {
-        return self::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        return Cookie::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
     }
 
     /**
@@ -80,7 +80,7 @@ class Cookie
      */
     public static function get($name, $includeUnsent = true)
     {
-        return self::get_inst()->get($name, $includeUnsent);
+        return Cookie::get_inst()->get($name, $includeUnsent);
     }
 
     /**
@@ -92,7 +92,7 @@ class Cookie
      */
     public static function get_all($includeUnsent = true)
     {
-        return self::get_inst()->getAll($includeUnsent);
+        return Cookie::get_inst()->getAll($includeUnsent);
     }
 
     /**
@@ -104,7 +104,7 @@ class Cookie
      */
     public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
-        return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
+        return Cookie::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
     }
 
     /**
@@ -116,14 +116,14 @@ class Cookie
     public static function validateSameSite(string $sameSite): void
     {
         $validValues = [
-            self::SAMESITE_STRICT,
-            self::SAMESITE_LAX,
-            self::SAMESITE_NONE,
+            Cookie::SAMESITE_STRICT,
+            Cookie::SAMESITE_LAX,
+            Cookie::SAMESITE_NONE,
         ];
         if (!in_array($sameSite, $validValues)) {
             throw new LogicException('Cookie samesite must be "Strict", "Lax", or "None"');
         }
-        if ($sameSite === self::SAMESITE_NONE && !Director::is_https(self::getRequest())) {
+        if ($sameSite === Cookie::SAMESITE_NONE && !Director::is_https(Cookie::getRequest())) {
             Injector::inst()->get(LoggerInterface::class)->warning('Cookie samesite cannot be "None" for non-https requests.');
         }
     }

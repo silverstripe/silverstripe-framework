@@ -32,6 +32,6 @@ class LevelTestData extends ViewableData implements TestOnly
 
     public function forWith($number)
     {
-        return new self($number);
+        return new LevelTestData($number);
     }
 }

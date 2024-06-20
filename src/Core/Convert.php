@@ -36,7 +36,7 @@ class Convert
      */
     public static function raw2att($val)
     {
-        return self::raw2xml($val);
+        return Convert::raw2xml($val);
     }
 
     /**
@@ -49,7 +49,7 @@ class Convert
      */
     public static function raw2htmlatt($val)
     {
-        return self::raw2att($val);
+        return Convert::raw2att($val);
     }
 
     /**
@@ -68,13 +68,13 @@ class Convert
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
-                $val[$k] = self::raw2htmlname($v);
+                $val[$k] = Convert::raw2htmlname($v);
             }
 
             return $val;
         }
 
-        return self::raw2att($val);
+        return Convert::raw2att($val);
     }
 
     /**
@@ -93,7 +93,7 @@ class Convert
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
-                $val[$k] = self::raw2htmlid($v);
+                $val[$k] = Convert::raw2htmlid($v);
             }
 
             return $val;
@@ -122,7 +122,7 @@ class Convert
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
-                $val[$k] = self::raw2xml($v);
+                $val[$k] = Convert::raw2xml($v);
             }
             return $val;
         }
@@ -142,7 +142,7 @@ class Convert
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
-                $val[$k] = self::raw2js($v);
+                $val[$k] = Convert::raw2js($v);
             }
             return $val;
         }
@@ -171,7 +171,7 @@ class Convert
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
-                $val[$k] = self::raw2sql($v, $quoted);
+                $val[$k] = Convert::raw2sql($v, $quoted);
             }
             return $val;
         }
@@ -211,14 +211,14 @@ class Convert
     {
         if (is_array($val)) {
             foreach ($val as $k => $v) {
-                $val[$k] = self::xml2raw($v);
+                $val[$k] = Convert::xml2raw($v);
             }
             return $val;
         }
 
         // More complex text needs to use html2raw instead
         if (strpos($val ?? '', '<') !== false) {
-            return self::html2raw($val);
+            return Convert::html2raw($val);
         }
 
         return html_entity_decode($val ?? '', ENT_QUOTES, 'UTF-8');

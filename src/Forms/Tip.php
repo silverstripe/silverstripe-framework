@@ -21,7 +21,7 @@ class Tip
 
     private const DEFAULT_ICON = 'lamp';
 
-    private const DEFAULT_IMPORTANCE_LEVEL = self::IMPORTANCE_LEVELS['NORMAL'];
+    private const DEFAULT_IMPORTANCE_LEVEL = Tip::IMPORTANCE_LEVELS['NORMAL'];
 
     /**
      * @var string The icon that should be used on the Tip button
@@ -46,8 +46,8 @@ class Tip
      */
     public function __construct(
         string $message,
-        string $importance_level = self::DEFAULT_IMPORTANCE_LEVEL,
-        string $icon = self::DEFAULT_ICON
+        string $importance_level = Tip::DEFAULT_IMPORTANCE_LEVEL,
+        string $icon = Tip::DEFAULT_ICON
     ) {
         $this->setMessage($message);
         $this->setIcon($icon);
@@ -81,9 +81,9 @@ class Tip
      * @return Tip
      * @throws InvalidArgumentException
      */
-    public function setImportanceLevel(string $importance_level): self
+    public function setImportanceLevel(string $importance_level): Tip
     {
-        if (!in_array($importance_level, self::IMPORTANCE_LEVELS ?? [])) {
+        if (!in_array($importance_level, Tip::IMPORTANCE_LEVELS ?? [])) {
             throw new InvalidArgumentException(
                 'Provided importance level must be defined in Tip::IMPORTANCE_LEVELS'
             );
@@ -106,7 +106,7 @@ class Tip
      * @param string $icon
      * @return Tip
      */
-    public function setIcon(string $icon): self
+    public function setIcon(string $icon): Tip
     {
         $this->icon = $icon;
 
@@ -125,7 +125,7 @@ class Tip
      * @param string $message
      * @return Tip
      */
-    public function setMessage(string $message): self
+    public function setMessage(string $message): Tip
     {
         $this->message = $message;
 

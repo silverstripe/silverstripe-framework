@@ -306,7 +306,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function permissionFailure($controller = null, $messageSet = null): HTTPResponse
     {
-        self::set_ignore_disallowed_actions(true);
+        Security::set_ignore_disallowed_actions(true);
 
         // Parse raw message / escape type
         $parseMessage = function ($message) {
@@ -437,7 +437,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function setCurrentUser($currentUser = null)
     {
-        self::$currentUser = $currentUser;
+        Security::$currentUser = $currentUser;
     }
 
     /**
@@ -445,7 +445,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function getCurrentUser()
     {
-        return self::$currentUser;
+        return Security::$currentUser;
     }
 
     /**
@@ -1049,7 +1049,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         // Fall back to the default encryption algorithm
         if (!$algorithm) {
-            $algorithm = self::config()->get('password_encryption_algorithm');
+            $algorithm = static::config()->get('password_encryption_algorithm');
         }
 
         $encryptor = PasswordEncryptor::create_for_algorithm($algorithm);
@@ -1074,12 +1074,12 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function database_is_ready()
     {
         // Used for unit tests
-        if (self::$force_database_is_ready !== null) {
-            return self::$force_database_is_ready;
+        if (Security::$force_database_is_ready !== null) {
+            return Security::$force_database_is_ready;
         }
 
-        if (self::$database_is_ready) {
-            return self::$database_is_ready;
+        if (Security::$database_is_ready) {
+            return Security::$database_is_ready;
         }
 
         $requiredClasses = ClassInfo::dataClassesFor(Member::class);
@@ -1115,7 +1115,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 return false;
             }
         }
-        self::$database_is_ready = true;
+        Security::$database_is_ready = true;
 
         return true;
     }
@@ -1125,8 +1125,8 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function clear_database_is_ready()
     {
-        self::$database_is_ready = null;
-        self::$force_database_is_ready = null;
+        Security::$database_is_ready = null;
+        Security::$force_database_is_ready = null;
     }
 
     /**
@@ -1136,7 +1136,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function force_database_is_ready($isReady)
     {
-        self::$force_database_is_ready = $isReady;
+        Security::$force_database_is_ready = $isReady;
     }
 
     /**
@@ -1165,12 +1165,12 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function set_ignore_disallowed_actions($flag)
     {
-        self::$ignore_disallowed_actions = $flag;
+        Security::$ignore_disallowed_actions = $flag;
     }
 
     public static function ignore_disallowed_actions()
     {
-        return self::$ignore_disallowed_actions;
+        return Security::$ignore_disallowed_actions;
     }
 
     /**
@@ -1182,7 +1182,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function login_url()
     {
-        return Controller::join_links(Director::baseURL(), self::config()->get('login_url'));
+        return Controller::join_links(Director::baseURL(), static::config()->get('login_url'));
     }
 
 
@@ -1195,7 +1195,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function logout_url()
     {
-        $logoutUrl = Controller::join_links(Director::baseURL(), self::config()->get('logout_url'));
+        $logoutUrl = Controller::join_links(Director::baseURL(), static::config()->get('logout_url'));
         return SecurityToken::inst()->addToUrl($logoutUrl);
     }
 
@@ -1208,7 +1208,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function lost_password_url()
     {
-        return Controller::join_links(Director::baseURL(), self::config()->get('lost_password_url'));
+        return Controller::join_links(Director::baseURL(), static::config()->get('lost_password_url'));
     }
 
     /**

@@ -102,8 +102,8 @@ class Debug
      */
     public static function dump($val, HTTPRequest $request = null)
     {
-        echo self::create_debug_view($request)
-            ->renderVariable($val, self::caller());
+        echo Debug::create_debug_view($request)
+            ->renderVariable($val, Debug::caller());
     }
 
     /**

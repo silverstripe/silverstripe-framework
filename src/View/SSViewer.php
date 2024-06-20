@@ -194,7 +194,7 @@ class SSViewer implements Flushable
             $message = 'None of the following templates could be found: ';
             $message .= print_r($templates, true);
 
-            $themes = self::get_themes();
+            $themes = SSViewer::get_themes();
             if (!$themes) {
                 $message .= ' (no theme in use)';
             } else {
@@ -210,8 +210,8 @@ class SSViewer implements Flushable
      */
     public static function flush()
     {
-        self::flush_template_cache(true);
-        self::flush_cacheblock_cache(true);
+        SSViewer::flush_template_cache(true);
+        SSViewer::flush_cacheblock_cache(true);
     }
 
     /**
@@ -261,7 +261,7 @@ class SSViewer implements Flushable
      */
     public static function get_themes()
     {
-        $default = [self::PUBLIC_THEME, self::DEFAULT_THEME];
+        $default = [SSViewer::PUBLIC_THEME, SSViewer::DEFAULT_THEME];
 
         if (!SSViewer::config()->uninherited('theme_enabled')) {
             return $default;
@@ -401,7 +401,7 @@ class SSViewer implements Flushable
      */
     public static function chooseTemplate($templates)
     {
-        return ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
+        return ThemeResourceLoader::inst()->findTemplate($templates, SSViewer::get_themes());
     }
 
     /**
@@ -436,7 +436,7 @@ class SSViewer implements Flushable
      */
     public static function hasTemplate($templates)
     {
-        return (bool)ThemeResourceLoader::inst()->findTemplate($templates, self::get_themes());
+        return (bool)ThemeResourceLoader::inst()->findTemplate($templates, SSViewer::get_themes());
     }
 
     /**
@@ -465,7 +465,7 @@ class SSViewer implements Flushable
      */
     public static function getTemplateFileByType($identifier, $type = null)
     {
-        return ThemeResourceLoader::inst()->findTemplate(['type' => $type, $identifier], self::get_themes());
+        return ThemeResourceLoader::inst()->findTemplate(['type' => $type, $identifier], SSViewer::get_themes());
     }
 
     /**
@@ -478,14 +478,14 @@ class SSViewer implements Flushable
      */
     public static function flush_template_cache($force = false)
     {
-        if (!self::$template_cache_flushed || $force) {
+        if (!SSViewer::$template_cache_flushed || $force) {
             $dir = dir(TEMP_PATH);
             while (false !== ($file = $dir->read())) {
                 if (strstr($file ?? '', '.cache')) {
                     unlink(TEMP_PATH . DIRECTORY_SEPARATOR . $file);
                 }
             }
-            self::$template_cache_flushed = true;
+            SSViewer::$template_cache_flushed = true;
         }
     }
 
@@ -499,12 +499,12 @@ class SSViewer implements Flushable
      */
     public static function flush_cacheblock_cache($force = false)
     {
-        if (!self::$cacheblock_cache_flushed || $force) {
+        if (!SSViewer::$cacheblock_cache_flushed || $force) {
             $cache = Injector::inst()->get(CacheInterface::class . '.cacheblock');
             $cache->clear();
 
 
-            self::$cacheblock_cache_flushed = true;
+            SSViewer::$cacheblock_cache_flushed = true;
         }
     }
 

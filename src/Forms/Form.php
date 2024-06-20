@@ -278,7 +278,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     public function __construct(
         RequestHandler $controller = null,
-        $name = self::DEFAULT_NAME,
+        $name = Form::DEFAULT_NAME,
         FieldList $fields = null,
         FieldList $actions = null,
         Validator $validator = null
@@ -348,7 +348,7 @@ class Form extends ViewableData implements HasRequestHandler
         // load data in from previous submission upon error
         $data = $this->getSessionData();
         if (isset($data)) {
-            $this->loadDataFrom($data, self::MERGE_AS_INTERNAL_VALUE);
+            $this->loadDataFrom($data, Form::MERGE_AS_INTERNAL_VALUE);
         }
         return $this;
     }
@@ -536,7 +536,7 @@ class Form extends ViewableData implements HasRequestHandler
      */
     protected function setupDefaultClasses()
     {
-        $defaultClasses = self::config()->get('default_classes');
+        $defaultClasses = static::config()->get('default_classes');
         if ($defaultClasses) {
             foreach ($defaultClasses as $class) {
                 $this->addExtraClass($class);
@@ -560,7 +560,7 @@ class Form extends ViewableData implements HasRequestHandler
      * in which case the default form behaviour will kick in.
      *
      * @param $callback
-     * @return self
+     * @return Form
      */
     public function setValidationResponseCallback($callback)
     {
@@ -954,12 +954,12 @@ class Form extends ViewableData implements HasRequestHandler
         if ($fields = $this->fields->dataFields()) {
             foreach ($fields as $field) {
                 if ($field instanceof FileField) {
-                    return self::ENC_TYPE_MULTIPART;
+                    return Form::ENC_TYPE_MULTIPART;
                 }
             }
         }
 
-        return self::ENC_TYPE_URLENCODED;
+        return Form::ENC_TYPE_URLENCODED;
     }
 
     /**
@@ -1343,7 +1343,7 @@ class Form extends ViewableData implements HasRequestHandler
 
         // Handle the backwards compatible case of passing "true" as the second argument
         if ($mergeStrategy === true) {
-            $mergeStrategy = self::MERGE_CLEAR_MISSING;
+            $mergeStrategy = Form::MERGE_CLEAR_MISSING;
         } elseif ($mergeStrategy === false) {
             $mergeStrategy = 0;
         }
@@ -1359,9 +1359,9 @@ class Form extends ViewableData implements HasRequestHandler
 
         // Using the `MERGE_AS_INTERNAL_VALUE` or `MERGE_AS_SUBMITTED_VALUE` flags users can explicitly specify which
         // `setValue` method to use.
-        if (($mergeStrategy & self::MERGE_AS_INTERNAL_VALUE) == self::MERGE_AS_INTERNAL_VALUE) {
+        if (($mergeStrategy & Form::MERGE_AS_INTERNAL_VALUE) == Form::MERGE_AS_INTERNAL_VALUE) {
             $submitted = false;
-        } elseif (($mergeStrategy & self::MERGE_AS_SUBMITTED_VALUE) == self::MERGE_AS_SUBMITTED_VALUE) {
+        } elseif (($mergeStrategy & Form::MERGE_AS_SUBMITTED_VALUE) == Form::MERGE_AS_SUBMITTED_VALUE) {
             $submitted = true;
         }
 
@@ -1455,10 +1455,10 @@ class Form extends ViewableData implements HasRequestHandler
             // save to the field if either a value is given, or loading of blank/undefined values is forced
             $setValue = false;
             if ($exists) {
-                if ($val != false || ($mergeStrategy & self::MERGE_IGNORE_FALSEISH) != self::MERGE_IGNORE_FALSEISH) {
+                if ($val != false || ($mergeStrategy & Form::MERGE_IGNORE_FALSEISH) != Form::MERGE_IGNORE_FALSEISH) {
                     $setValue = true;
                 }
-            } elseif (($mergeStrategy & self::MERGE_CLEAR_MISSING) == self::MERGE_CLEAR_MISSING) {
+            } elseif (($mergeStrategy & Form::MERGE_CLEAR_MISSING) == Form::MERGE_CLEAR_MISSING) {
                 $setValue = true;
             }
 

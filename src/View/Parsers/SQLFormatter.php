@@ -58,7 +58,7 @@ class SQLFormatter
     protected function addNewlines($sql, $useHtmlFormatting = false)
     {
         $eol = PHP_EOL;
-        foreach (self::$newline_before_tokens as $token) {
+        foreach (SQLFormatter::$newline_before_tokens as $token) {
             $breakToken = ($useHtmlFormatting) ? "<br />$eol" : $eol;
             $sql = preg_replace('/[^\n](' . $token . ')/', $breakToken . '$1', $sql ?? '');
         }

@@ -206,9 +206,9 @@ class DataObjectSchema
         if (!is_int($options)) {
             throw new InvalidArgumentException("Invalid options " . var_export($options, true));
         }
-        $uninherited = ($options & self::UNINHERITED) === self::UNINHERITED;
-        $dbOnly = ($options & self::DB_ONLY) === self::DB_ONLY;
-        $includeClass = ($options & self::INCLUDE_CLASS) === self::INCLUDE_CLASS;
+        $uninherited = ($options & DataObjectSchema::UNINHERITED) === DataObjectSchema::UNINHERITED;
+        $dbOnly = ($options & DataObjectSchema::DB_ONLY) === DataObjectSchema::DB_ONLY;
+        $includeClass = ($options & DataObjectSchema::INCLUDE_CLASS) === DataObjectSchema::INCLUDE_CLASS;
 
         // Walk class hierarchy
         $db = [];
@@ -513,7 +513,7 @@ class DataObjectSchema
                 }
                 // Handle has_one which handles multiple reciprocal has_many relations
                 $hasOneClass = $spec['class'];
-                if (($spec[self::HAS_ONE_MULTI_RELATIONAL] ?? false) === true) {
+                if (($spec[DataObjectSchema::HAS_ONE_MULTI_RELATIONAL] ?? false) === true) {
                     $compositeFields[$fieldName] = 'PolymorphicRelationAwareForeignKey';
                     continue;
                 }
@@ -577,7 +577,7 @@ class DataObjectSchema
         }
         $this->defaultDatabaseIndexes[$class] = [];
 
-        $fieldSpecs = $this->fieldSpecs($class, self::UNINHERITED);
+        $fieldSpecs = $this->fieldSpecs($class, DataObjectSchema::UNINHERITED);
         foreach ($fieldSpecs as $field => $spec) {
             /** @var DBField $fieldObj */
             $fieldObj = Injector::inst()->create($spec, $field);
@@ -651,7 +651,7 @@ class DataObjectSchema
                     list ($table, $column) = $this->parseSortColumn(trim($value ?? ''));
                     $table = trim($table ?? '', '"');
                     $column = trim($column ?? '', '"');
-                    if ($table && strtolower($table ?? '') !== strtolower(self::tableName($class) ?? '')) {
+                    if ($table && strtolower($table ?? '') !== strtolower(DataObjectSchema::tableName($class) ?? '')) {
                         continue;
                     }
                     if ($this->databaseField($class, $column, false)) {
@@ -945,7 +945,7 @@ class DataObjectSchema
         }
 
         $spec = $hasOnes[$component];
-        return ($spec[self::HAS_ONE_MULTI_RELATIONAL] ?? false) === true;
+        return ($spec[DataObjectSchema::HAS_ONE_MULTI_RELATIONAL] ?? false) === true;
     }
 
     /**
@@ -1280,7 +1280,7 @@ class DataObjectSchema
             );
         }
 
-        if (($spec[self::HAS_ONE_MULTI_RELATIONAL] ?? false) === true
+        if (($spec[DataObjectSchema::HAS_ONE_MULTI_RELATIONAL] ?? false) === true
             && $spec['class'] !== DataObject::class
         ) {
             throw new InvalidArgumentException(

@@ -139,7 +139,7 @@ abstract class BaseKernel implements Kernel
      */
     protected function bootPHP()
     {
-        if ($this->getEnvironment() === self::LIVE) {
+        if ($this->getEnvironment() === BaseKernel::LIVE) {
             // limited to fatal errors and warnings in live mode
             error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
         } else {
@@ -262,7 +262,7 @@ abstract class BaseKernel implements Kernel
             return $env;
         }
 
-        return self::LIVE;
+        return BaseKernel::LIVE;
     }
 
     abstract public function boot($flush = false);
@@ -405,7 +405,7 @@ abstract class BaseKernel implements Kernel
 
     public function setEnvironment($environment)
     {
-        if (!in_array($environment, [self::DEV, self::TEST, self::LIVE, null])) {
+        if (!in_array($environment, [BaseKernel::DEV, BaseKernel::TEST, BaseKernel::LIVE, null])) {
             throw new InvalidArgumentException(
                 "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
             );

@@ -28,7 +28,7 @@ abstract class PasswordEncryptor
      */
     public static function get_encryptors()
     {
-        return Config::inst()->get(self::class, 'encryptors');
+        return Config::inst()->get(PasswordEncryptor::class, 'encryptors');
     }
 
     /**
@@ -38,7 +38,7 @@ abstract class PasswordEncryptor
      */
     public static function create_for_algorithm($algorithm)
     {
-        $encryptors = self::get_encryptors();
+        $encryptors = PasswordEncryptor::get_encryptors();
         if (!isset($encryptors[$algorithm])) {
             throw new PasswordEncryptor_NotFoundException(
                 sprintf('No implementation found for "%s"', $algorithm)

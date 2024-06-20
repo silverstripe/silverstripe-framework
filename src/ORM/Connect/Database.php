@@ -236,9 +236,9 @@ abstract class Database
                 $sql = DB::inline_parameters($sql, $parameters);
             } elseif (strtolower($_REQUEST['showqueries'] ?? '') === 'whitelist') {
                 $displaySql = false;
-                foreach (self::$whitelist_array as $query => $searchType) {
-                    $fullQuery = ($searchType === self::FULL_QUERY && $query === $sql);
-                    $partialQuery = ($searchType === self::PARTIAL_QUERY && mb_strpos($sql ?? '', $query ?? '') !== false);
+                foreach (Database::$whitelist_array as $query => $searchType) {
+                    $fullQuery = ($searchType === Database::FULL_QUERY && $query === $sql);
+                    $partialQuery = ($searchType === Database::PARTIAL_QUERY && mb_strpos($sql ?? '', $query ?? '') !== false);
                     if (!$fullQuery && !$partialQuery) {
                         continue;
                     }
@@ -279,7 +279,7 @@ abstract class Database
      */
     public static function setWhitelistQueryArray($whitelistArray)
     {
-        self::$whitelist_array = $whitelistArray;
+        Database::$whitelist_array = $whitelistArray;
     }
 
     /**
@@ -289,7 +289,7 @@ abstract class Database
      */
     public static function getWhitelistQueryArray()
     {
-        return self::$whitelist_array;
+        return Database::$whitelist_array;
     }
 
     /**

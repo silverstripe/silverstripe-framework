@@ -46,7 +46,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
      */
     public static function inst()
     {
-        return self::$instance ? self::$instance : self::$instance = new self();
+        return ThemeResourceLoader::$instance ? ThemeResourceLoader::$instance : ThemeResourceLoader::$instance = new ThemeResourceLoader();
     }
 
     /**
@@ -56,7 +56,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
      */
     public static function set_instance(ThemeResourceLoader $instance)
     {
-        self::$instance = $instance;
+        ThemeResourceLoader::$instance = $instance;
     }
 
     public function __construct($base = null)
@@ -390,7 +390,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
      */
     public static function flush()
     {
-        self::inst()->getCache()->clear();
+        ThemeResourceLoader::inst()->getCache()->clear();
     }
 
     /**
