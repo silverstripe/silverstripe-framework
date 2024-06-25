@@ -127,10 +127,10 @@ class DBDatetimeTest extends SapphireTest
 
         // note: Some localisation packages exclude the ',' in default medium format
         i18n::set_locale('en_NZ');
-        $this->assertMatchesRegularExpression('#11/12/2001(,)? 10:10 PM#i', $date->Nice());
+        $this->assertMatchesRegularExpression('#11/12/2001(,)?\h10:10\hPM#iu', $date->Nice());
 
         i18n::set_locale('en_US');
-        $this->assertMatchesRegularExpression('#Dec 11(,)? 2001(,)? 10:10 PM#i', $date->Nice());
+        $this->assertMatchesRegularExpression('#Dec\h11(,)?\h2001(,)?\h10:10\hPM#iu', $date->Nice());
     }
 
     public function testDate()
@@ -142,7 +142,7 @@ class DBDatetimeTest extends SapphireTest
     public function testTime()
     {
         $date = DBDatetime::create_field('Datetime', '2001-12-31 22:10:59');
-        $this->assertMatchesRegularExpression('#10:10:59 PM#i', $date->Time());
+        $this->assertMatchesRegularExpression('#10:10:59\hPM#iu', $date->Time());
     }
 
     public function testTime24()

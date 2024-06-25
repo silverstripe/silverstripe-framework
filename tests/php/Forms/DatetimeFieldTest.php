@@ -148,7 +148,7 @@ class DatetimeFieldTest extends SapphireTest
 
         // Some localisation packages exclude the ',' in default medium format
         $this->assertMatchesRegularExpression(
-            '#29/03/2003(,)? 11:00:00 (PM|pm)#',
+            '#29/03/2003(,)?\h11:00:00\h(PM|pm)#u',
             $datetimeField->Value(),
             'User value is formatted, and in user timezone'
         );
