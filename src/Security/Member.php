@@ -40,6 +40,10 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Closure;
 use RuntimeException;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\SearchableDropdownField;
+use SilverStripe\Forms\SearchableMultiDropdownField;
+use SilverStripe\ORM\FieldType\DBForeignKey;
 
 /**
  * The member class which represents the users of the system
@@ -1440,6 +1444,50 @@ class Member extends DataObject
         }
 
         return $labels;
+    }
+
+    public function scaffoldFormFieldForHasOne(
+        string $fieldName,
+        ?string $fieldTitle,
+        string $relationName,
+        DataObject $ownerRecord
+    ): FormField {
+        $field = parent::scaffoldFormFieldForHasOne($fieldName, $fieldTitle, $relationName, $ownerRecord);
+        if ($field instanceof SearchableDropdownField) {
+            $field->setUseSearchContext(true);
+        }
+        return $field;
+    }
+
+    public function scaffoldFormFieldForHasMany(
+        string $relationName,
+        ?string $fieldTitle,
+        DataObject $ownerRecord,
+        bool &$includeInOwnTab
+    ): FormField {
+        $includeInOwnTab = false;
+        return $this->scaffoldFormFieldForManyRelation($relationName, $fieldTitle);
+    }
+
+    public function scaffoldFormFieldForManyMany(
+        string $relationName,
+        ?string $fieldTitle,
+        DataObject $ownerRecord,
+        bool &$includeInOwnTab
+    ): FormField {
+        $includeInOwnTab = false;
+        return $this->scaffoldFormFieldForManyRelation($relationName, $fieldTitle);
+    }
+
+    private function scaffoldFormFieldForManyRelation(string $relationName, ?string $fieldTitle): FormField
+    {
+        $list = static::get();
+        $field = SearchableMultiDropdownField::create($relationName, $fieldTitle, $list);
+        // Use the same lazyload threshold has_one relations use
+        $threshold = DBForeignKey::config()->get('dropdown_field_threshold');
+        $overThreshold = $list->count() > $threshold;
+        $field->setIsLazyLoaded($overThreshold)->setLazyLoadLimit($threshold);
+        return $field;
     }
 
     /**
