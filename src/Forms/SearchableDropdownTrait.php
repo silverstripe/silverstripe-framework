@@ -397,7 +397,6 @@ trait SearchableDropdownTrait
                     $record->$classNameField = $ids ? $record->ClassName : '';
                 }
             }
-            $record->write();
         } else {
             // has_many / many_many field
             if (!method_exists($record, 'hasMethod')) {
