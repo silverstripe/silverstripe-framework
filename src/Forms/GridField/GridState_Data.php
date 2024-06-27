@@ -19,11 +19,11 @@ class GridState_Data
      */
     protected $data;
 
-    protected GridState $state;
+    protected ?GridState $state;
 
     protected $defaults = [];
 
-    public function __construct($data = [], GridState $state = null)
+    public function __construct($data = [], ?GridState $state = null)
     {
         $this->data = $data;
         $this->state = $state;
@@ -88,7 +88,7 @@ class GridState_Data
     public function storeData()
     {
         $stateManager = $this->getStateManager();
-        if (ClassInfo::hasMethod($stateManager, 'storeState')) {
+        if (ClassInfo::hasMethod($stateManager, 'storeState') && $this->state) {
             $stateManager->storeState($this->state->getGridField(), $this->state->Value());
         }
     }
