@@ -120,4 +120,36 @@ class ManifestFileFinderTest extends SapphireTest
             ]
         );
     }
+
+    /**
+     * Note that this phpunit file is unable to use a dataProvider for some unknown reason
+     */
+    public function testIsDirectoryModule()
+    {
+        $provider = [
+            'vendormodule' => [
+                'silverstripe-vendormodule',
+                true,
+            ],
+            'theme' => [
+                'silverstripe-theme',
+                true,
+            ],
+            'somethingelse' => [
+                'silverstripe-somethingelse',
+                false,
+            ],
+            'notype' => [
+                'silverstripe-notype',
+                false,
+            ],
+        ];
+        foreach ($provider as $data) {
+            list($subdir, $expected) = $data;
+            $finder = new ManifestFileFinder();
+            $pathname = __DIR__ . '/fixtures/manifestfilefinder_rootconfigcomposer/' . $subdir;
+            $actual = $finder->isDirectoryModule('', $pathname, 0);
+            $this->assertSame($expected, $actual);
+        }
+    }
 }

@@ -18,6 +18,11 @@ class ManifestFileFinder extends FileFinder
 
     const CONFIG_FILE = '_config.php';
     const CONFIG_DIR = '_config';
+    const COMPOSER_FILE = 'composer.json';
+    const COMPOSER_TYPES = [
+        'silverstripe-vendormodule',
+        'silverstripe-theme',
+    ];
     const EXCLUDE_FILE = '_manifest_exclude';
     const LANG_DIR = 'lang';
     const TESTS_DIR = 'tests';
@@ -177,6 +182,16 @@ class ManifestFileFinder extends FileFinder
         // True if config dir exists
         if (file_exists($pathname . '/' . ManifestFileFinder::CONFIG_DIR)) {
             return true;
+        }
+
+        // True if composer type
+        $path = $pathname . '/' . ManifestFileFinder::COMPOSER_FILE;
+        if (file_exists($path)) {
+            $composer = json_decode(file_get_contents($path), true);
+            $type = $composer['type'] ?? '';
+            if (in_array($type, ManifestFileFinder::COMPOSER_TYPES)) {
+                return true;
+            }
         }
 
         return false;
