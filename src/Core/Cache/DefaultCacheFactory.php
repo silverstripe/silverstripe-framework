@@ -2,38 +2,24 @@
 
 namespace SilverStripe\Core\Cache;
 
-use InvalidArgumentException;
-use Psr\Log\LoggerAwareInterface;
+use LogicException;
 use Psr\Log\LoggerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
-use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
-use Symfony\Component\Cache\Psr16Cache;
 
 /**
- * Returns the most performant combination of caches available on the system:
- * - `PhpFilesCache` (PHP 7 with opcache enabled)
- * - `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
- * - `FilesystemCache` if none of the above is available
- *
- * Modelled after `Symfony\Component\Cache\Adapter\AbstractAdapter::createSystemCache()`
+ * Creates the following cache adapters:
+ * - `PhpFilesAdapter` (falls back to `FilesystemAdapter` if `PhpFilesAdapter` isn't supported)
+ * - An optional in-memory cache such as Redis, Memcached, or APCu.
  */
-class DefaultCacheFactory implements CacheFactory
+class DefaultCacheFactory extends AbstractCacheFactory
 {
-    /**
-     * @var string Absolute directory path
-     */
-    protected $args = [];
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected array $args = [];
 
     /**
      * @param array $args List of global options to merge with args during create()
@@ -42,148 +28,97 @@ class DefaultCacheFactory implements CacheFactory
     public function __construct($args = [], LoggerInterface $logger = null)
     {
         $this->args = $args;
-        $this->logger = $logger;
+        parent::__construct($logger);
     }
 
     /**
      * @inheritdoc
      */
-    public function create($service, array $args = [])
+    public function create(string $service, array $args = []): CacheInterface
     {
         // merge args with default
         $args = array_merge($this->args, $args);
         $namespace = isset($args['namespace']) ? $args['namespace'] : '';
-        $defaultLifetime = isset($args['defaultLifetime']) ? $args['defaultLifetime'] : 0;
+        $defaultLifetime = (int) (isset($args['defaultLifetime']) ? $args['defaultLifetime'] : 0);
         $directory = isset($args['directory']) ? $args['directory'] : null;
-        $version = isset($args['version']) ? $args['version'] : null;
         $useInjector = isset($args['useInjector']) ? $args['useInjector'] : true;
 
         // In-memory caches are typically more resource constrained (number of items and storage space).
         // Give cache consumers an opt-out if they are expecting to create large caches with long lifetimes.
         $useInMemoryCache = isset($args['useInMemoryCache']) ? $args['useInMemoryCache'] : true;
+        $inMemoryCacheFactory = Environment::getEnv('SS_MEMORY_CACHEFACTORY');
 
-        // Check support
-        $apcuSupported = ($this->isAPCUSupported() && $useInMemoryCache);
-        $phpFilesSupported = $this->isPHPFilesSupported();
-
-        // If apcu isn't supported, phpfiles is the next best preference
-        if (!$apcuSupported && $phpFilesSupported) {
-            return $this->createCache(PhpFilesAdapter::class, [$namespace, $defaultLifetime, $directory], $useInjector);
+        $filesystemCache = $this->instantiateFilesystemCache($namespace, $defaultLifetime, $directory, $useInjector);
+        if (!$useInMemoryCache || !$inMemoryCacheFactory) {
+            return $this->prepareCacheForUse($filesystemCache, $useInjector);
         }
 
-        // Create filesystem cache
-        if (!$apcuSupported) {
-            return $this->createCache(
-                FilesystemAdapter::class,
-                [$namespace, $defaultLifetime, $directory],
-                $useInjector
+        // Check if SS_MEMORY_CACHEFACTORY is a factory
+        if (!is_a($inMemoryCacheFactory, InMemoryCacheFactory::class, true)) {
+            throw new LogicException(
+                'SS_MEMORY_CACHEFACTORY is not a valid InMemoryCacheFactory class name'
             );
         }
 
-        // Create PSR6 filesystem + apcu cache's wrapped in a PSR6 chain adapter, then wrap in a PSR16 class
-        $fs = $this->instantiateCache(
-            FilesystemAdapter::class,
-            [$namespace, $defaultLifetime, $directory],
+        // Note that the cache lifetime will be shorter there by default, to ensure there's enough
+        // resources for "hot cache" items as a resource constrained in memory cache.
+        $inMemoryLifetime = (int) ($defaultLifetime / 5);
+        $inMemoryCache = $this->instantiateInMemoryCache(
+            $service,
+            $inMemoryCacheFactory,
+            ['namespace' => $namespace, 'defaultLifetime' => $inMemoryLifetime, 'useInjector' => $useInjector],
             $useInjector
         );
 
-        // Note that the cache lifetime will be shorter there by default, to ensure there's enough
-        // resources for "hot cache" items in APCu as a resource constrained in memory cache.
-        $apcuNamespace = $namespace . ($namespace ? '_' : '') . md5(BASE_PATH);
-        $lifetime = (int) $defaultLifetime / 5;
-        $apcu = $this->instantiateCache(ApcuAdapter::class, [$apcuNamespace, $lifetime, $version], $useInjector);
+        // The ChainAdapter doesn't take a logger, so we need to make sure to add it to the child cache adapters.
+        $this->addLogger($filesystemCache);
 
-        return $this->createCache(ChainAdapter::class, [[$apcu, $fs]], $useInjector);
-    }
-
-    /**
-     * Determine if apcu is supported
-     *
-     * @return bool
-     */
-    protected function isAPCUSupported()
-    {
-        static $apcuSupported = null;
-        if (null === $apcuSupported) {
-            // Need to check for CLI because Symfony won't: https://github.com/symfony/symfony/pull/25080
-            $apcuSupported = Director::is_cli()
-                ? filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOL) && ApcuAdapter::isSupported()
-                : ApcuAdapter::isSupported();
-        }
-        return $apcuSupported;
+        return $this->createCache(ChainAdapter::class, [[$inMemoryCache, $filesystemCache]], $useInjector);
     }
 
     /**
      * Determine if PHP files is supported
-     *
-     * @return bool
      */
-    protected function isPHPFilesSupported()
+    protected function isPHPFilesSupported(): bool
     {
         static $phpFilesSupported = null;
         if (null === $phpFilesSupported) {
-            $phpFilesSupported = PhpFilesAdapter::isSupported();
+            // Only consider to be enabled if opcache is enabled in CLI, or else
+            // filesystem cache won't be shared between webserver and CLI.
+            $phpFilesSupported = PhpFilesAdapter::isSupported() &&
+                filter_var(ini_get('opcache.enable_cli'), FILTER_VALIDATE_BOOL);
         }
         return $phpFilesSupported;
     }
 
     /**
-     * Creates an object with a PSR-16 interface, usually from a PSR-6 class name
-     *
-     * Quick explanation of caching standards:
-     * - Symfony cache implements the PSR-6 standard
-     * - Symfony provides adapters which wrap a PSR-6 backend with a PSR-16 interface
-     * - Silverstripe uses the PSR-16 interface to interact with caches. It does not directly interact with the PSR-6 classes
-     * - Psr\SimpleCache\CacheInterface is the php interface of the PSR-16 standard. All concrete cache classes Silverstripe code interacts with should implement this interface
-     *
-     * Further reading:
-     * - https://symfony.com/doc/current/components/cache/psr6_psr16_adapters.html#using-a-psr-6-cache-object-as-a-psr-16-cache
-     * - https://github.com/php-fig/simple-cache
+     * Instantiate the cache adapter for the filesystem cache.
      */
-    protected function createCache(
-        string $class,
-        array $args,
-        bool $useInjector = true
-    ): CacheInterface {
-        $loggerAdded = false;
-        $classIsPsr6 = is_a($class, CacheItemPoolInterface::class, true);
-        $classIsPsr16 = is_a($class, CacheInterface::class, true);
-        if (!$classIsPsr6 && !$classIsPsr16) {
-            throw new InvalidArgumentException("class $class must implement one of " . CacheItemPoolInterface::class . ' or ' . CacheInterface::class);
-        }
-        if ($classIsPsr6) {
-            $psr6Cache = $this->instantiateCache($class, $args, $useInjector);
-            $loggerAdded = $this->addLogger($psr6Cache, $loggerAdded);
-            // Wrap the PSR-6 class inside a class with a PSR-16 interface
-            $psr16Cache = $this->instantiateCache(Psr16Cache::class, [$psr6Cache], $useInjector);
-        } else {
-            $psr16Cache = $this->instantiateCache($class, $args, $useInjector);
-        }
-        if (!$loggerAdded) {
-            $this->addLogger($psr16Cache, $loggerAdded);
-        }
-        return $psr16Cache;
-    }
-
-    private function instantiateCache(
-        string $class,
-        array $args,
+    private function instantiateFilesystemCache(
+        string $namespace,
+        int $defaultLifetime,
+        string $directory,
         bool $useInjector
-    ): CacheItemPoolInterface|CacheInterface {
-        if ($useInjector) {
-            // Injector is used for in most instances to allow modification of the cache implementations
-            return Injector::inst()->createWithArgs($class, $args);
+    ): CacheInterface|CacheItemPoolInterface {
+        if ($this->isPHPFilesSupported()) {
+            return $this->instantiateCache(PhpFilesAdapter::class, [$namespace, $defaultLifetime, $directory], $useInjector);
         }
-        // ManifestCacheFactory cannot use Injector because config is not available at that point
-        return new $class(...$args);
+        return $this->instantiateCache(FilesystemAdapter::class, [$namespace, $defaultLifetime, $directory], $useInjector);
     }
 
-    private function addLogger(CacheItemPoolInterface|CacheInterface $cache): bool
+    /**
+     * Instantiate the cache adapter for the in-memory cache.
+     */
+    private function instantiateInMemoryCache(string $service, string $inMemoryCacheFactory, array $args): CacheItemPoolInterface
     {
-        if ($this->logger && $cache instanceof LoggerAwareInterface) {
-            $cache->setLogger($this->logger);
-            return true;
+        if ($args['useInjector']) {
+            $factory = Injector::inst()->create($inMemoryCacheFactory);
+        } else {
+            $factory = new $inMemoryCacheFactory();
         }
-        return false;
+        /** @var InMemoryCacheFactory $factory */
+        $adapter = $factory->createPsr6($service, $args);
+        $this->addLogger($adapter);
+        return $adapter;
     }
 }

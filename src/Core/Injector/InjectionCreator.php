@@ -12,19 +12,10 @@ class InjectionCreator implements Factory
     /**
      * Create a new instance of a class
      *
-     * Passing an object for $class will result from using an anonymous class in unit testing, e.g.
-     * Injector::inst()->load([SomeClass::class => ['class' => new class { ... }]]);
-     *
      * @param string|object $class - string: The FQCN of the class, object: A class instance
      */
-    public function create($class, array $params = [])
+    public function create(string $class, array $params = []): object
     {
-        if (is_object($class ?? '')) {
-            $class = get_class($class);
-        }
-        if (!is_string($class ?? '')) {
-            throw new InvalidArgumentException('$class parameter must be a string or an object');
-        }
         if (!class_exists($class)) {
             throw new InjectorNotFoundException("Class {$class} does not exist");
         }

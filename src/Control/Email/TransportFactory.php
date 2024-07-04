@@ -12,7 +12,7 @@ use Symfony\Component\Mailer\Transport;
  */
 class TransportFactory implements Factory
 {
-    public function create($service, array $params = [])
+    public function create(string $service, array $params = []): object
     {
         $dsn = Environment::getEnv('MAILER_DSN') ?: $params['dsn'];
         $dispatcher = $params['dispatcher'];

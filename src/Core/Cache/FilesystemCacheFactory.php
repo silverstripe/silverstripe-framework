@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Cache;
 
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Injector\Injector;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Psr16Cache;
@@ -24,7 +25,7 @@ class FilesystemCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = [])
+    public function create(string $service, array $params = []): CacheInterface
     {
         $psr6Cache = Injector::inst()->createWithArgs(FilesystemAdapter::class, [
             (isset($params['namespace'])) ? $params['namespace'] : '',
