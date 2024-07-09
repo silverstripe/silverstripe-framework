@@ -160,4 +160,32 @@ class HTMLValueTest extends SapphireTest
             $this->assertEquals($noscript, $value->getContent(), 'Child tags are left untouched in noscript tags.');
         }
     }
+
+    public function provideOnlyStripIntendedTags(): array
+    {
+        return [
+            [
+                'input' => '<html><head></head><body><div><p>blahblah</p></div></body></html>',
+                'expected' => '<div><p>blahblah</p></div>',
+            ],
+            [
+                'input' => '<html><head></head><body><header></header><div><p>blahblah</p></div></body></html>',
+                'expected' => '<header></header><div><p>blahblah</p></div>',
+            ],
+            [
+                'input' => '<html some-attribute another-attribute="something"><head></head><body><div><p>blahblah</p></div></body></html>',
+                'expected' => '<div><p>blahblah</p></div>',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideOnlyStripIntendedTags
+     */
+    public function testOnlyStripIntendedTags(string $input, string $expected): void
+    {
+        $value = new HTMLValue();
+        $value->setContent($input);
+        $this->assertEquals($expected, $value->getContent(), 'Invalid HTML can be parsed');
+    }
 }
