@@ -78,10 +78,10 @@ class DefaultCacheFactoryTest extends SapphireTest
      */
     public function testCreate(array $args, ?string $inMemoryCacheFactory): void
     {
-        $oldFactoryValue = Environment::getEnv('SS_MEMORY_CACHEFACTORY');
+        $oldFactoryValue = Environment::getEnv('SS_IN_MEMORY_CACHE_FACTORY');
         $oldMemcachedDSNValue = Environment::getEnv('SS_MEMCACHED_DSN');
         $oldRedisDSNValue = Environment::getEnv('SS_REDIS_DSN');
-        Environment::setEnv('SS_MEMORY_CACHEFACTORY', $inMemoryCacheFactory);
+        Environment::setEnv('SS_IN_MEMORY_CACHE_FACTORY', $inMemoryCacheFactory);
         // These are obviously not real connections, but it seems a real connection is not required
         // to just instantiate the cache adapter, which allows us to validate the correct adapter
         // is instantiated.
@@ -148,7 +148,7 @@ class DefaultCacheFactoryTest extends SapphireTest
             $reflectionLoggerProperty->setAccessible(true);
             $this->assertTrue($logger === $reflectionLoggerProperty->getValue($filesystemCache));
         } finally {
-            Environment::setEnv('SS_MEMORY_CACHEFACTORY', $oldFactoryValue);
+            Environment::setEnv('SS_IN_MEMORY_CACHE_FACTORY', $oldFactoryValue);
             Environment::setEnv('SS_MEMCACHED_DSN', $oldMemcachedDSNValue);
             Environment::setEnv('SS_REDIS_DSN', $oldRedisDSNValue);
         }

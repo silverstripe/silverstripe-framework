@@ -46,17 +46,18 @@ class DefaultCacheFactory extends AbstractCacheFactory
         // In-memory caches are typically more resource constrained (number of items and storage space).
         // Give cache consumers an opt-out if they are expecting to create large caches with long lifetimes.
         $useInMemoryCache = isset($args['useInMemoryCache']) ? $args['useInMemoryCache'] : true;
-        $inMemoryCacheFactory = Environment::getEnv('SS_MEMORY_CACHEFACTORY');
+        $inMemoryCacheFactory = Environment::getEnv('SS_IN_MEMORY_CACHE_FACTORY');
 
         $filesystemCache = $this->instantiateFilesystemCache($namespace, $defaultLifetime, $directory, $useInjector);
         if (!$useInMemoryCache || !$inMemoryCacheFactory) {
             return $this->prepareCacheForUse($filesystemCache, $useInjector);
         }
 
-        // Check if SS_MEMORY_CACHEFACTORY is a factory
+        // Check if SS_IN_MEMORY_CACHE_FACTORY is a factory
         if (!is_a($inMemoryCacheFactory, InMemoryCacheFactory::class, true)) {
             throw new LogicException(
-                'SS_MEMORY_CACHEFACTORY is not a valid InMemoryCacheFactory class name'
+                'The value in your SS_IN_MEMORY_CACHE_FACTORY environment variable'
+                . ' is not a valid InMemoryCacheFactory class name'
             );
         }
 

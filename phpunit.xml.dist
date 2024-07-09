@@ -21,6 +21,10 @@ Requires PHPUnit ^9
         <testsuite name="cms">
             <directory>vendor/silverstripe/cms/tests</directory>
         </testsuite>
+        <!-- Cache suite is separate so it only runs what it needs to run. Intentionally also included in core above. -->
+        <testsuite name="framework-cache-only">
+            <directory>tests/php/Core/Cache</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
