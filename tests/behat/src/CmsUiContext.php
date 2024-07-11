@@ -105,7 +105,20 @@ class CmsUiContext implements Context
                 // no-op - if the element doesn't exist at all, then that passes the test.
             }
         } else {
-            $this->getMainContext()->assertElementContains('.toast--' . $type, $notice);
+            $page = $this->getSession()->getPage();
+            $container = $page->find('css', '.toasts');
+            if (!$container) {
+                Assert::assertNull('Not found', 'No toast container found');
+                return;
+            }
+            foreach ($container->findAll('css', '.toast--' . $type) as $toast) {
+                $text = $toast->getText();
+                if (str_contains($text, $notice)) {
+                    Assert::assertStringContainsString($notice, $text);
+                    return;
+                }
+            }
+            Assert::assertNull('Not found', 'No toast container found with text: ' . $notice);
         }
     }
 
