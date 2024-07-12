@@ -12,3 +12,9 @@ jobs:
     with:
       # Turn phpcoverage off because it causes a segfault
       phpcoverage_force_off: true
+      phpunit_skip_suites: framework-cache-only
+      # Ensure we test all in-memory cache factories provided in core
+      extra_jobs: |
+        - phpunit: true
+          phpunit_suite: framework-cache-only
+          install_in_memory_cache_exts: true

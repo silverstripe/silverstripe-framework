@@ -15,5 +15,5 @@ interface Factory
      * @param array $params The constructor parameters.
      * @return object The created service instances.
      */
-    public function create($service, array $params = []);
+    public function create(string $service, array $params = []): ?object;
 }
