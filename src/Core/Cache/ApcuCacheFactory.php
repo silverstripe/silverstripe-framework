@@ -40,6 +40,9 @@ class ApcuCacheFactory extends AbstractCacheFactory implements InMemoryCacheFact
         $defaultLifetime = isset($params['defaultLifetime']) ? $params['defaultLifetime'] : 0;
         // $version is optional - defaults to null.
         $version = isset($params['version']) ? $params['version'] : Environment::getEnv('SS_APCU_VERSION');
+        if ($version === false) {
+            $version = null;
+        }
         $useInjector = isset($params['useInjector']) ? $params['useInjector'] : true;
 
         return $this->instantiateCache(
