@@ -347,7 +347,7 @@ class HTMLEditorSanitiser
                 }
 
                 // Matches "javascript:" with any arbitrary linebreaks inbetween the characters.
-                $regex = '/^\s*' . implode('\s*', str_split('javascript:')) . '/i';
+                $regex = '#^\s*(' . implode('\s*', str_split('javascript:')) . '|' . implode('\s*', str_split('data:text/html;')) . ')#i';
                 // Strip out javascript execution in href or src attributes.
                 foreach (['src', 'href', 'data'] as $dangerAttribute) {
                     if ($el->hasAttribute($dangerAttribute)) {
