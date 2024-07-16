@@ -311,6 +311,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         'promotion' => false,
         'upload_folder_id' => null, // Set folder ID for insert media dialog
         'link_default_target' => '_blank', // https://www.tiny.cloud/docs/tinymce/6/autolink/#example-using-link_default_target
+        'convert_unsafe_embeds' => true, // SS-2024-001
     ];
 
     /**
