@@ -322,7 +322,8 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
         . "-div[id|dir|class|align|style],-span[class|align|style],-pre[class|align],address[class|align],"
         . "-h1[id|dir|class|align|style],-h2[id|dir|class|align|style],-h3[id|dir|class|align|style],"
         . "-h4[id|dir|class|align|style],-h5[id|dir|class|align|style],-h6[id|dir|class|align|style],hr[class],"
-        . "dd[id|class|title|dir],dl[id|class|title|dir],dt[id|class|title|dir],"
+        . "dd[id|class|title|dir],dl[id|class|title|dir],dt[id|class|title|dir],",
+        'convert_unsafe_embeds' => true, // SS-2024-001
     ];
 
     protected $settings = [];
