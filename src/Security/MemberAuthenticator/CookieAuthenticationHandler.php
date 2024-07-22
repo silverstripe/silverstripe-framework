@@ -10,6 +10,7 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Authenticate a member passed on a session cookie
@@ -175,17 +176,21 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         }
 
         // Renew the token
-        $rememberLoginHash->renew();
-        $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-        Cookie::set(
-            $this->getTokenCookieName(),
-            $member->ID . ':' . $rememberLoginHash->getToken(),
-            $tokenExpiryDays,
-            null,
-            null,
-            false,
-            true
-        );
+        Deprecation::withNoReplacement(fn() => $rememberLoginHash->renew());
+
+        // Send the new token to the client if it was changed
+        if ($rememberLoginHash->getToken()) {
+            $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
+            Cookie::set(
+                $this->getTokenCookieName(),
+                $member->ID . ':' . $rememberLoginHash->getToken(),
+                $tokenExpiryDays,
+                null,
+                null,
+                false,
+                true
+            );
+        }
 
         // Audit logging hook
         $member->extend('memberAutoLoggedIn');
