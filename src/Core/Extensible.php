@@ -191,7 +191,7 @@ trait Extensible
         $subclasses = ClassInfo::subclassesFor($class);
         $subclasses[] = $class;
         foreach ($subclasses as $subclass) {
-            unset(self::$extra_methods[strtolower($subclass)]);
+            unset(self::class::$extra_methods[strtolower($subclass)]);
         }
 
         Config::modify()
@@ -248,7 +248,7 @@ trait Extensible
         $subclasses = ClassInfo::subclassesFor($class);
         $subclasses[] = $class;
         foreach ($subclasses as $subclass) {
-            unset(self::$extra_methods[strtolower($subclass)]);
+            unset(self::class::$extra_methods[strtolower($subclass)]);
         }
     }
 
@@ -300,7 +300,7 @@ trait Extensible
         }
 
         // If this class is unextendable, NOP
-        if (in_array($class, self::$unextendable_classes)) {
+        if (in_array($class, self::class::$unextendable_classes)) {
             return null;
         }
 
@@ -364,7 +364,7 @@ trait Extensible
         }
 
         $requiredExtension = Extension::get_classname_without_arguments($requiredExtension);
-        $extensions = self::get_extensions($class);
+        $extensions = self::class::get_extensions($class);
         foreach ($extensions as $extension) {
             if (strcasecmp($extension ?? '', $requiredExtension ?? '') === 0) {
                 return true;
