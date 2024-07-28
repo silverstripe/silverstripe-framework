@@ -586,4 +586,18 @@ trait SearchableDropdownTrait
         }
         return $options;
     }
+
+    public function performReadonlyTransformation()
+    {
+        // This is calling a non-static method statically
+        // using call_user_func() here to prevent an IDE warning
+        // The reason we're calling FormField::castedCopy directly is to prevent an ancestor
+        // call to $this->getSource() which will load the entire DataList into memory which
+        // causes issues with very large datasets and isn't needed when the field is read-only
+        $field = call_user_func('SilverStripe\\Forms\\FormField::castedCopy', SearchableLookupField::class);
+        $field->setSource($this->sourceList);
+        $field->setReadonly(true);
+
+        return $field;
+    }
 }
