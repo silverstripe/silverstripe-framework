@@ -171,11 +171,11 @@ trait CustomMethods
         }
         // Lazy define methods
         $lowerClass = strtolower(static::class);
-        if (!isset(self::$extra_methods[$lowerClass])) {
+        if (!isset(self::class::$extra_methods[$lowerClass])) {
             $this->defineMethods();
         }
 
-        return self::$extra_methods[$lowerClass][strtolower($method)] ?? null;
+        return self::class::$extra_methods[$lowerClass][strtolower($method)] ?? null;
     }
 
     /**
@@ -190,8 +190,8 @@ trait CustomMethods
 
         // Query extra methods
         $lowerClass = strtolower(static::class);
-        if ($custom && isset(self::$extra_methods[$lowerClass])) {
-            $methods = array_merge(self::$extra_methods[$lowerClass], $methods);
+        if ($custom && isset(self::class::$extra_methods[$lowerClass])) {
+            $methods = array_merge(self::class::$extra_methods[$lowerClass], $methods);
         }
 
         return $methods;
@@ -207,19 +207,19 @@ trait CustomMethods
     {
         $class = is_object($class) ? get_class($class) : ($class ?: static::class);
         $lowerClass = strtolower($class);
-        if (isset(self::$built_in_methods[$lowerClass])) {
-            return self::$built_in_methods[$lowerClass];
+        if (isset(self::class::$built_in_methods[$lowerClass])) {
+            return self::class::$built_in_methods[$lowerClass];
         }
 
         // Build new list
         $reflection = new ReflectionClass($class);
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
-        self::$built_in_methods[$lowerClass] = [];
+        self::class::$built_in_methods[$lowerClass] = [];
         foreach ($methods as $method) {
             $name = $method->getName();
-            self::$built_in_methods[$lowerClass][strtolower($name)] = $name;
+            self::class::$built_in_methods[$lowerClass][strtolower($name)] = $name;
         }
-        return self::$built_in_methods[$lowerClass];
+        return self::class::$built_in_methods[$lowerClass];
     }
 
     /**
@@ -280,10 +280,10 @@ trait CustomMethods
 
         // Merge with extra_methods
         $lowerClass = strtolower($class);
-        if (isset(self::$extra_methods[$lowerClass])) {
-            self::$extra_methods[$lowerClass] = array_merge(self::$extra_methods[$lowerClass], $newMethods);
+        if (isset(self::class::$extra_methods[$lowerClass])) {
+            self::class::$extra_methods[$lowerClass] = array_merge(self::class::$extra_methods[$lowerClass], $newMethods);
         } else {
-            self::$extra_methods[$lowerClass] = $newMethods;
+            self::class::$extra_methods[$lowerClass] = $newMethods;
         }
     }
 
@@ -305,17 +305,17 @@ trait CustomMethods
         }
 
         $lowerClass = strtolower($class);
-        if (!isset(self::$extra_methods[$lowerClass])) {
+        if (!isset(self::class::$extra_methods[$lowerClass])) {
             return;
         }
         $methods = $this->findMethodsFrom($extension);
 
         // Unset by key
-        self::$extra_methods[$lowerClass] = array_diff_key(self::$extra_methods[$lowerClass], $methods);
+        self::class::$extra_methods[$lowerClass] = array_diff_key(self::class::$extra_methods[$lowerClass], $methods);
 
         // Clear empty list
-        if (empty(self::$extra_methods[$lowerClass])) {
-            unset(self::$extra_methods[$lowerClass]);
+        if (empty(self::class::$extra_methods[$lowerClass])) {
+            unset(self::class::$extra_methods[$lowerClass]);
         }
     }
 
@@ -328,7 +328,7 @@ trait CustomMethods
      */
     protected function addWrapperMethod($method, $wrap)
     {
-        self::$extra_methods[strtolower(static::class)][strtolower($method)] = [
+        self::class::$extra_methods[strtolower(static::class)][strtolower($method)] = [
             'wrap' => $wrap,
             'method' => $method
         ];
@@ -343,7 +343,7 @@ trait CustomMethods
      */
     protected function addCallbackMethod($method, $callback)
     {
-        self::$extra_methods[strtolower(static::class)][strtolower($method)] = [
+        self::class::$extra_methods[strtolower(static::class)][strtolower($method)] = [
             'callback' => $callback,
         ];
     }
