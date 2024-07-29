@@ -1327,4 +1327,101 @@ class SQLSelectTest extends SapphireTest
 
         $select->addWith('cte', new SQLSelect());
     }
+
+    public function subqueryProvider()
+    {
+        return [
+            'no-explicit-alias-string' => ['( SELECT DISTINCT "SQLSelectTest_DO"."ClassName" FROM "SQLSelectTest_DO") AS "FINAL"'],
+            'no-alias-array' => [['( SELECT DISTINCT "SQLSelectTest_DO"."ClassName" FROM "SQLSelectTest_DO") AS "FINAL"']],
+            'no-alias-array-numeric-key' => [[0 => '( SELECT DISTINCT "SQLSelectTest_DO"."ClassName" FROM "SQLSelectTest_DO") AS "FINAL"']],
+            'explicit-alias-string' => [['FINAL' => '( SELECT DISTINCT "SQLSelectTest_DO"."ClassName" FROM "SQLSelectTest_DO")']],
+        ];
+    }
+
+    /**
+     * @dataProvider subqueryProvider
+     */
+    public function testSubqueries($subquery)
+    {
+        $query = new SQLSelect('*', $subquery);
+
+        $actualSQL = $query->sql();
+
+        $this->assertSQLEquals(
+            'SELECT * FROM ( SELECT DISTINCT "SQLSelectTest_DO"."ClassName" FROM "SQLSelectTest_DO") AS "FINAL"',
+            $actualSQL
+        );
+    }
+
+    public function addFromProvider()
+    {
+        return [
+            'string' => [
+                'MyTable', ['MyTable' => 'MyTable'],
+                'Plain table name get alias automatic alias'
+            ],
+            'string padded with spaces' => [
+                ' MyTable  ', [' MyTable  ' => ' MyTable  '],
+                'Plain table name get alias automatic alias'
+            ],
+            'quoted string' => [
+                '"MyTable"', ['MyTable' => '"MyTable"'],
+                'Quoted table name get alias without the quotes'
+            ],
+            'underscore in table name string' => [
+                '"My_Table_123"', ['My_Table_123' => '"My_Table_123"'],
+                'Numbers and underscores are allowed in table names'
+            ],
+            'backtick string' => [
+                '`MyTable`', ['MyTable' => '`MyTable`'],
+                'Backtick quoted table name get alias without the quotes'
+            ],
+            'subquery string' => [
+                ' (SELECT * from "FooBar") as FooBar ', [' (SELECT * from "FooBar") as FooBar '],
+                'String that don\'t look like table name don\'t get alias'
+            ],
+            'array' => [
+                ['MyTable'], ['MyTable'],
+                'Arrays are passed through as is'
+            ],
+            'array-associative-key' => [
+                ['MyTableAlias' => 'MyTable'], ['MyTableAlias' => 'MyTable'],
+                'Associative arrays are passed through as is and aliases are preserved'
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider addFromProvider
+     */
+    public function testAddFrom($input, $out, $message = ""): void
+    {
+        $query = new SQLSelect();
+        $query->addFrom($input);
+        $this->assertEquals($out, $query->getFrom(), $message);
+    }
+
+    public function testAddFromRetainPreviousData()
+    {
+        // Initial setup
+        $query = new SQLSelect();
+        $query->addFrom('MyTable');
+        $query->addFrom('"MyOtherTable"');
+
+        // This will override some value and add a new one
+        $query->addFrom([
+            'MyTable' => '(SELECT * FROM "MyTable" where "Foo" = "Bar")',
+            'ThirdTable',
+        ]);
+
+        $this->assertEquals(
+            [
+                'MyTable' => '(SELECT * FROM "MyTable" where "Foo" = "Bar")',
+                'MyOtherTable' => '"MyOtherTable"',
+                'ThirdTable',
+            ],
+            $query->getFrom(),
+            'MyTable entry got merge over, MyOtherTable was retained, ThirdTable was added'
+        );
+    }
 }
