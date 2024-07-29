@@ -110,20 +110,25 @@ class RememberLoginHashTest extends SapphireTest
 
         $member = $this->objFromFixture(Member::class, 'main');
 
-        RememberLoginHash::config()->set('replace_token_during_session_renewal', $replaceToken);
+        Deprecation::withNoReplacement(
+            fn() => RememberLoginHash::config()->set('replace_token_during_session_renewal', $replaceToken)
+        );
 
         $hash = RememberLoginHash::generate($member);
         $oldToken = $hash->getToken();
         $oldHash = $hash->Hash;
 
-        Deprecation::withNoReplacement(fn() => $hash->renew());
+        // Fetch the token from the DB - otherwise we still have the token from when this was originally created
+        $storedHash = RememberLoginHash::get()->find('ID', $hash->ID);
+
+        Deprecation::withNoReplacement(fn() => $storedHash->renew());
 
         if ($replaceToken) {
-            $this->assertNotEquals($oldToken, $hash->getToken());
-            $this->assertNotEquals($oldHash, $hash->Hash);
+            $this->assertNotEquals($oldToken, $storedHash->getToken());
+            $this->assertNotEquals($oldHash, $storedHash->Hash);
         } else {
-            $this->assertEmpty($hash->getToken());
-            $this->assertEquals($oldHash, $hash->Hash);
+            $this->assertEmpty($storedHash->getToken());
+            $this->assertEquals($oldHash, $storedHash->Hash);
         }
     }
 
