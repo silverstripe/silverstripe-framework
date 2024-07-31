@@ -78,7 +78,18 @@ abstract class SQLConditionalExpression extends SQLExpression
         if (is_array($from)) {
             $this->from = array_merge($this->from, $from);
         } elseif (!empty($from)) {
-            $this->from[str_replace(['"','`'], '', $from)] = $from;
+            // Check if the from clause looks like a regular table name
+            // Table name most be an uninterrupted string, with no spaces.
+            // It may be padded with spaces. e.g. ` TableName ` will be
+            // treated as Table Name, but not ` Table Name `.
+            if (preg_match('/^\s*[^\s]+\s*$/', $from)) {
+                // Add an alias for the table name, stripping any quotes
+                $this->from[str_replace(['"','`'], '', $from)] = $from;
+            } else {
+                // Add from clause without an alias - this is probably a full
+                // sub-select with its own explicit alias.
+                $this->from[] = $from;
+            }
         }
 
         return $this;
