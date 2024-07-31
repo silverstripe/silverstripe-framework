@@ -258,8 +258,8 @@ class Environment
      */
     public static function isCli()
     {
-        if (self::$isCliOverride !== null) {
-            return self::$isCliOverride;
+        if (Environment::$isCliOverride !== null) {
+            return Environment::$isCliOverride;
         }
         return in_array(strtolower(php_sapi_name() ?? ''), ['cli', 'phpdbg']);
     }
