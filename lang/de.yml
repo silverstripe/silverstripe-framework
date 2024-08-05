@@ -27,9 +27,22 @@ de:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ungültige Anfrage'
     REQUEST_ABORTED: 'Anfrage abgebrochen'
+  SilverStripe\Dev\DevBuildController:
+    CAN_DEV_BUILD_DESCRIPTION: 'Darf /dev/build ausführen'
+    CAN_DEV_BUILD_HELP: 'Darf den Build-Befehl ausführen (/dev/build).'
+  SilverStripe\Dev\DevConfigController:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Darf /dev/config anzeigen'
+    CAN_DEV_CONFIG_HELP: 'Darf die gesamte Anwendungskonfiguration einsehen (/dev/config).'
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Bestätige potenziell gefährliche Aktion'
     INFO_TITLE: Sicherheitsbestätigung
+  SilverStripe\Dev\DevelopmentAdmin:
+    ALL_DEV_ADMIN_DESCRIPTION: 'Darf alle /dev-Endpunkte anzeigen und ausführen'
+    ALL_DEV_ADMIN_HELP: 'Darf alle /dev-Endpunkte anzeigen und ausführen'
+    PERMISSIONS_CATEGORY: 'Dev Berechtigungen'
+  SilverStripe\Dev\TaskRunner:
+    BUILDTASK_CAN_RUN_DESCRIPTION: 'Darf alle /dev/tasks anzeigen und ausführen'
+    BUILDTASK_CAN_RUN_HELP: 'Darf alle /dev/tasks anzeigen und ausführen (/dev/tasks). Dies kann noch durch individuelle Berechtigungen für die Tasks überschrieben werden'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nein
     YESANSWER: Ja
@@ -42,6 +55,7 @@ de:
     CURRENT_PASSWORD_MISSING: 'Bitte geben Sie Ihr derzeitiges Passwort ein.'
     LOGGED_IN_ERROR: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
+    RANDOM_IF_EMPTY: 'Wenn dieses Feld leer gelassen wird, wird automatisch ein Zufallspasswort generiert.'
     SHOWONCLICKTITLE: 'Passwort ändern'
   SilverStripe\Forms\DateField:
     NOTSET: 'Nicht gesetzt'
@@ -103,7 +117,7 @@ de:
     Create: Erstellen
     Delete: Löschen
     DeletePermissionsFailure: 'Keine Berechtigungen zum löschen'
-    Deleted: 'Gelöscht {type} {name}'
+    Deleted: 'Gelöscht {type} "{name}"'
     Save: Speichern
     Saved: '{name} {link} gespeichert'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
@@ -111,6 +125,8 @@ de:
     NEW: 'Neuen Eintrag hinzufügen'
     NEXT: 'Gehe zu nächstem Eintrag'
     PREVIOUS: 'Gehe zu vorherigem Eintrag'
+    SAVEDUP: 'Erfolgreich gespeichert'
+    SAVETOASTMESSAGE: '{type} "{title}" erfolgreich gespeichert.'
     ViewPermissionsFailure: 'Sie haben nicht die nötigen Berechtigungen um {ObjectTitle} aufzurufen.'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Bearbeiten
@@ -138,6 +154,10 @@ de:
     IsNullLabel: 'ist NULL'
   SilverStripe\Forms\NumericField:
     VALIDATION: "'{value}' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt"
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Auswählen...
+    SELECT_OR_TYPE_TO_SEARCH: 'Auswählen oder tippen um zu suchen...'
+    TYPE_TO_SEARCH: 'Tippen um zu suchen...'
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'Der für {name} eingegebene Wert darf nicht mehr als {maxLength} Zeichen lang sein'
   SilverStripe\Forms\TimeField:
@@ -145,11 +165,14 @@ de:
   SilverStripe\Forms\UrlField:
     INVALID: 'Bitte geben Sie eine gültige URL ein'
   SilverStripe\ORM\DataObject:
+    GENERALSEARCH: 'Generelle Suche'
     PLURALNAME: DatenObjekte
     PLURALS:
       one: 'Ein DatenObjekt'
       other: '{count} DatenObjekte'
     SINGULARNAME: DatenObjekt
+    many_many_FileTracking: Datei-Verfolgung
+    many_many_LinkTracking: Link-Verfolgung
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: alle
     NOANSWER: Nein
@@ -233,7 +256,11 @@ de:
     RolesAddEditLink: 'Rollen hinzufügen/editieren'
     SINGULARNAME: Gruppe
     Sort: Sortierreihenfolge
+    ValidationIdentifierAlreadyExists: 'Es existiert bereits eine Gruppe ({group}) mit dem selben {identifier}'
+    db_AccessAllSubsites: 'Zugang zu allen Unterseiten'
     db_Description: Beschreibung
+    db_LastSynced: 'Zuletzt aktualisiert'
+    db_Locked: Gesperrt
     db_Sort: Sortierung
     db_Title: Titel
     has_many_Groups: Gruppe
@@ -241,6 +268,13 @@ de:
     has_one_Parent: Übergeordnet
     many_many_Members: Mitglieder
     many_many_Roles: Rollen
+  SilverStripe\Security\InheritedPermissionsExtension:
+    db_CanEditType: 'Kann Typ bearbeiten'
+    db_CanViewType: 'Kann Typ ansehen'
+    many_many_EditorGroups: Bearbeitungsgruppen
+    many_many_EditorMembers: Bearbeitungsnutzer
+    many_many_ViewerGroups: Betrachtergruppen
+    many_many_ViewerMembers: Betrachtungsnutzer
   SilverStripe\Security\LoginAttempt:
     Email: E-Mail-Adresse
     EmailHashed: 'E-Mail-Adresse (gehashed)'
@@ -263,6 +297,7 @@ de:
     CURRENT_PASSWORD: 'Derzeitiges Passwort'
     EDIT_PASSWORD: 'Neues Passwort'
     EMAIL: E-Mail
+    EMAIL_FAILED: 'Beim Versuch, Ihnen einen Link zum Zurücksetzen des Passworts per E-Mail zu schicken, ist ein Fehler aufgetreten.'
     EMPTYNEWPASSWORD: 'Das neue Passwort darf nicht leer sein. Bitte versuchen Sie es erneut.'
     ENTEREMAIL: 'Bitte geben Sie eine E-Mail-Adresse ein, um einen Link zum Zurücksetzen des Passworts zu erhalten.'
     ERRORLOCKEDOUT2: 'Ihr Zugang wurde auf Grund von einer unzulässig hohen Anzahl von falschen Zugangsversuchen gesperrt. Bitte versuchen Sie es in {count} Minuten noch einmal.'
@@ -281,6 +316,7 @@ de:
     PLURALS:
       one: 'Ein Mitglied'
       other: '{count}  Mitglieder'
+    RequiresPasswordChangeOnNextLogin: 'Erfordert Passwortänderung bei nächster Anmeldung'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
@@ -290,15 +326,34 @@ de:
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
+    belongs_many_many_BlogPosts: Blogbeiträge
     belongs_many_many_Groups: Gruppe
+    db_AccountResetExpired: 'Zurücksetzen des Kontos ist abgelaufen'
+    db_AccountResetHash: 'Hash zum zurücksetzen des Accounts'
+    db_AutoLoginExpired: 'Automatische Anmeldung abgelaufen'
+    db_AutoLoginHash: 'Hash für die automatische Anmeldung'
+    db_BlogProfileSummary: 'Zusammenfassung für das Blogprofil'
     db_Email: E-Mail
+    db_FailedLoginCount: 'Anzahl der fehlgeschlagenen Anmeldungen'
     db_FirstName: Vorname
+    db_HasSkippedMFARegistration: 'Hat die MFA-Registrierung übersprungen'
+    db_IsExpired: 'Ist abgelaufen'
+    db_LastSynced: 'Zuletzt aktualisiert'
     db_Locale: 'Interface Sprachumgebung'
     db_LockedOutUntil: 'Gesperrt bis'
     db_Password: Passwort
+    db_PasswordEncryption: Passwortverschlüsselung
     db_PasswordExpiry: 'Ablaufdatum des Passworts'
+    db_Salt: Salz
     db_Surname: Nachname
     db_URLSegment: URL-Segment
+    db_Username: Nutzername
+    has_many_LoggedPasswords: 'Protokollierte Passwörter'
+    has_many_LoginSessions: Login-Sitzungen
+    has_many_RegisteredMFAMethods: 'Registrierte MFA-Methoden'
+    has_one_AFile: 'Eine Datei'
+    has_one_AImage: 'Ein Bild'
+    has_one_BlogProfileImage: 'Blogprofil Bild'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: 'CMS Benutzer Login Formular'
     BUTTONFORGOTPASSWORD: 'Passwort vergessen'
@@ -316,6 +371,8 @@ de:
       other: '{count} Benutzerpasswörter'
     SINGULARNAME: Benutzerpasswort
     db_Password: Passwort
+    db_PasswordEncryption: Passwortverschlüsselung
+    db_Salt: Salz
     has_one_Member: Benutzer
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: {chars}'
@@ -363,6 +420,8 @@ de:
     PLURALS:
       one: 'Ein Login Hash'
       other: '{count} Login Hashes'
+    db_DeviceID: 'Geräte ID'
+    db_ExpiryDate: Ablaufdatum
     has_one_Member: Benutzer
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sie haben keinen Zugriff auf diese Seite. Wenn Sie ein anderes Konto besitzen, mit dem Sie auf diese Seite zugreifen können, melden Sie sich bitte unten an.'
