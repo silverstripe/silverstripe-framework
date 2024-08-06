@@ -3891,6 +3891,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     }
                     foreach ($types as $type => $attrs) {
                         foreach ($attrs as $name => $spec) {
+                            /** @phpstan-ignore translation.key (we need the key to be dynamic here) */
                             $autoLabels[$name] = _t(
                                 "{$ancestorClass}.{$type}_{$name}",
                                 FormField::name_to_label($name)
