@@ -203,6 +203,7 @@ class PasswordValidator
                 if (preg_match($tests[$name] ?? '', $password ?? '')) {
                     continue;
                 }
+                /** @phpstan-ignore translation.key (we need the key to be dynamic here) */
                 $missedTests[] = _t(
                     __CLASS__ . '.STRENGTHTEST' . strtoupper($name ?? ''),
                     $name,
