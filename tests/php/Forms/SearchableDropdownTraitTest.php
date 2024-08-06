@@ -205,16 +205,16 @@ class SearchableDropdownTraitTest extends SapphireTest
         $field->setForm($form);
         $schema = $field->getSchemaDataDefaults();
         $this->assertFalse($schema['lazyLoad']);
-        $this->assertFalse($schema['clearable']);
+        $this->assertTrue($schema['clearable']);
         $this->assertSame('Select or type to search...', $schema['placeholder']);
         $this->assertTrue($schema['searchable']);
         $field->setIsLazyLoaded(true);
-        $field->setIsClearable(true);
+        $field->setIsClearable(false);
         $field->setPlaceholder('My placeholder');
         $field->setIsSearchable(false);
         $schema = $field->getSchemaDataDefaults();
         $this->assertTrue($schema['lazyLoad']);
-        $this->assertTrue($schema['clearable']);
+        $this->assertFalse($schema['clearable']);
         $this->assertSame('My placeholder', $schema['placeholder']);
         $this->assertFalse($schema['searchable']);
     }
