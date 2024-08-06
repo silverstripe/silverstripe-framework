@@ -680,6 +680,18 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      */
     public static function normaliseTrailingSlash(string $url): string
     {
+        // Do not normalise external urls
+        // Note that urls without a scheme such as "www.example.com" will be counted as a relative file
+        if (!Director::is_site_url($url)) {
+            return $url;
+        }
+
+        // Do not modify files
+        $extension = pathinfo(Director::makeRelative($url), PATHINFO_EXTENSION);
+        if ($extension) {
+            return $url;
+        }
+
         $querystring = null;
         $fragmentIdentifier = null;
 
@@ -694,14 +706,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
 
         // Normlise trailing slash
         $shouldHaveTrailingSlash = Controller::config()->uninherited('add_trailing_slash');
-        if ($shouldHaveTrailingSlash
-            && !str_ends_with($url, '/')
-            && !preg_match('/^(.*)\.([^\/]*)$/', Director::makeRelative($url))
-        ) {
-            // Add trailing slash if enabled and url does not end with a file extension
+        if ($shouldHaveTrailingSlash && !str_ends_with($url, '/')) {
             $url .= '/';
         } elseif (!$shouldHaveTrailingSlash) {
-            // Remove trailing slash if it shouldn't be there
             $url = rtrim($url, '/');
         }
 
