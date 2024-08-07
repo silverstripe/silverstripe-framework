@@ -750,6 +750,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
             }
 
             if (isset($preset['i18n'])) {
+                /** @phpstan-ignore translation.key (we need the key to be dynamic here) */
                 $preset['text'] = _t(
                     $preset['i18n'],
                     isset($preset['text']) ? $preset['text'] : ''

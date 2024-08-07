@@ -29,7 +29,7 @@ trait SearchableDropdownTrait
         'search',
     ];
 
-    private bool $isClearable = false;
+    private bool $isClearable = true;
 
     private bool $isLazyLoaded = false;
 

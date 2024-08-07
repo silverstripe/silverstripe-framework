@@ -109,21 +109,21 @@ class DirectorTest extends SapphireTest
 
             // Test Director::BASE
             $this->assertEquals("http://www.mysite.com:9090{$slash}", Director::absoluteURL('http://www.mysite.com:9090/', Director::BASE));
-            $this->assertEquals("http://www.mytest.com{$slash}", Director::absoluteURL('http://www.mytest.com', Director::BASE));
+            $this->assertEquals("http://www.mytest.com", Director::absoluteURL('http://www.mytest.com', Director::BASE));
             $this->assertEquals("http://www.mysite.com:9090/test{$slash}", Director::absoluteURL("http://www.mysite.com:9090/test", Director::BASE));
             $this->assertEquals("http://www.mysite.com:9090/root{$slash}", Director::absoluteURL("/root", Director::BASE));
             $this->assertEquals("http://www.mysite.com:9090/root/url{$slash}", Director::absoluteURL("/root/url", Director::BASE));
 
             // Test Director::ROOT
             $this->assertEquals("http://www.mysite.com:9090{$slash}", Director::absoluteURL('http://www.mysite.com:9090/', Director::ROOT));
-            $this->assertEquals("http://www.mytest.com{$slash}", Director::absoluteURL('http://www.mytest.com', Director::ROOT));
+            $this->assertEquals("http://www.mytest.com", Director::absoluteURL('http://www.mytest.com', Director::ROOT));
             $this->assertEquals("http://www.mysite.com:9090/test{$slash}", Director::absoluteURL("http://www.mysite.com:9090/test", Director::ROOT));
             $this->assertEquals("http://www.mysite.com:9090/root{$slash}", Director::absoluteURL("/root", Director::ROOT));
             $this->assertEquals("http://www.mysite.com:9090/root/url{$slash}", Director::absoluteURL("/root/url", Director::ROOT));
 
             // Test Director::REQUEST
             $this->assertEquals("http://www.mysite.com:9090{$slash}", Director::absoluteURL('http://www.mysite.com:9090/', Director::REQUEST));
-            $this->assertEquals("http://www.mytest.com{$slash}", Director::absoluteURL('http://www.mytest.com', Director::REQUEST));
+            $this->assertEquals("http://www.mytest.com", Director::absoluteURL('http://www.mytest.com', Director::REQUEST));
             $this->assertEquals("http://www.mysite.com:9090/test{$slash}", Director::absoluteURL("http://www.mysite.com:9090/test", Director::REQUEST));
             $this->assertEquals("http://www.mysite.com:9090/root{$slash}", Director::absoluteURL("/root", Director::REQUEST));
             $this->assertEquals("http://www.mysite.com:9090/root/url{$slash}", Director::absoluteURL("/root/url", Director::REQUEST));
