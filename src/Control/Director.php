@@ -821,7 +821,16 @@ class Director implements TemplateGlobalProvider
 
         // Allow extensions to weigh in
         $isSiteUrl = false;
-        static::singleton()->extend('updateIsSiteUrl', $isSiteUrl, $url);
+        // Not using static::singleton() here because it can break
+        // functional tests such as those in HTTPCacheControlIntegrationTest
+        // This happens because a singleton of Director is instantiating prior to tests being run,
+        // because Controller::normaliseTrailingSlash() is called during SapphireTest::setUp(),
+        // which in turn calls Director::is_site_url()
+        // For this specific use case we don't need to use dependency injection because the
+        // chance of the extend() method being customised in projects is low.
+        // Any extension hooks implementing updateIsSiteUrl() will still be called as expected
+        $director = new static();
+        $director->extend('updateIsSiteUrl', $isSiteUrl, $url);
         if ($isSiteUrl) {
             return true;
         }

@@ -276,14 +276,17 @@ class ControllerTest extends FunctionalTest
     {
         /* Controller::join_links() will reliably join two URL-segments together so that they will be
         * appropriately parsed by the URL parser */
+        Director::config()->set('alternate_base_url', 'https://www.internal.com');
         Controller::config()->set('add_trailing_slash', false);
         $this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm", "MyForm"));
         $this->assertEquals("admin/crm/MyForm", Controller::join_links("admin/crm/", "MyForm"));
-        $this->assertEquals("https://www.test.com/admin/crm/MyForm", Controller::join_links("https://www.test.com", "admin/crm/", "MyForm"));
+        $this->assertEquals("https://www.internal.com/admin/crm/MyForm", Controller::join_links("https://www.internal.com", "admin/crm/", "MyForm"));
+        $this->assertEquals("https://www.external.com/admin/crm/MyForm", Controller::join_links("https://www.external.com", "admin/crm/", "MyForm"));
         Controller::config()->set('add_trailing_slash', true);
         $this->assertEquals("admin/crm/MyForm/", Controller::join_links("admin/crm", "MyForm"));
         $this->assertEquals("admin/crm/MyForm/", Controller::join_links("admin/crm/", "MyForm"));
-        $this->assertEquals("https://www.test.com/admin/crm/MyForm/", Controller::join_links("https://www.test.com", "admin/crm/", "MyForm"));
+        $this->assertEquals("https://www.internal.com/admin/crm/MyForm/", Controller::join_links("https://www.internal.com", "admin/crm/", "MyForm"));
+        $this->assertEquals("https://www.external.com/admin/crm/MyForm", Controller::join_links("https://www.external.com", "admin/crm/", "MyForm"));
 
         /* It will also handle appropriate combination of querystring variables */
         Controller::config()->set('add_trailing_slash', false);
@@ -293,7 +296,8 @@ class ControllerTest extends FunctionalTest
             "admin/crm/MyForm?field=1&other=1",
             Controller::join_links("admin/crm/?field=1", "MyForm?other=1")
         );
-        $this->assertEquals("https://www.test.com/admin/crm/MyForm?flush=1", Controller::join_links("https://www.test.com", "admin/crm/", "MyForm?flush=1"));
+        $this->assertEquals("https://www.internal.com/admin/crm/MyForm?flush=1", Controller::join_links("https://www.internal.com", "admin/crm/", "MyForm?flush=1"));
+        $this->assertEquals("https://www.external.com/admin/crm/MyForm?flush=1", Controller::join_links("https://www.external.com", "admin/crm/", "MyForm?flush=1"));
         Controller::config()->set('add_trailing_slash', true);
         $this->assertEquals("admin/crm/MyForm/?flush=1", Controller::join_links("admin/crm/?flush=1", "MyForm"));
         $this->assertEquals("admin/crm/MyForm/?flush=1", Controller::join_links("admin/crm/", "MyForm?flush=1"));
@@ -301,7 +305,8 @@ class ControllerTest extends FunctionalTest
             "admin/crm/MyForm/?field=1&other=1",
             Controller::join_links("admin/crm/?field=1", "MyForm?other=1")
         );
-        $this->assertEquals("https://www.test.com/admin/crm/MyForm/?flush=1", Controller::join_links("https://www.test.com", "admin/crm/", "MyForm?flush=1"));
+        $this->assertEquals("https://www.internal.com/admin/crm/MyForm/?flush=1", Controller::join_links("https://www.internal.com", "admin/crm/", "MyForm?flush=1"));
+        $this->assertEquals("https://www.external.com/admin/crm/MyForm?flush=1", Controller::join_links("https://www.external.com", "admin/crm/", "MyForm?flush=1"));
 
         /* It can handle arbitrary numbers of components, and will ignore empty ones */
         Controller::config()->set('add_trailing_slash', false);
@@ -340,8 +345,12 @@ class ControllerTest extends FunctionalTest
             Controller::join_links("admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
         );
         $this->assertEquals(
-            "https://www.test.com/admin/crm?foo=2&bar=3&baz=1",
-            Controller::join_links("https://www.test.com", "admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
+            "https://www.internal.com/admin/crm?foo=2&bar=3&baz=1",
+            Controller::join_links("https://www.internal.com", "admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
+        );
+        $this->assertEquals(
+            "https://www.external.com/admin/crm?foo=2&bar=3&baz=1",
+            Controller::join_links("https://www.external.com", "admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
         );
         Controller::config()->set('add_trailing_slash', true);
         $this->assertEquals(
@@ -349,8 +358,12 @@ class ControllerTest extends FunctionalTest
             Controller::join_links("admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
         );
         $this->assertEquals(
-            "https://www.test.com/admin/crm/?foo=2&bar=3&baz=1",
-            Controller::join_links("https://www.test.com", "admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
+            "https://www.internal.com/admin/crm/?foo=2&bar=3&baz=1",
+            Controller::join_links("https://www.internal.com", "admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
+        );
+        $this->assertEquals(
+            "https://www.external.com/admin/crm?foo=2&bar=3&baz=1",
+            Controller::join_links("https://www.external.com", "admin/crm?foo=1&bar=1&baz=1", "?foo=2&bar=3")
         );
 
         Controller::config()->set('add_trailing_slash', false);
@@ -361,8 +374,13 @@ class ControllerTest extends FunctionalTest
         );
         $this->assertEquals('/admin/action', Controller::join_links('/admin', 'action'));
         $this->assertEquals(
-            'https://www.test.com/admin/action',
-            Controller::join_links('https://www.test.com', '/', '/admin/', '/', '/action'),
+            'https://www.internal.com/admin/action',
+            Controller::join_links('https://www.internal.com', '/', '/admin/', '/', '/action'),
+            'Test that multiple slashes are trimmed.'
+        );
+        $this->assertEquals(
+            'https://www.external.com/admin/action',
+            Controller::join_links('https://www.external.com', '/', '/admin/', '/', '/action'),
             'Test that multiple slashes are trimmed.'
         );
         Controller::config()->set('add_trailing_slash', true);
@@ -373,8 +391,13 @@ class ControllerTest extends FunctionalTest
         );
         $this->assertEquals('/admin/action/', Controller::join_links('/admin', 'action'));
         $this->assertEquals(
-            'https://www.test.com/admin/action/',
-            Controller::join_links('https://www.test.com', '/', '/admin/', '/', '/action'),
+            'https://www.internal.com/admin/action/',
+            Controller::join_links('https://www.internal.com', '/', '/admin/', '/', '/action'),
+            'Test that multiple slashes are trimmed.'
+        );
+        $this->assertEquals(
+            'https://www.external.com/admin/action',
+            Controller::join_links('https://www.external.com', '/', '/admin/', '/', '/action'),
             'Test that multiple slashes are trimmed.'
         );
 
@@ -391,8 +414,12 @@ class ControllerTest extends FunctionalTest
             Controller::join_links("my-page#subsection", "?arg=var", "#second-section")
         );
         $this->assertEquals(
-            "https://www.test.com/my-page?arg=var#second-section",
-            Controller::join_links("https://www.test.com", "my-page#subsection", "?arg=var", "#second-section")
+            "https://www.internal.com/my-page?arg=var#second-section",
+            Controller::join_links("https://www.internal.com", "my-page#subsection", "?arg=var", "#second-section")
+        );
+        $this->assertEquals(
+            "https://www.external.com/my-page?arg=var#second-section",
+            Controller::join_links("https://www.external.com", "my-page#subsection", "?arg=var", "#second-section")
         );
         Controller::config()->set('add_trailing_slash', true);
         $this->assertEquals(
@@ -400,8 +427,12 @@ class ControllerTest extends FunctionalTest
             Controller::join_links("my-page#subsection", "?arg=var", "#second-section")
         );
         $this->assertEquals(
-            "https://www.test.com/my-page/?arg=var#second-section",
-            Controller::join_links("https://www.test.com", "my-page#subsection", "?arg=var", "#second-section")
+            "https://www.internal.com/my-page/?arg=var#second-section",
+            Controller::join_links("https://www.internal.com", "my-page#subsection", "?arg=var", "#second-section")
+        );
+        $this->assertEquals(
+            "https://www.external.com/my-page?arg=var#second-section",
+            Controller::join_links("https://www.external.com", "my-page#subsection", "?arg=var", "#second-section")
         );
 
         /* Does type-safe checks for zero value */
@@ -413,60 +444,245 @@ class ControllerTest extends FunctionalTest
         // Test array args
         Controller::config()->set('add_trailing_slash', false);
         $this->assertEquals(
-            "https://www.test.com/admin/crm/MyForm?a=1&b=2&c=3",
-            Controller::join_links(["https://www.test.com", "?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
+            "https://www.internal.com/admin/crm/MyForm?a=1&b=2&c=3",
+            Controller::join_links(["https://www.internal.com", "?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
+        );
+        $this->assertEquals(
+            "https://www.external.com/admin/crm/MyForm?a=1&b=2&c=3",
+            Controller::join_links(["https://www.external.com", "?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
         );
         Controller::config()->set('add_trailing_slash', true);
         $this->assertEquals(
-            "https://www.test.com/admin/crm/MyForm/?a=1&b=2&c=3",
-            Controller::join_links(["https://www.test.com", "?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
+            "https://www.internal.com/admin/crm/MyForm/?a=1&b=2&c=3",
+            Controller::join_links(["https://www.internal.com", "?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
+        );
+        $this->assertEquals(
+            "https://www.external.com/admin/crm/MyForm?a=1&b=2&c=3",
+            Controller::join_links(["https://www.external.com", "?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
         );
     }
 
-    public function testNormaliseTrailingSlash()
+    public function provideNormaliseTrailingSlash(): array
     {
-        foreach ([true, false] as $withTrailingSlash) {
-            Controller::config()->set('add_trailing_slash', $withTrailingSlash);
-            $slash = $withTrailingSlash ? '/' : '';
-
+        // note 93.184.215.14 is the IP address for example.com
+        return [
             // Correctly gives slash to a relative root path
-            $this->assertEquals('/', Controller::normaliseTrailingSlash(''));
-            $this->assertEquals('/', Controller::normaliseTrailingSlash('/'));
-
+            [
+                'path' => '',
+                'withSlash' => '/',
+                'withoutSlash' => '/',
+            ],
+            [
+                'path' => '/',
+                'withSlash' => '/',
+                'withoutSlash' => '/',
+            ],
             // Correctly adds or removes trailing slash
-            $this->assertEquals("some/path{$slash}", Controller::normaliseTrailingSlash('some/path/'));
-            $this->assertEquals("some/path{$slash}", Controller::normaliseTrailingSlash('some/path'));
-
+            [
+                'path' => 'some/path/',
+                'withSlash' => 'some/path/',
+                'withoutSlash' => 'some/path',
+            ],
             // Retains leading slash, if there is one
-            $this->assertEquals("/some/path{$slash}", Controller::normaliseTrailingSlash('/some/path/'));
-            $this->assertEquals("/some/path{$slash}", Controller::normaliseTrailingSlash('/some/path'));
-
-            // Effectively treats absolute URL as relative
-            $this->assertEquals("https://www.google.com/some/path{$slash}", Controller::normaliseTrailingSlash('https://www.google.com/some/path/'));
-            $this->assertEquals("//www.google.com/some/path{$slash}", Controller::normaliseTrailingSlash('//www.google.com/some/path'));
-            $this->assertEquals("www.google.com/some/path{$slash}", Controller::normaliseTrailingSlash('www.google.com/some/path'));
-            $this->assertEquals("https://www.google.com{$slash}", Controller::normaliseTrailingSlash('https://www.google.com'));
-            $this->assertEquals("//www.google.com{$slash}", Controller::normaliseTrailingSlash('//www.google.com/'));
-
+            [
+                'path' => '/some/path/',
+                'withSlash' => '/some/path/',
+                'withoutSlash' => '/some/path',
+            ],
+            // Treat absolute URLs pointing to the current site as relative
+            [
+                'path' => '<AbsoluteBaseUrl>/some/path/',
+                'withSlash' => '<AbsoluteBaseUrl>/some/path/',
+                'withoutSlash' => '<AbsoluteBaseUrl>/some/path',
+            ],
+            [
+                'path' => '<AbsoluteBaseUrl>/',
+                'withSlash' => '<AbsoluteBaseUrl>/',
+                'withoutSlash' => '<AbsoluteBaseUrl>',
+            ],
+            [
+                'path' => '<AbsoluteBaseUrl>',
+                'withSlash' => '<AbsoluteBaseUrl>/',
+                'withoutSlash' => '<AbsoluteBaseUrl>',
+            ],
+            // External links never get normalised
+            [
+                'path' => 'https://www.example.com/some/path',
+                'withSlash' => 'https://www.example.com/some/path',
+                'withoutSlash' => 'https://www.example.com/some/path',
+            ],
+            [
+                'path' => 'https://www.example.com/some/path/',
+                'withSlash' => 'https://www.example.com/some/path/',
+                'withoutSlash' => 'https://www.example.com/some/path/',
+            ],
+            [
+                'path' => 'https://www.example.com',
+                'withSlash' => 'https://www.example.com',
+                'withoutSlash' => 'https://www.example.com',
+            ],
+            [
+                'path' => 'https://www.example.com/',
+                'withSlash' => 'https://www.example.com/',
+                'withoutSlash' => 'https://www.example.com/',
+            ],
+            [
+                'path' => '//www.example.com/some/path',
+                'withSlash' => '//www.example.com/some/path',
+                'withoutSlash' => '//www.example.com/some/path',
+            ],
+            [
+                'path' => '//www.example.com/some/path/',
+                'withSlash' => '//www.example.com/some/path/',
+                'withoutSlash' => '//www.example.com/some/path/',
+            ],
+            [
+                'path' => '//www.example.com',
+                'withSlash' => '//www.example.com',
+                'withoutSlash' => '//www.example.com',
+            ],
+            [
+                'path' => '//www.example.com/',
+                'withSlash' => '//www.example.com/',
+                'withoutSlash' => '//www.example.com/',
+            ],
+            [
+                'path' => 'https://93.184.215.14/some/path',
+                'withSlash' => 'https://93.184.215.14/some/path',
+                'withoutSlash' => 'https://93.184.215.14/some/path',
+            ],
+            [
+                'path' => 'https://93.184.215.14/some/path/',
+                'withSlash' => 'https://93.184.215.14/some/path/',
+                'withoutSlash' => 'https://93.184.215.14/some/path/',
+            ],
+            // Links without a scheme with a path are treated as relative
+            // Note: content authors should be specifying a scheme in these cases themselves
+            [
+                'path' => 'www.example.com/some/path',
+                'withSlash' => 'www.example.com/some/path/',
+                'withoutSlash' => 'www.example.com/some/path',
+            ],
+            [
+                'path' => 'www.example.com/some/path/',
+                'withSlash' => 'www.example.com/some/path/',
+                'withoutSlash' => 'www.example.com/some/path',
+            ],
+            [
+                'path' => '93.184.215.14/some/path',
+                'withSlash' => '93.184.215.14/some/path/',
+                'withoutSlash' => '93.184.215.14/some/path',
+            ],
+            [
+                'path' => '93.184.215.14/some/path/',
+                'withSlash' => '93.184.215.14/some/path/',
+                'withoutSlash' => '93.184.215.14/some/path',
+            ],
+            // Links without a scheme or path are treated like files i.e. not altered
+            // Note: content authors should be specifying a scheme in these cases themselves
+            [
+                'path' => 'www.example.com',
+                'withSlash' => 'www.example.com',
+                'withoutSlash' => 'www.example.com',
+            ],
+            [
+                'path' => 'www.example.com/',
+                'withSlash' => 'www.example.com/',
+                'withoutSlash' => 'www.example.com/',
+            ],
+            [
+                'path' => '93.184.215.14',
+                'withSlash' => '93.184.215.14',
+                'withoutSlash' => '93.184.215.14',
+            ],
+            [
+                'path' => '93.184.215.14/',
+                'withSlash' => '93.184.215.14/',
+                'withoutSlash' => '93.184.215.14/',
+            ],
             // Retains query string and anchor if present
-            $this->assertEquals("some/path{$slash}?key=value&key2=value2", Controller::normaliseTrailingSlash('some/path/?key=value&key2=value2'));
-            $this->assertEquals("some/path{$slash}#some-id", Controller::normaliseTrailingSlash('some/path/#some-id'));
-            $this->assertEquals("some/path{$slash}?key=value&key2=value2#some-id", Controller::normaliseTrailingSlash('some/path/?key=value&key2=value2#some-id'));
-            $this->assertEquals("some/path{$slash}?key=value&key2=value2", Controller::normaliseTrailingSlash('some/path?key=value&key2=value2'));
-            $this->assertEquals("some/path{$slash}#some-id", Controller::normaliseTrailingSlash('some/path#some-id'));
-            $this->assertEquals("some/path{$slash}?key=value&key2=value2#some-id", Controller::normaliseTrailingSlash('some/path?key=value&key2=value2#some-id'));
-
+            [
+                'path' => 'some/path/?key=value&key2=value2',
+                'withSlash' => 'some/path/?key=value&key2=value2',
+                'withoutSlash' => 'some/path?key=value&key2=value2',
+            ],
+            [
+                'path' => 'some/path/#some-id',
+                'withSlash' => 'some/path/#some-id',
+                'withoutSlash' => 'some/path#some-id',
+            ],
+            [
+                'path' => 'some/path?key=value&key2=value2#some-id',
+                'withSlash' => 'some/path/?key=value&key2=value2#some-id',
+                'withoutSlash' => 'some/path?key=value&key2=value2#some-id',
+            ],
+            [
+                'path' => 'some/path?key=value&key2=value2',
+                'withSlash' => 'some/path/?key=value&key2=value2',
+                'withoutSlash' => 'some/path?key=value&key2=value2',
+            ],
+            [
+                'path' => 'some/path#some-id',
+                'withSlash' => 'some/path/#some-id',
+                'withoutSlash' => 'some/path#some-id',
+            ],
+            [
+                'path' => 'some/path?key=value&key2=value2#some-id',
+                'withSlash' => 'some/path/?key=value&key2=value2#some-id',
+                'withoutSlash' => 'some/path?key=value&key2=value2#some-id',
+            ],
             // Don't ever add a trailing slash to the end of a URL that looks like a file
-            $this->assertEquals("https://www.google.com/some/file.txt", Controller::normaliseTrailingSlash('https://www.google.com/some/file.txt'));
-            $this->assertEquals("//www.google.com/some/file.txt", Controller::normaliseTrailingSlash('//www.google.com/some/file.txt'));
-            $this->assertEquals("www.google.com/some/file.txt", Controller::normaliseTrailingSlash('www.google.com/some/file.txt'));
-            $this->assertEquals("/some/file.txt", Controller::normaliseTrailingSlash('/some/file.txt'));
-            $this->assertEquals("some/file.txt", Controller::normaliseTrailingSlash('some/file.txt'));
-            $this->assertEquals("file.txt", Controller::normaliseTrailingSlash('file.txt'));
-            $this->assertEquals("some/file.txt?key=value&key2=value2#some-id", Controller::normaliseTrailingSlash('some/file.txt?key=value&key2=value2#some-id'));
-            // NOTE: `www.google.com` is already treated as "relative" by Director::makeRelative(), which means we can't tell that it's a host (and not a file).
-            $this->assertEquals("www.google.com", Controller::normaliseTrailingSlash('www.google.com'));
-        }
+            [
+                'path' => 'https://www.example.com/some/file.txt',
+                'withSlash' => 'https://www.example.com/some/file.txt',
+                'withoutSlash' => 'https://www.example.com/some/file.txt',
+            ],
+            [
+                'path' => '//www.example.com/some/file.txt',
+                'withSlash' => '//www.example.com/some/file.txt',
+                'withoutSlash' => '//www.example.com/some/file.txt',
+            ],
+            [
+                'path' => 'www.example.com/some/file.txt',
+                'withSlash' => 'www.example.com/some/file.txt',
+                'withoutSlash' => 'www.example.com/some/file.txt',
+            ],
+            [
+                'path' => '/some/file.txt',
+                'withSlash' => '/some/file.txt',
+                'withoutSlash' => '/some/file.txt',
+            ],
+            [
+                'path' => 'some/file.txt',
+                'withSlash' => 'some/file.txt',
+                'withoutSlash' => 'some/file.txt',
+            ],
+            [
+                'path' => 'file.txt',
+                'withSlash' => 'file.txt',
+                'withoutSlash' => 'file.txt',
+            ],
+            [
+                'path' => 'some/file.txt?key=value&key2=value2#some-id',
+                'withSlash' => 'some/file.txt?key=value&key2=value2#some-id',
+                'withoutSlash' => 'some/file.txt?key=value&key2=value2#some-id',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideNormaliseTrailingSlash
+     */
+    public function testNormaliseTrailingSlash(string $path, string $withSlash, string $withoutSlash): void
+    {
+        $absBaseUrlNoSlash = rtrim(Director::absoluteBaseURL(), '/');
+        $path = str_replace('<AbsoluteBaseUrl>', $absBaseUrlNoSlash, $path);
+        $withSlash = str_replace('<AbsoluteBaseUrl>', $absBaseUrlNoSlash, $withSlash);
+        $withoutSlash = str_replace('<AbsoluteBaseUrl>', $absBaseUrlNoSlash, $withoutSlash);
+        Controller::config()->set('add_trailing_slash', true);
+        $this->assertEquals($withSlash, Controller::normaliseTrailingSlash($path), 'With trailing slash test');
+        Controller::config()->set('add_trailing_slash', false);
+        $this->assertEquals($withoutSlash, Controller::normaliseTrailingSlash($path), 'Without trailing slash test');
     }
 
     public function testLink()
