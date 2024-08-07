@@ -8,6 +8,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Director;
 
 class CanonicalURLMiddlewareTest extends SapphireTest
 {
@@ -121,6 +122,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
 
     private function performRedirectTest(string $requestURL, CanonicalURLMiddleware $middleware, bool $shouldRedirect, bool $addTrailingSlash)
     {
+        Director::config()->set('alternate_base_url', 'https://www.example.com');
         Environment::setEnv('REQUEST_URI', $requestURL);
         $request = new HTTPRequest('GET', $requestURL);
         $request->setScheme('https');

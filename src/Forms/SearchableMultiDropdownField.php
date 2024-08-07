@@ -24,6 +24,5 @@ class SearchableMultiDropdownField extends MultiSelectField
         $this->setLabelField($labelField);
         $this->addExtraClass('ss-searchable-dropdown-field');
         $this->setIsMultiple(true);
-        $this->setIsClearable(true);
     }
 }

@@ -566,6 +566,26 @@ class MySQLDatabase extends Database implements TransactionManager
      */
     public function clearTable($table)
     {
-        $this->query("TRUNCATE TABLE \"$table\"");
+        // Not simply using "TRUNCATE TABLE \"$table\"" because DELETE is a lot quicker
+        // than TRUNCATE which is very relevant during unit testing. Using TRUNCATE will lead to an
+        // approximately 50% increase it the total time of running unit tests.
+        //
+        // Using max(ID) to determine if the table should reset its auto-increment, rather than using
+        // SELECT "AUTO_INCREMENT" FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?
+        // after deleting from the table, because in MySQL 8, under certain conditions, notably
+        // when running behat, sometimes the auto-increment was being reset to 2 for unknown reasons
+        $self = $this;
+        $fn = function () use ($self, $table) {
+            $maxID = $self->query("SELECT MAX(ID) FROM \"$table\"")->value();
+            $self->query("DELETE FROM \"$table\"");
+            if ($maxID > 0) {
+                $self->query("ALTER TABLE \"$table\" AUTO_INCREMENT = 1");
+            }
+        };
+        if ($this->supportsTransactions()) {
+            $this->withTransaction($fn);
+        } else {
+            $fn();
+        }
     }
 }
