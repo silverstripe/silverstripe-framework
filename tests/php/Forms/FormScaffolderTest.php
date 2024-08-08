@@ -173,21 +173,40 @@ class FormScaffolderTest extends SapphireTest
 
     public function provideScaffoldRelationFormFields()
     {
-        return [
-            [true],
-            [false],
+        $scenarios = [
+            'ignore no relations' => [
+                'includeInOwnTab' => true,
+                'ignoreRelations' => [],
+            ],
+            'ignore some relations' => [
+                'includeInOwnTab' => true,
+                'ignoreRelations' => [
+                    'ChildrenHasMany',
+                    'ChildrenManyManyThrough',
+                ],
+            ],
         ];
+        foreach ($scenarios as $name => $scenario) {
+            $scenario['includeInOwnTab'] = false;
+            $scenarios[$name . ' - not in own tab'] = $scenario;
+        }
+        return $scenarios;
     }
 
     /**
      * @dataProvider provideScaffoldRelationFormFields
      */
-    public function testScaffoldRelationFormFields(bool $includeInOwnTab)
+    public function testScaffoldRelationFormFields(bool $includeInOwnTab, array $ignoreRelations)
     {
         $parent = $this->objFromFixture(ParentModel::class, 'parent1');
         Child::$includeInOwnTab = $includeInOwnTab;
-        $fields = $parent->scaffoldFormFields(['includeRelations' => true, 'tabbed' => true]);
+        $fields = $parent->scaffoldFormFields([
+            'includeRelations' => true,
+            'tabbed' => true,
+            'ignoreRelations' => $ignoreRelations,
+        ]);
 
+        // has_one
         foreach (array_keys(ParentModel::config()->uninherited('has_one')) as $hasOneName) {
             $scaffoldedFormField = $fields->dataFieldByName($hasOneName . 'ID');
             if ($hasOneName === 'ChildPolymorphic') {
@@ -196,20 +215,136 @@ class FormScaffolderTest extends SapphireTest
                 $this->assertInstanceOf(DateField::class, $scaffoldedFormField, "$hasOneName should be a DateField");
             }
         }
+        // has_many
         foreach (array_keys(ParentModel::config()->uninherited('has_many')) as $hasManyName) {
-            $this->assertInstanceOf(CurrencyField::class, $fields->dataFieldByName($hasManyName), "$hasManyName should be a CurrencyField");
-            if ($includeInOwnTab) {
-                $this->assertNotNull($fields->findTab("Root.$hasManyName"));
+            if (in_array($hasManyName, $ignoreRelations)) {
+                $this->assertNull($fields->dataFieldByName($hasManyName));
             } else {
-                $this->assertNull($fields->findTab("Root.$hasManyName"));
+                $this->assertInstanceOf(CurrencyField::class, $fields->dataFieldByName($hasManyName), "$hasManyName should be a CurrencyField");
+                if ($includeInOwnTab) {
+                    $this->assertNotNull($fields->findTab("Root.$hasManyName"));
+                } else {
+                    $this->assertNull($fields->findTab("Root.$hasManyName"));
+                }
             }
         }
+        // many_many
         foreach (array_keys(ParentModel::config()->uninherited('many_many')) as $manyManyName) {
-            $this->assertInstanceOf(TimeField::class, $fields->dataFieldByName($manyManyName), "$manyManyName should be a TimeField");
-            if ($includeInOwnTab) {
-                $this->assertNotNull($fields->findTab("Root.$manyManyName"));
+            if (in_array($hasManyName, $ignoreRelations)) {
+                $this->assertNull($fields->dataFieldByName($hasManyName));
             } else {
-                $this->assertNull($fields->findTab("Root.$manyManyName"));
+                $this->assertInstanceOf(TimeField::class, $fields->dataFieldByName($manyManyName), "$manyManyName should be a TimeField");
+                if ($includeInOwnTab) {
+                    $this->assertNotNull($fields->findTab("Root.$manyManyName"));
+                } else {
+                    $this->assertNull($fields->findTab("Root.$manyManyName"));
+                }
+            }
+        }
+    }
+
+    public function testScaffoldIgnoreFields(): void
+    {
+        $article1 = $this->objFromFixture(Article::class, 'article1');
+        $fields = $article1->scaffoldFormFields([
+            'ignoreFields' => [
+                'Content',
+                'Author',
+            ],
+        ]);
+        $this->assertSame(['ExtendedField', 'Title'], $fields->column('Name'));
+    }
+
+    public function testScaffoldRestrictRelations(): void
+    {
+        $article1 = $this->objFromFixture(Article::class, 'article1');
+        $fields = $article1->scaffoldFormFields([
+            'includeRelations' => true,
+            'restrictRelations' => [
+                'Tags',
+            ],
+            // Ensure no db or has_one fields get scaffolded
+            'restrictFields' => [
+                'non-existent',
+            ],
+        ]);
+        $this->assertSame(['Tags'], $fields->column('Name'));
+    }
+
+    public function provideTabs(): array
+    {
+        return [
+            'only main tab' => [
+                'tabs' => true,
+                'mainTabOnly' => true,
+            ],
+            'all tabs, all fields' => [
+                'tabs' => true,
+                'mainTabOnly' => false,
+            ],
+            'no tabs, no fields' => [
+                'tabs' => false,
+                'mainTabOnly' => true,
+            ],
+            'no tabs, all fields' => [
+                'tabs' => false,
+                'mainTabOnly' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTabs
+     */
+    public function testTabs(bool $tabbed, bool $mainTabOnly): void
+    {
+        $parent = $this->objFromFixture(ParentModel::class, 'parent1');
+        Child::$includeInOwnTab = true;
+        $fields = $parent->scaffoldFormFields([
+            'tabbed' => $tabbed,
+            'mainTabOnly' => $mainTabOnly,
+            'includeRelations' => true,
+        ]);
+
+        $fieldsToExpect = [
+            ['Name' => 'Title'],
+            ['Name' => 'ChildID'],
+            ['Name' => 'ChildrenHasMany'],
+            ['Name' => 'ChildrenManyMany'],
+            ['Name' => 'ChildrenManyManyThrough'],
+        ];
+        $relationTabs = [
+            'Root.ChildrenHasMany',
+            'Root.ChildrenManyMany',
+            'Root.ChildrenManyManyThrough',
+        ];
+
+        if ($tabbed) {
+            $this->assertNotNull($fields->findTab('Root.Main'));
+            if ($mainTabOnly) {
+                // Only Root.Main with no fields
+                $this->assertListNotContains($fieldsToExpect, $fields->flattenFields());
+                foreach ($relationTabs as $tabName) {
+                    $this->assertNull($fields->findTab($tabName));
+                }
+            } else {
+                // All fields in all tabs
+                $this->assertListContains($fieldsToExpect, $fields->flattenFields());
+                foreach ($relationTabs as $tabName) {
+                    $this->assertNotNull($fields->findTab($tabName));
+                }
+            }
+        } else {
+            if ($mainTabOnly) {
+                // Empty list
+                $this->assertEmpty($fields);
+            } else {
+                // All fields, no tabs
+                $this->assertNull($fields->findTab('Root.Main'));
+                foreach ($relationTabs as $tabName) {
+                    $this->assertNull($fields->findTab($tabName));
+                }
+                $this->assertListContains($fieldsToExpect, $fields->flattenFields());
             }
         }
     }
