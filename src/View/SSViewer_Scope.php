@@ -177,6 +177,9 @@ class SSViewer_Scope
     public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
     {
         $on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
+        if ($on === null) {
+            return null;
+        }
         return $on->obj($name, $arguments, $cache, $cacheName);
     }
 
