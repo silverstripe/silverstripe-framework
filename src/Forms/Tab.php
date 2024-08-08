@@ -75,7 +75,6 @@ class Tab extends CompositeField
         // Assign name and title (not assigned by parent constructor)
         $this->setName($name);
         $this->setTitle($title);
-        $this->setID(Convert::raw2htmlid($name));
     }
 
     public function ID()
@@ -97,6 +96,16 @@ class Tab extends CompositeField
     {
         $this->id = $id;
         return $this;
+    }
+
+    public function setName($name)
+    {
+        // Use raw properties instead of ID() and getName() here because we
+        // only want to check the actual raw values of those properties.
+        if (($this->id ?? '') === Convert::raw2htmlid($this->name)) {
+            $this->setID(Convert::raw2htmlid($name));
+        }
+        return parent::setName($name);
     }
 
     /**

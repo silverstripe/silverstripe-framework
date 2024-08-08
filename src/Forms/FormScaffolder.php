@@ -17,16 +17,16 @@ class FormScaffolder
     use Injectable;
 
     /**
-     * @var DataObject $obj The object defining the fields to be scaffolded
+     * The object defining the fields to be scaffolded
      * through its metadata like $db, $searchable_fields, etc.
      */
-    protected $obj;
+    protected DataObject $obj;
 
     /**
-     * @var boolean $tabbed Return fields in a tabset, with all main fields in the path "Root.Main",
+     * Return fields in a tabset, with all main fields in the path "Root.Main",
      * relation fields in "Root.<relationname>" (if {@link $includeRelations} is enabled).
      */
-    public $tabbed = false;
+    public bool $tabbed = false;
 
     /**
      * Only set up the "Root.Main" tab, but skip scaffolding actual FormFields.
@@ -35,16 +35,10 @@ class FormScaffolder
     public bool $mainTabOnly = false;
 
     /**
-     * @var boolean $ajaxSafe
-     * @deprecated 5.3.0 Will be removed without equivalent functionality.
+     * Array of field names to use as an allow list.
+     * If left blank, all fields from {@link DataObject->db()} will be included unless explicitly ignored.
      */
-    public $ajaxSafe = false;
-
-    /**
-     * @var array $restrictFields Numeric array of a field name whitelist.
-     * If left blank, all fields from {@link DataObject->db()} will be included.
-     */
-    public $restrictFields;
+    public array $restrictFields = [];
 
     /**
      * Numeric array of field names and has_one relations to explicitly not scaffold.
@@ -52,15 +46,15 @@ class FormScaffolder
     public array $ignoreFields = [];
 
     /**
-     * @var array $fieldClasses Optional mapping of fieldnames to subclasses of {@link FormField}.
+     * Optional mapping of fieldnames to subclasses of {@link FormField}.
      * By default the scaffolder will determine the field instance by {@link DBField::scaffoldFormField()}.
      */
-    public $fieldClasses;
+    public array $fieldClasses = [];
 
     /**
-     * @var boolean $includeRelations Include has_many and many_many relations
+     * Include has_many and many_many relations
      */
-    public $includeRelations = false;
+    public bool|array $includeRelations = false;
 
     /**
      * Array of relation names to use as an allow list.
@@ -106,7 +100,7 @@ class FormScaffolder
         // Add logical fields directly specified in db config
         foreach ($this->obj->config()->get('db') as $fieldName => $fieldType) {
             // Skip fields that aren't in the allow list
-            if ($this->restrictFields && !in_array($fieldName, $this->restrictFields ?? [])) {
+            if (!empty($this->restrictFields) && !in_array($fieldName, $this->restrictFields)) {
                 continue;
             }
             // Skip ignored fields
@@ -114,7 +108,7 @@ class FormScaffolder
                 continue;
             }
 
-            if ($this->fieldClasses && isset($this->fieldClasses[$fieldName])) {
+            if (isset($this->fieldClasses[$fieldName])) {
                 $fieldClass = $this->fieldClasses[$fieldName];
                 $fieldObject = new $fieldClass($fieldName);
             } else {
@@ -138,7 +132,7 @@ class FormScaffolder
         // add has_one relation fields
         if ($this->obj->hasOne()) {
             foreach ($this->obj->hasOne() as $relationship => $component) {
-                if ($this->restrictFields && !in_array($relationship, $this->restrictFields ?? [])) {
+                if (!empty($this->restrictFields) && !in_array($relationship, $this->restrictFields)) {
                     continue;
                 }
                 if (in_array($relationship, $this->ignoreFields)) {
@@ -147,7 +141,7 @@ class FormScaffolder
                 $fieldName = $component === 'SilverStripe\\ORM\\DataObject'
                     ? $relationship // Polymorphic has_one field is composite, so don't refer to ID subfield
                     : "{$relationship}ID";
-                if ($this->fieldClasses && isset($this->fieldClasses[$fieldName])) {
+                if (isset($this->fieldClasses[$fieldName])) {
                     $fieldClass = $this->fieldClasses[$fieldName];
                     $hasOneField = new $fieldClass($fieldName);
                 } else {
@@ -305,7 +299,6 @@ class FormScaffolder
             'restrictFields' => $this->restrictFields,
             'ignoreFields' => $this->ignoreFields,
             'fieldClasses' => $this->fieldClasses,
-            'ajaxSafe' => $this->ajaxSafe
         ];
     }
 }

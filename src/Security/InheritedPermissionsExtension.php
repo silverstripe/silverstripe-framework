@@ -42,4 +42,21 @@ class InheritedPermissionsExtension extends DataExtension
         'ViewerMembers',
         'EditorMembers',
     ];
+
+    /**
+     * These fields will need to be added manually, since SiteTree wants it in the special settings tab
+     * and nothing else in code that uses these fields is scaffolded.
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'ignoreFields' => [
+            'CanViewType',
+            'CanEditType',
+        ],
+        'ignoreRelations' => [
+            'ViewerGroups',
+            'EditorGroups',
+            'ViewerMembers',
+            'EditorMembers',
+        ],
+    ];
 }
