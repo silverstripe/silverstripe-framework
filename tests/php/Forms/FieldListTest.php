@@ -259,6 +259,8 @@ class FieldListTest extends SapphireTest
         $this->assertNull($fields->findTab('More'));
         $this->assertEquals($fields->findTab('Root.More'), $more);
         $this->assertEquals($fields->findTab('Root.More.Tab4'), $tab4);
+
+        $this->assertNull($fields->findTab('This.Doesnt.Exist'));
     }
 
     /**
