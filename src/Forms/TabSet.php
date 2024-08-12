@@ -250,6 +250,39 @@ class TabSet extends CompositeField
     }
 
     /**
+     * Change the order of tabs which are direct children of this TabSet by specifying an ordered list of
+     * tab names.
+     *
+     * This works well in conjunction with SilverStripe's scaffolding functions: take the scaffold, and
+     * shuffle the tabs around to the order that you want.
+     *
+     * Tab names should exclude prefixes. For example if this TabSet is "Root", include "Main" not "Root.Main"
+     */
+    public function changeTabOrder(array $tabNames): static
+    {
+        // Build a map of tabs indexed by their name. This will make the 2nd step much easier.
+        $existingTabs = [];
+        foreach ($this->children as $tab) {
+            $existingTabs[$tab->getName()] = $tab;
+        }
+
+        // Iterate through the ordered list of names, building a new array.
+        // While we're doing this, empty out $existingTabs so that we can keep track of leftovers.
+        // Unrecognised field names are okay; just ignore them.
+        $orderedTabs = [];
+        foreach ($tabNames as $tabName) {
+            if (isset($existingTabs[$tabName])) {
+                $orderedTabs[] = $existingTabs[$tabName];
+                unset($existingTabs[$tabName]);
+            }
+        }
+
+        // Add the leftover fields to the end of the ordered list.
+        $this->setTabs(FieldList::create([...$orderedTabs, ...$existingTabs]));
+        return $this;
+    }
+
+    /**
      * Sets an additional default for $schemaData.
      * The existing keys are immutable. HideNav is added in this overriding method to ensure it is not ignored by
      * {@link setSchemaData()}

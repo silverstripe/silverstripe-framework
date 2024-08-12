@@ -387,6 +387,9 @@ class FieldList extends ArrayList
         $currentPointer = $this;
 
         foreach ($parts as $k => $part) {
+            if ($currentPointer === null) {
+                return null;
+            }
             $currentPointer = $currentPointer->fieldByName($part);
         }
         $this->checkIsTabOrTabSetOrNull($tabName, $currentPointer);

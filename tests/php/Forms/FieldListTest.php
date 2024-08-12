@@ -295,6 +295,7 @@ class FieldListTest extends SapphireTest
         $message = "Root.Tab1.Field1 is an instance of 'SilverStripe\Forms\TextField', not Tab or TabSet";
         $this->expectExceptionMessage($message);
         $fields->findOrMakeTab('Root.Tab1.Field1');
+        $this->assertNull($fields->findTab('This.Doesnt.Exist'));
     }
 
     /**

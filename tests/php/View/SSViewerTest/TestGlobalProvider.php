@@ -18,8 +18,8 @@ class TestGlobalProvider implements TemplateGlobalProvider, TestOnly
             'SSViewerTest_GlobalReferencedByString' => 'get_reference',
             'SSViewerTest_GlobalReferencedInArray' => ['method' => 'get_reference'],
 
-            'SSViewerTest_GlobalThatTakesArguments' => ['method' => 'get_argmix', 'casting' => 'HTMLFragment']
-
+            'SSViewerTest_GlobalThatTakesArguments' => ['method' => 'get_argmix', 'casting' => 'HTMLFragment'],
+            'SSViewerTest_GlobalReturnsNull' => 'getNull',
         ];
     }
 
@@ -42,5 +42,10 @@ class TestGlobalProvider implements TemplateGlobalProvider, TestOnly
     {
         $args = func_get_args();
         return 'z' . implode(':', $args) . 'z';
+    }
+
+    public static function getNull()
+    {
+        return null;
     }
 }

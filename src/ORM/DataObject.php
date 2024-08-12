@@ -290,6 +290,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static $table_name = null;
 
     /**
+     * Settings used by the FormScaffolder that scaffolds fields for getCMSFields()
+     */
+    private static array $scaffold_cms_fields_settings = [
+        'includeRelations' => true,
+        'tabbed' => true,
+        'ajaxSafe' => true,
+    ];
+
+    /**
      * Non-static relationship cache, indexed by component name.
      *
      * @var DataObject[]
@@ -2474,8 +2483,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $params = array_merge(
             [
                 'tabbed' => false,
+                'mainTabOnly' => false,
                 'includeRelations' => false,
+                'restrictRelations' => [],
+                'ignoreRelations' => [],
                 'restrictFields' => false,
+                'ignoreFields' => [],
                 'fieldClasses' => false,
                 'ajaxSafe' => false
             ],
@@ -2484,8 +2497,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         $fs = FormScaffolder::create($this);
         $fs->tabbed = $params['tabbed'];
+        $fs->mainTabOnly = $params['mainTabOnly'];
         $fs->includeRelations = $params['includeRelations'];
+        $fs->restrictRelations = $params['restrictRelations'];
+        $fs->ignoreRelations = $params['ignoreRelations'];
         $fs->restrictFields = $params['restrictFields'];
+        $fs->ignoreFields = $params['ignoreFields'];
         $fs->fieldClasses = $params['fieldClasses'];
         $fs->ajaxSafe = $params['ajaxSafe'];
 
@@ -2605,12 +2622,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function getCMSFields()
     {
-        $tabbedFields = $this->scaffoldFormFields([
-            // Don't allow has_many/many_many relationship editing before the record is first saved
-            'includeRelations' => ($this->ID > 0),
-            'tabbed' => true,
-            'ajaxSafe' => true
-        ]);
+        $scaffoldOptions = static::config()->get('scaffold_cms_fields_settings');
+        // Don't allow has_many/many_many relationship editing before the record is first saved
+        if (!$this->isInDB()) {
+            $scaffoldOptions['includeRelations'] = false;
+        }
+        $tabbedFields = $this->scaffoldFormFields($scaffoldOptions);
 
         $this->extend('updateCMSFields', $tabbedFields);
 
