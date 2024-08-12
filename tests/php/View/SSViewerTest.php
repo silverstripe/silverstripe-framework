@@ -364,6 +364,12 @@ SS;
         );
     }
 
+    public function testGlobalVariablesReturnNull()
+    {
+        $this->assertEquals('<p></p>', $this->render('<p>$SSViewerTest_GlobalReturnsNull</p>'));
+        $this->assertEquals('<p></p>', $this->render('<p>$SSViewerTest_GlobalReturnsNull.Chained.Properties</p>'));
+    }
+
     public function testCoreGlobalVariableCalls()
     {
         $this->assertEquals(
