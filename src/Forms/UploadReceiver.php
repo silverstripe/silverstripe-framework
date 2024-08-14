@@ -61,10 +61,10 @@ trait UploadReceiver
     /**
      * Sets the upload handler
      *
-     * @param Upload $upload
+     * @param $upload
      * @return $this Self reference
      */
-    public function setUpload(Upload $upload)
+    public function setUpload($upload)
     {
         $this->upload = $upload;
         return $this;
