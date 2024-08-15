@@ -116,7 +116,7 @@ class Hierarchy extends DataExtension
      *
      * @param ValidationResult $validationResult
      */
-    public function validate(ValidationResult $validationResult)
+    protected function updateValidate(ValidationResult $validationResult)
     {
         // The object is new, won't be looping.
         $owner = $this->owner;
@@ -572,7 +572,7 @@ class Hierarchy extends DataExtension
      * - Children (instance)
      * - NumChildren (instance)
      */
-    public function flushCache()
+    protected function onFlushCache()
     {
         $this->owner->_cache_children = null;
         Hierarchy::$cache_numChildren = [];

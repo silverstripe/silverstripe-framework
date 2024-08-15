@@ -1228,7 +1228,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function validate()
     {
         $result = ValidationResult::create();
-        $this->extend('validate', $result);
+        $this->extend('updateValidate', $result);
         return $result;
     }
 
@@ -1311,7 +1311,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Will traverse the defaults of the current class and all its parent classes.
      * Called by the constructor when creating new records.
      *
-     * @uses DataExtension::populateDefaults()
      * @return static $this
      */
     public function populateDefaults()
@@ -1348,7 +1347,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        $this->extend('populateDefaults');
+        $this->extend('onAfterPopulateDefaults');
         return $this;
     }
 
@@ -3542,7 +3541,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
         }
 
-        $this->extend('flushCache');
+        $this->extend('onFlushCache');
 
         $this->components = [];
         $this->eagerLoadedData = [];
@@ -3800,7 +3799,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Let any extensions make their own database default data
-        $this->extend('requireDefaultRecords', $dummy);
+        $this->extend('onRequireDefaultRecords', $dummy);
     }
 
     /**

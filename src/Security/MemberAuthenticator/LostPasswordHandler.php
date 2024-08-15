@@ -152,7 +152,7 @@ class LostPasswordHandler extends RequestHandler
     /**
      * Forgot password form handler method.
      * Called when the user clicks on "I've lost my password".
-     * Extensions can use the 'forgotPassword' method to veto executing
+     * Extensions can use the 'onForgotPassword' method to veto executing
      * the logic, by returning FALSE. In this case, the user will be redirected back
      * to the form without further action. It is recommended to set a message
      * in the form detailing why the action was denied.
@@ -168,7 +168,7 @@ class LostPasswordHandler extends RequestHandler
         $member = $this->getMemberFromData($data);
 
         // Allow vetoing forgot password requests
-        $results = $this->extend('forgotPassword', $member);
+        $results = $this->extend('onForgotPassword', $member);
         if ($results && is_array($results) && in_array(false, $results ?? [], true)) {
             return $this->redirectToLostPassword();
         }

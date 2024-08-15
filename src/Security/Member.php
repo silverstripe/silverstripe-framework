@@ -452,7 +452,7 @@ class Member extends DataObject
      */
     public function beforeMemberLoggedIn()
     {
-        $this->extend('beforeMemberLoggedIn');
+        $this->extend('onBeforeMemberLoggedIn');
     }
 
     /**
@@ -470,7 +470,7 @@ class Member extends DataObject
         $this->write();
 
         // Audit logging hook
-        $this->extend('afterMemberLoggedIn');
+        $this->extend('onAfterMemberLoggedIn');
     }
 
     /**
@@ -497,7 +497,7 @@ class Member extends DataObject
      */
     public function beforeMemberLoggedOut(HTTPRequest $request = null)
     {
-        $this->extend('beforeMemberLoggedOut', $request);
+        $this->extend('onBeforeMemberLoggedOut', $request);
     }
 
     /**
@@ -507,7 +507,7 @@ class Member extends DataObject
      */
     public function afterMemberLoggedOut(HTTPRequest $request = null)
     {
-        $this->extend('afterMemberLoggedOut', $request);
+        $this->extend('onAfterMemberLoggedOut', $request);
     }
 
     /**
@@ -1709,7 +1709,7 @@ class Member extends DataObject
                 $this->FailedLoginCount = 0;
             }
         }
-        $this->extend('registerFailedLogin');
+        $this->extend('onRegisterFailedLogin');
         $this->write();
     }
 
