@@ -295,7 +295,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     private static array $scaffold_cms_fields_settings = [
         'includeRelations' => true,
         'tabbed' => true,
-        'ajaxSafe' => true,
     ];
 
     /**
@@ -2396,8 +2395,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         $params = array_merge(
             [
-                'fieldClasses' => false,
-                'restrictFields' => false
+                'fieldClasses' => [],
+                'restrictFields' => []
             ],
             (array)$_params
         );
@@ -2487,10 +2486,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 'includeRelations' => false,
                 'restrictRelations' => [],
                 'ignoreRelations' => [],
-                'restrictFields' => false,
+                'restrictFields' => [],
                 'ignoreFields' => [],
-                'fieldClasses' => false,
-                'ajaxSafe' => false
+                'fieldClasses' => [],
             ],
             (array)$_params
         );
@@ -2504,7 +2502,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $fs->restrictFields = $params['restrictFields'];
         $fs->ignoreFields = $params['ignoreFields'];
         $fs->fieldClasses = $params['fieldClasses'];
-        $fs->ajaxSafe = $params['ajaxSafe'];
 
         $this->extend('updateFormScaffolder', $fs, $this);
 
