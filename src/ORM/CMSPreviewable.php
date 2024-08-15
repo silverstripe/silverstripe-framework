@@ -32,9 +32,9 @@ interface CMSPreviewable
     public function getMimeType();
 
     /**
-     * @return string Link to the CMS-author view. Should point to a
+     * @return string|null Link to the CMS-author view. Should point to a
      * controller subclassing {@link LeftAndMain}. Example:
      * http://mysite.com/admin/edit/6
      */
-    public function CMSEditLink();
+    public function getCMSEditLink(): ?string;
 }

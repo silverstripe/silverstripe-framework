@@ -2693,6 +2693,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Get the link for editing this record in the CMS.
+     */
+    public function getCMSEditLink(): ?string
+    {
+        $link = null;
+        $this->extend('updateCMSEditLink', $link);
+        return $link;
+    }
+
+    /**
+     * @deprecated 6.0.0 Use getCMSEditLink() instead
+     */
+    public function CMSEditLink()
+    {
+        Deprecation::notice('6.0.0', 'Use getCMSEditLink() instead');
+        return $this->getCMSEditLink();
+    }
+
+    /**
      * Gets the value of a field.
      * Called by {@link __get()} and any getFieldName() methods you might create.
      *
@@ -4143,6 +4162,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     private static $casting = [
         "Title" => 'Text',
+        'CMSEditLink' => 'Text',
     ];
 
     /**
