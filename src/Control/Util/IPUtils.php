@@ -11,10 +11,13 @@
 
 namespace SilverStripe\Control\Util;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * Http utility functions.
  *
  * @author Fabien Potencier <fabien@symfony.com>
+ * @deprecated 5.3.0 Use Symfony\Component\HttpFoundation\IpUtils instead
  */
 class IPUtils
 {
@@ -37,6 +40,7 @@ class IPUtils
      */
     public static function checkIP($requestIP, $ips)
     {
+        Deprecation::notice('5.3.0', 'Use Symfony\Component\HttpFoundation\IpUtils::checkIP() instead');
         if (!is_array($ips)) {
             $ips = [$ips];
         }
@@ -62,6 +66,7 @@ class IPUtils
      */
     public static function checkIP4($requestIP, $ip)
     {
+        Deprecation::notice('5.3.0', 'Use Symfony\Component\HttpFoundation\IpUtils::checkIP4() instead');
         if (!filter_var($requestIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             return false;
         }
@@ -100,6 +105,7 @@ class IPUtils
      */
     public static function checkIP6($requestIP, $ip)
     {
+        Deprecation::notice('5.3.0', 'Use Symfony\Component\HttpFoundation\IpUtils::checkIP6() instead');
         if (!((extension_loaded('sockets') && defined('AF_INET6')) || @inet_pton('::1'))) {
             throw new \RuntimeException('Unable to check IPv6. Check that PHP was not compiled with option "disable-ipv6".');
         }
@@ -141,6 +147,7 @@ class IPUtils
      */
     public static function anonymize(string $ip): string
     {
+        Deprecation::notice('5.3.0', 'Use Symfony\Component\HttpFoundation\IpUtils::anonymize() instead');
         $wrappedIPv6 = false;
         if (str_starts_with($ip, '[') && str_ends_with($ip, ']')) {
             $wrappedIPv6 = true;
