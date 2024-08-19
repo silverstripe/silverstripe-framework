@@ -13,6 +13,7 @@ namespace SilverStripe\Control\Tests;
  */
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Util\IPUtils;
+use SilverStripe\Dev\Deprecation;
 
 class IPUtilsTest extends SapphireTest
 {
@@ -21,7 +22,9 @@ class IPUtilsTest extends SapphireTest
      */
     public function testIPv4($matches, $remoteAddr, $cidr)
     {
-        $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
+        Deprecation::withNoReplacement(function () use ($matches, $remoteAddr, $cidr) {
+            $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
+        });
     }
 
     public function iPv4Provider()
@@ -51,7 +54,9 @@ class IPUtilsTest extends SapphireTest
             $this->markTestSkipped('Only works when PHP is compiled without the option "disable-ipv6".');
         }
 
-        $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
+        Deprecation::withNoReplacement(function () use ($matches, $remoteAddr, $cidr) {
+            $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
+        });
     }
 
     public function iPv6Provider()
@@ -80,6 +85,8 @@ class IPUtilsTest extends SapphireTest
             $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
         }
 
-        IPUtils::checkIP('2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65');
+        Deprecation::withNoReplacement(function () {
+            IPUtils::checkIP('2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65');
+        });
     }
 }
