@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDecimal;
+use TypeError;
 
 class DecimalTest extends SapphireTest
 {
@@ -45,11 +46,8 @@ class DecimalTest extends SapphireTest
 
     public function testInvalidSpecifiedDefaultValue()
     {
-        $this->assertEquals(
-            $this->testDataObject->MyDecimal3,
-            0,
-            'Invalid default value for Decimal type is casted to 0'
-        );
+        $this->expectException(TypeError::class);
+        new DBDecimal(defaultValue: 'Invalid');
     }
 
     public function testSpecifiedDefaultValueInDefaultsArray()

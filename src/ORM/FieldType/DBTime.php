@@ -4,11 +4,13 @@ namespace SilverStripe\ORM\FieldType;
 
 use IntlDateFormatter;
 use InvalidArgumentException;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TimeField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\View\ViewableData;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -25,9 +27,9 @@ class DBTime extends DBField
     /**
      * Standard ISO format string for time in CLDR standard format
      */
-    const ISO_TIME = 'HH:mm:ss';
+    public const ISO_TIME = 'HH:mm:ss';
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
     {
         $value = $this->parseTime($value);
         if ($value === false) {
@@ -42,10 +44,9 @@ class DBTime extends DBField
     /**
      * Parse timestamp or iso8601-ish date into standard iso8601 format
      *
-     * @param mixed $value
      * @return string|null|false Formatted time, null if empty but valid, or false if invalid
      */
-    protected function parseTime($value)
+    protected function parseTime(mixed $value): string|null|false
     {
         // Skip empty values
         if (empty($value) && !is_numeric($value)) {
@@ -73,24 +74,19 @@ class DBTime extends DBField
 
     /**
      * Get date / time formatter for the current locale
-     *
-     * @param int $timeLength
-     * @return IntlDateFormatter
      */
-    public function getFormatter($timeLength = IntlDateFormatter::MEDIUM)
+    public function getFormatter(int $timeLength = IntlDateFormatter::MEDIUM): IntlDateFormatter
     {
         return IntlDateFormatter::create(i18n::get_locale(), IntlDateFormatter::NONE, $timeLength);
     }
 
     /**
      * Returns the date in the localised short format
-     *
-     * @return string
      */
-    public function Short()
+    public function Short(): string
     {
         if (!$this->value) {
-            return null;
+            return '';
         }
         $formatter = $this->getFormatter(IntlDateFormatter::SHORT);
         return $formatter->format($this->getTimestamp());
@@ -99,13 +95,11 @@ class DBTime extends DBField
     /**
      * Returns the standard localised medium time
      * e.g. "3:15pm"
-     *
-     * @return string
      */
-    public function Nice()
+    public function Nice(): string
     {
         if (!$this->value) {
-            return null;
+            return '';
         }
         $formatter = $this->getFormatter();
         return $formatter->format($this->getTimestamp());
@@ -114,20 +108,19 @@ class DBTime extends DBField
     /**
      * Return the time using a particular formatting string.
      *
-     * @param string $format Format code string. See https://unicode-org.github.io/icu/userguide/format_parse/datetime
-     * @return string The time in the requested format
+     * See https://unicode-org.github.io/icu/userguide/format_parse/datetime for valid formats
      */
-    public function Format($format)
+    public function Format(string $format): string
     {
         if (!$this->value) {
-            return null;
+            return '';
         }
         $formatter = $this->getFormatter();
         $formatter->setPattern($format);
         return $formatter->format($this->getTimestamp());
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'time',
@@ -140,18 +133,15 @@ class DBTime extends DBField
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return TimeField::create($this->name, $title);
     }
 
     /**
      * Return a time formatted as per a CMS user's settings.
-     *
-     * @param Member $member
-     * @return string A time formatted as per user-defined settings.
      */
-    public function FormatFromSettings($member = null)
+    public function FormatFromSettings(?Member $member = null): string
     {
         if (!$member) {
             $member = Security::getCurrentUser();
@@ -169,20 +159,16 @@ class DBTime extends DBField
 
     /**
      * Get standard ISO time format string
-     *
-     * @return string
      */
-    public function getISOFormat()
+    public function getISOFormat(): string
     {
         return DBTime::ISO_TIME;
     }
 
     /**
      * Get unix timestamp for this time
-     *
-     * @return int
      */
-    public function getTimestamp()
+    public function getTimestamp(): int
     {
         if ($this->value) {
             return strtotime($this->value ?? '');

@@ -166,7 +166,7 @@ class NullableField extends FormField
     /**
      * @return string
      */
-    public function debug()
+    public function debug(): string
     {
         $result = sprintf(
             '%s (%s: %s : <span style="color: red">%s</span>) = ',

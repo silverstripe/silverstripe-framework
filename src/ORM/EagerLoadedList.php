@@ -341,7 +341,7 @@ class EagerLoadedList extends ViewableData implements Relation, SS_List, Filtera
         return $this;
     }
 
-    public function debug()
+    public function debug(): string
     {
         // Same implementation as DataList::debug()
         $val = '<h2>' . static::class . '</h2><ul>';

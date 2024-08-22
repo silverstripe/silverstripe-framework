@@ -15,7 +15,7 @@ use SilverStripe\ORM\DB;
 class DBBigInt extends DBInt
 {
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'bigint',

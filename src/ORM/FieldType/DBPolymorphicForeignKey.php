@@ -2,21 +2,23 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ViewableData;
 
 /**
  * A special ForeignKey class that handles relations with arbitrary class types
  */
 class DBPolymorphicForeignKey extends DBComposite
 {
-    private static $index = true;
+    private static bool $index = true;
 
-    private static $composite_db = [
+    private static array $composite_db = [
         'ID' => 'Int',
         'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])"
     ];
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         // Don't provide scaffolded form field generation - Scaffolding should be performed on
         // the has_many end, or set programmatically.
@@ -28,7 +30,7 @@ class DBPolymorphicForeignKey extends DBComposite
      *
      * @return string Name of a subclass of DataObject
      */
-    public function getClassValue()
+    public function getClassValue(): ?string
     {
         return $this->getField('Class');
     }
@@ -37,35 +39,29 @@ class DBPolymorphicForeignKey extends DBComposite
      * Set the value of the "Class" this key points to
      *
      * @param string $value Name of a subclass of DataObject
-     * @param boolean $markChanged Mark this field as changed?
      */
-    public function setClassValue($value, $markChanged = true)
+    public function setClassValue(string $value, bool $markChanged = true)
     {
         $this->setField('Class', $value, $markChanged);
     }
 
     /**
      * Gets the value of the "ID" this key points to
-     *
-     * @return integer
      */
-    public function getIDValue()
+    public function getIDValue(): ?int
     {
         return $this->getField('ID');
     }
 
     /**
      * Sets the value of the "ID" this key points to
-     *
-     * @param integer $value
-     * @param boolean $markChanged Mark this field as changed?
      */
-    public function setIDValue($value, $markChanged = true)
+    public function setIDValue(int $value, bool $markChanged = true)
     {
         $this->setField('ID', $value, $markChanged);
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
     {
         // Map dataobject value to array
         if ($value instanceof DataObject) {
@@ -75,10 +71,10 @@ class DBPolymorphicForeignKey extends DBComposite
             ];
         }
 
-        parent::setValue($value, $record, $markChanged);
+        return parent::setValue($value, $record, $markChanged);
     }
 
-    public function getValue()
+    public function getValue(): ?DataObject
     {
         $id = $this->getIDValue();
         $class = $this->getClassValue();

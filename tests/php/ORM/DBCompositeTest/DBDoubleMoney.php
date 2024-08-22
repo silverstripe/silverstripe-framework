@@ -7,7 +7,7 @@ use SilverStripe\ORM\FieldType\DBMoney;
 
 class DBDoubleMoney extends DBMoney implements TestOnly
 {
-    public function writeToManipulation(&$manipulation)
+    public function writeToManipulation(array &$manipulation): void
     {
         // Duplicate the amount before writing
         $this->setAmount($this->getAmount() * 2);

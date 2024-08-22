@@ -4,21 +4,23 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\ViewableData;
 
 /**
  * Represents a boolean field.
  */
 class DBBoolean extends DBField
 {
-    public function __construct($name = null, $defaultVal = 0)
+    public function __construct(?string $name = null, bool|int $defaultVal = 0)
     {
         $this->defaultVal = ($defaultVal) ? 1 : 0;
 
         parent::__construct($name);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'tinyint',
@@ -32,17 +34,17 @@ class DBBoolean extends DBField
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function Nice()
+    public function Nice(): string
     {
         return ($this->value) ? _t(__CLASS__ . '.YESANSWER', 'Yes') : _t(__CLASS__ . '.NOANSWER', 'No');
     }
 
-    public function NiceAsBoolean()
+    public function NiceAsBoolean(): string
     {
         return ($this->value) ? 'true' : 'false';
     }
 
-    public function saveInto($dataObject)
+    public function saveInto(ViewableData $dataObject): void
     {
         $fieldName = $this->name;
         if ($fieldName) {
@@ -57,12 +59,12 @@ class DBBoolean extends DBField
         }
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return CheckboxField::create($this->name, $title);
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField(?string $title = null): ?FormField
     {
         $anyText = _t(__CLASS__ . '.ANY', 'Any');
         $source = [
@@ -71,16 +73,16 @@ class DBBoolean extends DBField
             0 => _t(__CLASS__ . '.NOANSWER', 'No')
         ];
 
-        return (new DropdownField($this->name, $title, $source))
+        return DropdownField::create($this->name, $title, $source)
             ->setEmptyString($anyText);
     }
 
-    public function nullValue()
+    public function nullValue(): ?int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): array|int|null
     {
         if (is_bool($value)) {
             return $value ? 1 : 0;

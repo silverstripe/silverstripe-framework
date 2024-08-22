@@ -868,7 +868,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         return $this;
     }
 
-    public function debug()
+    public function debug(): string
     {
         $val = "<h2>" . static::class . "</h2><ul>";
         foreach ($this->toNestedArray() as $item) {
@@ -1702,10 +1702,8 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     /**
      * Returns true if this DataList has items
-     *
-     * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return $this->dataQuery->exists();
     }

@@ -50,7 +50,7 @@ class Castable extends ViewableData implements TestOnly
         return $this->unsafeXML();
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return 'castable';
     }

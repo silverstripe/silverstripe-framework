@@ -4,6 +4,8 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\SelectField;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
@@ -15,35 +17,28 @@ use SilverStripe\ORM\DB;
  */
 class DBEnum extends DBString
 {
-
     /**
      * List of enum values
-     *
-     * @var array
      */
-    protected $enum = [];
+    protected array $enum = [];
 
     /**
      * Default value
-     *
-     * @var string|null
      */
-    protected $default = null;
+    protected ?string $default = null;
 
-    private static $default_search_filter_class = 'ExactMatchFilter';
+    private static string $default_search_filter_class = 'ExactMatchFilter';
 
     /**
      * Internal cache for obsolete enum values. The top level keys are the table, each of which contains
      * nested arrays with keys mapped to field names. The values of the lowest level array are the enum values
-     *
-     * @var array
      */
-    protected static $enum_cache = [];
+    protected static array $enum_cache = [];
 
     /**
      * Clear all cached enum values.
      */
-    public static function flushCache()
+    public static function flushCache(): void
     {
         DBEnum::$enum_cache = [];
     }
@@ -60,15 +55,18 @@ class DBEnum extends DBString
      *  "MyField" => "Enum(['Val1', 'Val2', 'Val3'], 'Val1')" // Supports array notation as well
      * </code>
      *
-     * @param string $name
      * @param string|array $enum A string containing a comma separated list of options or an array of Vals.
      * @param string|int|null $default The default option, which is either NULL or one of the items in the enumeration.
      * If passing in an integer (non-string) it will default to the index of that item in the list.
      * Set to null or empty string to allow empty values
-     * @param array  $options Optional parameters for this DB field
+     * @param array $options Optional parameters for this DB field
      */
-    public function __construct($name = null, $enum = null, $default = 0, $options = [])
-    {
+    public function __construct(
+        ?string $name = null,
+        string|array|null $enum = null,
+        string|int|null $default = 0,
+        array $options = []
+    ) {
         if ($enum) {
             $this->setEnum($enum);
             $enum = $this->getEnum();
@@ -94,10 +92,7 @@ class DBEnum extends DBString
         parent::__construct($name, $options);
     }
 
-    /**
-     * @return void
-     */
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -121,18 +116,15 @@ class DBEnum extends DBString
     }
 
     /**
-     * Return a dropdown field suitable for editing this field.
-     *
-     * @param string $title
-     * @param string $name
-     * @param bool $hasEmpty
-     * @param string $value
-     * @param string $emptyString
-     * @return DropdownField
+     * Return a form field suitable for editing this field.
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = '', $emptyString = null)
-    {
-
+    public function formField(
+        ?string $title = null,
+        ?string $name = null,
+        bool $hasEmpty = false,
+        ?string $value = '',
+        ?string $emptyString = null
+    ): SelectField {
         if (!$title) {
             $title = $this->getName();
         }
@@ -148,16 +140,12 @@ class DBEnum extends DBString
         return $field;
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return $this->formField($title);
     }
 
-    /**
-     * @param string $title
-     * @return DropdownField
-     */
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField(?string $title = null): ?FormField
     {
         $anyText = _t(__CLASS__ . '.ANY', 'Any');
         return $this->formField($title, null, true, '', "($anyText)");
@@ -166,12 +154,8 @@ class DBEnum extends DBString
     /**
      * Returns the values of this enum as an array, suitable for insertion into
      * a {@link DropdownField}
-     *
-     * @param bool $hasEmpty
-     *
-     * @return array
      */
-    public function enumValues($hasEmpty = false)
+    public function enumValues(bool $hasEmpty = false): array
     {
         return ($hasEmpty)
             ? array_merge(['' => ''], ArrayLib::valuekey($this->getEnum()))
@@ -180,14 +164,11 @@ class DBEnum extends DBString
 
     /**
      * Get list of enum values
-     *
-     * @return array
      */
-    public function getEnum()
+    public function getEnum(): array
     {
         return $this->enum;
     }
-
 
     /**
      * Get the list of enum values, including obsolete values still present in the database
@@ -196,10 +177,8 @@ class DBEnum extends DBString
      * then only known enum values are returned.
      *
      * Values cached in this method can be cleared via `DBEnum::flushCache();`
-     *
-     * @return array
      */
-    public function getEnumObsolete()
+    public function getEnumObsolete(): array
     {
         // Without a table or field specified, we can only retrieve known enum values
         $table = $this->getTable();
@@ -232,11 +211,8 @@ class DBEnum extends DBString
 
     /**
      * Set enum options
-     *
-     * @param string|array $enum
-     * @return $this
      */
-    public function setEnum($enum)
+    public function setEnum(string|array $enum): static
     {
         if (!is_array($enum)) {
             $enum = preg_split(
@@ -250,22 +226,17 @@ class DBEnum extends DBString
     }
 
     /**
-     * Get default vwalue
-     *
-     * @return string|null
+     * Get default value
      */
-    public function getDefault()
+    public function getDefault(): ?string
     {
         return $this->default;
     }
 
     /**
      * Set default value
-     *
-     * @param string $default
-     * @return $this
      */
-    public function setDefault($default)
+    public function setDefault(?string $default): static
     {
         $this->default = $default;
         $this->setDefaultValue($default);

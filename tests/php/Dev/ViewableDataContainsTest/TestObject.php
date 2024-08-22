@@ -14,14 +14,14 @@ class TestObject extends ViewableData implements TestOnly
         $this->data = $data;
     }
 
-    public function hasField($name)
+    public function hasField(string $fieldName): bool
     {
-        return isset($this->data[$name]);
+        return isset($this->data[$fieldName]);
     }
 
-    public function getField($name)
+    public function getField(string $fieldName): mixed
     {
-        return isset($this->data[$name]) ?: null;
+        return isset($this->data[$fieldName]) ?: null;
     }
 
     public function getSomething()

@@ -7,6 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\View\ViewableData;
 
 /**
  * Extend this class when designing a {@link DBField} that doesn't have a 1-1 mapping with a database field.
@@ -29,26 +30,21 @@ abstract class DBComposite extends DBField
      * holds an array of composite field names.
      * Don't include the fields "main name",
      * it will be prefixed in {@link requireField()}.
-     *
-     * @config
-     * @var array
      */
-    private static $composite_db = [];
+    private static array $composite_db = [];
 
     /**
      * Marker as to whether this record has changed
      * Only used when deference to the parent object isn't possible
      */
-    protected $isChanged = false;
+    protected bool $isChanged = false;
 
     /**
      * Either the parent dataobject link, or a record of saved values for each field
-     *
-     * @var array|DataObject
      */
-    protected $record = [];
+    protected array|ViewableData $record = [];
 
-    public function __set($property, $value)
+    public function __set(string $property, mixed $value): void
     {
         // Prevent failover / extensions from hijacking composite field setters
         // by intentionally avoiding hasMethod()
@@ -59,7 +55,7 @@ abstract class DBComposite extends DBField
         parent::__set($property, $value);
     }
 
-    public function __get($property)
+    public function __get(string $property): mixed
     {
         // Prevent failover / extensions from hijacking composite field getters
         // by intentionally avoiding hasMethod()
@@ -71,10 +67,8 @@ abstract class DBComposite extends DBField
 
     /**
      * Write all nested fields into a manipulation
-     *
-     * @param array $manipulation
      */
-    public function writeToManipulation(&$manipulation)
+    public function writeToManipulation(array &$manipulation): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Write sub-manipulation
@@ -88,10 +82,8 @@ abstract class DBComposite extends DBField
      * and {@link $composite_db}, or any additional SQL that is required
      * to get to these columns. Will mostly just write to the {@link SQLSelect->select}
      * array.
-     *
-     * @param SQLSelect $query
      */
-    public function addToQuery(&$query)
+    public function addToQuery(SQLSelect &$query): void
     {
         parent::addToQuery($query);
 
@@ -109,12 +101,10 @@ abstract class DBComposite extends DBField
     /**
      * Return array in the format of {@link $composite_db}.
      * Used by {@link DataObject->hasOwnDatabaseField()}.
-     *
-     * @return array
      */
-    public function compositeDatabaseFields()
+    public function compositeDatabaseFields(): array
     {
-        return $this->config()->composite_db;
+        return static::config()->get('composite_db');
     }
 
 
@@ -122,7 +112,7 @@ abstract class DBComposite extends DBField
      * Returns true if this composite field has changed.
      * For fields bound to a DataObject, this will be cleared when the DataObject is written.
      */
-    public function isChanged()
+    public function isChanged(): bool
     {
         // When unbound, use the local changed flag
         if (!$this->record instanceof DataObject) {
@@ -141,10 +131,8 @@ abstract class DBComposite extends DBField
 
     /**
      * Composite field defaults to exists only if all fields have values
-     *
-     * @return boolean
      */
-    public function exists()
+    public function exists(): bool
     {
         // By default all fields
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
@@ -156,7 +144,7 @@ abstract class DBComposite extends DBField
         return true;
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             $key = $this->getName() . $field;
@@ -171,12 +159,9 @@ abstract class DBComposite extends DBField
      *
      * {@see ViewableData::obj}
      *
-     * @param mixed $value
-     * @param mixed $record Parent object to this field, which could be a DataObject, record array, or other
-     * @param bool $markChanged
-     * @return $this
+     * @param null|array|ViewableData $record Parent object to this field, which could be a DataObject, record array, or other
      */
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
     {
         $this->isChanged = $markChanged;
 
@@ -206,16 +191,14 @@ abstract class DBComposite extends DBField
     }
 
     /**
-     * Bind this field to the dataobject, and set the underlying table to that of the owner
-     *
-     * @param DataObject $dataObject
+     * Bind this field to the model, and set the underlying table to that of the owner
      */
-    public function bindTo($dataObject)
+    public function bindTo(DataObject $dataObject): void
     {
         $this->record = $dataObject;
     }
 
-    public function saveInto($dataObject)
+    public function saveInto(ViewableData $dataObject): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Save into record
@@ -230,52 +213,44 @@ abstract class DBComposite extends DBField
 
     /**
      * get value of a single composite field
-     *
-     * @param string $field
-     * @return mixed
      */
-    public function getField($field)
+    public function getField(string $fieldName): mixed
     {
         // Skip invalid fields
         $fields = $this->compositeDatabaseFields();
-        if (!isset($fields[$field])) {
+        if (!isset($fields[$fieldName])) {
             return null;
         }
 
         // Check bound object
         if ($this->record instanceof DataObject) {
-            $key = $this->getName() . $field;
+            $key = $this->getName() . $fieldName;
             return $this->record->getField($key);
         }
 
         // Check local record
-        if (isset($this->record[$field])) {
-            return $this->record[$field];
+        if (isset($this->record[$fieldName])) {
+            return $this->record[$fieldName];
         }
         return null;
     }
 
-    public function hasField($field)
+    public function hasField(string $fieldName): bool
     {
         $fields = $this->compositeDatabaseFields();
-        return isset($fields[$field]);
+        return isset($fields[$fieldName]);
     }
 
     /**
      * Set value of a single composite field
-     *
-     * @param string $field
-     * @param mixed $value
-     * @param bool $markChanged
-     * @return $this
      */
-    public function setField($field, $value, $markChanged = true)
+    public function setField(string $fieldName, mixed $value, bool $markChanged = true): static
     {
         $this->objCacheClear();
 
-        if (!$this->hasField($field)) {
+        if (!$this->hasField($fieldName)) {
             throw new InvalidArgumentException(implode(' ', [
-                "Field $field does not exist.",
+                "Field $fieldName does not exist.",
                 'If this was accessed via a dynamic property then call setDynamicData() instead.'
             ]));
         }
@@ -287,23 +262,20 @@ abstract class DBComposite extends DBField
 
         // Set bound object
         if ($this->record instanceof DataObject) {
-            $key = $this->getName() . $field;
+            $key = $this->getName() . $fieldName;
             $this->record->setField($key, $value);
             return $this;
         }
 
         // Set local record
-        $this->record[$field] = $value;
+        $this->record[$fieldName] = $value;
         return $this;
     }
 
     /**
      * Get a db object for the named field
-     *
-     * @param string $field Field name
-     * @return DBField|null
      */
-    public function dbObject($field)
+    public function dbObject(string $field): ?DBField
     {
         $fields = $this->compositeDatabaseFields();
         if (!isset($fields[$field])) {
@@ -319,7 +291,7 @@ abstract class DBComposite extends DBField
         return $fieldObject;
     }
 
-    public function castingHelper($field, bool $useFallback = true)
+    public function castingHelper(string $field, bool $useFallback = true): ?string
     {
         $fields = $this->compositeDatabaseFields();
         if (isset($fields[$field])) {
@@ -329,7 +301,7 @@ abstract class DBComposite extends DBField
         return parent::castingHelper($field, $useFallback);
     }
 
-    public function getIndexSpecs()
+    public function getIndexSpecs(): array
     {
         if ($type = $this->getIndexType()) {
             $columns = array_map(function ($name) {
@@ -341,9 +313,10 @@ abstract class DBComposite extends DBField
                 'columns' => $columns,
             ];
         }
+        return [];
     }
 
-    public function scalarValueOnly()
+    public function scalarValueOnly(): bool
     {
         return false;
     }

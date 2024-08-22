@@ -58,7 +58,7 @@ class RequiredFields extends Validator
      * Debug helper
      * @return string
      */
-    public function debug()
+    public function debug(): string
     {
         if (!is_array($this->required)) {
             return false;

@@ -36,7 +36,7 @@ interface DataObjectInterface
      * @param string $fieldName
      * @return mixed
      */
-    public function __get($fieldName);
+    public function __get(string $property): mixed;
 
     /**
      * Save content from a form into a field on this data object.

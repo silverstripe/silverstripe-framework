@@ -18,13 +18,6 @@ use BadMethodCallException;
 class RSSFeed_Entry extends ViewableData
 {
     /**
-     * The object that represents the item, it contains all the data.
-     *
-     * @var mixed
-     */
-    protected $failover;
-
-    /**
      * Name of the title field of feed entries
      *
      * @var string

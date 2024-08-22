@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\MultiSelectField;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
 
@@ -33,7 +34,7 @@ class DBMultiEnum extends DBEnum
         }
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -54,18 +55,15 @@ class DBMultiEnum extends DBEnum
 
 
     /**
-     * Return a {@link CheckboxSetField} suitable for editing this field
-     *
-     * @param string $title
-     * @param string $name
-     * @param bool $hasEmpty
-     * @param string $value
-     * @param string $emptyString
-     * @return CheckboxSetField
+     * Return a form field suitable for editing this field
      */
-    public function formField($title = null, $name = null, $hasEmpty = false, $value = '', $emptyString = null)
-    {
-
+    public function formField(
+        ?string $title = null,
+        ?string $name = null,
+        bool $hasEmpty = false,
+        ?string $value = '',
+        ?string $emptyString = null
+    ): MultiSelectField {
         if (!$title) {
             $title = $this->name;
         }
@@ -73,6 +71,6 @@ class DBMultiEnum extends DBEnum
             $name = $this->name;
         }
 
-        return new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value);
+        return CheckboxSetField::create($name, $title, $this->enumValues($hasEmpty), $value);
     }
 }

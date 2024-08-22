@@ -2,9 +2,11 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -12,8 +14,7 @@ use SilverStripe\View\ArrayData;
  */
 class DBInt extends DBField
 {
-
-    public function __construct($name = null, $defaultVal = 0)
+    public function __construct(?string $name = null, int $defaultVal = 0)
     {
         $this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
 
@@ -24,7 +25,7 @@ class DBInt extends DBField
      * Ensure int values are always returned.
      * This is for mis-configured databases that return strings.
      */
-    public function getValue()
+    public function getValue(): ?int
     {
         return (int) $this->value;
     }
@@ -32,12 +33,12 @@ class DBInt extends DBField
     /**
      * Returns the number, with commas added as appropriate, eg “1,000”.
      */
-    public function Formatted()
+    public function Formatted(): string
     {
         return number_format($this->value ?? 0.0);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'int',
@@ -50,7 +51,7 @@ class DBInt extends DBField
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function Times()
+    public function Times(): SS_List
     {
         $output = new ArrayList();
         for ($i = 0; $i < $this->value; $i++) {
@@ -60,22 +61,22 @@ class DBInt extends DBField
         return $output;
     }
 
-    public function Nice()
+    public function Nice(): string
     {
         return sprintf('%d', $this->value);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return NumericField::create($this->name, $title);
     }
 
-    public function nullValue()
+    public function nullValue(): ?int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): array|int|null
     {
         if ($value === true) {
             return 1;

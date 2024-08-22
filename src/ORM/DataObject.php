@@ -816,10 +816,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Returns true if this object "exists", i.e., has a sensible value.
      * The default behaviour for a DataObject is to return true if
      * the object exists in the database, you can override this in subclasses.
-     *
-     * @return boolean true if this object exists
      */
-    public function exists()
+    public function exists(): bool
     {
         return $this->isInDB();
     }
@@ -2687,7 +2685,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return $untabbedFields;
     }
 
-    public function getViewerTemplates($suffix = '')
+    public function getViewerTemplates(string $suffix = ''): array
     {
         return SSViewer::get_templates_by_class(static::class, $suffix, $this->baseClass());
     }
@@ -2714,11 +2712,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Gets the value of a field.
      * Called by {@link __get()} and any getFieldName() methods you might create.
-     *
-     * @param string $field The name of the field
-     * @return mixed The field value
      */
-    public function getField($field)
+    public function getField(string $field): mixed
     {
         // If we already have a value in $this->record, then we should just return that
         if (isset($this->record[$field])) {
@@ -2929,12 +2924,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Set the value of the field
      * Called by {@link __set()} and any setFieldName() methods you might create.
-     *
-     * @param string $fieldName Name of the field
-     * @param mixed $val New field value
-     * @return $this
      */
-    public function setField($fieldName, $val)
+    public function setField(string $fieldName, mixed $value): static
     {
         $this->objCacheClear();
         //if it's a has_one component, destroy the cache
@@ -2953,42 +2944,42 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($schema->unaryComponent(static::class, $fieldName)) {
             unset($this->components[$fieldName]);
             // Assign component directly
-            if (is_null($val) || $val instanceof DataObject) {
-                return $this->setComponent($fieldName, $val);
+            if (is_null($value) || $value instanceof DataObject) {
+                return $this->setComponent($fieldName, $value);
             }
             // Assign by ID instead of object
-            if (is_numeric($val)) {
+            if (is_numeric($value)) {
                 $fieldName .= 'ID';
             }
         }
 
         // Situation 1: Passing an DBField
-        if ($val instanceof DBField) {
-            $val->setName($fieldName);
-            $val->saveInto($this);
+        if ($value instanceof DBField) {
+            $value->setName($fieldName);
+            $value->saveInto($this);
 
             // Situation 1a: Composite fields should remain bound in case they are
             // later referenced to update the parent dataobject
-            if ($val instanceof DBComposite) {
-                $val->bindTo($this);
-                $this->setFieldValue($fieldName, $val);
+            if ($value instanceof DBComposite) {
+                $value->bindTo($this);
+                $this->setFieldValue($fieldName, $value);
             }
         // Situation 2: Passing a literal or non-DBField object
         } else {
-            $this->setFieldValue($fieldName, $val);
+            $this->setFieldValue($fieldName, $value);
         }
         return $this;
     }
 
-    private function setFieldValue(string $fieldName, mixed $val): void
+    private function setFieldValue(string $fieldName, mixed $value): void
     {
         $schema = static::getSchema();
         // If this is a proper database field, we shouldn't be getting non-DBField objects
-        if (is_object($val) && !($val instanceof DBField) && $schema->fieldSpec(static::class, $fieldName)) {
+        if (is_object($value) && !($value instanceof DBField) && $schema->fieldSpec(static::class, $fieldName)) {
             throw new InvalidArgumentException('DataObject::setFieldValue: passed an object that is not a DBField');
         }
 
-        if (!empty($val) && !is_scalar($val)) {
+        if (!empty($value) && !is_scalar($value)) {
             $dbField = $this->dbObject($fieldName);
             if ($dbField && $dbField->scalarValueOnly()) {
                 throw new InvalidArgumentException(
@@ -3001,12 +2992,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // if a field is not existing or has strictly changed
-        if (!array_key_exists($fieldName, $this->original ?? []) || $this->original[$fieldName] !== $val) {
+        if (!array_key_exists($fieldName, $this->original ?? []) || $this->original[$fieldName] !== $value) {
             // At the very least, the type has changed
             $this->changed[$fieldName] = DataObject::CHANGE_STRICT;
 
-            if ((!array_key_exists($fieldName, $this->original ?? []) && $val)
-                || (array_key_exists($fieldName, $this->original ?? []) && $this->original[$fieldName] != $val)
+            if ((!array_key_exists($fieldName, $this->original ?? []) && $value)
+                || (array_key_exists($fieldName, $this->original ?? []) && $this->original[$fieldName] != $value)
             ) {
                 // Value has changed as well, not just the type
                 $this->changed[$fieldName] = DataObject::CHANGE_VALUE;
@@ -3017,7 +3008,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Value is saved regardless, since the change detection relates to the last write
-        $this->record[$fieldName] = $val;
+        $this->record[$fieldName] = $value;
     }
 
     /**
@@ -3048,7 +3039,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * {@inheritdoc}
      */
-    public function castingHelper($field, bool $useFallback = true)
+    public function castingHelper(string $field, bool $useFallback = true): ?string
     {
         $fieldSpec = static::getSchema()->fieldSpec(static::class, $field);
         if ($fieldSpec) {
@@ -3073,19 +3064,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Returns true if the given field exists in a database column on any of
      * the objects tables and optionally look up a dynamic getter with
      * get<fieldName>().
-     *
-     * @param string $field Name of the field
-     * @return boolean True if the given field exists
      */
-    public function hasField($field)
+    public function hasField(string $fieldName): bool
     {
         $schema = static::getSchema();
         return (
-            array_key_exists($field, $this->record ?? [])
-            || array_key_exists($field, $this->components ?? [])
-            || $schema->fieldSpec(static::class, $field)
-            || $schema->unaryComponent(static::class, $field)
-            || $this->hasMethod("get{$field}")
+            array_key_exists($fieldName, $this->record ?? [])
+            || array_key_exists($fieldName, $this->components ?? [])
+            || $schema->fieldSpec(static::class, $fieldName)
+            || $schema->unaryComponent(static::class, $fieldName)
+            || $this->hasMethod("get{$fieldName}")
         );
     }
 
@@ -3233,7 +3221,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *
      * @return string HTML data representing this object
      */
-    public function debug()
+    public function debug(): string
     {
         $class = static::class;
         $val = "<h3>Database record: {$class}</h3>\n<ul>\n";
@@ -4406,13 +4394,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     /**
      * Returns true if the given method/parameter has a value
      * (Uses the DBField::hasValue if the parameter is a database field)
-     *
-     * @param string $field The field name
-     * @param array $arguments
-     * @param bool $cache
-     * @return boolean
      */
-    public function hasValue($field, $arguments = null, $cache = true)
+    public function hasValue(string $field, array $arguments = [], bool $cache = true): bool
     {
         // has_one fields should not use dbObject to check if a value is given
         $hasOne = static::getSchema()->hasOneComponent(static::class, $field);

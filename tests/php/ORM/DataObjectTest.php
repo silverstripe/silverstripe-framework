@@ -739,15 +739,15 @@ class DataObjectTest extends SapphireTest
         $fan1 = $this->objFromFixture(DataObjectTest\Fan::class, 'fan1');
 
         // Test relation probing
-        $this->assertFalse((bool)$team1->hasValue('Captain', null, false));
-        $this->assertFalse((bool)$team1->hasValue('CaptainID', null, false));
+        $this->assertFalse((bool)$team1->hasValue('Captain', [], false));
+        $this->assertFalse((bool)$team1->hasValue('CaptainID', [], false));
 
         // Add a captain to team 1
         $team1->setField('CaptainID', $player1->ID);
         $team1->write();
 
-        $this->assertTrue((bool)$team1->hasValue('Captain', null, false));
-        $this->assertTrue((bool)$team1->hasValue('CaptainID', null, false));
+        $this->assertTrue((bool)$team1->hasValue('Captain', [], false));
+        $this->assertTrue((bool)$team1->hasValue('CaptainID', [], false));
 
         $this->assertEquals(
             $player1->ID,
@@ -2075,22 +2075,22 @@ class DataObjectTest extends SapphireTest
     public function testHasValue()
     {
         $team = new DataObjectTest\Team();
-        $this->assertFalse($team->hasValue('Title', null, false));
-        $this->assertFalse($team->hasValue('DatabaseField', null, false));
+        $this->assertFalse($team->hasValue('Title', [], false));
+        $this->assertFalse($team->hasValue('DatabaseField', [], false));
 
         $team->Title = 'hasValue';
-        $this->assertTrue($team->hasValue('Title', null, false));
-        $this->assertFalse($team->hasValue('DatabaseField', null, false));
+        $this->assertTrue($team->hasValue('Title', [], false));
+        $this->assertFalse($team->hasValue('DatabaseField', [], false));
 
         $team->Title = '<p></p>';
         $this->assertTrue(
-            $team->hasValue('Title', null, false),
+            $team->hasValue('Title', [], false),
             'Test that an empty paragraph is a value for non-HTML fields.'
         );
 
         $team->DatabaseField = 'hasValue';
-        $this->assertTrue($team->hasValue('Title', null, false));
-        $this->assertTrue($team->hasValue('DatabaseField', null, false));
+        $this->assertTrue($team->hasValue('Title', [], false));
+        $this->assertTrue($team->hasValue('DatabaseField', [], false));
     }
 
     public function testHasMany()

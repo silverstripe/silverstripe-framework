@@ -521,7 +521,7 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    public function castingHelper($field, bool $useFallback = true)
+    public function castingHelper(string $field, bool $useFallback = true): ?string
     {
         // Override casting for field message
         if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
@@ -1547,10 +1547,8 @@ class Form extends ViewableData implements HasRequestHandler
      *
      * This is returned when you access a form as $FormObject rather
      * than <% with FormObject %>
-     *
-     * @return DBHTMLText
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         if (!$this->canBeCached()) {
             HTTPCacheControlMiddleware::singleton()->disableCache();
@@ -1750,7 +1748,7 @@ class Form extends ViewableData implements HasRequestHandler
         return $this;
     }
 
-    public function debug()
+    public function debug(): string
     {
         $class = static::class;
         $result = "<h3>$class</h3><ul>";

@@ -129,9 +129,9 @@ class DBClassNameTest extends SapphireTest
         $this->assertEquals('stdClass', $test3->getShortName());
 
         $test4 = DBField::create_field('DBClassName', null);
-        $this->assertNull($test4->getShortName());
+        $this->assertSame('', $test4->getShortName());
 
         $test5 = DBField::create_field('DBClassName', 'not a class');
-        $this->assertNull($test5->getShortName());
+        $this->assertSame('', $test5->getShortName());
     }
 }

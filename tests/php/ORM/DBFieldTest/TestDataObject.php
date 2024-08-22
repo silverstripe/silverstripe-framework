@@ -16,10 +16,10 @@ class TestDataObject extends DataObject implements TestOnly
 
     public $setFieldCalledCount = 0;
 
-    public function setField($fieldName, $val)
+    public function setField(string $fieldName, mixed $value): static
     {
         $this->setFieldCalledCount++;
-        return parent::setField($fieldName, $val);
+        return parent::setField($fieldName, $value);
     }
 
     public function setMyTestField($val)
