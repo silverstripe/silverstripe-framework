@@ -4,14 +4,14 @@ namespace SilverStripe\Security;
 
 use Psr\Log\InvalidArgumentException;
 use SilverStripe\Core\Flushable;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
 
 /**
- * @extends DataExtension<Member|Group>
+ * @extends Extension<Member|Group>
  */
-class InheritedPermissionFlusher extends DataExtension implements Flushable
+class InheritedPermissionFlusher extends Extension implements Flushable
 {
     /**
      * @var MemberCacheFlusher[]

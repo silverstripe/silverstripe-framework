@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\Tests\DataExtensionTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class PlayerExtension extends DataExtension implements TestOnly
+class PlayerExtension extends Extension implements TestOnly
 {
 
     public static function get_extra_config($class = null, $extensionClass = null, $args = null)

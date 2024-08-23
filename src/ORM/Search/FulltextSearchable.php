@@ -7,7 +7,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use Exception;
 
 /**
@@ -21,9 +21,9 @@ use Exception;
  * unless "File" is excluded from FulltextSearchable::enable().
  *
  * @template T of SiteTree|File
- * @extends DataExtension<T>
+ * @extends Extension<T>
  */
-class FulltextSearchable extends DataExtension
+class FulltextSearchable extends Extension
 {
 
     /**

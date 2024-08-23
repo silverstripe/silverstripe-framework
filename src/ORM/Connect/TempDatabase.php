@@ -6,10 +6,10 @@ use Exception;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 
@@ -148,9 +148,9 @@ class TempDatabase
             return;
         }
 
-        // Some DataExtensions keep a static cache of information that needs to
+        // Some Extensions keep a static cache of information that needs to
         // be reset whenever the database is killed
-        foreach (ClassInfo::subclassesFor(DataExtension::class) as $class) {
+        foreach (ClassInfo::subclassesFor(Extension::class) as $class) {
             $toCall = [$class, 'on_db_reset'];
             if (is_callable($toCall)) {
                 call_user_func($toCall);
@@ -171,10 +171,10 @@ class TempDatabase
 
         $this->getConn()->clearAllData();
 
-        // Some DataExtensions keep a static cache of information that needs to
+        // Some Extensions keep a static cache of information that needs to
         // be reset whenever the database is cleaned out
         $classes = array_merge(
-            ClassInfo::subclassesFor(DataExtension::class),
+            ClassInfo::subclassesFor(Extension::class),
             ClassInfo::subclassesFor(DataObject::class)
         );
         foreach ($classes as $class) {

@@ -3,12 +3,12 @@
 namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
 /**
  * Extension that adds additional validation criteria
  */
-class SurnameMustMatchFirstNameExtension extends DataExtension implements TestOnly
+class SurnameMustMatchFirstNameExtension extends Extension implements TestOnly
 {
     protected function updatePHP($data, $form)
     {

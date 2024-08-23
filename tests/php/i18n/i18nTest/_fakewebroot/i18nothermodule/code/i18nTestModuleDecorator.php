@@ -1,8 +1,8 @@
 <?php
 
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class i18nTestModuleExtension extends DataExtension
+class i18nTestModuleExtension extends Extension
 {
 
     public static $db = [

@@ -48,7 +48,7 @@ use stdClass;
  *
  * <h2>Extensions</h2>
  *
- * See {@link Extension} and {@link DataExtension}.
+ * See {@link Extension}
  *
  * <h2>Permission Control</h2>
  *
@@ -1212,7 +1212,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Validate the current object.
      *
      * By default, there is no validation - objects are always valid!  However, you can overload this method in your
-     * DataObject sub-classes to specify custom validation, or use the hook through DataExtension.
+     * DataObject sub-classes to specify custom validation, or use the hook through Extension.
      *
      * Invalid objects won't be able to be written - a warning will be thrown and no write will occur.  onBeforeWrite()
      * and onAfterWrite() won't get called either.
@@ -1236,8 +1236,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * database.  Don't forget to call parent::onBeforeWrite(), though!
      *
      * This called after {@link $this->validate()}, so you can be sure that your data is valid.
-     *
-     * @uses DataExtension::onBeforeWrite()
      */
     protected function onBeforeWrite()
     {
@@ -1252,8 +1250,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * You can overload this to act upon changes made to the data after it is written.
      * $this->changed will have a record
      * database.  Don't forget to call parent::onAfterWrite(), though!
-     *
-     * @uses DataExtension::onAfterWrite()
      */
     protected function onAfterWrite()
     {
@@ -1282,8 +1278,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Event handler called before deleting from the database.
      * You can overload this to clean up or otherwise process data before delete this
      * record.  Don't forget to call parent::onBeforeDelete(), though!
-     *
-     * @uses DataExtension::onBeforeDelete()
      */
     protected function onBeforeDelete()
     {
@@ -1563,8 +1557,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *  - $this->onBeforeWrite() gets called beforehand.
      *  - Extensions such as Versioned will amend the database-write to ensure that a version is saved.
      *
-     * @uses DataExtension::augmentWrite()
-     *
      * @param boolean       $showDebug Show debugging information
      * @param boolean       $forceInsert Run INSERT command rather than UPDATE, even if record already exists
      * @param boolean       $forceWrite Write to database even if there are no changes
@@ -1737,7 +1729,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Delete this data object.
      * $this->onBeforeDelete() gets called.
      * Note that in Versioned objects, both Stage and Live will be deleted.
-     * @uses DataExtension::augmentSQL()
      */
     public function delete()
     {
@@ -2596,7 +2587,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * which returns a {@link FieldList} suitable for a {@link Form} object.
      * If not overloaded, we're using {@link scaffoldFormFields()} to automatically
      * generate this set. To customize, overload this method in a subclass
-     * or extended onto it by using {@link DataExtension->updateCMSFields()}.
+     * or use an Extension which implements updateCMSFields()
      *
      * <code>
      * class MyCustomClass extends DataObject {
@@ -2671,7 +2662,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * Used for simple frontend forms without relation editing
      * or {@link TabSet} behaviour. Uses {@link scaffoldFormFields()}
      * by default. To customize, either overload this method in your
-     * subclass, or extend it by {@link DataExtension->updateFrontEndFields()}.
+     * subclass, or create an Extensiona and implement updateFrontEndFields()
      *
      * @param array $params See {@link scaffoldFormFields()}
      * @return FieldList Always returns a simple field collection without TabSet.
@@ -3685,8 +3676,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Check the database schema and update it as necessary.
-     *
-     * @uses DataExtension::augmentDatabase()
      */
     public function requireTable()
     {
@@ -3767,8 +3756,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * database is built, after the database tables have all been created. Overload
      * this to add default records when the database is built, but make sure you
      * call parent::requireDefaultRecords().
-     *
-     * @uses DataExtension::requireDefaultRecords()
      */
     public function requireDefaultRecords()
     {
@@ -3917,7 +3904,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         $fields = $rewrite;
 
-        // apply DataExtensions if present
         $this->extend('updateSearchableFields', $fields);
 
         return $fields;
@@ -4028,6 +4014,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         $rawFields = $this->config()->get('summary_fields');
 
         // Merge associative / numeric keys
+        // Key could be a mixture of key types for example
+        // base class $summary_fields = ['Title'] - key is 0
+        // extension class $summary-fields = ['Title' => 'Custom Title'] - key is 'Title'
+        // Sort by numeric keys first so that any associative keys will override them later
+        uksort($rawFields, function ($a, $b) {
+            if (is_int($a) && !is_int($b)) {
+                return -1;
+            } elseif (!is_int($a) && is_int($b)) {
+                return 1;
+            }
+        });
         $fields = [];
         foreach ($rawFields as $key => $value) {
             if (is_int($key)) {
@@ -4035,7 +4032,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
             $fields[$key] = $value;
         }
-
         if (!$fields) {
             $fields = [];
             // try to scaffold a couple of usual suspects
@@ -4558,8 +4554,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
     /**
      * Extension point to add more cache key components.
-     * The framework extend method will return combined values from DataExtension method(s) as an array
-     * The method on your DataExtension class should return a single scalar value. For example:
+     * The framework extend method will return combined values from Extension method(s) as an array
+     * The method on your Extension class should return a single scalar value. For example:
      *
      * protected function cacheKeyComponent()
      * {

@@ -3,9 +3,9 @@
 namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class ValidatorExtension extends DataExtension implements TestOnly
+class ValidatorExtension extends Extension implements TestOnly
 {
 
     protected function updateValidator($validator)

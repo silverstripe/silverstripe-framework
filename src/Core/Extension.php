@@ -7,7 +7,6 @@ use SilverStripe\ORM\DataObject;
 
 /**
  * Add extension that can be added to an object with {@link Object::add_extension()}.
- * For {@link DataObject} extensions, use {@link DataExtension}.
  * Each extension instance has an "owner" instance, accessible through
  * {@link getOwner()}.
  * Every object instance gets its own set of extension instances,

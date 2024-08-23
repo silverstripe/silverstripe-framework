@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\Tests\DataExtensionTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class Extension2 extends DataExtension implements TestOnly
+class Extension2 extends Extension implements TestOnly
 {
 
     protected function canOne($member = null)

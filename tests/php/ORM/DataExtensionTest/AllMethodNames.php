@@ -4,9 +4,9 @@ namespace SilverStripe\ORM\Tests\DataExtensionTest;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class AllMethodNames extends DataExtension implements TestOnly
+class AllMethodNames extends Extension implements TestOnly
 {
     public function allMethodNames()
     {

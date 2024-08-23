@@ -3,7 +3,7 @@
 namespace SilverStripe\ORM\Tests\ManyManyListTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\ManyManyList;
 
 /**
@@ -12,7 +12,7 @@ use SilverStripe\ORM\ManyManyList;
  *
  * @method ManyManyList Primary()
  */
-class IndirectSecondaryExtension extends DataExtension implements TestOnly
+class IndirectSecondaryExtension extends Extension implements TestOnly
 {
     private static $db = [
         'Title' => 'Varchar(255)'
