@@ -9,15 +9,28 @@ use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Security\Member;
 use Exception;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *
  * @template T of DataObject
  * @extends Extension<T>
+ * @deprecated 5.3.0 Subclass SilverStripe\Core\Extension\Extension instead
  */
 abstract class DataExtension extends Extension
 {
+    public function __construct()
+    {
+        // Wrapping with Deprecation::withNoReplacement() to avoid triggering deprecation notices
+        // as we are unable to update existing subclasses of this class until a new major
+        // unless we add in the pointless empty methods that are in this class
+        Deprecation::withNoReplacement(function () {
+            $class = Extension::class;
+            Deprecation::notice('5.3.0', "Subclass $class instead", Deprecation::SCOPE_CLASS);
+        });
+        parent::__construct();
+    }
 
     /**
      * Hook for extension-specific validation.
