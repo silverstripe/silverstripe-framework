@@ -195,18 +195,18 @@ class MemberAuthenticator implements Authenticator
             $attempt->Status = LoginAttempt::SUCCESS;
 
             // Audit logging hook
-            $member->extend('authenticationSucceeded');
+            $member->extend('onAuthenticationSucceeded');
         } else {
             // Failed login - we're trying to see if a user exists with this email (disregarding wrong passwords)
             $attempt->Status = LoginAttempt::FAILURE;
             if ($member) {
                 // Audit logging hook
                 $attempt->MemberID = $member->ID;
-                $member->extend('authenticationFailed', $data, $request);
+                $member->extend('onAuthenticationFailed', $data, $request);
             } else {
                 // Audit logging hook
                 Member::singleton()
-                   ->extend('authenticationFailedUnknownUser', $data, $request);
+                   ->extend('onAuthenticationFailedUnknownUser', $data, $request);
             }
         }
 

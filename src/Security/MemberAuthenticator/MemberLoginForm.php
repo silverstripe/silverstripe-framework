@@ -23,9 +23,9 @@ use SilverStripe\View\Requirements;
  * Log-in form for the "member" authentication method.
  *
  * Available extension points:
- * - "authenticationFailed": Called when login was not successful.
+ * - "onAuthenticationFailed": Called when login was not successful.
  *    Arguments: $data containing the form submission
- * - "forgotPassword": Called before forgot password logic kicks in,
+ * - "onForgotPassword": Called before forgot password logic kicks in,
  *    allowing extensions to "veto" execution by returning FALSE.
  *    Arguments: $member containing the detected Member record
  */

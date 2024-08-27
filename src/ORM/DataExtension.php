@@ -38,7 +38,7 @@ abstract class DataExtension extends Extension
      * @param ValidationResult $validationResult Local validation result
      * @throws ValidationException
      */
-    public function validate(ValidationResult $validationResult)
+    protected function updateValidate(ValidationResult $validationResult)
     {
     }
 
@@ -112,7 +112,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::requireDefaultRecords()} for context.
      */
-    public function requireDefaultRecords()
+    protected function onRequireDefaultRecords()
     {
     }
 
@@ -121,7 +121,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::populateDefaults()} for context.
      */
-    public function populateDefaults()
+    protected function onAfterPopulateDefaults()
     {
     }
 
@@ -130,7 +130,7 @@ abstract class DataExtension extends Extension
      *
      * See {@link DataObject::onAfterBuild()} for context.
      */
-    public function onAfterBuild()
+    protected function onAfterBuild()
     {
     }
 
@@ -144,7 +144,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function can($member)
+    protected function can($member)
     {
     }
 
@@ -158,7 +158,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function canEdit($member)
+    protected function canEdit($member)
     {
     }
 
@@ -172,7 +172,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function canDelete($member)
+    protected function canDelete($member)
     {
     }
 
@@ -186,7 +186,7 @@ abstract class DataExtension extends Extension
      * @param Member $member
      * @return bool|null
      */
-    public function canCreate($member)
+    protected function canCreate($member)
     {
     }
 

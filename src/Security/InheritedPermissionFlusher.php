@@ -23,7 +23,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
      */
     public static function flush()
     {
-        singleton(__CLASS__)->flushCache();
+        singleton(__CLASS__)->onFlushCache();
     }
 
     /**
@@ -77,7 +77,7 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
     /**
      * Flushes all registered MemberCacheFlusher services
      */
-    public function flushCache()
+    protected function onFlushCache()
     {
         $ids = $this->getMemberIDList();
         foreach ($this->getServices() as $service) {
