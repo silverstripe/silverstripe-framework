@@ -27,6 +27,6 @@ class Controller1 extends Controller
 
     public function y1Action()
     {
-        echo Controller1::OK_MSG;
+        echo Controller1::OK_MSG . ' y1';
     }
 }

@@ -3,13 +3,15 @@
 namespace SilverStripe\Dev\Tests\TaskRunnerTest;
 
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Input\InputInterface;
 
 class TaskRunnerTest_DisabledTask extends BuildTask
 {
-    protected $enabled = false;
+    private static bool $is_enabled = false;
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        // NOOP
+        return 0;
     }
 }

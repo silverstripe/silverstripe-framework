@@ -12,14 +12,11 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Dev\Deprecation;
 
 /**
- * Output the error to the browser, with the given HTTP status code.
- * We recommend that you use a formatter that generates HTML with this.
- *
- * @deprecated 5.4.0 Will be renamed to ErrorOutputHandler
+ * Output the error to either the browser or the terminal, depending on
+ * the context we're running in.
  */
-class HTTPOutputHandler extends AbstractProcessingHandler
+class ErrorOutputHandler extends AbstractProcessingHandler
 {
-
     /**
      * @var string
      */
@@ -62,7 +59,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * Default text/html
      *
      * @param string $contentType
-     * @return HTTPOutputHandler Return $this to allow chainable calls
+     * @return ErrorOutputHandler Return $this to allow chainable calls
      */
     public function setContentType($contentType)
     {
@@ -97,7 +94,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * Set a formatter to use if Director::is_cli() is true
      *
      * @param FormatterInterface $cliFormatter
-     * @return HTTPOutputHandler Return $this to allow chainable calls
+     * @return ErrorOutputHandler Return $this to allow chainable calls
      */
     public function setCLIFormatter(FormatterInterface $cliFormatter)
     {
@@ -180,6 +177,11 @@ class HTTPOutputHandler extends AbstractProcessingHandler
             }
         }
 
+        if (Director::is_cli()) {
+            echo $record['formatted'];
+            return;
+        }
+
         if (Controller::has_curr()) {
             $response = Controller::curr()->getResponse();
         } else {
@@ -197,15 +199,5 @@ class HTTPOutputHandler extends AbstractProcessingHandler
 
         $response->setBody($record['formatted']);
         $response->output();
-    }
-
-    /**
-     * This method used to be used for unit testing but is no longer required.
-     * @deprecated 5.4.0 Use SilverStripe\Control\Director::is_cli() instead
-     */
-    protected function isCli(): bool
-    {
-        Deprecation::notice('5.4.0', 'Use ' . Director::class . '::is_cli() instead');
-        return Director::is_cli();
     }
 }

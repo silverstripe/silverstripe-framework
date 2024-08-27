@@ -52,7 +52,7 @@ Only:
 # Dev handler outputs detailed information including notices
 SilverStripe\Core\Injector\Injector:
   Monolog\Handler\HandlerInterface:
-    class: SilverStripe\Logging\HTTPOutputHandler
+    class: SilverStripe\Logging\ErrorOutputHandler
     constructor:
       - "notice"
     properties:
@@ -66,7 +66,7 @@ Except:
 # CLI errors still show full details
 SilverStripe\Core\Injector\Injector:
   Monolog\Handler\HandlerInterface:
-    class: SilverStripe\Logging\HTTPOutputHandler
+    class: SilverStripe\Logging\ErrorOutputHandler
     constructor:
       - "error"
     properties:

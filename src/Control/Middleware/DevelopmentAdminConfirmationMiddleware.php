@@ -4,7 +4,6 @@ namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Security\Permission;
 
@@ -25,7 +24,6 @@ use SilverStripe\Security\Permission;
  */
 class DevelopmentAdminConfirmationMiddleware extends PermissionAwareConfirmationMiddleware
 {
-
     /**
      * Check whether the user has permissions to perform the target operation
      * Otherwise we may want to skip the confirmation dialog.
@@ -43,21 +41,10 @@ class DevelopmentAdminConfirmationMiddleware extends PermissionAwareConfirmation
             return false;
         }
 
-        $registeredRoutes = DevelopmentAdmin::config()->get('registered_controllers');
-        while (!isset($registeredRoutes[$action]) && strpos($action, '/') !== false) {
-            // Check for the parent route if a specific route isn't found
-            $action = substr($action, 0, strrpos($action, '/'));
-        }
-
-        if (isset($registeredRoutes[$action]['controller'])) {
-            $initPermissions = Config::forClass($registeredRoutes[$action]['controller'])->get('init_permissions');
-            foreach ($initPermissions as $permission) {
-                if (Permission::check($permission)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        $url = rtrim($request->getURL(), '/');
+        $registeredRoutes = DevelopmentAdmin::singleton()->getLinks();
+        // Permissions were already checked when generating the links list, so if
+        // it's in the list the user has access.
+        return isset($registeredRoutes[$url]);
     }
 }

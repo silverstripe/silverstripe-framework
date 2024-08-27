@@ -139,4 +139,9 @@ interface Kernel
      * @return bool|null null if the kernel hasn't been booted yet
      */
     public function isFlushed(): ?bool;
+
+    /**
+     * Returns whether the kernel has been booted
+     */
+    public function getBooted(): bool;
 }

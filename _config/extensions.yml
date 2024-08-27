@@ -7,6 +7,6 @@ SilverStripe\Security\Member:
 SilverStripe\Security\Group:
   extensions:
     - SilverStripe\Security\InheritedPermissionFlusher
-SilverStripe\ORM\DatabaseAdmin:
+SilverStripe\Dev\Command\DbBuild:
   extensions:
-    - SilverStripe\Dev\Validation\DatabaseAdminExtension
+    - SilverStripe\Dev\Validation\DbBuildExtension

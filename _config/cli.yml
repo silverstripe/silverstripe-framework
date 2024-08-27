@@ -1,0 +1,13 @@
+---
+Name: cli-config
+---
+SilverStripe\Core\Injector\Injector:
+  Symfony\Contracts\EventDispatcher\EventDispatcherInterface.sake:
+    class: 'Symfony\Component\EventDispatcher\EventDispatcher'
+  Symfony\Component\Console\Formatter\OutputFormatterInterface:
+    class: 'Symfony\Component\Console\Formatter\OutputFormatter'
+    calls:
+      - ['setDecorated', [true]]
+  SilverStripe\PolyExecution\HtmlOutputFormatter:
+    constructor:
+      formatter: '%$Symfony\Component\Console\Formatter\OutputFormatterInterface'

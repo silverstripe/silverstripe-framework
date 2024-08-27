@@ -2,83 +2,71 @@
 
 namespace SilverStripe\Dev\Tasks;
 
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Collects i18n strings
+ *
+ * It will search for existent modules that use the i18n feature, parse the _t() calls
+ * and write the resultant files in the lang folder of each module.
  */
 class i18nTextCollectorTask extends BuildTask
 {
+    protected static string $commandName = 'i18nTextCollectorTask';
 
-    private static $segment = 'i18nTextCollectorTask';
+    protected string $title = "i18n Textcollector Task";
 
-    protected $title = "i18n Textcollector Task";
+    protected static string $description = 'Traverses through files in order to collect the '
+                                            . '"entity master tables" stored in each module.';
 
-    protected $description = "
-		Traverses through files in order to collect the 'entity master tables'
-		stored in each module.
-
-		Parameters:
-		- locale: Sets default locale
-		- writer: Custom writer class (defaults to i18nTextCollector_Writer_RailsYaml)
-		- module: One or more modules to limit collection (comma-separated)
-		- merge: Merge new strings with existing ones already defined in language files (default: TRUE)
-	";
-
-    /**
-     * This is the main method to build the master string tables with the original strings.
-     * It will search for existent modules that use the i18n feature, parse the _t() calls
-     * and write the resultant files in the lang folder of each module.
-     *
-     * @uses DataObject::collectI18nStatics()
-     *
-     * @param HTTPRequest $request
-     */
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
         Environment::increaseTimeLimitTo();
-        $collector = i18nTextCollector::create($request->getVar('locale'));
+        $collector = i18nTextCollector::create($input->getOption('locale'));
 
-        $merge = $this->getIsMerge($request);
+        $merge = $this->getIsMerge($input);
 
         // Custom writer
-        $writerName = $request->getVar('writer');
+        $writerName = $input->getOption('writer');
         if ($writerName) {
             $writer = Injector::inst()->get($writerName);
             $collector->setWriter($writer);
         }
 
         // Get restrictions
-        $restrictModules = ($request->getVar('module'))
-            ? explode(',', $request->getVar('module'))
+        $restrictModules = ($input->getOption('module'))
+            ? explode(',', $input->getOption('module'))
             : null;
 
         $collector->run($restrictModules, $merge);
 
-        Debug::message(__CLASS__ . " completed!", false);
+        return Command::SUCCESS;
     }
 
     /**
      * Check if we should merge
-     *
-     * @param HTTPRequest $request
-     * @return bool
      */
-    protected function getIsMerge($request)
+    protected function getIsMerge(InputInterface $input): bool
     {
-        $merge = $request->getVar('merge');
-
-        // Default to true if not given
-        if (!isset($merge)) {
-            return true;
-        }
-
+        $merge = $input->getOption('merge');
         // merge=0 or merge=false will disable merge
         return !in_array($merge, ['0', 'false']);
+    }
+
+    public function getOptions(): array
+    {
+        return [
+            new InputOption('locale', null, InputOption::VALUE_REQUIRED, 'Sets default locale'),
+            new InputOption('writer', null, InputOption::VALUE_REQUIRED, 'Custom writer class (must implement the <info>SilverStripe\i18n\Messages\Writer</> interface)'),
+            new InputOption('module', null, InputOption::VALUE_REQUIRED, 'One or more modules to limit collection (comma-separated)'),
+            new InputOption('merge', null, InputOption::VALUE_NEGATABLE, 'Merge new strings with existing ones already defined in language files', true),
+        ];
     }
 }

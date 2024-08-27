@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -431,6 +432,11 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         // If the value has already been cast, is null, or is a non-string scalar
         if (is_object($value) || is_null($value) || (is_scalar($value) && !is_string($value))) {
             return $value;
+        }
+
+        // Wrap list arrays in ModelData so templates can handle them
+        if (is_array($value) && array_is_list($value)) {
+            return ArrayList::create($value);
         }
 
         // Get provided or default cast

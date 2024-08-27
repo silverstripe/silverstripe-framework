@@ -56,7 +56,7 @@ trait DBClassNameTrait
         if ($this->record) {
             return $schema->baseDataClass($this->record);
         }
-        // During dev/build only the table is assigned
+        // When building the db only the table is assigned
         $tableClass = $schema->tableClass($this->getTable());
         if ($tableClass && ($baseClass = $schema->baseDataClass($tableClass))) {
             return $baseClass;

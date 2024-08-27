@@ -2367,4 +2367,17 @@ EOC;
         };
         $this->render('$Me', $myArrayData);
     }
+
+    public function testLoopingThroughArrayInOverlay(): void
+    {
+        $modelData = new ModelData();
+        $theArray = [
+            ['Val' => 'one'],
+            ['Val' => 'two'],
+            ['Val' => 'red'],
+            ['Val' => 'blue'],
+        ];
+        $output = $modelData->renderWith('SSViewerTestLoopArray', ['MyArray' => $theArray]);
+        $this->assertEqualIgnoringWhitespace('one two red blue', $output);
+    }
 }

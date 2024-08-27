@@ -9,7 +9,19 @@ $Info.RAW
                     <div class="task__item">
                         <div>
                             <h3 class="task__title">$Title</h3>
-                            <div class="task__description">$Description</div>
+                            <div class="task__description">
+                                $Description
+                                <% if $Help %>
+                                    <details class="task__help">
+                                        <summary>Display additional information</summary>
+                                        $Help
+                                    </details>
+                                <% end_if %>
+                            </div>
+                            <% if $Parameters %>
+                                Parameters:
+                                <% include SilverStripe/Dev/Parameters %>
+                            <% end_if %>
                         </div>
                         <div>
                             <a href="{$TaskLink.ATT}" class="task__button">Run task</a>

@@ -6,7 +6,6 @@ use Exception;
 use LogicException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
@@ -39,8 +38,8 @@ use SilverStripe\ORM\DataObject;
  *
  * Usage through URL: http://localhost/dev/tasks/i18nTextCollectorTask
  * Usage through URL (module-specific): http://localhost/dev/tasks/i18nTextCollectorTask/?module=mymodule
- * Usage on CLI: sake dev/tasks/i18nTextCollectorTask
- * Usage on CLI (module-specific): sake dev/tasks/i18nTextCollectorTask module=mymodule
+ * Usage on CLI: sake tasks:i18nTextCollectorTask
+ * Usage on CLI (module-specific): sake tasks:i18nTextCollectorTask --module=mymodule
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>

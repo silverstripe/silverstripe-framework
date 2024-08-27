@@ -19,9 +19,7 @@ abstract class DBSchemaManager
 {
 
     /**
-     *
-     * @config
-     * Check tables when running /dev/build, and repair them if necessary.
+     * Check tables when building the db, and repair them if necessary.
      * In case of large databases or more fine-grained control on how to handle
      * data corruption in tables, you can disable this behaviour and handle it
      * outside of this class, e.g. through a nightly system task with extended logging capabilities.
@@ -32,11 +30,11 @@ abstract class DBSchemaManager
 
     /**
      * For large databases you can declare a list of DataObject classes which will be excluded from
-     * CHECK TABLE and REPAIR TABLE queries during dev/build. Note that the entire inheritance chain
+     * CHECK TABLE and REPAIR TABLE queries when building the db. Note that the entire inheritance chain
      * for that class will be excluded, including both ancestors and descendants.
      *
      * Only use this configuration if you know what you are doing and have identified specific models
-     * as being problematic during your dev/build process.
+     * as being problematic when building the db.
      */
     private static array $exclude_models_from_db_checks = [];
 

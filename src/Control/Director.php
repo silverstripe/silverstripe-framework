@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Path;
+use SilverStripe\PolyExecution\PolyCommand;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
@@ -345,6 +346,9 @@ class Director implements TemplateGlobalProvider
                 try {
                     /** @var RequestHandler $controllerObj */
                     $controllerObj = Injector::inst()->create($arguments['Controller']);
+                    if ($controllerObj instanceof PolyCommand) {
+                        $controllerObj = PolyCommandController::create($controllerObj);
+                    }
                     return $controllerObj->handleRequest($request);
                 } catch (HTTPResponse_Exception $responseException) {
                     return $responseException->getResponse();

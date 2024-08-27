@@ -22,7 +22,7 @@ use SilverStripe\Security\RandomGenerator;
  *  - isTest GET parameter
  *  - dev/build URL
  *
- * @see https://docs.silverstripe.org/en/4/developer_guides/debugging/url_variable_tools/ special variables docs
+ * @see https://docs.silverstripe.org/en/developer_guides/debugging/url_variable_tools/ special variables docs
  *
  * {@inheritdoc}
  */

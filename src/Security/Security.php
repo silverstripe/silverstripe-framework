@@ -1067,7 +1067,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
     /**
      * Checks the database is in a state to perform security checks.
-     * See {@link DatabaseAdmin->init()} for more information.
+     * See DbBuild permission checks for more information.
      *
      * @return bool
      */

@@ -2,21 +2,20 @@
 Name: DevelopmentAdmin
 ---
 SilverStripe\Dev\DevelopmentAdmin:
-  registered_controllers:
-    build:
-      controller: SilverStripe\Dev\DevBuildController
-      links:
-        build: 'Build/rebuild this environment. Call this whenever you have updated your project sources'
+  commands:
+    build: 'SilverStripe\Dev\Command\DbBuild'
+    'build/cleanup': 'SilverStripe\Dev\Command\DbCleanup'
+    'build/defaults': 'SilverStripe\Dev\Command\DbDefaults'
+    config: 'SilverStripe\Dev\Command\ConfigDump'
+    'config/audit': 'SilverStripe\Dev\Command\ConfigAudit'
+    generatesecuretoken: 'SilverStripe\Dev\Command\GenerateSecureToken'
+  controllers:
     tasks:
-      controller: SilverStripe\Dev\TaskRunner
-      links:
-        tasks: 'See a list of build tasks to run'
+      class: 'SilverStripe\Dev\TaskRunner'
+      description: 'See a list of build tasks to run'
     confirm:
-      controller: SilverStripe\Dev\DevConfirmationController
-    config:
-      controller: Silverstripe\Dev\DevConfigController
-      links:
-        config: 'View the current config, useful for debugging'
+      class: 'SilverStripe\Dev\DevConfirmationController'
+      skipLink: true
 
 SilverStripe\Dev\CSSContentParser:
   disable_xml_external_entities: true

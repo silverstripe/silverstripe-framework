@@ -4,24 +4,21 @@ namespace SilverStripe\Dev\Validation;
 
 use ReflectionException;
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\DatabaseAdmin;
+use SilverStripe\Dev\Command\DbBuild;
 
 /**
  * Hook up static validation to the deb/build process
  *
- * @extends Extension<DatabaseAdmin>
+ * @extends Extension<DbBuild>
  */
-class DatabaseAdminExtension extends Extension
+class DbBuildExtension extends Extension
 {
     /**
-     * Extension point in @see DatabaseAdmin::doBuild()
+     * Extension point in @see DbBuild::doBuild()
      *
-     * @param bool $quiet
-     * @param bool $populate
-     * @param bool $testMode
      * @throws ReflectionException
      */
-    protected function onAfterBuild(bool $quiet, bool $populate, bool $testMode): void
+    protected function onAfterBuild(): void
     {
         $service = RelationValidationService::singleton();
 

@@ -772,7 +772,7 @@ class Member extends DataObject
             }
         }
 
-        // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
+        // We don't send emails out during tests to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
         if ((Director::isLive() || Injector::inst()->get(MailerInterface::class) instanceof TestMailer)
             && $this->isChanged('Password')

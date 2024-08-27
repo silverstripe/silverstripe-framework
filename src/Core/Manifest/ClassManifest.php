@@ -549,7 +549,7 @@ class ClassManifest
         $finder = new ManifestFileFinder();
         $finder->setOptions([
             'name_regex' => '/^[^_].*\\.php$/',
-            'ignore_files' => ['index.php', 'cli-script.php'],
+            'ignore_files' => ['index.php', 'bin/sake.php'],
             'ignore_tests' => !$includeTests,
             'file_callback' => function ($basename, $pathname, $depth) use ($includeTests) {
                 $this->handleFile($basename, $pathname, $includeTests);

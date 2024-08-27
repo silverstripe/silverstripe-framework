@@ -7,11 +7,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Forms\Form as BaseForm;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\TextField;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
 
 /**
  * Confirmation form handler implementation
