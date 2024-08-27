@@ -147,6 +147,17 @@ class GridField extends FormField
     protected $readonlyComponents = [];
 
     /**
+     * Intentionally not set to FormField::SCHEMA_DATA_TYPE_STRUCTURAL even though there is no corresponding
+     * react component because we want a hard exception thrown for devleopers to see rather than have
+     * them wonder why the field is not rendering.
+     *
+     * Marked as @interal to allow change in a minor release as a react GridField may be implemented in the future
+     *
+     * @internal
+     */
+    protected $schemaDataType;
+
+    /**
      * Pattern used for looking up
      */
     const FRAGMENT_REGEX = '/\$DefineFragment\(([a-z0-9\-_]+)\)/i';

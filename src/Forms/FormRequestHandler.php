@@ -77,7 +77,6 @@ class FormRequestHandler extends RequestHandler
     public function Link($action = null)
     {
         // Forms without parent controller have no link;
-        // E.g. Submission handled via graphql
         $controller = $this->form->getController();
         if (empty($controller)) {
             return null;

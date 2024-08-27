@@ -8,7 +8,7 @@ use Exception;
 /**
  * Utility class required due to bad coupling in framework.
  * Not every framework execution should require a working database connection.
- * For example, when generating class and config manifests for deployment bundles,
+ * For example, when generating class and config manifests for deployment bundles
  * or when generating code in a silverstripe/graphql schema build.
  *
  * This class creates the required no-ops to fulfill the contract,
