@@ -18,7 +18,6 @@ class TestFixture extends ViewableData
         parent::__construct();
     }
 
-
     private function argedName($fieldName, $arguments)
     {
         $childName = $this->name ? "$this->name.$fieldName" : $fieldName;
@@ -29,8 +28,12 @@ class TestFixture extends ViewableData
         }
     }
 
-    public function obj($fieldName, $arguments = null, $cache = false, $cacheName = null)
-    {
+    public function obj(
+        string $fieldName,
+        array $arguments = [],
+        bool $cache = false,
+        ?string $cacheName = null
+    ): ?object {
         $childName = $this->argedName($fieldName, $arguments);
 
         // Special field name Loop### to create a list
@@ -49,8 +52,7 @@ class TestFixture extends ViewableData
         }
     }
 
-
-    public function XML_val($fieldName, $arguments = null, $cache = false)
+    public function XML_val(string $fieldName, array $arguments = [], bool $cache = false): string
     {
         if (preg_match('/NotSet/i', $fieldName ?? '')) {
             return '';
@@ -63,7 +65,7 @@ class TestFixture extends ViewableData
         }
     }
 
-    public function hasValue($fieldName, $arguments = null, $cache = true)
+    public function hasValue(string $fieldName, array $arguments = [], bool $cache = true): bool
     {
         return (bool)$this->XML_val($fieldName, $arguments);
     }

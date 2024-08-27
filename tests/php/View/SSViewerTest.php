@@ -653,12 +653,14 @@ SS;
 
     public function testLoopWhitespace()
     {
+        $data = new ArrayList([new SSViewerTest\TestFixture()]);
         $this->assertEquals(
-            'before[out:SingleItem.Test]after
+            'before[out:Test]after
 				beforeTestafter',
             $this->render(
-                'before<% loop SingleItem %>$Test<% end_loop %>after
-				before<% loop SingleItem %>Test<% end_loop %>after'
+                'before<% loop %>$Test<% end_loop %>after
+				before<% loop %>Test<% end_loop %>after',
+                $data
             )
         );
 
@@ -668,15 +670,16 @@ SS;
         $this->assertEquals(
             'before
 
-[out:SingleItem.ItemOnItsOwnLine]
+[out:ItemOnItsOwnLine]
 
 after',
             $this->render(
                 'before
-<% loop SingleItem %>
+<% loop %>
 $ItemOnItsOwnLine
 <% end_loop %>
-after'
+after',
+$data
             )
         );
 
@@ -2369,7 +2372,7 @@ EOC;
     public function testMe(): void
     {
         $mockArrayData = $this->getMockBuilder(ArrayData::class)->addMethods(['forTemplate'])->getMock();
-        $mockArrayData->expects($this->once())->method('forTemplate');
+        $mockArrayData->expects($this->once())->method('forTemplate')->willReturn('');
         $this->render('$Me', $mockArrayData);
     }
 }

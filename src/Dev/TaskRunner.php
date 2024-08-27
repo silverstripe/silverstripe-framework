@@ -236,7 +236,7 @@ class TaskRunner extends Controller implements PermissionProvider
         }
         return count($this->getTaskList()) > 0;
     }
-    
+
     public function providePermissions(): array
     {
         return [

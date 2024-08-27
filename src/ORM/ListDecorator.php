@@ -112,7 +112,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->getIterator();
     }
 
-    public function exists()
+    public function exists(): bool
     {
         return $this->list->exists();
     }
@@ -140,7 +140,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->count();
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->list->forTemplate();
     }
@@ -313,7 +313,7 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->exclude(...func_get_args());
     }
 
-    public function debug()
+    public function debug(): string
     {
         return $this->list->debug();
     }

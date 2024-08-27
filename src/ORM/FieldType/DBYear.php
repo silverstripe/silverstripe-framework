@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DB;
 
 /**
@@ -10,15 +11,14 @@ use SilverStripe\ORM\DB;
  */
 class DBYear extends DBField
 {
-
-    public function requireField()
+    public function requireField(): void
     {
         $parts = ['datatype' => 'year', 'precision' => 4, 'arrayValue' => $this->arrayValue];
         $values = ['type' => 'year', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         $selectBox = DropdownField::create($this->name, $title);
         $selectBox->setSource($this->getDefaultOptions());
@@ -31,11 +31,10 @@ class DBYear extends DBField
      * input values. Starts by default at the current year,
      * and counts back to 1900.
      *
-     * @param int|bool $start starting date to count down from
-     * @param int|bool $end end date to count down to
-     * @return array
+     * @param int|null $start starting date to count down from
+     * @param int|null $end end date to count down to
      */
-    private function getDefaultOptions($start = null, $end = null)
+    private function getDefaultOptions(?int $start = null, ?int $end = null): array
     {
         if (!$start) {
             $start = (int)date('Y');

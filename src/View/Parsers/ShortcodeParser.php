@@ -733,6 +733,6 @@ class ShortcodeParser
 
         $this->extend('onAfterParse', $content);
 
-        return $content;
+        return $content ?? '';
     }
 }

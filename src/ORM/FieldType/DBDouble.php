@@ -11,7 +11,7 @@ use SilverStripe\ORM\DB;
 class DBDouble extends DBFloat
 {
 
-    public function requireField()
+    public function requireField(): void
     {
         // HACK: MSSQL does not support double so we're using float instead
         if (DB::get_conn() instanceof MySQLDatabase) {

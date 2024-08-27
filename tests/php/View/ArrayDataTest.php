@@ -11,7 +11,7 @@ use stdClass;
 class ArrayDataTest extends SapphireTest
 {
 
-    public function testViewabledataItemsInsideArraydataArePreserved()
+    public function testViewableDataItemsInsideArraydataArePreserved()
     {
         /* ViewableData objects will be preserved, but other objects will be converted */
         $arrayData = new ArrayData(

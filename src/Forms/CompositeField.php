@@ -514,7 +514,7 @@ class CompositeField extends FormField
         return false;
     }
 
-    public function debug()
+    public function debug(): string
     {
         $class = static::class;
         $result = "$class ($this->name) <ul>";

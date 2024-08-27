@@ -790,7 +790,7 @@ class FormField extends RequestHandler
         return $form->getSecurityToken()->isEnabled();
     }
 
-    public function castingHelper($field, bool $useFallback = true)
+    public function castingHelper(string $field, bool $useFallback = true): ?string
     {
         // Override casting for field message
         if (strcasecmp($field ?? '', 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
@@ -1269,7 +1269,7 @@ class FormField extends RequestHandler
     /**
      * @return string
      */
-    public function debug()
+    public function debug(): string
     {
         $strValue = is_string($this->value) ? $this->value : print_r($this->value, true);
 
@@ -1286,10 +1286,8 @@ class FormField extends RequestHandler
     /**
      * This function is used by the template processor. If you refer to a field as a $ variable, it
      * will return the $Field value.
-     *
-     * @return string
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->Field();
     }

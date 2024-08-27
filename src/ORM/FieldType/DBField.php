@@ -7,7 +7,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\View\ViewableData;
@@ -36,7 +35,7 @@ use SilverStripe\View\ViewableData;
  *
  * <code>
  * class Blob extends DBField {
- *  function requireField() {
+ *  function requireField(): void {
  *      DB::require_field($this->tableName, $this->name, "blob");
  *  }
  * }
@@ -47,65 +46,47 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Raw value of this field
-     *
-     * @var mixed
      */
-    protected $value;
+    protected mixed $value = null;
 
     /**
      * Table this field belongs to
-     *
-     * @var string
      */
-    protected $tableName;
+    protected ?string $tableName = null;
 
     /**
      * Name of this field
-     *
-     * @var string
      */
-    protected $name;
+    protected ?string $name = null;
 
     /**
      * Used for generating DB schema. {@see DBSchemaManager}
-     *
-     * @var array
+     * Despite its name, this seems to be a string
      */
     protected $arrayValue;
 
     /**
      * Optional parameters for this field
-     *
-     * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * The escape type for this field when inserted into a template - either "xml" or "raw".
-     *
-     * @var string
-     * @config
      */
-    private static $escape_type = 'raw';
+    private static string $escape_type = 'raw';
 
     /**
      * Subclass of {@link SearchFilter} for usage in {@link defaultSearchFilter()}.
-     *
-     * @var string
-     * @config
      */
-    private static $default_search_filter_class = 'PartialMatchFilter';
+    private static string $default_search_filter_class = 'PartialMatchFilter';
 
     /**
      * The type of index to use for this field. Can either be a string (one of the DBIndexable type options) or a
      * boolean. When a boolean is given, false will not index the field, and true will use the default index type.
-     *
-     * @var string|bool
-     * @config
      */
-    private static $index = false;
+    private static string|bool $index = false;
 
-    private static $casting = [
+    private static array $casting = [
         'ATT' => 'HTMLFragment',
         'CDATA' => 'HTMLFragment',
         'HTML' => 'HTMLFragment',
@@ -119,20 +100,18 @@ abstract class DBField extends ViewableData implements DBIndexable
     ];
 
     /**
-     * @var $default mixed Default-value in the database.
+     * Default value in the database.
      * Might be overridden on DataObject-level, but still useful for setting defaults on
      * already existing records after a db-build.
      */
-    protected $defaultVal;
+    protected mixed $defaultVal = null;
 
     /**
      * Provide the DBField name and an array of options, e.g. ['index' => true], or ['nullifyEmpty' => false]
      *
-     * @param  string $name
-     * @param  array  $options
      * @throws InvalidArgumentException If $options was passed by not an array
      */
-    public function __construct($name = null, $options = [])
+    public function __construct(?string $name = null, array $options = [])
     {
         $this->name = $name;
 
@@ -154,12 +133,11 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param string $spec Class specification to construct. May include both service name and additional
      * constructor arguments in the same format as DataObject.db config.
      * @param mixed $value value of field
-     * @param string $name Name of field
+     * @param null|string $name Name of field
      * @param mixed $args Additional arguments to pass to constructor if not using args in service $spec
      * Note: Will raise a warning if using both
-     * @return static
      */
-    public static function create_field($spec, $value, $name = null, ...$args)
+    public static function create_field(string $spec, mixed $value, ?string $name = null, mixed ...$args): static
     {
         // Raise warning if inconsistent with DataObject::dbObject() behaviour
         // This will cause spec args to be shifted down by the number of provided $args
@@ -182,12 +160,8 @@ abstract class DBField extends ViewableData implements DBIndexable
      * the first place you can set a name.
      *
      * If you try an alter the name a warning will be thrown.
-     *
-     * @param string $name
-     *
-     * @return $this
      */
-    public function setName($name)
+    public function setName(?string $name): static
     {
         if ($this->name && $this->name !== $name) {
             user_error("DBField::setName() shouldn't be called once a DBField already has a name."
@@ -201,20 +175,16 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Returns the name of this field.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
      * Returns the value of this field.
-     *
-     * @return mixed
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->value;
     }
@@ -228,14 +198,12 @@ abstract class DBField extends ViewableData implements DBIndexable
      * and actually changing its values, it needs a {@link $markChanged}
      * parameter.
      *
-     * @param mixed $value
-     * @param DataObject|array $record An array or object that this field is part of
+     * @param null|ViewableData|array $record An array or object that this field is part of
      * @param bool $markChanged Indicate whether this field should be marked changed.
      *  Set to FALSE if you are initializing this field after construction, rather
      *  than setting a new value.
-     * @return $this
      */
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
     {
         $this->value = $value;
         return $this;
@@ -243,21 +211,16 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Get default value assigned at the DB level
-     *
-     * @return mixed
      */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->defaultVal;
     }
 
     /**
      * Set default value to use at the DB level
-     *
-     * @param mixed $defaultValue
-     * @return $this
      */
-    public function setDefaultValue($defaultValue)
+    public function setDefaultValue(mixed $defaultValue): static
     {
         $this->defaultVal = $defaultValue;
         return $this;
@@ -265,11 +228,8 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Update the optional parameters for this field
-     *
-     * @param array $options Array of options
-     * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): static
     {
         $this->options = $options;
         return $this;
@@ -277,15 +237,13 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Get optional parameters for this field
-     *
-     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    public function setIndexType($type)
+    public function setIndexType($type): string|bool
     {
         if (!is_bool($type)
             && !in_array($type, [DBIndexable::TYPE_INDEX, DBIndexable::TYPE_UNIQUE, DBIndexable::TYPE_FULLTEXT])
@@ -320,10 +278,8 @@ abstract class DBField extends ViewableData implements DBIndexable
     /**
      * Determines if the field has a value which is not considered to be 'null'
      * in a database context.
-     *
-     * @return boolean
      */
-    public function exists()
+    public function exists(): bool
     {
         return (bool)$this->value;
     }
@@ -336,7 +292,7 @@ abstract class DBField extends ViewableData implements DBIndexable
      * @param mixed $value The value to check
      * @return mixed The raw value, or escaped parameterised details
      */
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): mixed
     {
         if ($value === null ||
             $value === "" ||
@@ -358,10 +314,8 @@ abstract class DBField extends ViewableData implements DBIndexable
      * can also be used to apply special SQL-commands
      * to the raw value (e.g. for GIS functionality).
      * {@see prepValueForDB}
-     *
-     * @param array $manipulation
      */
-    public function writeToManipulation(&$manipulation)
+    public function writeToManipulation(array &$manipulation): void
     {
         $manipulation['fields'][$this->name] = $this->exists()
             ? $this->prepValueForDB($this->value) : $this->nullValue();
@@ -375,20 +329,15 @@ abstract class DBField extends ViewableData implements DBIndexable
      * SELECT <tablename>.* which
      * gets you the default representations
      * of all columns.
-     *
-     * @param SQLSelect $query
      */
-    public function addToQuery(&$query)
+    public function addToQuery(SQLSelect &$query)
     {
     }
 
     /**
      * Assign this DBField to a table
-     *
-     * @param string $tableName
-     * @return $this
      */
-    public function setTable($tableName)
+    public function setTable(string $tableName): static
     {
         $this->tableName = $tableName;
         return $this;
@@ -396,20 +345,16 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Get the table this field belongs to, if assigned
-     *
-     * @return string|null
      */
-    public function getTable()
+    public function getTable(): ?string
     {
         return $this->tableName;
     }
 
     /**
      * Determine 'default' casting for this field.
-     *
-     * @return string
      */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         // Default to XML encoding
         return $this->XML();
@@ -417,40 +362,32 @@ abstract class DBField extends ViewableData implements DBIndexable
 
     /**
      * Gets the value appropriate for a HTML attribute string
-     *
-     * @return string
      */
-    public function HTMLATT()
+    public function HTMLATT(): string
     {
         return Convert::raw2htmlatt($this->RAW());
     }
 
     /**
      * urlencode this string
-     *
-     * @return string
      */
-    public function URLATT()
+    public function URLATT(): string
     {
         return urlencode($this->RAW() ?? '');
     }
 
     /**
      * rawurlencode this string
-     *
-     * @return string
      */
-    public function RAWURLATT()
+    public function RAWURLATT(): string
     {
         return rawurlencode($this->RAW() ?? '');
     }
 
     /**
      * Gets the value appropriate for a HTML attribute string
-     *
-     * @return string
      */
-    public function ATT()
+    public function ATT(): string
     {
         return Convert::raw2att($this->RAW());
     }
@@ -458,60 +395,48 @@ abstract class DBField extends ViewableData implements DBIndexable
     /**
      * Gets the raw value for this field.
      * Note: Skips processors implemented via forTemplate()
-     *
-     * @return mixed
      */
-    public function RAW()
+    public function RAW(): mixed
     {
         return $this->getValue();
     }
 
     /**
      * Gets javascript string literal value
-     *
-     * @return string
      */
-    public function JS()
+    public function JS(): string
     {
         return Convert::raw2js($this->RAW());
     }
 
     /**
      * Return JSON encoded value
-     *
-     * @return string
      */
-    public function JSON()
+    public function JSON(): string
     {
         return json_encode($this->RAW());
     }
 
     /**
      * Alias for {@see XML()}
-     *
-     * @return string
      */
-    public function HTML()
+    public function HTML(): string
     {
         return $this->XML();
     }
 
     /**
      * XML encode this value
-     *
-     * @return string
      */
-    public function XML()
+    public function XML(): string
     {
         return Convert::raw2xml($this->RAW());
     }
 
     /**
      * Safely escape for XML string
-     *
-     * @return string
      */
-    public function CDATA()
+    public function CDATA(): string
     {
         return $this->XML();
     }
@@ -519,20 +444,16 @@ abstract class DBField extends ViewableData implements DBIndexable
     /**
      * Returns the value to be set in the database to blank this field.
      * Usually it's a choice between null, 0, and ''
-     *
-     * @return mixed
      */
-    public function nullValue()
+    public function nullValue(): mixed
     {
         return null;
     }
 
     /**
      * Saves this field to the given data object.
-     *
-     * @param DataObject $dataObject
      */
-    public function saveInto($dataObject)
+    public function saveInto(ViewableData $model): void
     {
         $fieldName = $this->name;
         if (empty($fieldName)) {
@@ -541,9 +462,9 @@ abstract class DBField extends ViewableData implements DBIndexable
             );
         }
         if ($this->value instanceof DBField) {
-            $this->value->saveInto($dataObject);
+            $this->value->saveInto($model);
         } else {
-            $dataObject->__set($fieldName, $this->value);
+            $model->__set($fieldName, $this->value);
         }
     }
 
@@ -554,10 +475,8 @@ abstract class DBField extends ViewableData implements DBIndexable
      * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
      *
      * @param string $title Optional. Localized title of the generated instance
-     * @param array $params
-     * @return FormField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return TextField::create($this->name, $title);
     }
@@ -569,30 +488,28 @@ abstract class DBField extends ViewableData implements DBIndexable
      * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}.
      *
      * @param string $title Optional. Localized title of the generated instance
-     * @return FormField
      */
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField(?string $title = null): ?FormField
     {
         return $this->scaffoldFormField($title);
     }
 
     /**
      * @param string $name Override name of this field
-     * @return SearchFilter
      */
-    public function defaultSearchFilter($name = null)
+    public function defaultSearchFilter(?string $name = null): SearchFilter
     {
         $name = ($name) ? $name : $this->name;
-        $filterClass = $this->config()->get('default_search_filter_class');
+        $filterClass = static::config()->get('default_search_filter_class');
         return Injector::inst()->create($filterClass, $name);
     }
 
     /**
      * Add the field to the underlying database.
      */
-    abstract public function requireField();
+    abstract public function requireField(): void;
 
-    public function debug()
+    public function debug(): string
     {
         return <<<DBG
 <ul>
@@ -603,40 +520,31 @@ abstract class DBField extends ViewableData implements DBIndexable
 DBG;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->forTemplate();
     }
 
-    /**
-     * @return array
-     */
     public function getArrayValue()
     {
         return $this->arrayValue;
     }
 
-    /**
-     * @param array $value
-     * @return $this
-     */
-    public function setArrayValue($value)
+    public function setArrayValue($value): static
     {
         $this->arrayValue = $value;
         return $this;
     }
 
     /**
-     * Get formfield schema value
-     *
-     * @return string|array Encoded string for use in formschema response
+     * Get formfield schema value for use in formschema response
      */
-    public function getSchemaValue()
+    public function getSchemaValue(): mixed
     {
         return $this->RAW();
     }
 
-    public function getIndexSpecs()
+    public function getIndexSpecs(): ?array
     {
         $type = $this->getIndexType();
         if ($type) {
@@ -652,9 +560,8 @@ DBG;
      * Whether or not this DBField only accepts scalar values.
      *
      * Composite DBFields can override this method and return `false` so they can accept arrays of values.
-     * @return boolean
      */
-    public function scalarValueOnly()
+    public function scalarValueOnly(): bool
     {
         return true;
     }

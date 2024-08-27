@@ -70,13 +70,10 @@ class ArrayData extends ViewableData
      *
      * If the value is an associative array, it will likewise be
      * converted recursively to an ArrayData.
-     *
-     * @param string $field
-     * @return mixed
      */
-    public function getField($field)
+    public function getField(string $fieldName): mixed
     {
-        $value = $this->array[$field];
+        $value = $this->array[$fieldName];
         if (is_object($value) && !($value instanceof ViewableData) && !is_iterable($value)) {
             return new ArrayData($value);
         } elseif (ArrayLib::is_associative($value)) {
@@ -87,14 +84,10 @@ class ArrayData extends ViewableData
     }
     /**
     * Add or set a field on this object.
-    *
-    * @param string $field
-    * @param mixed $value
-    * @return $this
     */
-    public function setField($field, $value)
+    public function setField(string $fieldName, mixed $value): static
     {
-        $this->array[$field] = $value;
+        $this->array[$fieldName] = $value;
         return $this;
     }
 
@@ -104,9 +97,9 @@ class ArrayData extends ViewableData
      * @param string $field Field Key
      * @return bool
      */
-    public function hasField($field)
+    public function hasField(string $fieldName): bool
     {
-        return isset($this->array[$field]);
+        return isset($this->array[$fieldName]);
     }
 
     /**

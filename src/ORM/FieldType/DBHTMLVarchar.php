@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\Parsers\ShortcodeParser;
@@ -14,10 +15,9 @@ use SilverStripe\View\Parsers\ShortcodeParser;
  */
 class DBHTMLVarchar extends DBVarchar
 {
+    private static string $escape_type = 'xml';
 
-    private static $escape_type = 'xml';
-
-    private static $casting = [
+    private static array $casting = [
         // DBString conversion / summary methods
         // Not overridden, but returns HTML instead of plain text.
         "LowerCase" => "HTMLFragment",
@@ -26,35 +26,27 @@ class DBHTMLVarchar extends DBVarchar
 
     /**
      * Enable shortcode parsing on this field
-     *
-     * @var bool
      */
-    protected $processShortcodes = false;
+    protected bool $processShortcodes = false;
 
     /**
      * Check if shortcodes are enabled
-     *
-     * @return bool
      */
-    public function getProcessShortcodes()
+    public function getProcessShortcodes(): bool
     {
         return $this->processShortcodes;
     }
 
     /**
      * Set shortcodes on or off by default
-     *
-     * @param bool $process
-     * @return $this
      */
-    public function setProcessShortcodes($process)
+    public function setProcessShortcodes(bool $process): static
     {
-        $this->processShortcodes = (bool)$process;
+        $this->processShortcodes = $process;
         return $this;
     }
+
     /**
-     * @param array $options
-     *
      * Options accepted in addition to those provided by Text:
      *
      *   - shortcodes: If true, shortcodes will be turned into the appropriate HTML.
@@ -66,10 +58,8 @@ class DBHTMLVarchar extends DBVarchar
      *                Text nodes outside of HTML tags are filtered out by default, but may be included by adding
      *                the text() directive. E.g. 'link,meta,text()' will allow only <link /> <meta /> and text at
      *                the root level.
-     *
-     * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): static
     {
         if (array_key_exists("shortcodes", $options ?? [])) {
             $this->setProcessShortcodes(!!$options["shortcodes"]);
@@ -78,13 +68,13 @@ class DBHTMLVarchar extends DBVarchar
         return parent::setOptions($options);
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         // Suppress XML encoding for DBHtmlText
-        return $this->RAW();
+        return $this->RAW() ?? '';
     }
 
-    public function RAW()
+    public function RAW(): ?string
     {
         if ($this->processShortcodes) {
             return ShortcodeParser::get_active()->parse($this->value);
@@ -94,10 +84,8 @@ class DBHTMLVarchar extends DBVarchar
 
     /**
      * Safely escape for XML string
-     *
-     * @return string
      */
-    public function CDATA()
+    public function CDATA(): string
     {
         return sprintf(
             '<![CDATA[%s]]>',
@@ -109,10 +97,8 @@ class DBHTMLVarchar extends DBVarchar
      * Get plain-text version.
      *
      * Note: unlike DBHTMLText, this doesn't respect line breaks / paragraphs
-     *
-     * @return string
      */
-    public function Plain()
+    public function Plain(): string
     {
         // Strip out HTML
         $text = strip_tags($this->RAW() ?? '');
@@ -121,17 +107,17 @@ class DBHTMLVarchar extends DBVarchar
         return trim(Convert::xml2raw($text) ?? '');
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return HTMLEditorField::create($this->name, $title);
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField(?string $title = null): ?FormField
     {
         return TextField::create($this->name, $title);
     }
 
-    public function getSchemaValue()
+    public function getSchemaValue(): ?array
     {
         // Form schema format as HTML
         $value = $this->RAW();
@@ -141,7 +127,7 @@ class DBHTMLVarchar extends DBVarchar
         return null;
     }
 
-    public function exists()
+    public function exists(): bool
     {
         // Optimisation: don't process shortcode just for ->exists()
         $value = $this->getValue();

@@ -110,10 +110,8 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 
     /**
      * Returns true if this list has items
-     *
-     * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return !empty($this->items);
     }
@@ -159,7 +157,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
         return $this;
     }
 
-    public function debug()
+    public function debug(): string
     {
         $val = "<h2>" . static::class . "</h2><ul>";
         foreach ($this->toNestedArray() as $item) {

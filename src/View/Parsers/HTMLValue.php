@@ -46,10 +46,7 @@ class HTMLValue extends ViewableData
         return false;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): string
     {
         $document = $this->getDocument();
         if (!$document) {
@@ -98,7 +95,7 @@ class HTMLValue extends ViewableData
     }
 
     /** @see HTMLValue::getContent() */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->getContent();
     }

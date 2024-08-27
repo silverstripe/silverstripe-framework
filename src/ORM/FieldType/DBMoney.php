@@ -13,25 +13,17 @@ use SilverStripe\i18n\i18n;
  */
 class DBMoney extends DBComposite
 {
-    /**
-     * @var string $locale
-     */
-    protected $locale = null;
+    protected ?string $locale = null;
 
-    /**
-     * @var array<string,string>
-     */
-    private static $composite_db = [
+    private static array $composite_db = [
         'Currency' => 'Varchar(3)',
         'Amount' => 'Decimal(19,4)'
     ];
 
     /**
      * Get currency formatter
-     *
-     * @return NumberFormatter
      */
-    public function getFormatter()
+    public function getFormatter(): NumberFormatter
     {
         $locale = $this->getLocale();
         $currency = $this->getCurrency();
@@ -43,10 +35,8 @@ class DBMoney extends DBComposite
 
     /**
      * Get nicely formatted currency (based on current locale)
-     *
-     * @return string
      */
-    public function Nice()
+    public function Nice(): string
     {
         if (!$this->exists()) {
             return null;
@@ -66,10 +56,8 @@ class DBMoney extends DBComposite
 
     /**
      * Standard '0.00 CUR' format (non-localised)
-     *
-     * @return string
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         if (!$this->exists()) {
             return null;
@@ -82,39 +70,23 @@ class DBMoney extends DBComposite
         return $amount . ' ' . $currency;
     }
 
-    /**
-     * @return string
-     */
-    public function getCurrency()
+    public function getCurrency(): ?string
     {
         return $this->getField('Currency');
     }
 
-    /**
-     * @param string $currency
-     * @param bool $markChanged
-     * @return $this
-     */
-    public function setCurrency($currency, $markChanged = true)
+    public function setCurrency(?string $currency, bool $markChanged = true): static
     {
         $this->setField('Currency', $currency, $markChanged);
         return $this;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): ?float
     {
         return $this->getField('Amount');
     }
 
-    /**
-     * @param mixed $amount
-     * @param bool $markChanged
-     * @return $this
-     */
-    public function setAmount($amount, $markChanged = true)
+    public function setAmount(mixed $amount, bool $markChanged = true): static
     {
         // Retain nullability to mark this field as empty
         if (isset($amount)) {
@@ -124,49 +96,35 @@ class DBMoney extends DBComposite
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function exists()
+    public function exists(): bool
     {
         return is_numeric($this->getAmount());
     }
 
     /**
      * Determine if this has a non-zero amount
-     *
-     * @return bool
      */
-    public function hasAmount()
+    public function hasAmount(): bool
     {
         $a = $this->getAmount();
         return (!empty($a) && is_numeric($a));
     }
 
-    /**
-     * @param string $locale
-     * @return $this
-     */
-    public function setLocale($locale)
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale ?: i18n::get_locale();
     }
 
     /**
      * Get currency symbol
-     *
-     * @return string
      */
-    public function getSymbol()
+    public function getSymbol(): string
     {
         return $this->getFormatter()->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
     }
@@ -178,10 +136,8 @@ class DBMoney extends DBComposite
      * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
      *
      * @param string $title Optional. Localized title of the generated instance
-     * @param array $params
-     * @return FormField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return MoneyField::create($this->getName(), $title)
             ->setLocale($this->getLocale());

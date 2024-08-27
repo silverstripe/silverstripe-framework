@@ -968,7 +968,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * Get Pjax response negotiator so form submission mirrors other form submission in the CMS.
      * See LeftAndMain::getResponseNegotiator()
      */
-    private function getResponseNegotiator(DBHTMLText $renderedForm): PjaxResponseNegotiator
+    private function getResponseNegotiator(string $renderedForm): PjaxResponseNegotiator
     {
         return new PjaxResponseNegotiator([
             'default' => function () use ($renderedForm) {

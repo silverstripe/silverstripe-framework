@@ -133,7 +133,7 @@ class ViewableDataTest extends SapphireTest
         $this->assertFalse($data->hasValue('SomethingElse'));
         // this should cast the raw string to a StringField since we are
         // passing true as the third argument:
-        $obj = $data->obj('Title', null, true);
+        $obj = $data->obj('Title', [], true);
         $this->assertTrue(is_object($obj));
         // and the string field should have the value of the raw string:
         $this->assertEquals('SomeTitleValue', $obj->forTemplate());
@@ -164,11 +164,11 @@ class ViewableDataTest extends SapphireTest
 
         // Save a literal string into cache
         $cache = true;
-        $uncastedData = $obj->obj('noCastingInformation', null, false, $cache);
+        $uncastedData = $obj->obj('noCastingInformation', [], false, $cache);
 
         // Fetch the cached string as an object
         $forceReturnedObject = true;
-        $castedData = $obj->obj('noCastingInformation', null, $forceReturnedObject);
+        $castedData = $obj->obj('noCastingInformation', [], $forceReturnedObject);
 
         // Uncasted data should always be the nonempty string
         $this->assertNotEmpty($uncastedData, 'Uncasted data was empty.');
@@ -189,15 +189,15 @@ class ViewableDataTest extends SapphireTest
         $objCached->Test = 'AAA';
         $objNotCached->Test = 'AAA';
 
-        $this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
-        $this->assertEquals('AAA', $objNotCached->obj('Test', null, true, true));
+        $this->assertEquals('AAA', $objCached->obj('Test', [], true, true));
+        $this->assertEquals('AAA', $objNotCached->obj('Test', [], true, true));
 
         $objCached->Test = 'BBB';
         $objNotCached->Test = 'BBB';
 
         // Cached data must be always the same
-        $this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
-        $this->assertEquals('BBB', $objNotCached->obj('Test', null, true, true));
+        $this->assertEquals('AAA', $objCached->obj('Test', [], true, true));
+        $this->assertEquals('BBB', $objNotCached->obj('Test', [], true, true));
     }
 
     public function testSetFailover()

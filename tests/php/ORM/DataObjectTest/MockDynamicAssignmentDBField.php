@@ -34,10 +34,8 @@ class MockDynamicAssignmentDBField extends DBBoolean implements TestOnly
 
     /**
      * If the field value and $dynamicAssignment are true, we'll try to do a dynamic assignment.
-     * @param $value
-     * @return array|int
      */
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): array|int|null
     {
         if ($value) {
             return $this->dynamicAssignment
@@ -48,7 +46,7 @@ class MockDynamicAssignmentDBField extends DBBoolean implements TestOnly
         return 0;
     }
 
-    public function scalarValueOnly()
+    public function scalarValueOnly(): bool
     {
         return $this->scalarOnly;
     }

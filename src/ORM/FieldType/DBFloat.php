@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
 
@@ -10,15 +11,14 @@ use SilverStripe\ORM\DB;
  */
 class DBFloat extends DBField
 {
-
-    public function __construct($name = null, $defaultVal = 0)
+    public function __construct(?string $name = null, float|int $defaultVal = 0)
     {
         $this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;
 
         parent::__construct($name);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'float',
@@ -35,34 +35,34 @@ class DBFloat extends DBField
      *
      * @uses number_format()
      */
-    public function Nice()
+    public function Nice(): string
     {
         return number_format($this->value ?? 0.0, 2);
     }
 
-    public function Round($precision = 3)
+    public function Round($precision = 3): float
     {
         return round($this->value ?? 0.0, $precision ?? 0);
     }
 
-    public function NiceRound($precision = 3)
+    public function NiceRound($precision = 3): string
     {
         return number_format(round($this->value ?? 0.0, $precision ?? 0), $precision ?? 0);
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         $field = NumericField::create($this->name, $title);
         $field->setScale(null); // remove no-decimal restriction
         return $field;
     }
 
-    public function nullValue()
+    public function nullValue(): ?int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): array|float|int|null
     {
         if ($value === true) {
             return 1;

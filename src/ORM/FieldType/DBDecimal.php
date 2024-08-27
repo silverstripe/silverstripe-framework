@@ -2,71 +2,55 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\ViewableData;
 
 /**
  * Represents a Decimal field.
  */
 class DBDecimal extends DBField
 {
-
     /**
      * Whole number size
-     *
-     * @var int
      */
-    protected $wholeSize = 9;
+    protected int $wholeSize = 9;
 
     /**
      * Decimal scale
-     *
-     * @var int
      */
-    protected $decimalSize = 2;
+    protected int $decimalSize = 2;
 
     /**
      * Default value
-     *
-     * @var string
      */
-    protected $defaultValue = 0;
+    protected float|int|string $defaultValue = 0;
 
     /**
      * Create a new Decimal field.
-     *
-     * @param string $name
-     * @param int $wholeSize
-     * @param int $decimalSize
-     * @param float|int $defaultValue
      */
-    public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0)
+    public function __construct(?string $name = null, ?int $wholeSize = 9, ?int $decimalSize = 2, float|int $defaultValue = 0)
     {
         $this->wholeSize = is_int($wholeSize) ? $wholeSize : 9;
         $this->decimalSize = is_int($decimalSize) ? $decimalSize : 2;
 
-        $this->defaultValue = number_format((float) $defaultValue, $decimalSize ?? 0);
+        $this->defaultValue = number_format((float) $defaultValue, $this->decimalSize);
 
         parent::__construct($name);
     }
 
-    /**
-     * @return float
-     */
-    public function Nice()
+    public function Nice(): string
     {
         return number_format($this->value ?? 0.0, $this->decimalSize ?? 0);
     }
 
-    /**
-     * @return int
-     */
-    public function Int()
+    public function Int(): int
     {
         return floor($this->value ?? 0.0);
     }
 
-    public function requireField()
+    public function requireField(): void
     {
         $parts = [
             'datatype' => 'decimal',
@@ -83,16 +67,16 @@ class DBDecimal extends DBField
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function saveInto($dataObject)
+    public function saveInto(ViewableData $model): void
     {
         $fieldName = $this->name;
 
         if ($fieldName) {
             if ($this->value instanceof DBField) {
-                $this->value->saveInto($dataObject);
+                $this->value->saveInto($model);
             } else {
                 $value = (float) preg_replace('/[^0-9.\-\+]/', '', $this->value ?? '');
-                $dataObject->__set($fieldName, $value);
+                $model->__set($fieldName, $value);
             }
         } else {
             throw new \UnexpectedValueException(
@@ -101,27 +85,18 @@ class DBDecimal extends DBField
         }
     }
 
-    /**
-     * @param string $title
-     * @param array $params
-     *
-     * @return NumericField
-     */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         return NumericField::create($this->name, $title)
             ->setScale($this->decimalSize);
     }
 
-    /**
-     * @return float
-     */
-    public function nullValue()
+    public function nullValue(): ?int
     {
         return 0;
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): array|float|int|null
     {
         if ($value === true) {
             return 1;

@@ -9,8 +9,7 @@ use SilverStripe\i18n\i18n;
  */
 class DBLocale extends DBVarchar
 {
-
-    public function __construct($name = null, $size = 16)
+    public function __construct(?string $name = null, int $size = 16)
     {
         parent::__construct($name, $size);
     }
@@ -18,11 +17,10 @@ class DBLocale extends DBVarchar
     /**
      * See {@link getShortName()} and {@link getNativeName()}.
      *
-     * @param Boolean $showNative Show a localized version of the name instead, based on the
+     * @param bool $showNative Show a localized version of the name instead, based on the
      *  field's locale value.
-     * @return String
      */
-    public function Nice($showNative = false)
+    public function Nice(bool $showNative = false): string
     {
         if ($showNative) {
             return $this->getNativeName();
@@ -30,7 +28,7 @@ class DBLocale extends DBVarchar
         return $this->getShortName();
     }
 
-    public function RFC1766()
+    public function RFC1766(): string
     {
         return i18n::convert_rfc1766($this->value);
     }
@@ -38,18 +36,13 @@ class DBLocale extends DBVarchar
     /**
      * Resolves the locale to a common english-language
      * name through {@link i18n::get_common_locales()}.
-     *
-     * @return string
      */
-    public function getShortName()
+    public function getShortName(): string
     {
         return i18n::getData()->languageName($this->value);
     }
 
-    /**
-     * @return string
-     */
-    public function getLongName()
+    public function getLongName(): string
     {
         return i18n::getData()->localeName($this->value);
     }
@@ -57,10 +50,8 @@ class DBLocale extends DBVarchar
     /**
      * Returns the localized name based on the field's value.
      * Example: "de_DE" returns "Deutsch".
-     *
-     * @return string
      */
-    public function getNativeName()
+    public function getNativeName(): string
     {
         $locale = $this->value;
         return i18n::with_locale($locale, function () {

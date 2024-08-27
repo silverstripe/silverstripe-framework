@@ -10,7 +10,7 @@ class RequiresCasting extends ViewableData implements TestOnly
 
     public $test = 'overwritten';
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return 'casted';
     }

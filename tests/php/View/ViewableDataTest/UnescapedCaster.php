@@ -15,7 +15,7 @@ class UnescapedCaster extends ViewableData implements TestOnly
         $this->value = $value;
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return Convert::raw2xml($this->value);
     }

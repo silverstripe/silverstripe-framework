@@ -56,7 +56,7 @@ class ReadonlyField extends FormField
         return 'readonly';
     }
 
-    public function castingHelper($field, bool $useFallback = true)
+    public function castingHelper(string $field, bool $useFallback = true): ?string
     {
         // Get dynamic cast for 'Value' field
         if (strcasecmp($field ?? '', 'Value') === 0) {

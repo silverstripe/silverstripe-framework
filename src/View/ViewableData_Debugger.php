@@ -9,15 +9,8 @@ use ReflectionObject;
  */
 class ViewableData_Debugger extends ViewableData
 {
+    protected ViewableData $object;
 
-    /**
-     * @var ViewableData
-     */
-    protected $object;
-
-    /**
-     * @param ViewableData $object
-     */
     public function __construct(ViewableData $object)
     {
         $this->object = $object;
@@ -25,9 +18,9 @@ class ViewableData_Debugger extends ViewableData
     }
 
     /**
-     * @return string The rendered debugger
+     * Returns the rendered debugger
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->forTemplate();
     }
@@ -35,11 +28,8 @@ class ViewableData_Debugger extends ViewableData
     /**
      * Return debugging information, as XHTML. If a field name is passed, it will show debugging information on that
      * field, otherwise it will show information on all methods and fields.
-     *
-     * @param string $field the field name
-     * @return string
      */
-    public function forTemplate($field = null)
+    public function forTemplate(?string $field = null): string
     {
         // debugging info for a specific field
         $class = get_class($this->object);

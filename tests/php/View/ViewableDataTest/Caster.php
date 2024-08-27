@@ -8,7 +8,7 @@ use SilverStripe\View\ViewableData;
 class Caster extends ViewableData implements TestOnly
 {
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return 'casted';
     }

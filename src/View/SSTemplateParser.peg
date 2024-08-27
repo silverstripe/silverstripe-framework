@@ -288,7 +288,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             $arguments = $sub['Call']['CallArguments']['php'];
             $res['php'] .= "->$method('$property', [$arguments], true)";
         } else {
-            $res['php'] .= "->$method('$property', null, true)";
+            $res['php'] .= "->$method('$property', [], true)";
         }
     }
 
@@ -1037,7 +1037,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
         //loop without arguments loops on the current scope
         if ($res['ArgumentCount'] == 0) {
-            $on = '$scope->locally()->obj(\'Me\', null, true)';
+            $on = '$scope->locally()->obj(\'Me\', [], true)';
         } else {    //loop in the normal way
             $arg = $res['Arguments'][0];
             if ($arg['ArgumentMode'] == 'string') {

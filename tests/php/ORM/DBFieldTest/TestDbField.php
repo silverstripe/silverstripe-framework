@@ -6,10 +6,11 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ViewableData;
 
 class TestDbField extends DBField implements TestOnly
 {
-    public function requireField()
+    public function requireField(): void
     {
         // Basically the same as DBVarchar but we don't want to test with DBVarchar in case something
         // changes in that class eventually.
@@ -34,9 +35,9 @@ class TestDbField extends DBField implements TestOnly
 
     public $saveIntoCalledCount = 0;
 
-    public function saveInto($dataObject)
+    public function saveInto(ViewableData $model): void
     {
         $this->saveIntoCalledCount++;
-        return parent::saveInto($dataObject);
+        parent::saveInto($model);
     }
 }

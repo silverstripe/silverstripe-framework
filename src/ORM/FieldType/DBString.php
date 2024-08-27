@@ -7,10 +7,7 @@ namespace SilverStripe\ORM\FieldType;
  */
 abstract class DBString extends DBField
 {
-    /**
-     * @var array
-     */
-    private static $casting = [
+    private static array $casting = [
         'LimitCharacters' => 'Text',
         'LimitCharactersToClosestWord' => 'Text',
         'LimitWordCount' => 'Text',
@@ -33,16 +30,14 @@ abstract class DBString extends DBField
     /**
      * Update the optional parameters for this field.
      *
-     * @param array $options Array of options
      * The options allowed are:
      *   <ul><li>"nullifyEmpty"
      *       This is a boolean flag.
      *       True (the default) means that empty strings are automatically converted to nulls to be stored in
      *       the database. Set it to false to ensure that nulls and empty strings are kept intact in the database.
      *   </li></ul>
-     * @return $this
      */
-    public function setOptions(array $options = [])
+    public function setOptions(array $options = []): static
     {
         parent::setOptions($options);
 
@@ -63,9 +58,9 @@ abstract class DBString extends DBField
      * @param $value boolean True if empty strings are to be converted to null
      * @return $this
      */
-    public function setNullifyEmpty($value)
+    public function setNullifyEmpty(bool $value): static
     {
-        $this->options['nullifyEmpty'] = (bool) $value;
+        $this->options['nullifyEmpty'] = $value;
         return $this;
     }
 
@@ -75,23 +70,19 @@ abstract class DBString extends DBField
      *
      * @return boolean True if empty strings are to be converted to null
      */
-    public function getNullifyEmpty()
+    public function getNullifyEmpty(): bool
     {
         return !empty($this->options['nullifyEmpty']);
     }
 
-    /**
-     * (non-PHPdoc)
-     * @see DBField::exists()
-     */
-    public function exists()
+    public function exists(): bool
     {
         $value = $this->RAW();
         // All truthy values and non-empty strings exist ('0' but not (int)0)
         return $value || (is_string($value) && strlen($value ?? ''));
     }
 
-    public function prepValueForDB($value)
+    public function prepValueForDB(mixed $value): array|string|null
     {
         // Cast non-empty value
         if (is_scalar($value) && strlen($value ?? '')) {
@@ -105,10 +96,7 @@ abstract class DBString extends DBField
         return '';
     }
 
-    /**
-     * @return string
-     */
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return nl2br(parent::forTemplate() ?? '');
     }
@@ -120,9 +108,8 @@ abstract class DBString extends DBField
      *
      * @param int $limit Number of characters to limit by
      * @param string|false $add Ellipsis to add to the end of truncated string
-     * @return string
      */
-    public function LimitCharacters($limit = 20, $add = false)
+    public function LimitCharacters(int $limit = 20, string|false $add = false): string
     {
         $value = $this->Plain();
         if (mb_strlen($value ?? '') <= $limit) {
@@ -140,7 +127,7 @@ abstract class DBString extends DBField
      * @param string|false $add Ellipsis to add to the end of truncated string
      * @return string Plain text value with limited characters
      */
-    public function LimitCharactersToClosestWord($limit = 20, $add = false)
+    public function LimitCharactersToClosestWord(int $limit = 20, string|false $add = false): string
     {
         // Safely convert to plain text
         $value = $this->Plain();
@@ -169,11 +156,9 @@ abstract class DBString extends DBField
      * Limit this field's content by a number of words.
      *
      * @param int $numWords Number of words to limit by.
-     * @param false $add Ellipsis to add to the end of truncated string.
-     *
-     * @return string
+     * @param string|false $add Ellipsis to add to the end of truncated string.
      */
-    public function LimitWordCount($numWords = 26, $add = false)
+    public function LimitWordCount(int $numWords = 26, string|false $add = false): string
     {
         $value = $this->Plain();
         $words = explode(' ', $value ?? '');
@@ -191,7 +176,7 @@ abstract class DBString extends DBField
      *
      * @return string Text with lowercase (HTML for some subclasses)
      */
-    public function LowerCase()
+    public function LowerCase(): string
     {
         return mb_strtolower($this->RAW() ?? '');
     }
@@ -201,28 +186,23 @@ abstract class DBString extends DBField
      *
      * @return string Text with uppercase (HTML for some subclasses)
      */
-    public function UpperCase()
+    public function UpperCase(): string
     {
         return mb_strtoupper($this->RAW() ?? '');
     }
 
     /**
      * Plain text version of this string
-     *
-     * @return string Plain text
      */
-    public function Plain()
+    public function Plain(): string
     {
         return trim($this->RAW() ?? '');
     }
 
     /**
      * Swap add for defaultEllipsis if need be
-     * @param string $string
-     * @param false|string $add
-     * @return string
      */
-    private function addEllipsis(string $string, $add): string
+    private function addEllipsis(string $string, string|false $add): string
     {
         if ($add === false) {
             $add = $this->defaultEllipsis();
@@ -233,7 +213,6 @@ abstract class DBString extends DBField
 
     /**
      * Get the default string to indicate that a string was cut off.
-     * @return string
      */
     public function defaultEllipsis(): string
     {

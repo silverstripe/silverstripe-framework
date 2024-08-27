@@ -4,17 +4,12 @@ namespace SilverStripe\View;
 
 class ViewableData_Customised extends ViewableData
 {
+    protected ViewableData $original;
 
-    /**
-     * @var ViewableData
-     */
-    protected $original, $customised;
+    protected ViewableData $customised;
 
     /**
      * Instantiate a new customised ViewableData object
-     *
-     * @param ViewableData $originalObject
-     * @param ViewableData $customisedObject
      */
     public function __construct(ViewableData $originalObject, ViewableData $customisedObject)
     {
@@ -35,7 +30,7 @@ class ViewableData_Customised extends ViewableData
         return call_user_func_array([$this->original, $method], $arguments ?? []);
     }
 
-    public function __get($property)
+    public function __get(string $property): mixed
     {
         if (isset($this->customised->$property)) {
             return $this->customised->$property;
@@ -44,12 +39,12 @@ class ViewableData_Customised extends ViewableData
         return $this->original->$property;
     }
 
-    public function __set($property, $value)
+    public function __set(string $property, mixed $value): void
     {
         $this->customised->$property = $this->original->$property = $value;
     }
 
-    public function __isset($property)
+    public function __isset(string $property): bool
     {
         return isset($this->customised->$property) || isset($this->original->$property) || parent::__isset($property);
     }
@@ -59,16 +54,20 @@ class ViewableData_Customised extends ViewableData
         return $this->customised->hasMethod($method) || $this->original->hasMethod($method);
     }
 
-    public function cachedCall($fieldName, $arguments = null, $identifier = null)
+    public function cachedCall(string $fieldName, array $arguments = [], ?string $cacheName = null): object
     {
         if ($this->customisedHas($fieldName)) {
-            return $this->customised->cachedCall($fieldName, $arguments, $identifier);
+            return $this->customised->cachedCall($fieldName, $arguments, $cacheName);
         }
-        return $this->original->cachedCall($fieldName, $arguments, $identifier);
+        return $this->original->cachedCall($fieldName, $arguments, $cacheName);
     }
 
-    public function obj($fieldName, $arguments = null, $cache = false, $cacheName = null)
-    {
+    public function obj(
+        string $fieldName,
+        array $arguments = [],
+        bool $cache = false,
+        ?string $cacheName = null
+    ): ?object {
         if ($this->customisedHas($fieldName)) {
             return $this->customised->obj($fieldName, $arguments, $cache, $cacheName);
         }

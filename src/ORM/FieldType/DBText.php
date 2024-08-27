@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NullableField;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
@@ -27,8 +28,7 @@ use SilverStripe\ORM\DB;
  */
 class DBText extends DBString
 {
-
-    private static $casting = [
+    private static array $casting = [
         'BigSummary' => 'Text',
         'ContextSummary' => 'HTMLFragment', // Always returns HTML as it contains formatting and highlighting
         'FirstParagraph' => 'Text',
@@ -42,11 +42,7 @@ class DBText extends DBString
      */
     private static array $summary_sentence_separators = ['.', '?', '!'];
 
-    /**
-     * (non-PHPdoc)
-     * @see DBField::requireField()
-     */
-    public function requireField()
+    public function requireField(): void
     {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
@@ -71,9 +67,8 @@ class DBText extends DBString
      * Limit sentences, can be controlled by passing an integer.
      *
      * @param int $maxSentences The amount of sentences you want.
-     * @return string
      */
-    public function LimitSentences($maxSentences = 2)
+    public function LimitSentences(int $maxSentences = 2): string
     {
         if (!is_numeric($maxSentences)) {
             throw new InvalidArgumentException("Text::LimitSentence() expects one numeric argument");
@@ -107,22 +102,16 @@ class DBText extends DBString
 
     /**
      * Return the first string that finishes with a period (.) in this text.
-     *
-     * @return string
      */
-    public function FirstSentence()
+    public function FirstSentence(): string
     {
         return $this->LimitSentences(1);
     }
 
     /**
      * Builds a basic summary, up to a maximum number of words
-     *
-     * @param int $maxWords
-     * @param string|false $add
-     * @return string
      */
-    public function Summary($maxWords = 50, $add = false)
+    public function Summary(int $maxWords = 50, string|false $add = false): string
     {
         // Get plain-text version
         $value = $this->Plain();
@@ -171,10 +160,8 @@ class DBText extends DBString
 
     /**
      * Get first paragraph
-     *
-     * @return string
      */
-    public function FirstParagraph()
+    public function FirstParagraph(): string
     {
         $value = $this->Plain();
         if (empty($value)) {
@@ -193,17 +180,15 @@ class DBText extends DBString
      * @param int $characters Number of characters in the summary
      * @param string $keywords Supplied string ("keywords"). Will fall back to 'Search' querystring arg.
      * @param bool $highlight Add a highlight <mark> element around search query?
-     * @param string|false $prefix Prefix text
-     * @param string|false $suffix Suffix text
      * @return string HTML string with context
      */
     public function ContextSummary(
-        $characters = 500,
-        $keywords = null,
-        $highlight = true,
-        $prefix = false,
-        $suffix = false
-    ) {
+        int $characters = 500,
+        ?string $keywords = null,
+        bool $highlight = true,
+        string|false $prefix = false,
+        string|false $suffix = false
+    ): string {
 
         if (!$keywords) {
             // Use the default "Search" request variable (from SearchForm)
@@ -267,7 +252,7 @@ class DBText extends DBString
         return nl2br($summary ?? '');
     }
 
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField(?string $title = null, array $params = []): ?FormField
     {
         if (!$this->nullifyEmpty) {
             // Allow the user to select if it's null instead of automatically assuming empty string is
@@ -277,7 +262,7 @@ class DBText extends DBString
         return TextareaField::create($this->name, $title);
     }
 
-    public function scaffoldSearchField($title = null)
+    public function scaffoldSearchField(?string $title = null): ?FormField
     {
         return new TextField($this->name, $title);
     }
