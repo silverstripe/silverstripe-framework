@@ -15,7 +15,7 @@ class SQLDelete extends SQLConditionalExpression
      * List of tables to limit the delete to, if multiple tables
      * are specified in the condition clause
      *
-     * @see http://dev.mysql.com/doc/refman/5.0/en/delete.html
+     * @see https://dev.mysql.com/doc/refman/8.4/en/delete.html
      *
      * @var array
      */

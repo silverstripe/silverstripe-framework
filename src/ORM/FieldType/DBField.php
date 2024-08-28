@@ -31,7 +31,7 @@ use SilverStripe\View\ViewableData;
  * <b>Subclass Example</b>
  *
  * The class is easy to overload with custom types, e.g. the MySQL "BLOB" type
- * (http://dev.mysql.com/doc/refman/5.0/en/blob.html).
+ * (https://dev.mysql.com/doc/refman/8.4/en/blob.html).
  *
  * <code>
  * class Blob extends DBField {
