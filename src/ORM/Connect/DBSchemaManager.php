@@ -601,7 +601,7 @@ abstract class DBSchemaManager
      * Some indexes may be arrays, such as fulltext and unique indexes, and this allows database-specific
      * arrays to be created. See {@link requireTable()} for details on the index format.
      *
-     * @see http://dev.mysql.com/doc/refman/5.0/en/create-index.html
+     * @see https://dev.mysql.com/doc/refman/8.4/en/create-index.html
      * @see parseIndexSpec() for approximate inverse
      *
      * @param string|array $indexSpec
@@ -679,8 +679,6 @@ abstract class DBSchemaManager
             $spec = $this->{$spec['type']}($spec['parts'], true);
         }
 
-        // Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
-        // collations.
         if (!$this->database->supportsCollations()) {
             $spec = preg_replace('/ *character set [^ ]+( collate [^ ]+)?( |$)/', '\\2', $spec ?? '');
         }

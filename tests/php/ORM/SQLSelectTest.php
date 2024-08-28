@@ -957,7 +957,7 @@ class SQLSelectTest extends SapphireTest
     public function provideWith()
     {
         // Each of these examples shows it working with aliased implicit columns, and with explicit CTE columns.
-        // Most of these examples are derived from https://dev.mysql.com/doc/refman/8.0/en/with.html
+        // Most of these examples are derived from https://dev.mysql.com/doc/refman/8.4/en/with.html
         return [
             // Just a CTE, no union
             'basic CTE with aliased columns' => [

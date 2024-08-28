@@ -135,7 +135,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         if ($version) {
             $success = version_compare($version ?? '', '5.0', '>=');
             if (!$success) {
-                $error = "Your MySQL server version is $version. It's recommended you use at least MySQL 5.0.";
+                $error = "Your MySQL server version is $version. It's recommended you use at least MySQL 8.0.";
             }
         } else {
             $error = "Could not determine your MySQL version.";
@@ -178,7 +178,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         }
 
         // Restricted to characters in the ASCII and Extended ASCII range
-        // @see http://dev.mysql.com/doc/refman/5.0/en/identifiers.html
+        // @see https://dev.mysql.com/doc/refman/8.4/en/identifiers.html
         return preg_match('/^[\x{0001}-\x{FFFF}]+$/u', $database ?? '');
     }
 
@@ -199,7 +199,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper
         }
 
         // Escape all valid database patterns (permission must exist on all tables)
-        $sqlDatabase = addcslashes($database ?? '', '_%'); // See http://dev.mysql.com/doc/refman/5.7/en/string-literals.html
+        $sqlDatabase = addcslashes($database ?? '', '_%'); // https://dev.mysql.com/doc/refman/8.4/en/string-literals.html
         $dbPattern = sprintf(
             '((%s)|(%s)|(%s)|(%s))',
             preg_quote("\"$sqlDatabase\".*"), // Regexp escape sql-escaped db identifier

@@ -9,7 +9,7 @@ DatabaseAdapterRegistry::register(
     [
         'class' => 'MySQLDatabase',
         'module' => 'framework',
-        'title' => 'MySQL 5.0+ (using MySQLi)',
+        'title' => 'MySQL 8.0+ (using MySQLi)',
         'helperPath' => __DIR__ . '/src/Dev/Install/MySQLDatabaseConfigurationHelper.php',
         'helperClass' => MySQLDatabaseConfigurationHelper::class,
         'supported' => class_exists('MySQLi'),
