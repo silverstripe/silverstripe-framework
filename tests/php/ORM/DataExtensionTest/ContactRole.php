@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\Tests\DataExtensionTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class ContactRole extends DataExtension implements TestOnly
+class ContactRole extends Extension implements TestOnly
 {
     private static $db = [
         'Website' => 'Varchar',

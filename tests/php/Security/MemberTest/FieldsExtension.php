@@ -5,9 +5,9 @@ namespace SilverStripe\Security\Tests\MemberTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class FieldsExtension extends DataExtension implements TestOnly
+class FieldsExtension extends Extension implements TestOnly
 {
     protected function updateCMSFields(FieldList $fields)
     {

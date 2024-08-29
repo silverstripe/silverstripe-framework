@@ -5,12 +5,12 @@ namespace SilverStripe\ORM\Tests\DataExtensionTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
 /**
  * Extension to top level test class, tests that updateCMSFields work
  */
-class CMSFieldsBaseExtension extends DataExtension implements TestOnly
+class CMSFieldsBaseExtension extends Extension implements TestOnly
 {
     private static $db = [
         'ExtendedFieldKeep' => 'Varchar(255)',

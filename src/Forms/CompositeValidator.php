@@ -24,7 +24,7 @@ use SilverStripe\ORM\ValidationResult;
  *   return $compositeValidator
  * }
  *
- * Or by implementing the updateCMSCompositeValidator() method in a DataExtension:
+ * Or by implementing the updateCMSCompositeValidator() method in an Extension:
  *
  * protected function updateCMSCompositeValidator(CompositeValidator $compositeValidator): void
  * {

@@ -686,7 +686,7 @@ class Member extends DataObject
      * Validator is used when saving a {@link CMSProfileController} or added to
      * any form responsible for saving a users data.
      *
-     * To customize the required fields, add a {@link DataExtension} to member
+     * To customize the required fields, add a {@link Extension} to member
      * calling the `updateValidator()` method.
      *
      * @return Member_Validator

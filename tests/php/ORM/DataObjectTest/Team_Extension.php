@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\Tests\DataObjectTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class Team_Extension extends DataExtension implements TestOnly
+class Team_Extension extends Extension implements TestOnly
 {
     private static $summary_fields = [
         'Title' => 'Custom Title', // override non-associative 'Title'

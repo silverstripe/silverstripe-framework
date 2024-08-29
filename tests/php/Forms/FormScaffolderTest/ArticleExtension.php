@@ -5,9 +5,9 @@ namespace SilverStripe\Forms\Tests\FormScaffolderTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class ArticleExtension extends DataExtension implements TestOnly
+class ArticleExtension extends Extension implements TestOnly
 {
     private static $db = [
         'ExtendedField' => 'Varchar'

@@ -10,7 +10,6 @@ use SilverStripe\Config\Middleware\MiddlewareCommon;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\DataExtension;
 
 class ExtensionMiddleware implements Middleware
 {
@@ -83,8 +82,6 @@ class ExtensionMiddleware implements Middleware
                 // Skip base classes
                 switch ($extensionClassParent) {
                     case Extension::class:
-                    case DataExtension::class:
-                        continue 2;
                     default:
                         // continue
                 }

@@ -1098,7 +1098,7 @@ class Security extends Controller implements TemplateGlobalProvider
                 return false;
             }
 
-            // HACK: DataExtensions aren't applied until a class is instantiated for
+            // HACK: Extensions aren't applied until a class is instantiated for
             // the first time, so create an instance here.
             singleton($class);
 

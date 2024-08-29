@@ -3,13 +3,13 @@
 namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\ValidationResult;
 
 /**
  * Extension that does something extra when changing a member's password
  */
-class ExtendedChangePasswordExtension extends DataExtension implements TestOnly
+class ExtendedChangePasswordExtension extends Extension implements TestOnly
 {
     protected function onBeforeChangePassword($newPassword, $valid)
     {

@@ -9,7 +9,7 @@ use SilverStripe\Forms\RequiredFields;
  * Member Validator
  *
  * Custom validation for the Member object can be achieved either through an
- * {@link DataExtension} on the Member_Validator object or, by specifying a subclass of
+ * {@link Extension} on the Member_Validator object or, by specifying a subclass of
  * {@link Member_Validator} through the {@link Injector} API.
  * The Validator can also be modified by adding an Extension to Member and implement the
  * <code>updateValidator</code> hook.

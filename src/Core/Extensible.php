@@ -154,7 +154,6 @@ trait Extensible
      * Keep in mind that the extension will only be applied to new
      * instances, not existing ones (including all instances created through {@link singleton()}).
      *
-     * @see http://doc.silverstripe.org/framework/en/trunk/reference/dataextension
      * @param string $classOrExtension Class that should be extended - has to be a subclass of {@link Object}
      * @param string $extension Subclass of {@link Extension} with optional parameters
      *  as a string, e.g. "Versioned"
@@ -256,7 +255,7 @@ trait Extensible
      * @param string $class If omitted, will get extensions for the current class
      * @param bool $includeArgumentString Include the argument string in the return array,
      *  FALSE would return array("Versioned"), TRUE returns array("Versioned('Stage','Live')").
-     * @return array Numeric array of either {@link DataExtension} class names,
+     * @return array Numeric array of either {@link Extension} class names,
      *  or eval'ed class name strings with constructor arguments.
      */
     public static function get_extensions($class = null, $includeArgumentString = false)
@@ -501,7 +500,7 @@ trait Extensible
      *
      * This method also provides lazy-population of the extension_instances property.
      *
-     * @return Extension[] Map of {@link DataExtension} instances, keyed by classname.
+     * @return Extension[] Map of {@link Extension} instances, keyed by classname.
      */
     public function getExtensionInstances()
     {

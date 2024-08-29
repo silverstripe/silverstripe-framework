@@ -3,9 +3,9 @@
 namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class ViewingDeniedExtension extends DataExtension implements TestOnly
+class ViewingDeniedExtension extends Extension implements TestOnly
 {
 
     protected function canView($member = null)

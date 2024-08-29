@@ -10,7 +10,7 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DB;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Config\Config;
@@ -24,9 +24,9 @@ use SilverStripe\View\ViewableData;
  *
  * @property int $ParentID
  * @method DataObject Parent()
- * @extends DataExtension<DataObject&static>
+ * @extends Extension<DataObject&static>
  */
-class Hierarchy extends DataExtension
+class Hierarchy extends Extension
 {
     /**
      * The lower bounds for the amount of nodes to mark. If set, the logic will expand nodes until it reaches at least

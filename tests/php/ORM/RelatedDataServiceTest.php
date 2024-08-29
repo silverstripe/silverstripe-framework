@@ -106,7 +106,7 @@ class RelatedDataServiceTest extends SapphireTest
 
     public function testUsageHasOneHubExtension()
     {
-        // Add DataExtension and reset database so that tables + columns get added
+        // Add Extension and reset database so that tables + columns get added
         Hub::add_extension(HubExtension::class);
         DataObject::reset();
         RelatedDataServiceTest::resetDBSchema(true, true);
@@ -212,7 +212,7 @@ class RelatedDataServiceTest extends SapphireTest
 
     public function testUsageManyManyWithoutBelongsHubExtension()
     {
-        // Add DataExtension and reset database so that tables + columns get added
+        // Add Extension and reset database so that tables + columns get added
         Hub::add_extension(HubExtension::class);
         DataObject::reset();
         RelatedDataServiceTest::resetDBSchema(true, true);

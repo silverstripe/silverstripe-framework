@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\Tests\RelatedDataServiceTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Extension;
 
-class HubExtension extends DataExtension implements TestOnly
+class HubExtension extends Extension implements TestOnly
 {
     private static $has_one = [
         'ExtHO' => Node::class
