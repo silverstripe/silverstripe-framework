@@ -182,7 +182,6 @@ class CanonicalURLMiddlewareTest extends SapphireTest
         $requestSlash = $requestHasSlash ? '/' : '';
         $noRedirectPaths = [
             "/admin{$requestSlash}",
-            "/admin/graphql{$requestSlash}",
             "/dev/tasks/my-task{$requestSlash}",
         ];
         $allowRedirectPaths = [
