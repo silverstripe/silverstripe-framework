@@ -40,16 +40,16 @@
         "silverstripe/assets": "^3",
         "silverstripe/vendor-plugin": "^2",
         "sminnee/callbacklist": "^0.1.1",
-        "symfony/cache": "^6.1",
-        "symfony/config": "^6.1",
-        "symfony/dom-crawler": "^6.1",
-        "symfony/filesystem": "^6.1",
-        "symfony/http-foundation": "^6.1",
-        "symfony/mailer": "^6.1",
-        "symfony/mime": "^6.1",
-        "symfony/translation": "^6.1",
-        "symfony/validator": "^6.1",
-        "symfony/yaml": "^6.1",
+        "symfony/cache": "^7.0",
+        "symfony/config": "^7.0",
+        "symfony/dom-crawler": "^7.0",
+        "symfony/filesystem": "^7.0",
+        "symfony/http-foundation": "^7.0",
+        "symfony/mailer": "^7.0",
+        "symfony/mime": "^7.0",
+        "symfony/translation": "^7.0",
+        "symfony/validator": "^7.0",
+        "symfony/yaml": "^7.0",
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-hash": "*",
@@ -71,8 +71,7 @@
     },
     "conflict": {
         "egulias/email-validator": "^2",
-        "oscarotero/html-parser": "<0.1.7",
-        "symfony/process": "<5.3.7"
+        "oscarotero/html-parser": "<0.1.7"
     },
     "provide": {
         "psr/container-implementation": "1.0.0"
