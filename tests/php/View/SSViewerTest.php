@@ -679,7 +679,7 @@ after',
 $ItemOnItsOwnLine
 <% end_loop %>
 after',
-$data
+                $data
             )
         );
 
