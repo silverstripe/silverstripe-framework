@@ -40,7 +40,18 @@ trait SearchFilterable
                 $filterServiceName = "DataListFilter.{$secondArg}";
             }
         }
+        if (is_array($value)) {
+            foreach ($value as $key => $val) {
+                if ($val === '' || $val === 'null') {
+                    $value[] = null;
+                }
 
+            }
+        } else {
+            if ($value === '' || $value === 'null') {
+                $value = ['', null];
+            }
+        }
         // Build instance
         return Injector::inst()->create($filterServiceName, $fieldName, $value, $modifiers);
     }
