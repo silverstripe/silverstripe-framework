@@ -11,6 +11,9 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 
+/**
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild
+ */
 class DevBuildController extends Controller implements PermissionProvider
 {
 
@@ -27,6 +30,18 @@ class DevBuildController extends Controller implements PermissionProvider
         'ALL_DEV_ADMIN',
         'CAN_DEV_BUILD',
     ];
+
+    public function __construct()
+    {
+        parent::__construct();
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with SilverStripe\Dev\Command\DbBuild',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
 
     protected function init(): void
     {
@@ -68,7 +83,7 @@ class DevBuildController extends Controller implements PermissionProvider
             || Permission::check(static::config()->get('init_permissions'))
         );
     }
-    
+
     public function providePermissions(): array
     {
         return [

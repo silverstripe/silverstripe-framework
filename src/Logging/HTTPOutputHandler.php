@@ -13,6 +13,8 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Output the error to the browser, with the given HTTP status code.
  * We recommend that you use a formatter that generates HTML with this.
+ *
+ * @deprecated 5.4.0 Will be renamed to ErrorOutputHandler
  */
 class HTTPOutputHandler extends AbstractProcessingHandler
 {
@@ -31,6 +33,18 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      * @var FormatterInterface
      */
     private $cliFormatter = null;
+
+    public function __construct()
+    {
+        parent::__construct();
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be renamed to ErrorOutputHandler',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
 
     /**
      * Get the mime type to use when displaying this error.
@@ -146,7 +160,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
         // or our deprecations when the relevant shouldShow method returns true
         return $errorCode !== E_USER_DEPRECATED
             || !Deprecation::isTriggeringError()
-            || ($this->isCli() ? Deprecation::shouldShowForCli() : Deprecation::shouldShowForHttp());
+            || (Director::is_cli() ? Deprecation::shouldShowForCli() : Deprecation::shouldShowForHttp());
     }
 
     /**
@@ -185,10 +199,12 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     }
 
     /**
-     * This method is required and must be protected for unit testing, since we can't mock static or private methods
+     * This method used to be used for unit testing but is no longer required.
+     * @deprecated 5.4.0 Use SilverStripe\Control\Director::is_cli() instead
      */
     protected function isCli(): bool
     {
+        Deprecation::notice('5.4.0', 'Use ' . Director::class . '::is_cli() instead');
         return Director::is_cli();
     }
 }
