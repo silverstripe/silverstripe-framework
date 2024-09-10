@@ -8,6 +8,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBCurrency
   DBClassName:
     class: SilverStripe\ORM\FieldType\DBClassName
+  DBClassNameVarchar:
+    class: SilverStripe\ORM\FieldType\DBClassNameVarchar
   Date:
     class: SilverStripe\ORM\FieldType\DBDate
   Datetime:
