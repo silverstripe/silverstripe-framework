@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use Generator;
 use SilverStripe\Dev\Deprecation;
+use InvalidArgumentException;
 
 /**
  * Library of static methods for manipulating arrays.
@@ -353,5 +354,66 @@ class ArrayLib
         }
 
         $array = $shuffledArray;
+    }
+
+    /**
+     * Insert a value into an array before another given value.
+     * Does not preserve keys.
+     *
+     * @param mixed $before The value to check for. If this value isn't in the source array, $insert will be put at the end.
+     * @param boolean $strict If true then this will perform a strict type comparison to look for the $before value in the source array.
+     * @param boolean $splatInsertArray If true, $insert must be an array.
+     * Its values will be splatted into the source array.
+     */
+    public static function insertBefore(array $array, mixed $insert, mixed $before, bool $strict = false, bool $splatInsertArray = false): array
+    {
+        if ($splatInsertArray && !is_array($insert)) {
+            throw new InvalidArgumentException('$insert must be an array when $splatInsertArray is true. Got ' . gettype($insert));
+        }
+        $array = array_values($array);
+        $pos = array_search($before, $array, $strict);
+        if ($pos === false) {
+            return static::insertIntoArray($array, $insert, $splatInsertArray);
+        }
+        return static::insertAtPosition($array, $insert, $pos, $splatInsertArray);
+    }
+
+    /**
+     * Insert a value into an array after another given value.
+     * Does not preserve keys.
+     *
+     * @param mixed $after The value to check for. If this value isn't in the source array, $insert will be put at the end.
+     * @param boolean $strict If true then this will perform a strict type comparison to look for the $before value in the source array.
+     * @param boolean $splatInsertArray If true, $insert must be an array.
+     * Its values will be splatted into the source array.
+     */
+    public static function insertAfter(array $array, mixed $insert, mixed $after, bool $strict = false, bool $splatInsertArray = false): array
+    {
+        if ($splatInsertArray && !is_array($insert)) {
+            throw new InvalidArgumentException('$insert must be an array when $splatInsertArray is true. Got ' . gettype($insert));
+        }
+        $array = array_values($array);
+        $pos = array_search($after, $array, $strict);
+        if ($pos === false) {
+            return static::insertIntoArray($array, $insert, $splatInsertArray);
+        }
+        return static::insertAtPosition($array, $insert, $pos + 1, $splatInsertArray);
+    }
+
+    private static function insertAtPosition(array $array, mixed $insert, int $pos, bool $splatInsertArray): array
+    {
+        $result = array_slice($array, 0, $pos);
+        $result = static::insertIntoArray($result, $insert, $splatInsertArray);
+        return array_merge($result, array_slice($array, $pos));
+    }
+
+    private static function insertIntoArray(array $array, mixed $insert, bool $splatInsertArray): array
+    {
+        if ($splatInsertArray) {
+            $array = array_merge($array, $insert);
+        } else {
+            $array[] = $insert;
+        }
+        return $array;
     }
 }
