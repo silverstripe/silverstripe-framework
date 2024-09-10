@@ -3,6 +3,7 @@
 namespace SilverStripe\Core;
 
 use Exception;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Boot a kernel without requiring a database connection.
@@ -11,6 +12,7 @@ use Exception;
  * around the availability of a database for every execution path.
  *
  * @internal
+ * @deprecated 5.4.0 Use SilverStripe\Core\CoreKernel::setBootDatabase() instead
  */
 class DatabaselessKernel extends BaseKernel
 {
@@ -28,6 +30,16 @@ class DatabaselessKernel extends BaseKernel
      * @var boolean
      */
     protected $bootErrorHandling = true;
+
+    public function __construct($basePath)
+    {
+        parent::__construct($basePath);
+        Deprecation::notice(
+            '5.4.0',
+            'Use ' . CoreKernel::class . '::setBootDatabase() instead',
+            Deprecation::SCOPE_CLASS
+        );
+    }
 
     public function setBootErrorHandling(bool $bool)
     {
