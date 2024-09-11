@@ -11,7 +11,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Part\DataPart;
@@ -394,12 +394,12 @@ class EmailTest extends SapphireTest
         $this->assertSame('My content', $email->getData()->Content);
     }
 
-    public function testDataWithViewableData(): void
+    public function testDataWithModelData(): void
     {
         $email = new Email();
-        $viewableData = new ViewableData();
-        $viewableData->ABC = 'XYZ';
-        $email->setData($viewableData);
+        $model = new ModelData();
+        $model->ABC = 'XYZ';
+        $email->setData($model);
         $data = $email->getData();
         $this->assertSame('XYZ', $data->ABC);
         $this->assertSame(true, $data->IsEmail);

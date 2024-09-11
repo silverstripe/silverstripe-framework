@@ -3,10 +3,10 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\ORM\Limitable;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\Limitable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
 use SilverStripe\Dev\Deprecation;

@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * CompositeValidator can contain between 0 and many different types of Validators. Each Validator is itself still

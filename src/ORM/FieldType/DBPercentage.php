@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a decimal field from 0-1 containing a percentage value.
@@ -37,7 +37,7 @@ class DBPercentage extends DBDecimal
         return number_format($this->value * 100, $this->decimalSize - 2) . '%';
     }
 
-    public function saveInto(ViewableData $model): void
+    public function saveInto(ModelData $model): void
     {
         parent::saveInto($model);
 

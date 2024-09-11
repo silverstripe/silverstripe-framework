@@ -5,7 +5,7 @@ namespace SilverStripe\Control\RSS;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use BadMethodCallException;
 
 /**
@@ -15,7 +15,7 @@ use BadMethodCallException;
  *
  * @see RSSFeed
  */
-class RSSFeed_Entry extends ViewableData
+class RSSFeed_Entry extends ModelData
 {
     /**
      * Name of the title field of feed entries
@@ -40,7 +40,7 @@ class RSSFeed_Entry extends ViewableData
 
     /**
      * Create a new RSSFeed entry.
-     * @param ViewableData $entry
+     * @param ModelData $entry
      * @param string $titleField
      * @param string $descriptionField
      * @param string $authorField

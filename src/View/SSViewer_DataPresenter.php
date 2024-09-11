@@ -4,6 +4,7 @@ namespace SilverStripe\View;
 
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -130,7 +131,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                     if (!is_array($details)) {
                         $details = [
                             'method' => $details,
-                            'casting' => ViewableData::config()->uninherited('default_cast')
+                            'casting' => ModelData::config()->uninherited('default_cast')
                         ];
                     }
 
@@ -313,7 +314,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         if ($val) {
             $obj = $val['obj'];
             if ($name === 'hasValue') {
-                $result = ($obj instanceof ViewableData) ? $obj->exists() : (bool)$obj;
+                $result = ($obj instanceof ModelData) ? $obj->exists() : (bool)$obj;
             } elseif (is_null($obj) || (is_scalar($obj) && !is_string($obj))) {
                 $result = $obj; // Nulls and non-string scalars don't need casting
             } else {
@@ -434,7 +435,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
 
         // Get provided or default cast
         $casting = empty($source['casting'])
-            ? ViewableData::config()->uninherited('default_cast')
+            ? ModelData::config()->uninherited('default_cast')
             : $source['casting'];
 
         return DBField::create_field($casting, $value);

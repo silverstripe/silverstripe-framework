@@ -4,9 +4,9 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\Filterable;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\SS_List;
 
 /**
  * GridFieldLazyLoader alters the {@link GridField} behavior to delay rendering of rows until the tab containing the

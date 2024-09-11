@@ -6,7 +6,7 @@ use ArrayAccess;
 use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method

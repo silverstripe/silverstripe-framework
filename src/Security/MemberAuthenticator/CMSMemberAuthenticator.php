@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Security\MemberAuthenticator;
 
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Authenticator as BaseAuthenticator;
 use SilverStripe\Security\Member;
 

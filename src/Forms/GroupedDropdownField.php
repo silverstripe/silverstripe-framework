@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Core\ArrayLib;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 
 /**
  * Grouped dropdown, using optgroup tags.

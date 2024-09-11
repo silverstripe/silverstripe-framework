@@ -5,7 +5,7 @@ namespace SilverStripe\Security\Tests;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Tests\HttpRequestMockBuilder;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Security\PasswordExpirationMiddleware;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;

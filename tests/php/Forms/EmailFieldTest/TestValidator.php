@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests\EmailFieldTest;
 
 use Exception;
 use SilverStripe\Forms\Validator;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 class TestValidator extends Validator
 {

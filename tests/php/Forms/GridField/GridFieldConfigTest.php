@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use SilverStripe\Forms\Tests\GridField\GridFieldConfigTest\MyOtherComponent;
 use SilverStripe\Forms\Tests\GridField\GridFieldConfigTest\MyComponent;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridField_URLHandler;

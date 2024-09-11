@@ -6,7 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 class TestDbField extends DBField implements TestOnly
 {
@@ -35,7 +35,7 @@ class TestDbField extends DBField implements TestOnly
 
     public $saveIntoCalledCount = 0;
 
-    public function saveInto(ViewableData $model): void
+    public function saveInto(ModelData $model): void
     {
         $this->saveIntoCalledCount++;
         parent::saveInto($model);

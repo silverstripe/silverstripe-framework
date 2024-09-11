@@ -15,6 +15,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
 use InvalidArgumentException;
+use SilverStripe\Model\ModelData;
 
 /**
  * Parses a template file with an *.ss file extension.
@@ -324,7 +325,7 @@ class SSViewer implements Flushable
     /**
      * Get the current item being processed
      *
-     * @return ViewableData
+     * @return ModelData
      */
     public static function topLevel()
     {
@@ -549,10 +550,10 @@ class SSViewer implements Flushable
      * Effectively this is the common code that both SSViewer#process and SSViewer_FromString#process call
      *
      * @param string $cacheFile The path to the file that contains the template compiled to PHP
-     * @param ViewableData $item The item to use as the root scope for the template
+     * @param ModelData $item The item to use as the root scope for the template
      * @param array $overlay Any variables to layer on top of the scope
      * @param array $underlay Any variables to layer underneath the scope
-     * @param ViewableData $inheritedScope The current scope of a parent template including a sub-template
+     * @param ModelData $inheritedScope The current scope of a parent template including a sub-template
      * @return string The result of executing the template
      */
     protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay, $inheritedScope = null)
@@ -587,11 +588,11 @@ class SSViewer implements Flushable
      *
      * The method injects extra HTML in the header via {@link Requirements::includeInHTML()}.
      *
-     * Note: You can call this method indirectly by {@link ViewableData->renderWith()}.
+     * Note: You can call this method indirectly by {@link ModelData->renderWith()}.
      *
-     * @param ViewableData $item
+     * @param ModelData $item
      * @param array|null $arguments Arguments to an included template
-     * @param ViewableData $inheritedScope The current scope of a parent template including a sub-template
+     * @param ModelData $inheritedScope The current scope of a parent template including a sub-template
      * @return DBHTMLText Parsed template output.
      */
     public function process($item, $arguments = null, $inheritedScope = null)

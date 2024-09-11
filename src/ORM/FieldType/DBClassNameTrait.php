@@ -6,7 +6,7 @@ use RuntimeException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 trait DBClassNameTrait
 {
@@ -98,7 +98,7 @@ trait DBClassNameTrait
         return array_values($classNames ?? []);
     }
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         parent::setValue($value, $record, $markChanged);
 

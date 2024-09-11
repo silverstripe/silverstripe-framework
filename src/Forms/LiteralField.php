@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * This field lets you put an arbitrary piece of HTML into your forms.
@@ -51,7 +51,7 @@ class LiteralField extends DatalessField
      */
     public function FieldHolder($properties = [])
     {
-        if ($this->content instanceof ViewableData) {
+        if ($this->content instanceof ModelData) {
             $context = $this->content;
 
             if ($properties) {

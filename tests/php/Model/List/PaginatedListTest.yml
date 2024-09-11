@@ -1,0 +1,13 @@
+SilverStripe\Model\Tests\List\PaginatedListTest\Player:
+  captain1:
+    FirstName: Captain
+    Surname: Zookeeper
+    ShirtNumber: '007'
+    IsRetired: 1
+  captain2:
+    FirstName: Captain 2
+    Surname: Aaron
+  player1:
+    FirstName: Player 1
+  player2:
+    FirstName: Player 2

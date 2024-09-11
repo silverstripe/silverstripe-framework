@@ -6,13 +6,13 @@ use LogicException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\Requirements;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
@@ -233,7 +233,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
 
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
 
-        /** @var ViewableData $item */
+        /** @var ModelData $item */
         foreach ($items->limit(null) as $item) {
             // Assume item can be viewed if canView() isn't implemented
             if (!$item->hasMethod('canView') || $item->canView()) {

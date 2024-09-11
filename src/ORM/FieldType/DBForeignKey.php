@@ -10,7 +10,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * A special type Int field used for foreign keys in has_one relationships.
@@ -58,7 +58,7 @@ class DBForeignKey extends DBInt
         return $field;
     }
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         if ($record instanceof DataObject) {
             $this->object = $record;

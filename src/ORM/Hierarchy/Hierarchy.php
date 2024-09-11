@@ -6,9 +6,9 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DB;
@@ -16,7 +16,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use Exception;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
@@ -416,7 +416,7 @@ class Hierarchy extends Extension
     {
         $ancestry = ClassInfo::ancestry($this->owner);
         $ancestorClass = array_shift($ancestry);
-        while ($ancestorClass && !ViewableData::has_extension($ancestorClass, Hierarchy::class)) {
+        while ($ancestorClass && !ModelData::has_extension($ancestorClass, Hierarchy::class)) {
             $ancestorClass = array_shift($ancestry);
         }
 

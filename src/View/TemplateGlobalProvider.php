@@ -19,7 +19,7 @@ interface TemplateGlobalProvider
      * If the method to call is not included for a particular template variable, a method named the same as the
      * template variable will be called
      *
-     * If the casting class is not specified for a particular template variable, ViewableData::$default_cast is used
+     * If the casting class is not specified for a particular template variable, ModelData::$default_cast is used
      *
      * The first letter of the template variable is case-insensitive. However the method name is always case sensitive.
      *

@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * A special type Int field used for primary keys.
@@ -54,7 +54,7 @@ class DBPrimaryKey extends DBInt
         return parent::scaffoldFormField($title);
     }
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         parent::setValue($value, $record, $markChanged);
 

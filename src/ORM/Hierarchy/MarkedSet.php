@@ -5,12 +5,12 @@ namespace SilverStripe\ORM\Hierarchy;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Core\ArrayLib;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\ArrayData;
 
 /**
  * Contains a set of hierarchical objects generated from a marking compilation run.

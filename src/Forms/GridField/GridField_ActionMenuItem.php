@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * GridField action menu item interface, this provides data so the action
@@ -21,7 +21,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      * @see {@link GridField_ActionMenu->getColumnContent()}
      *
      * @param GridField $gridField
-     * @param ViewableData $record
+     * @param ModelData $record
      *
      * @return string $title
      */
@@ -33,7 +33,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      * @see {@link GridField_ActionMenu->getColumnContent()}
      *
      * @param GridField $gridField
-     * @param ViewableData $record
+     * @param ModelData $record
      *
      * @return array $data
      */
@@ -46,7 +46,7 @@ interface GridField_ActionMenuItem extends GridFieldComponent
      * @see {@link GridField_ActionMenu->getColumnContent()}
      *
      * @param GridField $gridField
-     * @param ViewableData $record
+     * @param ModelData $record
      *
      * @return string|null $group
      */

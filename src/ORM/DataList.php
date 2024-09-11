@@ -5,7 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
@@ -13,7 +13,12 @@ use BadMethodCallException;
 use SilverStripe\ORM\Connect\Query;
 use Traversable;
 use SilverStripe\ORM\DataQuery;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\Limitable;
+use SilverStripe\Model\List\Map;
+use SilverStripe\Model\List\Sortable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Filters\SearchFilterable;
 
 /**
@@ -42,7 +47,7 @@ use SilverStripe\ORM\Filters\SearchFilterable;
  * @implements Sortable<T>
  * @implements Limitable<T>
  */
-class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
+class DataList extends ModelData implements SS_List, Filterable, Sortable, Limitable
 {
     use SearchFilterable;
 
@@ -924,7 +929,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 
     private function setDataObjectEagerLoadedData(DataObject $item): void
     {
-        // cache $item->ID at the top of this method to reduce calls to ViewableData::__get()
+        // cache $item->ID at the top of this method to reduce calls to ModelData::__get()
         $itemID = $item->ID;
         foreach (array_keys($this->eagerLoadedData) as $relation) {
             if (array_key_exists($itemID, $this->eagerLoadedData[$relation])) {

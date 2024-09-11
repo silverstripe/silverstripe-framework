@@ -10,7 +10,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class ListboxFieldTest extends SapphireTest
 {

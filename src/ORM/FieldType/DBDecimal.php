@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a Decimal field.
@@ -67,7 +67,7 @@ class DBDecimal extends DBField
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function saveInto(ViewableData $model): void
+    public function saveInto(ModelData $model): void
     {
         $fieldName = $this->name;
 

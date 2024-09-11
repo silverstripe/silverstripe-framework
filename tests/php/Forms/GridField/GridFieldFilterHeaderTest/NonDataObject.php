@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class NonDataObject extends ArrayData implements TestOnly
 {

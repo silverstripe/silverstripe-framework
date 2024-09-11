@@ -15,7 +15,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Cache\Psr16Cache;
 
-// Not actually a data object, we just want a ViewableData object that's just for us
+// Not actually a data object, we just want a ModelData object that's just for us
 
 class SSViewerCacheBlockTest extends SapphireTest
 {

@@ -11,7 +11,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a date field.
@@ -42,7 +42,7 @@ class DBDate extends DBField
      */
     public const ISO_LOCALE = 'en_US';
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         $value = $this->parseDate($value);
         if ($value === false) {

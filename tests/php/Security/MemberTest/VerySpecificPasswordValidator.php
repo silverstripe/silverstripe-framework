@@ -3,7 +3,7 @@
 namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\PasswordValidator;
 
 class VerySpecificPasswordValidator extends PasswordValidator implements TestOnly

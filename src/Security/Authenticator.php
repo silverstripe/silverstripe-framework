@@ -3,7 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\MemberAuthenticator\LoginHandler;
 use SilverStripe\Security\MemberAuthenticator\LogoutHandler;
 

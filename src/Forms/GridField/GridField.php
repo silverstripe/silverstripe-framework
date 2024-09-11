@@ -18,16 +18,16 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\GridField\FormAction\SessionStore;
 use SilverStripe\Forms\GridField\FormAction\StateStore;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\Filterable;
-use SilverStripe\ORM\Limitable;
-use SilverStripe\ORM\Sortable;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\Limitable;
+use SilverStripe\Model\List\Sortable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\View\HTML;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Displays a {@link SS_List} in a grid format.
@@ -767,7 +767,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param array $attributes
      * @param string $content
      *
@@ -785,7 +785,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param array $attributes
      * @param string $content
      *
@@ -803,7 +803,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param ViewableData $record
+     * @param ModelData $record
      *
      * @return array
      */
@@ -821,7 +821,7 @@ class GridField extends FormField
     /**
      * @param int $total
      * @param int $index
-     * @param ViewableData $record
+     * @param ModelData $record
      *
      * @return array
      */
@@ -892,7 +892,7 @@ class GridField extends FormField
     /**
      * Get the value from a column.
      *
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param string $column
      *
      * @return string
@@ -945,7 +945,7 @@ class GridField extends FormField
      * Use of this method ensures that any special rules around the data for this gridfield are
      * followed.
      *
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param string $fieldName
      *
      * @return mixed
@@ -972,7 +972,7 @@ class GridField extends FormField
     /**
      * Get extra columns attributes used as HTML attributes.
      *
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param string $column
      *
      * @return array

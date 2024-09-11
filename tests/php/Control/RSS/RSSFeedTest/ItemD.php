@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Control\Tests\RSS\RSSFeedTest;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class ItemD extends ViewableData
+class ItemD extends ModelData
 {
     // ItemD test fields - all fields use casting but Content & AltContent cast as HTMLText
     private static $casting = [

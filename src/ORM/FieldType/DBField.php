@@ -9,7 +9,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLSelect;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Single field in the database.
@@ -41,7 +41,7 @@ use SilverStripe\View\ViewableData;
  * }
  * </code>
  */
-abstract class DBField extends ViewableData implements DBIndexable
+abstract class DBField extends ModelData implements DBIndexable
 {
 
     /**
@@ -198,12 +198,12 @@ abstract class DBField extends ViewableData implements DBIndexable
      * and actually changing its values, it needs a {@link $markChanged}
      * parameter.
      *
-     * @param null|ViewableData|array $record An array or object that this field is part of
+     * @param null|ModelData|array $record An array or object that this field is part of
      * @param bool $markChanged Indicate whether this field should be marked changed.
      *  Set to FALSE if you are initializing this field after construction, rather
      *  than setting a new value.
      */
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         $this->value = $value;
         return $this;
@@ -453,7 +453,7 @@ abstract class DBField extends ViewableData implements DBIndexable
     /**
      * Saves this field to the given data object.
      */
-    public function saveInto(ViewableData $model): void
+    public function saveInto(ModelData $model): void
     {
         $fieldName = $this->name;
         if (empty($fieldName)) {

@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObjectInterface;
 

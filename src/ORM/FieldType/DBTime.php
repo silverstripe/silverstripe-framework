@@ -10,7 +10,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -29,7 +29,7 @@ class DBTime extends DBField
      */
     public const ISO_TIME = 'HH:mm:ss';
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         $value = $this->parseTime($value);
         if ($value === false) {

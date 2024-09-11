@@ -3,11 +3,11 @@
 namespace SilverStripe\View\Tests\SSViewerTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\ModelData;
 
-class CacheTestData extends ViewableData implements TestOnly
+class CacheTestData extends ModelData implements TestOnly
 {
 
     public $testWithCalls = 0;

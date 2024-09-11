@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Tests;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use PHPUnit\Framework\Attributes\DataProvider;

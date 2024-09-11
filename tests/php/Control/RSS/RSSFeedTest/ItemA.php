@@ -3,9 +3,9 @@
 namespace SilverStripe\Control\Tests\RSS\RSSFeedTest;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class ItemA extends ViewableData
+class ItemA extends ModelData
 {
     // RSS-feed items must have $casting/$db information.
     private static $casting = [

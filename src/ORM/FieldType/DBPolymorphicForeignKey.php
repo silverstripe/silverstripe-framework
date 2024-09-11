@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * A special ForeignKey class that handles relations with arbitrary class types
@@ -61,7 +61,7 @@ class DBPolymorphicForeignKey extends DBComposite
         $this->setField('ID', $value, $markChanged);
     }
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         // Map dataobject value to array
         if ($value instanceof DataObject) {

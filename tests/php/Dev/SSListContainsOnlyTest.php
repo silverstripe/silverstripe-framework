@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Tests;
 
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Member;
 use PHPUnit\Framework\Attributes\DataProvider;
 

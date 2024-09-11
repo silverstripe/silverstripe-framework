@@ -5,7 +5,7 @@ namespace SilverStripe\View;
 use ArrayIterator;
 use Countable;
 use Iterator;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBFloat;
@@ -16,7 +16,7 @@ use SilverStripe\ORM\FieldType\DBField;
  * This tracks the current scope for an SSViewer instance. It has three goals:
  *   - Handle entering & leaving sub-scopes in loops and withs
  *   - Track Up and Top
- *   - (As a side effect) Inject data that needs to be available globally (used to live in ViewableData)
+ *   - (As a side effect) Inject data that needs to be available globally (used to live in ModelData)
  *
  * In order to handle up, rather than tracking it using a tree, which would involve constructing new objects
  * for each step, we use indexes into the itemStack (which already has to exist).
@@ -132,7 +132,7 @@ class SSViewer_Scope
             $item = $this->convertScalarToDBField($item);
         }
 
-        // Wrap list arrays in ViewableData so templates can handle them
+        // Wrap list arrays in ModelData so templates can handle them
         if (is_array($item) && array_is_list($item)) {
             $item = ArrayList::create($item);
         }

@@ -10,7 +10,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Filterable;
+use SilverStripe\Model\List\Filterable;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;

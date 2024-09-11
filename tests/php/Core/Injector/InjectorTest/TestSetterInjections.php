@@ -3,12 +3,12 @@
 namespace SilverStripe\Core\Tests\Injector\InjectorTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
- * Make sure DI works with ViewableData's implementation of __isset
+ * Make sure DI works with ModelData's implementation of __isset
  */
-class TestSetterInjections extends ViewableData implements TestOnly
+class TestSetterInjections extends ModelData implements TestOnly
 {
 
     protected $backend;

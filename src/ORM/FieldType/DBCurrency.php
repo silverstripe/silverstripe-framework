@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\FormField;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a decimal field containing a currency amount.
@@ -51,7 +51,7 @@ class DBCurrency extends DBDecimal
         return $val;
     }
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         $matches = null;
         if (is_numeric($value)) {

@@ -4,7 +4,7 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 
 /**
  * Constraint for checking if a SS_List contains only items matching the given

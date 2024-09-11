@@ -8,11 +8,11 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\Filterable;
+use SilverStripe\Model\List\Filterable;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
-use SilverStripe\ORM\Limitable;
-use SilverStripe\ORM\Sortable;
+use SilverStripe\Model\List\Limitable;
+use SilverStripe\Model\List\Sortable;
 
 /**
  * A SearchContext that can be used with non-ORM data.

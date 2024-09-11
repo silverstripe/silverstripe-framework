@@ -2,13 +2,13 @@
 
 namespace SilverStripe\View\Tests\SSViewerTest;
 
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ModelData;
 
 /**
  * A test fixture that will echo back the template item
  */
-class TestFixture extends ViewableData
+class TestFixture extends ModelData
 {
     protected $name;
 
@@ -45,7 +45,7 @@ class TestFixture extends ViewableData
             return $output;
         } else {
             if (preg_match('/NotSet/i', $fieldName ?? '')) {
-                return new ViewableData();
+                return new ModelData();
             } else {
                 return new TestFixture($childName);
             }

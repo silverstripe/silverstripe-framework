@@ -18,7 +18,7 @@ use SilverStripe\Forms\FieldsValidator;
 use SilverStripe\Forms\Validator;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Provides view and edit forms at GridField-specific URLs.
@@ -156,9 +156,9 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
         return $handler->handleRequest($request);
     }
 
-    protected function getRecordFromRequest(GridField $gridField, HTTPRequest $request): ?ViewableData
+    protected function getRecordFromRequest(GridField $gridField, HTTPRequest $request): ?ModelData
     {
-        /** @var ViewableData $record */
+        /** @var ModelData $record */
         if (is_numeric($request->param('ID'))) {
             $dataList = $gridField->getList();
             $record = $dataList->byID($request->param('ID'));
@@ -219,7 +219,7 @@ class GridFieldDetailForm extends AbstractGridFieldComponent implements GridFiel
      * Build a request handler for the given record
      *
      * @param GridField $gridField
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param RequestHandler $requestHandler
      * @return GridFieldDetailForm_ItemRequest
      */

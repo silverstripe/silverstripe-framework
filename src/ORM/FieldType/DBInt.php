@@ -4,10 +4,10 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\ArrayData;
 
 /**
  * Represents a signed 32 bit integer field.

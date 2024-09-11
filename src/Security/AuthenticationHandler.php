@@ -3,7 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 
 /**
  * An AuthenticationHandler is responsible for providing an identity (in the form of a Member object) for

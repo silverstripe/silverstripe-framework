@@ -17,7 +17,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -25,13 +25,13 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\PolymorphicHasManyList;
 use SilverStripe\ORM\RelationList;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ValidationException;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Core\Validation\ValidationException;
+use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
 {
@@ -68,7 +68,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     protected $component;
 
     /**
-     * @var ViewableData
+     * @var ModelData
      */
     protected $record;
 
@@ -100,7 +100,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      *
      * @param GridField $gridField
      * @param GridFieldDetailForm $component
-     * @param ViewableData&DataObjectInterface $record
+     * @param ModelData&DataObjectInterface $record
      * @param RequestHandler $requestHandler
      * @param string $popupFormName
      */
@@ -528,7 +528,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * Handles detection of falsey values explicitly saved into the
      * record by formfields
      *
-     * @param ViewableData $record
+     * @param ModelData $record
      * @param SS_List $list
      * @return array List of data to write to the relation
      */
@@ -785,7 +785,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      * @param array $data
      * @param Form $form
      * @throws ValidationException On error
-     * @return ViewableData&DataObjectInterface Saved record
+     * @return ModelData&DataObjectInterface Saved record
      */
     protected function saveFormIntoRecord($data, $form)
     {
@@ -905,7 +905,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
     }
 
     /**
-     * @return ViewableData
+     * @return ModelData
      */
     public function getRecord()
     {

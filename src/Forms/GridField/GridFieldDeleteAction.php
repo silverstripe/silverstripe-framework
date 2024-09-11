@@ -6,8 +6,8 @@ use LogicException;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\ValidationException;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Core\Validation\ValidationException;
+use SilverStripe\Model\ModelData;
 
 /**
  * This class is a {@link GridField} component that adds a delete action for
@@ -75,7 +75,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      *
      * @param GridField $gridField
-     * @param DataObjectInterface&ViewableData $record
+     * @param DataObjectInterface&ModelData $record
      * @param string $columnName
      * @return string|null the attribles for the action
      */
@@ -107,7 +107,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * Return any special attributes that will be used for FormField::create_tag()
      *
      * @param GridField $gridField
-     * @param DataObjectInterface&ViewableData $record
+     * @param DataObjectInterface&ModelData $record
      * @param string $columnName
      * @return array
      */
@@ -155,7 +155,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      *
      * @param GridField $gridField
-     * @param DataObjectInterface&ViewableData $record
+     * @param DataObjectInterface&ModelData $record
      * @param string $columnName
      * @return string|null the HTML for the column
      */
@@ -183,7 +183,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     {
         $list = $gridField->getList();
         if ($actionName == 'deleterecord' || $actionName == 'unlinkrelation') {
-            /** @var DataObjectInterface&ViewableData $item */
+            /** @var DataObjectInterface&ModelData $item */
             $item = $list->byID($arguments['RecordID']);
             if (!$item) {
                 return;
@@ -221,7 +221,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
     /**
      *
      * @param GridField $gridField
-     * @param DataObjectInterface&ViewableData $record
+     * @param DataObjectInterface&ModelData $record
      * @param string $columnName
      * @return GridField_FormAction|null
      */

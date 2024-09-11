@@ -11,10 +11,10 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a field in a form.
@@ -325,7 +325,7 @@ class FormField extends RequestHandler
      * Creates a new field.
      *
      * @param string $name The internal field name, passed to forms.
-     * @param null|string|\SilverStripe\View\ViewableData $title The human-readable field label.
+     * @param null|string|\SilverStripe\Model\ModelData $title The human-readable field label.
      * @param mixed $value The value of the field.
      */
     public function __construct($name, $title = null, $value = null)
@@ -458,7 +458,7 @@ class FormField extends RequestHandler
      *
      * By default, makes use of $this->dataValue()
      *
-     * @param ViewableData|DataObjectInterface $record Record to save data into
+     * @param ModelData|DataObjectInterface $record Record to save data into
      */
     public function saveInto(DataObjectInterface $record)
     {
@@ -697,7 +697,7 @@ class FormField extends RequestHandler
      * or a submitted form value they should override setSubmittedValue() instead.
      *
      * @param mixed $value Either the parent object, or array of source data being loaded
-     * @param array|ViewableData $data {@see Form::loadDataFrom}
+     * @param array|ModelData $data {@see Form::loadDataFrom}
      * @return $this
      */
     public function setValue($value, $data = null)
@@ -712,7 +712,7 @@ class FormField extends RequestHandler
      * data formats.
      *
      * @param mixed $value
-     * @param array|ViewableData $data
+     * @param array|ModelData $data
      * @return $this
      */
     public function setSubmittedValue($value, $data = null)
