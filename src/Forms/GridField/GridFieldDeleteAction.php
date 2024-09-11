@@ -225,7 +225,7 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
      * @param string $columnName
      * @return GridField_FormAction|null
      */
-    private function getRemoveAction($gridField, $record, $columnName)
+    protected function getRemoveAction($gridField, $record, $columnName)
     {
         if ($this->getRemoveRelation()) {
             $this->checkForRequiredMethod($record, 'canEdit');

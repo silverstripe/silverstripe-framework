@@ -200,7 +200,9 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         DBEnum::flushCache();
         $do1 = new TestObject();
         $fields = $schema->databaseFields(TestObject::class, false);
-        $this->assertEquals("DBClassName", $fields['ClassName']);
+        // May be overridden from DBClassName to DBClassNameVarchar by config
+        $expectedClassName = DataObject::config()->get('fixed_fields')['ClassName'];
+        $this->assertEquals($expectedClassName, $fields['ClassName']);
         $this->assertEquals(
             [
                 TestObject::class,

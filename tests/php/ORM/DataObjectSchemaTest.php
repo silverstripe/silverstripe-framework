@@ -165,6 +165,11 @@ class DataObjectSchemaTest extends SapphireTest
     public function testFieldSpec(array $args, array $expected): void
     {
         $schema = DataObject::getSchema();
+        // May be overridden from DBClassName to DBClassNameVarchar by config
+        $expectedClassName = DataObject::config()->get('fixed_fields')['ClassName'];
+        if (array_key_exists('ClassName', $expected) && $expectedClassName !== 'DBClassName') {
+            $expected['ClassName'] = str_replace('DBClassName', $expectedClassName, $expected['ClassName']);
+        }
         $this->assertEquals($expected, $schema->fieldSpecs(...$args));
     }
 

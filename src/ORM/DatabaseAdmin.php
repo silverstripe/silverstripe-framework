@@ -15,6 +15,7 @@ use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Connect\TableBuilder;
 use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\FieldType\DBClassNameVarchar;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
@@ -460,7 +461,8 @@ class DatabaseAdmin extends Controller
         foreach ($dataClasses as $className) {
             $fieldSpecs = $schema->fieldSpecs($className);
             foreach ($fieldSpecs as $fieldName => $fieldSpec) {
-                if (Injector::inst()->create($fieldSpec, 'Dummy') instanceof DBClassName) {
+                $dummy = Injector::inst()->create($fieldSpec, 'Dummy');
+                if ($dummy instanceof DBClassName || $dummy instanceof DBClassNameVarchar) {
                     $remapping[$className][] = $fieldName;
                 }
             }

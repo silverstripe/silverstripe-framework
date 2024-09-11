@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests;
 
-use ReflectionProperty;
+use ReflectionClass;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 
@@ -142,9 +142,8 @@ class EnvironmentTest extends SapphireTest
         $this->assertSame($expected, Environment::hasEnv($name));
 
         // unset the value
-        $reflectionEnv = new ReflectionProperty(Environment::class, 'env');
-        $reflectionEnv->setAccessible(true);
-        $reflectionEnv->setValue(array_diff($reflectionEnv->getValue(), [$name => $value]));
+        $reflectionEnv = new ReflectionClass(Environment::class);
+        $reflectionEnv->setStaticPropertyValue('env', array_diff($reflectionEnv->getStaticPropertyValue('env'), [$name => $value]));
         unset($_ENV[$name]);
         unset($_SERVER[$name]);
         putenv("$name");
