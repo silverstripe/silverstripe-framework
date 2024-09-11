@@ -3,7 +3,7 @@
 namespace SilverStripe\Core\Tests;
 
 use BadMethodCallException;
-use ReflectionProperty;
+use ReflectionClass;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Tests\ExtensionTest\NamedExtension;
 use SilverStripe\Dev\SapphireTest;
@@ -15,9 +15,8 @@ class ExtensionTest extends SapphireTest
     {
         parent::setUp();
         // Reset extra_methods so that when we set NamedExtension to null it re-evaluates which methods are available
-        $reflectionProperty = new ReflectionProperty(DataObject::class, 'extra_methods');
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue([]);
+        $reflectionClass = new ReflectionClass(DataObject::class);
+        $reflectionClass->setStaticPropertyValue('extra_methods', []);
         // Add named extension config like we would in yaml
         Config::modify()->merge(DataObject::class, 'extensions', ['NamedExtension' => NamedExtension::class]);
     }
