@@ -9,6 +9,7 @@ use SilverStripe\View\ArrayData;
 use ArrayAccess;
 use Exception;
 use IteratorIterator;
+use SilverStripe\Dev\Deprecation;
 use Traversable;
 
 /**
@@ -17,6 +18,7 @@ use Traversable;
  * @template TList of SS_List
  * @template T
  * @extends ListDecorator<TList, T>
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\PaginatedList
  */
 class PaginatedList extends ListDecorator
 {
@@ -39,6 +41,10 @@ class PaginatedList extends ListDecorator
      */
     public function __construct(SS_List $list, $request = [])
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\List\PaginatedList', Deprecation::SCOPE_CLASS);
+        });
+
         if (!is_array($request) && !$request instanceof ArrayAccess) {
             throw new Exception('The request must be readable as an array.');
         }

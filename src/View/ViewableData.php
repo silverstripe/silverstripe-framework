@@ -27,6 +27,8 @@ use UnexpectedValueException;
  * A view interrogates the object being currently rendered in order to get data to render into the template. This data
  * is provided and automatically escaped by ViewableData. Any class that needs to be available to a view (controllers,
  * {@link DataObject}s, page controls) should inherit from this class.
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\ModelData
  */
 class ViewableData
 {
@@ -75,6 +77,9 @@ class ViewableData
 
     public function __construct()
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ModelData', Deprecation::SCOPE_CLASS);
+        });
     }
 
     // -----------------------------------------------------------------------------------------------------------------

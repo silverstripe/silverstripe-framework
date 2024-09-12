@@ -4,6 +4,7 @@ namespace SilverStripe\View;
 
 use SilverStripe\ORM\ArrayLib;
 use InvalidArgumentException;
+use SilverStripe\Dev\Deprecation;
 use stdClass;
 
 /**
@@ -15,6 +16,8 @@ use stdClass;
  *    "AddAction" => "Add a new Page page",
  * ));
  * </code>
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\ArrayData
  */
 class ArrayData extends ViewableData
 {
@@ -31,6 +34,10 @@ class ArrayData extends ViewableData
      */
     public function __construct($value = [])
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ArrayData', Deprecation::SCOPE_CLASS);
+        });
+
         if (is_object($value)) {
             $this->array = get_object_vars($value);
         } elseif (is_array($value)) {

@@ -35,6 +35,7 @@ use Traversable;
  * @implements Filterable<T>
  * @implements Sortable<T>
  * @implements Limitable<T>
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\ArrayList
  */
 class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, Limitable
 {
@@ -60,6 +61,10 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
      */
     public function __construct(array $items = [])
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\List\ArrayList', Deprecation::SCOPE_CLASS);
+        });
+
         $this->items = array_values($items ?? []);
         parent::__construct();
     }

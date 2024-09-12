@@ -14,6 +14,7 @@ namespace SilverStripe\ORM;
  *
  * @template T
  * @extends SS_List<T>
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\Filterable
  */
 interface Filterable extends SS_List
 {
