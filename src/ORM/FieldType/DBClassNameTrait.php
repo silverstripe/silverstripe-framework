@@ -6,6 +6,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use RuntimeException;
+use SilverStripe\View\ViewableData;
 
 trait DBClassNameTrait
 {
@@ -13,28 +14,23 @@ trait DBClassNameTrait
      * Base classname of class to enumerate.
      * If 'DataObject' then all classes are included.
      * If empty, then the baseClass of the parent object will be used
-     *
-     * @var string|null
      */
-    protected $baseClass = null;
+    protected ?string $baseClass = null;
 
     /**
      * Parent object
-     *
-     * @var DataObject|null
      */
-    protected $record = null;
+    protected ?DataObject $record = null;
 
-    private static $index = true;
+    private static string|bool $index = true;
 
     /**
      * Create a new DBClassName field
      *
-     * @param string      $name      Name of field
      * @param string|null $baseClass Optional base class to limit selections
-     * @param array       $options   Optional parameters for this DBField instance
+     * @param array $options Optional parameters for this DBField instance
      */
-    public function __construct($name = null, $baseClass = null, $options = [])
+    public function __construct(?string $name = null, ?string $baseClass = null, array $options = [])
     {
         $this->setBaseClass($baseClass);
         if (is_a($this, DBVarchar::class)) {
@@ -48,10 +44,8 @@ trait DBClassNameTrait
 
     /**
      * Get the base dataclass for the list of subclasses
-     *
-     * @return string
      */
-    public function getBaseClass()
+    public function getBaseClass(): string
     {
         // Use explicit base class
         if ($this->baseClass) {
@@ -74,25 +68,20 @@ trait DBClassNameTrait
     /**
      * Get the base name of the current class
      * Useful as a non-fully qualified CSS Class name in templates.
-     *
-     * @return string|null
      */
-    public function getShortName()
+    public function getShortName(): string
     {
         $value = $this->getValue();
         if (empty($value) || !ClassInfo::exists($value)) {
-            return null;
+            return '';
         }
         return ClassInfo::shortName($value);
     }
 
     /**
      * Assign the base class
-     *
-     * @param string $baseClass
-     * @return $this
      */
-    public function setBaseClass($baseClass)
+    public function setBaseClass(?string $baseClass): static
     {
         $this->baseClass = $baseClass;
         return $this;
@@ -100,10 +89,8 @@ trait DBClassNameTrait
 
     /**
      * Get list of classnames that should be selectable
-     *
-     * @return array
      */
-    public function getEnum()
+    public function getEnum(): array
     {
         $classNames = ClassInfo::subclassesFor($this->getBaseClass());
         $dataobject = strtolower(DataObject::class);
@@ -111,7 +98,7 @@ trait DBClassNameTrait
         return array_values($classNames ?? []);
     }
 
-    public function setValue($value, $record = null, $markChanged = true)
+    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
     {
         parent::setValue($value, $record, $markChanged);
 
@@ -121,8 +108,8 @@ trait DBClassNameTrait
 
         return $this;
     }
-    
-    private function getDefaultClassName()
+
+    private function getDefaultClassName(): string
     {
         // Allow classes to set default class
         $baseClass = $this->getBaseClass();
