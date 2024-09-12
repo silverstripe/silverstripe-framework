@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A class that combined as a boolean result with an optional list of error messages.
@@ -11,6 +12,8 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * Each message can have a code or field which will uniquely identify that message. However,
  * messages can be stored without a field or message as an "overall" message.
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Core\Validation\ValidationResult
  */
 class ValidationResult
 {
@@ -60,6 +63,13 @@ class ValidationResult
      * @var array
      */
     protected $messages = [];
+
+    public function __construct()
+    {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\Validation\ValidationResult', Deprecation::SCOPE_CLASS);
+        });
+    }
 
     /**
      * Record an error against this validation result,

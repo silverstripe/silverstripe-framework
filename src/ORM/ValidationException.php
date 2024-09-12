@@ -5,11 +5,14 @@ namespace SilverStripe\ORM;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Exception thrown by {@link DataObject}::write if validation fails. By throwing an
  * exception rather than a user error, the exception can be caught in unit tests and as such
  * can be used as a successful test.
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Core\Validation\ValidationException
  */
 class ValidationException extends Exception
 {
@@ -31,6 +34,10 @@ class ValidationException extends Exception
      */
     public function __construct($result = null, $code = 0)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\Validation\ValidationException', Deprecation::SCOPE_CLASS);
+        });
+
         // Catch legacy behaviour where second argument was not code
         if ($code && !is_numeric($code)) {
             throw new InvalidArgumentException("Code must be numeric");

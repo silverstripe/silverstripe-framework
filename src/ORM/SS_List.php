@@ -12,6 +12,8 @@ use IteratorAggregate;
  * @template T
  * @extends ArrayAccess<array-key, T>
  * @extends IteratorAggregate<array-key, T>
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\SS_List
  */
 interface SS_List extends ArrayAccess, Countable, IteratorAggregate
 {
