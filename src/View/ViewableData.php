@@ -20,6 +20,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\SSViewer;
 use UnexpectedValueException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
