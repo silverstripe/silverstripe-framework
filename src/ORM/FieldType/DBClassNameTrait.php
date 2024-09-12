@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
+use RuntimeException;
 
 trait DBClassNameTrait
 {
@@ -36,7 +37,13 @@ trait DBClassNameTrait
     public function __construct($name = null, $baseClass = null, $options = [])
     {
         $this->setBaseClass($baseClass);
-        parent::__construct($name, null, null, $options);
+        if (is_a($this, DBVarchar::class)) {
+            parent::__construct($name, 255, $options);
+        } elseif (is_a($this, DBEnum::class)) {
+            parent::__construct($name, null, null, $options);
+        } else {
+            throw new RuntimeException('DBClassNameTrait can only be used with DBVarchar or DBEnum');
+        }
     }
 
     /**
