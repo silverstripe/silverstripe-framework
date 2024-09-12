@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\ArrayData;
 
 /**
@@ -11,9 +12,18 @@ use SilverStripe\View\ArrayData;
  * @template TList
  * @template T
  * @extends ListDecorator<TList, T>
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\GroupedList
  */
 class GroupedList extends ListDecorator
 {
+
+    public function __construct(SS_List&Sortable&Filterable&Limitable $list)
+    {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\List\GroupedList', Deprecation::SCOPE_CLASS);
+        });
+        parent::__construct($list);
+    }
 
     /**
      * @param  string $index

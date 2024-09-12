@@ -6,10 +6,13 @@ use ArrayAccess;
 use BadMethodCallException;
 use Countable;
 use IteratorAggregate;
+use SilverStripe\Dev\Deprecation;
 use Traversable;
 
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\Map
  */
 class Map implements ArrayAccess, Countable, IteratorAggregate
 {
@@ -39,6 +42,10 @@ class Map implements ArrayAccess, Countable, IteratorAggregate
      */
     public function __construct(SS_List $list, $keyField = "ID", $valueField = "Title")
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\List\Map', Deprecation::SCOPE_CLASS);
+        });
+
         $this->list = $list;
         $this->keyField = $keyField;
         $this->valueField = $valueField;

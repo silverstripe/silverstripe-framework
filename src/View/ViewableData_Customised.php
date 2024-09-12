@@ -2,6 +2,11 @@
 
 namespace SilverStripe\View;
 
+use SilverStripe\Dev\Deprecation;
+
+/**
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\ModelDataCustomised
+ */
 class ViewableData_Customised extends ViewableData
 {
 
@@ -18,6 +23,10 @@ class ViewableData_Customised extends ViewableData
      */
     public function __construct(ViewableData $originalObject, ViewableData $customisedObject)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ModelDataCustomised', Deprecation::SCOPE_CLASS);
+        });
+
         $this->original = $originalObject;
         $this->customised = $customisedObject;
 

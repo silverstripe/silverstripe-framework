@@ -3,9 +3,11 @@
 namespace SilverStripe\View;
 
 use ReflectionObject;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Allows you to render debug information about a {@link ViewableData} object into a template.
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\ModelDataDebugger
  */
 class ViewableData_Debugger extends ViewableData
 {
@@ -20,6 +22,9 @@ class ViewableData_Debugger extends ViewableData
      */
     public function __construct(ViewableData $object)
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ModelDataDebugger', Deprecation::SCOPE_CLASS);
+        });
         $this->object = $object;
         parent::__construct();
     }

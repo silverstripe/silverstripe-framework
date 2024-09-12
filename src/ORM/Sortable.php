@@ -14,6 +14,7 @@ namespace SilverStripe\ORM;
  *
  * @template T
  * @implements SS_List<T>
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Model\List\Sortable
  */
 interface Sortable extends SS_List
 {
