@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use InvalidArgumentException;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\HTTPMiddlewareAware;
@@ -11,11 +12,11 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
-use SilverStripe\Core\Path;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\TemplateGlobalProvider;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Director is responsible for processing URLs, and providing environment information.
@@ -841,28 +842,16 @@ class Director implements TemplateGlobalProvider
 
     /**
      * Given a filesystem reference relative to the site root, return the full file-system path.
-     *
-     * @param string $file
-     *
-     * @return string
      */
-    public static function getAbsFile($file)
+    public static function getAbsFile(string $file): string
     {
-        // If already absolute
-        if (Director::is_absolute($file)) {
-            return $file;
+        $path = Director::getAbsolutePathForFile($file);
+
+        if (!Path::isBasePath(Director::baseFolder(), $path)) {
+            throw new InvalidArgumentException("'$file' must not be outside the project root");
         }
 
-        // If path is relative to public folder search there first
-        if (Director::publicDir()) {
-            $path = Path::join(Director::publicFolder(), $file);
-            if (file_exists($path ?? '')) {
-                return $path;
-            }
-        }
-
-        // Default to base folder
-        return Path::join(Director::baseFolder(), $file);
+        return $path;
     }
 
     /**
@@ -1122,5 +1111,24 @@ class Director implements TemplateGlobalProvider
             $request = Injector::inst()->get(HTTPRequest::class);
         }
         return $request;
+    }
+
+    private static function getAbsolutePathForFile(string $file): string
+    {
+        // If already absolute
+        if (Director::is_absolute($file)) {
+            return $file;
+        }
+
+        // If path is relative to public folder search there first
+        if (Director::publicDir()) {
+            $path = Path::join(Director::publicFolder(), $file);
+            if (file_exists($path ?? '')) {
+                return $path;
+            }
+        }
+
+        // Default to base folder
+        return Path::join(Director::baseFolder(), $file);
     }
 }

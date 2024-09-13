@@ -3,6 +3,7 @@
 namespace SilverStripe\i18n\TextCollection;
 
 use Exception;
+use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
@@ -12,7 +13,6 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
@@ -22,6 +22,7 @@ use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\i18n\Messages\Reader;
 use SilverStripe\i18n\Messages\Writer;
 use SilverStripe\ORM\DataObject;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * SilverStripe-variant of the "gettext" tool:
@@ -113,9 +114,10 @@ class i18nTextCollector
      */
     public function __construct($locale = null)
     {
-        $this->defaultLocale = $locale
-            ? $locale
-            : i18n::getData()->langFromLocale(i18n::config()->uninherited('default_locale'));
+        if (!$locale) {
+            $locale = i18n::getData()->langFromLocale(i18n::config()->uninherited('default_locale'));
+        }
+        $this->setDefaultLocale($locale);
         $this->basePath = Director::baseFolder();
         $this->baseSavePath = Director::baseFolder();
         $this->setWarnOnEmptyDefault(i18n::config()->uninherited('missing_default_warning'));
@@ -473,8 +475,9 @@ class i18nTextCollector
             }
             if (!empty($themes)) {
                 foreach ($themes as $theme) {
-                    if (is_dir(Path::join(THEMES_PATH, $theme))) {
-                        $modules[i18nTextCollector::THEME_PREFIX . $theme] = new Module(Path::join(THEMES_PATH, $theme), BASE_PATH);
+                    $themeDir = Path::join(THEMES_PATH, $theme);
+                    if (is_dir($themeDir)) {
+                        $modules[i18nTextCollector::THEME_PREFIX . $theme] = new Module($themeDir, BASE_PATH);
                     }
                 }
             }
@@ -1075,6 +1078,9 @@ class i18nTextCollector
 
     public function setDefaultLocale($locale)
     {
+        if ($locale && str_contains($locale, '..')) {
+            throw new InvalidArgumentException('Locale must not contain ".."');
+        }
         $this->defaultLocale = $locale;
     }
 

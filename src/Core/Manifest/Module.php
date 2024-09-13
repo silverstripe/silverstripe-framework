@@ -4,7 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use Exception;
 use InvalidArgumentException;
-use SilverStripe\Core\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Abstraction of a PHP Package. Can be used to retrieve information about Silverstripe CMS modules, and other packages
@@ -14,17 +14,13 @@ class Module
 {
     /**
      * Full directory path to this module with no trailing slash
-     *
-     * @var string
      */
-    protected $path = null;
+    protected string $path;
 
     /**
      * Base folder of application with no trailing slash
-     *
-     * @var string
      */
-    protected $basePath = null;
+    protected string $basePath;
 
     /**
      * Cache of composer data
@@ -46,10 +42,10 @@ class Module
      * @param string $path Absolute filesystem path to this module
      * @param string $basePath base path for the application this module is installed in
      */
-    public function __construct($path, $basePath)
+    public function __construct(string $path, string $basePath)
     {
-        $this->path = Path::normalise($path);
-        $this->basePath = Path::normalise($basePath);
+        $this->path = rtrim(Path::normalize($path), '/');
+        $this->basePath = rtrim(Path::normalize($basePath), '/');
         $this->loadComposer();
     }
 
@@ -118,7 +114,7 @@ class Module
         }
 
         // Base name of directory
-        return basename($this->path ?? '');
+        return basename($this->path);
     }
 
     /**
@@ -156,7 +152,7 @@ class Module
         if ($this->path === $this->basePath) {
             return '';
         }
-        return substr($this->path ?? '', strlen($this->basePath ?? '') + 1);
+        return substr($this->path, strlen($this->basePath) + 1);
     }
 
     public function __serialize(): array
@@ -175,14 +171,14 @@ class Module
             $this->composerData = $data['composerData'];
             $this->resources = [];
     }
-    
+
     /**
      * Activate _config.php for this module, if one exists
      */
     public function activate()
     {
         $config = "{$this->path}/_config.php";
-        if (file_exists($config ?? '')) {
+        if (file_exists($config)) {
             requireFile($config);
         }
     }
@@ -194,9 +190,9 @@ class Module
     {
         // Load composer data
         $path = "{$this->path}/composer.json";
-        if (file_exists($path ?? '')) {
-            $content = file_get_contents($path ?? '');
-            $result = json_decode($content ?? '', true);
+        if (file_exists($path)) {
+            $content = file_get_contents($path);
+            $result = json_decode($content, true);
             if (json_last_error()) {
                 $errorMessage = json_last_error_msg();
                 throw new Exception("$path: $errorMessage");
@@ -208,12 +204,11 @@ class Module
     /**
      * Get resource for this module
      *
-     * @param string $path
      * @return ModuleResource
      */
-    public function getResource($path)
+    public function getResource(string $path)
     {
-        $path = Path::normalise($path, true);
+        $path = trim(Path::normalize($path), '/');
         if (empty($path)) {
             throw new InvalidArgumentException('$path is required');
         }

@@ -4,7 +4,7 @@ namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * This object represents a single resource file attached to a module, and can be used
@@ -12,17 +12,12 @@ use SilverStripe\Core\Path;
  */
 class ModuleResource
 {
-    /**
-     * @var Module
-     */
-    protected $module = null;
+    protected Module $module;
 
     /**
      * Path to this resource relative to the module (no leading slash)
-     *
-     * @var string
      */
-    protected $relativePath = null;
+    protected string $relativePath;
 
     /**
      * Nested resources for this parent resource
@@ -31,43 +26,33 @@ class ModuleResource
      */
     protected $resources = [];
 
-    /**
-     * ModuleResource constructor.
-     *
-     * @param Module $module
-     * @param string $relativePath
-     */
-    public function __construct(Module $module, $relativePath)
+    public function __construct(Module $module, string $relativePath)
     {
         $this->module = $module;
-        $this->relativePath = Path::normalise($relativePath, true);
+        $this->relativePath = trim(Path::normalize($relativePath), '/');
         if (empty($this->relativePath)) {
             throw new InvalidArgumentException("Resource cannot have empty path");
         }
     }
 
     /**
-     * Return the full filesystem path to this resource.
+     * Return the full filesystem path to this resource with no trailing slash..
      *
      * Note: In the case that this resource is mapped to the `_resources` folder, this will
      * return the original rather than the copy / symlink.
-     *
-     * @return string Path with no trailing slash E.g. /var/www/module
      */
-    public function getPath()
+    public function getPath(): string
     {
         return Path::join($this->module->getPath(), $this->relativePath);
     }
 
     /**
-     * Get the path of this resource relative to the base path.
+     * Get the path of this resource relative to the base path with no trailing or leading slash.
      *
      * Note: In the case that this resource is mapped to the `_resources` folder, this will
      * return the original rather than the copy / symlink.
-     *
-     * @return string Relative path (no leading /)
      */
-    public function getRelativePath()
+    public function getRelativePath(): string
     {
         // Root module
         $parent = $this->module->getRelativePath();
@@ -104,20 +89,16 @@ class ModuleResource
 
     /**
      * Determine if this resource exists
-     *
-     * @return bool
      */
-    public function exists()
+    public function exists(): bool
     {
         return file_exists($this->getPath() ?? '');
     }
 
     /**
      * Get relative path
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getRelativePath();
     }
@@ -132,12 +113,10 @@ class ModuleResource
 
     /**
      * Get nested resource relative to this.
-     * Note: Doesn't support `..` or `.` relative syntax
      *
-     * @param string $path
      * @return ModuleResource
      */
-    public function getRelativeResource($path)
+    public function getRelativeResource(string $path)
     {
         // Defer to parent module
         $relativeToModule = Path::join($this->relativePath, $path);

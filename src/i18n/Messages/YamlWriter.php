@@ -2,12 +2,13 @@
 
 namespace SilverStripe\i18n\Messages;
 
+use InvalidArgumentException;
 use SilverStripe\Assets\Filesystem;
-use SilverStripe\Core\Path;
 use SilverStripe\i18n\i18n;
 use Symfony\Component\Yaml\Dumper;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
 use LogicException;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Write yml files compatible with ModuleYamlLoader
@@ -55,6 +56,9 @@ class YamlWriter implements Writer
 
         // Open the English file and write the Master String Table
         $langFile = Path::join($langFolder, $locale . '.yml');
+        if (!Path::isBasePath($langFolder, $langFile)) {
+            throw new InvalidArgumentException("Language file must be inside '$langFolder'");
+        }
         if ($fh = fopen($langFile ?? '', "w")) {
             fwrite($fh, $content ?? '');
             fclose($fh);

@@ -8,7 +8,7 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
-use SilverStripe\Core\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
@@ -113,7 +113,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
             if (count($parts ?? []) > 1) {
                 throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
-            return Path::normalise($identifier, true);
+            return trim(Path::normalize($identifier), '/');
         }
 
         // If there is no slash / colon it's a legacy theme
@@ -158,7 +158,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
         }
 
         // Join module with subpath
-        return Path::normalise($modulePath . $subpath, true);
+        return trim(Path::normalize($modulePath . $subpath), '/');
     }
 
     /**
@@ -238,7 +238,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
                 // Join path
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
                 try {
-                    $path = Path::join($pathParts) . '.ss';
+                    $path = Path::join(...$pathParts) . '.ss';
                     if (file_exists($path ?? '')) {
                         $this->getCache()->set($cacheKey, $path);
                         return $path;
@@ -328,6 +328,9 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
         foreach ($paths as $themePath) {
             $relativePath = Path::join($themePath, $resource);
             $absolutePath = Path::join($this->base, $relativePath);
+            if (!Path::isBasePath($themePath, $relativePath) || !Path::isBasePath($this->base, $absolutePath)) {
+                continue;
+            }
             if (file_exists($absolutePath ?? '')) {
                 return $relativePath;
             }

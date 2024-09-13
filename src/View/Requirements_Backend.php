@@ -14,11 +14,10 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
-use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBField;
-use Symfony\Component\Filesystem\Path as FilesystemPath;
+use Symfony\Component\Filesystem\Path;
 
 class Requirements_Backend
 {
@@ -1416,7 +1415,7 @@ class Requirements_Backend
             if ($relativePath[0] === '/' || false !== strpos($relativePath, '://')) {
                 return $fullMatch;
             }
-            $substitute = FilesystemPath::canonicalize(FilesystemPath::join($fileUrlDir, $relativePath));
+            $substitute = Path::join($fileUrlDir, $relativePath);
             return $prefix . $substitute;
         }, $content);
         return $content;

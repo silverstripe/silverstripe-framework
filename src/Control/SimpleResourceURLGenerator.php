@@ -8,7 +8,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
 use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
-use SilverStripe\Core\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Generate URLs assuming that BASE_PATH is also the webroot
@@ -77,7 +77,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             if (strpos($relativePath ?? '', '?') !== false) {
                 list($relativePath, $query) = explode('?', $relativePath ?? '');
             }
-            
+
             list($exists, $absolutePath, $relativePath) = $this->resolvePublicResource($relativePath);
         }
         if (!$exists) {
@@ -135,17 +135,8 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         $exists = $resource->exists();
         $absolutePath = $resource->getPath();
 
-        // Rewrite to _resources with public directory
-        if (Director::publicDir()) {
-            // All resources mapped directly to _resources/
-            $relativePath = Path::join(RESOURCES_DIR, $relativePath);
-        } elseif (stripos($relativePath ?? '', ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
-            // If there is no public folder, map to _resources/ but trim leading vendor/ too (4.0 compat)
-            $relativePath = Path::join(
-                RESOURCES_DIR,
-                substr($relativePath ?? '', strlen(ManifestFileFinder::VENDOR_DIR ?? ''))
-            );
-        }
+        // All resources mapped directly to public/_resources/
+        $relativePath = Path::join(RESOURCES_DIR, $relativePath);
         return [$exists, $absolutePath, $relativePath];
     }
 
@@ -160,13 +151,17 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
     protected function inferPublicResourceRequired(&$relativePath)
     {
         // Normalise path
-        $relativePath = Path::normalise($relativePath, true);
+        $relativePath = Path::normalize($relativePath);
 
         // Detect public-only request
         $publicOnly = stripos($relativePath ?? '', 'public' . DIRECTORY_SEPARATOR) === 0;
         if ($publicOnly) {
             $relativePath = substr($relativePath ?? '', strlen(Director::publicDir() . DIRECTORY_SEPARATOR));
         }
+
+        // Trim slashes
+        $relativePath = trim($relativePath, '/');
+
         return $publicOnly;
     }
 
@@ -181,10 +176,14 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
     {
         // Determine if we should search both public and base resources, or only public
         $publicOnly = $this->inferPublicResourceRequired($relativePath);
+        $publicDir = Director::publicFolder();
 
         // Search public folder first, and unless `public/` is prefixed, also private base path
-        $publicPath = Path::join(Director::publicFolder(), $relativePath);
+        $publicPath = Path::join($publicDir, $relativePath);
         if (file_exists($publicPath ?? '')) {
+            if (!Path::isBasePath($publicDir, $publicPath)) {
+                throw new InvalidArgumentException("'$relativePath' must not be outside the public root");
+            }
             // String is a literal url committed directly to public folder
             return [true, $publicPath, $relativePath];
         }
@@ -194,6 +193,12 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         if (!$publicOnly && file_exists($privatePath ?? '')) {
             // String is private but exposed to _resources/, so rewrite to the symlinked base
             $relativePath = Path::join(RESOURCES_DIR, $relativePath);
+            if (!Path::isBasePath(RESOURCES_DIR, $relativePath)) {
+                throw new InvalidArgumentException("'$relativePath' must not be outside the resources root");
+            }
+            if (!Path::isBasePath(Director::baseFolder(), $privatePath)) {
+                throw new InvalidArgumentException("'$privatePath' must not be outside the project root");
+            }
             return [true, $privatePath, $relativePath];
         }
 

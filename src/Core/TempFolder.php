@@ -3,6 +3,7 @@
 namespace SilverStripe\Core;
 
 use Exception;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Guesses location for temp folder
