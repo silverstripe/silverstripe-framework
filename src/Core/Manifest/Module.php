@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Manifest;
 use Exception;
 use InvalidArgumentException;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Abstraction of a PHP Package. Can be used to retrieve information about Silverstripe CMS modules, and other packages
@@ -48,8 +49,8 @@ class Module
      */
     public function __construct($path, $basePath)
     {
-        $this->path = Path::normalise($path);
-        $this->basePath = Path::normalise($basePath);
+        $this->path = Deprecation::withNoReplacement(fn () => Path::normalise($path));
+        $this->basePath = Deprecation::withNoReplacement(fn () => Path::normalise($basePath));
         $this->loadComposer();
     }
 
@@ -175,7 +176,7 @@ class Module
             $this->composerData = $data['composerData'];
             $this->resources = [];
     }
-    
+
     /**
      * Activate _config.php for this module, if one exists
      */
@@ -213,7 +214,7 @@ class Module
      */
     public function getResource($path)
     {
-        $path = Path::normalise($path, true);
+        $path = Deprecation::withNoReplacement(fn () => Path::normalise($path, true));
         if (empty($path)) {
             throw new InvalidArgumentException('$path is required');
         }

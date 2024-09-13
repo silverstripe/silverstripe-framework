@@ -3,6 +3,7 @@
 namespace SilverStripe\Core;
 
 use Exception;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Guesses location for temp folder
@@ -20,7 +21,7 @@ class TempFolder
         $parent = static::getTempParentFolder($base);
 
         // The actual temp folder is a subfolder of getTempParentFolder(), named by username
-        $subfolder = Path::join($parent, static::getTempFolderUsername());
+        $subfolder = Deprecation::withNoReplacement(fn () => Path::join($parent, static::getTempFolderUsername()));
 
         if (!@file_exists($subfolder ?? '')) {
             mkdir($subfolder ?? '');
@@ -69,7 +70,7 @@ class TempFolder
     protected static function getTempParentFolder($base)
     {
         // first, try finding a silverstripe-cache dir built off the base path
-        $localPath = Path::join($base, 'silverstripe-cache');
+        $localPath = Deprecation::withNoReplacement(fn () => Path::join($base, 'silverstripe-cache'));
         if (@file_exists($localPath ?? '')) {
             if ((fileperms($localPath ?? '') & 0777) != 0777) {
                 @chmod($localPath ?? '', 0777);
@@ -78,11 +79,13 @@ class TempFolder
         }
 
         // failing the above, try finding a namespaced silverstripe-cache dir in the system temp
-        $tempPath = Path::join(
-            sys_get_temp_dir(),
-            'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION) .
-            str_replace([' ', '/', ':', '\\'], '-', $base ?? '')
-        );
+        $tempPath = Deprecation::withNoReplacement(function () use ($base) {
+            return Path::join(
+                sys_get_temp_dir(),
+                'silverstripe-cache-php' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION) .
+                str_replace([' ', '/', ':', '\\'], '-', $base ?? '')
+            );
+        });
         if (!@file_exists($tempPath ?? '')) {
             $oldUMask = umask(0);
             @mkdir($tempPath ?? '', 0777);

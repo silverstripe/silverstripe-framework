@@ -3,13 +3,24 @@
 namespace SilverStripe\Core;
 
 use InvalidArgumentException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Path manipulation helpers
+ * @deprecated 5.4.0 Use Symfony\Component\Filesystem\Path from symfony/filesystem instead
  */
 class Path
 {
     const TRIM_CHARS = ' /\\';
+
+    public function __construct()
+    {
+        Deprecation::notice(
+            '5.4.0',
+            'Use Symfony\Component\Filesystem\Path from symfony/filesystem instead',
+            Deprecation::SCOPE_CLASS
+        );
+    }
 
     /**
      * Joins one or more paths, normalising all separators to DIRECTORY_SEPARATOR
@@ -20,10 +31,12 @@ class Path
      * @see File::join_paths() for joining file identifiers
      *
      * @param array $parts
-     * @return string Combined path, not including trailing slash (unless it's a single slash)
+     * @return string Combined path, not including trailing slash (unless it's a single slash)'
+     * @deprecated 5.4.0 Use Symfony\Component\Filesystem\Path::join() from symfony/filesystem instead
      */
     public static function join(...$parts)
     {
+        Deprecation::notice('5.4.0', 'Use Symfony\Component\Filesystem\Path::join() from symfony/filesystem instead');
         // In case $parts passed as an array in first parameter
         if (count($parts ?? []) === 1 && is_array($parts[0])) {
             $parts = $parts[0];
@@ -48,9 +61,14 @@ class Path
      * @param string $path Input path
      * @param bool $relative
      * @return string Path with no trailing slash. If $relative is true, also trim leading slashes
+     * @deprecated 5.4.0 Use Symfony\Component\Filesystem\Path::normalize() from symfony/filesystem instead
      */
     public static function normalise($path, $relative = false)
     {
+        Deprecation::notice(
+            '5.4.0',
+            'Use Symfony\Component\Filesystem\Path::normalize() from symfony/filesystem instead'
+        );
         $path = trim(Convert::slashes($path) ?? '');
         if ($relative) {
             return trim($path ?? '', Path::TRIM_CHARS ?? '');

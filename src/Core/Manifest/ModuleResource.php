@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Manifest;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * This object represents a single resource file attached to a module, and can be used
@@ -40,7 +41,7 @@ class ModuleResource
     public function __construct(Module $module, $relativePath)
     {
         $this->module = $module;
-        $this->relativePath = Path::normalise($relativePath, true);
+        $this->relativePath = Deprecation::withNoReplacement(fn () => Path::normalise($relativePath, true));
         if (empty($this->relativePath)) {
             throw new InvalidArgumentException("Resource cannot have empty path");
         }
@@ -56,7 +57,7 @@ class ModuleResource
      */
     public function getPath()
     {
-        return Path::join($this->module->getPath(), $this->relativePath);
+        return Deprecation::withNoReplacement(fn () => Path::join($this->module->getPath(), $this->relativePath));
     }
 
     /**
@@ -74,7 +75,7 @@ class ModuleResource
         if (!$parent) {
             return $this->relativePath;
         }
-        return Path::join($parent, $this->relativePath);
+        return Deprecation::withNoReplacement(fn () => Path::join($parent, $this->relativePath));
     }
 
     /**
@@ -140,7 +141,7 @@ class ModuleResource
     public function getRelativeResource($path)
     {
         // Defer to parent module
-        $relativeToModule = Path::join($this->relativePath, $path);
+        $relativeToModule = Deprecation::withNoReplacement(fn () => Path::join($this->relativePath, $path));
         return $this->getModule()->getResource($relativeToModule);
     }
 }

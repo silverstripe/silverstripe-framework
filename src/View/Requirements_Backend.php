@@ -16,6 +16,7 @@ use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBField;
 use Symfony\Component\Filesystem\Path as FilesystemPath;
@@ -1047,7 +1048,7 @@ class Requirements_Backend
         );
 
         foreach ($candidates as $candidate) {
-            $relativePath = Path::join($langDir, $candidate);
+            $relativePath = Deprecation::withNoReplacement(fn () => Path::join($langDir, $candidate));
             $absolutePath = Director::getAbsFile($relativePath);
             if (file_exists($absolutePath ?? '')) {
                 $files[] = $relativePath;

@@ -16,6 +16,7 @@ use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FormField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
@@ -385,7 +386,9 @@ class i18nTextCollector
         $modules = $this->getModulesAndThemes();
         foreach ($entitiesByModule as $module => $messages) {
             // Load existing localisations
-            $masterFile = Path::join($modules[$module]->getPath(), 'lang', $this->defaultLocale . '.yml');
+            $masterFile = Deprecation::withNoReplacement(
+                fn () => Path::join($modules[$module]->getPath(), 'lang', $this->defaultLocale . '.yml')
+            );
             $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
             // Merge
@@ -473,8 +476,9 @@ class i18nTextCollector
             }
             if (!empty($themes)) {
                 foreach ($themes as $theme) {
-                    if (is_dir(Path::join(THEMES_PATH, $theme))) {
-                        $modules[i18nTextCollector::THEME_PREFIX . $theme] = new Module(Path::join(THEMES_PATH, $theme), BASE_PATH);
+                    if (is_dir(Deprecation::withNoReplacement(fn () => Path::join(THEMES_PATH, $theme)))) {
+                        $themePath = Deprecation::withNoReplacement(fn () => Path::join(THEMES_PATH, $theme));
+                        $modules[i18nTextCollector::THEME_PREFIX . $theme] = new Module($themePath, BASE_PATH);
                     }
                 }
             }
@@ -503,7 +507,7 @@ class i18nTextCollector
         $this->getWriter()->write(
             $entities,
             $this->defaultLocale,
-            Path::join($this->baseSavePath, $module->getRelativePath())
+            Deprecation::withNoReplacement(fn () => Path::join($this->baseSavePath, $module->getRelativePath()))
         );
         return $this;
     }
@@ -563,20 +567,34 @@ class i18nTextCollector
         }
 
         // If non-standard module structure, search all root files
-        if (!is_dir(Path::join($modulePath, 'code')) && !is_dir(Path::join($modulePath, 'src'))) {
+        if (!is_dir(Deprecation::withNoReplacement(fn () => Path::join($modulePath, 'code')))
+            && !is_dir(Deprecation::withNoReplacement(fn () => Path::join($modulePath, 'src')))
+        ) {
             return $this->getFilesRecursive($modulePath);
         }
 
         // Get code files
         if (is_dir(Path::join($modulePath, 'src'))) {
-            $files = $this->getFilesRecursive(Path::join($modulePath, 'src'), null, 'php');
+            $files = $this->getFilesRecursive(
+                Deprecation::withNoReplacement(fn () => Path::join($modulePath, 'src')),
+                null,
+                'php'
+            );
         } else {
-            $files = $this->getFilesRecursive(Path::join($modulePath, 'code'), null, 'php');
+            $files = $this->getFilesRecursive(
+                Deprecation::withNoReplacement(fn () => Path::join($modulePath, 'code')),
+                null,
+                'php'
+            );
         }
 
         // Search for templates in this module
-        if (is_dir(Path::join($modulePath, 'templates'))) {
-            $templateFiles = $this->getFilesRecursive(Path::join($modulePath, 'templates'), null, 'ss');
+        if (is_dir(Deprecation::withNoReplacement(fn () => Path::join($modulePath, 'templates')))) {
+            $templateFiles = $this->getFilesRecursive(
+                Deprecation::withNoReplacement(fn () => Path::join($modulePath, 'templates')),
+                null,
+                'ss'
+            );
         } else {
             $templateFiles = $this->getFilesRecursive($modulePath, null, 'ss');
         }
@@ -1043,7 +1061,9 @@ class i18nTextCollector
             $fileList = [];
         }
         // Skip ignored folders
-        if (is_file(Path::join($folder, '_manifest_exclude')) || preg_match($folderExclude ?? '', $folder ?? '')) {
+        if (is_file(Deprecation::withNoReplacement(fn () => Path::join($folder, '_manifest_exclude')))
+            || preg_match($folderExclude ?? '', $folder ?? '')
+        ) {
             return $fileList;
         }
 

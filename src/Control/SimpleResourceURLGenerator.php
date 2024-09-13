@@ -9,6 +9,7 @@ use SilverStripe\Core\Manifest\ManifestFileFinder;
 use SilverStripe\Core\Manifest\ModuleResource;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Generate URLs assuming that BASE_PATH is also the webroot
@@ -77,7 +78,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
             if (strpos($relativePath ?? '', '?') !== false) {
                 list($relativePath, $query) = explode('?', $relativePath ?? '');
             }
-            
+
             list($exists, $absolutePath, $relativePath) = $this->resolvePublicResource($relativePath);
         }
         if (!$exists) {
@@ -138,12 +139,14 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         // Rewrite to _resources with public directory
         if (Director::publicDir()) {
             // All resources mapped directly to _resources/
-            $relativePath = Path::join(RESOURCES_DIR, $relativePath);
+            $relativePath = Deprecation::withNoReplacement(fn () => Path::join(RESOURCES_DIR, $relativePath));
         } elseif (stripos($relativePath ?? '', ManifestFileFinder::VENDOR_DIR . DIRECTORY_SEPARATOR) === 0) {
             // If there is no public folder, map to _resources/ but trim leading vendor/ too (4.0 compat)
-            $relativePath = Path::join(
-                RESOURCES_DIR,
-                substr($relativePath ?? '', strlen(ManifestFileFinder::VENDOR_DIR ?? ''))
+            $relativePath = Deprecation::withNoReplacement(
+                fn () => Path::join(
+                    RESOURCES_DIR,
+                    substr($relativePath ?? '', strlen(ManifestFileFinder::VENDOR_DIR ?? ''))
+                )
             );
         }
         return [$exists, $absolutePath, $relativePath];
@@ -160,7 +163,7 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
     protected function inferPublicResourceRequired(&$relativePath)
     {
         // Normalise path
-        $relativePath = Path::normalise($relativePath, true);
+        $relativePath = Deprecation::withNoReplacement(fn () => Path::normalise($relativePath, true));
 
         // Detect public-only request
         $publicOnly = stripos($relativePath ?? '', 'public' . DIRECTORY_SEPARATOR) === 0;
@@ -183,17 +186,17 @@ class SimpleResourceURLGenerator implements ResourceURLGenerator
         $publicOnly = $this->inferPublicResourceRequired($relativePath);
 
         // Search public folder first, and unless `public/` is prefixed, also private base path
-        $publicPath = Path::join(Director::publicFolder(), $relativePath);
+        $publicPath = Deprecation::withNoReplacement(fn () => Path::join(Director::publicFolder(), $relativePath));
         if (file_exists($publicPath ?? '')) {
             // String is a literal url committed directly to public folder
             return [true, $publicPath, $relativePath];
         }
 
         // Fall back to private path (and assume expose will make this available to _resources/)
-        $privatePath = Path::join(Director::baseFolder(), $relativePath);
+        $privatePath = Deprecation::withNoReplacement(fn () => Path::join(Director::baseFolder(), $relativePath));
         if (!$publicOnly && file_exists($privatePath ?? '')) {
             // String is private but exposed to _resources/, so rewrite to the symlinked base
-            $relativePath = Path::join(RESOURCES_DIR, $relativePath);
+            $relativePath = Deprecation::withNoReplacement(fn () => Path::join(RESOURCES_DIR, $relativePath));
             return [true, $privatePath, $relativePath];
         }
 

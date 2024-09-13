@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
@@ -662,7 +663,7 @@ class Director implements TemplateGlobalProvider
         $folder = Director::baseFolder();
         $publicDir = Director::publicDir();
         if ($publicDir) {
-            return Path::join($folder, $publicDir);
+            return Deprecation::withNoReplacement(fn () => Path::join($folder, $publicDir));
         }
 
         return $folder;
@@ -855,14 +856,14 @@ class Director implements TemplateGlobalProvider
 
         // If path is relative to public folder search there first
         if (Director::publicDir()) {
-            $path = Path::join(Director::publicFolder(), $file);
+            $path = Deprecation::withNoReplacement(fn () => Path::join(Director::publicFolder(), $file));
             if (file_exists($path ?? '')) {
                 return $path;
             }
         }
 
         // Default to base folder
-        return Path::join(Director::baseFolder(), $file);
+        return Deprecation::withNoReplacement(fn () => Path::join(Director::baseFolder(), $file));
     }
 
     /**

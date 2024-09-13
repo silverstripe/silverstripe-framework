@@ -9,6 +9,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
@@ -113,12 +114,12 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
             if (count($parts ?? []) > 1) {
                 throw new InvalidArgumentException("Invalid theme identifier {$identifier}");
             }
-            return Path::normalise($identifier, true);
+            return Deprecation::withNoReplacement(fn () => Path::normalise($identifier, true));
         }
 
         // If there is no slash / colon it's a legacy theme
         if ($slashPos === false && count($parts ?? []) === 1) {
-            return Path::join(THEMES_DIR, $identifier);
+            return Deprecation::withNoReplacement(fn () => Path::join(THEMES_DIR, $identifier));
         }
 
         // Extract from <vendor>/<module>:<theme> format.
@@ -158,7 +159,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
         }
 
         // Join module with subpath
-        return Path::normalise($modulePath . $subpath, true);
+        return Deprecation::withNoReplacement(fn () => Path::normalise($modulePath . $subpath, true));
     }
 
     /**
@@ -238,7 +239,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
                 // Join path
                 $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
                 try {
-                    $path = Path::join($pathParts) . '.ss';
+                    $path = Deprecation::withNoReplacement(fn () => Path::join($pathParts)) . '.ss';
                     if (file_exists($path ?? '')) {
                         $this->getCache()->set($cacheKey, $path);
                         return $path;
@@ -326,8 +327,8 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
         $paths = $this->getThemePaths($themes);
 
         foreach ($paths as $themePath) {
-            $relativePath = Path::join($themePath, $resource);
-            $absolutePath = Path::join($this->base, $relativePath);
+            $relativePath = Deprecation::withNoReplacement(fn () => Path::join($themePath, $resource));
+            $absolutePath = Deprecation::withNoReplacement(fn () => Path::join($this->base, $relativePath));
             if (file_exists($absolutePath ?? '')) {
                 return $relativePath;
             }

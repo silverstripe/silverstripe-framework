@@ -8,6 +8,7 @@ use SilverStripe\i18n\i18n;
 use Symfony\Component\Yaml\Dumper;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
 use LogicException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Write yml files compatible with ModuleYamlLoader
@@ -44,17 +45,17 @@ class YamlWriter implements Writer
         }
 
         // Create folder for lang files
-        $langFolder = Path::join($path, 'lang');
+        $langFolder = Deprecation::withNoReplacement(fn () => Path::join($path, 'lang'));
         if (!file_exists($langFolder ?? '')) {
             Filesystem::makeFolder($langFolder);
-            touch(Path::join($langFolder, '_manifest_exclude'));
+            touch(Deprecation::withNoReplacement(fn () => Path::join($langFolder, '_manifest_exclude')));
         }
 
         // De-normalise messages and convert to yml
         $content = $this->getYaml($messages, $locale);
 
         // Open the English file and write the Master String Table
-        $langFile = Path::join($langFolder, $locale . '.yml');
+        $langFile = Deprecation::withNoReplacement(fn () => Path::join($langFolder, $locale . '.yml'));
         if ($fh = fopen($langFile ?? '', "w")) {
             fwrite($fh, $content ?? '');
             fclose($fh);

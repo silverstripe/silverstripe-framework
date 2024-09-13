@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Tests;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 
 class PathTest extends SapphireTest
@@ -17,7 +18,7 @@ class PathTest extends SapphireTest
      */
     public function testJoinPaths($args, $expected)
     {
-        $joined = Path::join($args);
+        $joined = Deprecation::withNoReplacement(fn () => Path::join($args));
         $this->assertEquals($expected, $joined);
     }
 
@@ -72,7 +73,7 @@ class PathTest extends SapphireTest
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($error);
-        Path::join($args);
+        Deprecation::withNoReplacement(fn () => Path::join($args));
     }
 
     public function providerTestJoinPathsErrors()
@@ -93,7 +94,7 @@ class PathTest extends SapphireTest
      */
     public function testNormalise($input, $expected)
     {
-        $output = Path::normalise($input);
+        $output = Deprecation::withNoReplacement(fn () => Path::normalise($input));
         $this->assertEquals($expected, $output, "Expected $input to be normalised to $expected");
     }
 
