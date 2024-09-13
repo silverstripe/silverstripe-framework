@@ -30,6 +30,7 @@ abstract class BuildTask
      *
      * @config
      * @var string
+     * @deprecated 5.4.0 Will be replaced with $commandName
      */
     private static $segment = null;
 
@@ -55,6 +56,7 @@ abstract class BuildTask
     /**
      * @var string $description Describe the implications the task has,
      * and the changes it makes. Accepts HTML formatting.
+     * @deprecated 5.4.0 Will be replaced with a static property with the same name
      */
     protected $description = 'No description available';
 
@@ -90,9 +92,13 @@ abstract class BuildTask
 
     /**
      * @return string HTML formatted description
+     * @deprecated 5.4.0 Will be replaced with a static method with the same name
      */
     public function getDescription()
     {
+        Deprecation::withNoReplacement(
+            fn() => Deprecation::notice('5.4.0', 'Will be replaced with a static method with the same name')
+        );
         return $this->description;
     }
 }

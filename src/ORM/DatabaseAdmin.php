@@ -10,6 +10,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\DevBuildController;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\ORM\Connect\DatabaseException;
@@ -25,6 +26,8 @@ use SilverStripe\Versioned\Versioned;
  *
  * Utility functions for administrating the database. These can be accessed
  * via URL, e.g. http://www.yourdomain.com/db/build.
+ *
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild
  */
 class DatabaseAdmin extends Controller
 {
@@ -39,6 +42,7 @@ class DatabaseAdmin extends Controller
 
     /**
      * Obsolete classname values that should be remapped in dev/build
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild.classname_value_remapping
      */
     private static $classname_value_remapping = [
         'File'               => 'SilverStripe\\Assets\\File',
@@ -56,8 +60,21 @@ class DatabaseAdmin extends Controller
 
     /**
      * Config setting to enabled/disable the display of record counts on the dev/build output
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild.show_record_counts
      */
     private static $show_record_counts = true;
+
+    public function __construct()
+    {
+        parent::__construct();
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with SilverStripe\Dev\Command\DbBuild',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
 
     protected function init()
     {
@@ -191,9 +208,18 @@ class DatabaseAdmin extends Controller
      *
      * @return string Returns the timestamp of the time that the database was
      *                last built
+     *
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt()
      */
     public static function lastBuilt()
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt()'
+            );
+        });
+
         $file = TEMP_PATH
             . DIRECTORY_SEPARATOR
             . 'database-last-generated-'

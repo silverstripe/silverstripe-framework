@@ -357,6 +357,14 @@ abstract class BaseKernel implements Kernel
         $this->booted = $bool;
     }
 
+    /**
+     * Check whether the kernel has booted or not
+     */
+    public function getBooted(): bool
+    {
+        return $this->booted;
+    }
+
     public function shutdown()
     {
     }

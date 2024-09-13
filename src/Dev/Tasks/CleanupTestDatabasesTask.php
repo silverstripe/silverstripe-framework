@@ -4,6 +4,7 @@ namespace SilverStripe\Dev\Tasks;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Connect\TempDatabase;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -35,6 +36,12 @@ class CleanupTestDatabasesTask extends BuildTask
 
     public function canView(): bool
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with canRunInBrowser()'
+            );
+        });
         return Permission::check('ADMIN') || Director::is_cli();
     }
 }

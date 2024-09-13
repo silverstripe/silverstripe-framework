@@ -6,7 +6,6 @@ use SilverStripe\Control\HTTPApplication;
 use SilverStripe\Core\CoreKernel;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\NullDatabase;
-use SilverStripe\Core\DatabaselessKernel;
 
 require __DIR__ . '/src/includes/autoload.php';
 
@@ -25,9 +24,10 @@ if ($skipDatabase) {
     DB::set_conn(new NullDatabase());
 }
 // Default application
-$kernel = $skipDatabase
-    ? new DatabaselessKernel(BASE_PATH)
-    : new CoreKernel(BASE_PATH);
+$kernel = new CoreKernel(BASE_PATH);
+if ($skipDatabase) {
+    $kernel->setBootDatabase(false);
+}
 
 $app = new HTTPApplication($kernel);
 $response = $app->handle($request);

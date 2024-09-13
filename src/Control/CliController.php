@@ -4,6 +4,7 @@ namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 
@@ -13,9 +14,16 @@ use SilverStripe\Security\Security;
  * call to {@link process()} on every sub-subclass. For instance, calling
  * "sake DailyTask" from the commandline will call {@link process()} on every subclass
  * of DailyTask.
+ *
+ * @deprecated 5.4.0 Will be replaced with symfony/console commands
  */
 abstract class CliController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        Deprecation::notice('5.4.0', 'Will be replaced with symfony/console commands', Deprecation::SCOPE_CLASS);
+    }
 
     private static $allowed_actions = [
         'index'
