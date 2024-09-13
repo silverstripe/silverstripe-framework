@@ -6,6 +6,7 @@ use SebastianBergmann\Exporter\Exporter;
 use SebastianBergmann\RecursionContext\Context;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
+use SilverStripe\Dev\Deprecation;
 
 if (!class_exists(Exporter::class)) {
     return;
@@ -13,9 +14,22 @@ if (!class_exists(Exporter::class)) {
 
 /**
  * A custom exporter for prettier formatting of SilverStripe specific Objects in PHPUnit's failing test messages.
+ *
+ * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
  */
 class SSListExporter extends Exporter implements TestOnly
 {
+    public function __construct()
+    {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be removed without equivalent functionality to replace it',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
+
     /**
      * @param mixed $value
      * @param int $indentation
