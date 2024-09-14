@@ -6,6 +6,7 @@ use mysqli;
 use mysqli_sql_exception;
 use mysqli_stmt;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 
 /**
  * Connector for MySQL using the MySQLi method
@@ -81,15 +82,21 @@ class MySQLiConnector extends DBConnector
         // Connection charset and collation
         $connCharset = Config::inst()->get(MySQLDatabase::class, 'connection_charset');
         $connCollation = Config::inst()->get(MySQLDatabase::class, 'connection_collation');
+        $socket = Environment::getEnv('SS_DATABASE_SOCKET');
+        $flags = Environment::getEnv('SS_DATABASE_FLAGS');
+
+        $flags = $flags ? array_reduce(explode(',', $flags), function ($carry, $item) {
+            $item = trim($item);
+            return $carry | constant($item);
+        }, 0) : $flags;
 
         $this->dbConn = mysqli_init();
 
         // Use native types (MysqlND only)
         if (defined('MYSQLI_OPT_INT_AND_FLOAT_NATIVE')) {
             $this->dbConn->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
-
-        // The alternative is not ideal, throw a notice-level error
         } else {
+            // The alternative is not ideal, throw a notice-level error
             user_error(
                 'mysqlnd PHP library is not available, numeric values will be fetched from the DB as strings',
                 E_USER_NOTICE
@@ -117,7 +124,9 @@ class MySQLiConnector extends DBConnector
             $parameters['username'],
             $parameters['password'],
             $selectedDB,
-            !empty($parameters['port']) ? $parameters['port'] : ini_get("mysqli.default_port")
+            !empty($parameters['port']) ? $parameters['port'] : ini_get("mysqli.default_port"),
+            $socket ?? null,
+            $flags ?? 0
         );
 
         if ($this->dbConn->connect_error) {
@@ -126,8 +135,8 @@ class MySQLiConnector extends DBConnector
 
         // Set charset and collation if given and not null. Can explicitly set to empty string to omit
         $charset = isset($parameters['charset'])
-                ? $parameters['charset']
-                : $connCharset;
+            ? $parameters['charset']
+            : $connCharset;
 
         if (!empty($charset)) {
             $this->dbConn->set_charset($charset);
