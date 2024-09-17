@@ -99,7 +99,7 @@ class ViewableData implements IteratorAggregate
 
     public function __construct()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ModelData', Deprecation::SCOPE_CLASS);
         });
     }

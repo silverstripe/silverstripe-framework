@@ -14,7 +14,7 @@ class ArrayLib
 {
     public function __construct()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib', Deprecation::SCOPE_CLASS);
         });
     }
@@ -58,7 +58,7 @@ class ArrayLib
      */
     public static function invert($arr)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::invert()');
         });
 
@@ -86,7 +86,7 @@ class ArrayLib
      */
     public static function valuekey($arr)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::valuekey()');
         });
 
@@ -102,7 +102,7 @@ class ArrayLib
      */
     public static function array_values_recursive($array)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::invearray_values_recursivert()');
         });
 
@@ -121,7 +121,7 @@ class ArrayLib
      */
     public static function filter_keys($arr, $keys)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::filter_keys()');
         });
 
@@ -147,7 +147,7 @@ class ArrayLib
      */
     public static function is_associative($array)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::is_associative()');
         });
 
@@ -173,7 +173,7 @@ class ArrayLib
      */
     public static function in_array_recursive($needle, $haystack, $strict = false)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::in_array_recursive()');
         });
 
@@ -206,7 +206,7 @@ class ArrayLib
      */
     public static function array_map_recursive($f, $array)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::array_map_recursive()');
         });
 
@@ -232,7 +232,7 @@ class ArrayLib
      */
     public static function array_merge_recursive($array)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::array_merge_recursive()');
         });
 
@@ -282,7 +282,7 @@ class ArrayLib
      */
     public static function flatten($array, $preserveKeys = true, &$out = [])
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::flatten()');
         });
 
@@ -314,7 +314,7 @@ class ArrayLib
      */
     public static function iterateVolatile(array &$list)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::iterateVolatile()');
         });
 
@@ -341,7 +341,7 @@ class ArrayLib
      */
     public static function shuffleAssociative(array &$array): void
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\ArrayLib::shuffleAssociative()');
         });
 

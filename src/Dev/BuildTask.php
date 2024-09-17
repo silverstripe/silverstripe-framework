@@ -96,7 +96,7 @@ abstract class BuildTask
      */
     public function getDescription()
     {
-        Deprecation::withNoReplacement(
+        Deprecation::withSuppressedNotice(
             fn() => Deprecation::notice('5.4.0', 'Will be replaced with a static method with the same name')
         );
         return $this->description;

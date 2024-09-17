@@ -67,7 +67,7 @@ class DatabaseAdmin extends Controller
     public function __construct()
     {
         parent::__construct();
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be replaced with SilverStripe\Dev\Command\DbBuild',
@@ -213,7 +213,7 @@ class DatabaseAdmin extends Controller
      */
     public static function lastBuilt()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt()'

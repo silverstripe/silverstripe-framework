@@ -23,7 +23,7 @@ class ViewableData_Customised extends ViewableData
      */
     public function __construct(ViewableData $originalObject, ViewableData $customisedObject)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ModelDataCustomised', Deprecation::SCOPE_CLASS);
         });
 

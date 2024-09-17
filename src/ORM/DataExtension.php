@@ -22,10 +22,10 @@ abstract class DataExtension extends Extension
 {
     public function __construct()
     {
-        // Wrapping with Deprecation::withNoReplacement() to avoid triggering deprecation notices
+        // Wrapping with Deprecation::withSuppressedNotice() to avoid triggering deprecation notices
         // as we are unable to update existing subclasses of this class until a new major
         // unless we add in the pointless empty methods that are in this class
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             $class = Extension::class;
             Deprecation::notice('5.3.0', "Subclass $class instead", Deprecation::SCOPE_CLASS);
         });

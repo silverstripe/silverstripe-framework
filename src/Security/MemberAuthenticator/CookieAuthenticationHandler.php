@@ -176,7 +176,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         }
 
         // Renew the token
-        Deprecation::withNoReplacement(fn() => $rememberLoginHash->renew());
+        Deprecation::withSuppressedNotice(fn() => $rememberLoginHash->renew());
 
         // Send the new token to the client if it was changed
         if ($rememberLoginHash->getToken()) {

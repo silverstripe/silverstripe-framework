@@ -37,7 +37,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
     public function __construct()
     {
         parent::__construct();
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be renamed to ErrorOutputHandler',

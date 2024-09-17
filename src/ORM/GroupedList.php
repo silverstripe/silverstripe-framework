@@ -19,7 +19,7 @@ class GroupedList extends ListDecorator
 
     public function __construct(SS_List&Sortable&Filterable&Limitable $list)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\List\GroupedList', Deprecation::SCOPE_CLASS);
         });
         parent::__construct($list);

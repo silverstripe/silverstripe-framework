@@ -113,72 +113,72 @@ class DeprecationTest extends SapphireTest
         Deprecation::outputNotices();
     }
 
-    public function testWithNoReplacementDefault()
+    public function testwithSuppressedNoticeDefault()
     {
         Deprecation::enable();
-        $ret = Deprecation::withNoReplacement(function () {
+        $ret = Deprecation::withSuppressedNotice(function () {
             return $this->myDeprecatedMethod();
         });
         $this->assertSame('abc', $ret);
         Deprecation::outputNotices();
     }
 
-    public function testWithNoReplacementTrue()
+    public function testwithSuppressedNoticeTrue()
     {
         $message = implode(' ', [
             'SilverStripe\Dev\Tests\DeprecationTest->myDeprecatedMethod is deprecated.',
             'My message.',
-            'Called from SilverStripe\Dev\Tests\DeprecationTest->testWithNoReplacementTrue.'
+            'Called from SilverStripe\Dev\Tests\DeprecationTest->testwithSuppressedNoticeTrue.'
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
         Deprecation::enable(true);
-        $ret = Deprecation::withNoReplacement(function () {
+        $ret = Deprecation::withSuppressedNotice(function () {
             return $this->myDeprecatedMethod();
         });
         $this->assertSame('abc', $ret);
         Deprecation::outputNotices();
     }
 
-    public function testWithNoReplacementTrueCallUserFunc()
+    public function testwithSuppressedNoticeTrueCallUserFunc()
     {
         $message = implode(' ', [
             'SilverStripe\Dev\Tests\DeprecationTest->myDeprecatedMethod is deprecated.',
             'My message.',
-            'Called from SilverStripe\Dev\Tests\DeprecationTest->testWithNoReplacementTrueCallUserFunc.'
+            'Called from SilverStripe\Dev\Tests\DeprecationTest->testwithSuppressedNoticeTrueCallUserFunc.'
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
         Deprecation::enable(true);
-        $ret = Deprecation::withNoReplacement(function () {
+        $ret = Deprecation::withSuppressedNotice(function () {
             return call_user_func([$this, 'myDeprecatedMethod']);
         });
         $this->assertSame('abc', $ret);
         Deprecation::outputNotices();
     }
 
-    public function testNoticeWithNoReplacementTrue()
+    public function testNoticewithSuppressedNoticeTrue()
     {
         $message = implode(' ', [
-            'SilverStripe\Dev\Tests\DeprecationTest->testNoticeWithNoReplacementTrue is deprecated.',
+            'SilverStripe\Dev\Tests\DeprecationTest->testNoticewithSuppressedNoticeTrue is deprecated.',
             'My message.',
             'Called from PHPUnit\Framework\TestCase->runTest.'
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
         Deprecation::enable(true);
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('123', 'My message.');
         });
         Deprecation::outputNotices();
     }
 
-    public function testClassWithNoReplacement()
+    public function testClasswithSuppressedNotice()
     {
         $message = implode(' ', [
             'SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject is deprecated.',
             'Some class message.',
-            'Called from SilverStripe\Dev\Tests\DeprecationTest->testClassWithNoReplacement.'
+            'Called from SilverStripe\Dev\Tests\DeprecationTest->testClasswithSuppressedNotice.'
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
@@ -190,12 +190,12 @@ class DeprecationTest extends SapphireTest
         Deprecation::outputNotices();
     }
 
-    public function testClassWithInjectorWithNoReplacement()
+    public function testClassWithInjectorwithSuppressedNotice()
     {
         $message = implode(' ', [
             'SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject is deprecated.',
             'Some class message.',
-            'Called from SilverStripe\Dev\Tests\DeprecationTest->testClassWithInjectorWithNoReplacement.'
+            'Called from SilverStripe\Dev\Tests\DeprecationTest->testClassWithInjectorwithSuppressedNotice.'
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);

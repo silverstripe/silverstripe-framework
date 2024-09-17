@@ -36,7 +36,7 @@ class CleanupTestDatabasesTask extends BuildTask
 
     public function canView(): bool
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be replaced with canRunInBrowser()'

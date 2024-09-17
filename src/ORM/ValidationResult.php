@@ -66,7 +66,7 @@ class ValidationResult
 
     public function __construct()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\Validation\ValidationResult', Deprecation::SCOPE_CLASS);
         });
     }
