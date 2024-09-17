@@ -15,6 +15,8 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Outputs the full configuration.
+ *
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\ConfigDump
  */
 class DevConfigController extends Controller implements PermissionProvider
 {
@@ -40,6 +42,19 @@ class DevConfigController extends Controller implements PermissionProvider
         'ALL_DEV_ADMIN',
         'CAN_DEV_CONFIG',
     ];
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with SilverStripe\Dev\Command\ConfigDump',
+                Deprecation::SCOPE_CLASS
+            );
+        });
+    }
 
     protected function init(): void
     {
@@ -157,7 +172,7 @@ class DevConfigController extends Controller implements PermissionProvider
             || Permission::check(static::config()->get('init_permissions'))
         );
     }
-    
+
     public function providePermissions(): array
     {
         return [

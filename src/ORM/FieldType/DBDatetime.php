@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use DateTime;
 use Exception;
 use IntlDateFormatter;
 use InvalidArgumentException;
@@ -185,6 +186,69 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
             ->setAttribute('placeholder', $dateTimeFormat);
 
         return $field;
+    }
+
+    /**
+     * Get the amount of time inbetween two datetimes.
+     */
+    public static function getTimeBetween(DBDateTime $from, DBDateTime $to): string
+    {
+        $fromRaw = new DateTime();
+        $fromRaw->setTimestamp((int) $from->getTimestamp());
+        $toRaw = new DateTime();
+        $toRaw->setTimestamp((int) $to->getTimestamp());
+        $diff = $fromRaw->diff($toRaw);
+        $result = [];
+        if ($diff->y) {
+            $result[] = _t(
+                __CLASS__ . '.nYears',
+                'one year|{count} years',
+                ['count' => $diff->y]
+            );
+        }
+        if ($diff->m) {
+            $result[] = _t(
+                __CLASS__ . '.nMonths',
+                'one month|{count} months',
+                ['count' => $diff->m]
+            );
+        }
+        if ($diff->d) {
+            $result[] = _t(
+                __CLASS__ . '.nDays',
+                'one day|{count} days',
+                ['count' => $diff->d]
+            );
+        }
+        if ($diff->h) {
+            $result[] = _t(
+                __CLASS__ . '.nHours',
+                'one hour|{count} hours',
+                ['count' => $diff->h]
+            );
+        }
+        if ($diff->i) {
+            $result[] = _t(
+                __CLASS__ . '.nMinutes',
+                'one minute|{count} minutes',
+                ['count' => $diff->i]
+            );
+        }
+        if ($diff->s) {
+            $result[] = _t(
+                __CLASS__ . '.nSeconds',
+                'one second|{count} seconds',
+                ['count' => $diff->s]
+            );
+        }
+        if (empty($result)) {
+            return _t(
+                __CLASS__ . '.nSeconds',
+                '{count} seconds',
+                ['count' => 0]
+            );
+        }
+        return implode(', ', $result);
     }
 
     /**

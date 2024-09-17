@@ -54,6 +54,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      * ]
      *
      * @var array
+     * @deprecated 5.4.0 Will be replaced with "controllers" and "commands" configuration properties
      */
     private static $registered_controllers = [];
 
@@ -82,7 +83,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
         if (static::config()->get('deny_non_cli') && !Director::is_cli()) {
             return $this->httpError(404);
         }
-        
+
         if (!$this->canViewAll() && empty($this->getLinks())) {
             Security::permissionFailure($this);
             return;
@@ -201,8 +202,12 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
         return $links;
     }
 
+    /**
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+     */
     protected function getRegisteredController($baseUrlPart)
     {
+        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it');
         $reg = Config::inst()->get(static::class, 'registered_controllers');
 
         if (isset($reg[$baseUrlPart])) {
@@ -223,9 +228,18 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      * DataObject classes
      * Should match the $url_handlers rule:
      *      'build/defaults' => 'buildDefaults',
+     *
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\DbDefaults
      */
     public function buildDefaults()
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with SilverStripe\Dev\Command\DbDefaults'
+            );
+        });
+
         $da = DatabaseAdmin::create();
 
         $renderer = null;
@@ -247,9 +261,18 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
     /**
      * Generate a secure token which can be used as a crypto key.
      * Returns the token and suggests PHP configuration to set it.
+     *
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\GenerateSecureToken
      */
     public function generatesecuretoken()
     {
+        Deprecation::withNoReplacement(function () {
+            Deprecation::notice(
+                '5.4.0',
+                'Will be replaced with SilverStripe\Dev\Command\GenerateSecureToken'
+            );
+        });
+
         $generator = Injector::inst()->create('SilverStripe\\Security\\RandomGenerator');
         $token = $generator->randomToken('sha1');
         $body = <<<TXT

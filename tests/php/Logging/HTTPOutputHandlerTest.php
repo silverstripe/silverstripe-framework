@@ -6,6 +6,7 @@ use Monolog\Handler\HandlerInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
@@ -172,14 +173,20 @@ class HTTPOutputHandlerTest extends SapphireTest
         }
         $reflectionDeprecation->setStaticPropertyValue('isTriggeringError', $triggeringError);
 
-        $mockHandler = $this->getMockBuilder(HTTPOutputHandler::class)->onlyMethods(['isCli'])->getMock();
-        $mockHandler->method('isCli')->willReturn($isCli);
+        $reflectionDirector = new ReflectionClass(Environment::class);
+        $origIsCli = $reflectionDirector->getStaticPropertyValue('isCliOverride');
+        $reflectionDirector->setStaticPropertyValue('isCliOverride', $isCli);
 
-        $result = $reflectionShouldShow->invoke($mockHandler, $errorCode);
-        $this->assertSame($expected, $result);
+        try {
+            $handler = new HTTPOutputHandler();
+            $result = $reflectionShouldShow->invoke($handler, $errorCode);
+            $this->assertSame($expected, $result);
 
-        Deprecation::setShouldShowForCli($cliShouldShowOrig);
-        Deprecation::setShouldShowForHttp($httpShouldShowOrig);
-        $reflectionDeprecation->setStaticPropertyValue('isTriggeringError', $triggeringErrorOrig);
+            Deprecation::setShouldShowForCli($cliShouldShowOrig);
+            Deprecation::setShouldShowForHttp($httpShouldShowOrig);
+            $reflectionDeprecation->setStaticPropertyValue('isTriggeringError', $triggeringErrorOrig);
+        } finally {
+            $reflectionDirector->setStaticPropertyValue('isCliOverride', $origIsCli);
+        }
     }
 }
