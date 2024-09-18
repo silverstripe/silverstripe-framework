@@ -4,6 +4,7 @@ namespace SilverStripe\View\Tests\Parsers;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\ShortcodeParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ShortcodeParserTest extends SapphireTest
 {
@@ -79,7 +80,7 @@ class ShortcodeParserTest extends SapphireTest
         );
     }
 
-    public function simpleTagDataProvider()
+    public static function simpleTagDataProvider()
     {
         return [
             ['[test_shortcode]'],
@@ -92,9 +93,7 @@ class ShortcodeParserTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider simpleTagDataProvider
-     */
+    #[DataProvider('simpleTagDataProvider')]
     public function testSimpleTag($test)
     {
         $this->parser->parse($test);
@@ -103,7 +102,7 @@ class ShortcodeParserTest extends SapphireTest
         $this->assertEquals('test_shortcode', $this->tagName, $test);
     }
 
-    public function oneArgumentDataProvider()
+    public static function oneArgumentDataProvider()
     {
         return [
             ['[test_shortcode foo="bar"]'],
@@ -117,9 +116,7 @@ class ShortcodeParserTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider oneArgumentDataProvider
-     */
+    #[DataProvider('oneArgumentDataProvider')]
     public function testOneArgument($test)
     {
         $this->parser->parse($test);
@@ -138,7 +135,7 @@ class ShortcodeParserTest extends SapphireTest
         $this->assertEquals('test_shortcode', $this->tagName);
     }
 
-    public function emptyArgumentsDataProvider()
+    public static function emptyArgumentsDataProvider()
     {
         return [
             ['[test_shortcode foo=""]'],
@@ -147,9 +144,7 @@ class ShortcodeParserTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider emptyArgumentsDataProvider
-     */
+    #[DataProvider('emptyArgumentsDataProvider')]
     public function testEmptyArguments($test)
     {
         $this->parser->parse($test);
@@ -359,7 +354,7 @@ class ShortcodeParserTest extends SapphireTest
 
     public function testNoParseAttemptIfNoCode()
     {
-        $stub = $this->getMockBuilder(ShortcodeParser::class)->setMethods(['replaceElementTagsWithMarkers'])
+        $stub = $this->getMockBuilder(ShortcodeParser::class)->onlyMethods(['replaceElementTagsWithMarkers'])
             ->getMock();
         $stub->register(
             'test',
@@ -369,7 +364,7 @@ class ShortcodeParserTest extends SapphireTest
         );
 
         $stub->expects($this->never())
-            ->method('replaceElementTagsWithMarkers')->will($this->returnValue(['', '']));
+            ->method('replaceElementTagsWithMarkers')->willReturn(['', '']);
 
         $stub->parse('<p>test</p>');
     }

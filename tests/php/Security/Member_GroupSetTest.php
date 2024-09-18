@@ -6,6 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Tests\GroupTest\TestMember;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class Member_GroupSetTest extends SapphireTest
 {
@@ -15,9 +16,7 @@ class Member_GroupSetTest extends SapphireTest
         TestMember::class
     ];
 
-    /**
-     * @dataProvider provideForForeignIDPlaceholders
-     */
+    #[DataProvider('provideForForeignIDPlaceholders')]
     public function testForForeignIDPlaceholders(bool $config, bool $useInt, bool $expected): void
     {
         Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
@@ -34,10 +33,12 @@ class Member_GroupSetTest extends SapphireTest
         $expectedIDs = $useInt
             ? array_unique(array_merge($groups1->column('ID'), $groups2->column('ID')))
             : [];
-        $this->assertEqualsCanonicalizing($expectedIDs, $newGroupList->column('ID'));
+        sort($expectedIDs);
+        $actual = $newGroupList->sort('ID')->column('ID');
+        $this->assertSame($expectedIDs, $actual);
     }
 
-    public function provideForForeignIDPlaceholders(): array
+    public static function provideForForeignIDPlaceholders(): array
     {
         return [
             'config false' => [

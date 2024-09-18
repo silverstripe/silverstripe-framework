@@ -4,11 +4,11 @@ namespace SilverStripe\View\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Tests\AttributesHTMLTest\DummyAttributesHTML;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AttributesHTMLTest extends SapphireTest
 {
-
-    public function provideGetAttribute(): array
+    public static function provideGetAttribute(): array
     {
         return [
             'empty string' => ['test', '', 'Empty string is not converted to a different falsy value'],
@@ -23,7 +23,7 @@ class AttributesHTMLTest extends SapphireTest
         ];
     }
 
-    /** @dataProvider provideGetAttribute */
+    #[DataProvider('provideGetAttribute')]
     public function testGetAttribute($name, $value, $message): void
     {
         $dummy = new DummyAttributesHTML();

@@ -33,6 +33,7 @@ use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FormTest extends FunctionalTest
 {
@@ -68,7 +69,7 @@ class FormTest extends FunctionalTest
     /**
      * @return array
      */
-    public function boolDataProvider()
+    public static function boolDataProvider()
     {
         return [
             [false],
@@ -76,7 +77,7 @@ class FormTest extends FunctionalTest
         ];
     }
 
-    public function formMessageDataProvider()
+    public static function formMessageDataProvider()
     {
         return [
             [
@@ -100,40 +101,40 @@ class FormTest extends FunctionalTest
         ];
     }
 
-    public function formMessageExceptionsDataProvider()
+    public static function formMessageExceptionsDataProvider()
     {
         return [
             [
-                'message_1' => [
+                'message1' => [
                     'val' => 'Just a string',
                     'type' => ValidationResult::TYPE_ERROR,
                     'cast' => ValidationResult::CAST_TEXT,
                 ],
-                'message_2' => [
+                'message2' => [
                     'val' => 'This is a good message',
                     'type' => ValidationResult::TYPE_GOOD,
                     'cast' => ValidationResult::CAST_TEXT,
                 ],
             ],
             [
-                'message_1' => [
+                'message1' => [
                     'val' => 'This is a good message',
                     'type' => ValidationResult::TYPE_GOOD,
                     'cast' => ValidationResult::CAST_TEXT,
                 ],
-                'message_2' => [
+                'message2' => [
                     'val' => 'HTML is the future of the web',
                     'type' => ValidationResult::TYPE_GOOD,
                     'cast' => ValidationResult::CAST_HTML,
                 ],
             ],
             [
-                'message_1' => [
+                'message1' => [
                     'val' => 'This is a good message',
                     'type' => ValidationResult::TYPE_GOOD,
                     'cast' => ValidationResult::CAST_TEXT,
                 ],
-                'message_2' => [
+                'message2' => [
                     'val' => 'HTML is the future of the web',
                     'type' => ValidationResult::TYPE_GOOD,
                     'cast' => ValidationResult::CAST_HTML,
@@ -732,7 +733,7 @@ class FormTest extends FunctionalTest
         );
     }
 
-    public function provideFormsSet()
+    public static function provideFormsSet()
     {
         return [
             'with security token' =>
@@ -756,9 +757,7 @@ class FormTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideFormsSet
-     */
+    #[DataProvider('provideFormsSet')]
     public function testSubmitFormWithSpecifiedParameters(
         array $formData,
         ?int $statusCode,
@@ -1097,9 +1096,7 @@ class FormTest extends FunctionalTest
         );
     }
 
-    /**
-     * @dataProvider formMessageDataProvider
-     */
+    #[DataProvider('formMessageDataProvider')]
     public function testFieldMessageAppend($messages)
     {
         $form = $this->getStubForm();
@@ -1115,9 +1112,7 @@ class FormTest extends FunctionalTest
         }
     }
 
-    /**
-     * @dataProvider formMessageExceptionsDataProvider
-     */
+    #[DataProvider('formMessageExceptionsDataProvider')]
     public function testFieldMessageAppendExceptions(array $message1, array $message2, bool $force = false)
     {
         $form = $this->getStubForm();
@@ -1166,9 +1161,9 @@ class FormTest extends FunctionalTest
     }
 
     /**
-     * @dataProvider boolDataProvider
      * @param bool $allow
      */
+    #[DataProvider('boolDataProvider')]
     public function testPasswordPostback($allow)
     {
         $form = $this->getStubForm();

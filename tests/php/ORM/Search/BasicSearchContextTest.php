@@ -14,6 +14,7 @@ use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Filters\StartsWithFilter;
 use SilverStripe\ORM\Search\BasicSearchContext;
 use SilverStripe\View\ArrayData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class BasicSearchContextTest extends SapphireTest
 {
@@ -96,7 +97,7 @@ class BasicSearchContextTest extends SapphireTest
         $this->assertEquals(1, $results->Count());
     }
 
-    public function provideApplySearchFilters()
+    public static function provideApplySearchFilters()
     {
         $idFilter = new ExactMatchFilter('ID');
         $idFilter->setModifiers(['nocase']);
@@ -130,9 +131,7 @@ class BasicSearchContextTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideApplySearchFilters
-     */
+    #[DataProvider('provideApplySearchFilters')]
     public function testApplySearchFilters(array $searchParams, ?array $filters, array $expected)
     {
         $context = new BasicSearchContext(ArrayData::class);
@@ -146,7 +145,7 @@ class BasicSearchContextTest extends SapphireTest
         $this->assertSame($expected, $reflectionApplySearchFilters->invoke($context, $searchParams));
     }
 
-    public function provideGetGeneralSearchFilterTerm()
+    public static function provideGetGeneralSearchFilterTerm()
     {
         return [
             'defaults to case-insensitive partial match' => [
@@ -172,9 +171,7 @@ class BasicSearchContextTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetGeneralSearchFilterTerm
-     */
+    #[DataProvider('provideGetGeneralSearchFilterTerm')]
     public function testGetGeneralSearchFilterTerm(?string $filterType, ?SearchFilter $fieldFilter, string $expected)
     {
         $context = new BasicSearchContext(ArrayData::class);
@@ -190,7 +187,7 @@ class BasicSearchContextTest extends SapphireTest
         $this->assertSame($expected, $reflectionGetGeneralSearchFilterTerm->invoke($context, 'MyField'));
     }
 
-    public function provideGetQuery()
+    public static function provideGetQuery()
     {
         // Note that the search TERM is the same for both scenarios,
         // but because the search FIELD is different, we get different results.
@@ -226,9 +223,7 @@ class BasicSearchContextTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetQuery
-     */
+    #[DataProvider('provideGetQuery')]
     public function testGetQuery(array $searchParams, array $expected)
     {
         $list = $this->getList();

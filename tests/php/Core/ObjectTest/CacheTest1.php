@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-class CacheTest extends BaseObject
+class CacheTest1 extends BaseObject
 {
     public $count = 0;
 

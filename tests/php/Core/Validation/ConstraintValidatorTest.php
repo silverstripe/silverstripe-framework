@@ -60,12 +60,13 @@ use Symfony\Component\Validator\Constraints\Ulid;
 use Symfony\Component\Validator\Constraints\Unique;
 use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Component\Validator\Constraints\Uuid;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ConstraintValidatorTest extends SapphireTest
 {
     protected $usesDatabase = false;
 
-    public function provideValidate(): array
+    public static function provideValidate(): array
     {
         $scenarios = [
             // basic
@@ -309,15 +310,14 @@ class ConstraintValidatorTest extends SapphireTest
      *
      * We're not actually testing the validation logic per se - just testing that the validators
      * all do some validating (hence why they are all set to fail) without exceptions being thrown.
-     *
-     * @dataProvider provideValidate
      */
+    #[DataProvider('provideValidate')]
     public function testValidate(mixed $value, Constraint $constraint): void
     {
         $this->assertFalse(ConstraintValidator::validate($value, $constraint)->isValid());
     }
 
-    public function provideValidateResults(): array
+    public static function provideValidateResults(): array
     {
         return [
             'single constraint, no field' => [
@@ -343,9 +343,7 @@ class ConstraintValidatorTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideValidateResults
-     */
+    #[DataProvider('provideValidateResults')]
     public function testValidateResults(mixed $value, Constraint|array $constraints, string $fieldName): void
     {
         $result = ConstraintValidator::validate($value, $constraints, $fieldName);

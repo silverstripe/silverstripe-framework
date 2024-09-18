@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-class ExtensionRemoveTest extends BaseObject
+class ExtensionRemoveTest1 extends BaseObject
 {
     private static $extensions = [
         ExtendTest1::class,

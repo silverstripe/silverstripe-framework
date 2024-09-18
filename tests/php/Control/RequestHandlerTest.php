@@ -5,7 +5,10 @@ namespace SilverStripe\Control\Tests;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Tests\RequestHandlerTest\RequestHandlerTestException;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Dev\Exceptions\ExpectedWarningException;
 
 /**
  * Tests for the RequestHandler class
@@ -14,7 +17,7 @@ class RequestHandlerTest extends SapphireTest
 {
     protected $usesDatabase = false;
 
-    public function provideTestLink(): array
+    public static function provideTestLink(): array
     {
         return [
             // If there's no url segment, there's no link
@@ -42,14 +45,13 @@ class RequestHandlerTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideTestLink
-     */
+    #[DataProvider('provideTestLink')]
     public function testLink(?string $urlSegment, ?string $action, ?string $expected)
     {
+        $this->enableErrorHandler();
         if ($urlSegment === null) {
-            $this->expectWarning();
-            $this->expectWarningMessage('Request handler SilverStripe\Control\RequestHandler does not have a url_segment defined. Relying on this link may be an application error');
+            $this->expectException(ExpectedWarningException::class);
+            $this->expectExceptionMessage('Request handler SilverStripe\Control\RequestHandler does not have a url_segment defined. Relying on this link may be an application error');
         }
 
         $handler = new RequestHandler();
@@ -67,14 +69,13 @@ class RequestHandlerTest extends SapphireTest
         $this->assertEquals($expected, $handler->Link($action));
     }
 
-    /**
-     * @dataProvider provideTestLink
-     */
+    #[DataProvider('provideTestLink')]
     public function testAbsoluteLink(?string $urlSegment, ?string $action, ?string $expected)
     {
+        $this->enableErrorHandler();
         if ($urlSegment === null) {
-            $this->expectWarning();
-            $this->expectWarningMessage('Request handler SilverStripe\Control\RequestHandler does not have a url_segment defined. Relying on this link may be an application error');
+            $this->expectException(ExpectedWarningException::class);
+            $this->expectExceptionMessage('Request handler SilverStripe\Control\RequestHandler does not have a url_segment defined. Relying on this link may be an application error');
         }
 
         $handler = new RequestHandler();

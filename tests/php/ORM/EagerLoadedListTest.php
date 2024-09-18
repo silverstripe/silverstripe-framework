@@ -31,6 +31,7 @@ use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst;
 use SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class EagerLoadedListTest extends SapphireTest
 {
@@ -42,7 +43,7 @@ class EagerLoadedListTest extends SapphireTest
         return DataListTest::getExtraDataObjects();
     }
 
-    private function getBasicRecordRows(): array
+    private static function getBasicRecordRows(): array
     {
         return [
             [
@@ -109,7 +110,7 @@ class EagerLoadedListTest extends SapphireTest
     public function testHasID()
     {
         $list = new EagerLoadedList(Sortable::class, DataList::class);
-        foreach ($this->getBasicRecordRows() as $row) {
+        foreach (EagerLoadedListTest::getBasicRecordRows() as $row) {
             $list->addRow($row);
         }
         $this->assertTrue($list->hasID(3));
@@ -205,9 +206,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertSame($rows, $list->getRows());
     }
 
-    /**
-     * @dataProvider provideAddRowBadID
-     */
+    #[DataProvider('provideAddRowBadID')]
     public function testAddRowBadID(array $row)
     {
         $list = new EagerLoadedList(TeamComment::class, DataList::class);
@@ -216,7 +215,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->addRow($row);
     }
 
-    public function provideAddRowBadID()
+    public static function provideAddRowBadID()
     {
         return [
             [['ID' => null]],
@@ -254,9 +253,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertTrue($list->exists());
     }
 
-    /**
-     * @dataProvider provideIteration
-     */
+    #[DataProvider('provideIteration')]
     public function testIteration(string $dataListClass): void
     {
         // Get some garbage values for the manymany component so we don't get errors.
@@ -270,7 +267,7 @@ class EagerLoadedListTest extends SapphireTest
             $manyManyComponent['extraFields'] = [];
         }
 
-        $rows = $this->getBasicRecordRows();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
         $eagerloadedDataClass = Sortable::class;
 
         $foreignID = $dataListClass === DataList::class ? null : 9999;
@@ -286,7 +283,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->iterate($list, $rows, array_column($rows, 'ID'));
     }
 
-    public function provideIteration()
+    public static function provideIteration()
     {
         return [
             [DataList::class],
@@ -296,7 +293,7 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    private function iterate(EagerLoadedList $list, array $rows, array $expectedIDs): void
+    private function iterate(EagerLoadedList $list, array $rows, array $expected): void
     {
         $foundIDs = [];
         foreach ($list as $record) {
@@ -314,19 +311,17 @@ class EagerLoadedListTest extends SapphireTest
             $foundIDs[] = $record->ID;
         }
         // Assert all (and only) the expected records were included in the list
-        $this->assertSame($expectedIDs, $foundIDs);
+        $this->assertSame($expected, $foundIDs);
     }
 
-    /**
-     * @dataProvider provideFilter
-     * @dataProvider provideFilterWithSearchFilters
-     */
+    #[DataProvider('provideFilter')]
+    #[DataProvider('provideFilterWithSearchFilters')]
     public function testFilter(
         string $dataListClass,
         string $eagerloadedDataClass,
         array $rows,
         array $filter,
-        array $expectedIDs
+        array $expected,
     ): void {
         // Get some garbage values for the manymany component so we don't get errors.
         // Real relations aren't necessary for this test.
@@ -348,41 +343,41 @@ class EagerLoadedListTest extends SapphireTest
 
         // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
         $this->assertCount(count($rows), $list);
-        $this->assertCount(count($expectedIDs), $filteredList);
+        $this->assertCount(count($expected), $filteredList);
 
         // Validate that the filtered list has the CORRECT records
         $this->iterate($list, $rows, array_column($rows, 'ID'));
     }
 
-    public function provideFilter(): array
+    public static function provideFilter(): array
     {
-        $rows = $this->getBasicRecordRows();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
         return [
             [
                 'dataListClass' => DataList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => ['Created' => '2023-01-01 00:00:00'],
                 'expected' => [2, 3],
             ],
             [
                 'dataListClass' => HasManyList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => ['Created' => '2023-01-01 00:00:00'],
                 'expected' => [2, 3],
             ],
             [
                 'dataListClass' => ManyManyList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => ['Created' => '2023-12-01 00:00:00'],
                 'expected' => [],
             ],
             [
                 'dataListClass' => ManyManyThroughList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => [
                     'Created' => '2023-01-01 00:00:00',
                     'Name' => 'test obj 3',
@@ -392,7 +387,7 @@ class EagerLoadedListTest extends SapphireTest
             [
                 'dataListClass' => ManyManyThroughList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => [
                     'Created' => '2023-01-01 00:00:00',
                     'Name' => 'not there',
@@ -402,7 +397,7 @@ class EagerLoadedListTest extends SapphireTest
             [
                 'dataListClass' => ManyManyThroughList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => [
                     'Name' => ['test obj 1', 'test obj 3', 'not there'],
                 ],
@@ -411,7 +406,7 @@ class EagerLoadedListTest extends SapphireTest
             [
                 'dataListClass' => ManyManyThroughList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => [
                     'Name' => ['not there', 'also not there'],
                 ],
@@ -420,7 +415,7 @@ class EagerLoadedListTest extends SapphireTest
             [
                 'dataListClass' => ManyManyThroughList::class,
                 'eagerloadedDataClass' => ValidatedObject::class,
-                $rows,
+                'rows' => $rows,
                 'filter' => [
                     'ID' => [1, 2],
                 ],
@@ -429,9 +424,9 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    public function provideFilterWithSearchFilters()
+    public static function provideFilterWithSearchFilters()
     {
-        $rows = $this->getBasicRecordRows();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
         $scenarios = [
             // exact match filter tests
             'exact match - negate' => [
@@ -555,12 +550,10 @@ class EagerLoadedListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideFilterAnyWithSearchFilters
-     */
-    public function testFilterAnyWithSearchfilters(array $filter, array $expectedIDs): void
+    #[DataProvider('provideFilterAnyWithSearchFilters')]
+    public function testFilterAnyWithSearchfilters(array $filter, array $expected): void
     {
-        $rows = $this->getBasicRecordRows();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
         $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
         foreach ($rows as $row) {
             $list->addRow($row);
@@ -569,13 +562,13 @@ class EagerLoadedListTest extends SapphireTest
 
         // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
         $this->assertCount(count($rows), $list);
-        $this->assertCount(count($expectedIDs), $filteredList);
+        $this->assertCount(count($expected), $filteredList);
 
         // Validate that the filtered list has the CORRECT records
         $this->iterate($list, $rows, array_column($rows, 'ID'));
     }
 
-    public function provideFilterAnyWithSearchFilters()
+    public static function provideFilterAnyWithSearchFilters()
     {
         return [
             // test a couple of search filters
@@ -618,12 +611,12 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    public function provideExcludeWithSearchfilters()
+    public static function provideExcludeWithSearchfilters()
     {
         // If it's included in the filter test, then it's excluded in the exclude test,
         // so we can just use the same scenarios and reverse the expected results.
-        $rows = $this->getBasicRecordRows();
-        $scenarios = $this->provideFilterWithSearchfilters();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
+        $scenarios = EagerLoadedListTest::provideFilterWithSearchfilters();
         foreach ($scenarios as $name => $scenario) {
             $kept = [];
             $excluded = [];
@@ -645,12 +638,10 @@ class EagerLoadedListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideExcludeWithSearchfilters
-     */
-    public function testExcludeWithSearchfilters(array $filter, array $expectedIDs): void
+    #[DataProvider('provideExcludeWithSearchfilters')]
+    public function testExcludeWithSearchfilters(array $filter, array $expected): void
     {
-        $rows = $this->getBasicRecordRows();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
         $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
         foreach ($rows as $row) {
             $list->addRow($row);
@@ -659,18 +650,18 @@ class EagerLoadedListTest extends SapphireTest
 
         // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
         $this->assertCount(count($rows), $list);
-        $this->assertCount(count($expectedIDs), $filteredList);
+        $this->assertCount(count($expected), $filteredList);
 
         // Validate that the filtered list has the CORRECT records
         $this->iterate($list, $rows, array_column($rows, 'ID'));
     }
 
-    public function provideExcludeAnyWithSearchfilters()
+    public static function provideExcludeAnyWithSearchfilters()
     {
         // If it's included in the filterAny test, then it's excluded in the excludeAny test,
         // so we can just use the same scenarios and reverse the expected results.
-        $rows = $this->getBasicRecordRows();
-        $scenarios = $this->provideFilterAnyWithSearchfilters();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
+        $scenarios = EagerLoadedListTest::provideFilterAnyWithSearchfilters();
         foreach ($scenarios as $name => $scenario) {
             $kept = [];
             $excluded = [];
@@ -687,12 +678,10 @@ class EagerLoadedListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideExcludeAnyWithSearchfilters
-     */
-    public function testExcludeAnyWithSearchfilters(array $filter, array $expectedIDs): void
+    #[DataProvider('provideExcludeAnyWithSearchfilters')]
+    public function testExcludeAnyWithSearchfilters(array $filter, array $expected): void
     {
-        $rows = $this->getBasicRecordRows();
+        $rows = EagerLoadedListTest::getBasicRecordRows();
         $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
         foreach ($rows as $row) {
             $list->addRow($row);
@@ -701,7 +690,7 @@ class EagerLoadedListTest extends SapphireTest
 
         // Validate that the unfiltered list still has all records, and the filtered list has the expected amount
         $this->assertCount(count($rows), $list);
-        $this->assertCount(count($expectedIDs), $filteredList);
+        $this->assertCount(count($expected), $filteredList);
 
         // Validate that the filtered list has the CORRECT records
         $this->iterate($list, $rows, array_column($rows, 'ID'));
@@ -725,9 +714,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->filter(['Captain.ShirtNumber' => 'anything']);
     }
 
-    /**
-     * @dataProvider provideFilterByWrongNumArgs
-     */
+    #[DataProvider('provideFilterByWrongNumArgs')]
     public function testFilterByWrongNumArgs(...$args)
     {
         $list = new EagerLoadedList(ValidatedObject::class, DataList::class);
@@ -737,7 +724,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->filter(...$args);
     }
 
-    public function provideFilterByWrongNumArgs()
+    public static function provideFilterByWrongNumArgs()
     {
         return [
             0 => [],
@@ -745,9 +732,7 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideLimitAndOffset
-     */
+    #[DataProvider('provideLimitAndOffset')]
     public function testLimitAndOffset($length, $offset, $expectedCount, $expectException = false)
     {
         $list = $this->getListWithRecords(TeamComment::class);
@@ -768,7 +753,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertCount($expectedCount, $list->limit($length, $offset)->toArray());
     }
 
-    public function provideLimitAndOffset(): array
+    public static function provideLimitAndOffset(): array
     {
         return [
             'no limit' => [null, 0, 3],
@@ -1127,9 +1112,7 @@ class EagerLoadedListTest extends SapphireTest
         $list = $list->sort('Team.Title', 'ASC');
     }
 
-    /**
-     * @dataProvider provideSortInvalidParameters
-     */
+    #[DataProvider('provideSortInvalidParameters')]
     public function testSortInvalidParameters(string $sort, string $type): void
     {
         if ($type === 'valid') {
@@ -1162,7 +1145,7 @@ class EagerLoadedListTest extends SapphireTest
     /**
      * @see DataListTest::provideRawSqlSortException()
      */
-    public function provideSortInvalidParameters(): array
+    public static function provideSortInvalidParameters(): array
     {
         return [
             ['Title', 'valid'],
@@ -1189,9 +1172,7 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideSortDirectionValidationTwoArgs
-     */
+    #[DataProvider('provideSortDirectionValidationTwoArgs')]
     public function testSortDirectionValidationTwoArgs(string $direction, string $type): void
     {
         if ($type === 'valid') {
@@ -1203,7 +1184,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->getListWithRecords(Team::class)->sort('Title', $direction)->column('ID');
     }
 
-    public function provideSortDirectionValidationTwoArgs(): array
+    public static function provideSortDirectionValidationTwoArgs(): array
     {
         return [
             ['ASC', 'valid'],
@@ -1216,9 +1197,8 @@ class EagerLoadedListTest extends SapphireTest
 
     /**
      * Test passing scalar values to sort()
-     *
-     * @dataProvider provideSortScalarValues
      */
+    #[DataProvider('provideSortScalarValues')]
     public function testSortScalarValues(mixed $emtpyValue, string $type): void
     {
         $this->assertSame(['Subteam 1'], $this->getListWithRecords(Team::class)->limit(1)->column('Title'));
@@ -1236,7 +1216,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertSame(['Subteam 1'], $list->limit(1)->column('Title'));
     }
 
-    public function provideSortScalarValues(): array
+    public static function provideSortScalarValues(): array
     {
         return [
             ['', 'empty-scalar'],
@@ -1261,7 +1241,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertSame($order, $list->column('ID'));
     }
 
-    public function provideSortMatchesDataList()
+    public static function provideSortMatchesDataList()
     {
         // These will be used to make fixtures
         // We don't use a fixtures yaml file here because we want a full DataList of only
@@ -1300,9 +1280,7 @@ class EagerLoadedListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideSortMatchesDataList
-     */
+    #[DataProvider('provideSortMatchesDataList')]
     public function testSortMatchesDataList(string $sortDir, string $field, array $values)
     {
         // Use explicit per-scenario fixtures
@@ -1500,7 +1478,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->filterAny(['Players.Count()' => 2]);
     }
 
-    public function provideCantFilterByRelation()
+    public static function provideCantFilterByRelation()
     {
         return [
             'many_many' => [
@@ -1518,9 +1496,7 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideCantFilterByRelation
-     */
+    #[DataProvider('provideCantFilterByRelation')]
     public function testCantFilterByRelation(string $column)
     {
         // Many to many
@@ -1530,9 +1506,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->filter($column, ['Captain', 'Captain 2']);
     }
 
-    /**
-     * @dataProvider provideFilterByNull
-     */
+    #[DataProvider('provideFilterByNull')]
     public function testFilterByNull(string $filterMethod, array $filter, array $expected)
     {
         // Force DataObjectTest_Fan/fan5::Email to empty string
@@ -1544,7 +1518,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertListEquals($expected, $filteredList);
     }
 
-    public function provideFilterByNull()
+    public static function provideFilterByNull()
     {
         return [
             'Filter by null email' => [
@@ -1802,8 +1776,8 @@ class EagerLoadedListTest extends SapphireTest
 
     /**
      * Test that if an exclude() is applied to a filter(), the filter() is still preserved.
-     * @dataProvider provideExcludeOnFilter
      */
+    #[DataProvider('provideExcludeOnFilter')]
     public function testExcludeOnFilter(array $filter, array $exclude, array $expected)
     {
         $list = $this->getListWithRecords(TeamComment::class);
@@ -1812,7 +1786,7 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertListEquals($expected, $list->sort('Name'));
     }
 
-    public function provideExcludeOnFilter()
+    public static function provideExcludeOnFilter()
     {
         return [
             [
@@ -2092,10 +2066,8 @@ class EagerLoadedListTest extends SapphireTest
         $list->offsetUnset(0);
     }
 
-    /**
-     * @dataProvider provideRelation
-     */
-    public function testRelation(string $parentClass, string $relation, ?array $expected)
+    #[DataProvider('provideRelation')]
+    public function testRelation(string $parentClass, string $relation, ?array $expected, array $eagerLoaded)
     {
         $relationList = $this->getListWithRecords($parentClass)->relation($relation);
         if ($expected === null) {
@@ -2106,9 +2078,7 @@ class EagerLoadedListTest extends SapphireTest
         }
     }
 
-    /**
-     * @dataProvider provideRelation
-     */
+    #[DataProvider('provideRelation')]
     public function testRelationEagerLoaded(string $parentClass, string $relation, ?array $expected, array $eagerLoaded)
     {
         // Get an EagerLoadedList and add the relation data to it
@@ -2139,7 +2109,7 @@ class EagerLoadedListTest extends SapphireTest
         }
     }
 
-    public function provideRelation()
+    public static function provideRelation()
     {
         return [
             'many_many' => [
@@ -2150,7 +2120,7 @@ class EagerLoadedListTest extends SapphireTest
                     ['Title' => 'Test 2'],
                     ['Title' => 'Test 3'],
                 ],
-                'eagerloaded' => [
+                'eagerLoaded' => [
                     'test1' => [
                         ['class' => RelationChildSecond::class, 'fixture' => 'test1', 'Title' => 'Test 1'],
                         ['class' => RelationChildSecond::class, 'fixture' => 'test2', 'Title' => 'Test 2'],
@@ -2167,7 +2137,7 @@ class EagerLoadedListTest extends SapphireTest
                 'expected' => [
                     ['Title' => 'Subteam 1'],
                 ],
-                'eagerloaded' => [
+                'eagerLoaded' => [
                     'team1' => [
                         ['class' => SubTeam::class, 'fixture' => 'subteam1', 'Title' => 'Subteam 1'],
                     ],
@@ -2178,7 +2148,7 @@ class EagerLoadedListTest extends SapphireTest
                 'parentClass' => DataObjectTest\Company::class,
                 'relation' => 'Owner',
                 'expected' => null,
-                'eagerloaded' => [
+                'eagerLoaded' => [
                     'company1' => [
                         'class' => Player::class, 'fixture' => 'player1', 'Title' => 'Player 1',
                     ],
@@ -2190,9 +2160,7 @@ class EagerLoadedListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideCreateDataObject
-     */
+    #[DataProvider('provideCreateDataObject')]
     public function testCreateDataObject(string $dataClass, string $realClass, array $row)
     {
         $list = new EagerLoadedList($dataClass, DataList::class);
@@ -2214,7 +2182,7 @@ class EagerLoadedListTest extends SapphireTest
         }
     }
 
-    public function provideCreateDataObject()
+    public static function provideCreateDataObject()
     {
         return [
             'no ClassName' => [
@@ -2314,9 +2282,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->getExtraData('Teams', 'abc');
     }
 
-    /**
-     * @dataProvider provideGetExtraDataBadListType
-     */
+    #[DataProvider('provideGetExtraDataBadListType')]
     public function testGetExtraDataBadListType(string $listClass)
     {
         $list = new EagerLoadedList(Player::class, $listClass, 99999);
@@ -2325,7 +2291,7 @@ class EagerLoadedListTest extends SapphireTest
         $list->getExtraData('Teams', 1);
     }
 
-    public function provideGetExtraDataBadListType()
+    public static function provideGetExtraDataBadListType()
     {
         return [
             [HasManyList::class],

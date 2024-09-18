@@ -16,6 +16,7 @@ use SilverStripe\ORM\Tests\ManyManyThroughListTest\Locale;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\FallbackLocale;
 use SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject;
 use SilverStripe\ORM\DataList;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ManyManyThroughListTest extends SapphireTest
 {
@@ -96,8 +97,8 @@ class ManyManyThroughListTest extends SapphireTest
     /**
      * @param string $sort
      * @param array $expected
-     * @dataProvider sortingProvider
      */
+    #[DataProvider('sortingProvider')]
     public function testSorting($sort, $expected)
     {
         /** @var ManyManyThroughListTest\TestObject $parent */
@@ -113,7 +114,7 @@ class ManyManyThroughListTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function sortingProvider()
+    public static function sortingProvider()
     {
         return [
             'nothing passed (default)' => [
@@ -163,7 +164,7 @@ class ManyManyThroughListTest extends SapphireTest
         ];
     }
 
-    public function provideAdd(): array
+    public static function provideAdd(): array
     {
         return [
             [
@@ -181,9 +182,7 @@ class ManyManyThroughListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideAdd
-     */
+    #[DataProvider('provideAdd')]
     public function testAdd(string $parentClass, string $joinClass, string $joinProperty, string $relation)
     {
         $parent = $this->objFromFixture($parentClass, 'parent1');
@@ -207,7 +206,7 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals('new join record', $newItem->$joinProperty->Title);
     }
 
-    public function provideRemove(): array
+    public static function provideRemove(): array
     {
         return [
             [
@@ -221,9 +220,7 @@ class ManyManyThroughListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideRemove
-     */
+    #[DataProvider('provideRemove')]
     public function testRemove(string $parentClass, string $relation)
     {
         $parent = $this->objFromFixture($parentClass, 'parent1');
@@ -554,9 +551,7 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEquals(sort($remove), sort($removedIds));
     }
 
-    /**
-     * @dataProvider provideForForeignIDPlaceholders
-     */
+    #[DataProvider('provideForForeignIDPlaceholders')]
     public function testForForeignIDPlaceholders(bool $config, bool $useInt, bool $expected): void
     {
         Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
@@ -576,7 +571,7 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertEqualsCanonicalizing($expectedIDs, $newItemsList->column('ID'));
     }
 
-    public function provideForForeignIDPlaceholders(): array
+    public static function provideForForeignIDPlaceholders(): array
     {
         return [
             'config false' => [

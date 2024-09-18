@@ -9,6 +9,7 @@ use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for the {@link TemplateLoader} class.
@@ -316,7 +317,7 @@ class ThemeResourceLoaderTest extends SapphireTest
         }
     }
 
-    public function providerTestGetPath()
+    public static function providerTestGetPath()
     {
         return [
             // Legacy theme
@@ -372,10 +373,10 @@ class ThemeResourceLoaderTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerTestGetPath
      * @param string $name Theme identifier
      * @param string $path Path to theme
      */
+    #[DataProvider('providerTestGetPath')]
     public function testGetPath($name, $path)
     {
         $this->assertEquals($path, $this->loader->getPath($name));

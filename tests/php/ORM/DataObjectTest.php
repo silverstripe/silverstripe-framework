@@ -27,6 +27,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\View\ViewableData;
 use ReflectionMethod;
 use stdClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DataObjectTest extends SapphireTest
 {
@@ -92,9 +93,7 @@ class DataObjectTest extends SapphireTest
         );
     }
 
-    /**
-     * @dataProvider provideSingletons
-     */
+    #[DataProvider('provideSingletons')]
     public function testSingleton($inst, $defaultValue, $altDefaultValue)
     {
         $inst = $inst();
@@ -113,7 +112,7 @@ class DataObjectTest extends SapphireTest
         }
     }
 
-    public function provideSingletons()
+    public static function provideSingletons()
     {
         // because PHPUnit evaluates test providers *before* setUp methods
         // any extensions added in the setUp methods won't be available
@@ -2674,7 +2673,7 @@ class DataObjectTest extends SapphireTest
         $this->assertSame('SOME VALUE', $obj->MyTestField);
     }
 
-    public function provideTestGetDatabaseBackedField()
+    public static function provideTestGetDatabaseBackedField()
     {
         return [
             ['Captain.IsRetired', 'Captain.IsRetired'],
@@ -2704,9 +2703,7 @@ class DataObjectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideTestGetDatabaseBackedField
-     */
+    #[DataProvider('provideTestGetDatabaseBackedField')]
     public function testGetDatabaseBackedField(string $fieldPath, $expected)
     {
         $dataObjectClass = new DataObject();

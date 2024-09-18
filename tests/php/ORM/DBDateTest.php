@@ -9,6 +9,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DBDateTest extends SapphireTest
 {
@@ -349,8 +350,8 @@ class DBDateTest extends SapphireTest
     /**
      * @param string $adjustment
      * @param string $expected
-     * @dataProvider modifyProvider
      */
+    #[DataProvider('modifyProvider')]
     public function testModify($adjustment, $expected)
     {
         /** @var DBDate $dateField */
@@ -362,7 +363,7 @@ class DBDateTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function modifyProvider()
+    public static function modifyProvider()
     {
         return [
             ['+1 day', '2019-03-04'],

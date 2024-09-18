@@ -7,6 +7,9 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Tests\HTTPRequestTest\HTTPRequestTestException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Dev\Exceptions\ExpectedWarningException;
 
 class HTTPRequestTest extends SapphireTest
 {
@@ -55,7 +58,9 @@ class HTTPRequestTest extends SapphireTest
      */
     public function testWildCardWithFurtherParams()
     {
-        $this->expectWarning();
+        $this->enableErrorHandler();
+        $this->expectException(ExpectedWarningException::class);
+        $this->expectExceptionMessage('All URL params after wildcard parameter $@ will be ignored');
         $request = new HTTPRequest('GET', 'admin/crm/test');
         // all parameters after the first wildcard parameter are ignored
         $request->match('admin/$Action/$@/$Other/$*', true);
@@ -150,7 +155,7 @@ class HTTPRequestTest extends SapphireTest
         ];
     }
 
-    public function setHttpMethodDataProvider()
+    public static function setHttpMethodDataProvider()
     {
         return [
             'POST request' => ['POST','POST'],
@@ -162,9 +167,7 @@ class HTTPRequestTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider setHttpMethodDataProvider
-     */
+    #[DataProvider('setHttpMethodDataProvider')]
     public function testSetHttpMethod($method, $expected)
     {
         $request = new HTTPRequest('GET', '/hello');

@@ -39,6 +39,7 @@ use SilverStripe\ORM\Tests\DataListTest\EagerLoading\BelongsManyManySubSubEagerL
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\MixedHasManyEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\MixedHasOneEagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\MixedManyManyEagerLoadObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DataListEagerLoadingTest extends SapphireTest
 {
@@ -162,9 +163,7 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->showQueries = DataListEagerLoadingTest::SHOW_QUERIES_RESET;
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelations
-     */
+    #[DataProvider('provideEagerLoadRelations')]
     public function testEagerLoadRelations(string $iden, array $eagerLoad, int $expected): void
     {
         $this->createEagerLoadData();
@@ -180,7 +179,7 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->assertSame($expected, $selectCount);
     }
 
-    public function provideEagerLoadRelations(): array
+    public static function provideEagerLoadRelations(): array
     {
         return [
             // Include the lazy-loaded expectation here, since if the number
@@ -756,9 +755,7 @@ class DataListEagerLoadingTest extends SapphireTest
         return [$results, $selectCount];
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelationsEmpty
-     */
+    #[DataProvider('provideEagerLoadRelationsEmpty')]
     public function testEagerLoadRelationsEmpty(string $eagerLoadRelation, int $expectedNumQueries): void
     {
         EagerLoadObject::create(['Title' => 'test object'])->write();
@@ -779,35 +776,35 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->assertSame($expectedNumQueries, $numQueries);
     }
 
-    public function provideEagerLoadRelationsEmpty(): array
+    public static function provideEagerLoadRelationsEmpty(): array
     {
         return [
             'has_one' => [
-                'eagerLoad' => 'HasOneEagerLoadObject',
+                'eagerLoadRelation' => 'HasOneEagerLoadObject',
                 'expectedNumQueries' => 1,
             ],
             'polymorph_has_one' => [
-                'eagerLoad' => 'HasOnePolymorphObject',
+                'eagerLoadRelation' => 'HasOnePolymorphObject',
                 'expectedNumQueries' => 1,
             ],
             'belongs_to' => [
-                'eagerLoad' => 'BelongsToEagerLoadObject',
+                'eagerLoadRelation' => 'BelongsToEagerLoadObject',
                 'expectedNumQueries' => 2,
             ],
             'has_many' => [
-                'eagerLoad' => 'HasManyEagerLoadObjects',
+                'eagerLoadRelation' => 'HasManyEagerLoadObjects',
                 'expectedNumQueries' => 2,
             ],
             'many_many' => [
-                'eagerLoad' => 'ManyManyEagerLoadObjects',
+                'eagerLoadRelation' => 'ManyManyEagerLoadObjects',
                 'expectedNumQueries' => 2,
             ],
             'many_many through' => [
-                'eagerLoad' => 'ManyManyThroughEagerLoadObjects',
+                'eagerLoadRelation' => 'ManyManyThroughEagerLoadObjects',
                 'expectedNumQueries' => 2,
             ],
             'belongs_many_many' => [
-                'eagerLoad' => 'BelongsManyManyEagerLoadObjects',
+                'eagerLoadRelation' => 'BelongsManyManyEagerLoadObjects',
                 'expectedNumQueries' => 2,
             ],
         ];
@@ -830,9 +827,7 @@ class DataListEagerLoadingTest extends SapphireTest
         EagerLoadObject::get()->eagerLoad($eagerLoadRelation);
     }
 
-    /**
-     * @dataProvider provideEagerLoadInvalidRelationException
-     */
+    #[DataProvider('provideEagerLoadInvalidRelationException')]
     public function testEagerLoadInvalidRelationException(string $eagerLoadRelation): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -841,7 +836,7 @@ class DataListEagerLoadingTest extends SapphireTest
         EagerLoadObject::get()->eagerLoad($eagerLoadRelation)->toArray();
     }
 
-    public function provideEagerLoadInvalidRelationException(): array
+    public static function provideEagerLoadInvalidRelationException(): array
     {
         return [
             [
@@ -856,9 +851,7 @@ class DataListEagerLoadingTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideEagerLoadManyManyExtraFields
-     */
+    #[DataProvider('provideEagerLoadManyManyExtraFields')]
     public function testEagerLoadManyManyExtraFields(string $parentClass, string $eagerLoadRelation): void
     {
         $this->createEagerLoadData();
@@ -887,7 +880,7 @@ class DataListEagerLoadingTest extends SapphireTest
         }
     }
 
-    public function provideEagerLoadManyManyExtraFields(): array
+    public static function provideEagerLoadManyManyExtraFields(): array
     {
         return [
             [
@@ -901,9 +894,7 @@ class DataListEagerLoadingTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideEagerLoadManyManyThroughJoinRecords
-     */
+    #[DataProvider('provideEagerLoadManyManyThroughJoinRecords')]
     public function testEagerLoadManyManyThroughJoinRecords(string $parentClass, string $eagerLoadRelation): void
     {
         $this->createEagerLoadData();
@@ -936,7 +927,7 @@ class DataListEagerLoadingTest extends SapphireTest
         }
     }
 
-    public function provideEagerLoadManyManyThroughJoinRecords(): array
+    public static function provideEagerLoadManyManyThroughJoinRecords(): array
     {
         return [
             [
@@ -950,10 +941,8 @@ class DataListEagerLoadingTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelations
-     */
-    public function testEagerLoadingFilteredList(string $iden, array $eagerLoad): void
+    #[DataProvider('provideEagerLoadRelations')]
+    public function testEagerLoadingFilteredList(string $iden, array $eagerLoad, int $expected): void
     {
         $this->createEagerLoadData(5);
         $filter = ['Title:GreaterThan' => 'obj 0'];
@@ -970,10 +959,8 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->validateEagerLoadingResults($iden, EagerLoadObject::get()->filter($filter), $dataList);
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelations
-     */
-    public function testEagerLoadingSortedList(string $iden, array $eagerLoad): void
+    #[DataProvider('provideEagerLoadRelations')]
+    public function testEagerLoadingSortedList(string $iden, array $eagerLoad, int $expected): void
     {
         $this->createEagerLoadData(3);
         $items = [
@@ -999,10 +986,8 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->validateEagerLoadingResults($iden, EagerLoadObject::get()->sort($sort), $dataList);
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelations
-     */
-    public function testEagerLoadingLimitedList(string $iden, array $eagerLoad): void
+    #[DataProvider('provideEagerLoadRelations')]
+    public function testEagerLoadingLimitedList(string $iden, array $eagerLoad, int $expected): void
     {
         // Make sure to create more base records AND more records on at least one relation than the limit
         // to ensure the limit isn't accidentally carried through to the relations.
@@ -1016,10 +1001,8 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->validateEagerLoadingResults($iden, EagerLoadObject::get()->limit($limit), $dataList);
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelations
-     */
-    public function testRepeatedIterationOfEagerLoadedList(string $iden, array $eagerLoad): void
+    #[DataProvider('provideEagerLoadRelations')]
+    public function testRepeatedIterationOfEagerLoadedList(string $iden, array $eagerLoad, int $expected): void
     {
         // We need at least 3 base records for many_many relations to have fewer db queries than lazy-loaded lists.
         $this->createEagerLoadData(3);
@@ -1034,10 +1017,9 @@ class DataListEagerLoadingTest extends SapphireTest
      * This test validates that you can call eagerLoad() anywhere on the list before
      * execution, including before or after sort/limit/filter, etc - and it will
      * work the same way regardless of when it was called.
-     *
-     * @dataProvider provideEagerLoadRelations
      */
-    public function testEagerLoadWorksAnywhereBeforeExecution(string $iden, array $eagerLoad): void
+    #[DataProvider('provideEagerLoadRelations')]
+    public function testEagerLoadWorksAnywhereBeforeExecution(string $iden, array $eagerLoad, int $expected): void
     {
         $this->createEagerLoadData(7);
         $filter = ['Title:LessThan' => 'obj 5'];
@@ -1066,10 +1048,8 @@ class DataListEagerLoadingTest extends SapphireTest
         $this->validateEagerLoadingResults($iden, $lazyList, $eagerList4);
     }
 
-    /**
-     * @dataProvider provideEagerLoadRelations
-     */
-    public function testEagerLoadWithChunkedFetch(string $iden, array $eagerLoad): void
+    #[DataProvider('provideEagerLoadRelations')]
+    public function testEagerLoadWithChunkedFetch(string $iden, array $eagerLoad, int $expected): void
     {
         $this->createEagerLoadData(10);
         $dataList = EagerLoadObject::get()->eagerLoad(...$eagerLoad);
@@ -1098,9 +1078,7 @@ class DataListEagerLoadingTest extends SapphireTest
         }
     }
 
-    /**
-     * @dataProvider provideEagerLoadingEmptyRelations
-     */
+    #[DataProvider('provideEagerLoadingEmptyRelations')]
     public function testEagerLoadingEmptyRelations(string $iden, string $eagerLoad): void
     {
         $numBaseRecords = 3;
@@ -1251,7 +1229,7 @@ class DataListEagerLoadingTest extends SapphireTest
         }
     }
 
-    public function provideEagerLoadingEmptyRelations(): array
+    public static function provideEagerLoadingEmptyRelations(): array
     {
         return [
             [
@@ -1362,7 +1340,7 @@ class DataListEagerLoadingTest extends SapphireTest
         EagerLoadObject::get()->eagerLoad(['HasManyEagerLoadObjects' => 'HasManyEagerLoadObjects']);
     }
 
-    public function provideNoLimitEagerLoadingQuery(): array
+    public static function provideNoLimitEagerLoadingQuery(): array
     {
         // Note we don't test has_one or belongs_to because those don't accept a callback at all.
         return [
@@ -1391,9 +1369,8 @@ class DataListEagerLoadingTest extends SapphireTest
 
     /**
      * Tests that attempting to limit an eagerloading query will throw an exception.
-     *
-     * @dataProvider provideNoLimitEagerLoadingQuery
      */
+    #[DataProvider('provideNoLimitEagerLoadingQuery')]
     public function testNoLimitEagerLoadingQuery(string $relation, string $relationType, callable $callback): void
     {
         // Need to have at least one record in the main list for eagerloading to even be triggered.
@@ -1407,7 +1384,7 @@ class DataListEagerLoadingTest extends SapphireTest
         EagerLoadObject::get()->eagerLoad([$relation => $callback])->toArray();
     }
 
-    public function provideCannotManipulateUnaryRelationQuery(): array
+    public static function provideCannotManipulateUnaryRelationQuery(): array
     {
         return [
             'has_one' => [
@@ -1423,9 +1400,8 @@ class DataListEagerLoadingTest extends SapphireTest
 
     /**
      * Tests that attempting to manipulate a has_one or belongs_to eagerloading query will throw an exception.
-     *
-     * @dataProvider provideCannotManipulateUnaryRelationQuery
      */
+    #[DataProvider('provideCannotManipulateUnaryRelationQuery')]
     public function testCannotManipulateUnaryRelationQuery(string $relation, string $relationType): void
     {
         // Need to have at least one record in the main list for eagerloading to even be triggered.
@@ -1458,7 +1434,7 @@ class DataListEagerLoadingTest extends SapphireTest
         ])->toArray();
     }
 
-    public function provideManipulatingEagerloadingQuery(): array
+    public static function provideManipulatingEagerloadingQuery(): array
     {
         return [
             'nested has_many' => [
@@ -1586,9 +1562,8 @@ class DataListEagerLoadingTest extends SapphireTest
 
     /**
      * Tests that callbacks can be used to manipulate eagerloading queries
-     *
-     * @dataProvider provideManipulatingEagerloadingQuery
      */
+    #[DataProvider('provideManipulatingEagerloadingQuery')]
     public function testManipulatingEagerloadingQuery(string $relationType, array $relations, array $eagerLoad, array $expected): void
     {
         $relationNames = array_keys($relations);

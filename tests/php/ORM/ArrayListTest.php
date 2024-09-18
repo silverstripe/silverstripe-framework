@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\View\ArrayData;
 use stdClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayListTest extends SapphireTest
 {
@@ -118,7 +119,7 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($list->Count(), $count);
     }
 
-    public function limitDataProvider(): array
+    public static function limitDataProvider(): array
     {
         $all = [ ['Key' => 1], ['Key' => 2], ['Key' => 3] ];
         list($one, $two, $three) = $all;
@@ -141,9 +142,7 @@ class ArrayListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider limitDataProvider
-     */
+    #[DataProvider('limitDataProvider')]
     public function testLimit($length, $offset, array $expected)
     {
         $data = [
@@ -343,9 +342,9 @@ class ArrayListTest extends SapphireTest
         );
     }
 
-    public function provideFindWithSearchfilters()
+    public static function provideFindWithSearchfilters()
     {
-        $objects = $this->getFilterWithSearchfiltersObjects();
+        $objects = ArrayListTest::getFilterWithSearchfiltersObjects();
         return [
             // test a couple of search filters
             // don't need to be as explicit as the filter tests, just check the syntax works
@@ -387,9 +386,7 @@ class ArrayListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideFindWithSearchfilters
-     */
+    #[DataProvider('provideFindWithSearchfilters')]
     public function testFindWithSearchfilters(array $args, array $objects, object|array|null $expected)
     {
         $list = new ArrayList($objects);
@@ -970,21 +967,19 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve and Clair');
     }
 
-    /**
-     * @dataProvider provideFilterNullComparisons
-     */
-    public function testFilterNullComparisons(mixed $objectValue, mixed $filterValue, bool $doesMatch, bool $negated = false)
+    #[DataProvider('provideFilterNullComparisons')]
+    public function testFilterNullComparisons(mixed $objectValue, mixed $filterValues, bool $doesMatch, bool $negated = false)
     {
         $filterField = 'Value';
         if ($negated) {
             $filterField .= ':not';
         }
         $list = new ArrayList([['Value' => $objectValue]]);
-        $list = $list->filter($filterField, $filterValue);
+        $list = $list->filter($filterField, $filterValues);
         $this->assertCount($doesMatch ? 1 : 0, $list);
     }
 
-    public function provideFilterNullComparisons()
+    public static function provideFilterNullComparisons()
     {
         // This is for backwards compatibility, since arraylist used to just do a straight == comparison
         // Everything that passes here would have passed a $objectValue == $filterValue comparison previously
@@ -1091,7 +1086,7 @@ class ArrayListTest extends SapphireTest
         return $scenarios;
     }
 
-    private function getFilterWithSearchfiltersObjects()
+    private static function getFilterWithSearchfiltersObjects()
     {
         return [
             [
@@ -1149,12 +1144,12 @@ class ArrayListTest extends SapphireTest
         ];
     }
 
-    public function provideFilterWithSearchfilters()
+    public static function provideFilterWithSearchfilters()
     {
         // Note that search filter tests here are to test syntax and to ensure all supported search filters
         // work with arraylist - but we don't need to test every possible edge case here,
         // we can rely on individual searchfilter unit tests for many edge cases
-        $objects = $this->getFilterWithSearchfiltersObjects();
+        $objects = ArrayListTest::getFilterWithSearchfiltersObjects();
         return [
             // exact match filter tests
             'exact match - negate' => [
@@ -1171,7 +1166,7 @@ class ArrayListTest extends SapphireTest
                 'expected' => [$objects[1], $objects[3], $objects[4]],
             ],
             'exact match negated - nothing gets filtered out' => [
-                'filter' => ['Title:not', 'No object has this title - we should have all objects'],
+                'args' => ['Title:not', 'No object has this title - we should have all objects'],
                 'objects' => $objects,
                 'expected' => $objects,
             ],
@@ -1311,9 +1306,7 @@ class ArrayListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideFilterWithSearchfilters
-     */
+    #[DataProvider('provideFilterWithSearchfilters')]
     public function testFilterWithSearchfilters(array $args, array $objects, array $expected)
     {
         $list = new ArrayList($objects);
@@ -1321,9 +1314,9 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals(array_column($expected, 'ID'), $list->column('ID'));
     }
 
-    public function provideFilterAnyWithSearchfilters()
+    public static function provideFilterAnyWithSearchfilters()
     {
-        $objects = $this->getFilterWithSearchfiltersObjects();
+        $objects = ArrayListTest::getFilterWithSearchfiltersObjects();
         return [
             // test a couple of search filters
             // don't need to be as explicit as the filter tests, just check the syntax works
@@ -1368,9 +1361,7 @@ class ArrayListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideFilterAnyWithSearchfilters
-     */
+    #[DataProvider('provideFilterAnyWithSearchfilters')]
     public function testFilterAnyWithSearchfilters(array $args, array $objects, array $expected)
     {
         $list = new ArrayList($objects);
@@ -1378,7 +1369,7 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals(array_column($expected, 'ID'), $list->column('ID'));
     }
 
-    public function provideFilterAny()
+    public static function provideFilterAny()
     {
         $list = new ArrayList(
             [
@@ -1429,9 +1420,7 @@ class ArrayListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideFilterAny
-     */
+    #[DataProvider('provideFilterAny')]
     public function testFilterAny(ArrayList $list, array $args, array $contains)
     {
         $filteredList = $list->filterAny(...$args)->toArray();
@@ -1650,12 +1639,12 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($expected, $list->toArray());
     }
 
-    public function provideExcludeWithSearchfilters()
+    public static function provideExcludeWithSearchfilters()
     {
         // If it's included in the filter test, then it's excluded in the exclude test,
         // so we can just use the same scenarios and reverse the expected results.
-        $objects = $this->getFilterWithSearchfiltersObjects();
-        $scenarios = $this->provideFilterWithSearchfilters();
+        $objects = ArrayListTest::getFilterWithSearchfiltersObjects();
+        $scenarios = ArrayListTest::provideFilterWithSearchfilters();
         foreach ($scenarios as $name => $scenario) {
             $kept = [];
             $excluded = [];
@@ -1672,9 +1661,7 @@ class ArrayListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideExcludeWithSearchfilters
-     */
+    #[DataProvider('provideExcludeWithSearchfilters')]
     public function testExcludeWithSearchfilters(array $args, array $objects, array $expected)
     {
         $list = new ArrayList($objects);
@@ -1682,12 +1669,12 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($expected, $list->toArray());
     }
 
-    public function provideExcludeAnyWithSearchfilters()
+    public static function provideExcludeAnyWithSearchfilters()
     {
         // If it's included in the filterAny test, then it's excluded in the excludeAny test,
         // so we can just use the same scenarios and reverse the expected results.
-        $objects = $this->getFilterWithSearchfiltersObjects();
-        $scenarios = $this->provideFilterAnyWithSearchfilters();
+        $objects = ArrayListTest::getFilterWithSearchfiltersObjects();
+        $scenarios = ArrayListTest::provideFilterAnyWithSearchfilters();
         foreach ($scenarios as $name => $scenario) {
             $kept = [];
             $excluded = [];
@@ -1704,9 +1691,7 @@ class ArrayListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideExcludeAnyWithSearchfilters
-     */
+    #[DataProvider('provideExcludeAnyWithSearchfilters')]
     public function testExcludeAnyWithSearchfilters(array $args, array $objects, array $expected)
     {
         $list = new ArrayList($objects);
@@ -1714,11 +1699,11 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals($expected, $list->toArray());
     }
 
-    public function provideExcludeAny()
+    public static function provideExcludeAny()
     {
         // If it's included in the filterAny test, then it's excluded in the excludeAny test,
         // so we can just use the same scenarios and reverse the expected results.
-        $scenarios = $this->provideFilterAny();
+        $scenarios = ArrayListTest::provideFilterAny();
         foreach ($scenarios as $name => $scenario) {
             $kept = [];
             $excluded = [];
@@ -1738,9 +1723,7 @@ class ArrayListTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideExcludeAny
-     */
+    #[DataProvider('provideExcludeAny')]
     public function testExcludeAny(ArrayList $list, array $args, array $contains)
     {
         $filteredList = $list->excludeAny(...$args)->toArray();

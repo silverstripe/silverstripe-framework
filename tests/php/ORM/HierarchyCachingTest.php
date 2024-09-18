@@ -11,11 +11,12 @@ use SilverStripe\ORM\Tests\HierarchyTest\HideTestObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HideTestSubObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * @internal Only test the right values are returned, not that the cache is actually used.
  */
-class HierachyCacheTest extends SapphireTest
+class HierarchyCachingTest extends SapphireTest
 {
 
     protected static $fixture_file = 'HierarchyTest.yml';
@@ -43,7 +44,7 @@ class HierachyCacheTest extends SapphireTest
         );
     }
 
-    public function cacheNumChildrenDataProvider()
+    public static function cacheNumChildrenDataProvider()
     {
         return [
             [TestObject::class, 'obj1', false, 0, 'childless object should have a numChildren of 0'],
@@ -60,9 +61,7 @@ class HierachyCacheTest extends SapphireTest
     }
 
 
-    /**
-     * @dataProvider cacheNumChildrenDataProvider
-     */
+    #[DataProvider('cacheNumChildrenDataProvider')]
     public function testNumChildrenCache($className, $identifier, $cache, $expected, $message)
     {
         $node = $this->objFromFixture($className, $identifier);
@@ -78,7 +77,7 @@ class HierachyCacheTest extends SapphireTest
         }
     }
 
-    public function prepopulateCacheNumChildrenDataProvider()
+    public static function prepopulateCacheNumChildrenDataProvider()
     {
         return [
             [
@@ -132,9 +131,7 @@ class HierachyCacheTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider prepopulateCacheNumChildrenDataProvider
-     */
+    #[DataProvider('prepopulateCacheNumChildrenDataProvider')]
     public function testPrepopulatedNumChildrenCache(
         $className,
         $idList,

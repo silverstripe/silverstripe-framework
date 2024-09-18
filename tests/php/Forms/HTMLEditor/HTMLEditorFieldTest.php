@@ -18,6 +18,7 @@ use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HTMLEditorFieldTest extends FunctionalTest
 {
@@ -215,7 +216,7 @@ EOS
         );
     }
 
-    public function provideTestValueEntities()
+    public static function provideTestValueEntities()
     {
         return [
             "ampersand" => [
@@ -233,9 +234,7 @@ EOS
         ];
     }
 
-    /**
-     * @dataProvider provideTestValueEntities
-     */
+    #[DataProvider('provideTestValueEntities')]
     public function testValueEntities(string $input, string $result)
     {
         $field = new HTMLEditorField("Content");

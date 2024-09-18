@@ -9,10 +9,10 @@ use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
 use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 
-/**
- * @requires extension mysqli
- */
+#[RequiresPhpExtension('mysqli')]
 class MySQLiConnectorTest extends SapphireTest implements TestOnly
 {
     /** @var array project database settings configuration */
@@ -50,9 +50,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $this->config = $config;
     }
 
-    /**
-     * @dataProvider charsetProvider
-     */
+    #[DataProvider('charsetProvider')]
     public function testConnectionCharsetControl($charset, $defaultCollation)
     {
         $connector = $this->getConnector($charset);
@@ -69,9 +67,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         unset($cset, $connection, $connector, $config);
     }
 
-    /**
-     * @dataProvider charsetProvider
-     */
+    #[DataProvider('charsetProvider')]
     public function testConnectionCollationControl($charset, $defaultCollation, $customCollation)
     {
         $connector = $this->getConnector($charset, $customCollation);
@@ -107,7 +103,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         unset($cset, $connection, $connector, $config);
     }
 
-    public function charsetProvider()
+    public static function charsetProvider()
     {
         return [
             ['ascii', 'ascii_general_ci', 'ascii_bin'],

@@ -125,7 +125,7 @@ class GridFieldAddNewButtonTest extends SapphireTest
     protected function mockSingleton($class)
     {
         $mock = $this->getMockBuilder($class)
-            ->setMethods(['canCreate'])
+            ->onlyMethods(['canCreate'])
             ->getMock();
         Injector::inst()->registerService($mock, $class);
 

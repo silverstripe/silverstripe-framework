@@ -5,10 +5,11 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\PasswordField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PasswordFieldTest extends SapphireTest
 {
-    public function boolDataProvider()
+    public static function boolDataProvider()
     {
         return [
             [false],
@@ -17,9 +18,9 @@ class PasswordFieldTest extends SapphireTest
     }
 
     /**
-     * @dataProvider boolDataProvider
      * @param bool $bool
      */
+    #[DataProvider('boolDataProvider')]
     public function testAutocomplete($bool)
     {
         Config::modify()->set(PasswordField::class, 'autocomplete', $bool);
@@ -31,9 +32,9 @@ class PasswordFieldTest extends SapphireTest
     }
 
     /**
-     * @dataProvider boolDataProvider
      * @param bool $bool
      */
+    #[DataProvider('boolDataProvider')]
     public function testValuePostback($bool)
     {
         $field = (new PasswordField('test', 'test', 'password'))

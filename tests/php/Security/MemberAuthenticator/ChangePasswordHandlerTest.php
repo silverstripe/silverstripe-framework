@@ -34,14 +34,16 @@ class ChangePasswordHandlerTest extends SapphireTest
         ]);
         $request->setSession(new Session([]));
 
-        /** @var ChangePasswordHandler $handler */
-        $handler = $this->getMockBuilder(ChangePasswordHandler::class)
-            ->disableOriginalConstructor()
-            ->setMethods(null)
-            ->getMock();
+        // not using a phpunit mock otherwise get the error
+        // Error: Typed property MockObject_ChangePasswordHandler_12f49d86::$__phpunit_state
+        // must not be accessed before initialization
+        $handler = new class() extends ChangePasswordHandler {
+            public function __construct()
+            {
+            }
+        };
 
         $result = $handler->setRequest($request)->changepassword();
-
         $this->assertIsArray($result, 'An array is returned');
         $this->assertStringContainsString('Security/lostpassword', $result['Content'], 'Lost password URL is included');
         $this->assertStringContainsString('Security/login', $result['Content'], 'Login URL is included');

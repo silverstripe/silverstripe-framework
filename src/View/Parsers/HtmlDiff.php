@@ -7,6 +7,7 @@ use Masterminds\HTML5\Elements;
 use SebastianBergmann\Diff\Differ;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SebastianBergmann\Diff\Output\DiffOnlyOutputBuilder;
 
 /**
  * Class representing a 'diff' between two sequences of HTML strings.
@@ -285,7 +286,7 @@ class HtmlDiff
     private static function getDiffer(): Differ
     {
         if (!HtmlDiff::$differ) {
-            HtmlDiff::$differ = new Differ();
+            HtmlDiff::$differ = new Differ(new DiffOnlyOutputBuilder());
         }
         return HtmlDiff::$differ;
     }

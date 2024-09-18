@@ -4,7 +4,6 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
-use SilverStripe\Dev\SSListExporter;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ViewableData;
@@ -20,8 +19,6 @@ class SSListContains extends Constraint implements TestOnly
      */
     protected $matches = [];
 
-    protected SSListExporter $exporter;
-
     /**
      * Check if the list has left over items that don't match
      *
@@ -31,8 +28,6 @@ class SSListContains extends Constraint implements TestOnly
 
     public function __construct(array $matches)
     {
-        $this->exporter = new SSListExporter();
-
         $this->matches = $matches;
     }
 

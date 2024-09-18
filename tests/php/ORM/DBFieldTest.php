@@ -29,6 +29,7 @@ use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBYear;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for DBField objects.
@@ -206,9 +207,7 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals(PHP_INT_MAX, $bigInt->getValue());
     }
 
-    /**
-     * @dataProvider dataProviderPrepValueForDBArrayValue
-     */
+    #[DataProvider('dataProviderPrepValueForDBArrayValue')]
     public function testPrepValueForDBArrayValue($dbFieldName, $scalarValueOnly, $extraArgs = [])
     {
         $reflection = new \ReflectionClass($dbFieldName);
@@ -226,7 +225,7 @@ class DBFieldTest extends SapphireTest
         $this->assertEquals($scalarValueOnly, $dbField->scalarValueOnly());
     }
 
-    public function dataProviderPrepValueForDBArrayValue()
+    public static function dataProviderPrepValueForDBArrayValue()
     {
         return [
             [DBBigInt::class, true],

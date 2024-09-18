@@ -6,10 +6,12 @@ use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Exceptions\ExpectedNoticeException;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\YamlWriter;
 use SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector;
+use SilverStripe\i18n\Tests\i18nTextCollectorTest\i18nTextCollectorTestException;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
 class i18nTextCollectorTest extends SapphireTest
@@ -74,6 +76,8 @@ PHP;
 
     public function testCollectFromNewTemplateSyntaxUsingParserSubclass()
     {
+        $this->enableErrorHandler();
+
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
@@ -115,8 +119,8 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
+        $this->expectException(ExpectedNoticeException::class);
+        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
 
         $c->collectFromTemplate($html, null, $mymodule);
     }
@@ -153,6 +157,7 @@ SS;
 
     public function testCollectFromTemplateAdvanced()
     {
+        $this->enableErrorHandler();
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false);
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
@@ -190,8 +195,8 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
+        $this->expectException(ExpectedNoticeException::class);
+        $this->expectExceptionMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
 
         $c->collectFromTemplate($html, 'Test', $mymodule);
     }
@@ -479,6 +484,7 @@ PHP;
      */
     public function testCollectFromCodeNewSignature()
     {
+        $this->enableErrorHandler();
         $c = i18nTextCollector::create();
         $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
@@ -523,8 +529,8 @@ PHP;
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
         // Test warning is raised on empty default
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
+        $this->expectException(ExpectedNoticeException::class);
+        $this->expectExceptionMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
 
         $php = <<<PHP
 _t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);

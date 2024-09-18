@@ -18,6 +18,7 @@ use SilverStripe\Control\Tests\RequestHandlingTest\HTTPMethodTestController;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ControllerTest extends FunctionalTest
 {
@@ -462,7 +463,7 @@ class ControllerTest extends FunctionalTest
         );
     }
 
-    public function provideNormaliseTrailingSlash(): array
+    public static function provideNormaliseTrailingSlash(): array
     {
         // note 93.184.215.14 is the IP address for example.com
         return [
@@ -670,9 +671,7 @@ class ControllerTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideNormaliseTrailingSlash
-     */
+    #[DataProvider('provideNormaliseTrailingSlash')]
     public function testNormaliseTrailingSlash(string $path, string $withSlash, string $withoutSlash): void
     {
         $absBaseUrlNoSlash = rtrim(Director::absoluteBaseURL(), '/');
@@ -704,9 +703,6 @@ class ControllerTest extends FunctionalTest
         $this->assertEquals('HasAction/allowed-action/', $controller->Link('allowed-action'));
     }
 
-    /**
-     * @covers \SilverStripe\Control\Controller::hasAction
-     */
     public function testHasAction()
     {
         $controller = new HasAction();

@@ -13,6 +13,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Logging\DebugViewFriendlyErrorFormatter;
 use SilverStripe\Logging\DetailedErrorFormatter;
 use SilverStripe\Logging\HTTPOutputHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HTTPOutputHandlerTest extends SapphireTest
 {
@@ -58,7 +59,7 @@ class HTTPOutputHandlerTest extends SapphireTest
         $this->assertInstanceOf(DetailedErrorFormatter::class, $handler->getFormatter());
     }
 
-    public function provideShouldShowError()
+    public static function provideShouldShowError()
     {
         $provide = [];
         // See https://www.php.net/manual/en/errorfunc.constants.php
@@ -145,9 +146,7 @@ class HTTPOutputHandlerTest extends SapphireTest
         return $provide;
     }
 
-    /**
-     * @dataProvider provideShouldShowError
-     */
+    #[DataProvider('provideShouldShowError')]
     public function testShouldShowError(
         int $errorCode,
         bool $triggeringError,

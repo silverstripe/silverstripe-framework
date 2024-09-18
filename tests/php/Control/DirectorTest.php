@@ -17,6 +17,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DirectorTest extends SapphireTest
 {
@@ -40,7 +41,6 @@ class DirectorTest extends SapphireTest
             ->setForceSSLPatterns([])
             ->setForceWWW(null)
             ->setEnabledEnvs(true);
-        $this->expectedRedirect = null;
     }
 
     protected function tearDown(): void
@@ -214,14 +214,14 @@ class DirectorTest extends SapphireTest
 
     /**
      * Tests that {@link Director::is_absolute()} works under different environment types
-     * @dataProvider provideAbsolutePaths
      */
+    #[DataProvider('provideAbsolutePaths')]
     public function testIsAbsolute($path, $result)
     {
         $this->assertEquals($result, Director::is_absolute($path));
     }
 
-    public function provideAbsolutePaths()
+    public static function provideAbsolutePaths()
     {
         return [
             ['C:/something', true],
@@ -294,7 +294,7 @@ class DirectorTest extends SapphireTest
     /**
      * @return array
      */
-    public function providerMakeRelative()
+    public static function providerMakeRelative()
     {
         return [
             // Resilience to slash position
@@ -409,11 +409,11 @@ class DirectorTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerMakeRelative
      * @param string $baseURL Site base URL
      * @param string $requestURL Request URL
      * @param string $relativeURL Expected relative URL
      */
+    #[DataProvider('providerMakeRelative')]
     public function testMakeRelative($baseURL, $requestURL, $relativeURL)
     {
         Director::config()->set('alternate_base_url', $baseURL);
@@ -543,7 +543,7 @@ class DirectorTest extends SapphireTest
         );
     }
 
-    public function providerTestTestRequestCarriesGlobals()
+    public static function providerTestTestRequestCarriesGlobals()
     {
         $tests = [];
         $fixture = ['somekey' => 'sometestvalue'];
@@ -558,11 +558,11 @@ class DirectorTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerTestTestRequestCarriesGlobals
      * @param $url
      * @param $fixture
      * @param $method
      */
+    #[DataProvider('providerTestTestRequestCarriesGlobals')]
     public function testTestRequestCarriesGlobals($url, $fixture, $method)
     {
         $getresponse = Director::test(
@@ -602,11 +602,12 @@ class DirectorTest extends SapphireTest
 
     public function testForceWWW()
     {
-        $this->expectExceptionRedirect('http://www.mysite.com:9090/some-url');
-        Director::mockRequest(function ($request) {
-            Injector::inst()->registerService($request, HTTPRequest::class);
-            Director::forceWWW();
-        }, 'http://mysite.com:9090/some-url');
+        $this->withExpectExceptionRedirect('http://www.mysite.com:9090/some-url', function () {
+            Director::mockRequest(function ($request) {
+                Injector::inst()->registerService($request, HTTPRequest::class);
+                Director::forceWWW();
+            }, 'http://mysite.com:9090/some-url');
+        });
     }
 
     public function testPromisedForceWWW()
@@ -632,11 +633,12 @@ class DirectorTest extends SapphireTest
 
     public function testForceSSLProtectsEntireSite()
     {
-        $this->expectExceptionRedirect('https://www.mysite.com:9090/some-url');
-        Director::mockRequest(function ($request) {
-            Injector::inst()->registerService($request, HTTPRequest::class);
-            Director::forceSSL();
-        }, 'http://www.mysite.com:9090/some-url');
+        $this->withExpectExceptionRedirect('https://www.mysite.com:9090/some-url', function () {
+            Director::mockRequest(function ($request) {
+                Injector::inst()->registerService($request, HTTPRequest::class);
+                Director::forceSSL();
+            }, 'http://www.mysite.com:9090/some-url');
+        });
     }
 
     public function testPromisedForceSSL()
@@ -664,21 +666,23 @@ class DirectorTest extends SapphireTest
     public function testForceSSLOnTopLevelPagePattern()
     {
         // Expect admin to trigger redirect
-        $this->expectExceptionRedirect('https://www.mysite.com:9090/admin');
-        Director::mockRequest(function (HTTPRequest $request) {
-            Injector::inst()->registerService($request, HTTPRequest::class);
-            Director::forceSSL(['/^admin/']);
-        }, 'http://www.mysite.com:9090/admin');
+        $this->withExpectExceptionRedirect('https://www.mysite.com:9090/admin', function () {
+            Director::mockRequest(function (HTTPRequest $request) {
+                Injector::inst()->registerService($request, HTTPRequest::class);
+                Director::forceSSL(['/^admin/']);
+            }, 'http://www.mysite.com:9090/admin');
+        });
     }
 
     public function testForceSSLOnSubPagesPattern()
     {
         // Expect to redirect to security login page
-        $this->expectExceptionRedirect('https://www.mysite.com:9090/Security/login');
-        Director::mockRequest(function (HTTPRequest $request) {
-            Injector::inst()->registerService($request, HTTPRequest::class);
-            Director::forceSSL(['/^Security/']);
-        }, 'http://www.mysite.com:9090/Security/login');
+        $this->withExpectExceptionRedirect('https://www.mysite.com:9090/Security/login', function () {
+            Director::mockRequest(function (HTTPRequest $request) {
+                Injector::inst()->registerService($request, HTTPRequest::class);
+                Director::forceSSL(['/^Security/']);
+            }, 'http://www.mysite.com:9090/Security/login');
+        });
     }
 
     public function testForceSSLWithPatternDoesNotMatchOtherPages()
@@ -701,21 +705,23 @@ class DirectorTest extends SapphireTest
     public function testForceSSLAlternateDomain()
     {
         // Ensure that forceSSL throws the appropriate exception
-        $this->expectExceptionRedirect('https://secure.mysite.com/admin');
-        Director::mockRequest(function (HTTPRequest $request) {
-            Injector::inst()->registerService($request, HTTPRequest::class);
-            return Director::forceSSL(['/^admin/'], 'secure.mysite.com');
-        }, 'http://www.mysite.com:9090/admin');
+        $this->withExpectExceptionRedirect('https://secure.mysite.com/admin', function () {
+            Director::mockRequest(function (HTTPRequest $request) {
+                Injector::inst()->registerService($request, HTTPRequest::class);
+                return Director::forceSSL(['/^admin/'], 'secure.mysite.com');
+            }, 'http://www.mysite.com:9090/admin');
+        });
     }
 
     public function testForceSSLAlternateDomainWithPort()
     {
         // Ensure that forceSSL throws the appropriate exception
-        $this->expectExceptionRedirect('https://secure.mysite.com:81/admin');
-        Director::mockRequest(function (HTTPRequest $request) {
-            Injector::inst()->registerService($request, HTTPRequest::class);
-            return Director::forceSSL(['/^admin/'], 'secure.mysite.com:81');
-        }, 'http://www.mysite.com:9090/admin');
+        $this->withExpectExceptionRedirect('https://secure.mysite.com:81/admin', function () {
+            Director::mockRequest(function (HTTPRequest $request) {
+                Injector::inst()->registerService($request, HTTPRequest::class);
+                return Director::forceSSL(['/^admin/'], 'secure.mysite.com:81');
+            }, 'http://www.mysite.com:9090/admin');
+        });
     }
 
     /**
@@ -745,39 +751,18 @@ class DirectorTest extends SapphireTest
     }
 
     /**
-     * Set url to redirect to
-     *
-     * @var string
-     */
-    protected $expectedRedirect = null;
-
-    /**
      * Expects this test to throw a HTTPResponse_Exception with the given redirect
-     *
-     * @param string $url
      */
-    protected function expectExceptionRedirect($url)
-    {
-        $this->expectedRedirect = $url;
-    }
-
-    protected function runTest()
+    protected function withExpectExceptionRedirect(string $expectedRedirect, callable $callback)
     {
         try {
-            $result = parent::runTest();
-            if ($this->expectedRedirect) {
-                $this->fail("Expected to redirect to {$this->expectedRedirect} but no redirect found");
-            }
-            return $result;
+            $callback();
+            $this->fail("Expected to redirect to $expectedRedirect but no redirect found");
         } catch (HTTPResponse_Exception $exception) {
             // Check URL
-            if ($this->expectedRedirect) {
-                $url = $exception->getResponse()->getHeader('Location');
-                $this->assertEquals($this->expectedRedirect, $url, "Expected to redirect to {$this->expectedRedirect}");
-                return null;
-            } else {
-                throw $exception;
-            }
+            $url = $exception->getResponse()->getHeader('Location');
+            $this->assertEquals($expectedRedirect, $url, "Expected to redirect to $expectedRedirect");
+            return null;
         }
     }
 

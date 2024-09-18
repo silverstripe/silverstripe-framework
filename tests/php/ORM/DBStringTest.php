@@ -11,9 +11,6 @@ use SilverStripe\ORM\Tests\DBStringTest\MyStringField;
 class DBStringTest extends SapphireTest
 {
 
-    /**
-     * @covers \SilverStripe\ORM\FieldType\DBField::forTemplate()
-     */
     public function testForTemplate()
     {
         $this->assertEquals(
@@ -35,9 +32,6 @@ class DBStringTest extends SapphireTest
         );
     }
 
-    /**
-     * @covers \SilverStripe\ORM\FieldType\DBString::LowerCase()
-     */
     public function testLowerCase()
     {
         /** @var MyStringField $field */
@@ -48,9 +42,6 @@ class DBStringTest extends SapphireTest
         );
     }
 
-    /**
-     * @covers \SilverStripe\ORM\FieldType\DBString::UpperCase()
-     */
     public function testUpperCase()
     {
         /** @var MyStringField $field */

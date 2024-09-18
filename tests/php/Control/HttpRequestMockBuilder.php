@@ -28,19 +28,19 @@ trait HttpRequestMockBuilder
 
         $request->method('getSession')->willReturn($session);
 
-        $request->method('getURL')->will($this->returnCallback(static function ($addParams) use ($url, $getVars) {
+        $request->method('getURL')->willReturnCallback(static function ($addParams) use ($url, $getVars) {
             return $addParams && count($getVars ?? []) ? $url . '?' . http_build_query($getVars) : $url;
-        }));
+        });
 
         $request->method('getVars')->willReturn($getVars);
-        $request->method('getVar')->will($this->returnCallback(static function ($key) use ($getVars) {
+        $request->method('getVar')->willReturnCallback(static function ($key) use ($getVars) {
             return isset($getVars[$key]) ? $getVars[$key] : null;
-        }));
+        });
 
         $request->method('postVars')->willReturn($postVars);
-        $request->method('postVar')->will($this->returnCallback(static function ($key) use ($postVars) {
+        $request->method('postVar')->willReturnCallback(static function ($key) use ($postVars) {
             return isset($postVars[$key]) ? $postVars[$key] : null;
-        }));
+        });
 
         if (is_null($method)) {
             if (count($postVars ?? [])) {

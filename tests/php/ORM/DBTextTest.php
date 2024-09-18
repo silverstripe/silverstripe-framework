@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBText;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests parsing and summary methods on DBText
@@ -33,7 +34,7 @@ class DBTextTest extends SapphireTest
     /**
      * Test {@link Text->LimitCharacters()}
      */
-    public function providerLimitCharacters()
+    public static function providerLimitCharacters()
     {
         // Plain text values always encoded safely
         // HTML stored in non-html fields is treated literally.
@@ -48,10 +49,10 @@ class DBTextTest extends SapphireTest
     /**
      * Test {@link Text->LimitCharacters()}
      *
-     * @dataProvider providerLimitCharacters
      * @param        string $originalValue
      * @param        string $expectedValue
      */
+    #[DataProvider('providerLimitCharacters')]
     public function testLimitCharacters($originalValue, $expectedValue)
     {
         $textObj = DBField::create_field('Text', $originalValue);
@@ -62,7 +63,7 @@ class DBTextTest extends SapphireTest
     /**
      * @return array
      */
-    public function providerLimitCharactersToClosestWord()
+    public static function providerLimitCharactersToClosestWord()
     {
         return [
             // Standard words limited, ellipsis added if truncated
@@ -91,12 +92,12 @@ class DBTextTest extends SapphireTest
     /**
      * Test {@link Text->LimitCharactersToClosestWord()}
      *
-     * @dataProvider providerLimitCharactersToClosestWord
      *
      * @param string $originalValue Raw string input
      * @param int    $limit
      * @param string $expectedValue Expected template value
      */
+    #[DataProvider('providerLimitCharactersToClosestWord')]
     public function testLimitCharactersToClosestWord($originalValue, $limit, $expectedValue)
     {
         $textObj = DBField::create_field('Text', $originalValue);
@@ -107,7 +108,7 @@ class DBTextTest extends SapphireTest
     /**
      * Test {@link Text->LimitWordCount()}
      */
-    public function providerLimitWordCount()
+    public static function providerLimitWordCount()
     {
         return [
             // Standard words limited, ellipsis added if truncated
@@ -137,12 +138,12 @@ class DBTextTest extends SapphireTest
     /**
      * Test {@link DBText->LimitWordCount()}
      *
-     * @dataProvider providerLimitWordCount
      *
      * @param string $originalValue Raw string input
      * @param int    $limit         Number of words
      * @param string $expectedValue Expected template value
      */
+    #[DataProvider('providerLimitWordCount')]
     public function testLimitWordCount($originalValue, $limit, $expectedValue)
     {
         $textObj = DBField::create_field('Text', $originalValue);
@@ -150,9 +151,7 @@ class DBTextTest extends SapphireTest
         $this->assertEquals($expectedValue, $result);
     }
 
-    /**
-     */
-    public function providerLimitSentences()
+    public static function providerLimitSentences()
     {
         return [
             ['', 2, ''],
@@ -172,11 +171,11 @@ class DBTextTest extends SapphireTest
     /**
      * Test {@link DBText->LimitSentences()}
      *
-     * @dataProvider providerLimitSentences
      * @param        string $originalValue
      * @param        int    $limit         Number of sentences
      * @param        string $expectedValue Expected template value
      */
+    #[DataProvider('providerLimitSentences')]
     public function testLimitSentences($originalValue, $limit, $expectedValue)
     {
         $textObj = DBField::create_field('Text', $originalValue);
@@ -184,7 +183,7 @@ class DBTextTest extends SapphireTest
         $this->assertEquals($expectedValue, $result);
     }
 
-    public function providerFirstSentence()
+    public static function providerFirstSentence()
     {
         return [
             ['', ''],
@@ -204,10 +203,10 @@ class DBTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerFirstSentence
      * @param string $originalValue
      * @param string $expectedValue
      */
+    #[DataProvider('providerFirstSentence')]
     public function testFirstSentence($originalValue, $expectedValue)
     {
         $textObj = DBField::create_field('Text', $originalValue);
@@ -220,7 +219,7 @@ class DBTextTest extends SapphireTest
      *
      * @return array
      */
-    public function providerContextSummary()
+    public static function providerContextSummary()
     {
         return [
             [
@@ -279,7 +278,7 @@ class DBTextTest extends SapphireTest
      *
      * @return array
      */
-    public function providerSummary()
+    public static function providerSummary()
     {
         return [
             'simple test' => [
@@ -336,12 +335,12 @@ class DBTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerContextSummary
      * @param string $originalValue Input
      * @param int    $limit         Number of characters
      * @param string $keywords      Keywords to highlight
      * @param string $expectedValue Expected output (XML encoded safely)
      */
+    #[DataProvider('providerContextSummary')]
     public function testContextSummary($originalValue, $limit, $keywords, $expectedValue)
     {
         $text = DBField::create_field('Text', $originalValue);
@@ -413,12 +412,12 @@ class DBTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerSummary
      * @param string $originalValue Input
      * @param int    $words         Number of words
      * @param mixed  $add           Ellipsis (false for default or string for custom text)
      * @param string $expectedValue Expected output (XML encoded safely)
      */
+    #[DataProvider('providerSummary')]
     public function testSummary($originalValue, $words, $add, $expectedValue)
     {
         $text = DBField::create_field(DBText::class, $originalValue);

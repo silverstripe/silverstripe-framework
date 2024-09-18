@@ -5,11 +5,12 @@ namespace SilverStripe\ORM\Tests\Filters;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Filters\GreaterThanFilter;
 use SilverStripe\View\ArrayData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GreaterThanFilterTest extends SapphireTest
 {
 
-    public function provideMatches()
+    public static function provideMatches()
     {
         $scenarios = [
             // without modifiers
@@ -212,9 +213,7 @@ class GreaterThanFilterTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideMatches
-     */
+    #[DataProvider('provideMatches')]
     public function testMatches(mixed $filterValue, mixed $matchValue, array $modifiers, bool $matches)
     {
         $filter = new GreaterThanFilter();

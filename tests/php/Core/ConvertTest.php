@@ -8,6 +8,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 use stdClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test various functions on the {@link Convert} class.
@@ -416,8 +417,8 @@ PHP
      *
      * @param string $memString
      * @param int    $expected
-     * @dataProvider memString2BytesProvider
      */
+    #[DataProvider('memString2BytesProvider')]
     public function testMemString2Bytes($memString, $expected)
     {
         $this->assertSame($expected, Convert::memstring2bytes($memString));
@@ -426,7 +427,7 @@ PHP
     /**
      * @return array
      */
-    public function memString2BytesProvider()
+    public static function memString2BytesProvider()
     {
         return [
             'infinite' => ['-1', -1],
@@ -449,8 +450,8 @@ PHP
      *
      * @param string $bytes
      * @param int    $expected
-     * @dataProvider bytes2MemStringProvider
      */
+    #[DataProvider('bytes2MemStringProvider')]
     public function testBytes2MemString($bytes, $expected)
     {
         $this->assertSame($expected, Convert::bytes2memstring($bytes));
@@ -459,7 +460,7 @@ PHP
     /**
      * @return array
      */
-    public function bytes2MemStringProvider()
+    public static function bytes2MemStringProvider()
     {
         return [
             [0, '0B'],
@@ -472,7 +473,7 @@ PHP
         ];
     }
 
-    public function providerTestSlashes()
+    public static function providerTestSlashes()
     {
         return [
             ['bob/bob', '/', true, 'bob/bob'],
@@ -497,12 +498,12 @@ PHP
     }
 
     /**
-     * @dataProvider providerTestSlashes
      * @param string $path
      * @param string $separator
      * @param bool $multiple
      * @param string $expected
      */
+    #[DataProvider('providerTestSlashes')]
     public function testSlashes($path, $separator, $multiple, $expected)
     {
         $this->assertEquals($expected, Convert::slashes($path, $separator, $multiple));

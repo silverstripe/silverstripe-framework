@@ -15,6 +15,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 
 /**
  * Tests to cover the {@link Session} class
@@ -32,10 +34,8 @@ class SessionTest extends SapphireTest
         parent::setUp();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testInitDoesNotStartSessionWithoutIdentifier()
     {
         $req = new HTTPRequest('GET', '/');
@@ -44,10 +44,8 @@ class SessionTest extends SapphireTest
         $this->assertFalse($session->isStarted());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testInitStartsSessionWithIdentifier()
     {
         $req = new HTTPRequest('GET', '/');
@@ -57,10 +55,8 @@ class SessionTest extends SapphireTest
         $this->assertTrue($session->isStarted());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testInitStartsSessionWithData()
     {
         $req = new HTTPRequest('GET', '/');
@@ -69,10 +65,8 @@ class SessionTest extends SapphireTest
         $this->assertTrue($session->isStarted());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testStartUsesDefaultCookieNameWithHttp()
     {
         $req = (new HTTPRequest('GET', '/'))
@@ -83,10 +77,8 @@ class SessionTest extends SapphireTest
         $this->assertNotEquals(session_name(), $session->config()->get('cookie_name_secure'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testStartUsesDefaultCookieNameWithHttpsAndCookieSecureOff()
     {
         $req = (new HTTPRequest('GET', '/'))
@@ -97,10 +89,8 @@ class SessionTest extends SapphireTest
         $this->assertNotEquals(session_name(), $session->config()->get('cookie_name_secure'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testStartUsesSecureCookieNameWithHttpsAndCookieSecureOn()
     {
         $req = (new HTTPRequest('GET', '/'))
@@ -112,10 +102,8 @@ class SessionTest extends SapphireTest
         $this->assertEquals(session_name(), $session->config()->get('cookie_name_secure'));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testStartErrorsWhenStartingTwice()
     {
         $this->expectException(\BadMethodCallException::class);
@@ -126,10 +114,8 @@ class SessionTest extends SapphireTest
         $session->start($req);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function testStartRetainsInMemoryData()
     {
         $this->markTestIncomplete('Test');
@@ -434,7 +420,7 @@ class SessionTest extends SapphireTest
         );
     }
 
-    public function provideSecureSamesiteData(): array
+    public static function provideSecureSamesiteData(): array
     {
         $data = [];
         foreach ([true, false] as $secure) {
@@ -462,9 +448,7 @@ class SessionTest extends SapphireTest
         return $data;
     }
 
-    /**
-     * @dataProvider provideSecureSamesiteData
-     */
+    #[DataProvider('provideSecureSamesiteData')]
     public function testBuildCookieParamsSecureAndSamesite(
         bool $secure,
         string $sameSite,

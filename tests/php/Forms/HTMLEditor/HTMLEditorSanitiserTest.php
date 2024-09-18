@@ -7,11 +7,12 @@ use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser;
 use SilverStripe\View\Parsers\HTMLValue;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HTMLEditorSanitiserTest extends FunctionalTest
 {
 
-    public function provideSanitise(): array
+    public static function provideSanitise(): array
     {
         return [
             [
@@ -155,9 +156,7 @@ class HTMLEditorSanitiserTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideSanitise
-     */
+    #[DataProvider('provideSanitise')]
     public function testSanitisation(string $validElements, string $input, string $output, string $desc): void
     {
         foreach (['valid_elements', 'extended_valid_elements'] as $configType) {

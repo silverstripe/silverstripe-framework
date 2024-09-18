@@ -23,6 +23,7 @@ use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\Forms\Tests\GridField\GridFieldReadonlyTest\GridFieldViewButtonReplacement;
 use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GridFieldReadonlyTest extends SapphireTest
 {
@@ -33,7 +34,7 @@ class GridFieldReadonlyTest extends SapphireTest
         Cheerleader::class,
     ];
 
-    public function provideReadOnlyTransformation(): array
+    public static function provideReadOnlyTransformation(): array
     {
         return [
             [
@@ -51,9 +52,8 @@ class GridFieldReadonlyTest extends SapphireTest
     /**
      * The CMS can set the value of a GridField to be a hasMany relation, which needs a readonly state.
      * This test ensures GridField has a readonly transformation.
-     *
-     * @dataProvider provideReadOnlyTransformation
      */
+    #[DataProvider('provideReadOnlyTransformation')]
     public function testReadOnlyTransformation(?string $viewButtonClass)
     {
         // Build a hasMany Relation via getComponents like ModelAdmin does.

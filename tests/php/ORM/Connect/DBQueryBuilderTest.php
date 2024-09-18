@@ -6,12 +6,13 @@ use ReflectionMethod;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\DBQueryBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DBQueryBuilderTest extends SapphireTest
 {
     protected $usesDatabase = false;
 
-    public function provideShouldBuildTraceComment(): array
+    public static function provideShouldBuildTraceComment(): array
     {
         return [
             [
@@ -47,9 +48,7 @@ class DBQueryBuilderTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideShouldBuildTraceComment
-     */
+    #[DataProvider('provideShouldBuildTraceComment')]
     public function testShouldBuildTraceComment(?bool $envValue, bool $yamlValue, bool $expected): void
     {
         $queryBuilder = new DBQueryBuilder();

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-class ExtendTest extends BaseObject
+class ExtendTestBase extends BaseObject
 {
     private static $extensions = [
         ExtendTest1::class,
@@ -15,6 +15,6 @@ class ExtendTest extends BaseObject
         if ($argument2) {
             $argument2 = 'objectmodified';
         }
-        return "ExtendTest($args)";
+        return "ExtendTestBase($args)";
     }
 }

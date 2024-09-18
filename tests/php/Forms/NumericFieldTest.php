@@ -6,6 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NumericFieldTest extends SapphireTest
 {
@@ -15,12 +16,12 @@ class NumericFieldTest extends SapphireTest
      * Test that data loaded in via Form::loadDataFrom(DataObject) will populate the field correctly,
      * and can format the database value appropriately for the frontend
      *
-     * @dataProvider dataForTestSetValue
      * @param string $locale Locale to test in
      * @param int $scale Scale size (number of decimal places)
      * @param string $input Input string
      * @param int|float $output Expected data value
      */
+    #[DataProvider('dataForTestSetValue')]
     public function testSetValue($locale, $scale, $input, $output)
     {
         $field = new NumericField('Number');
@@ -55,7 +56,7 @@ class NumericFieldTest extends SapphireTest
     /**
      * Test formatting of numbers
      */
-    public function dataForTestSetValue()
+    public static function dataForTestSetValue()
     {
         return [
             // de
@@ -124,7 +125,7 @@ class NumericFieldTest extends SapphireTest
         $this->assertEquals(0, $field->dataValue());
     }
 
-    public function dataForTestSubmittedValue()
+    public static function dataForTestSubmittedValue()
     {
         return [
             ['de_DE', 0, '13000', 13000, '13.000'],
@@ -187,13 +188,13 @@ class NumericFieldTest extends SapphireTest
     }
 
     /**
-     * @dataProvider dataForTestSubmittedValue
      * @param string $locale Locale to test in
      * @param int $scale Scale size (number of decimal places)
      * @param string $submittedValue Input string
      * @param int|float $dataValue Expected data value
      * @param string $cleanedInput
      */
+    #[DataProvider('dataForTestSubmittedValue')]
     public function testSetSubmittedValue($locale, $scale, $submittedValue, $dataValue, $cleanedInput = null)
     {
         $field = new NumericField('Number');

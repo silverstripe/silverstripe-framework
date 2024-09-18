@@ -5,16 +5,17 @@ namespace SilverStripe\Core\Tests;
 use InvalidArgumentException;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PathTest extends SapphireTest
 {
     /**
      * Test paths are joined
      *
-     * @dataProvider providerTestJoinPaths
      * @param array $args Arguments to pass to Path::join()
      * @param string $expected Expected path
      */
+    #[DataProvider('providerTestJoinPaths')]
     public function testJoinPaths($args, $expected)
     {
         $joined = Path::join($args);
@@ -26,7 +27,7 @@ class PathTest extends SapphireTest
      *
      * @return array
      */
-    public function providerTestJoinPaths()
+    public static function providerTestJoinPaths()
     {
         $tests = [
             // Single arg
@@ -64,10 +65,10 @@ class PathTest extends SapphireTest
     /**
      * Test that joinPaths give the appropriate error
      *
-     * @dataProvider providerTestJoinPathsErrors
      * @param array $args Arguments to pass to Filesystem::joinPath()
      * @param string $error Expected path
      */
+    #[DataProvider('providerTestJoinPathsErrors')]
     public function testJoinPathsErrors($args, $error)
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -75,7 +76,7 @@ class PathTest extends SapphireTest
         Path::join($args);
     }
 
-    public function providerTestJoinPathsErrors()
+    public static function providerTestJoinPathsErrors()
     {
         return [
             [['/base', '../passwd'], 'Can not collapse relative folders'],
@@ -87,17 +88,17 @@ class PathTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerTestNormalise
      * @param string $input
      * @param string $expected
      */
+    #[DataProvider('providerTestNormalise')]
     public function testNormalise($input, $expected)
     {
         $output = Path::normalise($input);
         $this->assertEquals($expected, $output, "Expected $input to be normalised to $expected");
     }
 
-    public function providerTestNormalise()
+    public static function providerTestNormalise()
     {
         $tests = [
             // Windows paths

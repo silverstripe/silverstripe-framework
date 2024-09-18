@@ -17,6 +17,7 @@ use SilverStripe\Forms\Tests\FormScaffolderTest\ParentModel;
 use SilverStripe\Forms\Tests\FormScaffolderTest\ParentChildJoin;
 use SilverStripe\Forms\Tests\FormScaffolderTest\Tag;
 use SilverStripe\Forms\TimeField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for DataObject FormField scaffolding
@@ -171,7 +172,7 @@ class FormScaffolderTest extends SapphireTest
         $this->assertFalse($fields->hasTabSet(), 'getFrontEndFields() doesnt produce a TabSet by default');
     }
 
-    public function provideScaffoldRelationFormFields()
+    public static function provideScaffoldRelationFormFields()
     {
         $scenarios = [
             'ignore no relations' => [
@@ -193,9 +194,7 @@ class FormScaffolderTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideScaffoldRelationFormFields
-     */
+    #[DataProvider('provideScaffoldRelationFormFields')]
     public function testScaffoldRelationFormFields(bool $includeInOwnTab, array $ignoreRelations)
     {
         $parent = $this->objFromFixture(ParentModel::class, 'parent1');
@@ -271,31 +270,29 @@ class FormScaffolderTest extends SapphireTest
         $this->assertSame(['Tags'], $fields->column('Name'));
     }
 
-    public function provideTabs(): array
+    public static function provideTabs(): array
     {
         return [
             'only main tab' => [
-                'tabs' => true,
+                'tabbed' => true,
                 'mainTabOnly' => true,
             ],
             'all tabs, all fields' => [
-                'tabs' => true,
+                'tabbed' => true,
                 'mainTabOnly' => false,
             ],
             'no tabs, no fields' => [
-                'tabs' => false,
+                'tabbed' => false,
                 'mainTabOnly' => true,
             ],
             'no tabs, all fields' => [
-                'tabs' => false,
+                'tabbed' => false,
                 'mainTabOnly' => false,
             ],
         ];
     }
 
-    /**
-     * @dataProvider provideTabs
-     */
+    #[DataProvider('provideTabs')]
     public function testTabs(bool $tabbed, bool $mainTabOnly): void
     {
         $parent = $this->objFromFixture(ParentModel::class, 'parent1');

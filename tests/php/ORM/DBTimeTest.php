@@ -7,6 +7,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBTime;
 use SilverStripe\Security\Member;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DBTimeTest extends SapphireTest
 {
@@ -16,7 +17,7 @@ class DBTimeTest extends SapphireTest
         i18n::set_locale('en_NZ');
     }
 
-    public function dataTestParse()
+    public static function dataTestParse()
     {
         return [
             // Test am-pm conversion
@@ -31,10 +32,10 @@ class DBTimeTest extends SapphireTest
     }
 
     /**
-     * @dataProvider dataTestParse
      * @param string $input
      * @param string $expected
      */
+    #[DataProvider('dataTestParse')]
     public function testParse($input, $expected)
     {
         $time = DBField::create_field('Time', $input);

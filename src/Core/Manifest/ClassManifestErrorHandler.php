@@ -24,7 +24,7 @@ class ClassManifestErrorHandler implements ErrorHandler
         $this->pathname = $pathname;
     }
 
-    public function handleError(Error $error)
+    public function handleError(Error $error): void
     {
         $newMessage = sprintf('%s in %s', $error->getRawMessage(), $this->pathname);
         $error->setRawMessage($newMessage);

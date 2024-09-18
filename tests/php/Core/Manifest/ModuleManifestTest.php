@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Tests\Manifest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ModuleManifestTest extends SapphireTest
 {
@@ -111,7 +112,7 @@ class ModuleManifestTest extends SapphireTest
     /**
      * @return array
      */
-    public function providerTestGetModuleByPath()
+    public static function providerTestGetModuleByPath()
     {
         return [
             ['vendor/silverstripe/modulec/code/VendorClassA.php', 'silverstripe/modulec'],
@@ -120,10 +121,10 @@ class ModuleManifestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerTestGetModuleByPath
      * @param string $path
      * @param string $expectedModuleName
      */
+    #[DataProvider('providerTestGetModuleByPath')]
     public function testGetModuleByPath($path, $expectedModuleName)
     {
         // important - load the manifest that we are working with to the ModuleLoader

@@ -68,7 +68,6 @@ class GridFieldFilterHeaderTest extends SapphireTest
 
     /**
      * Tests that the appropriate filter headers are generated
-     *
      */
     public function testRenderHeaders()
     {

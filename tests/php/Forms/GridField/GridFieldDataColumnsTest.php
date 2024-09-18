@@ -15,9 +15,6 @@ use stdClass;
 
 class GridFieldDataColumnsTest extends SapphireTest
 {
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
-     */
     public function testGridFieldGetDefaultDisplayFields()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
@@ -26,9 +23,6 @@ class GridFieldDataColumnsTest extends SapphireTest
         $this->assertEquals($expected, $columns->getDisplayFields($obj));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
-     */
     public function testGridFieldGetDisplayFieldsWithArrayList()
     {
         $list = new ArrayList([new ArrayData(['Title' => 'My Item'])]);
@@ -39,10 +33,6 @@ class GridFieldDataColumnsTest extends SapphireTest
         $this->assertEquals($expected, $columns->getDisplayFields($obj));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
-     */
     public function testGridFieldCustomDisplayFields()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
@@ -52,10 +42,6 @@ class GridFieldDataColumnsTest extends SapphireTest
         $this->assertEquals($expected, $columns->getDisplayFields($obj));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
-     */
     public function testGridFieldDisplayFieldsWithBadArguments()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -64,10 +50,6 @@ class GridFieldDataColumnsTest extends SapphireTest
         $columns->setDisplayFields(new stdClass());
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getFieldCasting
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setFieldCasting
-     */
     public function testFieldCasting()
     {
         $obj = new GridField('testfield', 'testfield');
@@ -77,10 +59,6 @@ class GridFieldDataColumnsTest extends SapphireTest
         $this->assertEquals(["MyShortText"=>"Text->FirstSentence"], $columns->getFieldCasting());
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::getFieldFormatting
-     * @covers \SilverStripe\Forms\GridField\GridFieldDataColumns::setFieldFormatting
-     */
     public function testFieldFormatting()
     {
         $obj = new GridField('testfield', 'testfield');

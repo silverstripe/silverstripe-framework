@@ -26,6 +26,7 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\ArrayData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GridFieldDeleteActionTest extends SapphireTest
 {
@@ -235,7 +236,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->assertNull($group, 'A menu group does not exist when the user cannot delete');
     }
 
-    public function provideHandleActionThrowsException()
+    public static function provideHandleActionThrowsException()
     {
         return [
             'unlinks relation' => [true],
@@ -243,9 +244,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideHandleActionThrowsException
-     */
+    #[DataProvider('provideHandleActionThrowsException')]
     public function testHandleActionThrowsException(bool $unlinkRelation)
     {
         $component = new GridFieldDeleteAction();
@@ -267,7 +266,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $component->handleAction($gridField, $secondArg, ['RecordID' => 1], []);
     }
 
-    public function provideGetRemoveActionThrowsException()
+    public static function provideGetRemoveActionThrowsException()
     {
         return [
             'removes relation' => [true],
@@ -275,9 +274,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetRemoveActionThrowsException
-     */
+    #[DataProvider('provideGetRemoveActionThrowsException')]
     public function testGetRemoveActionThrowsException(bool $removeRelation)
     {
         $component = new GridFieldDeleteAction();
