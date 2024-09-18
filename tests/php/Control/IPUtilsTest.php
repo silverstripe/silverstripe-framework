@@ -22,7 +22,7 @@ class IPUtilsTest extends SapphireTest
      */
     public function testIPv4($matches, $remoteAddr, $cidr)
     {
-        Deprecation::withNoReplacement(function () use ($matches, $remoteAddr, $cidr) {
+        Deprecation::withSuppressedNotice(function () use ($matches, $remoteAddr, $cidr) {
             $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
         });
     }
@@ -54,7 +54,7 @@ class IPUtilsTest extends SapphireTest
             $this->markTestSkipped('Only works when PHP is compiled without the option "disable-ipv6".');
         }
 
-        Deprecation::withNoReplacement(function () use ($matches, $remoteAddr, $cidr) {
+        Deprecation::withSuppressedNotice(function () use ($matches, $remoteAddr, $cidr) {
             $this->assertSame($matches, IPUtils::checkIP($remoteAddr, $cidr));
         });
     }
@@ -85,7 +85,7 @@ class IPUtilsTest extends SapphireTest
             $this->markTestSkipped('Only works when PHP is compiled with the option "disable-ipv6".');
         }
 
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             IPUtils::checkIP('2a01:198:603:0:396e:4789:8e99:890f', '2a01:198:603:0::/65');
         });
     }

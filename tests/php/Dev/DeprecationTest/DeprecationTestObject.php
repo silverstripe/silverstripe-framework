@@ -11,7 +11,7 @@ class DeprecationTestObject extends DataObject implements TestOnly
     public function __construct()
     {
         parent::__construct();
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '1.2.3',
                 'Some class message',

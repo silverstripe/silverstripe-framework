@@ -233,7 +233,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      */
     public function buildDefaults()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be replaced with SilverStripe\Dev\Command\DbDefaults'
@@ -266,7 +266,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      */
     public function generatesecuretoken()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be replaced with SilverStripe\Dev\Command\GenerateSecureToken'

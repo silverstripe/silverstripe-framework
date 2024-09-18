@@ -34,7 +34,7 @@ class ArrayData extends ViewableData
      */
     public function __construct($value = [])
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ArrayData', Deprecation::SCOPE_CLASS);
         });
 

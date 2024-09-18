@@ -34,7 +34,7 @@ class ValidationException extends Exception
      */
     public function __construct($result = null, $code = 0)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Core\Validation\ValidationException', Deprecation::SCOPE_CLASS);
         });
 

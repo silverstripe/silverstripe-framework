@@ -22,7 +22,7 @@ class ViewableData_Debugger extends ViewableData
      */
     public function __construct(ViewableData $object)
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('5.4.0', 'Will be renamed to SilverStripe\Model\ModelDataDebugger', Deprecation::SCOPE_CLASS);
         });
         $this->object = $object;

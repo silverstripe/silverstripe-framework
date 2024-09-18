@@ -21,7 +21,7 @@ class SSListExporter extends Exporter implements TestOnly
 {
     public function __construct()
     {
-        Deprecation::withNoReplacement(function () {
+        Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
                 'Will be removed without equivalent functionality to replace it',
