@@ -5,6 +5,8 @@ namespace SilverStripe\View\Tests\Parsers;
 use SebastianBergmann\Diff\Differ;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\HtmlDiff;
+use PHPUnit\Framework\Attributes\DataProvider;
+use SebastianBergmann\Diff\Output\DiffOnlyOutputBuilder;
 
 class HtmlDiffTest extends SapphireTest
 {
@@ -49,7 +51,7 @@ class HtmlDiffTest extends SapphireTest
 
         // Ensure that this test is valid and that those changes would include an end-of-line warning
         // in a direct call to the underlying differ
-        $differ = new Differ();
+        $differ = new Differ(new DiffOnlyOutputBuilder());
         $expected = [
             [
                 '#Warning: Strings contain different line endings!' . "\n",
@@ -67,7 +69,7 @@ class HtmlDiffTest extends SapphireTest
         $this->assertSame($expected, $differ->diffToArray($from, $to));
     }
 
-    public function provideCompareHtml(): array
+    public static function provideCompareHtml(): array
     {
         return [
             [
@@ -148,9 +150,7 @@ class HtmlDiffTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideCompareHtml
-     */
+    #[DataProvider('provideCompareHtml')]
     public function testCompareHTML(string|array $from, string|array $to, bool $escape, string $expected)
     {
         $diff = HtmlDiff::compareHtml($from, $to, $escape);

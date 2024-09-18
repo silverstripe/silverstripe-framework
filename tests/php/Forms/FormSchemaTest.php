@@ -16,6 +16,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\PopoverField;
 use SilverStripe\Forms\FormField;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FormSchemaTest extends SapphireTest
 {
@@ -41,9 +42,7 @@ class FormSchemaTest extends SapphireTest
         $this->assertEquals($expected, $schema);
     }
 
-    /**
-     * @dataProvider provideGetSchemaException
-     */
+    #[DataProvider('provideGetSchemaException')]
     public function testGetSchemaException(string $field, bool $expectException): void
     {
         $fields = [];
@@ -66,7 +65,7 @@ class FormSchemaTest extends SapphireTest
         $formSchema->getSchema($form);
     }
 
-    public function provideGetSchemaException(): array
+    public static function provideGetSchemaException(): array
     {
         return [
             [

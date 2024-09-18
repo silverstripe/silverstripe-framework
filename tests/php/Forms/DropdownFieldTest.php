@@ -13,6 +13,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\Map;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DropdownFieldTest extends SapphireTest
 {
@@ -410,9 +411,8 @@ class DropdownFieldTest extends SapphireTest
     /**
      * The Field() method should be able to handle arrays as values in an edge case. If it couldn't handle it then
      * this test would trigger an array to string conversion PHP notice
-     *
-     * @dataProvider arrayValueProvider
      */
+    #[DataProvider('arrayValueProvider')]
     public function testDropdownWithArrayValues($value)
     {
         $field = $this->createDropdownField();
@@ -424,7 +424,7 @@ class DropdownFieldTest extends SapphireTest
     /**
      * @return array
      */
-    public function arrayValueProvider()
+    public static function arrayValueProvider()
     {
         return [
             [[]],

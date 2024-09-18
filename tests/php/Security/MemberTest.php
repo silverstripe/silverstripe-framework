@@ -35,6 +35,7 @@ use SilverStripe\Security\Security;
 use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
 use SilverStripe\SessionManager\Models\LoginSession;
 use ReflectionMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MemberTest extends FunctionalTest
 {
@@ -1647,9 +1648,6 @@ class MemberTest extends FunctionalTest
         $this->assertEquals($adminMember->ID, $userFromSession->ID);
     }
 
-    /**
-     * @covers \SilverStripe\Security\Member::actAs()
-     */
     public function testActAsUserPermissions()
     {
         $this->assertNull(Security::getCurrentUser());
@@ -1686,9 +1684,6 @@ class MemberTest extends FunctionalTest
         $this->assertTrue($checkAdmin);
     }
 
-    /**
-     * @covers \SilverStripe\Security\Member::actAs()
-     */
     public function testActAsUser()
     {
         $this->assertNull(Security::getCurrentUser());
@@ -1794,9 +1789,7 @@ class MemberTest extends FunctionalTest
         $this->assertEmpty($result, 'Without LeftAndMain, no groups are CMS groups.');
     }
 
-    /**
-     * @dataProvider provideMapInCMSGroups
-     */
+    #[DataProvider('provideMapInCMSGroups')]
     public function testMapInCMSGroups(array $groupFixtures, array $groupCodes, array $expectedUsers)
     {
         if (!empty($groupFixtures) && !empty($groupCodes)) {
@@ -1837,7 +1830,7 @@ class MemberTest extends FunctionalTest
         $this->assertEqualsCanonicalizing($expectedUsers, $result->keys());
     }
 
-    public function provideMapInCMSGroups()
+    public static function provideMapInCMSGroups()
     {
         // Note: "ADMIN User" is not from the fixtures, that user is created by $this->logInWithPermission('ADMIN')
         return [
@@ -1860,7 +1853,7 @@ class MemberTest extends FunctionalTest
                 ],
             ],
             'single group in IDs array' => [
-                'groups' => [
+                'groupFixtures' => [
                     'staffgroup',
                 ],
                 'groupCodes' => [],

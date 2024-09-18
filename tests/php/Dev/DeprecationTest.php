@@ -9,9 +9,12 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestException;
 use SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
 class DeprecationTest extends SapphireTest
 {
@@ -27,14 +30,14 @@ class DeprecationTest extends SapphireTest
     {
         // Use custom error handler for two reasons:
         // - Filter out errors for deprecated class properties unrelated to this unit test
-        // - Allow the use of expectDeprecation(), which doesn't work with E_USER_DEPRECATION by default
+        // - Allow the use of expectException(), which doesn't work with E_USER_DEPRECATION by default
         //   https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
         parent::setup();
         $this->noticesWereEnabled = Deprecation::isEnabled();
         $this->oldHandler = set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) {
             if ($errno === E_USER_DEPRECATED) {
                 if (str_contains($errstr, 'SilverStripe\\Dev\\Tests\\DeprecationTest')) {
-                    throw new Deprecated($errstr, $errno, '', 1);
+                    throw new DeprecationTestException($errstr);
                 } else {
                     // Suppress any E_USER_DEPRECATED unrelated to this unit-test
                     return true;
@@ -73,8 +76,8 @@ class DeprecationTest extends SapphireTest
             'My message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testNotice.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         $ret = $this->myDeprecatedMethod();
         $this->assertSame('abc', $ret);
@@ -90,8 +93,8 @@ class DeprecationTest extends SapphireTest
             'My message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testCallUserFunc.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         $ret = call_user_func([$this, 'myDeprecatedMethod']);
         $this->assertSame('abc', $ret);
@@ -105,8 +108,8 @@ class DeprecationTest extends SapphireTest
             'My message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testCallUserFuncArray.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         $ret = call_user_func_array([$this, 'myDeprecatedMethod'], []);
         $this->assertSame('abc', $ret);
@@ -130,8 +133,8 @@ class DeprecationTest extends SapphireTest
             'My message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testWithNoReplacementTrue.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable(true);
         $ret = Deprecation::withNoReplacement(function () {
             return $this->myDeprecatedMethod();
@@ -147,8 +150,8 @@ class DeprecationTest extends SapphireTest
             'My message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testWithNoReplacementTrueCallUserFunc.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable(true);
         $ret = Deprecation::withNoReplacement(function () {
             return call_user_func([$this, 'myDeprecatedMethod']);
@@ -164,8 +167,8 @@ class DeprecationTest extends SapphireTest
             'My message.',
             'Called from PHPUnit\Framework\TestCase->runTest.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable(true);
         Deprecation::withNoReplacement(function () {
             Deprecation::notice('123', 'My message.');
@@ -180,8 +183,8 @@ class DeprecationTest extends SapphireTest
             'Some class message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testClassWithNoReplacement.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable(true);
         // using this syntax because my IDE was complaining about DeprecationTestObject not existing
         // when trying to use `new DeprecationTestObject();`
@@ -197,16 +200,14 @@ class DeprecationTest extends SapphireTest
             'Some class message.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testClassWithInjectorWithNoReplacement.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable(true);
         Injector::inst()->get(DeprecationTestObject::class);
         Deprecation::outputNotices();
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
+    #[DoesNotPerformAssertions]
     public function testDisabled()
     {
         if ($this->noticesWereEnabled) {
@@ -229,8 +230,8 @@ class DeprecationTest extends SapphireTest
             'Config SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject.first_config is deprecated.',
             'My first config message.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         Config::inst()->get(DeprecationTestObject::class, 'first_config');
         Deprecation::outputNotices();
@@ -242,8 +243,8 @@ class DeprecationTest extends SapphireTest
             'Config SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject.second_config is deprecated.',
             'My second config message.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         Config::inst()->get(DeprecationTestObject::class, 'second_config');
         Deprecation::outputNotices();
@@ -252,8 +253,8 @@ class DeprecationTest extends SapphireTest
     public function testConfigGetThird()
     {
         $message = 'Config SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject.third_config is deprecated.';
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         Config::inst()->get(DeprecationTestObject::class, 'third_config');
         Deprecation::outputNotices();
@@ -265,8 +266,8 @@ class DeprecationTest extends SapphireTest
             'Config SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject.first_config is deprecated.',
             'My first config message.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         Config::modify()->set(DeprecationTestObject::class, 'first_config', 'abc');
         Deprecation::outputNotices();
@@ -278,14 +279,14 @@ class DeprecationTest extends SapphireTest
             'Config SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject.array_config is deprecated.',
             'My array config message.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         Deprecation::enable();
         Config::modify()->merge(DeprecationTestObject::class, 'array_config', ['abc']);
         Deprecation::outputNotices();
     }
 
-    public function provideConfigVsEnv()
+    public static function provideConfigVsEnv()
     {
         return [
             // env var not set - config setting is respected
@@ -326,25 +327,19 @@ class DeprecationTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideConfigVsEnv
-     */
+    #[DataProvider('provideConfigVsEnv')]
     public function testEnabledConfigVsEnv($envVal, bool $configVal, bool $expected)
     {
         $this->runConfigVsEnvTest('SS_DEPRECATION_ENABLED', $envVal, $configVal, $expected);
     }
 
-    /**
-     * @dataProvider provideConfigVsEnv
-     */
+    #[DataProvider('provideConfigVsEnv')]
     public function testShowHttpConfigVsEnv($envVal, bool $configVal, bool $expected)
     {
         $this->runConfigVsEnvTest('SS_DEPRECATION_SHOW_HTTP', $envVal, $configVal, $expected);
     }
 
-    /**
-     * @dataProvider provideConfigVsEnv
-     */
+    #[DataProvider('provideConfigVsEnv')]
     public function testShowCliConfigVsEnv($envVal, bool $configVal, bool $expected)
     {
         $this->runConfigVsEnvTest('SS_DEPRECATION_SHOW_CLI', $envVal, $configVal, $expected);
@@ -391,7 +386,7 @@ class DeprecationTest extends SapphireTest
         $this->assertSame($expected, $result);
     }
 
-    public function provideVarAsBoolean()
+    public static function provideVarAsBoolean()
     {
         return [
             [
@@ -437,9 +432,7 @@ class DeprecationTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideVarAsBoolean
-     */
+    #[DataProvider('provideVarAsBoolean')]
     public function testVarAsBoolean($rawValue, bool $expected)
     {
         $reflectionVarAsBoolean = new ReflectionMethod(Deprecation::class, 'varAsBoolean');
@@ -448,7 +441,7 @@ class DeprecationTest extends SapphireTest
         $this->assertSame($expected, $reflectionVarAsBoolean->invoke(null, $rawValue));
     }
 
-    public function provideIsEnabled()
+    public static function provideIsEnabled()
     {
         return [
             'dev, explicitly enabled' => [
@@ -514,9 +507,7 @@ class DeprecationTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideIsEnabled
-     */
+    #[DataProvider('provideIsEnabled')]
     public function testIsEnabled(string $envMode, ?bool $envEnabled, bool $staticEnabled, bool $expected)
     {
         /** @var Kernel $kernel */

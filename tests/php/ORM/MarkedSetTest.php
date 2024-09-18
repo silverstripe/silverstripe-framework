@@ -72,9 +72,6 @@ class MarkedSetTest extends SapphireTest
         $this->assertEquals(['Obj 2', 'Obj 2a', 'Obj 2b'], $expanded);
     }
 
-    /**
-     * @covers \SilverStripe\ORM\Hierarchy\MarkedSet::markChildren()
-     */
     public function testMarkChildrenDoesntUnmarkPreviouslyMarked()
     {
         $obj3 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3');

@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for {@link Datetime} class.
@@ -271,8 +272,8 @@ class DBDatetimeTest extends SapphireTest
     /**
      * @param string $adjustment
      * @param string $expected
-     * @dataProvider modifyProvider
      */
+    #[DataProvider('modifyProvider')]
     public function testModify($adjustment, $expected)
     {
         DBDatetime::set_mock_now('2019-03-03 12:00:00');
@@ -283,7 +284,7 @@ class DBDatetimeTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function modifyProvider()
+    public static function modifyProvider()
     {
         return [
             ['+1 day', '2019-03-04 12:00:00'],
@@ -303,7 +304,7 @@ class DBDatetimeTest extends SapphireTest
         ];
     }
 
-    public function provideGetTimeBetween(): array
+    public static function provideGetTimeBetween(): array
     {
         return [
             'no time between' => [
@@ -339,9 +340,7 @@ class DBDatetimeTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetTimeBetween
-     */
+    #[DataProvider('provideGetTimeBetween')]
     public function testGetTimeBetween(string $timeBefore, string $timeAfter, string $expected): void
     {
         $before = (new DBDateTime())->setValue($timeBefore);

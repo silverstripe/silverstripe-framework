@@ -12,6 +12,7 @@ use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class i18nTest extends SapphireTest
 {
@@ -426,7 +427,7 @@ class i18nTest extends SapphireTest
         );
     }
 
-    public function pluralisationDataProvider()
+    public static function pluralisationDataProvider()
     {
         return [
             // English - 2 plural forms
@@ -451,11 +452,11 @@ class i18nTest extends SapphireTest
     }
 
     /**
-     * @dataProvider pluralisationDataProvider()
      * @param string $locale
      * @param int $count
      * @param string $expected
      */
+    #[DataProvider('pluralisationDataProvider')]
     public function testPluralisation($locale, $count, $expected)
     {
         i18n::set_locale($locale);

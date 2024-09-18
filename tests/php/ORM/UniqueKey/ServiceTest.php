@@ -5,6 +5,7 @@ namespace SilverStripe\Tests\ORM\UniqueKey;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ServiceTest extends SapphireTest
 {
@@ -21,8 +22,8 @@ class ServiceTest extends SapphireTest
      * @param string $class
      * @param bool $extraKeys
      * @param string $expected
-     * @dataProvider uniqueKeysProvider
      */
+    #[DataProvider('uniqueKeysProvider')]
     public function testUniqueKey(int $id, string $class, bool $extraKeys, string $expected): void
     {
         if ($extraKeys) {
@@ -40,7 +41,7 @@ class ServiceTest extends SapphireTest
         }
     }
 
-    public function uniqueKeysProvider(): array
+    public static function uniqueKeysProvider(): array
     {
         return [
             [1, River::class, false, 'River-1-8d3310e232f75a01f5a0c9344655263d'],

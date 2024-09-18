@@ -21,9 +21,9 @@ class StorageTest extends SapphireTest
     {
         $session = $this->createMock(Session::class);
         $sessionCleaned = false;
-        $session->method('clear')->will($this->returnCallback(static function ($namespace) use (&$sessionCleaned) {
+        $session->method('clear')->willReturnCallback(static function ($namespace) use (&$sessionCleaned) {
             $sessionCleaned = $namespace;
-        }));
+        });
 
         $storage = new Storage($session, 'test');
 
@@ -42,9 +42,9 @@ class StorageTest extends SapphireTest
     {
         $session = $this->createMock(Session::class);
         $sessionCleaned = false;
-        $session->method('clear')->will($this->returnCallback(static function ($namespace) use (&$sessionCleaned) {
+        $session->method('clear')->willReturnCallback(static function ($namespace) use (&$sessionCleaned) {
             $sessionCleaned = $namespace;
-        }));
+        });
 
         $storage = new Storage($session, 'test', false);
 

@@ -8,9 +8,6 @@ use Symfony\Component\Translation\Exception\InvalidResourceException;
 
 class YamlReaderTest extends SapphireTest
 {
-    /**
-     *
-     */
     public function testRead()
     {
         $reader = new YamlReader();

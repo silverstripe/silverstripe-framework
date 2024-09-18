@@ -8,6 +8,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\Security\Group;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RequiredFieldsTest extends SapphireTest
 {
@@ -290,7 +291,7 @@ class RequiredFieldsTest extends SapphireTest
         );
     }
 
-    public function provideHasOneRelationFieldInterfaceValidation(): array
+    public static function provideHasOneRelationFieldInterfaceValidation(): array
     {
         return [
             [
@@ -302,9 +303,7 @@ class RequiredFieldsTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideHasOneRelationFieldInterfaceValidation
-     */
+    #[DataProvider('provideHasOneRelationFieldInterfaceValidation')]
     public function testHasOneRelationFieldInterfaceValidation(string $className)
     {
         $form = new Form();

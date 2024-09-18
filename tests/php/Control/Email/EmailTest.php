@@ -16,6 +16,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Part\DataPart;
 use Symfony\Component\Mime\Part\AbstractPart;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class EmailTest extends SapphireTest
 {
@@ -66,30 +67,26 @@ class EmailTest extends SapphireTest
         return $attachments[0];
     }
 
-    /**
-     * @dataProvider provideValidEmailAddresses
-     */
+    #[DataProvider('provideValidEmailAddresses')]
     public function testValidEmailAddress($email): void
     {
         $this->assertTrue(Email::is_valid_address($email));
     }
 
-    /**
-     * @dataProvider provideInvalidEmailAddresses
-     */
+    #[DataProvider('provideInvalidEmailAddresses')]
     public function testInvalidEmailAddress($email): void
     {
         $this->assertFalse(Email::is_valid_address($email));
     }
 
-    public function provideValidEmailAddresses(): array
+    public static function provideValidEmailAddresses(): array
     {
         return [
             ['test@example.com', 'test-123@sub.example.com'],
         ];
     }
 
-    public function provideInvalidEmailAddresses(): array
+    public static function provideInvalidEmailAddresses(): array
     {
         return [
             ['foo.bar@', '@example.com', 'foo@'],
@@ -538,9 +535,7 @@ class EmailTest extends SapphireTest
         $this->assertTrue(true);
     }
 
-    /**
-     * @dataProvider provideCreateAddressArray
-     */
+    #[DataProvider('provideCreateAddressArray')]
     public function testCreateAddressArray(string|array $address, string $name, array $expected): void
     {
         $method = new \ReflectionMethod(Email::class, 'createAddressArray');
@@ -553,7 +548,7 @@ class EmailTest extends SapphireTest
         }
     }
 
-    public function provideCreateAddressArray(): array
+    public static function provideCreateAddressArray(): array
     {
         return [
             [

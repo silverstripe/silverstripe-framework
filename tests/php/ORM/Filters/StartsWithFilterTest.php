@@ -6,155 +6,156 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Filters\StartsWithFilter;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\Filters\SearchFilter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class StartsWithFilterTest extends SapphireTest
 {
 
-    public function provideMatches()
+    public static function provideMatches()
     {
         $scenarios = [
             // without modifiers
             'null starts with null' => [
                 'filterValue' => null,
-                'objValue' => null,
+                'matchValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'empty starts with null' => [
                 'filterValue' => null,
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'null starts with empty' => [
                 'filterValue' => '',
-                'objValue' => null,
+                'matchValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'empty starts with empty' => [
                 'filterValue' => '',
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'empty starts with false' => [
                 'filterValue' => false,
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'true doesnt start with empty' => [
                 'filterValue' => true,
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => false,
             ],
             'false doesnt start with empty' => [
                 'filterValue' => '',
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'true doesnt start with empty' => [
                 'filterValue' => '',
-                'objValue' => true,
+                'matchValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'null starts with false' => [
                 'filterValue' => false,
-                'objValue' => null,
+                'matchValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'false doesnt start with null' => [
                 'filterValue' => null,
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'false doesnt start with true' => [
                 'filterValue' => true,
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'true doesnt start with false' => [
                 'filterValue' => false,
-                'objValue' => true,
+                'matchValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'false doesnt start with false' => [
                 'filterValue' => false,
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'true doesnt start with true' => [
                 'filterValue' => true,
-                'objValue' => true,
+                'matchValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'number is cast to string' => [
                 'filterValue' => 1,
-                'objValue' => '1',
+                'matchValue' => '1',
                 'modifiers' => [],
                 'matches' => true,
             ],
             '1 starts with 1' => [
                 'filterValue' => 1,
-                'objValue' => 1,
+                'matchValue' => 1,
                 'modifiers' => [],
                 'matches' => true,
             ],
             '100 starts with 1' => [
                 'filterValue' => '1',
-                'objValue' => 100,
+                'matchValue' => 100,
                 'modifiers' => [],
                 'matches' => true,
             ],
             '100 still starts with 1' => [
                 'filterValue' => 1,
-                'objValue' => 100,
+                'matchValue' => 100,
                 'modifiers' => [],
                 'matches' => true,
             ],
             '100 doesnt start with 0' => [
                 'filterValue' => 0,
-                'objValue' => 100,
+                'matchValue' => 100,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'SomeValue starts with SomeValue' => [
                 'filterValue' => 'SomeValue',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'SomeValue doesnt start with somevalue' => [
                 'filterValue' => 'somevalue',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => null,
             ],
             'SomeValue doesnt start with meVal' => [
                 'filterValue' => 'meVal',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => false,
             ],
             'SomeValue starts with Some' => [
                 'filterValue' => 'Some',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'SomeValue doesnt start with with sOmE' => [
                 'filterValue' => 'sOmE',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => null,
             ],
@@ -180,19 +181,19 @@ class StartsWithFilterTest extends SapphireTest
             // Some multi-value tests
             [
                 'filterValue' => [123, 'somevalue', 'abc'],
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => null,
             ],
             [
                 'filterValue' => [123, 'Some', 'abc'],
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => true,
             ],
             [
                 'filterValue' => [123, 'meVal', 'abc'],
-                'objValue' => 'Some',
+                'matchValue' => 'Some',
                 'modifiers' => [],
                 'matches' => false,
             ],
@@ -200,38 +201,38 @@ class StartsWithFilterTest extends SapphireTest
             // We're testing this scenario because ArrayList might contain arbitrary values
             [
                 'filterValue' => new ArrayData(['SomeField' => 'some value']),
-                'objValue' => new ArrayData(['SomeField' => 'some value']),
+                'matchValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => [],
                 'matches' => true,
             ],
             [
                 'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
-                'objValue' => new ArrayData(['SomeField' => 'some value']),
+                'matchValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => [],
                 'matches' => true,
             ],
             // case insensitive
             [
                 'filterValue' => 'somevalue',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => true,
             ],
             [
                 'filterValue' => 'sOmE',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => true,
             ],
             [
                 'filterValue' => 'meval',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => false,
             ],
             [
                 'filterValue' => 'different',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => false,
             ],
@@ -252,9 +253,7 @@ class StartsWithFilterTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideMatches
-     */
+    #[DataProvider('provideMatches')]
     public function testMatches(mixed $filterValue, mixed $matchValue, array $modifiers, ?bool $matches)
     {
         // Test with explicit default case sensitivity rather than relying on the collation, so that database

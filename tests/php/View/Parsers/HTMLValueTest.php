@@ -7,6 +7,7 @@ use SilverStripe\View\Parsers\HTMLValue;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\Core\Convert;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HTMLValueTest extends SapphireTest
 {
@@ -161,7 +162,7 @@ class HTMLValueTest extends SapphireTest
         }
     }
 
-    public function provideOnlyStripIntendedTags(): array
+    public static function provideOnlyStripIntendedTags(): array
     {
         return [
             [
@@ -179,9 +180,7 @@ class HTMLValueTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideOnlyStripIntendedTags
-     */
+    #[DataProvider('provideOnlyStripIntendedTags')]
     public function testOnlyStripIntendedTags(string $input, string $expected): void
     {
         $value = new HTMLValue();

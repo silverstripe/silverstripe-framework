@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use RuntimeException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-use RuntimeException;
 use SilverStripe\View\ViewableData;
 
 trait DBClassNameTrait

@@ -5,10 +5,11 @@ namespace SilverStripe\Core\Tests;
 use ReflectionClass;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class EnvironmentTest extends SapphireTest
 {
-    public function providerTestPutEnv()
+    public static function providerTestPutEnv()
     {
         return [
             ['_ENVTEST_BOOL=true', '_ENVTEST_BOOL', true],
@@ -20,18 +21,14 @@ class EnvironmentTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider providerTestPutenv
-     */
+    #[DataProvider('providerTestPutenv')]
     public function testPutEnv($put, $var, $value)
     {
         Environment::putEnv($put);
         $this->assertEquals($value, Environment::getEnv($var));
     }
 
-    /**
-     * @dataProvider providerTestPutEnv
-     */
+    #[DataProvider('providerTestPutEnv')]
     public function testSetEnv($put, $var, $value)
     {
         Environment::setEnv($var, $value);
@@ -68,7 +65,7 @@ class EnvironmentTest extends SapphireTest
         $this->assertEquals('global', $GLOBALS['test']);
     }
 
-    public function provideHasEnv()
+    public static function provideHasEnv()
     {
         $setAsOptions = [
             '.env',
@@ -110,9 +107,7 @@ class EnvironmentTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideHasEnv
-     */
+    #[DataProvider('provideHasEnv')]
     public function testHasEnv(?string $setAs, $value, bool $expected)
     {
         $name = '_ENVTEST_HAS_ENV';

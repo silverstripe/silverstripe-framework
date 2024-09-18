@@ -12,10 +12,10 @@ class ManifestFileFinderTest extends SapphireTest
 {
     protected $defaultBase;
 
-    public function __construct()
+    public function __construct(string $name)
     {
         $this->defaultBase = __DIR__ . '/fixtures/manifestfilefinder';
-        parent::__construct();
+        parent::__construct($name);
     }
 
     /**

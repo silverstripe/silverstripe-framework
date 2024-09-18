@@ -21,6 +21,7 @@ use SilverStripe\ORM\Tests\DataObjectSchemaTest\HasIndexesInFieldSpecs;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\NoFields;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithCustomTable;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests schema inspection of DataObjects
@@ -159,9 +160,7 @@ class DataObjectSchemaTest extends SapphireTest
         );
     }
 
-    /**
-     * @dataProvider provideFieldSpec
-     */
+    #[DataProvider('provideFieldSpec')]
     public function testFieldSpec(array $args, array $expected): void
     {
         $schema = DataObject::getSchema();
@@ -173,7 +172,7 @@ class DataObjectSchemaTest extends SapphireTest
         $this->assertEquals($expected, $schema->fieldSpecs(...$args));
     }
 
-    public function provideFieldSpec(): array
+    public static function provideFieldSpec(): array
     {
         return [
             'just pass a class' => [
@@ -254,9 +253,6 @@ class DataObjectSchemaTest extends SapphireTest
         ];
     }
 
-    /**
-     * @covers \SilverStripe\ORM\DataObjectSchema::baseDataClass()
-     */
     public function testBaseDataClass()
     {
         $schema = DataObject::getSchema();
@@ -405,16 +401,14 @@ class DataObjectSchemaTest extends SapphireTest
         );
     }
 
-    /**
-     * @dataProvider provideHasOneComponent
-     */
+    #[DataProvider('provideHasOneComponent')]
 
     public function testHasOneComponent(string $class, string $component, string $expected): void
     {
         $this->assertSame($expected, DataObject::getSchema()->hasOneComponent($class, $component));
     }
 
-    public function provideHasOneComponent(): array
+    public static function provideHasOneComponent(): array
     {
         return [
             [
@@ -440,9 +434,7 @@ class DataObjectSchemaTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideHasOneComponentHandlesMultipleRelations
-     */
+    #[DataProvider('provideHasOneComponentHandlesMultipleRelations')]
     public function testHasOneComponentHandlesMultipleRelations(string $class, string $component, bool $expected): void
     {
         $this->assertSame(
@@ -451,7 +443,7 @@ class DataObjectSchemaTest extends SapphireTest
         );
     }
 
-    public function provideHasOneComponentHandlesMultipleRelations(): array
+    public static function provideHasOneComponentHandlesMultipleRelations(): array
     {
         return [
             [

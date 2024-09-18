@@ -5,10 +5,11 @@ namespace SilverStripe\Forms\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\UrlField;
 use SilverStripe\Forms\RequiredFields;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlFieldTest extends SapphireTest
 {
-    public function provideValidate(): array
+    public static function provideValidate(): array
     {
         return [
             [
@@ -78,13 +79,11 @@ class UrlFieldTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideValidate
-     */
-    public function testValidate(string $email, bool $valid)
+    #[DataProvider('provideValidate')]
+    public function testValidate(string $url, bool $valid)
     {
         $field = new UrlField('MyUrl');
-        $field->setValue($email);
+        $field->setValue($url);
         $validator = new RequiredFields();
         $field->validate($validator);
         $expectedCount = $valid ? 0 : 1;

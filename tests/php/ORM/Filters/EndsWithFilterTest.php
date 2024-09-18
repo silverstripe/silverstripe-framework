@@ -6,155 +6,156 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Filters\EndsWithFilter;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\Filters\SearchFilter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class EndsWithFilterTest extends SapphireTest
 {
 
-    public function provideMatches()
+    public static function provideMatches()
     {
         $scenarios = [
             // without modifiers
             'null ends with null' => [
                 'filterValue' => null,
-                'objValue' => null,
+                'matchValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'empty ends with null' => [
                 'filterValue' => null,
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'null ends with empty' => [
                 'filterValue' => '',
-                'objValue' => null,
+                'matchValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'empty ends with empty' => [
                 'filterValue' => '',
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'empty ends with false' => [
                 'filterValue' => false,
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'true doesnt end with empty' => [
                 'filterValue' => true,
-                'objValue' => '',
+                'matchValue' => '',
                 'modifiers' => [],
                 'matches' => false,
             ],
             'false doesnt end with empty' => [
                 'filterValue' => '',
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'true doesnt end with empty' => [
                 'filterValue' => '',
-                'objValue' => true,
+                'matchValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'null ends with false' => [
                 'filterValue' => false,
-                'objValue' => null,
+                'matchValue' => null,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'false doesnt end with null' => [
                 'filterValue' => null,
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'false doesnt end with true' => [
                 'filterValue' => true,
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'true doesnt end with false' => [
                 'filterValue' => false,
-                'objValue' => true,
+                'matchValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'false doesnt end with false' => [
                 'filterValue' => false,
-                'objValue' => false,
+                'matchValue' => false,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'true doesnt end with true' => [
                 'filterValue' => true,
-                'objValue' => true,
+                'matchValue' => true,
                 'modifiers' => [],
                 'matches' => false,
             ],
             'number is cast to string' => [
                 'filterValue' => 1,
-                'objValue' => '1',
+                'matchValue' => '1',
                 'modifiers' => [],
                 'matches' => true,
             ],
             '1 ends with 1' => [
                 'filterValue' => 1,
-                'objValue' => 1,
+                'matchValue' => 1,
                 'modifiers' => [],
                 'matches' => true,
             ],
             '100 doesnt end with 1' => [
                 'filterValue' => '1',
-                'objValue' => 100,
+                'matchValue' => 100,
                 'modifiers' => [],
                 'matches' => false,
             ],
             '100 ends with 0' => [
                 'filterValue' => '0',
-                'objValue' => 100,
+                'matchValue' => 100,
                 'modifiers' => [],
                 'matches' => true,
             ],
             '100 still ends with 0' => [
                 'filterValue' => 0,
-                'objValue' => 100,
+                'matchValue' => 100,
                 'modifiers' => [],
                 'matches' => true,
             ],
             'SomeValue ends with SomeValue' => [
                 'filterValue' => 'SomeValue',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'SomeValue doesnt end with somevalue' => [
                 'filterValue' => 'somevalue',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => null,
             ],
             'SomeValue doesnt end with meVal' => [
                 'filterValue' => 'meVal',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => false,
             ],
             'SomeValue ends with Value' => [
                 'filterValue' => 'Value',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => true,
             ],
             'SomeValue doesnt with vAlUe' => [
                 'filterValue' => 'vAlUe',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => null,
             ],
@@ -180,19 +181,19 @@ class EndsWithFilterTest extends SapphireTest
             // Some multi-value tests
             [
                 'filterValue' => [123, 'somevalue', 'abc'],
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => null,
             ],
             [
                 'filterValue' => [123, 'Value', 'abc'],
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => [],
                 'matches' => true,
             ],
             [
                 'filterValue' => [123, 'meVal', 'abc'],
-                'objValue' => 'Some',
+                'matchValue' => 'Some',
                 'modifiers' => [],
                 'matches' => false,
             ],
@@ -200,38 +201,38 @@ class EndsWithFilterTest extends SapphireTest
             // We're testing this scenario because ArrayList might contain arbitrary values
             [
                 'filterValue' => new ArrayData(['SomeField' => 'some value']),
-                'objValue' => new ArrayData(['SomeField' => 'some value']),
+                'matchValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => [],
                 'matches' => true,
             ],
             [
                 'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
-                'objValue' => new ArrayData(['SomeField' => 'some value']),
+                'matchValue' => new ArrayData(['SomeField' => 'some value']),
                 'modifiers' => [],
                 'matches' => true,
             ],
             // case insensitive
             [
                 'filterValue' => 'somevalue',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => true,
             ],
             [
                 'filterValue' => 'vAlUe',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => true,
             ],
             [
                 'filterValue' => 'meval',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => false,
             ],
             [
                 'filterValue' => 'different',
-                'objValue' => 'SomeValue',
+                'matchValue' => 'SomeValue',
                 'modifiers' => ['nocase'],
                 'matches' => false,
             ],
@@ -252,9 +253,7 @@ class EndsWithFilterTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideMatches
-     */
+    #[DataProvider('provideMatches')]
     public function testMatches(mixed $filterValue, mixed $matchValue, array $modifiers, ?bool $matches)
     {
         // Test with explicit default case sensitivity rather than relying on the collation, so that database

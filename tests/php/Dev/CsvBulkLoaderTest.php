@@ -17,6 +17,7 @@ use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CanModifyModel;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantCreateModel;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantDeleteModel;
 use SilverStripe\Dev\Tests\CsvBulkLoaderTest\CantEditModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CsvBulkLoaderTest extends SapphireTest
 {
@@ -345,9 +346,7 @@ class CsvBulkLoaderTest extends SapphireTest
         $this->assertCount(10, $results);
     }
 
-    /**
-     * @dataProvider provideCheckPermissions
-     */
+    #[DataProvider('provideCheckPermissions')]
     public function testCheckPermissions(string $class, string $file, bool $respectPerms, string $exceptionMessage)
     {
         $loader = new CsvBulkLoader($class);
@@ -370,7 +369,7 @@ class CsvBulkLoaderTest extends SapphireTest
         }
     }
 
-    public function provideCheckPermissions()
+    public static function provideCheckPermissions()
     {
         $scenarios = [
             'Has all permissions' => [

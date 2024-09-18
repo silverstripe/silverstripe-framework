@@ -11,6 +11,7 @@ use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
 use SilverStripe\Dev\Tests\DevAdminControllerTest\ControllerWithPermissions;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Note: the running of this test is handled by the thing it's testing (DevelopmentAdmin controller).
@@ -66,9 +67,7 @@ class DevAdminControllerTest extends FunctionalTest
         $this->assertEquals(true, $this->getAndCheckForError('/dev/x2'));
     }
 
-    /**
-     * @dataProvider getLinksPermissionsProvider
-     */
+    #[DataProvider('getLinksPermissionsProvider')]
     public function testGetLinks(string $permission, array $present, array $absent): void
     {
         DevelopmentAdmin::config()->set('allow_all_cli', false);
@@ -94,7 +93,7 @@ class DevAdminControllerTest extends FunctionalTest
         }
     }
 
-    protected function getLinksPermissionsProvider() : array
+    public static function getLinksPermissionsProvider() : array
     {
         return [
             ['ADMIN', ['x1', 'x1/y1', 'x3'], ['x2']],

@@ -5,6 +5,7 @@ namespace SilverStripe\Control\Tests\Middleware;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HTTPCacheControlMiddlewareTest extends SapphireTest
 {
@@ -18,7 +19,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         HTTPCacheControlMiddleware::reset();
     }
 
-    public function provideCacheStates()
+    public static function provideCacheStates()
     {
         return [
             ['enableCache', false],
@@ -28,9 +29,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideCacheStates
-     */
+    #[DataProvider('provideCacheStates')]
     public function testCheckDefaultStates($state, $immutable)
     {
         $cc = HTTPCacheControlMiddleware::singleton();
@@ -42,9 +41,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $this->assertStringContainsString('must-revalidate', $response->getHeader('cache-control'));
     }
 
-    /**
-     * @dataProvider provideCacheStates
-     */
+    #[DataProvider('provideCacheStates')]
     public function testSetMaxAge($state, $immutable)
     {
         $cc = HTTPCacheControlMiddleware::singleton();
@@ -127,9 +124,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         $this->assertStringContainsString('max-age=300', $response->getHeader('cache-control'));
     }
 
-    /**
-     * @dataProvider provideCacheStates
-     */
+    #[DataProvider('provideCacheStates')]
     public function testSetNoStore($state, $immutable)
     {
         $cc = HTTPCacheControlMiddleware::singleton();
@@ -156,9 +151,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         }
     }
 
-    /**
-     * @dataProvider provideCacheStates
-     */
+    #[DataProvider('provideCacheStates')]
     public function testSetNoCache($state, $immutable)
     {
         $cc = HTTPCacheControlMiddleware::singleton();
@@ -185,9 +178,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         }
     }
 
-    /**
-     * @dataProvider provideCacheStates
-     */
+    #[DataProvider('provideCacheStates')]
     public function testSetSharedMaxAge($state, $immutable)
     {
         $cc = HTTPCacheControlMiddleware::singleton();
@@ -212,9 +203,7 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         }
     }
 
-    /**
-     * @dataProvider provideCacheStates
-     */
+    #[DataProvider('provideCacheStates')]
     public function testSetMustRevalidate($state, $immutable)
     {
         $cc = HTTPCacheControlMiddleware::singleton();

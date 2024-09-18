@@ -7,6 +7,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\ViewableDataContainsTest\TestObject;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ArrayData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ViewableDataContainsTest extends SapphireTest
 {
@@ -15,7 +16,7 @@ class ViewableDataContainsTest extends SapphireTest
         'Surname' => 'Schommer'
     ];
 
-    public function provideMatchesForList()
+    public static function provideMatchesForList()
     {
         return [
             [
@@ -31,7 +32,7 @@ class ViewableDataContainsTest extends SapphireTest
     }
 
 
-    public function provideInvalidMatchesForList()
+    public static function provideInvalidMatchesForList()
     {
         return [
             [
@@ -47,10 +48,9 @@ class ViewableDataContainsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideMatchesForList()
-     *
      * @param $match
      */
+    #[DataProvider('provideMatchesForList')]
     public function testEvaluateMatchesCorrectlyArrayData($match)
     {
         $constraint = new ViewableDataContains($match);
@@ -61,10 +61,9 @@ class ViewableDataContainsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideMatchesForList()
-     *
      * @param $match
      */
+    #[DataProvider('provideMatchesForList')]
     public function testEvaluateMatchesCorrectlyDataObject($match)
     {
         $constraint = new ViewableDataContains($match);
@@ -75,10 +74,9 @@ class ViewableDataContainsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideInvalidMatchesForList()
-     *
      * @param $matches
      */
+    #[DataProvider('provideInvalidMatchesForList')]
     public function testEvaluateDoesNotMatchWrongMatchInArrayData($match)
     {
         $constraint = new ViewableDataContains($match);
@@ -89,10 +87,9 @@ class ViewableDataContainsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideInvalidMatchesForList()
-     *
      * @param $matches
      */
+    #[DataProvider('provideInvalidMatchesForList')]
     public function testEvaluateDoesNotMatchWrongMatchInDataObject($match)
     {
         $constraint = new ViewableDataContains($match);

@@ -6,10 +6,11 @@ use SilverStripe\Dev\Constraint\SSListContains;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SSListContainsTest extends SapphireTest
 {
-    public function provideMatchesForList()
+    public static function provideMatchesForList()
     {
         return [
             [
@@ -31,7 +32,7 @@ class SSListContainsTest extends SapphireTest
     }
 
 
-    public function provideInvalidMatchesForList()
+    public static function provideInvalidMatchesForList()
     {
         return [
             [
@@ -53,10 +54,9 @@ class SSListContainsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideMatchesForList()
-     *
      * @param $matches
      */
+    #[DataProvider('provideMatchesForList')]
     public function testEvaluateListMatchesCorrectly($matches)
     {
         $constraint = new SSListContains($matches);
@@ -65,10 +65,9 @@ class SSListContainsTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideInvalidMatchesForList()
-     *
      * @param $matches
      */
+    #[DataProvider('provideInvalidMatchesForList')]
     public function testEvaluateListDoesNotMatchWrongMatches($matches)
     {
         $constraint = new SSListContains($matches);

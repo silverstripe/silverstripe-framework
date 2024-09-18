@@ -8,6 +8,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Validation\RelationValidationService;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RelationValidationTest extends SapphireTest
 {
@@ -26,8 +27,8 @@ class RelationValidationTest extends SapphireTest
      * @param string|null $field
      * @param array $value
      * @param array $expected
-     * @dataProvider validateCasesProvider
      */
+    #[DataProvider('validateCasesProvider')]
     public function testValidation(?string $class, ?string $field, array $value, array $expected): void
     {
         if ($class && $field) {
@@ -49,8 +50,8 @@ class RelationValidationTest extends SapphireTest
      * @param string|null $relation
      * @param array $config
      * @param bool $expected
-     * @dataProvider ignoredClassesProvider
      */
+    #[DataProvider('ignoredClassesProvider')]
     public function testIgnoredClass(string $class, ?string $relation, array $config, bool $expected): void
     {
         if (!class_exists($class)) {
@@ -67,7 +68,7 @@ class RelationValidationTest extends SapphireTest
         $this->assertEquals($expected, $result);
     }
 
-    public function validateCasesProvider(): array
+    public static function validateCasesProvider(): array
     {
         return [
             'correct setup' => [
@@ -272,7 +273,7 @@ class RelationValidationTest extends SapphireTest
         ];
     }
 
-    public function ignoredClassesProvider(): array
+    public static function ignoredClassesProvider(): array
     {
         return [
             'class default' => [

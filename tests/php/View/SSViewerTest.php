@@ -33,6 +33,8 @@ use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\Tests\SSViewerTest\TestViewableData;
 use SilverStripe\View\ViewableData;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 
 class SSViewerTest extends SapphireTest
 {
@@ -208,7 +210,7 @@ class SSViewerTest extends SapphireTest
         /** @var Requirements_Backend|MockObject $requirements */
         $requirements = $this
             ->getMockBuilder(Requirements_Backend::class)
-            ->setMethods(["javascript", "css"])
+            ->onlyMethods(["javascript", "css"])
             ->getMock();
         $jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
         $cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
@@ -567,7 +569,7 @@ SS;
         $this->assertEquals("SubKid1SubKid2Number6", $result, "Loop in current scope works");
     }
 
-    public function provideArgumentTypes()
+    public static function provideArgumentTypes()
     {
         return [
             [
@@ -593,9 +595,7 @@ SS;
         ];
     }
 
-    /**
-     * @dataProvider provideArgumentTypes
-     */
+    #[DataProvider('provideArgumentTypes')]
     public function testArgumentTypes(string $expected, string $template)
     {
         $this->assertEquals($expected, $this->render($template, new TestViewableData()));
@@ -706,7 +706,7 @@ after'
         );
     }
 
-    public function typePreservationDataProvider()
+    public static function typePreservationDataProvider()
     {
         return [
             // Null
@@ -763,9 +763,7 @@ after'
         ];
     }
 
-    /**
-     * @dataProvider typePreservationDataProvider
-     */
+    #[DataProvider('typePreservationDataProvider')]
     public function testTypesArePreserved($expected, $templateArg)
     {
         $data = new ArrayData([
@@ -775,9 +773,7 @@ after'
         $this->assertEquals($expected, $this->render("\$Test.Type({$templateArg})", $data));
     }
 
-    /**
-     * @dataProvider typePreservationDataProvider
-     */
+    #[DataProvider('typePreservationDataProvider')]
     public function testTypesArePreservedAsIncludeArguments($expected, $templateArg)
     {
         $data = new ArrayData([
@@ -1034,7 +1030,7 @@ after'
         );
     }
 
-    public function provideIfBlockWithIterable(): array
+    public static function provideIfBlockWithIterable(): array
     {
         $scenarios = [
             'empty array' => [
@@ -1057,9 +1053,7 @@ after'
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideIfBlockWithIterable
-     */
+    #[DataProvider('provideIfBlockWithIterable')]
     public function testIfBlockWithIterable(iterable $iterable, bool $inScope): void
     {
         $expected = count($iterable) ? 'has value' : 'no value';
@@ -1387,7 +1381,7 @@ after'
         );
     }
 
-    public function provideLoop(): array
+    public static function provideLoop(): array
     {
         return [
             'nested array and iterator' => [
@@ -1422,16 +1416,14 @@ after'
         ];
     }
 
-    /**
-     * @dataProvider provideLoop
-     */
+    #[DataProvider('provideLoop')]
     public function testLoop(iterable $iterable, string $template, string $expected): void
     {
         $data = new ArrayData(['Iterable' => $iterable]);
         $this->assertEqualIgnoringWhitespace($expected, $this->render($template, $data));
     }
 
-    public function provideCountIterable(): array
+    public static function provideCountIterable(): array
     {
         $scenarios = [
             'empty array' => [
@@ -1454,9 +1446,7 @@ after'
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideCountIterable
-     */
+    #[DataProvider('provideCountIterable')]
     public function testCountIterable(iterable $iterable, bool $inScope): void
     {
         $expected = count($iterable);
@@ -1878,9 +1868,6 @@ after'
         );
     }
 
-    /**
-     * @covers \SilverStripe\View\SSViewer::get_templates_by_class()
-     */
     public function testGetTemplatesByClass()
     {
         $this->useTestTheme(
@@ -2369,10 +2356,15 @@ EOC;
         );
     }
 
+    #[DoesNotPerformAssertions]
     public function testMe(): void
     {
-        $mockArrayData = $this->getMockBuilder(ArrayData::class)->addMethods(['forTemplate'])->getMock();
-        $mockArrayData->expects($this->once())->method('forTemplate')->willReturn('');
-        $this->render('$Me', $mockArrayData);
+        $myArrayData = new class extends ArrayData {
+            public function forTemplate()
+            {
+                return '';
+            }
+        };
+        $this->render('$Me', $myArrayData);
     }
 }

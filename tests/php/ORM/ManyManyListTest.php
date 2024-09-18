@@ -14,6 +14,7 @@ use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
 use SilverStripe\ORM\Tests\ManyManyListTest\Product;
 use SilverStripe\ORM\DataList;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ManyManyListTest extends SapphireTest
 {
@@ -617,9 +618,7 @@ class ManyManyListTest extends SapphireTest
         $this->assertEquals(sort($remove), sort($removedIds));
     }
 
-    /**
-     * @dataProvider provideForForeignIDPlaceholders
-     */
+    #[DataProvider('provideForForeignIDPlaceholders')]
     public function testForForeignIDPlaceholders(bool $config, bool $useInt, bool $expected): void
     {
         Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
@@ -639,7 +638,7 @@ class ManyManyListTest extends SapphireTest
         $this->assertEqualsCanonicalizing($expectedIDs, $newPlayersList->column('ID'));
     }
 
-    public function provideForForeignIDPlaceholders(): array
+    public static function provideForForeignIDPlaceholders(): array
     {
         return [
             'config false' => [

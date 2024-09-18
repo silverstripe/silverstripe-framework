@@ -5,10 +5,10 @@ namespace SilverStripe\ORM\Tests;
 use PHPUnit\Framework\ExpectationFailedException;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayLibTest extends SapphireTest
 {
-
     public function testInvert()
     {
         $arr = [
@@ -369,7 +369,7 @@ class ArrayLibTest extends SapphireTest
         }
     }
 
-    public function provideInsertBefore(): array
+    public static function provideInsertBefore(): array
     {
         return [
             'simple insertion' => [
@@ -445,9 +445,7 @@ class ArrayLibTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideInsertBefore
-     */
+    #[DataProvider('provideInsertBefore')]
     public function testInsertBefore(mixed $insert, mixed $before, bool $strict, bool $splat, array $expected): void
     {
         $array = ['abc', '', [1,2,3], 'def', '0', null, true, 0, 'last'];
@@ -455,75 +453,75 @@ class ArrayLibTest extends SapphireTest
         $this->assertSame($expected, $final);
     }
 
-    public function provideInsertAfter(): array
+    public static function provideInsertAfter(): array
     {
         return [
             'simple insertion' => [
                 'insert' => 'new',
-                'before' => 'def',
+                'after' => 'def',
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', 'new', '0', null, true, 0, 'last']
             ],
             'insert after first' => [
                 'insert' => 'new',
-                'before' => 'abc',
+                'after' => 'abc',
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', 'new', '', [1,2,3], 'def', '0', null, true, 0, 'last']
             ],
             'insert after last' => [
                 'insert' => 'new',
-                'before' => 'last',
+                'after' => 'last',
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', '0', null, true, 0, 'last', 'new']
             ],
             'insert after missing' => [
                 'insert' => 'new',
-                'before' => 'this value isnt there',
+                'after' => 'this value isnt there',
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', '0', null, true, 0, 'last', 'new']
             ],
             'strict' => [
                 'insert' => 'new',
-                'before' => 0,
+                'after' => 0,
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', '0', null, true, 0, 'new', 'last']
             ],
             'not strict' => [
                 'insert' => 'new',
-                'before' => 0,
+                'after' => 0,
                 'strict' => false,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', '0', 'new', null, true, 0, 'last']
             ],
             'after array' => [
                 'insert' => 'new',
-                'before' => [1,2,3],
+                'after' => [1,2,3],
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'new', 'def', '0', null, true, 0, 'last']
             ],
             'after missing array' => [
                 'insert' => 'new',
-                'before' => ['a', 'b', 'c'],
+                'after' => ['a', 'b', 'c'],
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', '0', null, true, 0, 'last', 'new']
             ],
             'splat array' => [
                 'insert' => ['a', 'b', 'c'],
-                'before' => 'def',
+                'after' => 'def',
                 'strict' => true,
                 'splat' => true,
                 'expected' => ['abc', '', [1,2,3], 'def', 'a', 'b', 'c', '0', null, true, 0, 'last']
             ],
             'no splat array' => [
                 'insert' => ['a', 'b', 'c'],
-                'before' => 'def',
+                'after' => 'def',
                 'strict' => true,
                 'splat' => false,
                 'expected' => ['abc', '', [1,2,3], 'def', ['a', 'b', 'c'], '0', null, true, 0, 'last']
@@ -531,9 +529,7 @@ class ArrayLibTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideInsertAfter
-     */
+    #[DataProvider('provideInsertAfter')]
     public function testInsertAfter(mixed $insert, mixed $after, bool $strict, bool $splat, array $expected): void
     {
         $array = ['abc', '', [1,2,3], 'def', '0', null, true, 0, 'last'];

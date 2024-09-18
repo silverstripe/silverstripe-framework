@@ -9,6 +9,7 @@ use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Core\Environment;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CanonicalURLMiddlewareTest extends SapphireTest
 {
@@ -86,7 +87,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
         $this->assertFalse($middleware->getForceBasicAuthToSSL(), 'Explicitly set is returned');
     }
 
-    public function provideRedirectTrailingSlash()
+    public static function provideRedirectTrailingSlash()
     {
         $testScenarios = [];
         foreach ([true, false] as $forceRedirect) {
@@ -103,9 +104,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
         return $testScenarios;
     }
 
-    /**
-     * @dataProvider provideRedirectTrailingSlash
-     */
+    #[DataProvider('provideRedirectTrailingSlash')]
     public function testRedirectTrailingSlash(bool $forceRedirect, bool $addTrailingSlash, bool $requestHasSlash)
     {
         Controller::config()->set('add_trailing_slash', $addTrailingSlash);
@@ -147,7 +146,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
         }
     }
 
-    public function provideRedirectTrailingSlashIgnorePaths()
+    public static function provideRedirectTrailingSlashIgnorePaths()
     {
         return [
             [
@@ -169,9 +168,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideRedirectTrailingSlashIgnorePaths
-     */
+    #[DataProvider('provideRedirectTrailingSlashIgnorePaths')]
     public function testRedirectTrailingSlashIgnorePaths(bool $addTrailingSlash, bool $requestHasSlash)
     {
         Controller::config()->set('add_trailing_slash', $addTrailingSlash);
@@ -206,7 +203,7 @@ class CanonicalURLMiddlewareTest extends SapphireTest
 
         /** @var CanonicalURLMiddleware $middleware */
         $middleware = $this->getMockBuilder(CanonicalURLMiddleware::class)
-            ->setMethods($mockedMethods)
+            ->onlyMethods($mockedMethods)
             ->getMock();
 
         $middleware->expects($this->any())->method('isEnabled')->willReturn(true);

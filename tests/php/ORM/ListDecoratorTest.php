@@ -9,6 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\ListDecorator;
 use SilverStripe\ORM\SS_List;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * This test class is testing that ListDecorator correctly proxies its calls through to the underlying SS_List
@@ -30,7 +31,9 @@ class ListDecoratorTest extends SapphireTest
         parent::setUp();
 
         $this->list = $this->createMock(ArrayList::class);
-        $this->decorator = $this->getMockForAbstractClass(ListDecorator::class, [$this->list]);
+        // ListDecorator is an abstract class so cannot be instantiated, though has no abstract methods
+        $this->decorator = new class ($this->list) extends ListDecorator {
+        };
     }
 
     public function testGetIterator()
@@ -54,8 +57,8 @@ class ListDecoratorTest extends SapphireTest
 
     /**
      * @param array $input
-     * @dataProvider filterProvider
      */
+    #[DataProvider('filterProvider')]
     public function testExclude($input)
     {
         $this->list->expects($this->once())->method('exclude')->with($input)->willReturn('mock');
@@ -64,8 +67,8 @@ class ListDecoratorTest extends SapphireTest
 
     /**
      * @param array $input
-     * @dataProvider filterProvider
      */
+    #[DataProvider('filterProvider')]
     public function testFilter($input)
     {
         $this->list->expects($this->once())->method('filter')->with($input)->willReturn('mock');
@@ -74,8 +77,8 @@ class ListDecoratorTest extends SapphireTest
 
     /**
      * @param array $input
-     * @dataProvider filterProvider
      */
+    #[DataProvider('filterProvider')]
     public function testFilterAny($input)
     {
         $this->list->expects($this->once())->method('filterAny')->with($input)->willReturn('mock');
@@ -84,8 +87,8 @@ class ListDecoratorTest extends SapphireTest
 
     /**
      * @param array $input
-     * @dataProvider filterProvider
      */
+    #[DataProvider('filterProvider')]
     public function testSort($input)
     {
         $this->list->expects($this->once())->method('sort')->with($input)->willReturn('mock');
@@ -95,7 +98,7 @@ class ListDecoratorTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function filterProvider()
+    public static function filterProvider()
     {
         return [
             ['Name', 'Bob'],

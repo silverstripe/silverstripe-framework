@@ -5,6 +5,7 @@ namespace SilverStripe\Control\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HTTPResponseTest extends SapphireTest
 {
@@ -45,7 +46,7 @@ class HTTPResponseTest extends SapphireTest
         $this->assertEmpty($response->getHeader('X-Animal'));
     }
 
-    public function providerSanitiseHeaders()
+    public static function providerSanitiseHeaders()
     {
         return [
             'plain text is retained' => ['some arbitrary value1', 'some arbitrary value1'],
@@ -54,9 +55,7 @@ class HTTPResponseTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider providerSanitiseHeaders
-     */
+    #[DataProvider('providerSanitiseHeaders')]
     public function testSanitiseHeaders(string $expected, string $value)
     {
         $response = new HTTPResponse();
@@ -65,7 +64,7 @@ class HTTPResponseTest extends SapphireTest
         $this->assertSame($expected, $response->getHeader('X-Sanitised'));
     }
 
-    public function providerTestValidStatusCodes()
+    public static function providerTestValidStatusCodes()
     {
         return [
             [200, 'OK'],
@@ -76,10 +75,10 @@ class HTTPResponseTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerTestValidStatusCodes
      * @param int $code
      * @param string $status
      */
+    #[DataProvider('providerTestValidStatusCodes')]
     public function testValidStatusCodes($code, $status)
     {
         $response = new HTTPResponse();

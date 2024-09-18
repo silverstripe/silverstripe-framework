@@ -11,6 +11,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DBHTMLTextTest\TestShortcode;
 use SilverStripe\View\Parsers\ShortcodeParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DBHTMLTextTest extends SapphireTest
 {
@@ -45,7 +46,7 @@ class DBHTMLTextTest extends SapphireTest
     /**
      * Test {@link Text->LimitCharacters()}
      */
-    public function providerLimitCharacters()
+    public static function providerLimitCharacters()
     {
         // HTML characters are stripped safely
         return [
@@ -58,10 +59,10 @@ class DBHTMLTextTest extends SapphireTest
     /**
      * Test {@link DBHTMLText->LimitCharacters()}
      *
-     * @dataProvider providerLimitCharacters
      * @param        string $originalValue
      * @param        string $expectedValue
      */
+    #[DataProvider('providerLimitCharacters')]
     public function testLimitCharacters($originalValue, $expectedValue)
     {
         $textObj = DBField::create_field('HTMLFragment', $originalValue);
@@ -72,7 +73,7 @@ class DBHTMLTextTest extends SapphireTest
     /**
      * @return array
      */
-    public function providerLimitCharactersToClosestWord()
+    public static function providerLimitCharactersToClosestWord()
     {
         // HTML is converted safely to plain text
         return [
@@ -98,12 +99,12 @@ class DBHTMLTextTest extends SapphireTest
     /**
      * Test {@link DBHTMLText->LimitCharactersToClosestWord()}
      *
-     * @dataProvider providerLimitCharactersToClosestWord
      *
      * @param string $originalValue Raw string input
      * @param int    $limit
      * @param string $expectedValue Expected template value
      */
+    #[DataProvider('providerLimitCharactersToClosestWord')]
     public function testLimitCharactersToClosestWord($originalValue, $limit, $expectedValue)
     {
         $textObj = DBField::create_field('HTMLFragment', $originalValue);
@@ -111,7 +112,7 @@ class DBHTMLTextTest extends SapphireTest
         $this->assertEquals($expectedValue, $result);
     }
 
-    public function providerSummary()
+    public static function providerSummary()
     {
         return [
             [
@@ -167,11 +168,11 @@ class DBHTMLTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerSummary
      * @param string $originalValue
      * @param int    $limit
      * @param string $expectedValue
      */
+    #[DataProvider('providerSummary')]
     public function testSummary($originalValue, $limit, $expectedValue)
     {
         $textObj = DBField::create_field('HTMLFragment', $originalValue);
@@ -199,7 +200,7 @@ class DBHTMLTextTest extends SapphireTest
 
 
 
-    public function providerFirstSentence()
+    public static function providerFirstSentence()
     {
         return [
             // Same behaviour as DBTextTest
@@ -216,10 +217,10 @@ class DBHTMLTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerFirstSentence
      * @param string $originalValue
      * @param string $expectedValue
      */
+    #[DataProvider('providerFirstSentence')]
     public function testFirstSentence($originalValue, $expectedValue)
     {
         $textObj = DBField::create_field('HTMLFragment', $originalValue);
@@ -251,7 +252,7 @@ class DBHTMLTextTest extends SapphireTest
         $this->assertEquals(['a'], $field->getWhitelist());
     }
 
-    public function providerToPlain()
+    public static function providerToPlain()
     {
         return [
             [
@@ -274,10 +275,10 @@ class DBHTMLTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerToPlain
      * @param string $html
      * @param string $plain
      */
+    #[DataProvider('providerToPlain')]
     public function testToPlain($html, $plain)
     {
         /**
@@ -292,7 +293,7 @@ class DBHTMLTextTest extends SapphireTest
      *
      * @return array
      */
-    public function providerContextSummary()
+    public static function providerContextSummary()
     {
         return [
             [
@@ -358,12 +359,12 @@ class DBHTMLTextTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerContextSummary
      * @param string $originalValue Input
      * @param int    $limit         Number of characters
      * @param string $keywords      Keywords to highlight
      * @param string $expectedValue Expected output (XML encoded safely)
      */
+    #[DataProvider('providerContextSummary')]
     public function testContextSummary($originalValue, $limit, $keywords, $expectedValue)
     {
         $text = DBField::create_field('HTMLFragment', $originalValue);

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-class CreateTest extends BaseObject
+class CreateTest1 extends BaseObject
 {
     public $constructArguments;
 

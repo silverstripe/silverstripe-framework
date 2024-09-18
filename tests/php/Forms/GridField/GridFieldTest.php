@@ -57,19 +57,12 @@ class GridFieldTest extends SapphireTest
         ],
     ];
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::__construct
-     */
     public function testGridField()
     {
         $obj = new GridField('testfield', 'testfield');
         $this->assertTrue($obj instanceof GridField, 'Test that the constructor arguments are valid');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::__construct
-     * @covers \SilverStripe\Forms\GridField\GridField::getList
-     */
     public function testGridFieldSetList()
     {
         $list = ArrayList::create([1 => 'hello', 2 => 'goodbye']);
@@ -77,12 +70,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals($list, $obj->getList(), 'Testing getList');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::__construct
-     * @covers \SilverStripe\Forms\GridField\GridField::getConfig
-     * @covers \SilverStripe\Forms\GridField\GridFieldConfig_Base::__construct
-     * @covers \SilverStripe\Forms\GridField\GridFieldConfig::addComponent
-     */
     public function testGridFieldDefaultConfig()
     {
         $obj = new GridField('testfield', 'testfield');
@@ -104,10 +91,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridFieldConfig::__construct
-     * @covers \SilverStripe\Forms\GridField\GridFieldConfig::addComponent
-     */
     public function testGridFieldSetCustomConfig()
     {
 
@@ -128,10 +111,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getModelClass
-     * @covers \SilverStripe\Forms\GridField\GridField::setModelClass
-     */
     public function testGridFieldModelClass()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
@@ -140,9 +119,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals(Group::class, $obj->getModelClass(), 'Should return Group');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getModelClass
-     */
     public function testGridFieldModelClassThrowsException()
     {
         $this->expectException(LogicException::class);
@@ -150,10 +126,6 @@ class GridFieldTest extends SapphireTest
         $obj->getModelClass();
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::setList
-     * @covers \SilverStripe\Forms\GridField\GridField::getList
-     */
     public function testSetAndGetList()
     {
         $list = Member::get();
@@ -164,9 +136,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals($arrayList, $obj->getList());
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getState
-     */
     public function testGetState()
     {
         $obj = new GridField('testfield', 'testfield');
@@ -176,10 +145,6 @@ class GridFieldTest extends SapphireTest
 
     /**
      * Tests usage of nested GridState values
-     *
-     * @covers \SilverStripe\Forms\GridField\GridState_Data::__get
-     * @covers \SilverStripe\Forms\GridField\GridState_Data::__call
-     * @covers \SilverStripe\Forms\GridField\GridState_Data::getData
      */
     public function testGetStateData()
     {
@@ -220,9 +185,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals(10, $obj->State->Nested->DeeperNested->DataValue(10));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumns
-     */
     public function testGetColumns()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
@@ -234,18 +196,12 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals($expected, $obj->getColumns());
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnCount
-     */
     public function testGetColumnCount()
     {
         $obj = new GridField('testfield', 'testfield', Member::get());
         $this->assertEquals(3, $obj->getColumnCount());
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
-     */
     public function testGetColumnContent()
     {
         $list = new ArrayList(
@@ -257,9 +213,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals('test@example.org', $obj->getColumnContent($list->first(), 'Email'));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnContent
-     */
     public function testGetColumnContentBadArguments()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -272,9 +225,6 @@ class GridFieldTest extends SapphireTest
         $obj->getColumnContent($list->first(), 'non-existing');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
-     */
     public function testGetColumnAttributesEmptyArray()
     {
         $list = new ArrayList(
@@ -286,9 +236,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals(['class' => 'col-Email'], $obj->getColumnAttributes($list->first(), 'Email'));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
-     */
     public function testGetColumnAttributes()
     {
         $list = new ArrayList(
@@ -301,9 +248,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals(['class' => 'css-class'], $obj->getColumnAttributes($list->first(), 'Email'));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnAttributes
-     */
     public function testGetColumnAttributesBadArguments()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -330,9 +274,6 @@ class GridFieldTest extends SapphireTest
         $obj->getColumnAttributes($list->first(), 'Surname');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     */
     public function testGetColumnMetadata()
     {
         $list = new ArrayList(
@@ -345,9 +286,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals(['metadata' => 'istrue'], $obj->getColumnMetadata('Email'));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     */
     public function testGetColumnMetadataBadResponseFromComponent()
     {
         $this->expectException(\LogicException::class);
@@ -361,9 +299,6 @@ class GridFieldTest extends SapphireTest
         $obj->getColumnMetadata('Surname');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getColumnMetadata
-     */
     public function testGetColumnMetadataBadArguments()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -373,9 +308,6 @@ class GridFieldTest extends SapphireTest
         $obj->getColumnMetadata('non-exist-qweqweqwe');
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::handleAction
-     */
     public function testHandleActionBadArgument()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -383,9 +315,6 @@ class GridFieldTest extends SapphireTest
         $obj->handleAlterAction('prft', [], []);
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::handleAction
-     */
     public function testHandleAction()
     {
         $config = GridFieldConfig::create()->addComponent(new Component);
@@ -393,9 +322,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals('handledAction is executed', $obj->handleAlterAction('jump', [], []));
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getCastedValue
-     */
     public function testGetCastedValue()
     {
         $obj = new GridField('testfield', 'testfield');
@@ -403,9 +329,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals('This is a sentence.', $value);
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::getCastedValue
-     */
     public function testGetCastedValueObject()
     {
         $obj = new GridField('testfield', 'testfield');
@@ -413,9 +336,6 @@ class GridFieldTest extends SapphireTest
         $this->assertEquals('Here is some &lt;html&gt; content', $value);
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::gridFieldAlterAction
-     */
     public function testGridFieldAlterAction()
     {
         $this->markTestIncomplete();
@@ -547,9 +467,6 @@ class GridFieldTest extends SapphireTest
         $field->FieldHolder();
     }
 
-    /**
-     * @covers \SilverStripe\Forms\GridField\GridField::FieldHolder
-     */
     public function testCanViewOnlyOddIDs()
     {
         $this->logInWithPermission();

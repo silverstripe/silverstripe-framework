@@ -10,7 +10,7 @@ use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseObject;
 use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
-use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest;
+use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest1;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest2;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest3;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtensionTest1;
@@ -24,6 +24,7 @@ use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ViewableData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ClassInfoTest extends SapphireTest
 {
@@ -38,7 +39,7 @@ class ClassInfoTest extends SapphireTest
         WithCustomTable::class,
         WithRelation::class,
         BaseObject::class,
-        ExtendTest::class,
+        ExtendTest1::class,
         ExtendTest2::class,
         ExtendTest3::class,
     ];
@@ -145,9 +146,6 @@ class ClassInfoTest extends SapphireTest
         );
     }
 
-    /**
-     * @covers \SilverStripe\Core\ClassInfo::ancestry()
-     */
     public function testAncestry()
     {
         $ancestry = ClassInfo::ancestry(ChildClass::class);
@@ -176,9 +174,6 @@ class ClassInfoTest extends SapphireTest
         );
     }
 
-    /**
-     * @covers \SilverStripe\Core\ClassInfo::dataClassesFor()
-     */
     public function testDataClassesFor()
     {
         $expect = [
@@ -211,13 +206,10 @@ class ClassInfoTest extends SapphireTest
         $this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2] ?? '')));
     }
 
-    /**
-     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
-     */
     public function testClassesWithExtensionUsingConfiguredExtensions()
     {
         $expect = [
-            'silverstripe\\core\\tests\\classinfotest\\extendtest' => ExtendTest::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest1' => ExtendTest1::class,
             'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
             'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
         ];
@@ -228,20 +220,17 @@ class ClassInfoTest extends SapphireTest
         );
 
         $expect = [
-            'silverstripe\\core\\tests\\classinfotest\\extendtest' => ExtendTest::class,
+            'silverstripe\\core\\tests\\classinfotest\\extendtest1' => ExtendTest1::class,
             'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
             'silverstripe\\core\\tests\\classinfotest\\extendtest3' => ExtendTest3::class,
         ];
         $this->assertEquals(
             $expect,
-            ClassInfo::classesWithExtension(ExtensionTest1::class, ExtendTest::class, true),
+            ClassInfo::classesWithExtension(ExtensionTest1::class, ExtendTest1::class, true),
             'ClassInfo::testClassesWithExtension() returns class with extensions applied via class config, including the base class'
         );
     }
 
-    /**
-     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
-     */
     public function testClassesWithExtensionUsingDynamicallyAddedExtensions()
     {
         $this->assertEquals(
@@ -250,7 +239,7 @@ class ClassInfoTest extends SapphireTest
             'ClassInfo::testClassesWithExtension() returns no classes for extension that hasn\'t been applied yet.'
         );
 
-        ExtendTest::add_extension(ExtensionTest2::class);
+        ExtendTest1::add_extension(ExtensionTest2::class);
 
         $expect = [
             'silverstripe\\core\\tests\\classinfotest\\extendtest2' => ExtendTest2::class,
@@ -258,17 +247,14 @@ class ClassInfoTest extends SapphireTest
         ];
         $this->assertEquals(
             $expect,
-            ClassInfo::classesWithExtension(ExtensionTest2::class, ExtendTest::class),
+            ClassInfo::classesWithExtension(ExtensionTest2::class, ExtendTest1::class),
             'ClassInfo::testClassesWithExtension() returns class with extra extension dynamically added'
         );
     }
 
-    /**
-     * @covers \SilverStripe\Core\ClassInfo::classesWithExtension()
-     */
     public function testClassesWithExtensionWithDynamicallyRemovedExtensions()
     {
-        ExtendTest::remove_extension(ExtensionTest1::class);
+        ExtendTest1::remove_extension(ExtensionTest1::class);
 
         $this->assertEquals(
             [],
@@ -277,7 +263,7 @@ class ClassInfoTest extends SapphireTest
         );
     }
 
-    /** @dataProvider provideHasMethodCases */
+    #[DataProvider('provideHasMethodCases')]
     public function testHasMethod($object, $method, $output)
     {
         $this->assertEquals(
@@ -286,7 +272,7 @@ class ClassInfoTest extends SapphireTest
         );
     }
 
-    public function provideHasMethodCases()
+    public static function provideHasMethodCases()
     {
         return [
             'Basic object' => [
@@ -327,7 +313,7 @@ class ClassInfoTest extends SapphireTest
         ];
     }
 
-    /** @dataProvider provideClassSpecCases */
+    #[DataProvider('provideClassSpecCases')]
     public function testParseClassSpec($input, $output)
     {
         $this->assertEquals(
@@ -336,7 +322,7 @@ class ClassInfoTest extends SapphireTest
         );
     }
 
-    public function provideClassSpecCases()
+    public static function provideClassSpecCases()
     {
         return [
             'Standard class' => [

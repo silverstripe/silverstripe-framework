@@ -7,12 +7,14 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\Tests\DBSchemaManagerTest\ChildClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\ORM\Tests\DBSchemaManagerTest\TestDBSchemaManager;
 
 class DBSchemaManagerTest extends SapphireTest
 {
     protected $usesDatabase = false;
 
-    public function provideCanCheckAndRepairTable()
+    public static function provideCanCheckAndRepairTable()
     {
         return [
             // not ignored, but globally not allowed
@@ -48,9 +50,7 @@ class DBSchemaManagerTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideCanCheckAndRepairTable
-     */
+    #[DataProvider('provideCanCheckAndRepairTable')]
     public function testCanCheckAndRepairTable(string $tableName, bool $checkAndRepairOnBuild, bool $expected)
     {
         // set config
@@ -72,6 +72,6 @@ class DBSchemaManagerTest extends SapphireTest
      */
     private function getConcreteSchemaManager(): DBSchemaManager
     {
-        return $this->getMockBuilder(DBSchemaManager::class)->getMockForAbstractClass();
+        return new TestDBSchemaManager();
     }
 }

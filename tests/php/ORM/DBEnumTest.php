@@ -6,6 +6,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DB;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DBEnumTest extends SapphireTest
 {
@@ -17,11 +18,11 @@ class DBEnumTest extends SapphireTest
     protected $usesDatabase = true;
 
     /**
-     * @dataProvider provideParse
      *
      * nullifyEmpty is an option on DBString, which DBEnum extends
      * Mainly used for testing that Enum short-array style syntax works while passing in options
      */
+    #[DataProvider('provideParse')]
     public function testParse(?string $expectedDefault, bool $expectedNullifyEmpty, string $spec)
     {
         /** @var DBEnum $enum */
@@ -31,7 +32,7 @@ class DBEnumTest extends SapphireTest
         $this->assertEquals($expectedNullifyEmpty, $enum->getNullifyEmpty());
     }
 
-    public function provideParse()
+    public static function provideParse()
     {
         return [
             // standard syntax - double quotes

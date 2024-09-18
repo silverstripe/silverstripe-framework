@@ -7,14 +7,22 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DataProviderExternal;
+use SilverStripe\Dev\Exceptions\ExpectedErrorException;
+use SilverStripe\Dev\Exceptions\ExpectedNoticeException;
+use SilverStripe\Dev\Exceptions\ExpectedWarningException;
 
+/**
+ * @sometag This is a test annotation used in the testGetAnnotations test
+ */
 class SapphireTestTest extends SapphireTest
 {
 
     /**
      * @return array
      */
-    public function provideResolveFixturePath()
+    public static function provideResolveFixturePath()
     {
         return [
             'sameDirectory' => [
@@ -40,9 +48,7 @@ class SapphireTestTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideResolveFixturePath
-     */
+    #[DataProvider('provideResolveFixturePath')]
     public function testResolveFixturePath($expected, $path, $message)
     {
         $this->assertEquals(
@@ -86,13 +92,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideAllMatchingList()
-     *
      * @param $match
      * @param $itemsForList
-     *
-     * @testdox Has assertion assertListAllMatch
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideAllMatchingList')]
     public function testAssertListAllMatch($match, $itemsForList, $message)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
@@ -117,13 +120,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotMatchingList()
-     *
      * @param $match
      * @param $itemsForList
-     *
-     * @testdox assertion assertListAllMatch fails when not all items are matching
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideNotMatchingList')]
     public function testAssertListAllMatchFailsWhenNotMatchingAllItems($match, $itemsForList)
     {
         $this->expectException(ExpectationFailedException::class);
@@ -133,13 +133,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
-     *
      * @param $matches
      * @param $itemsForList
-     *
-     * @testdox Has assertion assertListContains
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideEqualListsWithEmptyList')]
     public function testAssertListContains($matches, $itemsForList)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
@@ -151,12 +148,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
-     * @testdox assertion assertListEquals fails on non equal Lists
-     *
      * @param $matches
      * @param $itemsForList array
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideNotContainingList')]
     public function testAssertListContainsFailsIfListDoesNotContainMatch($matches, $itemsForList)
     {
         $this->expectException(ExpectationFailedException::class);
@@ -169,13 +164,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNotContainingList
-     *
-     * @testdox Has assertion assertListNotContains
-     *
      * @param $matches
      * @param $itemsForList
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideNotContainingList')]
     public function testAssertListNotContains($matches, $itemsForList)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
@@ -184,13 +176,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualLists
-     *
      * @param $matches
      * @param $itemsForList
-     *
-     * @testdox assertion assertListNotContains throws a exception when a matching item is found in the list
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideEqualLists')]
     public function testAssertListNotContainsFailsWhenListContainsAMatch($matches, $itemsForList)
     {
         $this->expectException(ExpectationFailedException::class);
@@ -203,12 +192,10 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideEqualListsWithEmptyList()
-     * @testdox Has assertion assertListEquals
-     *
      * @param $matches
      * @param $itemsForList
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideEqualListsWithEmptyList')]
     public function testAssertListEquals($matches, $itemsForList)
     {
         $list = $this->generateArrayListFromItems($itemsForList);
@@ -217,17 +204,90 @@ class SapphireTestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider \SilverStripe\Dev\Tests\SapphireTestTest\DataProvider::provideNonEqualLists
-     * @testdox assertion assertListEquals fails on non equal Lists
-     *
      * @param $matches
      * @param $itemsForList
      */
+    #[DataProviderExternal('\SilverStripe\Dev\Tests\SapphireTestTest\DataProvider', 'provideNonEqualLists')]
     public function testAssertListEqualsFailsOnNonEqualLists($matches, $itemsForList)
     {
         $this->expectException(ExpectationFailedException::class);
         $list = $this->generateArrayListFromItems($itemsForList);
 
         $this->assertListEquals($matches, $list);
+    }
+
+    /**
+     * This test intentionally has non-sensical annotations to test the parser
+     *
+     * @lorem ipsum
+     * @param $one something
+     * @param $two else
+     */
+    public function testGetAnnotations(): void
+    {
+        $this->assertSame([
+            'method' => [
+                'lorem' => [
+                    'ipsum'
+                ],
+                'param' => [
+                    '$one something',
+                    '$two else',
+                ],
+            ],
+            'class' => [
+                'sometag' => [
+                    'This is a test annotation used in the testGetAnnotations test'
+                ],
+            ],
+        ], $this->getAnnotations());
+    }
+
+    #[DataProvider('provideEnableErrorHandler')]
+    public function testEnableErrorHandler(int $errno, ?string $expectedClass): void
+    {
+        $this->enableErrorHandler();
+        $bool = false;
+        if ($expectedClass) {
+            $this->expectException($expectedClass);
+            $this->expectExceptionMessage('test');
+        }
+        if ($errno === E_USER_DEPRECATED) {
+            // Prevent deprecation notices from being displayed
+            set_error_handler(function ($errno, $errstr) use (&$bool) {
+                if ($errno === E_USER_DEPRECATED) {
+                    $bool = true;
+                }
+            });
+            trigger_error('test', $errno);
+        }
+        trigger_error('test', $errno);
+        if ($errno === E_USER_DEPRECATED) {
+            restore_error_handler();
+            $this->assertTrue($bool);
+        }
+    }
+
+    public static function provideEnableErrorHandler(): array
+    {
+        // Only E_USER_* errors can be triggered, so that's all that's being tested
+        return [
+            'error' => [
+                'errno' => E_USER_ERROR,
+                'expectedClass' => ExpectedErrorException::class,
+            ],
+            'notice' => [
+                'errno' => E_USER_NOTICE,
+                'expectedClass' => ExpectedNoticeException::class,
+            ],
+            'warning' => [
+                'errno' => E_USER_WARNING,
+                'expectedClass' => ExpectedWarningException::class,
+            ],
+            'deprecated' => [
+                'errno' => E_USER_DEPRECATED,
+                'expectedClass' => null,
+            ],
+        ];
     }
 }

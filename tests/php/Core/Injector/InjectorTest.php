@@ -27,6 +27,7 @@ use SilverStripe\Core\Tests\Injector\InjectorTest\TestStaticInjections;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use stdClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 define('TEST_SERVICES', __DIR__ . '/AopProxyServiceTest');
 
@@ -829,9 +830,7 @@ class InjectorTest extends SapphireTest
         $this->assertInstanceOf(OtherTestObject::class, $item->property->property);
     }
 
-    /**
-     * @dataProvider provideConvertServicePropertyBackTicks
-     */
+    #[DataProvider('provideConvertServicePropertyBackTicks')]
     public function testConvertServicePropertyBackTicks($value, $expected)
     {
         Environment::setEnv('INJECTOR_TEST_CSP_A', 'ABC');
@@ -841,7 +840,7 @@ class InjectorTest extends SapphireTest
         $this->assertSame($expected, $actual);
     }
 
-    public function provideConvertServicePropertyBackTicks()
+    public static function provideConvertServicePropertyBackTicks()
     {
         return [
             ['`INJECTOR_TEST_CSP_A`', 'ABC'],
@@ -906,12 +905,10 @@ class InjectorTest extends SapphireTest
             ->expects($this->once())
             ->method('create')
             ->with($this->equalTo('service'), $this->equalTo([1, 2, 3]))
-            ->will(
-                $this->returnCallback(
-                    function ($args) {
-                        return new InjectorTest\TestObject();
-                    }
-                )
+            ->willReturnCallback(
+                function ($args) {
+                    return new InjectorTest\TestObject();
+                }
             );
 
         $injector->registerService($factory, 'factory');

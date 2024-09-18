@@ -38,6 +38,7 @@ use SilverStripe\Security\PermissionCheckboxSetField;
 use SilverStripe\Security\PermissionCheckboxSetField_Readonly;
 use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\Forms\SearchableDropdownField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FormFieldTest extends SapphireTest
 {
@@ -228,7 +229,7 @@ class FormFieldTest extends SapphireTest
     /**
      * Covering all potential inputs for Convert::raw2xml
      */
-    public function escapeHtmlDataProvider()
+    public static function escapeHtmlDataProvider()
     {
         return [
             ['<html>'],
@@ -238,8 +239,8 @@ class FormFieldTest extends SapphireTest
     }
 
     /**
-     * @dataProvider escapeHtmlDataProvider
      **/
+    #[DataProvider('escapeHtmlDataProvider')]
     public function testGetAttributesEscapeHtml($value)
     {
         $key = bin2hex(random_bytes(4));
@@ -258,9 +259,7 @@ class FormFieldTest extends SapphireTest
         $this->assertFalse(strpos($html ?? '', '<html>'));
     }
 
-    /**
-     * @dataProvider escapeHtmlDataProvider
-     */
+    #[DataProvider('escapeHtmlDataProvider')]
     public function testDebugEscapeHtml($value)
     {
         $field = new FormField('<html>', '<html>', '<html>');
@@ -606,7 +605,7 @@ class FormFieldTest extends SapphireTest
                 ->getMock();
             $mock->expects($invocationRule = $this->once())
                 ->method('extendValidationResult')
-                ->will($this->returnValue(true));
+                ->willReturn(true);
 
             $isValid = $mock->validate(new RequiredFields());
             $this->assertTrue($isValid, "$formFieldClass should be valid");
@@ -651,8 +650,8 @@ class FormFieldTest extends SapphireTest
     /**
      * @param string $name
      * @param string $expected
-     * @dataProvider nameToLabelProvider
      */
+    #[DataProvider('nameToLabelProvider')]
     public function testNameToLabel($name, $expected)
     {
         $this->assertSame($expected, FormField::name_to_label($name));
@@ -661,7 +660,7 @@ class FormFieldTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function nameToLabelProvider()
+    public static function nameToLabelProvider()
     {
         return [
             ['TotalAmount', 'Total amount'],

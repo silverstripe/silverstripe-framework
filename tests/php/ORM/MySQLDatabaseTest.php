@@ -10,6 +10,7 @@ use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Tests\MySQLSchemaManagerTest\MySQLDBDummy;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class MySQLDatabaseTest extends SapphireTest
 {
@@ -113,7 +114,7 @@ class MySQLDatabaseTest extends SapphireTest
         $this->assertEquals(1, DB::affected_rows());
     }
 
-    public function provideSupportsCte()
+    public static function provideSupportsCte()
     {
         return [
             // mysql unsupported
@@ -204,9 +205,7 @@ class MySQLDatabaseTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideSupportsCte
-     */
+    #[DataProvider('provideSupportsCte')]
     public function testSupportsCte(string $version, bool $expected, bool $expectedRecursive)
     {
         $database = new MySQLDBDummy($version);

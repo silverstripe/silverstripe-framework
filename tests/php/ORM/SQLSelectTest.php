@@ -14,6 +14,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Tests\SQLSelectTest\CteDatesObject;
 use SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SQLSelectTest extends SapphireTest
 {
@@ -74,7 +75,7 @@ class SQLSelectTest extends SapphireTest
         }
     }
 
-    public function provideIsEmpty()
+    public static function provideIsEmpty()
     {
         return [
             [
@@ -104,9 +105,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideIsEmpty
-     */
+    #[DataProvider('provideIsEmpty')]
     public function testIsEmpty(SQLSelect $query, $expected)
     {
         $this->assertSame($expected, $query->isEmpty());
@@ -118,7 +117,7 @@ class SQLSelectTest extends SapphireTest
         $this->assertSQLEquals('', $query->sql($parameters));
     }
 
-    public function provideSelectFrom()
+    public static function provideSelectFrom()
     {
         return [
             [
@@ -140,9 +139,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideSelectFrom
-     */
+    #[DataProvider('provideSelectFrom')]
     public function testSelectFrom(array $from, string $expected)
     {
         $query = new SQLSelect();
@@ -818,7 +815,7 @@ class SQLSelectTest extends SapphireTest
         $this->assertEquals(10, $limit['start']);
     }
 
-    public function provideParameterisedJoinSQL()
+    public static function provideParameterisedJoinSQL()
     {
         return [
             [
@@ -836,9 +833,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideParameterisedJoinSQL
-     */
+    #[DataProvider('provideParameterisedJoinSQL')]
     public function testParameterisedJoinSQL($joinMethod, $joinType)
     {
         $query = new SQLSelect();
@@ -865,7 +860,7 @@ class SQLSelectTest extends SapphireTest
         $query->execute();
     }
 
-    public function provideUnion()
+    public static function provideUnion()
     {
         return [
             // Note that a default (null) UNION is identical to a DISTINCT UNION
@@ -899,9 +894,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideUnion
-     */
+    #[DataProvider('provideUnion')]
     public function testUnion(SQLSelect $unionQuery, ?string $type, string|array $expected)
     {
         if (is_string($expected)) {
@@ -954,7 +947,7 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
-    public function provideWith()
+    public static function provideWith()
     {
         // Each of these examples shows it working with aliased implicit columns, and with explicit CTE columns.
         // Most of these examples are derived from https://dev.mysql.com/doc/refman/8.4/en/with.html
@@ -1247,9 +1240,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideWith
-     */
+    #[DataProvider('provideWith')]
     public function testWith(
         string $name,
         SQLSelect $query,
@@ -1328,7 +1319,7 @@ class SQLSelectTest extends SapphireTest
         $select->addWith('cte', new SQLSelect());
     }
 
-    public function subqueryProvider()
+    public static function subqueryProvider()
     {
         return [
             'no-explicit-alias-string' => ['( SELECT DISTINCT "SQLSelectTest_DO"."ClassName" FROM "SQLSelectTest_DO") AS "FINAL"'],
@@ -1338,9 +1329,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider subqueryProvider
-     */
+    #[DataProvider('subqueryProvider')]
     public function testSubqueries($subquery)
     {
         $query = new SQLSelect('*', $subquery);
@@ -1353,7 +1342,7 @@ class SQLSelectTest extends SapphireTest
         );
     }
 
-    public function addFromProvider()
+    public static function addFromProvider()
     {
         return [
             'string' => [
@@ -1391,9 +1380,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider addFromProvider
-     */
+    #[DataProvider('addFromProvider')]
     public function testAddFrom($input, $out, $message = ""): void
     {
         $query = new SQLSelect();

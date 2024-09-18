@@ -2,6 +2,6 @@
 
 namespace SilverStripe\Core\Tests\ClassInfoTest;
 
-class ExtendTest2 extends ExtendTest
+class ExtendTest2 extends ExtendTest1
 {
 }

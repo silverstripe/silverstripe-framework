@@ -19,7 +19,7 @@ class DatalessFieldTest extends SapphireTest
         /** @var DatalessField|MockObject $mock */
         $mock = $this->getMockBuilder(DatalessField::class)
             ->disableOriginalConstructor()
-            ->setMethods(['Field'])
+            ->onlyMethods(['Field'])
             ->getMock();
 
         $properties = [

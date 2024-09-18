@@ -5,6 +5,7 @@ namespace SilverStripe\Core\Tests\Manifest;
 use Exception;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Dev\SapphireTest;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for the {@link ClassManifest} class.
@@ -41,7 +42,7 @@ class ClassManifestTest extends SapphireTest
     /**
      * @return array
      */
-    public function providerTestGetItemPath()
+    public static function providerTestGetItemPath()
     {
         $paths = [
             ['CLASSA', 'module/classes/ClassA.php'],
@@ -66,10 +67,10 @@ class ClassManifestTest extends SapphireTest
     }
 
     /**
-     * @dataProvider providerTestGetItemPath
      * @param string $name
      * @param string $path
      */
+    #[DataProvider('providerTestGetItemPath')]
     public function testGetItemPath($name, $path)
     {
         $this->assertEquals("{$this->base}/$path", $this->manifest->getItemPath($name));

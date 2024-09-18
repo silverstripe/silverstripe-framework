@@ -21,7 +21,7 @@ class DebugViewFriendlyErrorFormatterTest extends SapphireTest
     {
         /** @var DebugViewFriendlyErrorFormatter|MockObject $mock */
         $mock = $this->getMockBuilder(DebugViewFriendlyErrorFormatter::class)
-            ->setMethods(['output'])
+            ->onlyMethods(['output'])
             ->getMock();
 
         $mock->expects($this->once())->method('output')->with(403)->willReturn('foo');
@@ -32,7 +32,7 @@ class DebugViewFriendlyErrorFormatterTest extends SapphireTest
     {
         /** @var DebugViewFriendlyErrorFormatter|MockObject $mock */
         $mock = $this->getMockBuilder(DebugViewFriendlyErrorFormatter::class)
-            ->setMethods(['output'])
+            ->onlyMethods(['output'])
             ->getMock();
 
         $mock->setStatusCode(404);
@@ -51,7 +51,7 @@ class DebugViewFriendlyErrorFormatterTest extends SapphireTest
 
         /** @var DebugViewFriendlyErrorFormatter|MockObject $mock */
         $mock = $this->getMockBuilder(DebugViewFriendlyErrorFormatter::class)
-            ->setMethods(['format'])
+            ->onlyMethods(['format'])
             ->getMock();
 
         $mock->expects($this->exactly(3))

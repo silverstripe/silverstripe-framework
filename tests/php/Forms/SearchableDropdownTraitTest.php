@@ -15,6 +15,7 @@ use SilverStripe\Security\SecurityToken;
 use SilverStripe\Forms\HiddenField;
 use stdClass;
 use SilverStripe\Forms\Form;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SearchableDropdownTraitTest extends SapphireTest
 {
@@ -103,9 +104,7 @@ class SearchableDropdownTraitTest extends SapphireTest
         $this->assertSame('Something', $field->getLabelField());
     }
 
-    /**
-     * @dataProvider provideGetValueArray
-     */
+    #[DataProvider('provideGetValueArray')]
     public function testGetValueArray(mixed $value, string|array $expected): void
     {
         if ($value === '<DataListValue>') {
@@ -121,7 +120,7 @@ class SearchableDropdownTraitTest extends SapphireTest
         $this->assertSame($expected, $field->getValueArray());
     }
 
-    public function provideGetValueArray(): array
+    public static function provideGetValueArray(): array
     {
         return [
             'empty' => [
@@ -219,7 +218,7 @@ class SearchableDropdownTraitTest extends SapphireTest
         $this->assertFalse($schema['searchable']);
     }
 
-    public function provideLazyLoadedDoesntCallGetSource()
+    public static function provideLazyLoadedDoesntCallGetSource()
     {
         $methodsToCall = [
             'Field',
@@ -244,9 +243,7 @@ class SearchableDropdownTraitTest extends SapphireTest
         return $scenarios;
     }
 
-    /**
-     * @dataProvider provideLazyLoadedDoesntCallGetSource
-     */
+    #[DataProvider('provideLazyLoadedDoesntCallGetSource')]
     public function testLazyLoadedDoesntCallGetSource(string $fieldClass, string $methodToCall)
     {
         // Some methods aren't shared between the two form fields.

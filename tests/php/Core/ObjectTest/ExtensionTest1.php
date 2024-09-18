@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Tests\ObjectTest;
 
-class ExtensionTest extends BaseObject
+class ExtensionTest1 extends BaseObject
 {
     private static $extensions = [
         'SilverStripe\\Core\\Tests\\oBjEcTTEST\\EXTENDTest1',

@@ -9,6 +9,7 @@ use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Backtrace;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class BacktraceTest extends SapphireTest
 {
@@ -115,7 +116,7 @@ class BacktraceTest extends SapphireTest
         $this->assertEquals('myval', $filtered[2]['args']['myarg']);
     }
 
-    public function matchesFilterableClassProvider(): array
+    public static function matchesFilterableClassProvider(): array
     {
         return [
             [
@@ -157,9 +158,7 @@ class BacktraceTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider matchesFilterableClassProvider
-     */
+    #[DataProvider('matchesFilterableClassProvider')]
     public function testMatchesFilterableClass(string $className, string $filterableClass, bool $expected, string $message): void
     {
         $reflectionMethod = new ReflectionMethod(Backtrace::class . '::matchesFilterableClass');

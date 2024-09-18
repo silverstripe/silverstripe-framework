@@ -16,7 +16,6 @@ class FileFieldTest extends FunctionalTest
 {
     /**
      * Test a valid upload of a required file in a form. Error is set to 0, as the upload went well
-     *
      */
     public function testUploadRequiredFile()
     {

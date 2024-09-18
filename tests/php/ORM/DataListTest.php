@@ -34,6 +34,7 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Tests\DataObjectTest\RelationChildFirst;
 use SilverStripe\ORM\Tests\DataObjectTest\RelationChildSecond;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DataListTest extends SapphireTest
 {
@@ -89,7 +90,7 @@ class DataListTest extends SapphireTest
         $this->assertEquals(2, count($list ?? []));
     }
 
-    public function provideDefaultCaseSensitivity()
+    public static function provideDefaultCaseSensitivity()
     {
         return [
             [
@@ -135,9 +136,7 @@ class DataListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideDefaultCaseSensitivity
-     */
+    #[DataProvider('provideDefaultCaseSensitivity')]
     public function testDefaultCaseSensitivity(bool $caseSensitive, array $filter, int $expectedCount)
     {
         SearchFilter::config()->set('default_case_sensitive', $caseSensitive);
@@ -203,7 +202,7 @@ class DataListTest extends SapphireTest
         $this->assertEquals(['Joe', 'Phil'], $list->limit(2, 1)->column('Name'));
     }
 
-    public function limitDataProvider(): array
+    public static function limitDataProvider(): array
     {
         return [
             'no limit' => [null, 0, 3],
@@ -220,9 +219,7 @@ class DataListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider limitDataProvider
-     */
+    #[DataProvider('limitDataProvider')]
     public function testLimitAndOffset($length, $offset, $expectedCount, $expectException = false)
     {
         $list = TeamComment::get();
@@ -304,7 +301,7 @@ class DataListTest extends SapphireTest
         $this->assertSQLEquals($expected, $list->sql($parameters));
     }
 
-    public function provideJoin()
+    public static function provideJoin()
     {
         return [
             [
@@ -322,9 +319,7 @@ class DataListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideJoin
-     */
+    #[DataProvider('provideJoin')]
     public function testJoin(string $joinMethod, string $joinType)
     {
         $db = DB::get_conn();
@@ -352,9 +347,7 @@ class DataListTest extends SapphireTest
         $this->assertEmpty($parameters);
     }
 
-    /**
-     * @dataProvider provideJoin
-     */
+    #[DataProvider('provideJoin')]
     public function testJoinParameterised(string $joinMethod, string $joinType)
     {
         $db = DB::get_conn();
@@ -680,7 +673,7 @@ class DataListTest extends SapphireTest
     public function testSortInvalidParameters()
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectDeprecationMessage('Fans is not a linear relation on model SilverStripe\ORM\Tests\DataObjectTest\Player');
+        $this->expectExceptionMessage('Fans is not a linear relation on model SilverStripe\ORM\Tests\DataObjectTest\Player');
         $list = Team::get();
         $list->sort('Founder.Fans.Surname'); // Can't sort on has_many
     }
@@ -1897,9 +1890,6 @@ class DataListTest extends SapphireTest
         $this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
     }
 
-    /**
-     *
-     */
     public function testSortByRelation()
     {
         $list = TeamComment::get();
@@ -1948,9 +1938,7 @@ class DataListTest extends SapphireTest
         );
     }
 
-    /**
-     * @dataProvider provideRawSqlSortException
-     */
+    #[DataProvider('provideRawSqlSortException')]
     public function testRawSqlSort(string $sort, string $type): void
     {
         $type = explode('|', $type)[0];
@@ -1978,9 +1966,7 @@ class DataListTest extends SapphireTest
         Team::get()->sort($sort)->column('ID');
     }
 
-    /**
-     * @dataProvider provideRawSqlSortException
-     */
+    #[DataProvider('provideRawSqlSortException')]
     public function testRawSqlOrderBy(string $sort, string $type): void
     {
         $type = explode('|', $type)[1];
@@ -2005,7 +1991,7 @@ class DataListTest extends SapphireTest
         Team::get()->orderBy($sort)->column('ID');
     }
 
-    public function provideRawSqlSortException(): array
+    public static function provideRawSqlSortException(): array
     {
         return [
             ['Title', 'valid|valid'],
@@ -2033,9 +2019,7 @@ class DataListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideSortDirectionValidationTwoArgs
-     */
+    #[DataProvider('provideSortDirectionValidationTwoArgs')]
     public function testSortDirectionValidationTwoArgs(string $direction, string $type): void
     {
         if ($type === 'valid') {
@@ -2047,7 +2031,7 @@ class DataListTest extends SapphireTest
         Team::get()->sort('Title', $direction)->column('ID');
     }
 
-    public function provideSortDirectionValidationTwoArgs(): array
+    public static function provideSortDirectionValidationTwoArgs(): array
     {
         return [
             ['ASC', 'valid'],
@@ -2060,9 +2044,8 @@ class DataListTest extends SapphireTest
 
     /**
      * Test passing scalar values to sort()
-     *
-     * @dataProvider provideSortScalarValues
      */
+    #[DataProvider('provideSortScalarValues')]
     public function testSortScalarValues(mixed $emtpyValue, string $type): void
     {
         $this->assertSame(['Subteam 1'], Team::get()->limit(1)->column('Title'));
@@ -2080,7 +2063,7 @@ class DataListTest extends SapphireTest
         $this->assertSame(['Subteam 1'], $list->limit(1)->column('Title'));
     }
 
-    public function provideSortScalarValues(): array
+    public static function provideSortScalarValues(): array
     {
         return [
             ['', 'empty-scalar'],
@@ -2261,9 +2244,7 @@ class DataListTest extends SapphireTest
         $list->offsetUnset(0);
     }
 
-    /**
-     * @dataProvider provideRelation
-     */
+    #[DataProvider('provideRelation')]
     public function testRelation(string $parentClass, string $relation, ?array $expected)
     {
         $list = $parentClass::get()->relation($relation);
@@ -2274,7 +2255,7 @@ class DataListTest extends SapphireTest
         }
     }
 
-    public function provideRelation()
+    public static function provideRelation()
     {
         return [
             'many_many' => [
@@ -2302,9 +2283,7 @@ class DataListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideCreateDataObject
-     */
+    #[DataProvider('provideCreateDataObject')]
     public function testCreateDataObject(string $dataClass, string $realClass, array $row)
     {
         $list = new DataList($dataClass);
@@ -2326,7 +2305,7 @@ class DataListTest extends SapphireTest
         }
     }
 
-    public function provideCreateDataObject()
+    public static function provideCreateDataObject()
     {
         return [
             'no ClassName' => [

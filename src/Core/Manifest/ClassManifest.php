@@ -302,7 +302,7 @@ class ClassManifest
     public function getParser()
     {
         if (!$this->parser) {
-            $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+            $this->parser = (new ParserFactory)->createForHostVersion();
         }
 
         return $this->parser;

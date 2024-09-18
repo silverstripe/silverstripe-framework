@@ -7,6 +7,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\SessionManager\Models\LoginSession;
 use SilverStripe\Dev\Deprecation;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RememberLoginHashTest extends SapphireTest
 {
@@ -32,7 +33,7 @@ class RememberLoginHashTest extends SapphireTest
         ];
     }
 
-    public function clearScenarios()
+    public static function clearScenarios()
     {
         return [
             'logout across devices' => [true, 'current', ['secondary'], ['current', 'other']],
@@ -47,8 +48,8 @@ class RememberLoginHashTest extends SapphireTest
      * @param mixed $deviceId
      * @param array $expected
      * @param array $unexpected
-     * @dataProvider clearScenarios
      */
+    #[DataProvider('clearScenarios')]
     public function testClear(bool $logoutAcrossDevices, $deviceId, array $expected, array $unexpected)
     {
         // If session-manager module is installed then logout_across_devices is modified so skip
@@ -98,9 +99,9 @@ class RememberLoginHashTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideRenew
      * @param bool $replaceToken
      */
+    #[DataProvider('provideRenew')]
     public function testRenew($replaceToken)
     {
         // If session-manager module is installed it expects an active request during renewal
@@ -132,7 +133,7 @@ class RememberLoginHashTest extends SapphireTest
         }
     }
 
-    public function provideRenew(): array
+    public static function provideRenew(): array
     {
         return [
             [true],

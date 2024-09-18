@@ -26,6 +26,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PolymorphicPeople
 use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class GridFieldDetailFormTest extends FunctionalTest
 {
@@ -496,7 +497,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         $this->autoFollowRedirection = $origAutoFollow;
     }
 
-    public function provideGetRecordFromRequestFindExisting()
+    public static function provideGetRecordFromRequestFindExisting()
     {
         return [
             'No records' => [
@@ -518,9 +519,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetRecordFromRequestFindExisting
-     */
+    #[DataProvider('provideGetRecordFromRequestFindExisting')]
     public function testGetRecordFromRequestFindExisting(array $data, bool $hasRecord)
     {
         $controller = new TestController();
@@ -538,7 +537,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         $this->assertSame($hasRecord, (bool) $reflectionMethod->invoke($component, $gridField, $request));
     }
 
-    public function provideGetRecordFromRequestCreateNew()
+    public static function provideGetRecordFromRequestCreateNew()
     {
         // Note that in all of these scenarios a new record gets created, so it *shouldn't* matter what's already in there.
         return [
@@ -554,9 +553,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetRecordFromRequestCreateNew
-     */
+    #[DataProvider('provideGetRecordFromRequestCreateNew')]
     public function testGetRecordFromRequestCreateNew(array $data)
     {
         $controller = new TestController();
@@ -574,7 +571,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         $this->assertEquals(new ArrayDataWithID(['ID' => 0]), $reflectionMethod->invoke($component, $gridField, $request));
     }
 
-    public function provideGetRecordFromRequestWithoutData()
+    public static function provideGetRecordFromRequestWithoutData()
     {
         // Note that in all of these scenarios a new record gets created, so it *shouldn't* matter what's already in there.
         return [
@@ -590,9 +587,7 @@ class GridFieldDetailFormTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideGetRecordFromRequestWithoutData
-     */
+    #[DataProvider('provideGetRecordFromRequestWithoutData')]
     public function testGetRecordFromRequestWithoutData(array $data)
     {
         $controller = new TestController();

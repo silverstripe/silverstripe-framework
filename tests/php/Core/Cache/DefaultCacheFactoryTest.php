@@ -19,10 +19,11 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DefaultCacheFactoryTest extends SapphireTest
 {
-    public function provideCreate(): array
+    public static function provideCreate(): array
     {
         $scenarios = [
             [
@@ -73,9 +74,7 @@ class DefaultCacheFactoryTest extends SapphireTest
         return $allScenarios;
     }
 
-    /**
-     * @dataProvider provideCreate
-     */
+    #[DataProvider('provideCreate')]
     public function testCreate(array $args, ?string $inMemoryCacheFactory): void
     {
         $oldFactoryValue = Environment::getEnv('SS_IN_MEMORY_CACHE_FACTORY');

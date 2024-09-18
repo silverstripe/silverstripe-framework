@@ -10,6 +10,11 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Tests\DataQueryTest\ObjectE;
 use SilverStripe\Security\Member;
+use SilverStripe\ORM\Tests\DataQueryTest\DataQueryTestException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use SilverStripe\Dev\Exceptions\ExpectedErrorException;
+use SilverStripe\Dev\Exceptions\ExpectedWarningException;
 
 class DataQueryTest extends SapphireTest
 {
@@ -56,7 +61,7 @@ class DataQueryTest extends SapphireTest
         $this->assertEquals('Foo', $result['Title']);
     }
 
-    public function provideJoins()
+    public static function provideJoins()
     {
         return [
             [
@@ -74,9 +79,7 @@ class DataQueryTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideJoins
-     */
+    #[DataProvider('provideJoins')]
     public function testJoins($joinMethod, $joinType)
     {
         $dq = new DataQuery(Member::class);
@@ -101,9 +104,7 @@ class DataQueryTest extends SapphireTest
         $this->assertStringContainsString('"testctwo_DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
     }
 
-    /**
-     * @dataProvider provideApplyRelationMultiRelational
-     */
+    #[DataProvider('provideApplyRelationMultiRelational')]
     public function testApplyRelationMultiRelational(string $relation): void
     {
         $dq = new DataQuery(DataQueryTest\ObjectHasMultiRelationalHasMany::class);
@@ -116,7 +117,7 @@ class DataQueryTest extends SapphireTest
         $this->assertStringContainsString($joinAliasWithQuotes . '."MultiRelationalClass" = "DataQueryTest_ObjectHasMultiRelationalHasMany"."ClassName"', $dq->sql());
     }
 
-    public function provideApplyRelationMultiRelational(): array
+    public static function provideApplyRelationMultiRelational(): array
     {
         return [
             'relation1' => [
@@ -215,7 +216,7 @@ class DataQueryTest extends SapphireTest
         $this->assertTrue(true);
     }
 
-    public function provideFieldCollision()
+    public static function provideFieldCollision()
     {
         return [
             'allow collisions' => [true],
@@ -223,11 +224,10 @@ class DataQueryTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideFieldCollision
-     */
+    #[DataProvider('provideFieldCollision')]
     public function testFieldCollision($allowCollisions)
     {
+        $this->enableErrorHandler();
         $dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
         $dataQuery->selectField('COALESCE(NULL, 1) AS "Title"');
         $dataQuery->setAllowCollidingFieldStatements($allowCollisions);
@@ -235,8 +235,8 @@ class DataQueryTest extends SapphireTest
         if ($allowCollisions) {
             $this->assertSQLContains('THEN "DataQueryTest_B"."Title" WHEN COALESCE(NULL, 1) AS "Title" IS NOT NULL THEN COALESCE(NULL, 1) AS "Title" ELSE NULL END AS "Title"', $dataQuery->sql());
         } else {
-            $this->expectError();
-            $this->expectErrorMessageMatches('/^Bad collision item /');
+            $this->expectException(ExpectedWarningException::class);
+            $this->expectExceptionMessageMatches('/^Bad collision item /');
         }
 
         $dataQuery->getFinalisedQuery();
@@ -604,7 +604,7 @@ class DataQueryTest extends SapphireTest
         );
     }
 
-    public function provideWith()
+    public static function provideWith()
     {
         return [
             // Simple scenarios to test auto-join functionality
@@ -720,7 +720,7 @@ class DataQueryTest extends SapphireTest
                 'extraManipulations' => [
                     'innerJoin' => ['hierarchy', '"SQLSelectTestCteRecursive"."ID" = "hierarchy"."parent_id"'],
                 ],
-                'expected' => [
+                'expectedItems' => [
                     'fixtures' => [
                         'grandparent',
                         'parent',
@@ -731,9 +731,7 @@ class DataQueryTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideWith
-     */
+    #[DataProvider('provideWith')]
     public function testWith(
         string $dataClass,
         string $name,
@@ -864,8 +862,8 @@ class DataQueryTest extends SapphireTest
     /**
      * Tests that CTE queries have appropriate JOINs for subclass tables etc.
      * If `$query->query()->` was replaced with `$query->query->` in DataQuery::with(), this test would throw an exception.
-     * @doesNotPerformAssertions
      */
+    #[DoesNotPerformAssertions]
     public function testWithUsingDataQueryAppliesRelations()
     {
         if (!DB::get_conn()->supportsCteQueries()) {

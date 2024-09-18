@@ -12,6 +12,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestExtension;
 use SilverStripe\View\Tests\ViewableDataTest\ViewableDataTestObject;
 use SilverStripe\View\ViewableData;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
@@ -284,7 +285,7 @@ class ViewableDataTest extends SapphireTest
         $this->assertSame($obj, $viewableData->abc);
     }
 
-    public function provideWrapArrayInObj(): array
+    public static function provideWrapArrayInObj(): array
     {
         return [
             'empty array' => [
@@ -301,9 +302,7 @@ class ViewableDataTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideWrapArrayInObj
-     */
+    #[DataProvider('provideWrapArrayInObj')]
     public function testWrapArrayInObj(array $arr, string $expectedClass): void
     {
         $viewableData = new ViewableData();

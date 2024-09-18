@@ -14,6 +14,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordValidator;
 use SilverStripe\View\SSViewer;
 use Closure;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
@@ -185,8 +186,8 @@ class ConfirmedPasswordFieldTest extends SapphireTest
      * @param int|null $maxLength
      * @param bool $expectValid
      * @param string $expectedMessage
-     * @dataProvider lengthValidationProvider
      */
+    #[DataProvider('lengthValidationProvider')]
     public function testLengthValidation($minLength, $maxLength, $expectValid, $expectedMessage = '')
     {
         $field = new ConfirmedPasswordField('Test', 'Testing', [
@@ -208,7 +209,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
     /**
      * @return array[]
      */
-    public function lengthValidationProvider()
+    public static function lengthValidationProvider()
     {
         return [
             'valid: within min and max' => [3, 8, true],
@@ -385,9 +386,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertCount(2, $field->getChildren(), 'Current password field should not be removed');
     }
 
-    /**
-     * @dataProvider provideSetCanBeEmptySaveInto
-     */
+    #[DataProvider('provideSetCanBeEmptySaveInto')]
     public function testSetCanBeEmptySaveInto(bool $generateRandomPasswordOnEmpty, ?string $expected)
     {
         $field = new ConfirmedPasswordField('Test', 'Change it');
@@ -403,7 +402,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertSame($expected, $field->Value());
     }
 
-    public function provideSetCanBeEmptySaveInto(): array
+    public static function provideSetCanBeEmptySaveInto(): array
     {
         return [
             [
@@ -430,7 +429,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertNotEmpty($passwordField->RightTitle());
     }
 
-    public function provideRequired()
+    public static function provideRequired()
     {
         return [
             'can be empty' => [true],
@@ -438,9 +437,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideRequired
-     */
+    #[DataProvider('provideRequired')]
     public function testRequired(bool $canBeEmpty)
     {
         $field = new ConfirmedPasswordField('Test');
@@ -448,7 +445,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertSame(!$canBeEmpty, $field->Required());
     }
 
-    public function provideChildFieldsAreRequired()
+    public static function provideChildFieldsAreRequired()
     {
         return [
             'not required' => [
@@ -478,9 +475,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideChildFieldsAreRequired
-     */
+    #[DataProvider('provideChildFieldsAreRequired')]
     public function testChildFieldsAreRequired(bool $canBeEmpty, bool $required, bool $childrenRequired, bool $expectRequired)
     {
         // CWP front-end templates break this logic - but there's no easy fix for that.

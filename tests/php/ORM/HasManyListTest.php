@@ -10,6 +10,7 @@ use SilverStripe\ORM\Tests\HasManyListTest\CompanyCar;
 use SilverStripe\ORM\Tests\HasManyListTest\Employee;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HasManyListTest extends SapphireTest
 {
@@ -192,9 +193,7 @@ class HasManyListTest extends SapphireTest
         $this->assertEquals([$remove->ID], $removedIds);
     }
 
-    /**
-     * @dataProvider provideForForeignIDPlaceholders
-     */
+    #[DataProvider('provideForForeignIDPlaceholders')]
     public function testForForeignIDPlaceholders(bool $config, bool $useInt, bool $expected): void
     {
         Config::modify()->set(DataList::class, 'use_placeholders_for_integer_ids', $config);
@@ -214,7 +213,7 @@ class HasManyListTest extends SapphireTest
         $this->assertSame($expectedIDs, $newCommentsList->column('ID'));
     }
 
-    public function provideForForeignIDPlaceholders(): array
+    public static function provideForForeignIDPlaceholders(): array
     {
         return [
             'config false' => [

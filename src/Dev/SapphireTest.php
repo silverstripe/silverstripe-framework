@@ -3,11 +3,13 @@
 namespace SilverStripe\Dev;
 
 use Exception;
+use Facebook\WebDriver\Exception\UnknownErrorException;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\Constraint\LogicalNot;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Exception as PHPUnitFrameworkException;
+use PHPUnit\Framework\TestSize\Unknown;
 use PHPUnit\Util\Test as TestUtil;
 use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\Control\CLIRequestBuilder;
@@ -41,6 +43,12 @@ use SilverStripe\View\SSViewer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\NullTransport;
+use ReflectionMethod;
+use ReflectionClass;
+use SilverStripe\Dev\Exceptions\ExpectedErrorException;
+use SilverStripe\Dev\Exceptions\ExpectedNoticeException;
+use SilverStripe\Dev\Exceptions\ExpectedWarningException;
+use SilverStripe\Dev\Exceptions\UnexpectedErrorException;
 
 /**
  * Test case class for the Silverstripe framework.
@@ -334,6 +342,37 @@ abstract class SapphireTest extends TestCase implements TestOnly
         Email::config()->remove('bcc_all_emails_to');
     }
 
+     /**
+     * @param callable|null $oldHandler
+     */
+    private $oldErrorHandler = null;
+
+    /**
+     * Setup a custom error handler to throw exceptions on errors
+     */
+    protected function enableErrorHandler()
+    {
+        // If changing this method, ensure that the corresponding table on 00_Unit_Testing.md
+        // in silverstripe/deveoper-docs is also updated
+        $this->oldErrorHandler = set_error_handler(
+            function (int $errno, string $errstr, string $errfile, int $errline) {
+                // E_ERROR, E_PARSE, E_CORE_ERROR, E_CORE_WARNING, E_COMPILE_ERROR, E_COMPILE_WARNING
+                // cannot be handled in set_error_handler()
+                // https://www.php.net/manual/en/function.set-error-handler.php
+                // https://www.php.net/manual/en/errorfunc.constants.php
+                if (in_array($errno, [E_USER_ERROR, E_RECOVERABLE_ERROR])) {
+                    throw new ExpectedErrorException($errstr);
+                } elseif (in_array($errno, [E_NOTICE, E_USER_NOTICE])) {
+                    throw new ExpectedNoticeException($errstr);
+                } elseif (in_array($errno, [E_WARNING, E_USER_WARNING])) {
+                    throw new ExpectedWarningException($errstr);
+                }
+                // Use the standard PHP error handler
+                return false;
+            }
+        );
+    }
+
     /**
      * Helper method to determine if the current test should enable a test database
      *
@@ -563,6 +602,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
 
         // Call state helpers
         static::$state->tearDown($this);
+
+        // Reset custom error handler
+        if ($this->oldErrorHandler) {
+            restore_error_handler();
+            $this->oldErrorHandler = null;
+        }
     }
 
     /**
@@ -1212,16 +1257,30 @@ abstract class SapphireTest extends TestCase implements TestOnly
     }
 
     /**
-     * Returns the annotations for this test.
-     *
-     * @return array
+     * Returns the annotations for this test
      */
     public function getAnnotations(): array
     {
-        return TestUtil::parseTestMethodAnnotations(
-            get_class($this),
-            $this->getName(false)
-        );
+        $class = get_class($this);
+        $method = $this->name();
+        $ret = [];
+        foreach (['method', 'class'] as $what) {
+            if ($what === 'method') {
+                $reflection = new ReflectionMethod($class, $method);
+            } else {
+                $reflection = new ReflectionClass($class);
+            }
+            preg_match_all('#@(.*?)\n#s', $reflection->getDocComment(), $annotations);
+            $ret[$what] = [];
+            foreach ($annotations[1] as $annotation) {
+                $parts = explode(' ', $annotation);
+                $key = array_shift($parts);
+                $value = implode(' ', $parts);
+                $ret[$what][$key] ??= [];
+                $ret[$what][$key][] = $value;
+            }
+        }
+        return $ret;
     }
 
     /**

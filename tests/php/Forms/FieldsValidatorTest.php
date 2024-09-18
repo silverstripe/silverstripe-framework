@@ -7,12 +7,13 @@ use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FieldsValidator;
 use SilverStripe\Forms\Form;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FieldsValidatorTest extends SapphireTest
 {
     protected $usesDatabase = false;
 
-    public function provideValidation()
+    public static function provideValidation()
     {
         return [
             'missing values arent invalid' => [
@@ -50,9 +51,7 @@ class FieldsValidatorTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideValidation
-     */
+    #[DataProvider('provideValidation')]
     public function testValidation(array $values, bool $isValid)
     {
         $fieldList = new FieldList([

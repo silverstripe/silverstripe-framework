@@ -33,7 +33,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
     private function getMemberMock($isPasswordExpired) : Member
     {
         $mock = $this->createMock(Member::class);
-        $mock->method('isPasswordExpired')->will($this->returnValue($isPasswordExpired));
+        $mock->method('isPasswordExpired')->willReturn($isPasswordExpired);
 
         return $mock;
     }
@@ -61,8 +61,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
      * Check a member with an expired password is allowed to process the request in
      * deauthorised mode (Security::getCurrentUser() === null) if there are no
      * change password redirects registered
-     *
-     * @depends test200
      */
     public function testDeauthorised()
     {
@@ -87,8 +85,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
     /**
      * Check a member with an expired password is redirected to a change password form
      * instead of processing its original request
-     *
-     * @depends test200
      */
     public function testRedirected()
     {
@@ -98,7 +94,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, '/redirect-address-custom');
@@ -120,8 +116,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 
     /**
      * Check we handle network locations correctly (the relative urls starting with //)
-     *
-     * @depends testRedirected
      */
     public function testNetworkLocationRedirect()
     {
@@ -131,7 +125,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, '//localhost/custom-base/redirect-address-custom');
@@ -153,9 +147,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 
     /**
      * Check we can allow the current request handling even with an expired password
-     *
-     * @depends test200
-     * @depends testDeauthorised
      */
     public function testAllowRequest()
     {
@@ -183,8 +174,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
     /**
      * Check a member with an expired password is redirected to a default change password form
      * if a custom not set
-     *
-     * @depends testRedirected
      */
     public function testDefaultRedirect()
     {
@@ -196,7 +185,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $executed = false;
@@ -217,8 +206,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
     /**
      * Check a member with an expired password is redirected to a default change password form
      * if a custom not set
-     *
-     * @depends testDefaultRedirect
      */
     public function testCustomRedirect()
     {
@@ -230,7 +217,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
 
         $executed = false;
         $activeMember = null;
@@ -249,8 +236,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 
     /**
      * Check a custom redirect URL overrides the default one
-     *
-     * @depends testCustomRedirect
      */
     public function testCustomOverDefaultRedirect()
     {
@@ -262,7 +247,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
         $a->setRedirect($session, '/redirect-address-custom');
 
@@ -283,8 +268,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 
     /**
      * Test we can allow URLs to be visited without redirections through config
-     *
-     * @depends testRedirected
      */
     public function testAllowedUrlStartswithNegative()
     {
@@ -298,7 +281,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/not-allowed');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, '/redirect-address-custom');
@@ -320,8 +303,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 
     /**
      * Test we can allow URLs to be visited without redirections through config
-     *
-     * @depends testRedirected
      */
     public function testAllowedUrlStartswithPositivePattern()
     {
@@ -335,7 +316,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/allowed-address-configured/subsection1/subsection2/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, '/redirect-address-custom');
@@ -364,7 +345,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/allowed-address-configured?foo=bar');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, '/redirect-address-custom');
@@ -393,7 +374,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/allowed-address-configured?foo=bar');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, 'redirect-address-custom');
@@ -412,8 +393,6 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
 
     /**
      * Test we can allow URLs to be visited without redirections through config
-     *
-     * @depends testRedirected
      */
     public function testAllowedUrlStartswithPositiveExactUrl()
     {
@@ -427,7 +406,7 @@ class PasswordExpirationMiddlewareTest extends SapphireTest
         $a = new PasswordExpirationMiddleware();
 
         $request = $this->buildRequestMock('/allowed-address-configured/');
-        $request->method('getAcceptMimetypes')->will($this->returnValue(['*/*']));
+        $request->method('getAcceptMimetypes')->willReturn(['*/*']);
         $session = $request->getSession();
 
         $a->setRedirect($session, '/redirect-address-custom');
