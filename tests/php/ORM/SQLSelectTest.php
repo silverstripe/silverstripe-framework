@@ -10,7 +10,7 @@ use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\PostgreSQL\PostgreSQLDatabase;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\Tests\SQLSelectTest\CteDatesObject;
 use SilverStripe\ORM\Tests\SQLSelectTest\CteRecursiveObject;

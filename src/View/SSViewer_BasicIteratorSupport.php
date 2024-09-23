@@ -4,7 +4,7 @@ namespace SilverStripe\View;
 
 /**
  * Defines an extra set of basic methods that can be used in templates
- * that are not defined on sub-classes of {@link ViewableData}.
+ * that are not defined on sub-classes of {@link ModelData}.
  */
 class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
 {

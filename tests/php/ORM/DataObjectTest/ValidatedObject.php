@@ -4,7 +4,7 @@ namespace SilverStripe\ORM\Tests\DataObjectTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 class ValidatedObject extends DataObject implements TestOnly
 {

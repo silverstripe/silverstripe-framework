@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use ArrayIterator;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use Traversable;
 

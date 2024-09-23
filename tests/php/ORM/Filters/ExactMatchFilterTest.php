@@ -8,7 +8,7 @@ use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Task;
 use SilverStripe\ORM\Tests\Filters\ExactMatchFilterTest\Project;
 use SilverStripe\ORM\DataList;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\ORM\Filters\SearchFilter;
 use PHPUnit\Framework\Attributes\DataProvider;
 

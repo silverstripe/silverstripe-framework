@@ -23,7 +23,7 @@ use SilverStripe\Core\Tests\ClassInfoTest\WithCustomTable;
 use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class ClassInfoTest extends SapphireTest
@@ -150,7 +150,7 @@ class ClassInfoTest extends SapphireTest
     {
         $ancestry = ClassInfo::ancestry(ChildClass::class);
         $expect = [
-            'silverstripe\\view\\viewabledata' => ViewableData::class,
+            'silverstripe\\model\\modeldata' => ModelData::class,
             'silverstripe\\orm\\dataobject' => DataObject::class,
             'silverstripe\\core\tests\classinfotest\\baseclass' => BaseClass::class,
             'silverstripe\\core\tests\classinfotest\\childclass' => ChildClass::class,

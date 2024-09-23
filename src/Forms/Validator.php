@@ -5,7 +5,7 @@ namespace SilverStripe\Forms;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * This validation class handles all form and custom form validation through the use of Required

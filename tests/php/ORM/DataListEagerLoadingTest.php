@@ -12,7 +12,7 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\ManyManyThroughList;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\EagerLoadSubClassObject;
 use SilverStripe\ORM\Tests\DataListTest\EagerLoading\HasOneEagerLoadObject;

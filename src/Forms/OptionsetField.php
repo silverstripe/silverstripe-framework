@@ -3,8 +3,8 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 
 /**
  * Set of radio buttons designed to emulate a dropdown.

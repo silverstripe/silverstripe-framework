@@ -34,7 +34,7 @@ interface GridField_ColumnProvider extends GridFieldComponent
      * HTML for the column, content of the <td> element.
      *
      * @param  GridField $gridField
-     * @param  ViewableData $record - Record displayed in this row
+     * @param  ModelData $record - Record displayed in this row
      * @param  string $columnName
      * @return string - HTML for the column. Return NULL to skip.
      */
@@ -44,7 +44,7 @@ interface GridField_ColumnProvider extends GridFieldComponent
      * Attributes for the element containing the content returned by {@link getColumnContent()}.
      *
      * @param  GridField $gridField
-     * @param  ViewableData $record displayed in this row
+     * @param  ModelData $record displayed in this row
      * @param  string $columnName
      * @return array
      */

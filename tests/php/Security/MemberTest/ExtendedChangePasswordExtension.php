@@ -4,7 +4,7 @@ namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Core\Extension;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * Extension that does something extra when changing a member's password

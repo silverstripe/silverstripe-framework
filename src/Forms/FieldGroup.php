@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * Lets you include a nested group of fields inside a template.

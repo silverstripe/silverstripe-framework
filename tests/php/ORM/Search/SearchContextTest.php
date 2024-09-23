@@ -18,7 +18,7 @@ use SilverStripe\ORM\Filters\EndsWithFilter;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Search\SearchContext;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class SearchContextTest extends SapphireTest
 {

@@ -5,15 +5,15 @@ namespace SilverStripe\Forms;
 use http\Exception\InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\Relation;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Security\Group;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * This formfield represents many-many joins using a tree selector shown in a dropdown styled element
@@ -211,7 +211,7 @@ class TreeMultiselectField extends TreeDropdownField
         if ($items && count($items ?? [])) {
             foreach ($items as $item) {
                 $idArray[] = $item->ID;
-                $titleArray[] = ($item instanceof ViewableData)
+                $titleArray[] = ($item instanceof ModelData)
                     ? $item->obj($this->getLabelField())->forTemplate()
                     : Convert::raw2xml($item->{$this->getLabelField()});
             }

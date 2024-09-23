@@ -275,7 +275,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     /**
      * The basic generated PHP of LookupStep and LastLookupStep is the same, except that LookupStep calls 'obj' to
-     * get the next ViewableData in the sequence, and LastLookupStep calls different methods (XML_val, hasValue, obj)
+     * get the next ModelData in the sequence, and LastLookupStep calls different methods (XML_val, hasValue, obj)
      * depending on the context the lookup is used in.
      */
     function Lookup_AddLookupStep(&$res, $sub, $method)

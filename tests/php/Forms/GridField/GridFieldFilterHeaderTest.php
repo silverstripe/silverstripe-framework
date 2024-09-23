@@ -18,10 +18,10 @@ use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Mom;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\NonDataObject;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\Team;
 use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TeamGroup;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class GridFieldFilterHeaderTest extends SapphireTest
 {

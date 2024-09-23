@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use RuntimeException;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Dev\Deprecation;
 
 /**

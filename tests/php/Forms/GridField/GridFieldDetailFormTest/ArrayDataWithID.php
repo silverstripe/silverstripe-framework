@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class ArrayDataWithID extends ArrayData implements TestOnly
 {

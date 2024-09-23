@@ -11,6 +11,8 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Resettable;
+use SilverStripe\Core\Validation\ValidationException;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
@@ -24,6 +26,8 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -40,7 +44,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use stdClass;
 
 /**
@@ -111,7 +115,7 @@ use stdClass;
  * @property string $Created Date and time of DataObject creation.
  * @property string $ObsoleteClassName If ClassName no longer exists this will be set to the legacy value
  */
-class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider, Resettable
+class DataObject extends ModelData implements DataObjectInterface, i18nEntityProvider, Resettable
 {
     /**
      * Human-readable singular name.
@@ -3280,7 +3284,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * can throw a LogicException.
      *
      * @param string $fieldPath List of paths on this object. All items in this path
-     * must be ViewableData implementors
+     * must be ModelData implementors
      *
      * @return mixed DBField of the field on the object or a DataList instance.
      * @throws LogicException If accessing invalid relations
@@ -3305,7 +3309,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 $component = $singleton->dbObject($relation) ?: $component->relation($relation);
             } elseif ($component instanceof DataObject && ($dbObject = $component->dbObject($relation))) {
                 $component = $dbObject;
-            } elseif ($component instanceof ViewableData && $component->hasField($relation)) {
+            } elseif ($component instanceof ModelData && $component->hasField($relation)) {
                 $component = $component->obj($relation);
             } else {
                 throw new LogicException(
@@ -3944,7 +3948,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             $ancestry = array_reverse($ancestry ?? []);
             if ($ancestry) {
                 foreach ($ancestry as $ancestorClass) {
-                    if ($ancestorClass === ViewableData::class) {
+                    if ($ancestorClass === ModelData::class) {
                         break;
                     }
                     $types = [

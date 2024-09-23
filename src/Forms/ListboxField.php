@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ArrayData;
 
 /**
  * Multi-line listbox field, created from a select tag.

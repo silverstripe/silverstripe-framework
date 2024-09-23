@@ -7,7 +7,7 @@ use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * Form used for editing a date string

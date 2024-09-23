@@ -5,8 +5,8 @@ namespace SilverStripe\Forms\Tests\GridField\GridFieldTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\List\SS_List;
 
 class Component2 implements GridField_DataManipulator, TestOnly
 {

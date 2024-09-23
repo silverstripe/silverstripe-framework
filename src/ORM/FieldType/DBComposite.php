@@ -7,7 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Extend this class when designing a {@link DBField} that doesn't have a 1-1 mapping with a database field.
@@ -42,7 +42,7 @@ abstract class DBComposite extends DBField
     /**
      * Either the parent dataobject link, or a record of saved values for each field
      */
-    protected array|ViewableData $record = [];
+    protected array|ModelData $record = [];
 
     public function __set(string $property, mixed $value): void
     {
@@ -157,11 +157,11 @@ abstract class DBComposite extends DBField
      * If $record is assigned to a dataobject, this field becomes a loose wrapper over
      * the records on that object instead.
      *
-     * {@see ViewableData::obj}
+     * {@see ModelData::obj}
      *
-     * @param null|array|ViewableData $record Parent object to this field, which could be a DataObject, record array, or other
+     * @param null|array|ModelData $record Parent object to this field, which could be a DataObject, record array, or other
      */
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         $this->isChanged = $markChanged;
 
@@ -198,7 +198,7 @@ abstract class DBComposite extends DBField
         $this->record = $dataObject;
     }
 
-    public function saveInto(ViewableData $dataObject): void
+    public function saveInto(ModelData $dataObject): void
     {
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Save into record

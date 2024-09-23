@@ -22,9 +22,9 @@ use SilverStripe\ORM\Tests\DataObjectTest\Company;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TreeNode;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Security\Member;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use ReflectionMethod;
 use stdClass;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -1586,7 +1586,7 @@ class DataObjectTest extends SapphireTest
 
         /* Return false if you don't pass it a subclass of DataObject */
         $this->assertFalse($schema->classHasTable(DataObject::class));
-        $this->assertFalse($schema->classHasTable(ViewableData::class));
+        $this->assertFalse($schema->classHasTable(ModelData::class));
 
         /* Invalid class name */
         $this->assertFalse($schema->classHasTable("ThisIsntADataObject"));

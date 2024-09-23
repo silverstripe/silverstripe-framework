@@ -1,11 +1,11 @@
 <?php
 
-namespace SilverStripe\Dev\Tests\ViewableDataContainsTest;
+namespace SilverStripe\Dev\Tests\ModelDataContainsTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class TestObject extends ViewableData implements TestOnly
+class TestObject extends ModelData implements TestOnly
 {
     protected $data = null;
 

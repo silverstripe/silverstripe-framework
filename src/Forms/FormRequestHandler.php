@@ -11,9 +11,9 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Core\Validation\ValidationException;
 
 class FormRequestHandler extends RequestHandler
 {

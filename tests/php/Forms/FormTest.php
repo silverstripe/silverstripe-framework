@@ -27,11 +27,11 @@ use SilverStripe\Forms\Tests\FormTest\TestController;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TimeField;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\SecurityToken;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -765,9 +765,9 @@ class FormTest extends FunctionalTest
     ): void {
 
         $this->get('FormTest_ControllerWithSecurityToken');
-        
+
         [ $form, $button, $data, $withSecurityToken ] = [ ...$formData ];
-        
+
         if (is_null($button)) {
             $response = $this->submitForm($form, $button, $data, $withSecurityToken);
             $this->assertEquals($statusCode, $response->getStatusCode(), $testMessage);

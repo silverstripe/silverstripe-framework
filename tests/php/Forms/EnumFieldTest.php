@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\Dev\SapphireTest;
 

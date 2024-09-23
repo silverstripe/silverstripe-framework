@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Control\Tests\RSS\RSSFeedTest;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class ItemC extends ViewableData
+class ItemC extends ModelData
 {
     // ItemC tests fields - Title has casting, Content doesn't.
     private static $casting = [

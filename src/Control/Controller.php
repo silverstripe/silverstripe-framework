@@ -230,7 +230,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             }
             $this->setResponse($response);
         } else {
-            // Could be Controller, or ViewableData_Customised controller wrapper
+            // Could be Controller, or ModelDataCustomised controller wrapper
             if (ClassInfo::hasMethod($response, 'getViewer')) {
                 if (isset($_REQUEST['debug_request'])) {
                     $class = static::class;

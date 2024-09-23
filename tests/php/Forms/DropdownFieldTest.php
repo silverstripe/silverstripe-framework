@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DropdownField;
@@ -11,8 +11,8 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FormTemplateHelper;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\View\ArrayData;
-use SilverStripe\ORM\Map;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\List\Map;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class DropdownFieldTest extends SapphireTest
@@ -171,7 +171,7 @@ class DropdownFieldTest extends SapphireTest
 
         $form->method('getHTMLID')
             ->willReturn($formName);
-        
+
         $source = [
             'first' => 'value',
             0 => 'otherValue'

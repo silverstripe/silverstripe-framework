@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Tests\RelatedDataServiceTest\Base;
 use SilverStripe\ORM\Tests\RelatedDataServiceTest\Belongs;
 use SilverStripe\ORM\Tests\RelatedDataServiceTest\HasMany;

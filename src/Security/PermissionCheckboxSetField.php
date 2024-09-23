@@ -5,10 +5,10 @@ namespace SilverStripe\Security;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use Traversable;
 
 /**

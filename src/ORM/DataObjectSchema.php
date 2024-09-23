@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;

@@ -8,8 +8,8 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Model\ModelData;
 
 /**
  * Adds an "Export list" button to the bottom of a {@link GridField}.
@@ -228,7 +228,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             ? $gridFieldColumnsComponent->getColumnsHandled($gridField)
             : [];
 
-        /** @var SS_List<ViewableData> $items */
+        /** @var SS_List<ModelData> $items */
         // Remove limit as the list may be paginated, we want the full list for the export
         $items = $items->limit(null);
 

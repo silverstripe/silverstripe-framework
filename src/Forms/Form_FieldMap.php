@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class Form_FieldMap extends ViewableData
+class Form_FieldMap extends ModelData
 {
 
     /**

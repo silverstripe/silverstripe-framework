@@ -12,7 +12,7 @@ use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Filterable;
+use SilverStripe\Model\List\Filterable;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Tests\DataObjectTest\DataListQueryCounter;
 use SilverStripe\ORM\Tests\DataObjectTest\Fixture;

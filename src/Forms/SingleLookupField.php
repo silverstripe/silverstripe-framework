@@ -4,7 +4,7 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\Map;
+use SilverStripe\Model\List\Map;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**

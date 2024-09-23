@@ -6,7 +6,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\RSS\RSSFeed;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 class RSSFeedTest extends SapphireTest

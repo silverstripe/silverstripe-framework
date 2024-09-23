@@ -6,7 +6,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a boolean field.
@@ -44,7 +44,7 @@ class DBBoolean extends DBField
         return ($this->value) ? 'true' : 'false';
     }
 
-    public function saveInto(ViewableData $dataObject): void
+    public function saveInto(ModelData $dataObject): void
     {
         $fieldName = $this->name;
         if ($fieldName) {

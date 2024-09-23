@@ -5,7 +5,7 @@ namespace SilverStripe\Core;
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Allows an object to have extensions applied to it.
@@ -43,7 +43,7 @@ trait Extensible
      * @var array
      */
     private static $unextendable_classes = [
-        ViewableData::class,
+        ModelData::class,
     ];
 
     /**

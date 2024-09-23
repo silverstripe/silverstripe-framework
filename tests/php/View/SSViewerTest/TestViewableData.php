@@ -3,13 +3,13 @@
 namespace SilverStripe\View\Tests\SSViewerTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * @property string $TextValue
  * @property string $HTMLValue
  */
-class TestViewableData extends ViewableData implements TestOnly
+class TestModelData extends ModelData implements TestOnly
 {
 
     private static $default_cast = 'Text';

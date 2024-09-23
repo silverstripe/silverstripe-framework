@@ -11,12 +11,12 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ArrayData;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\ModelData;
 
 class TaskRunner extends Controller implements PermissionProvider
 {
@@ -92,7 +92,7 @@ class TaskRunner extends Controller implements PermissionProvider
             'Info' => $renderer->renderInfo('SilverStripe Development Tools: Tasks', $baseUrl),
         ];
 
-        return ViewableData::create()->renderWith(static::class, $data);
+        return ModelData::create()->renderWith(static::class, $data);
     }
 
     /**

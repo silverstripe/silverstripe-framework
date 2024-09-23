@@ -3,13 +3,13 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
-use SilverStripe\ORM\ValidationResult;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Model\ModelData;
 
 /**
  * Form component which contains a castable message
  *
- * @mixin ViewableData
+ * @mixin ModelData
  */
 trait FormMessage
 {

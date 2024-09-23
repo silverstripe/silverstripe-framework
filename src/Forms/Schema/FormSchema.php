@@ -8,7 +8,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use LogicException;
 
 /**

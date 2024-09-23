@@ -14,12 +14,12 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Base class for all forms.
@@ -62,7 +62,7 @@ use SilverStripe\View\ViewableData;
  * For example, the "URLSegment" field in a standard CMS form would be
  * accessible through "admin/EditForm/field/URLSegment/FieldHolder".
  */
-class Form extends ViewableData implements HasRequestHandler
+class Form extends ModelData implements HasRequestHandler
 {
     use AttributesHTML;
     use FormMessage;
@@ -135,7 +135,7 @@ class Form extends ViewableData implements HasRequestHandler
     /**
      * Populated by {@link loadDataFrom()}.
      *
-     * @var ViewableData|null
+     * @var ModelData|null
      */
     protected $record;
 
@@ -1225,7 +1225,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Returns the record that has given this form its data
      * through {@link loadDataFrom()}.
      *
-     * @return ViewableData
+     * @return ModelData
      */
     public function getRecord()
     {
@@ -1305,7 +1305,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @uses FormField::setSubmittedValue()
      * @uses FormField::setValue()
      *
-     * @param array|ViewableData $data
+     * @param array|ModelData $data
      * @param int $mergeStrategy
      *  For every field, {@link $data} is interrogated whether it contains a relevant property/key, and
      *  what that property/key's value is.
@@ -1402,7 +1402,7 @@ class Form extends ViewableData implements HasRequestHandler
                         // There's no other way to tell whether the relation actually exists
                         $exists = false;
                     }
-                // Regular ViewableData access
+                // Regular ModelData access
                 } else {
                     $exists = (
                         isset($data->$name) ||
@@ -1478,7 +1478,7 @@ class Form extends ViewableData implements HasRequestHandler
      * Save the contents of this form into the given data object.
      * It will make use of setCastedField() to do this.
      *
-     * @param ViewableData&DataObjectInterface $dataObject The object to save data into
+     * @param ModelData&DataObjectInterface $dataObject The object to save data into
      * @param array<string>|null $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
      */

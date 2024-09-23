@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\Map;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\List\Map;
 use ArrayAccess;
 
 /**

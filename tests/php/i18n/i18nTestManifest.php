@@ -20,7 +20,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\SSViewer_DataPresenter;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -73,7 +73,7 @@ trait i18nTestManifest
     {
         // force SSViewer_DataPresenter to cache global template vars before we switch to the
         // test-project class manifest (since it will lose visibility of core classes)
-        $presenter = new SSViewer_DataPresenter(new ViewableData());
+        $presenter = new SSViewer_DataPresenter(new ModelData());
         unset($presenter);
 
         // Switch to test manifest

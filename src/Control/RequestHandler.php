@@ -13,7 +13,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionFailureException;
 use SilverStripe\Security\Security;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
@@ -45,7 +45,7 @@ use SilverStripe\View\ViewableData;
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
  */
-class RequestHandler extends ViewableData
+class RequestHandler extends ModelData
 {
 
     /**
@@ -130,7 +130,7 @@ class RequestHandler extends ViewableData
     /**
      * Handles URL requests.
      *
-     *  - ViewableData::handleRequest() iterates through each rule in {@link RequestHandler::$url_handlers}.
+     *  - ModelData::handleRequest() iterates through each rule in {@link RequestHandler::$url_handlers}.
      *  - If the rule matches, the named method will be called.
      *  - If there is still more URL to be processed, then handleRequest()
      *    is called on the object that that method returns.
@@ -248,8 +248,8 @@ class RequestHandler extends ViewableData
     {
         $handlerClass = static::class;
 
-        // We stop after RequestHandler; in other words, at ViewableData
-        while ($handlerClass && $handlerClass != ViewableData::class) {
+        // We stop after RequestHandler; in other words, at ModelData
+        while ($handlerClass && $handlerClass != ModelData::class) {
             $urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
 
             if ($urlHandlers) {

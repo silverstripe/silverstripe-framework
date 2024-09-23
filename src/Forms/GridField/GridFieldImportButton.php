@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Forms\Form;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 
 class GridFieldImportButton extends AbstractGridFieldComponent implements GridField_HTMLProvider

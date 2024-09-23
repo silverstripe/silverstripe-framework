@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Article;
 use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
@@ -16,7 +16,7 @@ use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class CheckboxSetFieldTest extends SapphireTest
 {

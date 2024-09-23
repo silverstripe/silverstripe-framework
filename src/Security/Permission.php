@@ -6,10 +6,10 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18nEntityProvider;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\SS_List;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\View\TemplateGlobalProvider;
 
 /**
@@ -375,7 +375,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     public static function grant($groupID, $code, $arg = "any")
     {
         $permissions = Permission::get()->filter(['GroupID' => $groupID, 'Code' => $code]);
-        
+
         if ($permissions && $permissions->count() > 0) {
             $perm = $permissions->last();
         } else {

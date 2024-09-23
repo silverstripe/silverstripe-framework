@@ -12,7 +12,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\LoginForm as BaseLoginForm;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;

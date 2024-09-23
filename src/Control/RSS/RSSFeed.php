@@ -3,8 +3,8 @@
 namespace SilverStripe\Control\RSS;
 
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\SS_List;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
@@ -12,14 +12,14 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTP;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * RSSFeed class
  *
  * This class is used to create an RSS feed.
  */
-class RSSFeed extends ViewableData
+class RSSFeed extends ModelData
 {
 
     /**

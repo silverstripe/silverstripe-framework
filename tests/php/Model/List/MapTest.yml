@@ -1,0 +1,32 @@
+SilverStripe\Model\Tests\List\MapTest\Team:
+  team1:
+    Title: Team 1
+    NumericField: 2
+  team2:
+    Title: Team 2
+    NumericField: 20
+  team3:
+    Title: Team 3
+    NumericField: 5
+SilverStripe\Model\Tests\List\MapTest\SubTeam:
+  subteam1:
+    Title: Subteam 1
+    NumericField: 7
+    ParentTeam: =>SilverStripe\Model\Tests\List\MapTest\Team.team1
+  subteam2_with_player_relation:
+    Title: Subteam 2
+  subteam3_with_empty_fields:
+    Title: Subteam 3
+SilverStripe\Model\Tests\List\MapTest\TeamComment:
+  comment1:
+    Name: Joe
+    Comment: This is a team comment by Joe
+    Team: =>SilverStripe\Model\Tests\List\MapTest\Team.team1
+  comment2:
+    Name: Bob
+    Comment: This is a team comment by Bob
+    Team: =>SilverStripe\Model\Tests\List\MapTest\Team.team1
+  comment3:
+    Name: Phil
+    Comment: Phil is a unique guy, and comments on team2
+    Team: =>SilverStripe\Model\Tests\List\MapTest\Team.team2

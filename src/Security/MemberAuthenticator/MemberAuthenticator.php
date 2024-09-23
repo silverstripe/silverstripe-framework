@@ -5,7 +5,7 @@ namespace SilverStripe\Security\MemberAuthenticator;
 use InvalidArgumentException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\DefaultAdminService;
 use SilverStripe\Security\LoginAttempt;

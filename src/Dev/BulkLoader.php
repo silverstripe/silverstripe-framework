@@ -5,7 +5,7 @@ namespace SilverStripe\Dev;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * A base for bulk loaders of content into the SilverStripe database.
@@ -16,7 +16,7 @@ use SilverStripe\View\ViewableData;
  * @see http://tools.ietf.org/html/rfc4180
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
-abstract class BulkLoader extends ViewableData
+abstract class BulkLoader extends ModelData
 {
     private bool $checkPermissions = false;
 

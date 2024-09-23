@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Allows GridField_ActionMenuItem to act as a link
@@ -15,7 +15,7 @@ interface GridField_ActionMenuLink extends GridField_ActionMenuItem
      * @see {@link GridField_ActionMenu->getColumnContent()}
      *
      * @param GridField $gridField
-     * @param ViewableData $record
+     * @param ModelData $record
      *
      * @return string $url
      */

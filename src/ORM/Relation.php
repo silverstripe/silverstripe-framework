@@ -2,6 +2,10 @@
 
 namespace SilverStripe\ORM;
 
+use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\Limitable;
+use SilverStripe\Model\List\Sortable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**

@@ -5,7 +5,7 @@ namespace SilverStripe\Dev\Tests;
 use SilverStripe\Dev\Constraint\SSListContainsOnly;
 use SilverStripe\Dev\Constraint\SSListContainsOnlyMatchingItems;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Security\Member;
 
 class SSListContainsOnlyMatchingItemsTest extends SapphireTest

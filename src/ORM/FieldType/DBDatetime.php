@@ -12,7 +12,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
 /**
  * Represents a date-time field.
@@ -69,7 +69,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         return $this;
     }
 
-    public function setValue(mixed $value, null|array|ViewableData $record = null, bool $markChanged = true): static
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         if ($this->immutable) {
             // This field is set as immutable so we have to create a new field instance

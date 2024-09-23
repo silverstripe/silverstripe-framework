@@ -12,7 +12,7 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 use SilverStripe\Forms\GridField\GridFieldStateManager;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Tests\GridField\GridFieldPrintButtonTest\TestObject;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class GridFieldStateManagerTest extends SapphireTest
 {

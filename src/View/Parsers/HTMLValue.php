@@ -3,7 +3,7 @@
 namespace SilverStripe\View\Parsers;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 use Masterminds\HTML5;
 use DOMNodeList;
 use DOMXPath;
@@ -16,7 +16,7 @@ use SilverStripe\View\HTML;
  *
  * @mixin DOMDocument
  */
-class HTMLValue extends ViewableData
+class HTMLValue extends ModelData
 {
     public function __construct($fragment = null)
     {

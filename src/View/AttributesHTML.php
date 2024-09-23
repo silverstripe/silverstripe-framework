@@ -5,7 +5,7 @@ namespace SilverStripe\View;
 use SilverStripe\Core\Convert;
 
 /**
- * This trait can be applied to a ViewableData class to add the logic to render attributes in an SS template.
+ * This trait can be applied to a ModelData class to add the logic to render attributes in an SS template.
  *
  * When applying this trait to a class, you also need to add the following casting configuration.
  * ```

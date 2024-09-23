@@ -6,7 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SelectField;
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
 

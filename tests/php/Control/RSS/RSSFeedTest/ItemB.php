@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Control\Tests\RSS\RSSFeedTest;
 
-use SilverStripe\View\ViewableData;
+use SilverStripe\Model\ModelData;
 
-class ItemB extends ViewableData
+class ItemB extends ModelData
 {
     // ItemB tests without $casting
 
