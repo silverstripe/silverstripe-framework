@@ -4,6 +4,7 @@ namespace SilverStripe\Logging;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
 use Monolog\LogRecord;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -34,9 +35,9 @@ class HTTPOutputHandler extends AbstractProcessingHandler
      */
     private $cliFormatter = null;
 
-    public function __construct()
+    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
     {
-        parent::__construct();
+        parent::__construct($level, $bubble);
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
