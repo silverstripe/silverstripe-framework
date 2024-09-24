@@ -156,7 +156,7 @@ class PasswordEncryptorTest extends SapphireTest
             'encryptors',
             ['test_sha1legacy' => [PasswordEncryptor_LegacyPHPHash::class => 'sha1']]
         );
-        $e = Deprecation::withNoReplacement(fn() => PasswordEncryptor::create_for_algorithm('test_sha1legacy'));
+        $e = Deprecation::withSuppressedNotice(fn() => PasswordEncryptor::create_for_algorithm('test_sha1legacy'));
         // precomputed hashes for 'mypassword' from different architectures
         $amdHash = 'h1fj0a6m4o6k0sosks88oo08ko4gc4s';
         $intelHash = 'h1fj0a6m4o0g04ocg00o4kwoc4wowws';

@@ -53,7 +53,7 @@ class Deprecation
     /**
      * @internal
      */
-    private static bool $insideWithNoReplacement = false;
+    private static bool $insideNoticeSuppression = false;
 
     /**
      * @internal
@@ -103,22 +103,32 @@ class Deprecation
     }
 
     /**
-     * Used to wrap deprecated methods and deprecated config get()/set() that will be removed
-     * in the next major version with no replacement. This is done to surpress deprecation notices
-     * by for calls from the vendor dir to deprecated code that projects have no ability to change
+     * Used to wrap deprecated methods and deprecated config get()/set() called from the vendor
+     * dir that projects have no ability to change.
      *
      * @return mixed
+     * @deprecated 5.4.0 Use withSuppressedNotice() instead
      */
     public static function withNoReplacement(callable $func)
     {
-        if (Deprecation::$insideWithNoReplacement) {
+        Deprecation::notice('5.4.0', 'Use withSuppressedNotice() instead');
+        return Deprecation::withSuppressedNotice($func);
+    }
+
+    /**
+     * Used to wrap deprecated methods and deprecated config get()/set() called from the vendor
+     * dir that projects have no ability to change.
+     */
+    public static function withSuppressedNotice(callable $func): mixed
+    {
+        if (Deprecation::$insideNoticeSuppression) {
             return $func();
         }
-        Deprecation::$insideWithNoReplacement = true;
+        Deprecation::$insideNoticeSuppression = true;
         try {
             return $func();
         } finally {
-            Deprecation::$insideWithNoReplacement = false;
+            Deprecation::$insideNoticeSuppression = false;
         }
     }
 
@@ -137,8 +147,8 @@ class Deprecation
             $level = 1;
         }
         $newLevel = $level;
-        // handle closures inside withNoReplacement()
-        if (Deprecation::$insideWithNoReplacement
+        // handle closures inside withSuppressedNotice()
+        if (Deprecation::$insideNoticeSuppression
             && substr($backtrace[$newLevel]['function'], -strlen('{closure}')) === '{closure}'
         ) {
             $newLevel = $newLevel + 2;
@@ -247,8 +257,8 @@ class Deprecation
             $count++;
             $arr = array_shift(Deprecation::$userErrorMessageBuffer);
             $message = $arr['message'];
-            $calledInsideWithNoReplacement = $arr['calledInsideWithNoReplacement'];
-            if ($calledInsideWithNoReplacement && !Deprecation::$showNoReplacementNotices) {
+            $calledWithNoticeSuppression = $arr['calledWithNoticeSuppression'];
+            if ($calledWithNoticeSuppression && !Deprecation::$showNoReplacementNotices) {
                 continue;
             }
             Deprecation::$isTriggeringError = true;
@@ -284,7 +294,7 @@ class Deprecation
                 $data = [
                     'key' => sha1($string),
                     'message' => $string,
-                    'calledInsideWithNoReplacement' => Deprecation::$insideWithNoReplacement
+                    'calledWithNoticeSuppression' => Deprecation::$insideNoticeSuppression
                 ];
             } else {
                 if (!Deprecation::isEnabled()) {
@@ -310,7 +320,7 @@ class Deprecation
                     $string .= ".";
                 }
 
-                $level = Deprecation::$insideWithNoReplacement ? 4 : 2;
+                $level = Deprecation::$insideNoticeSuppression ? 4 : 2;
                 $string .= " Called from " . Deprecation::get_called_method_from_trace($backtrace, $level) . '.';
 
                 if ($caller) {
@@ -319,7 +329,7 @@ class Deprecation
                 $data = [
                     'key' => sha1($string),
                     'message' => $string,
-                    'calledInsideWithNoReplacement' => Deprecation::$insideWithNoReplacement
+                    'calledWithNoticeSuppression' => Deprecation::$insideNoticeSuppression
                 ];
             }
             if ($data && !array_key_exists($data['key'], Deprecation::$userErrorMessageBuffer)) {

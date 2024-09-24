@@ -25,7 +25,7 @@ class GridFieldConfig_Base extends GridFieldConfig
         $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
         $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
 
-        Deprecation::withNoReplacement(function () use ($sort, $filter, $pagination) {
+        Deprecation::withSuppressedNotice(function () use ($sort, $filter, $pagination) {
             $sort->setThrowExceptionOnBadDataType(false);
             $filter->setThrowExceptionOnBadDataType(false);
             $pagination->setThrowExceptionOnBadDataType(false);

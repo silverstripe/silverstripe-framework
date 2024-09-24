@@ -32,7 +32,7 @@ class GridFieldConfig_RecordEditor extends GridFieldConfig
         $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
         $this->addComponent(GridFieldDetailForm::create(null, $showPagination, $showAdd));
 
-        Deprecation::withNoReplacement(function () use ($sort, $filter, $pagination) {
+        Deprecation::withSuppressedNotice(function () use ($sort, $filter, $pagination) {
             $sort->setThrowExceptionOnBadDataType(false);
             $filter->setThrowExceptionOnBadDataType(false);
             $pagination->setThrowExceptionOnBadDataType(false);

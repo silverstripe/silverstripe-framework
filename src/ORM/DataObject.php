@@ -1982,7 +1982,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
         if ($details['polymorphic']) {
             $result = PolymorphicHasManyList::create($componentClass, $details['joinField'], static::class);
             if ($details['needsRelation']) {
-                Deprecation::withNoReplacement(fn () => $result->setForeignRelation($componentName));
+                Deprecation::withSuppressedNotice(fn () => $result->setForeignRelation($componentName));
             }
         } else {
             $result = HasManyList::create($componentClass, $details['joinField']);

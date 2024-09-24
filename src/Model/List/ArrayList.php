@@ -720,7 +720,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
 
             // Apply default case sensitivity for backwards compatability
             if (!str_contains($filterKey, ':case') && !str_contains($filterKey, ':nocase')) {
-                $caseSensitive = Deprecation::withNoReplacement(fn() => static::config()->get('default_case_sensitive'));
+                $caseSensitive = Deprecation::withSuppressedNotice(fn() => static::config()->get('default_case_sensitive'));
                 if ($caseSensitive && in_array('case', $searchFilter->getSupportedModifiers())) {
                     $searchFilter->setModifiers($searchFilter->getModifiers() + ['case']);
                 } elseif (!$caseSensitive && in_array('nocase', $searchFilter->getSupportedModifiers())) {
