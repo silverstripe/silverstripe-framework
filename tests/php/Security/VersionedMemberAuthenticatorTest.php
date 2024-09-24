@@ -3,24 +3,11 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\NullHTTPRequest;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Core\Validation\ValidationResult;
-use SilverStripe\Security\Authenticator;
-use SilverStripe\Security\DefaultAdminService;
-use SilverStripe\Security\IdentityStore;
-use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
-use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
-use SilverStripe\Security\PasswordValidator;
-use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
 
 class VersionedMemberAuthenticatorTest extends SapphireTest
@@ -43,12 +30,8 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
             return;
         }
 
-        // Enforce dummy validation (this can otherwise be influenced by recipe config)
-        Deprecation::withSuppressedNotice(
-            fn() => PasswordValidator::singleton()
-            ->setMinLength(0)
-            ->setTestNames([])
-        );
+        // Remove password validation
+        Member::set_password_validator(null);
     }
 
     protected function tearDown(): void

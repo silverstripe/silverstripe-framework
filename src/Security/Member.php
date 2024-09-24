@@ -45,7 +45,8 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\ORM\FieldType\DBForeignKey;
-use SilverStripe\Dev\Deprecation;
+use SilverStripe\Security\Validation\PasswordValidator;
+use SilverStripe\Security\Validation\RulesPasswordValidator;
 
 /**
  * The member class which represents the users of the system
@@ -380,10 +381,8 @@ class Member extends DataObject
 
     /**
      * Set a {@link PasswordValidator} object to use to validate member's passwords.
-     *
-     * @param PasswordValidator $validator
      */
-    public static function set_password_validator(PasswordValidator $validator = null)
+    public static function set_password_validator(?PasswordValidator $validator = null)
     {
         // Override existing config
         Config::modify()->remove(Injector::class, PasswordValidator::class);
@@ -396,13 +395,11 @@ class Member extends DataObject
 
     /**
      * Returns the default {@link PasswordValidator}
-     *
-     * @return PasswordValidator|null
      */
-    public static function password_validator()
+    public static function password_validator(): ?PasswordValidator
     {
         if (Injector::inst()->has(PasswordValidator::class)) {
-            return Deprecation::withSuppressedNotice(fn() => Injector::inst()->get(PasswordValidator::class));
+            return Injector::inst()->get(PasswordValidator::class);
         }
         return null;
     }
@@ -1779,11 +1776,16 @@ class Member extends DataObject
     {
         $password = '';
         $validator = Member::password_validator();
-        if ($length && $validator && $length < $validator->getMinLength()) {
-            throw new InvalidArgumentException('length argument is less than password validator minLength');
+        if ($validator instanceof RulesPasswordValidator) {
+            $validatorMinLength = $validator->getMinLength();
+            if ($length && $length < $validatorMinLength) {
+                throw new InvalidArgumentException('length argument is less than password validator minLength');
+            }
+        } else {
+            // Make sure the password is long enough to beat even very strict entropy tests
+            $validatorMinLength = 128;
         }
-        $validatorMinLength = $validator ? $validator->getMinLength() : 0;
-        $len = $length ?: max($validatorMinLength, 20);
+        $len = max($length, $validatorMinLength, 20);
         // The default PasswordValidator checks the password includes the following four character sets
         $charsets = [
             'abcdefghijklmnopqrstuvwyxz',

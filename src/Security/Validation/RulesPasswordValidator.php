@@ -1,39 +1,32 @@
 <?php
 
-namespace SilverStripe\Security;
+namespace SilverStripe\Security\Validation;
 
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Validation\ValidationResult;
-use SilverStripe\Dev\Deprecation;
+use SilverStripe\Security\Member;
 
 /**
- * This class represents a validator for member passwords.
+ * Validates passwords based on a set of regex rules about what the password must contain.
  *
  * <code>
  * $pwdVal = new PasswordValidator();
  * $pwdValidator->setMinLength(7);
- * $pwdValidator->checkHistoricalPasswords(6);
+ * $pwdValidator->setHistoricCount(6);
  * $pwdValidator->setMinTestScore(3);
  * $pwdValidator->setTestNames(array("lowercase", "uppercase", "digits", "punctuation"));
  *
  * Member::set_password_validator($pwdValidator);
  * </code>
- *
- * @deprecated 5.4.0 Will be renamed to SilverStripe\Security\Validation\RulesPasswordValidator
  */
-class PasswordValidator
+class RulesPasswordValidator extends PasswordValidator
 {
-    use Injectable;
-    use Configurable;
     use Extensible;
 
     /**
-     * @config
-     * @var array
+     * Regex to test the password against. See min_test_score.
      */
-    private static $character_strength_tests = [
+    private static array $character_strength_tests = [
         'lowercase' => '/[a-z]/',
         'uppercase' => '/[A-Z]/',
         'digits' => '/[0-9]/',
@@ -41,89 +34,62 @@ class PasswordValidator
     ];
 
     /**
-     * @config
-     * @var int
+     * Default minimum number of characters for a valid password.
      */
-    private static $min_length = null;
+    private static int $min_length = 8;
 
     /**
-     * @config
-     * @var int
+     * Default minimum test score for a valid password.
+     * The test score is the number of character_strength_tests that the password matches.
      */
-    private static $min_test_score = null;
+    private static int $min_test_score = 0;
 
-    /**
-     * @config
-     * @var int
-     */
-    private static $historic_count = null;
+    protected ?int $minLength = null;
 
-    /**
-     * @var int
-     */
-    protected $minLength = null;
-
-    /**
-     * @var int
-     */
-    protected $minScore = null;
+    protected ?int $minScore = null;
 
     /**
      * @var string[]
      */
-    protected $testNames = null;
+    protected ?array $testNames = null;
 
     /**
-     * @var int
+     * Get the minimum number of characters for a valid password.
      */
-    protected $historicalPasswordCount = null;
-
-    public function __construct()
-    {
-        Deprecation::notice(
-            '5.4.0',
-            'Will be renamed to SilverStripe\Security\Validation\RulesPasswordValidator',
-            Deprecation::SCOPE_CLASS
-        );
-    }
-
-    /**
-     * @return int
-     */
-    public function getMinLength()
+    public function getMinLength(): int
     {
         if ($this->minLength !== null) {
             return $this->minLength;
         }
-        return $this->config()->get('min_length');
+        return $this->config()->get('min_length') ?? 0;
     }
 
     /**
-     * @param int $minLength
-     * @return $this
+     * Set the minimum number of characters for a valid password.
      */
-    public function setMinLength($minLength)
+    public function setMinLength(int $minLength): static
     {
         $this->minLength = $minLength;
         return $this;
     }
 
     /**
-     * @return integer
+     * Get the minimum test score for a valid password.
+     * The test score is the number of character_strength_tests that the password matches.
      */
-    public function getMinTestScore()
+    public function getMinTestScore(): int
     {
         if ($this->minScore !== null) {
             return $this->minScore;
         }
-        return $this->config()->get('min_test_score');
+        return $this->config()->get('min_test_score') ?? 0;
     }
 
     /**
-     * @param int $minScore
-     * @return $this
+     * Set the minimum test score for a valid password.
+     * The test score is the number of character_strength_tests that the password matches.
      */
-    public function setMinTestScore($minScore)
+    public function setMinTestScore(int $minScore): static
     {
         $this->minScore = $minScore;
         return $this;
@@ -134,7 +100,7 @@ class PasswordValidator
      *
      * @return string[]
      */
-    public function getTestNames()
+    public function getTestNames(): array
     {
         if ($this->testNames !== null) {
             return $this->testNames;
@@ -146,51 +112,22 @@ class PasswordValidator
      * Set list of tests to use for this validator
      *
      * @param string[] $testNames
-     * @return $this
      */
-    public function setTestNames($testNames)
+    public function setTestNames(array $testNames): static
     {
         $this->testNames = $testNames;
         return $this;
     }
 
     /**
-     * @return int
-     */
-    public function getHistoricCount()
-    {
-        if ($this->historicalPasswordCount !== null) {
-            return $this->historicalPasswordCount;
-        }
-        return $this->config()->get('historic_count');
-    }
-
-    /**
-     * @param int $count
-     * @return $this
-     */
-    public function setHistoricCount($count)
-    {
-        $this->historicalPasswordCount = $count;
-        return $this;
-    }
-
-    /**
      * Gets all possible tests
-     *
-     * @return array
      */
-    public function getTests()
+    public function getTests(): array
     {
         return $this->config()->get('character_strength_tests');
     }
 
-    /**
-     * @param string $password
-     * @param Member $member
-     * @return ValidationResult
-     */
-    public function validate($password, $member)
+    public function validate(string $password, Member $member): ValidationResult
     {
         $valid = ValidationResult::create();
 
@@ -234,23 +171,7 @@ class PasswordValidator
             }
         }
 
-        $historicCount = $this->getHistoricCount();
-        if ($historicCount) {
-            $previousPasswords = MemberPassword::get()
-                ->where(['"MemberPassword"."MemberID"' => $member->ID])
-                ->sort('"Created" DESC, "ID" DESC')
-                ->limit($historicCount);
-            foreach ($previousPasswords as $previousPassword) {
-                if ($previousPassword->checkPassword($password)) {
-                    $error = _t(
-                        __CLASS__ . '.PREVPASSWORD',
-                        'You\'ve already used that password in the past, please choose a new password'
-                    );
-                    $valid->addError($error, 'bad', 'PREVIOUS_PASSWORD');
-                    break;
-                }
-            }
-        }
+        $valid->combineAnd(parent::validate($password, $member));
 
         $this->extend('updateValidatePassword', $password, $member, $valid, $this);
 

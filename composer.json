@@ -50,7 +50,7 @@
         "symfony/mailer": "^7.0",
         "symfony/mime": "^7.0",
         "symfony/translation": "^7.0",
-        "symfony/validator": "^7.0",
+        "symfony/validator": "^7.1",
         "symfony/yaml": "^7.0",
         "ext-ctype": "*",
         "ext-dom": "*",
