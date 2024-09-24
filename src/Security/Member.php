@@ -40,6 +40,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Closure;
 use RuntimeException;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * The member class which represents the users of the system
@@ -396,7 +397,7 @@ class Member extends DataObject
     public static function password_validator()
     {
         if (Injector::inst()->has(PasswordValidator::class)) {
-            return Injector::inst()->get(PasswordValidator::class);
+            return Deprecation::withSuppressedNotice(fn() => Injector::inst()->get(PasswordValidator::class));
         }
         return null;
     }

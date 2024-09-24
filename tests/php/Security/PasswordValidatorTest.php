@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordValidator;
@@ -26,7 +27,7 @@ class PasswordValidatorTest extends SapphireTest
 
     public function testValidate()
     {
-        $v = new PasswordValidator();
+        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
         $r = $v->validate('', new Member());
         $this->assertTrue($r->isValid(), 'Empty password is valid by default');
 
@@ -36,7 +37,7 @@ class PasswordValidatorTest extends SapphireTest
 
     public function testValidateMinLength()
     {
-        $v = new PasswordValidator();
+        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
 
         $v->setMinLength(4);
         $r = $v->validate('123', new Member());
@@ -50,7 +51,7 @@ class PasswordValidatorTest extends SapphireTest
     public function testValidateMinScore()
     {
         // Set both score and set of tests
-        $v = new PasswordValidator();
+        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
         $v->setMinTestScore(3);
         $v->setTestNames(["lowercase", "uppercase", "digits", "punctuation"]);
 
@@ -61,7 +62,7 @@ class PasswordValidatorTest extends SapphireTest
         $this->assertTrue($r->isValid(), 'Passing enough tests');
 
         // Ensure min score without tests works (uses default tests)
-        $v = new PasswordValidator();
+        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
         $v->setMinTestScore(3);
 
         $r = $v->validate('aA', new Member());
@@ -81,7 +82,7 @@ class PasswordValidatorTest extends SapphireTest
      */
     public function testHistoricalPasswordCount()
     {
-        $validator = new PasswordValidator;
+        $validator = Deprecation::withSuppressedNotice(fn() => new PasswordValidator);
         $validator->setHistoricCount(3);
         Member::set_password_validator($validator);
 

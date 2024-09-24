@@ -6,6 +6,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\ValidationResult;
@@ -43,9 +44,11 @@ class VersionedMemberAuthenticatorTest extends SapphireTest
         }
 
         // Enforce dummy validation (this can otherwise be influenced by recipe config)
-        PasswordValidator::singleton()
+        Deprecation::withSuppressedNotice(
+            fn() => PasswordValidator::singleton()
             ->setMinLength(0)
-            ->setTestNames([]);
+            ->setTestNames([])
+        );
     }
 
     protected function tearDown(): void
