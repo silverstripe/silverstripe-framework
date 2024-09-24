@@ -10,6 +10,7 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
@@ -83,7 +84,7 @@ class ChangePasswordHandler extends RequestHandler
 
         $session = $this->getRequest()->getSession();
         if ($session->get('AutoLoginHash')) {
-            $message = DBField::create_field(
+            $message = DBFieldHelper::create_field(
                 'HTMLFragment',
                 '<p>' . _t(
                     'SilverStripe\\Security\\Security.ENTERNEWPASSWORD',
@@ -100,7 +101,7 @@ class ChangePasswordHandler extends RequestHandler
 
         if (Security::getCurrentUser()) {
             // Logged in user requested a password change form.
-            $message = DBField::create_field(
+            $message = DBFieldHelper::create_field(
                 'HTMLFragment',
                 '<p>' . _t(
                     'SilverStripe\\Security\\Security.CHANGEPASSWORDBELOW',
@@ -115,7 +116,7 @@ class ChangePasswordHandler extends RequestHandler
         }
         // Show a friendly message saying the login token has expired
         if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
-            $message = DBField::create_field(
+            $message = DBFieldHelper::create_field(
                 'HTMLFragment',
                 _t(
                     'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',

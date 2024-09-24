@@ -13,6 +13,7 @@ use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
@@ -509,7 +510,7 @@ class Email extends SymfonyEmail
         // Plain render fallbacks to using the html render with html tags removed
         if (!$plainRender && $htmlRender) {
             // call html_entity_decode() to ensure any encoded HTML is also stripped inside ->Plain()
-            $dbField = DBField::create_field('HTMLFragment', html_entity_decode($htmlRender));
+            $dbField = DBFieldHelper::create_field('HTMLFragment', html_entity_decode($htmlRender));
             $plainRender = $dbField->Plain();
         }
 

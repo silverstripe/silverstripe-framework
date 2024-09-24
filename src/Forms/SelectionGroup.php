@@ -4,6 +4,7 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\View\HTML;
 
 /**
@@ -91,7 +92,7 @@ class SelectionGroup extends CompositeField
 
             $itemID = $this->ID() . '_' . (++$count);
             $extra = [
-                "RadioButton" => DBField::create_field('HTMLFragment', HTML::createTag(
+                "RadioButton" => DBFieldHelper::create_field('HTMLFragment', HTML::createTag(
                     'input',
                     [
                         'class' => 'selector',

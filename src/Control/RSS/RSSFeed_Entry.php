@@ -4,6 +4,7 @@ namespace SilverStripe\Control\RSS;
 
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Model\ModelData;
 use BadMethodCallException;

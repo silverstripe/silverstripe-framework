@@ -16,6 +16,7 @@ use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Provides dataobject and database schema mapping functionality

@@ -10,11 +10,16 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\Model\ModelFields\ModelFieldTrait;
+use SilverStripe\Model\ModelFields\StringModelField;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Represents a field in a form.
@@ -40,10 +45,27 @@ use SilverStripe\Model\ModelData;
  * including both structure (name, id, attributes, etc.) and state (field value).
  * Can be used by for JSON data which is consumed by a front-end application.
  */
-class FormField extends RequestHandler
+abstract class FormField extends RequestHandler
 {
     use AttributesHTML;
     use FormMessage;
+
+    // todo: possibly should make this abstract
+    protected string $modelFieldClass = StringModelField::class;
+
+    private ModelField $modelField;
+
+    protected function getModelField(): ModelField
+    {
+        return $this->modelField;
+    }
+
+    private function initModelField(): void
+    {
+        $name = $this->getName();
+        $modelField = Injector::inst()->createWithArgs($this->modelFieldClass, [$name]);
+        $this->modelField = $modelField;
+    }
 
     /** @see $schemaDataType */
     const SCHEMA_DATA_TYPE_STRING = 'String';
@@ -344,6 +366,7 @@ class FormField extends RequestHandler
 
         parent::__construct();
 
+        $this->initModelField($name);
         $this->setupDefaultClasses();
     }
 
@@ -929,7 +952,7 @@ class FormField extends RequestHandler
         // Trim whitespace from the result, so that trailing newlines are suppressed. Works for strings and HTMLText values
         if (is_string($result)) {
             $result = trim($result ?? '');
-        } elseif ($result instanceof DBField) {
+        } elseif ($result instanceof ModelField) {
             $result->setValue(trim($result->getValue() ?? ''));
         }
 
@@ -1231,8 +1254,11 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Abstract method each {@link FormField} subclass must implement, determines whether the field
+     * Method each {@link FormField} subclass can implement, determines whether the field
      * is valid or not based on the value.
+     *
+     * Subclass methods should call $this->extendValidationResult(true, $validator)
+     * at the end of the method
      *
      * @param Validator $validator
      * @return bool

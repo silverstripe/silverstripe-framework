@@ -4,6 +4,7 @@ namespace SilverStripe\View;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Special SSViewer that will process a template passed as a string, rather than a filename.
@@ -72,7 +73,7 @@ class SSViewer_FromString extends SSViewer
             unlink($cacheFile ?? '');
         }
 
-        $html = DBField::create_field('HTMLFragment', $val);
+        $html = DBFieldHelper::create_field('HTMLFragment', $val);
 
         return $html;
     }

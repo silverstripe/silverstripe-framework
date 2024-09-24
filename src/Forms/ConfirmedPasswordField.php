@@ -6,6 +6,7 @@ use LogicException;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\HTML;
@@ -771,6 +772,6 @@ class ConfirmedPasswordField extends FormField
         if (strpos($attributes, 'required="required"') === false && $this->Required()) {
             $attributes .= ' required="required" aria-required="true"';
         }
-        return DBField::create_field('HTMLFragment', $attributes);
+        return DBFieldHelper::create_field('HTMLFragment', $attributes);
     }
 }

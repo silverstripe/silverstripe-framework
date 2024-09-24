@@ -10,6 +10,7 @@ use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
@@ -197,7 +198,7 @@ PHP
 
         // Show login
         $controller = $controller->customise([
-            'Content' => DBField::create_field(DBHTMLText::class, _t(
+            'Content' => DBFieldHelper::create_field(DBHTMLText::class, _t(
                 __CLASS__ . '.SUCCESSCONTENT',
                 '<p>Login success. If you are not automatically redirected ' . '<a target="_top" href="{link}">click here</a></p>',
                 'Login message displayed in the cms popup once a user has re-authenticated themselves',

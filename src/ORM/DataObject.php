@@ -20,6 +20,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\FormScaffolder;
 use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\FieldsValidator;
+use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\HiddenField;
@@ -33,6 +34,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\FieldType\DBForeignKey;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
@@ -45,7 +47,13 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBVarchar;
 use stdClass;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\Session;
+use Symfony\Component\Validator\Constraints\Uuid;
 
 /**
  * A single database record & abstract class for the data-access-model.
@@ -1230,8 +1238,42 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     public function validate()
     {
         $result = ValidationResult::create();
+        // Call validate() on every DBField
+        $specs = static::getSchema()->fieldSpecs(static::class);
+        foreach (array_keys($specs) as $fieldName) {
+            // Call DBField::validate() on every DBField
+            $dbField = $this->dbObject($fieldName);
+            $result->combineAnd($dbField->validate());
+        }
+        // If it passed DBField::validate(), then call FormField::validate()
+        // on every field that would be scaffolded
+        // This isn't ideal and can lead to double validation, however it's to preserve
+        // any legacy FormField::validate() logic on projects that has not been
+        // migrated to use DBField::validate()
+        // TODO: don't call this when in FormRequestHandler::httpSubmission()
+        // as it means that calling FormField::validate() is called twice
+        if ($result->isValid()) {
+            $form = $this->getFormForValidation();
+            $result->combineAnd($form->validationResult());
+        }
+        // Call extension hook and return
         $this->extend('updateValidate', $result);
         return $result;
+    }
+
+    private function getFormForValidation(): Form
+    {
+        $session = new Session([]);
+        $controller = new Controller();
+        $request = new HTTPRequest('GET', '/');
+        $request->setSession($session);
+        $controller->setRequest($request);
+        // Use getCMSFields rather than $dbField->scaffoldFormField()
+        // to ensure we get any CMS fields that were replaced by other fields
+        $fields = $this->getCMSFields();
+        $form = new Form($controller, sprintf('temp-%s', uniqid()), $fields, null, new FieldsValidator);
+        $form->loadDataFrom($this);
+        return $form;
     }
 
     /**
@@ -1456,7 +1498,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
             // if database column doesn't correlate to a DBField instance...
             $fieldObj = $this->dbObject($fieldName);
             if (!$fieldObj) {
-                $fieldObj = DBField::create_field('Varchar', $fieldValue, $fieldName);
+                $fieldObj = DBFieldHelper::create_field('Varchar', $fieldValue, $fieldName);
             }
 
             // Write to manipulation
@@ -2422,16 +2464,15 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                 }
 
             // Otherwise, use the database field's scaffolder
-            } elseif ($object = $this->relObject($fieldName)) {
-                if (is_object($object) && $object->hasMethod('scaffoldSearchField')) {
-                    $field = $object->scaffoldSearchField();
-                } else {
+            } elseif ($dbField = $this->relObject($fieldName)) {
+                if (!is_a($dbField, DBField::class)) {
                     throw new Exception(sprintf(
                         "SearchField '%s' on '%s' does not return a valid DBField instance.",
                         $fieldName,
                         get_class($this)
                     ));
                 }
+                $field = $dbField->scaffoldSearchField();
             }
 
             // Allow fields to opt out of search

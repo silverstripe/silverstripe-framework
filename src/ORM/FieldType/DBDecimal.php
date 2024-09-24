@@ -6,12 +6,16 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a Decimal field.
  */
-class DBDecimal extends DBField
+class DBDecimal extends ModelField implements DBField
 {
+    use DBFieldTrait;
     /**
      * Whole number size
      */

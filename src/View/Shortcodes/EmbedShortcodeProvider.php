@@ -10,6 +10,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\Embed\Embeddable;
 use SilverStripe\View\HTML;
@@ -197,7 +198,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         $data = [
             'Arguments' => $arguments,
             'Attributes' => $attributes,
-            'Content' => DBField::create_field('HTMLFragment', $content)
+            'Content' => DBFieldHelper::create_field('HTMLFragment', $content)
         ];
 
         return ArrayData::create($data)->renderWith(EmbedShortcodeProvider::class . '_video')->forTemplate();

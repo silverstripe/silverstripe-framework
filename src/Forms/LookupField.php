@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Read-only complement of {@link MultiSelectField}.
@@ -58,7 +59,7 @@ class LookupField extends MultiSelectField
         }
 
         $properties = array_merge($properties, [
-            'AttrValue' => DBField::create_field('HTMLFragment', $attrValue),
+            'AttrValue' => DBFieldHelper::create_field('HTMLFragment', $attrValue),
             'InputValue' => $inputValue
         ]);
 

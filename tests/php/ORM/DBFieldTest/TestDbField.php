@@ -6,6 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Model\ModelData;
 
 class TestDbField extends DBField implements TestOnly

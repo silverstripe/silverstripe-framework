@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\Model\List\Map;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Read-only complement of {@link DropdownField}.
@@ -125,7 +126,7 @@ class SingleLookupField extends SingleSelectField
         }
 
         $properties = array_merge($properties, [
-            'AttrValue' => DBField::create_field('HTMLFragment', $attrValue),
+            'AttrValue' => DBFieldHelper::create_field('HTMLFragment', $attrValue),
             'InputValue' => $inputValue
         ]);
 

@@ -17,7 +17,7 @@ use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use SilverStripe\i18n\i18n;
-use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use Symfony\Component\Filesystem\Path as FilesystemPath;
 
 class Requirements_Backend
@@ -1035,8 +1035,8 @@ class Requirements_Backend
             i18n::config()->get('default_locale'),
             i18n::getData()->langFromLocale(i18n::get_locale()),
             i18n::get_locale(),
-            strtolower(DBField::create_field('Locale', i18n::get_locale())->RFC1766() ?? ''),
-            strtolower(DBField::create_field('Locale', i18n::config()->get('default_locale'))->RFC1766() ?? '')
+            strtolower(DBFieldHelper::create_field('Locale', i18n::get_locale())->RFC1766() ?? ''),
+            strtolower(DBFieldHelper::create_field('Locale', i18n::config()->get('default_locale'))->RFC1766() ?? '')
         ];
 
         $candidates = array_map(

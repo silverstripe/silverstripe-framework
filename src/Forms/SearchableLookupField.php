@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataList;
 

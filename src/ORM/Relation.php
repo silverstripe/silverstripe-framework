@@ -7,6 +7,7 @@ use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Abstract representation of a DB relation field, either saved or in memory

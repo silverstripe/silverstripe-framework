@@ -11,6 +11,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -92,7 +93,7 @@ class LostPasswordHandler extends RequestHandler
         );
 
         return [
-            'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
+            'Content' => DBFieldHelper::create_field('HTMLFragment', "<p>$message</p>"),
             'Form'    => $this->lostPasswordForm(),
         ];
     }
@@ -115,7 +116,7 @@ class LostPasswordHandler extends RequestHandler
                 'SilverStripe\\Security\\Security.PASSWORDRESETSENTHEADER',
                 "Password reset link sent"
             ),
-            'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
+            'Content' => DBFieldHelper::create_field('HTMLFragment', "<p>$message</p>"),
         ];
     }
 

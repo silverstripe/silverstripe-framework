@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use LogicException;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\HTML;
@@ -91,7 +92,7 @@ class GridFieldLevelup extends AbstractGridFieldComponent implements GridField_H
         $linkTag = HTML::createTag('a', $attrs);
 
         $forTemplate = new ArrayData([
-            'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
+            'UpLink' => DBFieldHelper::create_field('HTMLFragment', $linkTag)
         ]);
 
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);

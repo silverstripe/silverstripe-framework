@@ -11,6 +11,9 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -22,8 +25,10 @@ use SilverStripe\Model\ModelData;
  * );
  * </code>
  */
-class DBTime extends DBField
+class DBTime extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     /**
      * Standard ISO format string for time in CLDR standard format
      */

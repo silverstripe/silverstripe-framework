@@ -5,12 +5,17 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a single year field.
  */
-class DBYear extends DBField
+class DBYear extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     public function requireField(): void
     {
         $parts = ['datatype' => 'year', 'precision' => 4, 'arrayValue' => $this->arrayValue];

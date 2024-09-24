@@ -9,6 +9,7 @@ use SilverStripe\Core\ArrayLib;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\ArrayData;
 

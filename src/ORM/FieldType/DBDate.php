@@ -12,6 +12,9 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a date field.
@@ -29,8 +32,10 @@ use SilverStripe\Model\ModelData;
  * Date formats all follow CLDR standard format codes
  * @link https://unicode-org.github.io/icu/userguide/format_parse/datetime
  */
-class DBDate extends DBField
+class DBDate extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     /**
      * Standard ISO format string for date in CLDR standard format
      */

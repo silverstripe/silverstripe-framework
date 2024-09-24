@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * This extends SSViewer_Scope to mix in data on top of what the item provides. This can be "global"
@@ -438,6 +439,6 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             ? ModelData::config()->uninherited('default_cast')
             : $source['casting'];
 
-        return DBField::create_field($casting, $value);
+        return DBFieldHelper::create_field($casting, $value);
     }
 }

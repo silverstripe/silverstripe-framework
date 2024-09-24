@@ -11,7 +11,7 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
 use InvalidArgumentException;
@@ -670,7 +670,7 @@ PHP;
         }
 
         /** @var DBHTMLText $html */
-        $html = DBField::create_field('HTMLFragment', $output);
+        $html = DBFieldHelper::create_field('HTMLFragment', $output);
 
         // Reset global state
         static::setRewriteHashLinksDefault($origRewriteDefault);

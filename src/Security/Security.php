@@ -22,6 +22,7 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Model\ArrayData;
@@ -911,8 +912,8 @@ class Security extends Controller implements TemplateGlobalProvider
         $fragments = array_merge(['Title' => $title], $fragments);
         if ($message) {
             $messageResult = [
-                'Content'     => DBField::create_field('HTMLFragment', $message),
-                'Message'     => DBField::create_field('HTMLFragment', $message),
+                'Content'     => DBFieldHelper::create_field('HTMLFragment', $message),
+                'Message'     => DBFieldHelper::create_field('HTMLFragment', $message),
                 'MessageType' => $messageType
             ];
             $fragments = array_merge($fragments, $messageResult);

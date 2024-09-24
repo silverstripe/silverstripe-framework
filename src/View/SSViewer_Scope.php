@@ -11,6 +11,7 @@ use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBFloat;
 use SilverStripe\ORM\FieldType\DBInt;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * This tracks the current scope for an SSViewer instance. It has three goals:

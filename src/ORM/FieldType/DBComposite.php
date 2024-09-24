@@ -8,6 +8,9 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Extend this class when designing a {@link DBField} that doesn't have a 1-1 mapping with a database field.
@@ -23,8 +26,10 @@ use SilverStripe\Model\ModelData;
 * }
  * </code>
  */
-abstract class DBComposite extends DBField
+abstract class DBComposite extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     /**
      * Similar to {@link DataObject::$db},
      * holds an array of composite field names.
@@ -85,8 +90,6 @@ abstract class DBComposite extends DBField
      */
     public function addToQuery(SQLSelect &$query): void
     {
-        parent::addToQuery($query);
-
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             $table = $this->getTable();
             $key = $this->getName() . $field;

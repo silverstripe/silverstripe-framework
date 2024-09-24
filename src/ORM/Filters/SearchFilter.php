@@ -11,6 +11,7 @@ use InvalidArgumentException;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Base class for filtering implementations,

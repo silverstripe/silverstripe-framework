@@ -5,12 +5,17 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a floating point field.
  */
-class DBFloat extends DBField
+class DBFloat extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     public function __construct(?string $name = null, float|int $defaultVal = 0)
     {
         $this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;

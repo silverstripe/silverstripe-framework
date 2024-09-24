@@ -6,6 +6,7 @@ use SilverStripe\Dev\Debug;
 use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\Connect\DatabaseException;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use BadMethodCallException;
 use InvalidArgumentException;
 use LogicException;

@@ -16,11 +16,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Core\ArrayLib;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 use UnexpectedValueException;
+use SilverStripe\Model\ModelField;
+use SilverStripe\Core\Validation\ValidationResult;
 
 /**
  * A ModelData object is any object that can be rendered into a template/view.
@@ -327,7 +328,7 @@ class ModelData
 
     /**
      * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object)
-     * for a field on this object. This helper will be a subclass of DBField.
+     * for a field on this object. This helper will be a subclass of ModelField.
      *
      * @param bool $useFallback If true, fall back on the default casting helper if there isn't an explicit one.
      * @return string|null Casting helper As a constructor pattern, and may include arguments.
@@ -361,7 +362,7 @@ class ModelData
 
     /**
      * Return the default "casting helper" for use when no explicit casting helper is defined.
-     * This helper will be a subclass of DBField. See castingHelper()
+     * This helper will be a subclass of ModelField. See castingHelper()
      */
     protected function defaultCastingHelper(string $field): string
     {
@@ -402,7 +403,7 @@ class ModelData
     {
         $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
-        /** @var DBField $type */
+        /** @var ModelField $type */
         $type = Injector::inst()->get($class, true);
         return $type->config()->get('escape_type');
     }
@@ -495,9 +496,9 @@ class ModelData
      * Get the value of a field on this object, automatically inserting the value into any available casting objects
      * that have been specified.
      *
-     * @return object|DBField|null The specific object representing the field, or null if there is no
+     * @return object|ModelField|null The specific object representing the field, or null if there is no
      * property, method, or dynamic data available for that field.
-     * Note that if there is a property or method that returns null, a relevant DBField instance will
+     * Note that if there is a property or method that returns null, a relevant ModelField instance will
      * be returned.
      */
     public function obj(
@@ -520,7 +521,13 @@ class ModelData
         // Load value from record
         if ($this->hasMethod($fieldName)) {
             $hasObj = true;
-            $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
+            // todo: remove try catch block
+            try {
+                $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
+            } catch (Exception $e) {
+                $x=1;
+                throw $e;
+            }
         } else {
             $hasObj = $this->hasField($fieldName) || ($this->hasMethod("get{$fieldName}") && $this->isAccessibleMethod("get{$fieldName}"));
             $value = $this->$fieldName;
@@ -568,7 +575,7 @@ class ModelData
      * A simple wrapper around {@link ModelData::obj()} that automatically caches the result so it can be used again
      * without re-running the method.
      *
-     * @return Object|DBField
+     * @return Object|ModelField
      */
     public function cachedCall(string $fieldName, array $arguments = [], ?string $cacheName = null): object
     {
@@ -599,7 +606,13 @@ class ModelData
             return '';
         }
         // Might contain additional formatting over ->XML(). E.g. parse shortcodes, nl2br()
-        return $result->forTemplate();
+        // todo: remove try catch block
+        try {
+            return $result->forTemplate();
+        } catch (Exception $e) {
+            $x=1;
+            throw $e;
+        }
     }
 
     /**

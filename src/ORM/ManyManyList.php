@@ -10,6 +10,7 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use InvalidArgumentException;
 use Exception;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * Subclass of {@link DataList} representing a many_many relation.

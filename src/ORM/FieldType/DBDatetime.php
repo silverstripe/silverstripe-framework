@@ -260,7 +260,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         $time = DBDatetime::$mock_now ? DBDatetime::$mock_now->Value : time();
 
         /** @var DBDatetime $now */
-        $now = DBField::create_field('Datetime', $time);
+        $now = DBFieldHelper::create_field('Datetime', $time);
 
         return $now;
     }
@@ -277,7 +277,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     {
         if (!$datetime instanceof DBDatetime) {
             $value = $datetime;
-            $datetime = DBField::create_field('Datetime', $datetime);
+            $datetime = DBFieldHelper::create_field('Datetime', $datetime);
             if ($datetime === false) {
                 throw new InvalidArgumentException('DBDatetime::set_mock_now(): Wrong format: ' . $value);
             }

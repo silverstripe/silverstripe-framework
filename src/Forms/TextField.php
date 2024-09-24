@@ -2,11 +2,15 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Model\ModelFields\StringModelField;
+
 /**
  * Text input field.
  */
 class TextField extends FormField implements TippableFieldInterface
 {
+    protected string $modelFieldClass = StringModelField::class;
+
     /**
      * @var int
      */

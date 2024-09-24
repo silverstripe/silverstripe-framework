@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Tests\DataObjectTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 
 /**
  * This is a fake DB field specifically design to test dynamic value assignment. You can set `scalarValueOnly` in

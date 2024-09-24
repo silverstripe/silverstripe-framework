@@ -7,12 +7,17 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DB;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBFieldTrait;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a boolean field.
  */
-class DBBoolean extends DBField
+class DBBoolean extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     public function __construct(?string $name = null, bool|int $defaultVal = 0)
     {
         $this->defaultVal = ($defaultVal) ? 1 : 0;

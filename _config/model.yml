@@ -20,6 +20,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBDecimal
   Double:
     class: SilverStripe\ORM\FieldType\DBDouble
+  Email:
+    class: SilverStripe\ORM\FieldType\DBEmail
   Enum:
     class: SilverStripe\ORM\FieldType\DBEnum
   Float:

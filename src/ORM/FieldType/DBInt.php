@@ -8,12 +8,16 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\ModelFields\ModelField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * Represents a signed 32 bit integer field.
  */
-class DBInt extends DBField
+class DBInt extends ModelField implements DBField
 {
+    use DBFieldTrait;
+
     public function __construct(?string $name = null, int $defaultVal = 0)
     {
         $this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;

@@ -22,6 +22,7 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBFieldHelper;
 use SilverStripe\Model\List\Filterable;
 use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Sortable;
@@ -382,14 +383,14 @@ class GridField extends FormField
 
         if (strpos($castingDefinition ?? '', '->') === false) {
             $castingFieldType = $castingDefinition;
-            $castingField = DBField::create_field($castingFieldType, $value);
+            $castingField = DBFieldHelper::create_field($castingFieldType, $value);
 
             return call_user_func_array([$castingField, 'XML'], $castingParams ?? []);
         }
 
         list($castingFieldType, $castingMethod) = explode('->', $castingDefinition ?? '');
 
-        $castingField = DBField::create_field($castingFieldType, $value);
+        $castingField = DBFieldHelper::create_field($castingFieldType, $value);
 
         return call_user_func_array([$castingField, $castingMethod], $castingParams ?? []);
     }
@@ -542,6 +543,8 @@ class GridField extends FormField
             'header' => '',
             'footer' => '',
         ];
+
+        $_c = $this->getComponents();
 
         foreach ($this->getComponents() as $item) {
             if ($item instanceof GridField_HTMLProvider) {
