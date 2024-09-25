@@ -5,6 +5,7 @@ namespace SilverStripe\Security;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ValidationResult;
 
 /**
@@ -19,6 +20,8 @@ use SilverStripe\ORM\ValidationResult;
  *
  * Member::set_password_validator($pwdValidator);
  * </code>
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\Security\Validation\RulesPasswordValidator
  */
 class PasswordValidator
 {
@@ -74,6 +77,15 @@ class PasswordValidator
      * @var int
      */
     protected $historicalPasswordCount = null;
+
+    public function __construct()
+    {
+        Deprecation::notice(
+            '5.4.0',
+            'Will be renamed to SilverStripe\Security\Validation\RulesPasswordValidator',
+            Deprecation::SCOPE_CLASS
+        );
+    }
 
     /**
      * @return int
