@@ -10,6 +10,8 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Validation\FieldValidator;
 
 /**
  * Single field in the database.
@@ -43,7 +45,6 @@ use SilverStripe\Model\ModelData;
  */
 abstract class DBField extends ModelData implements DBIndexable
 {
-
     /**
      * Raw value of this field
      */
@@ -98,6 +99,8 @@ abstract class DBField extends ModelData implements DBIndexable
         'XML' => 'HTMLFragment',
         'ProcessedRAW' => 'HTMLFragment',
     ];
+
+    private static array $field_validators = [];
 
     /**
      * Default value in the database.
@@ -466,6 +469,22 @@ abstract class DBField extends ModelData implements DBIndexable
         } else {
             $model->__set($fieldName, $this->value);
         }
+    }
+
+    /**
+     * Validate this field. Called during DataObject::validate().
+     */
+    public function validate(): ValidationResult
+    {
+        $result = ValidationResult::create();
+        $fieldValidators = FieldValidator::createFieldValidatorsForField($this, $this->getName(), $this->getValue());
+        foreach ($fieldValidators as $fieldValidator) {
+            $validationResult = $fieldValidator->validate();
+            if (!$validationResult->isValid()) {
+                $result->combineAnd($validationResult);
+            }
+        }
+        return $result;
     }
 
     /**
