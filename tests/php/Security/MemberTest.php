@@ -8,6 +8,7 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
@@ -74,9 +75,11 @@ class MemberTest extends FunctionalTest
 
         Member::config()->set('unique_identifier_field', 'Email');
 
-        PasswordValidator::singleton()
+        Deprecation::withSuppressedNotice(
+            fn() => PasswordValidator::singleton()
             ->setMinLength(0)
-            ->setTestNames([]);
+            ->setTestNames([])
+        );
 
         i18n::set_locale('en_US');
     }
@@ -1740,7 +1743,7 @@ class MemberTest extends FunctionalTest
     public function testChangePasswordOnlyValidatesPlaintext()
     {
         // This validator requires passwords to be 17 characters long
-        Member::set_password_validator(new MemberTest\VerySpecificPasswordValidator());
+        Member::set_password_validator(Deprecation::withSuppressedNotice(fn() => new MemberTest\VerySpecificPasswordValidator()));
 
         // This algorithm will never return a 17 character hash
         Security::config()->set('password_encryption_algorithm', 'blowfish');
@@ -1769,7 +1772,7 @@ class MemberTest extends FunctionalTest
 
     public function testChangePasswordToBlankIsValidated()
     {
-        Member::set_password_validator(new PasswordValidator());
+        Member::set_password_validator(Deprecation::withSuppressedNotice(fn() => new PasswordValidator()));
         // override setup() function which setMinLength(0)
         PasswordValidator::singleton()->setMinLength(8);
         // 'test' member has a password defined in yml
@@ -1905,7 +1908,7 @@ class MemberTest extends FunctionalTest
         $password = $member->generateRandomPassword();
         $this->assertSame(20, strlen($password));
         // password validator
-        $validator = new PasswordValidator();
+        $validator = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
         Member::set_password_validator($validator);
         // Password length of 20 even if validator minLength is less than 20
         $validator->setMinLength(10);

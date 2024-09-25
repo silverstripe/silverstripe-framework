@@ -15,6 +15,7 @@ use SilverStripe\Security\PasswordValidator;
 use SilverStripe\View\SSViewer;
 use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Dev\Deprecation;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
@@ -24,9 +25,11 @@ class ConfirmedPasswordFieldTest extends SapphireTest
     {
         parent::setUp();
 
-        PasswordValidator::singleton()
+        Deprecation::withSuppressedNotice(
+            fn() => PasswordValidator::singleton()
             ->setMinLength(0)
-            ->setTestNames([]);
+            ->setTestNames([])
+        );
     }
 
     public function testSetValue()

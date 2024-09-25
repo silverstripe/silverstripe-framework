@@ -44,6 +44,7 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\ORM\FieldType\DBForeignKey;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * The member class which represents the users of the system
@@ -400,7 +401,7 @@ class Member extends DataObject
     public static function password_validator()
     {
         if (Injector::inst()->has(PasswordValidator::class)) {
-            return Injector::inst()->get(PasswordValidator::class);
+            return Deprecation::withSuppressedNotice(fn() => Injector::inst()->get(PasswordValidator::class));
         }
         return null;
     }

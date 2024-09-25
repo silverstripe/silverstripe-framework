@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\MemberCsvBulkLoader;
@@ -19,9 +20,11 @@ class MemberCsvBulkLoaderTest extends SapphireTest
     {
         parent::setUp();
 
-        PasswordValidator::singleton()
+        Deprecation::withSuppressedNotice(
+            fn() => PasswordValidator::singleton()
             ->setMinLength(0)
-            ->setTestNames([]);
+            ->setTestNames([])
+        );
     }
 
     public function testNewImport()
