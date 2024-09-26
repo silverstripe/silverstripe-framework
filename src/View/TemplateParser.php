@@ -16,5 +16,5 @@ interface TemplateParser
      * @param bool $includeDebuggingComments True is debugging comments should be included in the output
      * @return string The php that, when executed (via include or exec) will behave as per the template source
      */
-    public function compileString($string, $templateName = "", $includeDebuggingComments = false);
+    public function compileString(string $string, string $templateName = "", bool $includeDebuggingComments = false): string;
 }

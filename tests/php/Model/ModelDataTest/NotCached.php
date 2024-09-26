@@ -9,7 +9,7 @@ class NotCached extends ModelData implements TestOnly
 {
     public $Test;
 
-    protected function objCacheGet($key)
+    public function objCacheGet(string $fieldName, array $arguments = []): mixed
     {
         // Disable caching
         return null;

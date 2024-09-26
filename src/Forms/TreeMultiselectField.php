@@ -92,10 +92,10 @@ class TreeMultiselectField extends TreeDropdownField
         foreach ($items as $item) {
             if ($item instanceof DataObject) {
                 $values[] = [
-                    'id' => $item->obj($this->getKeyField())->getValue(),
-                    'title' => $item->obj($this->getTitleField())->getValue(),
+                    'id' => $item->obj($this->getKeyField())?->getValue(),
+                    'title' => $item->obj($this->getTitleField())?->getValue(),
                     'parentid' => $item->ParentID,
-                    'treetitle' => $item->obj($this->getLabelField())->getSchemaValue(),
+                    'treetitle' => $item->obj($this->getLabelField())?->getSchemaValue(),
                 ];
             } else {
                 $values[] = $item;
@@ -212,7 +212,7 @@ class TreeMultiselectField extends TreeDropdownField
             foreach ($items as $item) {
                 $idArray[] = $item->ID;
                 $titleArray[] = ($item instanceof ModelData)
-                    ? $item->obj($this->getLabelField())->forTemplate()
+                    ? $item->obj($this->getLabelField())?->forTemplate()
                     : Convert::raw2xml($item->{$this->getLabelField()});
             }
 

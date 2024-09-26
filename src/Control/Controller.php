@@ -3,11 +3,14 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\TemplateEngine;
 use SilverStripe\View\TemplateGlobalProvider;
 
 /**
@@ -86,6 +89,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         'handleAction',
         'handleIndex',
     ];
+
+    protected ?TemplateEngine $templateEngine = null;
 
     public function __construct()
     {
@@ -400,7 +405,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $templates = array_unique(array_merge($actionTemplates, $classTemplates));
         }
 
-        return SSViewer::create($templates);
+        return SSViewer::create($templates, $this->getTemplateEngine());
     }
 
     /**
@@ -452,9 +457,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         }
 
         $class = static::class;
-        while ($class != 'SilverStripe\\Control\\RequestHandler') {
+        $engine = $this->getTemplateEngine();
+        while ($class !== RequestHandler::class) {
             $templateName = strtok($class ?? '', '_') . '_' . $action;
-            if (SSViewer::hasTemplate($templateName)) {
+            if ($engine->hasTemplate($templateName)) {
                 return $class;
             }
 
@@ -486,17 +492,25 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $parentClass = get_parent_class($parentClass ?? '');
         }
 
-        return SSViewer::hasTemplate($templates);
+        $engine = $this->getTemplateEngine();
+        return $engine->hasTemplate($templates);
+    }
+
+    public function renderWith($template, ModelData|array $customFields = []): DBHTMLText
+    {
+        // Ensure template engine is used, unless the viewer was already explicitly instantiated
+        if (!($template instanceof SSViewer)) {
+            $template = SSViewer::create($template, $this->getTemplateEngine());
+        }
+        return parent::renderWith($template, $customFields);
     }
 
     /**
      * Render the current controller with the templates determined by {@link getViewer()}.
      *
      * @param array $params
-     *
-     * @return string
      */
-    public function render($params = null)
+    public function render($params = null): DBHTMLText
     {
         $template = $this->getViewer($this->getAction());
 
@@ -734,5 +748,13 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         return [
             'CurrentPage' => 'curr',
         ];
+    }
+
+    protected function getTemplateEngine(): TemplateEngine
+    {
+        if (!$this->templateEngine) {
+            $this->templateEngine = Injector::inst()->create(TemplateEngine::class);
+        }
+        return $this->templateEngine;
     }
 }

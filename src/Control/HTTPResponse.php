@@ -444,8 +444,6 @@ EOT
 
     /**
      * The HTTP response represented as a raw string
-     *
-     * @return string
      */
     public function __toString()
     {

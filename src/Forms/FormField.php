@@ -15,6 +15,7 @@ use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\DataObject;
 
 /**
  * Represents a field in a form.
@@ -273,6 +274,8 @@ class FormField extends RequestHandler
         'Title' => 'Text',
         'RightTitle' => 'Text',
         'Description' => 'HTMLFragment',
+        // This is an associative arrays, but we cast to Text so we can get a JSON string representation
+        'SchemaData' => 'Text',
     ];
 
     /**
@@ -458,7 +461,7 @@ class FormField extends RequestHandler
      *
      * By default, makes use of $this->dataValue()
      *
-     * @param ModelData|DataObjectInterface $record Record to save data into
+     * @param DataObjectInterface $record Record to save data into
      */
     public function saveInto(DataObjectInterface $record)
     {
@@ -469,7 +472,9 @@ class FormField extends RequestHandler
         if (($pos = strrpos($this->name ?? '', '.')) !== false) {
             $relation = substr($this->name ?? '', 0, $pos);
             $fieldName = substr($this->name ?? '', $pos + 1);
-            $component = $record->relObject($relation);
+            if ($record instanceof DataObject) {
+                $component = $record->relObject($relation);
+            }
         }
 
         if ($fieldName && $component) {
@@ -943,7 +948,7 @@ class FormField extends RequestHandler
      *
      * The default field holder is a label and a form field inside a div.
      *
-     * @see FieldHolder.ss
+     * see FieldHolder template
      *
      * @param array $properties
      *
@@ -1027,7 +1032,7 @@ class FormField extends RequestHandler
      */
     protected function _templates($customTemplate = null, $customTemplateSuffix = null)
     {
-        $templates = SSViewer::get_templates_by_class(static::class, $customTemplateSuffix, __CLASS__);
+        $templates = SSViewer::get_templates_by_class(static::class, $customTemplateSuffix ?? '', __CLASS__);
         // Prefer any custom template
         if ($customTemplate) {
             // Prioritise direct template
@@ -1469,12 +1474,12 @@ class FormField extends RequestHandler
             'schemaType' => $this->getSchemaDataType(),
             'component' => $this->getSchemaComponent(),
             'holderId' => $this->HolderID(),
-            'title' => $this->obj('Title')->getSchemaValue(),
+            'title' => $this->obj('Title')?->getSchemaValue(),
             'source' => null,
             'extraClass' => $this->extraClass(),
-            'description' => $this->obj('Description')->getSchemaValue(),
-            'rightTitle' => $this->obj('RightTitle')->getSchemaValue(),
-            'leftTitle' => $this->obj('LeftTitle')->getSchemaValue(),
+            'description' => $this->obj('Description')?->getSchemaValue(),
+            'rightTitle' => $this->obj('RightTitle')?->getSchemaValue(),
+            'leftTitle' => $this->obj('LeftTitle')?->getSchemaValue(),
             'readOnly' => $this->isReadonly(),
             'disabled' => $this->isDisabled(),
             'customValidationMessage' => $this->getCustomValidationMessage(),

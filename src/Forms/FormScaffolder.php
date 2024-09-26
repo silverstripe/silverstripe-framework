@@ -115,7 +115,7 @@ class FormScaffolder
                 $fieldObject = $this
                     ->obj
                     ->dbObject($fieldName)
-                    ->scaffoldFormField(null, $this->getParamsArray());
+                    ?->scaffoldFormField(null, $this->getParamsArray());
             }
             // Allow fields to opt-out of scaffolding
             if (!$fieldObject) {
@@ -145,7 +145,7 @@ class FormScaffolder
                     $fieldClass = $this->fieldClasses[$fieldName];
                     $hasOneField = new $fieldClass($fieldName);
                 } else {
-                    $hasOneField = $this->obj->dbObject($fieldName)->scaffoldFormField(null, $this->getParamsArray());
+                    $hasOneField = $this->obj->dbObject($fieldName)?->scaffoldFormField(null, $this->getParamsArray());
                 }
                 if (empty($hasOneField)) {
                     continue; // Allow fields to opt out of scaffolding

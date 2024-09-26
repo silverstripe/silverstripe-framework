@@ -19,6 +19,8 @@ use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Control\Tests\ControllerTest\ControllerWithDummyEngine;
+use SilverStripe\Control\Tests\ControllerTest\DummyTemplateEngine;
 
 class ControllerTest extends FunctionalTest
 {
@@ -857,5 +859,13 @@ class ControllerTest extends FunctionalTest
         // 'POST ' (legacy method of specifying root route)
         $response = $this->post('HTTPMethodTestController', ['dummy' => 'example']);
         $this->assertEquals('Routed to postLegacyRoot', $response->getBody());
+    }
+
+    public function testTemplateEngineUsed()
+    {
+        $controller = new ControllerWithDummyEngine();
+        $this->assertSame('This is my controller', $controller->render()->getValue());
+        $this->assertSame('This is my controller', $controller->renderWith('literally-any-template')->getValue());
+        $this->assertInstanceOf(DummyTemplateEngine::class, $controller->getViewer('')->getTemplateEngine());
     }
 }

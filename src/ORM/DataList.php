@@ -19,6 +19,7 @@ use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Map;
 use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\Filters\SearchFilterable;
 
 /**
@@ -1852,7 +1853,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
         return $relation;
     }
 
-    public function dbObject($fieldName)
+    public function dbObject(string $fieldName): ?DBField
     {
         return singleton($this->dataClass)->dbObject($fieldName);
     }

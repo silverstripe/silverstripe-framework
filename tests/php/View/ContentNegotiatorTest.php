@@ -6,31 +6,17 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\Tests\SSViewerTest\TestFixture;
 
 class ContentNegotiatorTest extends SapphireTest
 {
-
-    /**
-     * Small helper to render templates from strings
-     * Cloned from SSViewerTest
-     */
-    private function render($templateString, $data = null)
-    {
-        $t = SSViewer::fromString($templateString);
-        if (!$data) {
-            $data = new TestFixture();
-        }
-        return $t->process($data);
-    }
-
     public function testXhtmltagReplacement()
     {
-        $tmpl1 = '<?xml version="1.0" encoding="UTF-8"?>
+        $baseTag = SSViewer::getBaseTag(true);
+        $renderedOutput = '<?xml version="1.0" encoding="UTF-8"?>
 			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"'
                 . ' "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 			<html>
-				<head><% base_tag %></head>
+				<head>' . $baseTag . '</head>
 				<body>
 				<form action="#">
 					<select>
@@ -53,8 +39,7 @@ class ContentNegotiatorTest extends SapphireTest
 
         // Check that the content negotiator converts to the equally legal formats
         $negotiator = new ContentNegotiator();
-
-        $response = new HTTPResponse($this->render($tmpl1));
+        $response = new HTTPResponse($renderedOutput);
         $negotiator->xhtml($response);
 
         ////////////////////////

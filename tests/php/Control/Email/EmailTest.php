@@ -416,27 +416,14 @@ class EmailTest extends SapphireTest
 
     public function testHTMLTemplate(): void
     {
-        // Find template on disk
-        $emailTemplate = ModuleResourceLoader::singleton()->resolveResource(
-            'silverstripe/framework:templates/SilverStripe/Control/Email/Email.ss'
-        );
-        $subClassTemplate = ModuleResourceLoader::singleton()->resolveResource(
-            'silverstripe/framework:tests/php/Control/Email/EmailTest/templates/'
-            . str_replace('\\', '/', EmailSubClass::class)
-            . '.ss'
-        );
-        $this->assertTrue($emailTemplate->exists());
-        $this->assertTrue($subClassTemplate->exists());
-
-        // Check template is auto-found
         $email = new Email();
-        $this->assertEquals($emailTemplate->getPath(), $email->getHTMLTemplate());
+        $this->assertSame(SSViewer::get_templates_by_class(Email::class, '', Email::class), $email->getHTMLTemplate());
         $email->setHTMLTemplate('MyTemplate');
         $this->assertEquals('MyTemplate', $email->getHTMLTemplate());
 
-        // Check subclass template is found
+        // Check subclass template
         $email2 = new EmailSubClass();
-        $this->assertEquals($subClassTemplate->getPath(), $email2->getHTMLTemplate());
+        $this->assertSame(SSViewer::get_templates_by_class(EmailSubClass::class, '', Email::class), $email2->getHTMLTemplate());
         $email->setHTMLTemplate('MyTemplate');
         $this->assertEquals('MyTemplate', $email->getHTMLTemplate());
     }

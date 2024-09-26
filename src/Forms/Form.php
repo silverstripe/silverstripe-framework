@@ -82,7 +82,7 @@ class Form extends ModelData implements HasRequestHandler
     const ENC_TYPE_MULTIPART  = 'multipart/form-data';
 
     /**
-     * Accessed by Form.ss.
+     * Accessed by Form template.
      * A performance enhancement over the generate-the-form-tag-and-then-remove-it code that was there previously
      *
      * @var bool
@@ -159,7 +159,7 @@ class Form extends ModelData implements HasRequestHandler
     /**
      * Legend value, to be inserted into the
      * <legend> element before the <fieldset>
-     * in Form.ss template.
+     * in Form template.
      *
      * @var string|null
      */
@@ -888,7 +888,7 @@ class Form extends ModelData implements HasRequestHandler
 
     /**
      * Set the legend value to be inserted into
-     * the <legend> element in the Form.ss template.
+     * the <legend> element in the Form template.
      * @param string $legend
      * @return $this
      */
@@ -899,10 +899,10 @@ class Form extends ModelData implements HasRequestHandler
     }
 
     /**
-     * Set the SS template that this form should use
+     * Set the template or template candidates that this form should use
      * to render with. The default is "Form".
      *
-     * @param string|array $template The name of the template (without the .ss extension) or array form
+     * @param string|array $template The name of the template (without the file extension) or array of candidates
      * @return $this
      */
     public function setTemplate($template)
@@ -1234,7 +1234,7 @@ class Form extends ModelData implements HasRequestHandler
 
     /**
      * Get the legend value to be inserted into the
-     * <legend> element in Form.ss
+     * <legend> element in Form template
      *
      * @return string
      */

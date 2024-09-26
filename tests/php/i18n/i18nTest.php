@@ -308,7 +308,7 @@ class i18nTest extends SapphireTest
     }
 
     /**
-     * See @i18nTestModule.ss for the template that is being used for this test
+     * See i18nTestModule.ss for the template that is being used for this test
      * */
     public function testNewTemplateTranslation()
     {

@@ -197,20 +197,6 @@ class PartialMatchFilterTest extends SapphireTest
                 'modifiers' => [],
                 'matches' => false,
             ],
-            // These will both evaluate to true because the __toString() method just returns the class name.
-            // We're testing this scenario because ArrayList might contain arbitrary values
-            [
-                'filterValue' => new ArrayData(['SomeField' => 'some value']),
-                'matchValue' => new ArrayData(['SomeField' => 'some value']),
-                'modifiers' => [],
-                'matches' => true,
-            ],
-            [
-                'filterValue' => new ArrayData(['SomeField' => 'SoMe VaLuE']),
-                'matchValue' => new ArrayData(['SomeField' => 'some value']),
-                'modifiers' => [],
-                'matches' => true,
-            ],
             // case insensitive
             [
                 'filterValue' => 'somevalue',

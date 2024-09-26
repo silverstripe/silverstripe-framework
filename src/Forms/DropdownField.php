@@ -68,7 +68,7 @@ use SilverStripe\Model\ArrayData;
  * DropdownField::create(
  *   'Country',
  *   'Country',
- *   singleton(MyObject::class)->dbObject('Country')->enumValues()
+ *   singleton(MyObject::class)->dbObject('Country')?->enumValues()
  * );
  * </code>
  *

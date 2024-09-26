@@ -114,8 +114,6 @@ class ModuleResource
 
     /**
      * Get relative path
-     *
-     * @return string
      */
     public function __toString()
     {

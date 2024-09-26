@@ -129,10 +129,6 @@ class GridState extends HiddenField
         return Convert::raw2att($this->Value());
     }
 
-    /**
-     *
-     * @return string
-     */
     public function __toString()
     {
         return $this->Value();

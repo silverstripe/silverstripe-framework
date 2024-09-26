@@ -11,7 +11,7 @@ class SSViewerTestState implements TestState
 {
     public function setUp(SapphireTest $test)
     {
-        SSViewer::set_themes(null);
+        SSViewer::set_themes([]);
         SSViewer::setRewriteHashLinksDefault(null);
         ContentNegotiator::setEnabled(null);
     }

@@ -14,7 +14,6 @@ use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
  */
 class FlushInvalidatedResource implements SelfCheckingResourceInterface, Flushable
 {
-
     public function __toString()
     {
         return md5(__CLASS__);

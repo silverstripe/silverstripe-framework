@@ -56,7 +56,9 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     public function setList(SS_List&Sortable&Filterable&Limitable $list): ListDecorator
     {
         $this->list = $list;
-        $this->failover = $this->list;
+        if ($list instanceof ModelData) {
+            $this->setFailover($list);
+        }
         return $this;
     }
 

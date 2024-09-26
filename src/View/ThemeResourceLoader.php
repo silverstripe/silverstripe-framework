@@ -91,6 +91,14 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
     }
 
     /**
+     * Get the base path of the application according to the resource loader
+     */
+    public function getBase(): string
+    {
+        return $this->base;
+    }
+
+    /**
      * Given a theme identifier, determine the path from the root directory
      *
      * The mapping from $identifier to path follows these rules:
@@ -160,101 +168,6 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
 
         // Join module with subpath
         return Path::normalise($modulePath . $subpath, true);
-    }
-
-    /**
-     * Attempts to find possible candidate templates from a set of template
-     * names from modules, current theme directory and finally the application
-     * folder.
-     *
-     * The template names can be passed in as plain strings, or be in the
-     * format "type/name", where type is the type of template to search for
-     * (e.g. Includes, Layout).
-     *
-     * The results of this method will be cached for future use.
-     *
-     * @param string|array $template Template name, or template spec in array format with the keys
-     * 'type' (type string) and 'templates' (template hierarchy in order of precedence).
-     * If 'templates' is omitted then any other item in the array will be treated as the template
-     * list, or list of templates each in the array spec given.
-     * Templates with an .ss extension will be treated as file paths, and will bypass
-     * theme-coupled resolution.
-     * @param array $themes List of themes to use to resolve themes. Defaults to {@see SSViewer::get_themes()}
-     * @return string Absolute path to resolved template file, or null if not resolved.
-     * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
-     * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
-     */
-    public function findTemplate($template, $themes = null)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
-        if ($themes === null) {
-            $themes = SSViewer::get_themes();
-        }
-
-        // Look for a cached result for this data set
-        $cacheKey = md5(json_encode($template) . json_encode($themes));
-        if ($this->getCache()->has($cacheKey)) {
-            return $this->getCache()->get($cacheKey);
-        }
-
-        $type = '';
-        if (is_array($template)) {
-            // Check if templates has type specified
-            if (array_key_exists('type', $template ?? [])) {
-                $type = $template['type'];
-                unset($template['type']);
-            }
-            // Templates are either nested in 'templates' or just the rest of the list
-            $templateList = array_key_exists('templates', $template ?? []) ? $template['templates'] : $template;
-        } else {
-            $templateList = [$template];
-        }
-
-        foreach ($templateList as $i => $template) {
-            // Check if passed list of templates in array format
-            if (is_array($template)) {
-                $path = $this->findTemplate($template, $themes);
-                if ($path) {
-                    $this->getCache()->set($cacheKey, $path);
-                    return $path;
-                }
-                continue;
-            }
-
-            // If we have an .ss extension, this is a path, not a template name. We should
-            // pass in templates without extensions in order for template manifest to find
-            // files dynamically.
-            if (substr($template ?? '', -3) == '.ss' && file_exists($template ?? '')) {
-                $this->getCache()->set($cacheKey, $template);
-                return $template;
-            }
-
-            // Check string template identifier
-            $template = str_replace('\\', '/', $template ?? '');
-            $parts = explode('/', $template ?? '');
-
-            $tail = array_pop($parts);
-            $head = implode('/', $parts);
-            $themePaths = $this->getThemePaths($themes);
-            foreach ($themePaths as $themePath) {
-                // Join path
-                $pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
-                try {
-                    $path = Path::join($pathParts) . '.ss';
-                    if (file_exists($path ?? '')) {
-                        $this->getCache()->set($cacheKey, $path);
-                        return $path;
-                    }
-                } catch (InvalidArgumentException $e) {
-                    // No-op
-                }
-            }
-        }
-
-        // No template found
-        $this->getCache()->set($cacheKey, null);
-        return null;
     }
 
     /**

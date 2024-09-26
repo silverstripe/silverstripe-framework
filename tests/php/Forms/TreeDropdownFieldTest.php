@@ -314,7 +314,7 @@ class TreeDropdownFieldTest extends SapphireTest
         $noResult = $parser->getBySelector($cssPath);
         $this->assertEmpty(
             $noResult,
-            $subObject2 . ' is not found'
+            get_class($subObject2) . ' is not found'
         );
     }
 

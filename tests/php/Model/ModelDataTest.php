@@ -12,6 +12,7 @@ use SilverStripe\Model\Tests\ModelDataTest\ModelDataTestExtension;
 use SilverStripe\Model\Tests\ModelDataTest\ModelDataTestObject;
 use SilverStripe\Model\ModelData;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Model\Tests\ModelDataTest\TestModelData;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ModelData behaviour,
@@ -54,6 +55,18 @@ class ModelDataTest extends SapphireTest
         $this->assertEquals($htmlString, $textField->obj('XML')->forTemplate());
     }
 
+    public function testCastingValues()
+    {
+        $caster = new ModelDataTest\Castable();
+
+        $this->assertEquals('casted', $caster->obj('alwaysCasted')->forTemplate());
+        $this->assertEquals('casted', $caster->obj('noCastingInformation')->forTemplate());
+
+        // Test automatic escaping is applied even to fields with no 'casting'
+        $this->assertEquals('casted', $caster->obj('unsafeXML')->forTemplate());
+        $this->assertEquals('&lt;foo&gt;', $caster->obj('castedUnsafeXML')->forTemplate());
+    }
+
     public function testRequiresCasting()
     {
         $caster = new ModelDataTest\Castable();
@@ -78,18 +91,6 @@ class ModelDataTest extends SapphireTest
         $this->assertInstanceOf(ModelDataTest\Caster::class, $caster->obj('noCastingInformation'));
     }
 
-    public function testCastingXMLVal()
-    {
-        $caster = new ModelDataTest\Castable();
-
-        $this->assertEquals('casted', $caster->XML_val('alwaysCasted'));
-        $this->assertEquals('casted', $caster->XML_val('noCastingInformation'));
-
-        // Test automatic escaping is applied even to fields with no 'casting'
-        $this->assertEquals('casted', $caster->XML_val('unsafeXML'));
-        $this->assertEquals('&lt;foo&gt;', $caster->XML_val('castedUnsafeXML'));
-    }
-
     public function testArrayCustomise()
     {
         $modelData    = new ModelDataTest\Castable();
@@ -100,11 +101,11 @@ class ModelDataTest extends SapphireTest
              ]
         );
 
-        $this->assertEquals('test', $modelData->XML_val('test'));
-        $this->assertEquals('casted', $modelData->XML_val('alwaysCasted'));
+        $this->assertEquals('test', $modelData->obj('test')->forTemplate());
+        $this->assertEquals('casted', $modelData->obj('alwaysCasted')->forTemplate());
 
-        $this->assertEquals('overwritten', $newModelData->XML_val('test'));
-        $this->assertEquals('overwritten', $newModelData->XML_val('alwaysCasted'));
+        $this->assertEquals('overwritten', $newModelData->obj('test')->forTemplate());
+        $this->assertEquals('overwritten', $newModelData->obj('alwaysCasted')->forTemplate());
 
         $this->assertEquals('castable', $modelData->forTemplate());
         $this->assertEquals('castable', $newModelData->forTemplate());
@@ -115,14 +116,14 @@ class ModelDataTest extends SapphireTest
         $modelData    = new ModelDataTest\Castable();
         $newModelData = $modelData->customise(new ModelDataTest\RequiresCasting());
 
-        $this->assertEquals('test', $modelData->XML_val('test'));
-        $this->assertEquals('casted', $modelData->XML_val('alwaysCasted'));
+        $this->assertEquals('test', $modelData->obj('test')->forTemplate());
+        $this->assertEquals('casted', $modelData->obj('alwaysCasted')->forTemplate());
 
-        $this->assertEquals('overwritten', $newModelData->XML_val('test'));
-        $this->assertEquals('casted', $newModelData->XML_val('alwaysCasted'));
+        $this->assertEquals('overwritten', $newModelData->obj('test')->forTemplate());
+        $this->assertEquals('casted', $newModelData->obj('alwaysCasted')->forTemplate());
 
         $this->assertEquals('castable', $modelData->forTemplate());
-        $this->assertEquals('casted', $newModelData->forTemplate());
+        $this->assertEquals('castable', $newModelData->forTemplate());
     }
 
     public function testDefaultValueWrapping()
@@ -137,25 +138,6 @@ class ModelDataTest extends SapphireTest
         $this->assertTrue(is_object($obj));
         // and the string field should have the value of the raw string:
         $this->assertEquals('SomeTitleValue', $obj->forTemplate());
-    }
-
-    public function testCastingClass()
-    {
-        $expected = [
-            //'NonExistant'   => null,
-            'Field'         => 'CastingType',
-            'Argument'      => 'ArgumentType',
-            'ArrayArgument' => 'ArrayArgumentType'
-        ];
-        $obj = new ModelDataTest\CastingClass();
-
-        foreach ($expected as $field => $class) {
-            $this->assertEquals(
-                $class,
-                $obj->castingClass($field),
-                "castingClass() returns correct results for ::\$$field"
-            );
-        }
     }
 
     public function testObjWithCachedStringValueReturnsValidObject()
@@ -271,6 +253,114 @@ class ModelDataTest extends SapphireTest
 
         $output = $reflectionMethod->invokeArgs(new ModelData(), ['objCache']);
         $this->assertTrue($output, 'Property should be accessible');
+    }
+
+    public static function provideObj(): array
+    {
+        return [
+            'returned value is caught' => [
+                'name' => 'justCallMethod',
+                'args' => [],
+                'expectRequested' => [
+                    [
+                        'type' => 'method',
+                        'name' => 'justCallMethod',
+                        'args' => [],
+                    ],
+                ],
+                'expected' => 'This is a method value',
+            ],
+            'getter is used' => [
+                'name' => 'ActualValue',
+                'args' => [],
+                'expectRequested' => [
+                    [
+                        'type' => 'method',
+                        'name' => 'getActualValue',
+                        'args' => [],
+                    ],
+                ],
+                'expected' => 'this is the value',
+            ],
+            'if no method exists, only property is fetched' => [
+                'name' => 'NoMethod',
+                'args' => [],
+                'expectRequested' => [
+                    [
+                        'type' => 'property',
+                        'name' => 'NoMethod',
+                    ],
+                ],
+                'expected' => null,
+            ],
+            'property value is caught' => [
+                'name' => 'ActualValueField',
+                'args' => [],
+                'expectRequested' => [
+                    [
+                        'type' => 'property',
+                        'name' => 'ActualValueField',
+                    ],
+                ],
+                'expected' => 'the value is here',
+            ],
+            'not set and no method' => [
+                'name' => 'NotSet',
+                'args' => [],
+                'expectRequested' => [],
+                'expected' => null,
+            ],
+            'args but no method' => [
+                'name' => 'SomeField',
+                'args' => ['abc', 123],
+                'expectRequested' => [
+                    [
+                        'type' => 'property',
+                        'name' => 'SomeField',
+                    ],
+                ],
+                'expected' => null,
+            ],
+            'method with args' => [
+                'name' => 'justCallMethod',
+                'args' => ['abc', 123],
+                'expectRequested' => [
+                    [
+                        'type' => 'method',
+                        'name' => 'justCallMethod',
+                        'args' => ['abc', 123],
+                    ],
+                ],
+                'expected' => 'This is a method value',
+            ],
+            'getter with args' => [
+                'name' => 'ActualValue',
+                'args' => ['abc', 123],
+                'expectRequested' => [
+                    [
+                        'type' => 'method',
+                        'name' => 'getActualValue',
+                        'args' => ['abc', 123],
+                    ],
+                ],
+                'expected' => 'this is the value',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideObj')]
+    public function testObj(string $name, array $args, array $expectRequested, ?string $expected): void
+    {
+        $fixture = new TestModelData();
+        $value = $fixture->obj($name, $args);
+        $this->assertSame($expectRequested, $fixture->getRequested());
+        $this->assertEquals($expected, ($value instanceof DBField) ? $value->getValue() : $value);
+        // Ensure value is being wrapped when not null
+        // Don't bother testing actual casting, there's some coverage for that in this class already
+        // but mostly it's tested in CastingServiceTest
+        if ($value !== null) {
+            $this->assertTrue(is_object($value));
+        }
     }
 
     public function testDynamicData()

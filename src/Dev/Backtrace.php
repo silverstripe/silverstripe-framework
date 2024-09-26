@@ -149,11 +149,11 @@ class Backtrace
         if ($showArgs && isset($item['args'])) {
             $args = [];
             foreach ($item['args'] as $arg) {
-                if (!is_object($arg) || method_exists($arg, '__toString')) {
+                if (is_object($arg)) {
+                    $args[] = get_class($arg);
+                } else {
                     $sarg = is_array($arg) ? 'Array' : strval($arg);
                     $args[] = (strlen($sarg ?? '') > $argCharLimit) ? substr($sarg, 0, $argCharLimit) . '...' : $sarg;
-                } else {
-                    $args[] = get_class($arg);
                 }
             }
 
