@@ -12,6 +12,10 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Model\List\ArrayList;
+use SilverStripe\PolyExecution\HtmlOutputFormatter;
+use SilverStripe\PolyExecution\HttpRequestInput;
+use SilverStripe\PolyExecution\PolyOutput;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
@@ -20,7 +24,6 @@ use SilverStripe\Model\ModelData;
 
 class TaskRunner extends Controller implements PermissionProvider
 {
-
     use Configurable;
 
     private static $url_handlers = [
@@ -59,25 +62,17 @@ class TaskRunner extends Controller implements PermissionProvider
     {
         $baseUrl = Director::absoluteBaseURL();
         $tasks = $this->getTasks();
-
-        if (Director::is_cli()) {
-            // CLI mode
-            $output = 'SILVERSTRIPE DEVELOPMENT TOOLS: Tasks' . PHP_EOL . '--------------------------' . PHP_EOL . PHP_EOL;
-
-            foreach ($tasks as $task) {
-                $output .= sprintf(' * %s: sake dev/tasks/%s%s', $task['title'], $task['segment'], PHP_EOL);
-            }
-
-            return $output;
-        }
-
         $list = ArrayList::create();
-
         foreach ($tasks as $task) {
+            if (!$task['class']::canRunInBrowser()) {
+                continue;
+            }
             $list->push(ArrayData::create([
                 'TaskLink' => Controller::join_links($baseUrl, 'dev/tasks/', $task['segment']),
                 'Title' => $task['title'],
                 'Description' => $task['description'],
+                'Parameters' => $task['parameters'],
+                'Help' => $task['help'],
             ]));
         }
 
@@ -104,26 +99,26 @@ class TaskRunner extends Controller implements PermissionProvider
         $name = $request->param('TaskName');
         $tasks = $this->getTasks();
 
-        $title = function ($content) {
-            printf(Director::is_cli() ? "%s\n\n" : '<h1>%s</h1>', $content);
-        };
-
         $message = function ($content) {
-            printf(Director::is_cli() ? "%s\n" : '<p>%s</p>', $content);
+            printf('<p>%s</p>', $content);
         };
 
         foreach ($tasks as $task) {
             if ($task['segment'] == $name) {
                 /** @var BuildTask $inst */
                 $inst = Injector::inst()->create($task['class']);
-                $title(sprintf('Running Task %s', $inst->getTitle()));
 
-                if (!$this->taskEnabled($task['class'])) {
+                if (!$this->taskEnabled($task['class']) || !$task['class']::canRunInBrowser()) {
                     $message('The task is disabled or you do not have sufficient permission to run it');
                     return;
                 }
 
-                $inst->run($request);
+                $input = HttpRequestInput::create($request, $inst->getOptions());
+                // DO NOT use a buffer here to capture the output - we explicitly want the output to be streamed
+                // to the client as its available, so that if there's an error the client gets all of the output
+                // available until the error occurs.
+                $output = PolyOutput::create(PolyOutput::FORMAT_HTML, $input->getVerbosity(), true);
+                $inst->run($input, $output);
                 return;
             }
         }
@@ -132,42 +127,49 @@ class TaskRunner extends Controller implements PermissionProvider
     }
 
     /**
-     * @return array Array of associative arrays for each task (Keys: 'class', 'title', 'description')
+     * Get an associative array of task names to classes for all enabled BuildTasks
      */
-    protected function getTasks()
+    public function getTaskList(): array
+    {
+        $taskList = [];
+        $taskClasses = ClassInfo::subclassesFor(BuildTask::class, false);
+        foreach ($taskClasses as $taskClass) {
+            if ($this->taskEnabled($taskClass)) {
+                $taskList[$taskClass::getName()] = $taskClass;
+            }
+        }
+        return $taskList;
+    }
+
+    /**
+     * Get the class names of all build tasks for use in HTTP requests
+     */
+    protected function getTasks(): array
     {
         $availableTasks = [];
+        $formatter = HtmlOutputFormatter::create();
 
+        /** @var BuildTask $class */
         foreach ($this->getTaskList() as $class) {
-            $singleton = BuildTask::singleton($class);
-            $description = $singleton->getDescription();
-            $description = trim($description ?? '');
+            if (!$class::canRunInBrowser()) {
+                continue;
+            }
 
-            $desc = (Director::is_cli())
-                ? Convert::html2raw($description)
-                : $description;
+            $singleton = BuildTask::singleton($class);
+            $description = DBField::create_field('HTMLText', $formatter->format($class::getDescription()));
+            $help = DBField::create_field('HTMLText', nl2br($formatter->format($class::getHelp())), false);
 
             $availableTasks[] = [
                 'class' => $class,
                 'title' => $singleton->getTitle(),
-                'segment' => $singleton->config()->segment ?: str_replace('\\', '-', $class ?? ''),
-                'description' => $desc,
+                'segment' => $class::getNameWithoutNamespace(),
+                'description' => $description,
+                'parameters' => $singleton->getOptionsForTemplate(),
+                'help' => $help,
             ];
         }
 
         return $availableTasks;
-    }
-
-    protected function getTaskList(): array
-    {
-        $taskClasses = ClassInfo::subclassesFor(BuildTask::class, false);
-        foreach ($taskClasses as $index => $task) {
-            if (!$this->taskEnabled($task)) {
-                unset($taskClasses[$index]);
-            }
-        }
-
-        return $taskClasses;
     }
 
     /**
@@ -181,6 +183,7 @@ class TaskRunner extends Controller implements PermissionProvider
             return false;
         }
 
+        /** @var BuildTask $task */
         $task = Injector::inst()->get($class);
         if (!$task->isEnabled()) {
             return false;
@@ -197,8 +200,7 @@ class TaskRunner extends Controller implements PermissionProvider
     {
         return (
             Director::isDev()
-            // We need to ensure that DevelopmentAdminTest can simulate permission failures when running
-            // "dev/tasks" from CLI.
+            // We need to ensure that unit tests can simulate permission failures when navigating to "dev/tasks"
             || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
             || Permission::check(static::config()->get('init_permissions'))
         );

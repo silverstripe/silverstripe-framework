@@ -2,103 +2,107 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\Configurable;
+use LogicException;
 use SilverStripe\Core\Extensible;
-use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\PolyExecution\PolyCommand;
+use SilverStripe\PolyExecution\PolyOutput;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
- * Interface for a generic build task. Does not support dependencies. This will simply
- * run a chunk of code when called.
- *
- * To disable the task (in the case of potentially destructive updates or deletes), declare
- * the $Disabled property on the subclass.
+ * A task that can be run either from the CLI or via an HTTP request.
+ * This is often used for post-deployment tasks, e.g. migrating data to fit a new schema.
  */
-abstract class BuildTask
+abstract class BuildTask extends PolyCommand
 {
-    use Injectable;
-    use Configurable;
     use Extensible;
+
+    /**
+     * Shown in the overview on the {@link TaskRunner}
+     * HTML or CLI interface. Should be short and concise.
+     * Do not use HTML markup.
+     */
+    protected string $title;
+
+    /**
+     * Whether the task is allowed to be run or not.
+     * This property overrides `can_run_in_cli` and `can_run_in_browser` if set to false.
+     */
+    private static bool $is_enabled = true;
+
+    /**
+     * Describe the implications the task has, and the changes it makes.
+     * Do not use HTML markup.
+     */
+    protected static string $description = 'No description available';
+
+    private static array $permissions_for_browser_execution = [
+        'ADMIN',
+        'ALL_DEV_ADMIN' => true,
+        'BUILDTASK_CAN_RUN' => true,
+    ];
 
     public function __construct()
     {
     }
 
     /**
-     * Set a custom url segment (to follow dev/tasks/)
+     * The code for running this task.
      *
-     * @config
-     * @var string
-     * @deprecated 5.4.0 Will be replaced with $commandName
-     */
-    private static $segment = null;
-
-    /**
-     * Make this non-nullable and change this to `bool` in CMS6 with a value of `true`
-     * @var bool|null
-     */
-    private static ?bool $is_enabled = null;
-
-    /**
-     * @var bool $enabled If set to FALSE, keep it from showing in the list
-     * and from being executable through URL or CLI.
-     * @deprecated - remove in CMS 6 and rely on $is_enabled instead
-     */
-    protected $enabled = true;
-
-    /**
-     * @var string $title Shown in the overview on the {@link TaskRunner}
-     * HTML or CLI interface. Should be short and concise, no HTML allowed.
-     */
-    protected $title;
-
-    /**
-     * @var string $description Describe the implications the task has,
-     * and the changes it makes. Accepts HTML formatting.
-     * @deprecated 5.4.0 Will be replaced with a static property with the same name
-     */
-    protected $description = 'No description available';
-
-    /**
-     * Implement this method in the task subclass to
-     * execute via the TaskRunner
+     * Output should be agnostic - do not include explicit HTML in the output unless there is no API
+     * on `PolyOutput` for what you want to do (in which case use the writeForHtml() method).
      *
-     * @param HTTPRequest $request
-     * @return void
+     * Use symfony/console ANSI formatting to style the output.
+     * See https://symfony.com/doc/current/console/coloring.html
+     *
+     * @return int 0 if everything went fine, or an exit code
      */
-    abstract public function run($request);
+    abstract protected function execute(InputInterface $input, PolyOutput $output): int;
 
-    /**
-     * @return bool
-     */
-    public function isEnabled()
+    public function run(InputInterface $input, PolyOutput $output): int
     {
-        $isEnabled = $this->config()->get('is_enabled');
+        $output->writeForAnsi("<options=bold>Running task '{$this->getTitle()}'</>", true);
+        $output->writeForHtml("<h1>Running task '{$this->getTitle()}'</h1>", false);
 
-        if ($isEnabled === null) {
-            return $this->enabled;
+        $before = DBDatetime::now();
+        $exitCode = $this->execute($input, $output);
+        $after = DBDatetime::now();
+
+        $message = "Task '{$this->getTitle()}' ";
+        if ($exitCode === Command::SUCCESS) {
+            $message .= 'completed successfully';
+        } else {
+            $message .= 'failed';
         }
-        return $isEnabled;
+        $timeTaken = DBDatetime::getTimeBetween($before, $after);
+        $message .= " in $timeTaken";
+        $output->writeln(['', "<options=bold>{$message}</>"]);
+        return $exitCode;
     }
 
-    /**
-     * @return string
-     */
-    public function getTitle()
+    public function isEnabled(): bool
     {
-        return $this->title ?: static::class;
+        return $this->config()->get('is_enabled');
     }
 
-    /**
-     * @return string HTML formatted description
-     * @deprecated 5.4.0 Will be replaced with a static method with the same name
-     */
-    public function getDescription()
+    public function getTitle(): string
     {
-        Deprecation::withSuppressedNotice(
-            fn() => Deprecation::notice('5.4.0', 'Will be replaced with a static method with the same name')
-        );
-        return $this->description;
+        return $this->title ?? static::class;
+    }
+
+    public static function getName(): string
+    {
+        return 'tasks:' . static::getNameWithoutNamespace();
+    }
+
+    public static function getNameWithoutNamespace(): string
+    {
+        $name = parent::getName() ?: str_replace('\\', '-', static::class);
+        // Don't allow `:` or `/` because it would affect routing and CLI namespacing
+        if (str_contains($name, ':') || str_contains($name, '/')) {
+            throw new LogicException('commandName must not contain `:` or `/`. Got ' . $name);
+        }
+        return $name;
     }
 }

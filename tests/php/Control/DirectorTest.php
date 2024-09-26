@@ -12,6 +12,7 @@ use SilverStripe\Control\Middleware\CanonicalURLMiddleware;
 use SilverStripe\Control\Middleware\RequestHandlerMiddlewareAdapter;
 use SilverStripe\Control\Middleware\TrustedProxyMiddleware;
 use SilverStripe\Control\Tests\DirectorTest\TestController;
+use SilverStripe\Control\Tests\DirectorTest\TestPolyCommand;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Environment;
@@ -996,5 +997,19 @@ class DirectorTest extends SapphireTest
             $this->assertEquals(1, $request->getVar('query'));
             $this->assertEquals('/some-subdir/some-page/nested', $_SERVER['REQUEST_URI']);
         }, 'some-page/nested?query=1');
+    }
+
+    public function testPolyCommandRoute(): void
+    {
+        Director::config()->set('rules', [
+            'test-route' => TestPolyCommand::class,
+        ]);
+        $response = Director::test('test-route');
+        $this->assertSame('Successful poly command request!', $response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+
+        // Arguments aren't available for PolyCommand yet so URLs with additional params should result in 404
+        $response = Director::test('test-route/more/params');
+        $this->assertSame(404, $response->getStatusCode());
     }
 }

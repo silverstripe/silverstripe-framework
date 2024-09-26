@@ -113,7 +113,6 @@ a:active {
 }
 
 /* Content types */
-.build,
 .options,
 .trace {
     position: relative;
@@ -128,20 +127,26 @@ a:active {
     line-height: 1.3;
 }
 
-.build .success {
+.options .success {
     color: #2b6c2d;
 }
 
-.build .error {
+.options .error {
     color: #d30000;
 }
 
-.build .warning {
+.options .warning {
     color: #8a6d3b;
 }
 
-.build .info {
+.options .info {
     color: #0073c1;
+}
+
+.options .more-details {
+  border: 1px dotted;
+  width: fit-content;
+  padding: 5px;
 }
 
 /* Backtrace styles */
@@ -161,4 +166,29 @@ pre span {
 
 pre .error {
     color: #d30000;
+}
+
+.params {
+  margin-top: 0;
+  margin-left: 10px;
+}
+
+.param {
+  display: flex;
+  align-items: baseline;
+}
+
+.param__name {
+  display: inline-block;
+  font-weight: 200;
+}
+
+.param__name::after {
+  content: ": ";
+}
+
+.param__description {
+  display: inline-block;
+  margin-left: 0.5em;
+  font-style: italic;
 }

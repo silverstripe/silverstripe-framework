@@ -88,7 +88,7 @@ class ExtensionTestState implements TestState
         }
 
         // clear singletons, they're caching old extension info
-        // which is used in DatabaseAdmin->doBuild()
+        // which is used in DbBuild->doBuild()
         Injector::inst()->unregisterObjects([
             DataObject::class,
             Extension::class

@@ -3,6 +3,7 @@
 namespace SilverStripe\Control;
 
 use SilverStripe\Core\Environment;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * CLI specific request building logic
@@ -33,7 +34,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
             'HTTP_USER_AGENT' => 'CLI',
         ], $variables['_SERVER']);
 
-        /**
+        /*
          * Process arguments and load them into the $_GET and $_REQUEST arrays
          * For example,
          * sake my/url somearg otherarg key=val --otherkey=val third=val&fourth=val
@@ -48,12 +49,12 @@ class CLIRequestBuilder extends HTTPRequestBuilder
         if (isset($variables['_SERVER']['argv'][2])) {
             $args = array_slice($variables['_SERVER']['argv'] ?? [], 2);
             foreach ($args as $arg) {
-                if (strpos($arg ?? '', '=') == false) {
+                if (strpos($arg ?? '', '=') === false) {
                     $variables['_GET']['args'][] = $arg;
                 } else {
                     $newItems = [];
                     parse_str((substr($arg ?? '', 0, 2) == '--') ? substr($arg, 2) : $arg, $newItems);
-                    $variables['_GET'] = array_merge($variables['_GET'], $newItems);
+                    $variables['_GET'] = array_merge_recursive($variables['_GET'], $newItems);
                 }
             }
             $_REQUEST = array_merge($_REQUEST, $variables['_GET']);
@@ -64,7 +65,7 @@ class CLIRequestBuilder extends HTTPRequestBuilder
             $variables['_GET']['url'] = $variables['_SERVER']['argv'][1];
             $variables['_SERVER']['REQUEST_URI'] = $variables['_SERVER']['argv'][1];
         }
-        
+
         // Set 'HTTPS' and 'SSL' flag for CLI depending on SS_BASE_URL scheme value.
         $scheme = parse_url(Environment::getEnv('SS_BASE_URL') ?? '', PHP_URL_SCHEME);
         if ($scheme == 'https') {
@@ -80,9 +81,8 @@ class CLIRequestBuilder extends HTTPRequestBuilder
      * @param array $variables
      * @param string $input
      * @param string|null $url
-     * @return HTTPRequest
      */
-    public static function createFromVariables(array $variables, $input, $url = null)
+    public static function createFromVariables(array $variables, $input, $url = null): HTTPRequest
     {
         $request = parent::createFromVariables($variables, $input, $url);
         // unset scheme so that SS_BASE_URL can provide `is_https` information if required
@@ -92,5 +92,18 @@ class CLIRequestBuilder extends HTTPRequestBuilder
         }
 
         return $request;
+    }
+
+    public static function createFromInput(InputInterface $input): HTTPRequest
+    {
+        $variables = [];
+        $variables['_SERVER']['argv'] = [
+            'sake',
+            $input->getArgument('path'),
+            ...$input->getArgument('get-vars'),
+        ];
+        $cleanVars = static::cleanEnvironment($variables);
+        Environment::setVariables($cleanVars);
+        return static::createFromVariables($cleanVars, []);
     }
 }

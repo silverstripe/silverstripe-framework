@@ -2,79 +2,81 @@
 
 namespace SilverStripe\Dev;
 
-use Exception;
+use LogicException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\DatabaseAdmin;
+use SilverStripe\Dev\Command\DevCommand;
+use SilverStripe\PolyExecution\HtmlOutputFormatter;
+use SilverStripe\PolyExecution\HttpRequestInput;
+use SilverStripe\PolyExecution\PolyOutput;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 use SilverStripe\Versioned\Versioned;
+use SilverStripe\Model\ModelData;
 
 /**
  * Base class for development tools.
  *
- * Configured in framework/_config/dev.yml, with the config key registeredControllers being
- * used to generate the list of links for /dev.
+ * Configured via the `commands` and `controllers` configuration properties
  */
 class DevelopmentAdmin extends Controller implements PermissionProvider
 {
-
-    private static $url_handlers = [
+    private static array $url_handlers = [
         '' => 'index',
-        'build/defaults' => 'buildDefaults',
-        'generatesecuretoken' => 'generatesecuretoken',
-        '$Action' => 'runRegisteredController',
+        '$Action' => 'runRegisteredAction',
     ];
 
-    private static $allowed_actions = [
+    private static array $allowed_actions = [
         'index',
-        'buildDefaults',
-        'runRegisteredController',
-        'generatesecuretoken',
+        'runRegisteredAction',
     ];
 
     /**
-     * Controllers for dev admin views
+     * Commands for dev admin views.
+     *
+     * Register any DevCommand classes that you want to be under the `/dev/*` HTTP
+     * route and also accessible by CLI.
+     *
+     * e.g [
+     *     'command-one' => 'App\Dev\CommandOne',
+     * ]
+     */
+    private static array $commands = [];
+
+    /**
+     * Controllers for dev admin views.
+     *
+     * This is for HTTP-only controllers routed under `/dev/*` which
+     * cannot be managed via CLI (e.g. an interactive GraphQL IDE).
+     * For most purposes, register a PolyCommand under $commands instead.
      *
      * e.g [
      *     'urlsegment' => [
-     *         'controller' => 'SilverStripe\Dev\DevelopmentAdmin',
-     *         'links' => [
-     *             'urlsegment' => 'description',
-     *             ...
-     *         ]
-     *     ]
+     *         'class' => 'App\Dev\MyHttpOnlyController',
+     *         'description' => 'See a list of build tasks to run',
+     *     ],
      * ]
-     *
-     * @var array
-     * @deprecated 5.4.0 Will be replaced with "controllers" and "commands" configuration properties
      */
-    private static $registered_controllers = [];
+    private static array $controllers = [];
 
     /**
      * Assume that CLI equals admin permissions
      * If set to false, normal permission model will apply even in CLI mode
-     * Applies to all development admin tasks (E.g. TaskRunner, DatabaseAdmin)
-     *
-     * @config
-     * @var bool
+     * Applies to all development admin tasks (E.g. TaskRunner, DbBuild)
      */
-    private static $allow_all_cli = true;
+    private static bool $allow_all_cli = true;
 
     /**
      * Deny all non-cli requests (browser based ones) to dev admin
-     *
-     * @config
-     * @var bool
      */
-    private static $deny_non_cli = false;
+    private static bool $deny_non_cli = false;
 
     protected function init()
     {
@@ -89,7 +91,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
             return;
         }
 
-        // Backwards compat: Default to "draft" stage, which is important
+        // Default to "draft" stage, which is important
         // for tasks like dev/build which call DataObject->requireDefaultRecords(),
         // but also for other administrative tasks which have assumptions about the default stage.
         if (class_exists(Versioned::class)) {
@@ -97,193 +99,221 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
         }
     }
 
+    /**
+     * Renders the main /dev menu in the browser
+     */
     public function index()
     {
-        $links = $this->getLinks();
-        // Web mode
-        if (!Director::is_cli()) {
-            $renderer = DebugView::create();
-            echo $renderer->renderHeader();
-            echo $renderer->renderInfo("SilverStripe Development Tools", Director::absoluteBaseURL());
-            $base = Director::baseURL();
+        $renderer = DebugView::create();
+        $base = Director::baseURL();
+        $formatter = HtmlOutputFormatter::create();
 
-            echo '<div class="options"><ul>';
-            $evenOdd = "odd";
-            foreach ($links as $action => $description) {
-                echo "<li class=\"$evenOdd\"><a href=\"{$base}dev/$action\"><b>/dev/$action:</b>"
-                    . " $description</a></li>\n";
-                $evenOdd = ($evenOdd == "odd") ? "even" : "odd";
+        $list = [];
+
+        foreach ($this->getLinks() as $path => $info) {
+            $class = $info['class'];
+            $description = $info['description'] ?? '';
+            $parameters = null;
+            $help = null;
+            if (is_a($class, DevCommand::class, true)) {
+                $parameters = $class::singleton()->getOptionsForTemplate();
+                $description = DBField::create_field('HTMLText', $formatter->format($class::getDescription()));
+                $help = DBField::create_field('HTMLText', nl2br($formatter->format($class::getHelp())), false);
             }
-
-            echo $renderer->renderFooter();
-
-        // CLI mode
-        } else {
-            echo "SILVERSTRIPE DEVELOPMENT TOOLS\n--------------------------\n\n";
-            echo "You can execute any of the following commands:\n\n";
-            foreach ($links as $action => $description) {
-                echo "  sake dev/$action: $description\n";
-            }
-            echo "\n\n";
+            $data = [
+                'Description' => $description,
+                'Link' => "{$base}$path",
+                'Path' => $path,
+                'Parameters' => $parameters,
+                'Help' => $help,
+            ];
+            $list[] = $data;
         }
+
+        $data = [
+            'ArrayLinks' => $list,
+            'Header' => $renderer->renderHeader(),
+            'Footer' => $renderer->renderFooter(),
+            'Info' => $renderer->renderInfo("SilverStripe Development Tools", Director::absoluteBaseURL()),
+        ];
+
+        return ModelData::create()->renderWith(static::class, $data);
     }
 
-    public function runRegisteredController(HTTPRequest $request)
+    /**
+     * Run the command, or hand execution to the controller.
+     * Note this method is for execution from the web only. CLI takes a different path.
+     */
+    public function runRegisteredAction(HTTPRequest $request)
     {
-        $controllerClass = null;
+        $returnUrl = $this->getBackURL();
+        $fullPath = $request->getURL();
+        $routes = $this->getRegisteredRoutes();
+        $class = null;
 
-        $baseUrlPart = $request->param('Action');
-        $reg = Config::inst()->get(static::class, 'registered_controllers');
-        if (isset($reg[$baseUrlPart])) {
-            $controllerClass = $reg[$baseUrlPart]['controller'];
+        // If full path directly matches, use that class.
+        if (isset($routes[$fullPath])) {
+            $class = $routes[$fullPath]['class'];
+            if (is_a($class, DevCommand::class, true)) {
+                // Tell the request we've matched the full URL
+                $request->shift($request->remaining());
+            }
         }
 
-        if ($controllerClass && class_exists($controllerClass ?? '')) {
-            return $controllerClass::create();
+        // The full path doesn't directly match any registered command or controller.
+        // Look for a controller that can handle the request. We reject commands at this stage.
+        // The full path will be for an action on the controller and may include nested actions,
+        // so we need to check all urlsegment sections within the request URL.
+        if (!$class) {
+            $parts = explode('/', $fullPath);
+            array_pop($parts);
+            while (count($parts) > 0) {
+                $newPath = implode('/', $parts);
+                // Don't check dev itself - that's the controller we're currently in.
+                if ($newPath === 'dev') {
+                    break;
+                }
+                // Check for a controller that matches this partial path.
+                $class = $routes[$newPath]['class'] ?? null;
+                if ($class !== null && is_a($class, RequestHandler::class, true)) {
+                    break;
+                }
+                array_pop($parts);
+            }
         }
 
-        $msg = 'Error: no controller registered in ' . static::class . ' for: ' . $request->param('Action');
-        if (Director::is_cli()) {
-            // in CLI we cant use httpError because of a bug with stuff being in the output already, see DevAdminControllerTest
-            throw new Exception($msg);
-        } else {
+        if (!$class) {
+            $msg = 'Error: no controller registered in ' . static::class . ' for: ' . $request->param('Action');
             $this->httpError(404, $msg);
         }
-    }
 
-    /*
-     * Internal methods
-     */
+        // Hand execution to the controller
+        if (is_a($class, RequestHandler::class, true)) {
+            return $class::create();
+        }
+
+        /** @var DevCommand $command */
+        $command = $class::create();
+        $input = HttpRequestInput::create($request, $command->getOptions());
+        // DO NOT use a buffer here to capture the output - we explicitly want the output to be streamed
+        // to the client as its available, so that if there's an error the client gets all of the output
+        // available until the error occurs.
+        $output = PolyOutput::create(PolyOutput::FORMAT_HTML, $input->getVerbosity(), true);
+        $renderer = DebugView::create();
+
+        // Output header etc
+        $headerOutput = [
+            $renderer->renderHeader(),
+            $renderer->renderInfo(
+                $command->getTitle(),
+                Director::absoluteBaseURL()
+            ),
+            '<div class="options">',
+        ];
+        $output->writeForHtml($headerOutput);
+
+        // Run command
+        $command->run($input, $output);
+
+        // Output footer etc
+        $output->writeForHtml([
+            '</div>',
+            $renderer->renderFooter(),
+        ]);
+
+        // Return to whence we came (e.g. if we had been redirected to dev/build)
+        if ($returnUrl) {
+            return $this->redirect($returnUrl);
+        }
+    }
 
     /**
-     * @deprecated 5.2.0 use getLinks() instead to include permission checks
-     * @return array of url => description
+     * Get a map of all registered DevCommands.
+     * The key is the route used for browser execution.
      */
-    protected static function get_links()
+    public function getCommands(): array
     {
-        Deprecation::notice('5.2.0', 'Use getLinks() instead to include permission checks');
-        $links = [];
-
-        $reg = Config::inst()->get(static::class, 'registered_controllers');
-        foreach ($reg as $registeredController) {
-            if (isset($registeredController['links'])) {
-                foreach ($registeredController['links'] as $url => $desc) {
-                    $links[$url] = $desc;
-                }
+        $commands = [];
+        foreach (Config::inst()->get(static::class, 'commands') as $name => $class) {
+            // Allow unsetting a command via YAML
+            if ($class === null) {
+                continue;
             }
+            // Check that the class exists and is a DevCommand
+            if (!ClassInfo::exists($class)) {
+                throw new LogicException("Class '$class' doesn't exist");
+            }
+            if (!is_a($class, DevCommand::class, true)) {
+                throw new LogicException("Class '$class' must be a subclass of " . DevCommand::class);
+            }
+
+            // Add to list of commands
+            $commands['dev/' . $name] = $class;
         }
-        return $links;
+        return $commands;
     }
 
-    protected function getLinks(): array
+    /**
+     * Get a map of routes that can be run via this controller in an HTTP request.
+     * The key is the URI path, and the value is an associative array of information about the route.
+     */
+    public function getRegisteredRoutes(): array
     {
         $canViewAll = $this->canViewAll();
-        $links = [];
-        $reg = Config::inst()->get(static::class, 'registered_controllers');
-        foreach ($reg as $registeredController) {
-            if (isset($registeredController['links'])) {
-                if (!ClassInfo::exists($registeredController['controller'])) {
+        $items = [];
+
+        foreach ($this->getCommands() as $urlSegment => $commandClass) {
+            // Note we've already checked if command classes exist and are DevCommand
+            // Check command can run in current context
+            if (!$canViewAll && !$commandClass::canRunInBrowser()) {
+                continue;
+            }
+
+            $items[$urlSegment] = ['class' => $commandClass];
+        }
+
+        foreach (static::config()->get('controllers') as $urlSegment => $info) {
+            // Allow unsetting a controller via YAML
+            if ($info === null) {
+                continue;
+            }
+            $controllerClass = $info['class'];
+            // Check that the class exists and is a RequestHandler
+            if (!ClassInfo::exists($controllerClass)) {
+                throw new LogicException("Class '$controllerClass' doesn't exist");
+            }
+            if (!is_a($controllerClass, RequestHandler::class, true)) {
+                throw new LogicException("Class '$controllerClass' must be a subclass of " . RequestHandler::class);
+            }
+
+            if (!$canViewAll) {
+                // Check access to controller
+                $controllerSingleton = Injector::inst()->get($controllerClass);
+                if (!$controllerSingleton->hasMethod('canInit') || !$controllerSingleton->canInit()) {
                     continue;
                 }
+            }
 
-                if (!$canViewAll) {
-                    // Check access to controller
-                    $controllerSingleton = Injector::inst()->get($registeredController['controller']);
-                    if (!$controllerSingleton->hasMethod('canInit') || !$controllerSingleton->canInit()) {
-                        continue;
-                    }
-                }
+            $items['dev/' . $urlSegment] = $info;
+        }
 
-                foreach ($registeredController['links'] as $url => $desc) {
-                    $links[$url] = $desc;
-                }
+        return $items;
+    }
+
+    /**
+     * Get a map of links to be displayed in the /dev route.
+     * The key is the URI path, and the value is an associative array of information about the route.
+     */
+    public function getLinks(): array
+    {
+        $links = $this->getRegisteredRoutes();
+        foreach ($links as $i => $info) {
+            // Allow a controller without a link, e.g. DevConfirmationController
+            if ($info['skipLink'] ?? false) {
+                unset($links[$i]);
             }
         }
         return $links;
-    }
-
-    /**
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    protected function getRegisteredController($baseUrlPart)
-    {
-        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it');
-        $reg = Config::inst()->get(static::class, 'registered_controllers');
-
-        if (isset($reg[$baseUrlPart])) {
-            $controllerClass = $reg[$baseUrlPart]['controller'];
-            return $controllerClass;
-        }
-
-        return null;
-    }
-
-
-    /*
-     * Unregistered (hidden) actions
-     */
-
-    /**
-     * Build the default data, calling requireDefaultRecords on all
-     * DataObject classes
-     * Should match the $url_handlers rule:
-     *      'build/defaults' => 'buildDefaults',
-     *
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\DbDefaults
-     */
-    public function buildDefaults()
-    {
-        Deprecation::withSuppressedNotice(function () {
-            Deprecation::notice(
-                '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\DbDefaults'
-            );
-        });
-
-        $da = DatabaseAdmin::create();
-
-        $renderer = null;
-        if (!Director::is_cli()) {
-            $renderer = DebugView::create();
-            echo $renderer->renderHeader();
-            echo $renderer->renderInfo("Defaults Builder", Director::absoluteBaseURL());
-            echo "<div class=\"build\">";
-        }
-
-        $da->buildDefaults();
-
-        if (!Director::is_cli()) {
-            echo "</div>";
-            echo $renderer->renderFooter();
-        }
-    }
-
-    /**
-     * Generate a secure token which can be used as a crypto key.
-     * Returns the token and suggests PHP configuration to set it.
-     *
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\GenerateSecureToken
-     */
-    public function generatesecuretoken()
-    {
-        Deprecation::withSuppressedNotice(function () {
-            Deprecation::notice(
-                '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\GenerateSecureToken'
-            );
-        });
-
-        $generator = Injector::inst()->create('SilverStripe\\Security\\RandomGenerator');
-        $token = $generator->randomToken('sha1');
-        $body = <<<TXT
-Generated new token. Please add the following code to your YAML configuration:
-
-Security:
-  token: $token
-
-TXT;
-        $response = new HTTPResponse($body);
-        return $response->addHeader('Content-Type', 'text/plain');
     }
 
     public function errors()
@@ -310,17 +340,17 @@ TXT;
 
     protected function canViewAll(): bool
     {
-        // Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)
-        $requestedDevBuild = (stripos($this->getRequest()->getURL() ?? '', 'dev/build') === 0)
-            && (stripos($this->getRequest()->getURL() ?? '', 'dev/build/defaults') === false);
-
-        // We allow access to this controller regardless of live-status or ADMIN permission only
-        // if on CLI.  Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-        $allowAllCLI = static::config()->get('allow_all_cli');
+        // If dev/build was requested, we must defer to DbBuild permission checks explicitly
+        // because otherwise the permission checks may result in an error
+        $url = rtrim($this->getRequest()->getURL(), '/');
+        if ($url === 'dev/build') {
+            return false;
+        }
+        // We allow access to this controller regardless of live-status or ADMIN permission only if on CLI.
+        // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
         return (
-            $requestedDevBuild
-            || Director::isDev()
-            || (Director::is_cli() && $allowAllCLI)
+            Director::isDev()
+            || (Director::is_cli() && static::config()->get('allow_all_cli'))
             // Its important that we don't run this check if dev/build was requested
             || Permission::check(['ADMIN', 'ALL_DEV_ADMIN'])
         );

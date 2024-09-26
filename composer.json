@@ -19,7 +19,7 @@
         }
     ],
     "bin": [
-        "sake"
+        "bin/sake"
     ],
     "require": {
         "php": "^8.3",
@@ -36,12 +36,14 @@
         "psr/container": "^1.1 || ^2.0",
         "psr/http-message": "^1",
         "sebastian/diff": "^6.0",
+        "sensiolabs/ansi-to-html": "^1.2",
         "silverstripe/config": "^3",
         "silverstripe/assets": "^3",
         "silverstripe/vendor-plugin": "^2",
         "sminnee/callbacklist": "^0.1.1",
         "symfony/cache": "^7.0",
         "symfony/config": "^7.0",
+        "symfony/console": "^7.0",
         "symfony/dom-crawler": "^7.0",
         "symfony/filesystem": "^7.0",
         "symfony/http-foundation": "^7.0",
@@ -84,6 +86,8 @@
     },
     "autoload": {
         "psr-4": {
+            "SilverStripe\\Cli\\": "src/Cli/",
+            "SilverStripe\\Cli\\Tests\\": "tests/php/Cli/",
             "SilverStripe\\Control\\": "src/Control/",
             "SilverStripe\\Control\\Tests\\": "tests/php/Control/",
             "SilverStripe\\Core\\": "src/Core/",
@@ -100,6 +104,8 @@
             "SilverStripe\\Model\\Tests\\": "tests/php/Model/",
             "SilverStripe\\ORM\\": "src/ORM/",
             "SilverStripe\\ORM\\Tests\\": "tests/php/ORM/",
+            "SilverStripe\\PolyExecution\\": "src/PolyExecution/",
+            "SilverStripe\\PolyExecution\\Tests\\": "tests/php/PolyExecution/",
             "SilverStripe\\Security\\": "src/Security/",
             "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
             "SilverStripe\\View\\": "src/View/",

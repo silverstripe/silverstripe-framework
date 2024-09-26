@@ -3,13 +3,15 @@
 namespace SilverStripe\Dev\Tests\TaskRunnerTest;
 
 use SilverStripe\Dev\Tests\TaskRunnerTest\TaskRunnerTest_AbstractTask;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Input\InputInterface;
 
 class TaskRunnerTest_ChildOfAbstractTask extends TaskRunnerTest_AbstractTask
 {
     protected $enabled = true;
 
-    public function run($request)
+    protected function doRun(InputInterface $input, PolyOutput $output): int
     {
-        // NOOP
+        return 0;
     }
 }

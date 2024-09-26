@@ -190,7 +190,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
 
     /**
      * Value for 2nd argument to constructor, indicating that a record is a singleton representing the whole type,
-     * e.g. to call requireTable() in dev/build
+     * e.g. to call requireTable() when building the db
      * Defaults will not be populated and data passed will be ignored
      */
     const CREATE_SINGLETON = 1;
@@ -3785,7 +3785,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      * Invoked after every database build is complete (including after table creation and
      * default record population).
      *
-     * See {@link DatabaseAdmin::doBuild()} for context.
+     * See {@link DbBuild::doBuild()} for context.
      */
     public function onAfterBuild()
     {

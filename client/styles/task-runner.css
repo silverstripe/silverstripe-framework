@@ -36,6 +36,12 @@
   margin-bottom: 12px;
 }
 
+.task__help {
+  border: 1px dotted;
+  width: fit-content;
+  padding: 5px;
+}
+
 .task__button {
   border: 1px solid #ced5e1;
   border-radius: 5px;

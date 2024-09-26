@@ -30,7 +30,6 @@ class CoreKernel extends BaseKernel
     }
 
     /**
-     * @param false $flush
      * @throws HTTPResponse_Exception
      * @throws Exception
      */

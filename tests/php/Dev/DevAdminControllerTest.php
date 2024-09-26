@@ -3,47 +3,47 @@
 namespace SilverStripe\Dev\Tests;
 
 use Exception;
-use ReflectionMethod;
+use LogicException;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
+use SilverStripe\Dev\Command\DevCommand;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
 use SilverStripe\Dev\Tests\DevAdminControllerTest\ControllerWithPermissions;
+use SilverStripe\Dev\Tests\DevAdminControllerTest\TestCommand;
+use SilverStripe\Dev\Tests\DevAdminControllerTest\TestHiddenController;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * Note: the running of this test is handled by the thing it's testing (DevelopmentAdmin controller).
- */
 class DevAdminControllerTest extends FunctionalTest
 {
-
     protected function setUp(): void
     {
         parent::setUp();
 
         DevelopmentAdmin::config()->merge(
-            'registered_controllers',
+            'commands',
+            [
+                'c1' => TestCommand::class,
+            ]
+        );
+
+        DevelopmentAdmin::config()->merge(
+            'controllers',
             [
                 'x1' => [
-                    'controller' => Controller1::class,
-                    'links' => [
-                        'x1' => 'x1 link description',
-                        'x1/y1' => 'x1/y1 link description'
-                    ]
-                ],
-                'x2' => [
-                    'controller' => 'DevAdminControllerTest_Controller2', // intentionally not a class that exists
-                    'links' => [
-                        'x2' => 'x2 link description'
-                    ]
+                    'class' => Controller1::class,
+                    'description' => 'controller1 description',
                 ],
                 'x3' => [
-                    'controller' => ControllerWithPermissions::class,
-                    'links' => [
-                        'x3' => 'x3 link description'
-                    ]
+                    'class' => ControllerWithPermissions::class,
+                    'description' => 'permission controller description',
+                ],
+                'x4' => [
+                    'class' => TestHiddenController::class,
+                    'skipLink' => true,
                 ],
             ]
         );
@@ -51,10 +51,12 @@ class DevAdminControllerTest extends FunctionalTest
 
     public function testGoodRegisteredControllerOutput()
     {
-        // Check for the controller running from the registered url above
-        // (we use contains rather than equals because sometimes you get a warning)
+        // Check for the controller or command running from the registered url above
+        // Use string contains string because there's a lot of extra HTML markup around the output
         $this->assertStringContainsString(Controller1::OK_MSG, $this->getCapture('/dev/x1'));
-        $this->assertStringContainsString(Controller1::OK_MSG, $this->getCapture('/dev/x1/y1'));
+        $this->assertStringContainsString(Controller1::OK_MSG . ' y1', $this->getCapture('/dev/x1/y1'));
+        $this->assertStringContainsString(TestHiddenController::OK_MSG, $this->getCapture('/dev/x4'));
+        $this->assertStringContainsString('<h2>This is a test command</h2>' . TestCommand::OK_MSG, $this->getCapture('/dev/c1'));
     }
 
     public function testGoodRegisteredControllerStatus()
@@ -62,9 +64,8 @@ class DevAdminControllerTest extends FunctionalTest
         // Check response code is 200/OK
         $this->assertEquals(false, $this->getAndCheckForError('/dev/x1'));
         $this->assertEquals(false, $this->getAndCheckForError('/dev/x1/y1'));
-
-        // Check response code is 500/ some sort of error
-        $this->assertEquals(true, $this->getAndCheckForError('/dev/x2'));
+        $this->assertEquals(false, $this->getAndCheckForError('/dev/x4'));
+        $this->assertEquals(false, $this->getAndCheckForError('/dev/xc1'));
     }
 
     #[DataProvider('getLinksPermissionsProvider')]
@@ -77,29 +78,77 @@ class DevAdminControllerTest extends FunctionalTest
         try {
             $this->logInWithPermission($permission);
             $controller = new DevelopmentAdmin();
-            $method = new ReflectionMethod($controller, 'getLinks');
-            $method->setAccessible(true);
-            $links = $method->invoke($controller);
+            $links = $controller->getLinks();
 
             foreach ($present as $expected) {
-                $this->assertArrayHasKey($expected, $links, sprintf('Expected link %s not found in %s', $expected, json_encode($links)));
+                $this->assertArrayHasKey('dev/' . $expected, $links, sprintf('Expected link %s not found in %s', 'dev/' . $expected, json_encode($links)));
             }
 
             foreach ($absent as $unexpected) {
-                $this->assertArrayNotHasKey($unexpected, $links, sprintf('Unexpected link %s found in %s', $unexpected, json_encode($links)));
+                $this->assertArrayNotHasKey('dev/' . $unexpected, $links, sprintf('Unexpected link %s found in %s', 'dev/' . $unexpected, json_encode($links)));
             }
         } finally {
             $kernel->setEnvironment($env);
         }
     }
 
+    public static function provideMissingClasses(): array
+    {
+        return [
+            'missing command' => [
+                'configKey' => 'commands',
+                'configToMerge' => [
+                    'c2' => 'DevAdminControllerTest_NonExistentCommand',
+                ],
+                'expectedMessage' => 'Class \'DevAdminControllerTest_NonExistentCommand\' doesn\'t exist',
+            ],
+            'missing controller' => [
+                'configKey' => 'controllers',
+                'configToMerge' => [
+                    'x2' => [
+                        'class' => 'DevAdminControllerTest_NonExistentController',
+                        'description' => 'controller2 description',
+                    ],
+                ],
+                'expectedMessage' => 'Class \'DevAdminControllerTest_NonExistentController\' doesn\'t exist',
+            ],
+            'wrong class command' => [
+                'configKey' => 'commands',
+                'configToMerge' => [
+                    'c2' => static::class,
+                ],
+                'expectedMessage' => 'Class \'' . static::class . '\' must be a subclass of ' . DevCommand::class,
+            ],
+            'wrong class controller' => [
+                'configKey' => 'controllers',
+                'configToMerge' => [
+                    'x2' => [
+                        'class' => static::class,
+                        'description' => 'controller2 description',
+                    ],
+                ],
+                'expectedMessage' => 'Class \'' . static::class . '\' must be a subclass of ' . RequestHandler::class,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideMissingClasses')]
+    public function testMissingClasses(string $configKey, array $configToMerge, string $expectedMessage): void
+    {
+        DevelopmentAdmin::config()->merge($configKey, $configToMerge);
+        $controller = new DevelopmentAdmin();
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage($expectedMessage);
+        $controller->getLinks();
+    }
+
     public static function getLinksPermissionsProvider() : array
     {
         return [
-            ['ADMIN', ['x1', 'x1/y1', 'x3'], ['x2']],
-            ['ALL_DEV_ADMIN', ['x1', 'x1/y1', 'x3'], ['x2']],
-            ['DEV_ADMIN_TEST_PERMISSION', ['x3'], ['x1', 'x1/y1', 'x2']],
-            ['NOTHING', [], ['x1', 'x1/y1', 'x2', 'x3']],
+            'admin access' => ['ADMIN', ['c1', 'x1', 'x3'], ['x4']],
+            'all dev access' => ['ALL_DEV_ADMIN', ['c1', 'x1', 'x3'], ['x4']],
+            'dev test access' => ['DEV_ADMIN_TEST_PERMISSION', ['x3'], ['c1', 'x1', 'x4']],
+            'no access' => ['NOTHING', [], ['c1', 'x1', 'x3', 'x4']],
         ];
     }
 

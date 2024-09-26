@@ -233,7 +233,7 @@ class TempDatabase
     {
         DataObject::reset();
 
-        // clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
+        // clear singletons, they're caching old extension info which is used in DbBuild->doBuild()
         Injector::inst()->unregisterObjects(DataObject::class);
 
         $dataClasses = ClassInfo::subclassesFor(DataObject::class);

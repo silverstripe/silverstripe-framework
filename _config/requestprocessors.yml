@@ -60,7 +60,6 @@ SilverStripe\Core\Injector\Injector:
       ConfirmationStorageId: 'url-specials'
       ConfirmationFormUrl: '/dev/confirm'
       Bypasses:
-        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass'
         - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass("dev")'
         - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\UrlPathStartswith("dev/confirm")'
       EnforceAuthentication: true
@@ -94,7 +93,6 @@ SilverStripe\Core\Injector\Injector:
       ConfirmationStorageId: 'dev-urls'
       ConfirmationFormUrl: '/dev/confirm'
       Bypasses:
-        - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\CliBypass'
         - '%$SilverStripe\Control\Middleware\ConfirmationMiddleware\EnvironmentBypass("dev")'
       EnforceAuthentication: false
 

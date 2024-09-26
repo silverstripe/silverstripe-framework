@@ -3,12 +3,15 @@
 namespace SilverStripe\Security;
 
 use Exception;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Convenience class for generating cryptographically secure pseudo-random strings/tokens
  */
 class RandomGenerator
 {
+    use Injectable;
+
     /**
      * Generates a random token that can be used for session IDs, CSRF tokens etc., based on
      * hash algorithms.

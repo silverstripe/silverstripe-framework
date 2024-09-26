@@ -13,9 +13,10 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Logging\DebugViewFriendlyErrorFormatter;
 use SilverStripe\Logging\DetailedErrorFormatter;
 use SilverStripe\Logging\HTTPOutputHandler;
+use SilverStripe\Logging\ErrorOutputHandler;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class HTTPOutputHandlerTest extends SapphireTest
+class ErrorOutputHandlerTest extends SapphireTest
 {
     protected function setUp(): void
     {
@@ -28,7 +29,7 @@ class HTTPOutputHandlerTest extends SapphireTest
 
     public function testGetFormatter()
     {
-        $handler = new HTTPOutputHandler();
+        $handler = new ErrorOutputHandler();
 
         $detailedFormatter = new DetailedErrorFormatter();
         $friendlyFormatter = new DebugViewFriendlyErrorFormatter();
@@ -49,9 +50,9 @@ class HTTPOutputHandlerTest extends SapphireTest
      */
     public function testDevConfig()
     {
-        /** @var HTTPOutputHandler $handler */
+        /** @var ErrorOutputHandler $handler */
         $handler = Injector::inst()->get(HandlerInterface::class);
-        $this->assertInstanceOf(HTTPOutputHandler::class, $handler);
+        $this->assertInstanceOf(ErrorOutputHandler::class, $handler);
 
         // Test only default formatter is set, but CLI specific formatter is left out
         $this->assertNull($handler->getCLIFormatter());
@@ -154,7 +155,7 @@ class HTTPOutputHandlerTest extends SapphireTest
         bool $shouldShow,
         bool $expected
     ) {
-        $reflectionShouldShow = new ReflectionMethod(HTTPOutputHandler::class, 'shouldShowError');
+        $reflectionShouldShow = new ReflectionMethod(ErrorOutputHandler::class, 'shouldShowError');
         $reflectionShouldShow->setAccessible(true);
         $reflectionDeprecation = new ReflectionClass(Deprecation::class);
 
@@ -175,16 +176,15 @@ class HTTPOutputHandlerTest extends SapphireTest
         $reflectionDirector = new ReflectionClass(Environment::class);
         $origIsCli = $reflectionDirector->getStaticPropertyValue('isCliOverride');
         $reflectionDirector->setStaticPropertyValue('isCliOverride', $isCli);
-
         try {
-            $handler = new HTTPOutputHandler();
+            $handler = new ErrorOutputHandler();
             $result = $reflectionShouldShow->invoke($handler, $errorCode);
             $this->assertSame($expected, $result);
 
             Deprecation::setShouldShowForCli($cliShouldShowOrig);
             Deprecation::setShouldShowForHttp($httpShouldShowOrig);
-            $reflectionDeprecation->setStaticPropertyValue('isTriggeringError', $triggeringErrorOrig);
         } finally {
+            $reflectionDeprecation->setStaticPropertyValue('isTriggeringError', $triggeringErrorOrig);
             $reflectionDirector->setStaticPropertyValue('isCliOverride', $origIsCli);
         }
     }

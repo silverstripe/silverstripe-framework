@@ -3,7 +3,6 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Confirmation;
 
 /**

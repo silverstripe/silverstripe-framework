@@ -314,7 +314,7 @@ class DataObjectSchema
      * Generate table name for a class.
      *
      * Note: some DB schema have a hard limit on table name length. This is not enforced by this method.
-     * See dev/build errors for details in case of table name violation.
+     * See build errors for details in case of table name violation.
      *
      * @param string $class
      *

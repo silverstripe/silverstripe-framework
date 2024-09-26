@@ -2,12 +2,11 @@
 
 namespace SilverStripe\Dev\Tasks;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\Dev\Deprecation;
+use SilverStripe\PolyExecution\PolyOutput;
 use SilverStripe\ORM\Connect\TempDatabase;
-use SilverStripe\Security\Permission;
-use SilverStripe\Security\Security;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Cleans up leftover databases from aborted test executions (starting with ss_tmpdb)
@@ -15,33 +14,20 @@ use SilverStripe\Security\Security;
  */
 class CleanupTestDatabasesTask extends BuildTask
 {
+    protected static string $commandName = 'CleanupTestDatabasesTask';
 
-    private static $segment = 'CleanupTestDatabasesTask';
+    protected string $title = 'Deletes all temporary test databases';
 
-    protected $title = 'Deletes all temporary test databases';
+    protected static string $description = 'Cleans up leftover databases from aborted test executions (starting with ss_tmpdb)';
 
-    protected $description = 'Cleans up leftover databases from aborted test executions (starting with ss_tmpdb)';
+    private static array $permissions_for_browser_execution = [
+        'ALL_DEV_ADMIN' => false,
+        'BUILDTASK_CAN_RUN' => false,
+    ];
 
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        if (!$this->canView()) {
-            $response = Security::permissionFailure();
-            if ($response) {
-                $response->output();
-            }
-            die;
-        }
         TempDatabase::create()->deleteAll();
-    }
-
-    public function canView(): bool
-    {
-        Deprecation::withSuppressedNotice(function () {
-            Deprecation::notice(
-                '5.4.0',
-                'Will be replaced with canRunInBrowser()'
-            );
-        });
-        return Permission::check('ADMIN') || Director::is_cli();
+        return Command::SUCCESS;
     }
 }
