@@ -1,38 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-Standard module phpunit configuration.
-Requires PHPUnit ^9
--->
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
-    <testsuites>
-        <testsuite name="Default">
-            <directory>tests/php</directory>
-        </testsuite>
-        <!-- Framework ORM tests are split up to run in parallel -->
-        <testsuite name="framework-core">
-            <directory>tests/php</directory>
-            <exclude>
-                <directory>tests/php/ORM</directory>
-            </exclude>
-        </testsuite>
-        <testsuite name="framework-orm">
-            <directory>tests/php/ORM</directory>
-        </testsuite>
-        <testsuite name="cms">
-            <directory>vendor/silverstripe/cms/tests</directory>
-        </testsuite>
-        <!-- Cache suite is separate so it only runs what it needs to run. Intentionally also included in core above. -->
-        <testsuite name="framework-cache-only">
-            <directory>tests/php/Core/Cache</directory>
-        </testsuite>
-    </testsuites>
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">.</directory>
-            <exclude>
-                <directory suffix=".php">tests/</directory>
-                <directory suffix=".php">thirdparty/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.3/phpunit.xsd">
+  <testsuites>
+    <testsuite name="Default">
+      <directory>tests/php</directory>
+    </testsuite>
+    <!-- Framework ORM tests are split up to run in parallel in github actions CI -->
+    <testsuite name="framework-core">
+      <!-- Will be run in github actions CI with option exclude-filter /ORM/ -->
+      <directory>tests/php</directory>
+    </testsuite>
+    <testsuite name="framework-orm">
+      <!-- Will be run in github actions CI with option filter /ORM/ -->
+      <directory>tests/php</directory>
+    </testsuite>
+    <!-- Cache suite is separate so it only runs what it needs to run -->
+    <testsuite name="framework-cache-only">
+      <directory>tests/php/Core/Cache</directory>
+    </testsuite>
+  </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">.</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">tests/</directory>
+      <directory suffix=".php">thirdparty/</directory>
+    </exclude>
+  </source>
 </phpunit>
