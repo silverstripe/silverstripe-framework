@@ -5,12 +5,13 @@ namespace SilverStripe\Core\Manifest;
 use InvalidArgumentException;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Path;
+use Stringable;
 
 /**
  * This object represents a single resource file attached to a module, and can be used
  * as a reference to this to be later turned into either a URL or file path.
  */
-class ModuleResource
+class ModuleResource implements Stringable
 {
     /**
      * @var Module
@@ -114,10 +115,8 @@ class ModuleResource
 
     /**
      * Get relative path
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getRelativePath();
     }

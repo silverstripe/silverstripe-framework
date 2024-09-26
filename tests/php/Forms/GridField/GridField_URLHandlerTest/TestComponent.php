@@ -56,7 +56,7 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
     public function showform(GridField $gridField, HTTPRequest $request)
     {
         $this->setRequest($request);
-        return "<head>" . SSViewer::get_base_tag("") . "</head>" . $this->Form($gridField, $request)->forTemplate();
+        return "<head>" . SSViewer::getBaseTag() . "</head>" . $this->Form($gridField, $request)->forTemplate();
     }
 
     /**

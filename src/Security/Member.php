@@ -345,7 +345,7 @@ class Member extends DataObject
     {
         /** @var DBDatetime $lockedOutUntilObj */
         $lockedOutUntilObj = $this->dbObject('LockedOutUntil');
-        if ($lockedOutUntilObj->InFuture()) {
+        if ($lockedOutUntilObj?->InFuture()) {
             return true;
         }
 
@@ -372,7 +372,7 @@ class Member extends DataObject
         /** @var DBDatetime $firstFailureDate */
         $firstFailureDate = $attempts->first()->dbObject('Created');
         $maxAgeSeconds = $this->config()->get('lock_out_delay_mins') * 60;
-        $lockedOutUntil = $firstFailureDate->getTimestamp() + $maxAgeSeconds;
+        $lockedOutUntil = $firstFailureDate?->getTimestamp() + $maxAgeSeconds;
         $now = DBDatetime::now()->getTimestamp();
         if ($now < $lockedOutUntil) {
             return true;
@@ -428,7 +428,7 @@ class Member extends DataObject
         $currentValue = $this->PasswordExpiry;
         $currentDate = $this->dbObject('PasswordExpiry');
 
-        if ($dataValue && (!$currentValue || $currentDate->inFuture())) {
+        if ($dataValue && (!$currentValue || $currentDate?->inFuture())) {
             // Only alter future expiries - this way an admin could see how long ago a password expired still
             $this->PasswordExpiry = DBDatetime::now()->Rfc2822();
         } elseif (!$dataValue && $this->isPasswordExpired()) {

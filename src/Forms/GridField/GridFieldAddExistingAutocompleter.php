@@ -17,6 +17,9 @@ use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\View\TemplateEngine;
+use SilverStripe\View\ViewLayerData;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -283,12 +286,15 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
         $json = [];
         Config::nest();
         SSViewer::config()->set('source_file_comments', false);
-        $viewer = SSViewer::fromString($this->resultsFormat);
+
+        $engine = Injector::inst()->create(TemplateEngine::class);
         foreach ($results as $result) {
             if (!$result->canView()) {
                 continue;
             }
-            $title = Convert::html2raw($viewer->process($result));
+            $title = Convert::html2raw(
+                $engine->renderString($this->resultsFormat, ViewLayerData::create($result), cache: false)
+            );
             $json[] = [
                 'label' => $title,
                 'value' => $title,

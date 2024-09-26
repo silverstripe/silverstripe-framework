@@ -5,9 +5,11 @@ namespace SilverStripe\Forms\HTMLEditor;
 use SilverStripe\Assets\Shortcodes\ImageShortcodeProvider;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TextareaField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use Exception;
+use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\CastingService;
 use SilverStripe\View\Parsers\HTMLValue;
 
 /**
@@ -123,13 +125,9 @@ class HTMLEditorField extends TextareaField
         );
     }
 
-    /**
-     * @param DataObject|DataObjectInterface $record
-     * @throws Exception
-     */
     public function saveInto(DataObjectInterface $record)
     {
-        if ($record->hasField($this->name) && $record->escapeTypeForField($this->name) != 'xml') {
+        if (!$this->usesXmlFriendlyField($record)) {
             throw new Exception(
                 'HTMLEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'
             );
@@ -224,5 +222,16 @@ class HTMLEditorField extends TextareaField
         }
 
         return $config;
+    }
+
+    private function usesXmlFriendlyField(DataObjectInterface $record): bool
+    {
+        if ($record instanceof ModelData && !$record->hasField($this->getName())) {
+            return true;
+        }
+
+        $castingService = CastingService::singleton();
+        $castValue = $castingService->cast($this->Value(), $record, $this->getName());
+        return $castValue instanceof DBField && $castValue::config()->get('escape_type') === 'xml';
     }
 }

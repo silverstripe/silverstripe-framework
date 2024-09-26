@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
-use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\View\ThemeResourceLoader;
@@ -67,188 +66,6 @@ class ThemeResourceLoaderTest extends SapphireTest
         parent::tearDown();
     }
 
-    /**
-     * Test that 'main' and 'Layout' templates are loaded from module
-     */
-    public function testFindTemplatesInModule()
-    {
-        $this->assertEquals(
-            "$this->base/module/templates/Page.ss",
-            $this->loader->findTemplate('Page', ['$default'])
-        );
-
-        $this->assertEquals(
-            "$this->base/module/templates/Layout/Page.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
-        );
-    }
-
-    public function testFindNestedThemeTemplates()
-    {
-        // Without including the theme this template cannot be found
-        $this->assertEquals(null, $this->loader->findTemplate('NestedThemePage', ['$default']));
-
-        // With a nested theme available then it is available
-        $this->assertEquals(
-            "{$this->base}/module/themes/subtheme/templates/NestedThemePage.ss",
-            $this->loader->findTemplate(
-                'NestedThemePage',
-                [
-                    'silverstripe/module:subtheme',
-                    '$default'
-                ]
-            )
-        );
-
-        // Can also be found if excluding $default theme
-        $this->assertEquals(
-            "{$this->base}/module/themes/subtheme/templates/NestedThemePage.ss",
-            $this->loader->findTemplate(
-                'NestedThemePage',
-                [
-                    'silverstripe/module:subtheme',
-                ]
-            )
-        );
-    }
-
-    public function testFindTemplateByType()
-    {
-        // Test that "type" is respected properly
-        $this->assertEquals(
-            "{$this->base}/module/templates/MyNamespace/Layout/MyClass.ss",
-            $this->loader->findTemplate(
-                [
-                    [
-                        'type' => 'Layout',
-                        'MyNamespace/NonExistantTemplate'
-                    ],
-                    [
-                        'type' => 'Layout',
-                        'MyNamespace/MyClass'
-                    ],
-                    'MyNamespace/MyClass'
-                ],
-                [
-                    'silverstripe/module:subtheme',
-                    'theme',
-                    '$default',
-                ]
-            )
-        );
-
-        // Non-typed template can be found even if looking for typed theme at a lower priority
-        $this->assertEquals(
-            "{$this->base}/module/templates/MyNamespace/MyClass.ss",
-            $this->loader->findTemplate(
-                [
-                    [
-                        'type' => 'Layout',
-                        'MyNamespace/NonExistantTemplate'
-                    ],
-                    'MyNamespace/MyClass',
-                    [
-                        'type' => 'Layout',
-                        'MyNamespace/MyClass'
-                    ]
-                ],
-                [
-                    'silverstripe/module',
-                    'theme',
-                    '$default',
-                ]
-            )
-        );
-    }
-
-    public function testFindTemplatesByPath()
-    {
-        // Items given as full paths are returned directly
-        $this->assertEquals(
-            "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate("$this->base/themes/theme/templates/Page.ss", ['theme'])
-        );
-
-        $this->assertEquals(
-            "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate(
-                [
-                    "$this->base/themes/theme/templates/Page.ss",
-                    "Page"
-                ],
-                ['theme']
-            )
-        );
-
-        // Ensure checks for file_exists
-        $this->assertEquals(
-            "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate(
-                [
-                    "$this->base/themes/theme/templates/NotAPage.ss",
-                    "$this->base/themes/theme/templates/Page.ss",
-                ],
-                ['theme']
-            )
-        );
-    }
-
-    /**
-     * Test that 'main' and 'Layout' templates are loaded from set theme
-     */
-    public function testFindTemplatesInTheme()
-    {
-        $this->assertEquals(
-            "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate('Page', ['theme'])
-        );
-
-        $this->assertEquals(
-            "$this->base/themes/theme/templates/Layout/Page.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['theme'])
-        );
-    }
-
-    /**
-     * Test that 'main' and 'Layout' templates are loaded from project without a set theme
-     */
-    public function testFindTemplatesInApplication()
-    {
-        $templates = [
-            $this->base . '/myproject/templates/Page.ss',
-            $this->base . '/myproject/templates/Layout/Page.ss'
-        ];
-        $this->createTestTemplates($templates);
-
-        $this->assertEquals(
-            "$this->base/myproject/templates/Page.ss",
-            $this->loader->findTemplate('Page', ['$default'])
-        );
-
-        $this->assertEquals(
-            "$this->base/myproject/templates/Layout/Page.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
-        );
-
-        $this->removeTestTemplates($templates);
-    }
-
-    /**
-     * Test that 'main' template is found in theme and 'Layout' is found in module
-     */
-    public function testFindTemplatesMainThemeLayoutModule()
-    {
-        $this->assertEquals(
-            "$this->base/themes/theme/templates/CustomThemePage.ss",
-            $this->loader->findTemplate('CustomThemePage', ['theme', '$default'])
-        );
-
-        $this->assertEquals(
-            "$this->base/module/templates/Layout/CustomThemePage.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'CustomThemePage'], ['theme', '$default'])
-        );
-    }
-
     public function testFindThemedCSS()
     {
         $this->assertEquals(
@@ -301,20 +118,6 @@ class ThemeResourceLoaderTest extends SapphireTest
             'module/javascript/content.js',
             $this->loader->findThemedJavascript('content', ['$default', '/module', 'theme'])
         );
-    }
-
-    protected function createTestTemplates($templates)
-    {
-        foreach ($templates as $template) {
-            file_put_contents($template ?? '', '');
-        }
-    }
-
-    protected function removeTestTemplates($templates)
-    {
-        foreach ($templates as $template) {
-            unlink($template ?? '');
-        }
     }
 
     public static function providerTestGetPath()
@@ -380,29 +183,5 @@ class ThemeResourceLoaderTest extends SapphireTest
     public function testGetPath($name, $path)
     {
         $this->assertEquals($path, $this->loader->getPath($name));
-    }
-
-    public function testFindTemplateWithCacheMiss()
-    {
-        $mockCache = $this->createMock(CacheInterface::class);
-        $mockCache->expects($this->once())->method('has')->willReturn(false);
-        $mockCache->expects($this->never())->method('get');
-        $mockCache->expects($this->once())->method('set');
-
-        $loader = new ThemeResourceLoader();
-        $loader->setCache($mockCache);
-        $loader->findTemplate('Page', ['$default']);
-    }
-
-    public function testFindTemplateWithCacheHit()
-    {
-        $mockCache = $this->createMock(CacheInterface::class);
-        $mockCache->expects($this->once())->method('has')->willReturn(true);
-        $mockCache->expects($this->never())->method('set');
-        $mockCache->expects($this->once())->method('get')->willReturn('mock_template.ss');
-
-        $loader = new ThemeResourceLoader();
-        $loader->setCache($mockCache);
-        $this->assertSame('mock_template.ss', $loader->findTemplate('Page', ['$default']));
     }
 }

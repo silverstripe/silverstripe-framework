@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\ORM\DataList;
+use Stringable;
 
 /**
  * This class is a snapshot of the current status of a {@link GridField}.
@@ -14,7 +15,7 @@ use SilverStripe\ORM\DataList;
  *
  * @see GridField
  */
-class GridState extends HiddenField
+class GridState extends HiddenField implements Stringable
 {
 
     /**
@@ -129,11 +130,7 @@ class GridState extends HiddenField
         return Convert::raw2att($this->Value());
     }
 
-    /**
-     *
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->Value();
     }

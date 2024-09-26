@@ -45,9 +45,6 @@ interface Relation extends SS_List, Filterable, Sortable, Limitable
 
     /**
      * Return the DBField object that represents the given field on the related class.
-     *
-     * @param string $fieldName Name of the field
-     * @return DBField The field as a DBField object
      */
-    public function dbObject($fieldName);
+    public function dbObject(string $fieldName): ?DBField;
 }

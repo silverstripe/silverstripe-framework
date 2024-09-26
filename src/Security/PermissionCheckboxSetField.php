@@ -117,7 +117,7 @@ class PermissionCheckboxSetField extends FormField
                 $uninheritedCodes[$permission->Code][] = _t(
                     'SilverStripe\\Security\\PermissionCheckboxSetField.AssignedTo',
                     'assigned to "{title}"',
-                    ['title' => $record->dbObject('Title')->forTemplate()]
+                    ['title' => $record->dbObject('Title')?->forTemplate()]
                 );
             }
 
@@ -135,7 +135,7 @@ class PermissionCheckboxSetField extends FormField
                                 'SilverStripe\\Security\\PermissionCheckboxSetField.FromRole',
                                 'inherited from role "{title}"',
                                 'A permission inherited from a certain permission role',
-                                ['title' => $role->dbObject('Title')->forTemplate()]
+                                ['title' => $role->dbObject('Title')?->forTemplate()]
                             );
                         }
                     }
@@ -159,8 +159,8 @@ class PermissionCheckboxSetField extends FormField
                                         'inherited from role "{roletitle}" on group "{grouptitle}"',
                                         'A permission inherited from a role on a certain group',
                                         [
-                                            'roletitle' => $role->dbObject('Title')->forTemplate(),
-                                            'grouptitle' => $parent->dbObject('Title')->forTemplate()
+                                            'roletitle' => $role->dbObject('Title')?->forTemplate(),
+                                            'grouptitle' => $parent->dbObject('Title')?->forTemplate()
                                         ]
                                     );
                                 }
@@ -176,7 +176,7 @@ class PermissionCheckboxSetField extends FormField
                                     'SilverStripe\\Security\\PermissionCheckboxSetField.FromGroup',
                                     'inherited from group "{title}"',
                                     'A permission inherited from a certain group',
-                                    ['title' => $parent->dbObject('Title')->forTemplate()]
+                                    ['title' => $parent->dbObject('Title')?->forTemplate()]
                                 );
                             }
                         }

@@ -8,11 +8,12 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements;
+use Stringable;
 
 /**
  * Represents a response returned by a controller.
  */
-class HTTPResponse
+class HTTPResponse implements Stringable
 {
     use Injectable;
 
@@ -444,10 +445,8 @@ EOT
 
     /**
      * The HTTP response represented as a raw string
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $headers = [];
         foreach ($this->getHeaders() as $header => $values) {
