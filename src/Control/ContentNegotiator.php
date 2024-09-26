@@ -225,7 +225,7 @@ class ContentNegotiator
         // Fix base tag
         $content = preg_replace(
             '/<base href="([^"]*)" \/>/',
-            '<base href="$1"><!--[if lte IE 6]></base><![endif]-->',
+            '<base href="$1">',
             $content ?? ''
         );
 

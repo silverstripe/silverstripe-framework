@@ -3,8 +3,9 @@
 namespace SilverStripe\View\Tests\Embed;
 
 use Psr\Http\Message\UriInterface;
+use Stringable;
 
-class MockUri implements UriInterface
+class MockUri implements UriInterface, Stringable
 {
     private string $scheme;
     private string $host;
@@ -91,7 +92,7 @@ class MockUri implements UriInterface
         return $this;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         $query = $this->getQuery();
         return sprintf(

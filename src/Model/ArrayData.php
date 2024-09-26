@@ -4,6 +4,7 @@ namespace SilverStripe\Model;
 
 use SilverStripe\Core\ArrayLib;
 use InvalidArgumentException;
+use JsonSerializable;
 use stdClass;
 
 /**
@@ -16,14 +17,9 @@ use stdClass;
  * ));
  * </code>
  */
-class ArrayData extends ModelData
+class ArrayData extends ModelData implements JsonSerializable
 {
-
-    /**
-     * @var array
-     * @see ArrayData::_construct()
-     */
-    protected $array;
+    protected array $array;
 
     /**
      * @param object|array $value An associative array, or an object with simple properties.
@@ -52,10 +48,8 @@ class ArrayData extends ModelData
 
     /**
      * Get the source array
-     *
-     * @return array
      */
-    public function toMap()
+    public function toMap(): array
     {
         return $this->array;
     }
@@ -87,6 +81,7 @@ class ArrayData extends ModelData
     */
     public function setField(string $fieldName, mixed $value): static
     {
+        $this->objCacheClear();
         $this->array[$fieldName] = $value;
         return $this;
     }
@@ -100,6 +95,16 @@ class ArrayData extends ModelData
     public function hasField(string $fieldName): bool
     {
         return isset($this->array[$fieldName]);
+    }
+
+    public function exists(): bool
+    {
+        return !empty($this->array);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->array;
     }
 
     /**

@@ -2,7 +2,6 @@
 
 namespace SilverStripe\View\Tests;
 
-use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -14,13 +13,12 @@ use SilverStripe\View\Requirements_Backend;
 use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Control\SimpleResourceURLGenerator;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
+use Symfony\Component\Filesystem\Path;
 
 class RequirementsTest extends SapphireTest
 {
-
     /**
      * @var ThemeResourceLoader
      */
@@ -31,9 +29,8 @@ class RequirementsTest extends SapphireTest
     protected function setUp(): void
     {
         parent::setUp();
-        Director::config()->set('alternate_base_folder', __DIR__ . '/SSViewerTest');
+        Director::config()->set('alternate_base_folder', __DIR__ . '/RequirementsTest');
         Director::config()->set('alternate_base_url', 'http://www.mysite.com/basedir/');
-        Director::config()->set('alternate_public_dir', 'public'); // Enforce public dir
         // Add public as a theme in itself
         SSViewer::set_themes([SSViewer::PUBLIC_THEME, SSViewer::DEFAULT_THEME]);
         TestAssetStore::activate('RequirementsTest'); // Set backend root to /RequirementsTest
@@ -959,12 +956,12 @@ class RequirementsTest extends SapphireTest
 
     public function testConditionalTemplateRequire()
     {
-        // Set /SSViewerTest and /SSViewerTest/public as themes
+        // Set /RequirementsTest and /RequirementsTest/public as themes
         SSViewer::set_themes([
             '/',
             SSViewer::PUBLIC_THEME
         ]);
-        ThemeResourceLoader::set_instance(new ThemeResourceLoader(__DIR__ . '/SSViewerTest'));
+        ThemeResourceLoader::set_instance(new ThemeResourceLoader(__DIR__ . '/RequirementsTest'));
 
         /** @var Requirements_Backend $backend */
         $backend = Injector::inst()->create(Requirements_Backend::class);
@@ -1500,5 +1497,36 @@ EOS
             $html,
             'Head Tag is correctly not displaying original write'
         );
+    }
+
+    public function testRequirementsCombine()
+    {
+        // Need to reset base folder for this test, which requires also resetting the asset store.
+        Director::config()->remove('alternate_base_folder');
+        TestAssetStore::reset();
+        TestAssetStore::activate('RequirementsTest');
+        /** @var Requirements_Backend $testBackend */
+        $testBackend = Injector::inst()->create(Requirements_Backend::class);
+        $testBackend->setSuffixRequirements(false);
+        $testBackend->setCombinedFilesEnabled(true);
+
+        //$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
+
+        $jsFile = Path::makeAbsolute($this->getCurrentRelativePath() . '/RequirementsTest/javascript/bad.js', BASE_PATH);
+        $jsFileContents = file_get_contents($jsFile);
+        $testBackend->combineFiles('testRequirementsCombine.js', [$jsFile]);
+
+        // secondly, make sure that requirements is generated, even though minification failed
+        $testBackend->processCombinedFiles();
+        $js = array_keys($testBackend->getJavascript() ?? []);
+        $combinedTestFilePath = Path::join(Director::publicFolder(), reset($js));
+        $this->assertStringContainsString('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
+
+        // and make sure the combined content matches the input content, i.e. no loss of functionality
+        if (!file_exists($combinedTestFilePath ?? '')) {
+            $this->fail('No combined file was created at expected path: ' . $combinedTestFilePath);
+        }
+        $combinedTestFileContents = file_get_contents($combinedTestFilePath ?? '');
+        $this->assertStringContainsString($jsFileContents, $combinedTestFileContents);
     }
 }

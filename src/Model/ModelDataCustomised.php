@@ -49,17 +49,22 @@ class ModelDataCustomised extends ModelData
         return isset($this->customised->$property) || isset($this->original->$property) || parent::__isset($property);
     }
 
+    public function forTemplate(): string
+    {
+        return $this->original->forTemplate();
+    }
+
     public function hasMethod($method)
     {
         return $this->customised->hasMethod($method) || $this->original->hasMethod($method);
     }
 
-    public function cachedCall(string $fieldName, array $arguments = [], ?string $cacheName = null): object
+    public function castingHelper(string $field): ?string
     {
-        if ($this->customisedHas($fieldName)) {
-            return $this->customised->cachedCall($fieldName, $arguments, $cacheName);
+        if ($this->customisedHas($field)) {
+            return $this->customised->castingHelper($field);
         }
-        return $this->original->cachedCall($fieldName, $arguments, $cacheName);
+        return $this->original->castingHelper($field);
     }
 
     public function obj(
@@ -74,10 +79,15 @@ class ModelDataCustomised extends ModelData
         return $this->original->obj($fieldName, $arguments, $cache, $cacheName);
     }
 
-    private function customisedHas(string $fieldName): bool
+    public function customisedHas(string $fieldName): bool
     {
         return property_exists($this->customised, $fieldName) ||
             $this->customised->hasField($fieldName) ||
             $this->customised->hasMethod($fieldName);
+    }
+
+    public function getCustomisedModelData(): ?ModelData
+    {
+        return $this->customised;
     }
 }
