@@ -15,6 +15,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\CompositeValidator;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -697,6 +698,20 @@ class Member extends DataObject
         return $validator;
     }
 
+    public function getCMSCompositeValidator(): CompositeValidator
+    {
+        // Add the member validator before extension point, so it's much easier to customise this
+        // via an extension
+        $this->beforeExtending(
+            'updateCMSCompositeValidator',
+            function (CompositeValidator $compositeValidator): void {
+                $memberValidator = $this->getValidator();
+                $compositeValidator->addValidator($memberValidator);
+            }
+        );
+
+        return parent::getCMSCompositeValidator();
+    }
 
     /**
      * Temporarily act as the specified user, limited to a $callback, but
