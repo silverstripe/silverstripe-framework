@@ -21,7 +21,8 @@ class DatetimeFieldTest extends SapphireTest
     protected function setUp(): void
     {
         parent::setUp();
-        i18n::set_locale('en_NZ');
+        // Set to an explicit locale so project-level locale swapping doesn't affect tests
+        i18n::set_locale('en_US');
         // Fix now to prevent race conditions
         DBDatetime::set_mock_now('2010-04-04');
         $this->timezone = date_default_timezone_get();
@@ -141,14 +142,14 @@ class DatetimeFieldTest extends SapphireTest
 
         $datetimeField
             ->setHTML5(false)
-            ->setLocale('en_NZ');
+            ->setLocale('de_DE');
 
-        $datetimeField->setSubmittedValue('29/03/2003 11:00:00 pm');
-        $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
+        $datetimeField->setSubmittedValue('29/03/2003 23:00:00');
+        $this->assertEquals('2003-03-29 23:00:00', $datetimeField->dataValue());
 
         // Some localisation packages exclude the ',' in default medium format
         $this->assertMatchesRegularExpression(
-            '#29/03/2003(,)? 11:00:00 (PM|pm)#',
+            '#29.03.2003(,)? 23:00:00#',
             $datetimeField->Value(),
             'User value is formatted, and in user timezone'
         );
