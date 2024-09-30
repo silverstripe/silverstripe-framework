@@ -12,7 +12,8 @@ class DateFieldDisabledTest extends SapphireTest
     protected function setUp(): void
     {
         parent::setUp();
-        i18n::set_locale('en_NZ');
+        // Set to an explicit locale so project-level locale swapping doesn't affect tests
+        i18n::set_locale('en_US');
         DBDatetime::set_mock_now('2011-02-01 8:34:00');
     }
 
@@ -22,7 +23,7 @@ class DateFieldDisabledTest extends SapphireTest
         $actual = DateField_Disabled::create('Test')
             ->setValue('2011-02-01')
             ->Field();
-        $expected = '<span class="readonly" id="Test">1/02/2011 (today)</span>';
+        $expected = '<span class="readonly" id="Test">Feb 1, 2011 (today)</span>';
         $this->assertEquals($expected, $actual);
 
         // Test today's date with time
@@ -38,14 +39,14 @@ class DateFieldDisabledTest extends SapphireTest
         $actual = DateField_Disabled::create('Test')
             ->setValue('2011-01-27')
             ->Field();
-        $expected = '<span class="readonly" id="Test">27/01/2011, 5 days ago</span>';
+        $expected = '<span class="readonly" id="Test">Jan 27, 2011, 5 days ago</span>';
         $this->assertEquals($expected, $actual);
 
         // Test future
         $actual = DateField_Disabled::create('Test')
             ->setValue('2011-02-06')
             ->Field();
-        $expected = '<span class="readonly" id="Test">6/02/2011, in 5 days</span>';
+        $expected = '<span class="readonly" id="Test">Feb 6, 2011, in 5 days</span>';
         $this->assertEquals($expected, $actual);
     }
 
