@@ -20,7 +20,8 @@ class DBDateTest extends SapphireTest
         $this->oldError = error_reporting();
         // Validate setup
         assert(date_default_timezone_get() === 'UTC');
-        i18n::set_locale('en_NZ');
+        // Set to an explicit locale so project-level locale swapping doesn't affect tests
+        i18n::set_locale('en_US');
     }
 
     protected function tearDown(): void
@@ -48,42 +49,42 @@ class DBDateTest extends SapphireTest
     public function testNiceDate()
     {
         $this->assertEquals(
-            '31/03/2008',
+            'Mar 31, 2008',
             DBField::create_field('Date', 1206968400)->Nice(),
             "Date->Nice() works with timestamp integers"
         );
         $this->assertEquals(
-            '30/03/2008',
+            'Mar 30, 2008',
             DBField::create_field('Date', 1206882000)->Nice(),
             "Date->Nice() works with timestamp integers"
         );
         $this->assertEquals(
-            '31/03/2008',
+            'Mar 31, 2008',
             DBField::create_field('Date', '1206968400')->Nice(),
             "Date->Nice() works with timestamp strings"
         );
         $this->assertEquals(
-            '30/03/2008',
+            'Mar 30, 2008',
             DBField::create_field('Date', '1206882000')->Nice(),
             "Date->Nice() works with timestamp strings"
         );
         $this->assertEquals(
-            '4/03/2003',
+            'Mar 4, 2003',
             DBField::create_field('Date', '4.3.2003')->Nice(),
             "Date->Nice() works with D.M.YYYY format"
         );
         $this->assertEquals(
-            '4/03/2003',
+            'Mar 4, 2003',
             DBField::create_field('Date', '04.03.2003')->Nice(),
             "Date->Nice() works with DD.MM.YYYY format"
         );
         $this->assertEquals(
-            '4/03/2003',
+            'Mar 4, 2003',
             DBField::create_field('Date', '2003-3-4')->Nice(),
             "Date->Nice() works with YYYY-M-D format"
         );
         $this->assertEquals(
-            '4/03/2003',
+            'Mar 4, 2003',
             DBField::create_field('Date', '2003-03-04')->Nice(),
             "Date->Nice() works with YYYY-MM-DD format"
         );
@@ -107,7 +108,7 @@ class DBDateTest extends SapphireTest
     {
         // iso8601 expects year first, but support year last
         $this->assertEquals(
-            '4/03/2003',
+            'Mar 4, 2003',
             DBField::create_field('Date', '04-03-2003')->Nice(),
             "Date->Nice() works with DD-MM-YYYY format"
         );
@@ -152,32 +153,32 @@ class DBDateTest extends SapphireTest
     public function testLongDate()
     {
         $this->assertEquals(
-            '31 March 2008',
+            'March 31, 2008',
             DBField::create_field('Date', 1206968400)->Long(),
             "Date->Long() works with numeric timestamp"
         );
         $this->assertEquals(
-            '31 March 2008',
+            'March 31, 2008',
             DBField::create_field('Date', '1206968400')->Long(),
             "Date->Long() works with string timestamp"
         );
         $this->assertEquals(
-            '30 March 2008',
+            'March 30, 2008',
             DBField::create_field('Date', 1206882000)->Long(),
             "Date->Long() works with numeric timestamp"
         );
         $this->assertEquals(
-            '30 March 2008',
+            'March 30, 2008',
             DBField::create_field('Date', '1206882000')->Long(),
             "Date->Long() works with numeric timestamp"
         );
         $this->assertEquals(
-            '3 April 2003',
+            'April 3, 2003',
             DBField::create_field('Date', '2003-4-3')->Long(),
             "Date->Long() works with YYYY-M-D"
         );
         $this->assertEquals(
-            '3 April 2003',
+            'April 3, 2003',
             DBField::create_field('Date', '3.4.2003')->Long(),
             "Date->Long() works with D.M.YYYY"
         );
@@ -186,7 +187,7 @@ class DBDateTest extends SapphireTest
     public function testFull()
     {
         $this->assertEquals(
-            'Monday, 31 March 2008',
+            'Monday, March 31, 2008',
             DBField::create_field('Date', 1206968400)->Full(),
             "Date->Full() works with timestamp integers"
         );
