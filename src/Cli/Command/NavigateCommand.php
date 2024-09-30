@@ -27,7 +27,7 @@ class NavigateCommand extends Command
 
         // Handle request and output resonse body
         $response = $app->handle($request);
-        $output->writeln($response->getBody(), OutputInterface::OUTPUT_RAW);
+        $output->writeln($response->getBody() ?? '', OutputInterface::OUTPUT_RAW);
 
         // Transform HTTP status code into sensible exit code
         $responseCode = $response->getStatusCode();
