@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class NavigateCommandTest extends SapphireTest
 {
-    protected $usesDatabase = false;
+    protected $usesDatabase = true;
 
     public static function provideExecute(): array
     {
