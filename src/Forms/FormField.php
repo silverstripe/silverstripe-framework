@@ -15,6 +15,8 @@ use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Validation\FieldValidator;
 
 /**
  * Represents a field in a form.
@@ -274,6 +276,8 @@ class FormField extends RequestHandler
         'RightTitle' => 'Text',
         'Description' => 'HTMLFragment',
     ];
+
+    private static array $field_validators = [];
 
     /**
      * Structured schema state representing the FormField's current data and validation.
@@ -1231,15 +1235,25 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Abstract method each {@link FormField} subclass must implement, determines whether the field
-     * is valid or not based on the value.
+     * Subclasses can define an existing FieldValidatorClass to validate the FormField value
+     * They may also override this method to provide custom validation logic
      *
      * @param Validator $validator
      * @return bool
      */
     public function validate($validator)
     {
-        return $this->extendValidationResult(true, $validator);
+        $isValid = true;
+        $name = strip_tags($this->Title() ? $this->Title() : $this->getName());
+        $fieldValidators = FieldValidator::createFieldValidatorsForField($this, $name, $this->value);
+        foreach ($fieldValidators as $fieldValidator) {
+            $validationResult = $fieldValidator->validate();
+            if (!$validationResult->isValid()) {
+                $validator->getResult()->combineAnd($validationResult);
+                $isValid = false;
+            }
+        }
+        return $this->extendValidationResult($isValid, $validator);
     }
 
     /**
