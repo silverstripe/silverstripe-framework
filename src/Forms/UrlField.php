@@ -53,12 +53,12 @@ class UrlField extends TextField
     }
 
     /**
-     * Set which protocols valid URLs are allowed to have
+     * Set which protocols valid URLs are allowed to have.
+     * Passing an empty array will result in using configured defaults.
      */
     public function setAllowedProtocols(array $protocols): static
     {
-        // Ensure the array isn't associative so we can use 0 index in validate().
-        $this->protocols = array_keys($protocols);
+        $this->protocols = $protocols;
         return $this;
     }
 
@@ -67,10 +67,12 @@ class UrlField extends TextField
      */
     public function getAllowedProtocols(): array
     {
-        if (empty($this->protocols)) {
-            return static::config()->get('default_protocols');
+        $protocols = $this->protocols;
+        if (empty($protocols)) {
+            $protocols = static::config()->get('default_protocols');
         }
-        return $this->protocols;
+        // Ensure the array isn't associative so we can use 0 index in validate().
+        return array_values($protocols);
     }
 
     /**

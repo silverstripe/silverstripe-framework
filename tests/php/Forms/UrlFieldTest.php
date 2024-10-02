@@ -89,4 +89,23 @@ class UrlFieldTest extends SapphireTest
         $expectedCount = $valid ? 0 : 1;
         $this->assertEquals($expectedCount, count($validator->getErrors()));
     }
+
+    public function testAllowedProtocols(): void
+    {
+        $field = new UrlField('MyUrl');
+        // Defaults should be http and https
+        $this->assertSame(['https', 'http'], $field->getAllowedProtocols());
+
+        // Defaults change with config, and ignore keys
+        UrlField::config()->set('default_protocols', ['my-key' => 'ftp']);
+        $this->assertSame(['ftp'], $field->getAllowedProtocols());
+
+        // Can set explicit protocols - again keys are ignored
+        $field->setAllowedProtocols(['http', 'key' => 'irc', 'nntp']);
+        $this->assertSame(['http', 'irc', 'nntp'], $field->getAllowedProtocols());
+
+        // Can reset back to config defaults
+        $field->setAllowedProtocols([]);
+        $this->assertSame(['ftp'], $field->getAllowedProtocols());
+    }
 }
