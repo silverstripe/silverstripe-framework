@@ -6,7 +6,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Core\Validation\ValidationResult;
@@ -19,7 +18,6 @@ use SilverStripe\Security\MemberAuthenticator\CMSMemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\MemberLoginForm;
-use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 
 class MemberAuthenticatorTest extends SapphireTest
@@ -44,12 +42,8 @@ class MemberAuthenticatorTest extends SapphireTest
         }
         DefaultAdminService::setDefaultAdmin('admin', 'password');
 
-        // Enforce dummy validation (this can otherwise be influenced by recipe config)
-        Deprecation::withSuppressedNotice(
-            fn() => PasswordValidator::singleton()
-            ->setMinLength(0)
-            ->setTestNames([])
-        );
+        // Enforce no password validation
+        Member::set_password_validator(null);
     }
 
     protected function tearDown(): void

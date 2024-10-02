@@ -11,11 +11,9 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\PasswordValidator;
 use SilverStripe\View\SSViewer;
 use Closure;
 use PHPUnit\Framework\Attributes\DataProvider;
-use SilverStripe\Dev\Deprecation;
 
 class ConfirmedPasswordFieldTest extends SapphireTest
 {
@@ -25,11 +23,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
     {
         parent::setUp();
 
-        Deprecation::withSuppressedNotice(
-            fn() => PasswordValidator::singleton()
-            ->setMinLength(0)
-            ->setTestNames([])
-        );
+        Member::set_password_validator(null);
     }
 
     public function testSetValue()
@@ -217,10 +211,10 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         return [
             'valid: within min and max' => [3, 8, true],
             'invalid: lower than min with max' => [8, 12, false, 'Passwords must be 8 to 12 characters long'],
-            'valid: greater than min' => [3, null, true],
-            'invalid: lower than min' => [8, null, false, 'Passwords must be at least 8 characters long'],
-            'valid: less than max' => [null, 8, true],
-            'invalid: greater than max' => [null, 4, false, 'Passwords must be at most 4 characters long'],
+            'valid: greater than min' => [3, 0, true],
+            'invalid: lower than min' => [8, 0, false, 'Passwords must be at least 8 characters long'],
+            'valid: less than max' => [0, 8, true],
+            'invalid: greater than max' => [0, 4, false, 'Passwords must be at most 4 characters long'],
 
         ];
     }
@@ -239,7 +233,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $this->assertFalse($result, 'Validate method should return its result');
         $this->assertFalse($validator->getResult()->isValid());
         $this->assertStringContainsString(
-            'Passwords must have at least one digit and one alphanumeric character',
+            'The password strength is too low. Please use a stronger password.',
             json_encode($validator->getResult()->__serialize())
         );
     }

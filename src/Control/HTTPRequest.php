@@ -7,6 +7,8 @@ use BadMethodCallException;
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\ArrayLib;
+use Symfony\Component\Validator\Constraints\Ip;
+use Symfony\Component\Validator\Constraints\IpValidator;
 
 /**
  * Represents a HTTP-request, including a URL that is tokenised for parsing, and a request method
@@ -810,7 +812,8 @@ class HTTPRequest implements ArrayAccess
      */
     public function setIP($ip)
     {
-        if (!filter_var($ip, FILTER_VALIDATE_IP)) {
+        // We can't use ConstraintValidator here because it relies on injector and the kernel may not have booted yet.
+        if (!IpValidator::checkIp($ip, Ip::ALL)) {
             throw new InvalidArgumentException("Invalid ip $ip");
         }
         $this->ip = $ip;

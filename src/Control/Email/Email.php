@@ -4,14 +4,13 @@ namespace SilverStripe\Control\Email;
 
 use Exception;
 use RuntimeException;
-use Egulias\EmailValidator\EmailValidator;
-use Egulias\EmailValidator\Validation\RFCValidation;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Validation\ConstraintValidator;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\Requirements;
@@ -22,6 +21,8 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as SymfonyEmail;
 use Symfony\Component\Mime\Part\AbstractPart;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class Email extends SymfonyEmail
 {
@@ -63,16 +64,17 @@ class Email extends SymfonyEmail
     private bool $dataHasBeenSet = false;
 
     /**
-     * Checks for RFC822-valid email format.
-     *
-     * @copyright Cal Henderson <cal@iamcal.com>
-     *    This code is licensed under a Creative Commons Attribution-ShareAlike 2.5 License
-     *    http://creativecommons.org/licenses/by-sa/2.5/
+     * Checks for RFC valid email format.
      */
     public static function is_valid_address(string $address): bool
     {
-        $validator = new EmailValidator();
-        return $validator->isValid($address, new RFCValidation());
+        return ConstraintValidator::validate(
+            $address,
+            [
+                new EmailConstraint(mode: EmailConstraint::VALIDATION_MODE_STRICT),
+                new NotBlank()
+            ]
+        )->isValid();
     }
 
     public static function getSendAllEmailsTo(): array
@@ -117,7 +119,7 @@ class Email extends SymfonyEmail
         $addresses = [];
         if (is_array($config)) {
             foreach ($config as $key => $val) {
-                if (filter_var($key, FILTER_VALIDATE_EMAIL)) {
+                if (static::is_valid_address($key)) {
                     $addresses[] = new Address($key, $val);
                 } else {
                     $addresses[] = new Address($val);

@@ -4,9 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\EmailField;
-use Exception;
-use PHPUnit\Framework\AssertionFailedError;
-use SilverStripe\Forms\Tests\EmailFieldTest\TestValidator;
+use SilverStripe\Forms\FieldsValidator;
 
 class EmailFieldTest extends FunctionalTest
 {
@@ -40,21 +38,14 @@ class EmailFieldTest extends FunctionalTest
         $field = new EmailField("MyEmail");
         $field->setValue($email);
 
-        $val = new TestValidator();
-        try {
-            $field->validate($val);
-            // If we expect failure and processing gets here without an exception, the test failed
-            $this->assertTrue($expectSuccess, $checkText . " (/$email/ passed validation, but not expected to)");
-        } catch (Exception $e) {
-            if ($e instanceof AssertionFailedError) {
-                 // re-throw assertion failure
-                throw $e;
-            } elseif ($expectSuccess) {
-                $this->fail(
-                    $checkText . ": " . $e->getMessage() . " (/$email/ did not pass validation, but was expected to)"
-                );
-            }
+        if ($expectSuccess) {
+            $message = $checkText . " (/$email/ did not pass validation, but was expected to)";
+        } else {
+            $message = $checkText . " (/$email/ passed validation, but not expected to)";
         }
+
+        $result = $field->validate(new FieldsValidator());
+        $this->assertSame($expectSuccess, $result, $message);
     }
 
     /**

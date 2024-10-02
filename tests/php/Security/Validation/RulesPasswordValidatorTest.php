@@ -1,25 +1,20 @@
 <?php
 
-namespace SilverStripe\Security\Tests;
+namespace SilverStripe\Security\Tests\Validation;
 
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
-use SilverStripe\Security\PasswordValidator;
+use SilverStripe\Security\Validation\RulesPasswordValidator;
 
-class PasswordValidatorTest extends SapphireTest
+class RulesPasswordValidatorTest extends SapphireTest
 {
-    /**
-     * {@inheritDoc}
-     * @var bool
-     */
-    protected $usesDatabase = true;
+    protected $usesDatabase = false;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        PasswordValidator::config()
+        RulesPasswordValidator::config()
             ->remove('min_length')
             ->remove('historic_count')
             ->set('min_test_score', 0);
@@ -27,7 +22,7 @@ class PasswordValidatorTest extends SapphireTest
 
     public function testValidate()
     {
-        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
+        $v = new RulesPasswordValidator();
         $r = $v->validate('', new Member());
         $this->assertTrue($r->isValid(), 'Empty password is valid by default');
 
@@ -37,7 +32,7 @@ class PasswordValidatorTest extends SapphireTest
 
     public function testValidateMinLength()
     {
-        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
+        $v = new RulesPasswordValidator();
 
         $v->setMinLength(4);
         $r = $v->validate('123', new Member());
@@ -51,7 +46,7 @@ class PasswordValidatorTest extends SapphireTest
     public function testValidateMinScore()
     {
         // Set both score and set of tests
-        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
+        $v = new RulesPasswordValidator();
         $v->setMinTestScore(3);
         $v->setTestNames(["lowercase", "uppercase", "digits", "punctuation"]);
 
@@ -62,7 +57,7 @@ class PasswordValidatorTest extends SapphireTest
         $this->assertTrue($r->isValid(), 'Passing enough tests');
 
         // Ensure min score without tests works (uses default tests)
-        $v = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
+        $v = new RulesPasswordValidator();
         $v->setMinTestScore(3);
 
         $r = $v->validate('aA', new Member());
@@ -75,32 +70,5 @@ class PasswordValidatorTest extends SapphireTest
         $v->setMinTestScore(1000);
         $r = $v->validate('aA1!', new Member());
         $this->assertTrue($r->isValid(), 'Passing enough tests');
-    }
-
-    /**
-     * Test that a certain number of historical passwords are checked if specified
-     */
-    public function testHistoricalPasswordCount()
-    {
-        $validator = Deprecation::withSuppressedNotice(fn() => new PasswordValidator);
-        $validator->setHistoricCount(3);
-        Member::set_password_validator($validator);
-
-        $member = new Member;
-        $member->FirstName = 'Repeat';
-        $member->Surname = 'Password-Man';
-        $member->Password = 'honk';
-        $member->write();
-
-        // Create a set of used passwords
-        $member->changePassword('foobar');
-        $member->changePassword('foobaz');
-        $member->changePassword('barbaz');
-
-        $this->assertFalse($member->changePassword('barbaz')->isValid());
-        $this->assertFalse($member->changePassword('foobaz')->isValid());
-        $this->assertFalse($member->changePassword('foobar')->isValid());
-        $this->assertTrue($member->changePassword('honk')->isValid());
-        $this->assertTrue($member->changePassword('newpassword')->isValid());
     }
 }

@@ -8,7 +8,6 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
@@ -29,7 +28,6 @@ use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\MemberAuthenticator\SessionAuthenticationHandler;
 use SilverStripe\Security\MemberPassword;
 use SilverStripe\Security\PasswordEncryptor_Blowfish;
-use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
@@ -37,6 +35,8 @@ use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
 use SilverStripe\SessionManager\Models\LoginSession;
 use ReflectionMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Security\Validation\EntropyPasswordValidator;
+use SilverStripe\Security\Validation\RulesPasswordValidator;
 
 class MemberTest extends FunctionalTest
 {
@@ -74,12 +74,6 @@ class MemberTest extends FunctionalTest
         parent::setUp();
 
         Member::config()->set('unique_identifier_field', 'Email');
-
-        Deprecation::withSuppressedNotice(
-            fn() => PasswordValidator::singleton()
-            ->setMinLength(0)
-            ->setTestNames([])
-        );
 
         i18n::set_locale('en_US');
     }
@@ -1743,7 +1737,7 @@ class MemberTest extends FunctionalTest
     public function testChangePasswordOnlyValidatesPlaintext()
     {
         // This validator requires passwords to be 17 characters long
-        Member::set_password_validator(Deprecation::withSuppressedNotice(fn() => new MemberTest\VerySpecificPasswordValidator()));
+        Member::set_password_validator(new MemberTest\VerySpecificPasswordValidator());
 
         // This algorithm will never return a 17 character hash
         Security::config()->set('password_encryption_algorithm', 'blowfish');
@@ -1770,11 +1764,23 @@ class MemberTest extends FunctionalTest
         $this->assertNotNull(Member::get()->find('Email', 'trimmed@test.com'));
     }
 
-    public function testChangePasswordToBlankIsValidated()
+    public static function provideChangePasswordToBlankIsValidated(): array
     {
-        Member::set_password_validator(Deprecation::withSuppressedNotice(fn() => new PasswordValidator()));
-        // override setup() function which setMinLength(0)
-        PasswordValidator::singleton()->setMinLength(8);
+        return [
+            [
+                'validatorClass' => RulesPasswordValidator::class,
+            ],
+            [
+                'validatorClass' => EntropyPasswordValidator::class,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideChangePasswordToBlankIsValidated')]
+    public function testChangePasswordToBlankIsValidated(string $validatorClass): void
+    {
+        $validator = new $validatorClass();
+        Member::set_password_validator($validator);
         // 'test' member has a password defined in yml
         $member = $this->objFromFixture(Member::class, 'test');
         $result = $member->changePassword('');
@@ -1896,34 +1902,57 @@ class MemberTest extends FunctionalTest
         ];
     }
 
-    public function testGenerateRandomPassword()
+    public static function provideGenerateRandomPassword(): array
+    {
+        return [
+            [
+                'validatorClass' => RulesPasswordValidator::class,
+            ],
+            [
+                'validatorClass' => EntropyPasswordValidator::class,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideGenerateRandomPassword')]
+    public function testGenerateRandomPassword(string $validatorClass): void
     {
         $member = new Member();
         // no password validator
         Member::set_password_validator(null);
-        // password length is same as length argument
+        // password length is min 128 chars long
         $password = $member->generateRandomPassword(5);
-        $this->assertSame(5, strlen($password));
-        // default to 20 if not length argument
-        $password = $member->generateRandomPassword();
-        $this->assertSame(20, strlen($password));
+        $this->assertSame(128, strlen($password));
+        // password length can be longer
+        $password = $member->generateRandomPassword(130);
+        $this->assertSame(130, strlen($password));
         // password validator
-        $validator = Deprecation::withSuppressedNotice(fn() => new PasswordValidator());
+        $validator = new $validatorClass();
         Member::set_password_validator($validator);
-        // Password length of 20 even if validator minLength is less than 20
-        $validator->setMinLength(10);
+        if ($validator instanceof RulesPasswordValidator) {
+            // Password length of 20 even if validator minLength is less than 20
+            $validator->setMinLength(10);
+            $minLengthInMember = 20;
+        } else {
+            $minLengthInMember = 128;
+        }
         $password = $member->generateRandomPassword();
-        $this->assertSame(20, strlen($password));
-        // Password length of 25 if passing length argument, and validator minlength is less than length argument
-        $password = $member->generateRandomPassword(25);
-        $this->assertSame(25, strlen($password));
-        // Password length is validator minLength if validator minLength is greater than 20 and no length argument
-        $validator->setMinLength(30);
-        $password = $member->generateRandomPassword();
-        $this->assertSame(30, strlen($password));
-        // Exception throw if length argument is less than validator minLength
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('length argument is less than password validator minLength');
-        $password = $member->generateRandomPassword(15);
+        $this->assertSame($minLengthInMember, strlen($password));
+        // Password length of 256 if passing length argument, and validator minlength is less than length argument
+        $password = $member->generateRandomPassword(256);
+        $this->assertSame(256, strlen($password));
+        if ($validator instanceof RulesPasswordValidator) {
+            // Password length is validator minLength if validator minLength is greater than 20 and no length argument
+            $validator->setMinLength(30);
+            $password = $member->generateRandomPassword();
+            $this->assertSame(30, strlen($password));
+            // Exception throw if length argument is less than validator minLength
+            $this->expectException(InvalidArgumentException::class);
+            $this->expectExceptionMessage('length argument is less than password validator minLength');
+            $password = $member->generateRandomPassword(15);
+        } else {
+            // No exception for entropy validator
+            $password = $member->generateRandomPassword(15);
+        }
     }
 }

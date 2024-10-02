@@ -10,6 +10,8 @@ use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\HTML;
 use Closure;
+use SilverStripe\Core\Validation\ConstraintValidator;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 /**
  * Two masked input fields, checks for matching passwords.
@@ -25,34 +27,33 @@ class ConfirmedPasswordField extends FormField
 
     /**
      * Minimum character length of the password.
-     *
-     * @var int
      */
-    public $minLength = null;
+    public int $minLength = 0;
 
     /**
      * Maximum character length of the password.
-     *
-     * @var int
+     * 0 means no maximum length.
      */
-    public $maxLength = null;
+    public int $maxLength = 0;
 
     /**
-     * Enforces at least one digit and one alphanumeric
-     * character (in addition to {$minLength} and {$maxLength}
-     *
-     * @var boolean
+     * Enforces password strength validation based on entropy.
+     * See setMinPasswordStrength()
      */
-    public $requireStrongPassword = false;
+    public bool $requireStrongPassword = false;
 
     /**
      * Allow empty fields when entering the password for the first time
      * If this is set to true then a random password may be generated if the field is empty
      * depending on the value of $ConfirmedPasswordField::generateRandomPasswordOnEmtpy
-     *
-     * @var boolean
      */
-    public $canBeEmpty = false;
+    public bool $canBeEmpty = false;
+
+    /**
+     * Minimum password strength if requireStrongPassword is true
+     * See https://symfony.com/doc/current/reference/constraints/PasswordStrength.html#minscore
+     */
+    private int $minPasswordStrength = PasswordStrength::STRENGTH_STRONG;
 
     /**
      * Callback used to generate a random password if $this->canBeEmpty is true and the field is left blank
@@ -72,79 +73,54 @@ class ConfirmedPasswordField extends FormField
      *
      * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
      * since the required frontend dependencies are included through CMS bundling.
-     *
-     * @param boolean $showOnClick
      */
-    protected $showOnClick = false;
+    protected bool $showOnClick = false;
 
     /**
      * Check if the existing password should be entered first
-     *
-     * @var bool
      */
-    protected $requireExistingPassword = false;
+    protected bool $requireExistingPassword = false;
 
 
     /**
      * A place to temporarily store the confirm password value
-     *
-     * @var string
      */
-    protected $confirmValue;
+    protected ?string $confirmValue = null;
 
     /**
      * Store value of "Current Password" field
-     *
-     * @var string
      */
-    protected $currentPasswordValue;
+    protected ?string $currentPasswordValue = null;
 
     /**
      * Title for the link that triggers the visibility of password fields.
-     *
-     * @var string
      */
-    public $showOnClickTitle;
+    public string $showOnClickTitle = '';
 
     /**
      * Child fields (_Password, _ConfirmPassword)
-     *
-     * @var FieldList
      */
-    public $children;
+    public FieldList $children;
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
-    /**
-     * @var PasswordField
-     */
-    protected $passwordField = null;
+    protected ?PasswordField $passwordField;
+
+    protected ?PasswordField $confirmPasswordfield;
+
+    protected ?HiddenField $hiddenField = null;
 
     /**
-     * @var PasswordField
-     */
-    protected $confirmPasswordfield = null;
-
-    /**
-     * @var HiddenField
-     */
-    protected $hiddenField = null;
-
-    /**
-     * @param string $name
-     * @param string $title
-     * @param mixed $value
      * @param Form $form Ignored for ConfirmedPasswordField.
-     * @param boolean $showOnClick
      * @param string $titleConfirmField Alternate title (not localizeable)
      */
     public function __construct(
-        $name,
-        $title = null,
-        $value = "",
-        $form = null,
-        $showOnClick = false,
-        $titleConfirmField = null
+        string $name,
+        ?string $title = null,
+        mixed $value = "",
+        ?Form $form = null,
+        bool $showOnClick = false,
+        ?string $titleConfirmField = null
     ) {
 
         // Set field title
@@ -528,14 +504,18 @@ class ConfirmedPasswordField extends FormField
         }
 
         if ($this->getRequireStrongPassword()) {
-            if (!preg_match('/^(([a-zA-Z]+\d+)|(\d+[a-zA-Z]+))[a-zA-Z0-9]*$/', $value ?? '')) {
+            $strongEnough = ConstraintValidator::validate(
+                $value,
+                new PasswordStrength(minScore: $this->getMinPasswordStrength())
+            )->isValid();
+            if (!$strongEnough) {
                 $validator->validationError(
                     $name,
                     _t(
-                        'SilverStripe\\Forms\\Form.VALIDATIONSTRONGPASSWORD',
-                        'Passwords must have at least one digit and one alphanumeric character'
+                        __CLASS__ . '.VALIDATIONSTRONGPASSWORD',
+                        'The password strength is too low. Please use a stronger password.'
                     ),
-                    "validation"
+                    'validation'
                 );
 
                 return $this->extendValidationResult(false, $validator);
@@ -637,24 +617,21 @@ class ConfirmedPasswordField extends FormField
 
     /**
      * Check if existing password is required
-     *
-     * @return bool
+     * If true, an extra form field will be added to enter the existing password
      */
-    public function getRequireExistingPassword()
+    public function getRequireExistingPassword(): bool
     {
         return $this->requireExistingPassword;
     }
 
     /**
      * Set if the existing password should be required
-     *
-     * @param bool $show Flag to show or hide this field
-     * @return $this
+     * If true, an extra form field will be added to enter the existing password
      */
-    public function setRequireExistingPassword($show)
+    public function setRequireExistingPassword(bool $show): static
     {
         // Don't modify if already added / removed
-        if ((bool)$show === $this->requireExistingPassword) {
+        if ($show === $this->requireExistingPassword) {
             return $this;
         }
         $this->requireExistingPassword = $show;
@@ -670,77 +647,89 @@ class ConfirmedPasswordField extends FormField
     }
 
     /**
-     * @return PasswordField
+     * Get the FormField that represents the main password field
      */
-    public function getPasswordField()
+    public function getPasswordField(): PasswordField
     {
         return $this->passwordField;
     }
 
     /**
-     * @return PasswordField
+     * Get the FormField that represents the "confirm" password field
      */
-    public function getConfirmPasswordField()
+    public function getConfirmPasswordField(): PasswordField
     {
         return $this->confirmPasswordfield;
     }
 
     /**
      * Set the minimum length required for passwords
-     *
-     * @param int $minLength
-     * @return $this
      */
-    public function setMinLength($minLength)
+    public function setMinLength(int $minLength): static
     {
-        $this->minLength = (int) $minLength;
+        $this->minLength = $minLength;
         return $this;
     }
 
     /**
-     * @return int
+     * Get the minimum length required for passwords
      */
-    public function getMinLength()
+    public function getMinLength(): int
     {
         return $this->minLength;
     }
 
     /**
-     * Set the maximum length required for passwords
-     *
-     * @param int $maxLength
-     * @return $this
+     * Set the maximum length required for passwords.
+     * 0 means no max length.
      */
-    public function setMaxLength($maxLength)
+    public function setMaxLength(int $maxLength): static
     {
-        $this->maxLength = (int) $maxLength;
+        $this->maxLength = $maxLength;
         return $this;
     }
 
     /**
-     * @return int
+     * Get the maximum length required for passwords.
+     * 0 means no max length.
      */
-    public function getMaxLength()
+    public function getMaxLength(): int
     {
         return $this->maxLength;
     }
 
     /**
-     * @param bool $requireStrongPassword
-     * @return $this
+     * Set whether password strength validation is enforced.
+     * See setMinPasswordStrength()
      */
-    public function setRequireStrongPassword($requireStrongPassword)
+    public function setRequireStrongPassword($requireStrongPassword): static
     {
         $this->requireStrongPassword = (bool) $requireStrongPassword;
         return $this;
     }
 
     /**
-     * @return bool
+     * Get whether password strength validation is enforced.
+     * See setMinPasswordStrength()
      */
-    public function getRequireStrongPassword()
+    public function getRequireStrongPassword(): bool
     {
         return $this->requireStrongPassword;
+    }
+
+    /**
+     * Set minimum password strength. Only applies if requireStrongPassword is true
+     * See https://symfony.com/doc/current/reference/constraints/PasswordStrength.html#minscore
+     */
+    public function setMinPasswordStrength(int $strength): static
+    {
+        $this->minPasswordStrength = $strength;
+        return $this;
+    }
+
+    public function getMinPasswordStrength(): int
+    {
+        return $this->minPasswordStrength;
     }
 
     /**

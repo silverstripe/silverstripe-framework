@@ -2,9 +2,12 @@
 
 namespace SilverStripe\Core;
 
+use SilverStripe\Core\Validation\ConstraintValidator;
 use SimpleXMLElement;
 use SilverStripe\ORM\DB;
 use SilverStripe\View\Parsers\URLSegmentFilter;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Url;
 
 /**
  * Library of conversion functions, implemented as static methods.
@@ -226,16 +229,14 @@ class Convert
 
     /**
      * Create a link if the string is a valid URL
-     *
-     * @param string $string The string to linkify
-     * @return string A link to the URL if string is a URL
      */
-    public static function linkIfMatch($string)
-    {
-        if (preg_match('/^[a-z+]+\:\/\/[a-zA-Z0-9$-_.+?&=!*\'()%]+$/', $string ?? '')) {
+    public static function linkIfMatch(
+        string $string,
+        array $protocols = ['file', 'ftp', 'http', 'https', 'imap', 'nntp']
+    ): string {
+        if (ConstraintValidator::validate($string, [new Url(protocols: $protocols), new NotBlank()])->isValid()) {
             return "<a style=\"white-space: nowrap\" href=\"$string\">$string</a>";
         }
-
         return $string;
     }
 

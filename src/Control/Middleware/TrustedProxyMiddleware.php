@@ -3,7 +3,10 @@
 namespace SilverStripe\Control\Middleware;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Validation\ConstraintValidator;
 use Symfony\Component\HttpFoundation\IpUtils;
+use Symfony\Component\Validator\Constraints\Ip;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * This middleware will rewrite headers that provide IP and host details from an upstream proxy.
@@ -220,14 +223,14 @@ class TrustedProxyMiddleware implements HTTPMiddleware
 
         // Prioritise filters
         $filters = [
-            FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
-            FILTER_FLAG_NO_PRIV_RANGE,
-            null
+            Ip::ALL_ONLY_PUBLIC,
+            Ip::ALL_NO_PRIVATE,
+            Ip::ALL
         ];
         foreach ($filters as $filter) {
             // Find best IP
             foreach ($ips as $ip) {
-                if (filter_var($ip, FILTER_VALIDATE_IP, $filter ?? 0)) {
+                if (ConstraintValidator::validate($ip, [new Ip(version: $filter), new NotBlank()])->isValid()) {
                     return $ip;
                 }
             }

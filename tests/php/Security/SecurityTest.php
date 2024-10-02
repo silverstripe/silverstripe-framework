@@ -22,7 +22,6 @@ use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
-use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
 
@@ -59,11 +58,6 @@ class SecurityTest extends FunctionalTest
         ]);
 
         Member::config()->set('unique_identifier_field', 'Email');
-
-        PasswordValidator::config()
-            ->remove('min_length')
-            ->remove('historic_count')
-            ->remove('min_test_score');
 
         Member::set_password_validator(null);
 
