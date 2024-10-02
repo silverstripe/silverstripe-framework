@@ -27,6 +27,8 @@ class MemberPassword extends DataObject
 
     private static $table_name = "MemberPassword";
 
+    private static bool $must_use_primary_db = true;
+
     /**
      * Log a password change from the given member.
      * Call MemberPassword::log($this) from within Member whenever the password is changed.

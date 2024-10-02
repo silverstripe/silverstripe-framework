@@ -85,7 +85,7 @@ class ClassInfo implements Flushable
     public static function hasTable($tableName)
     {
         $cache = ClassInfo::getCache();
-        $configData = serialize(DB::getConfig());
+        $configData = serialize(DB::getConfig(DB::CONN_PRIMARY));
         $cacheKey = 'tableList_' . md5($configData);
         $tableList = $cache->get($cacheKey) ?? [];
         if (empty($tableList) && DB::is_active()) {

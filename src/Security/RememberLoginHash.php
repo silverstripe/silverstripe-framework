@@ -44,6 +44,8 @@ class RememberLoginHash extends DataObject
 
     private static $table_name = "RememberLoginHash";
 
+    private static bool $must_use_primary_db = true;
+
     /**
      * Determines if logging out on one device also clears existing login tokens
      * on all other devices owned by the member.

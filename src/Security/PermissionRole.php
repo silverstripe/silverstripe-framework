@@ -40,6 +40,8 @@ class PermissionRole extends DataObject
 
     private static $table_name = "PermissionRole";
 
+    private static bool $must_use_primary_db = true;
+
     private static $default_sort = '"Title"';
 
     private static $singular_name = 'Role';

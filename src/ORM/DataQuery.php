@@ -10,6 +10,7 @@ use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\ORM\Queries\SQLSelect;
 use InvalidArgumentException;
+use SilverStripe\Core\Config\Config;
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
@@ -449,7 +450,9 @@ class DataQuery
      */
     public function execute()
     {
-        return $this->getFinalisedQuery()->execute();
+        return $this->withCorrectDatabase(
+            fn() => $this->getFinalisedQuery()->execute()
+        );
     }
 
     /**
@@ -472,7 +475,9 @@ class DataQuery
     public function count()
     {
         $quotedColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
-        return $this->getFinalisedQuery()->count("DISTINCT {$quotedColumn}");
+        return $this->withCorrectDatabase(
+            fn() => $this->getFinalisedQuery()->count("DISTINCT {$quotedColumn}")
+        );
     }
 
     /**
@@ -501,7 +506,9 @@ class DataQuery
 
         // Wrap the whole thing in an "EXISTS"
         $sql = 'SELECT CASE WHEN EXISTS(' . $statement->sql($params) . ') THEN 1 ELSE 0 END';
-        $result = DB::prepared_query($sql, $params);
+        $result = $this->withCorrectDatabase(
+            fn() => DB::prepared_query($sql, $params)
+        );
         $row = $result->record();
         $result = reset($row);
 
@@ -582,7 +589,9 @@ class DataQuery
      */
     public function aggregate($expression)
     {
-        return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
+        return $this->withCorrectDatabase(
+            fn() => $this->getFinalisedQuery()->aggregate($expression)->execute()->value()
+        );
     }
 
     /**
@@ -593,7 +602,9 @@ class DataQuery
      */
     public function firstRow()
     {
-        return $this->getFinalisedQuery()->firstRow();
+        return $this->withCorrectDatabase(
+            fn() => $this->getFinalisedQuery()->firstRow()
+        );
     }
 
     /**
@@ -604,7 +615,9 @@ class DataQuery
      */
     public function lastRow()
     {
-        return $this->getFinalisedQuery()->lastRow();
+        return $this->withCorrectDatabase(
+            fn() => $this->getFinalisedQuery()->lastRow()
+        );
     }
 
     /**
@@ -1344,7 +1357,9 @@ class DataQuery
         $query->selectField($fieldExpression, $field);
         $this->ensureSelectContainsOrderbyColumns($query, $originalSelect);
 
-        return $query->execute()->column($field);
+        return $this->withCorrectDatabase(
+            fn() => $query->execute()->column($field)
+        );
     }
 
     /**
@@ -1494,5 +1509,17 @@ class DataQuery
         $this->invokeWithExtensions('updateJoinTableName', $class, $table, $updated);
 
         return $updated;
+    }
+
+    /**
+     * Calls a callback on either the primary database or a replica, with respect to the configured
+     * value of `must_use_primary_db` on the current dataClass
+     */
+    private function withCorrectDatabase(callable $callback): mixed
+    {
+        if (Config::inst()->get($this->dataClass(), 'must_use_primary_db')) {
+            return DB::withPrimary($callback);
+        }
+        return $callback();
     }
 }

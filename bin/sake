@@ -2,6 +2,7 @@
 <?php
 
 use SilverStripe\Cli\Sake;
+use SilverStripe\ORM\DB;
 
 // Ensure that people can't access this from a web-server
 if (!in_array(PHP_SAPI, ['cli', 'cgi', 'cgi-fcgi'])) {
@@ -10,6 +11,9 @@ if (!in_array(PHP_SAPI, ['cli', 'cgi', 'cgi-fcgi'])) {
 }
 
 require_once __DIR__ . '/../src/includes/autoload.php';
+
+// CLI scripts must only use the primary database connection and not replicas
+DB::setMustUsePrimary();
 
 $sake = new Sake();
 $sake->run();

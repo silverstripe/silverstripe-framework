@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
+use RunTimeException;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
@@ -21,6 +22,22 @@ use SilverStripe\ORM\Queries\SQLExpression;
  */
 class DB
 {
+    /**
+     * A dynamic connection that will use either a replica connection if one is
+     * available and not forced to use the 'primary' connection, or the 'primary' connection
+     */
+    public const CONN_DYNAMIC = 'dynamic';
+
+    /**
+     * The 'primary' connection name, which is the main database connection and is used for all write
+     * operations and for read operations when the 'default' connection is forced to use the 'primary' connection
+     */
+    public const CONN_PRIMARY = 'primary';
+
+    /**
+     * The maximum number of replicas databases that can be configured
+     */
+    public const MAX_REPLICAS = 99;
 
     /**
      * This constant was added in SilverStripe 2.4 to indicate that SQL-queries
@@ -58,8 +75,6 @@ class DB
      */
     protected static $configs = [];
 
-
-
     /**
      * The last SQL query run.
      * @var string
@@ -67,9 +82,37 @@ class DB
     public static $lastQuery;
 
     /**
+     * The name of the last connection used. This is only used for unit-testing purposes.
+     * @interal
+     */
+    private static string $lastConnectionName = '';
+
+    /**
      * Internal flag to keep track of when db connection was attempted.
      */
     private static $connection_attempted = false;
+
+    /**
+     * Only use the primary database connection for the rest of the current request
+     *
+     * @internal
+     */
+    private static bool $mustUsePrimary = false;
+
+    /**
+     * Used by DB::withPrimary() to count the number of times it has been called
+     * Uses an int instead of a bool to allow for nested calls
+     *
+     * @internal
+     */
+    private static int $withPrimaryCount = 0;
+
+    /**
+     * The key of the replica config to use for this request
+     *
+     * @internal
+     */
+    private static string $replicaConfigKey = '';
 
     /**
      * Set the global database connection.
@@ -78,11 +121,11 @@ class DB
      *
      * @param Database $connection The connection object to set as the connection.
      * @param string $name The name to give to this connection.  If you omit this argument, the connection
-     * will be the default one used by the ORM.  However, you can store other named connections to
+     * will be the primary one used by the ORM.  However, you can store other named connections to
      * be accessed through DB::get_conn($name).  This is useful when you have an application that
      * needs to connect to more than one database.
      */
-    public static function set_conn(Database $connection, $name = 'default')
+    public static function set_conn(Database $connection, $name = DB::CONN_PRIMARY)
     {
         DB::$connections[$name] = $connection;
     }
@@ -92,11 +135,17 @@ class DB
      *
      * @param string $name An optional name given to a connection in the DB::setConn() call.  If omitted,
      * the default connection is returned.
-     * @return Database
+     * @return Database|null
      */
-    public static function get_conn($name = 'default')
+    public static function get_conn($name = DB::CONN_DYNAMIC)
     {
+        // Allow default to connect to replica if configured
+        if ($name === DB::CONN_DYNAMIC) {
+            $name = DB::getDynamicConnectionName();
+        }
+
         if (isset(DB::$connections[$name])) {
+            DB::$lastConnectionName = $name;
             return DB::$connections[$name];
         }
 
@@ -110,13 +159,49 @@ class DB
     }
 
     /**
+     * Whether the primary database connection will be used if the database is used right now
+     */
+    public static function willUsePrimary(): bool
+    {
+        return DB::$mustUsePrimary || DB::$withPrimaryCount > 0 || !DB::hasReplicaConfig();
+    }
+
+    /**
+     * Set to use the primary database connection for rest of the current request
+     * meaning that replia connections will no longer be used
+     *
+     * This intentioally does not have a parameter to set this back to false, as this it to prevent
+     * accidentally attempting writing to a replica, or reading from an out of date replica
+     * after a write
+     */
+    public static function setMustUsePrimary(): void
+    {
+        DB::$mustUsePrimary = true;
+    }
+
+    /**
+     * Only use the primary database connection when calling $callback
+     * Use this when doing non-mutable queries on the primary database where querying
+     * an out of sync replica could cause issues
+     * There's no need to use this with mutable queries, or after calling a mutable query
+     * as the primary database connection will be automatically used
+     */
+    public static function withPrimary(callable $callback): mixed
+    {
+        DB::$withPrimaryCount++;
+        $result = $callback();
+        DB::$withPrimaryCount--;
+        return $result;
+    }
+
+    /**
      * Retrieves the schema manager for the current database
      *
-     * @param string $name An optional name given to a connection in the DB::setConn() call.  If omitted,
-     * the default connection is returned.
-     * @return DBSchemaManager
+     * @param string $name An optional name given to a connection in the DB::setConn() call.
+     * If omitted, a dynamic connection is returned.
+     * @return DBSchemaManager|null
      */
-    public static function get_schema($name = 'default')
+    public static function get_schema($name = DB::CONN_DYNAMIC)
     {
         $connection = DB::get_conn($name);
         if ($connection) {
@@ -130,11 +215,11 @@ class DB
      *
      * @param SQLExpression $expression The expression object to build from
      * @param array $parameters Out parameter for the resulting query parameters
-     * @param string $name An optional name given to a connection in the DB::setConn() call.  If omitted,
-     * the default connection is returned.
-     * @return string The resulting SQL as a string
+     * @param string $name An optional name given to a connection in the DB::setConn() call.
+     * If omitted, a dynamic connection is returned.
+     * @return string|null The resulting SQL as a string
      */
-    public static function build_sql(SQLExpression $expression, &$parameters, $name = 'default')
+    public static function build_sql(SQLExpression $expression, &$parameters, $name = DB::CONN_DYNAMIC)
     {
         $connection = DB::get_conn($name);
         if ($connection) {
@@ -148,11 +233,11 @@ class DB
     /**
      * Retrieves the connector object for the current database
      *
-     * @param string $name An optional name given to a connection in the DB::setConn() call.  If omitted,
-     * the default connection is returned.
-     * @return DBConnector
+     * @param string $name An optional name given to a connection in the DB::setConn() call.
+     * If omitted, a dynamic connection is returned.
+     * @return DBConnector|null
      */
-    public static function get_connector($name = 'default')
+    public static function get_connector($name = DB::CONN_DYNAMIC)
     {
         $connection = DB::get_conn($name);
         if ($connection) {
@@ -268,8 +353,13 @@ class DB
      * @param string $label identifier for the connection
      * @return Database
      */
-    public static function connect($databaseConfig, $label = 'default')
+    public static function connect($databaseConfig, $label = DB::CONN_DYNAMIC)
     {
+        // Allow default to connect to replica if configured
+        if ($label === DB::CONN_DYNAMIC) {
+            $label = DB::getDynamicConnectionName();
+        }
+
         // This is used by the "testsession" module to test up a test session using an alternative name
         if ($name = DB::get_alternative_database_name()) {
             $databaseConfig['database'] = $name;
@@ -288,6 +378,7 @@ class DB
         $conn = Injector::inst()->create($dbClass);
         DB::set_conn($conn, $label);
         $conn->connect($databaseConfig);
+        DB::$lastConnectionName = $label;
 
         return $conn;
     }
@@ -298,7 +389,7 @@ class DB
      * @param array $databaseConfig
      * @param string $name
      */
-    public static function setConfig($databaseConfig, $name = 'default')
+    public static function setConfig($databaseConfig, $name = DB::CONN_PRIMARY)
     {
         static::$configs[$name] = $databaseConfig;
     }
@@ -309,11 +400,40 @@ class DB
      * @param string $name
      * @return mixed
      */
-    public static function getConfig($name = 'default')
+    public static function getConfig($name = DB::CONN_PRIMARY)
     {
-        if (isset(static::$configs[$name])) {
+        if (static::hasConfig($name)) {
             return static::$configs[$name];
         }
+    }
+
+    /**
+     * Check if a named connection config exists
+     */
+    public static function hasConfig($name = DB::CONN_PRIMARY): bool
+    {
+        return array_key_exists($name, static::$configs);
+    }
+
+    /**
+     * Get a replica database configuration key
+     * e.g. replica_01
+     */
+    public static function getReplicaConfigKey(int $replica): string
+    {
+        $len = strlen((string) DB::MAX_REPLICAS);
+        return 'replica_' . str_pad($replica, $len, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Check if there are any replica configurations
+     */
+    public static function hasReplicaConfig(): bool
+    {
+        $configKeys = array_keys(static::$configs);
+        return !empty(array_filter($configKeys, function (string $key) {
+            return (bool) preg_match('#^replica_[0-9]+$#', $key);
+        }));
     }
 
     /**
@@ -335,8 +455,8 @@ class DB
     public static function query($sql, $errorLevel = E_USER_ERROR)
     {
         DB::$lastQuery = $sql;
-
-        return DB::get_conn()->query($sql, $errorLevel);
+        $name = DB::getDynamicConnectionName($sql);
+        return DB::get_conn($name)->query($sql, $errorLevel);
     }
 
     /**
@@ -427,8 +547,8 @@ class DB
     public static function prepared_query($sql, $parameters, $errorLevel = E_USER_ERROR)
     {
         DB::$lastQuery = $sql;
-
-        return DB::get_conn()->preparedQuery($sql, $parameters, $errorLevel);
+        $name = DB::getDynamicConnectionName($sql);
+        return DB::get_conn($name)->preparedQuery($sql, $parameters, $errorLevel);
     }
 
     /**
@@ -679,5 +799,64 @@ class DB
     public static function alteration_message($message, $type = "")
     {
         DB::get_schema()->alterationMessage($message, $type);
+    }
+
+    /**
+     * Get the name of the database connection to use for the given SQL query
+     * The 'dynamic' connection can be either the primary or a replica connection if configured
+     */
+    private static function getDynamicConnectionName(string $sql = ''): string
+    {
+        if (DB::willUsePrimary()) {
+            return DB::CONN_PRIMARY;
+        }
+        if (DB::isMutableSql($sql)) {
+            DB::$mustUsePrimary = true;
+            return DB::CONN_PRIMARY;
+        }
+        if (DB::$replicaConfigKey) {
+            return DB::$replicaConfigKey;
+        }
+        $name = DB::getRandomReplicaConfigKey();
+        DB::$replicaConfigKey = $name;
+        return $name;
+    }
+
+    /**
+     * Check if the given SQL query is mutable
+     */
+    private static function isMutableSql(string $sql): bool
+    {
+        $dbClass = DB::getConfig(DB::CONN_PRIMARY)['type'];
+        // This must use getServiceSpec() and not Injector::get/create() followed by
+        // getConnector() as this can remove the dbConn from a different connection
+        // under edge case conditions
+        $dbSpec = Injector::inst()->getServiceSpec($dbClass);
+        $connectorService = $dbSpec['properties']['connector'];
+        $connector = Injector::inst()->convertServiceProperty($connectorService);
+        return $connector->isQueryMutable($sql);
+    }
+
+    /**
+     * Get a random replica database configuration key from the available replica configurations
+     * The replica choosen will be used for the rest of the request, unless the primary connection
+     * is forced
+     */
+    private static function getRandomReplicaConfigKey(): string
+    {
+        $replicaNumbers = [];
+        for ($i = 1; $i <= DB::MAX_REPLICAS; $i++) {
+            $replicaKey = DB::getReplicaConfigKey($i);
+            if (!DB::hasConfig($replicaKey)) {
+                break;
+            }
+            $replicaNumbers[] = $i;
+        }
+        if (count($replicaNumbers) === 0) {
+            throw new RunTimeException('No replica configurations found');
+        }
+        // Choose a random replica
+        $index = rand(0, count($replicaNumbers) - 1);
+        return DB::getReplicaConfigKey($replicaNumbers[$index]);
     }
 }

@@ -11,6 +11,10 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\InjectorLoader;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Environment;
+use ReflectionClass;
+use SilverStripe\ORM\DB;
+use ReflectionObject;
 
 class KernelTest extends SapphireTest
 {
@@ -80,5 +84,33 @@ class KernelTest extends SapphireTest
         $kernel->nest(); // $kernel is no longer current kernel
 
         $kernel->getConfigLoader()->getManifest();
+    }
+    
+    public function testReplicaDatabaseVarsLoaded()
+    {
+        // Set environment variables for a fake replica database
+        Environment::setEnv('SS_DATABASE_SERVER_REPLICA_01', 'the-moon');
+        Environment::setEnv('SS_DATABASE_USERNAME_REPLICA_01', 'alien');
+        Environment::setEnv('SS_DATABASE_PASSWORD_REPLICA_01', 'hi_people');
+        // Get the CoreKernel
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        /** @var CoreKernel $coreKernel */
+        $coreKernel = $kernel->nest();
+        $this->assertTrue(is_a($coreKernel, CoreKernel::class));
+        // Boot the database environment variables
+        $reflector = new ReflectionObject($coreKernel);
+        $method = $reflector->getMethod('bootDatabaseEnvVars');
+        $method->setAccessible(true);
+        $method->invoke($coreKernel);
+        // Assert DB config was updated
+        $default = DB::getConfig(DB::CONN_PRIMARY);
+        $configs = (new ReflectionClass(DB::class))->getStaticPropertyValue('configs');
+        $this->assertSame([
+            'type' => $default['type'],
+            'server' => 'the-moon',
+            'username' => 'alien',
+            'password' => 'hi_people',
+        ], $configs['replica_01']);
     }
 }
