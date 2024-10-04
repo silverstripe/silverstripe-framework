@@ -10,8 +10,13 @@ use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\View\HTML;
 use Closure;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Validation\ConstraintValidator;
 use Symfony\Component\Validator\Constraints\PasswordStrength;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Security\Validation\PasswordValidator;
 
 /**
  * Two masked input fields, checks for matching passwords.
@@ -24,6 +29,9 @@ use Symfony\Component\Validator\Constraints\PasswordStrength;
  */
 class ConfirmedPasswordField extends FormField
 {
+    private static $allowed_actions = [
+        'strength',
+    ];
 
     /**
      * Minimum character length of the password.
@@ -106,6 +114,8 @@ class ConfirmedPasswordField extends FormField
 
     protected ?PasswordField $passwordField;
 
+    protected ?LiteralField $passwordStrengthField;
+
     protected ?PasswordField $confirmPasswordfield;
 
     protected ?HiddenField $hiddenField = null;
@@ -132,6 +142,10 @@ class ConfirmedPasswordField extends FormField
                 "{$name}[_Password]",
                 $title
             ),
+            $this->passwordStrengthField = LiteralField::create(
+                "{$name}[_PasswordStrength]",
+                '<div class="passwordstrength"></div>'
+            ),
             $this->confirmPasswordfield = PasswordField::create(
                 "{$name}[_ConfirmPassword]",
                 (isset($titleConfirmField)) ? $titleConfirmField : _t('SilverStripe\\Security\\Member.CONFIRMPASSWORD', 'Confirm Password')
@@ -154,6 +168,50 @@ class ConfirmedPasswordField extends FormField
         $this->setValue($value);
     }
 
+    /**
+     * Provides feedback for the current and required level of password strength
+     */
+    public function strength(HTTPRequest $request): HTTPResponse
+    {
+        $response = HTTPResponse::create();
+        $json = json_decode($request->getBody(), true);
+        if (!$json || !array_key_exists('password', $json) || !$request->isPOST()) {
+            $response->setStatusCode(400);
+            return $response;
+        }
+        $password = $json['password'];
+        $validator = PasswordValidator::create();
+        if ($this->getRequireStrongPassword()) {
+            $requiredStrength = $this->getMinPasswordStrength();
+        } else {
+            $requiredStrength = $validator->getRequiredStrength();
+        }
+        $requiredLevel = $validator->getStrengthLevel($requiredStrength);
+        $passwordStrength = $validator->evaluateStrength($password);
+        $passwordLevel = $validator->getStrengthLevel($passwordStrength);
+        if ($passwordStrength < $requiredStrength) {
+            $valid = false;
+            $message = _t(
+                __CLASS__ . '.STRENGTH',
+                'Password strength is {passwordLevel}, must be at least {requiredLevel}',
+                ['passwordLevel' => $passwordLevel, 'requiredLevel' => $requiredLevel]
+            );
+        } else {
+            $valid = true;
+            $message = _t(
+                __CLASS__ . '.STRENGTH',
+                'Password strength is {passwordLevel}',
+                ['passwordLevel' => $passwordLevel]
+            );
+        }
+        $body = json_encode((object) [
+            'valid' => $valid,
+            'message' => $message,
+        ]);
+        $response->setBody($body);
+        return $response;
+    }
+
     public function Title()
     {
         // Title is displayed on nested field, not on the top level field
@@ -173,6 +231,7 @@ class ConfirmedPasswordField extends FormField
      */
     public function Field($properties = [])
     {
+        $canEvaluateStrength = PasswordValidator::singleton()->canEvaluateStrength();
         // Build inner content
         $fieldContent = '';
         foreach ($this->getChildren() as $field) {
@@ -183,6 +242,9 @@ class ConfirmedPasswordField extends FormField
                 foreach ($this->attributes as $name => $value) {
                     $field->setAttribute($name, $value);
                 }
+            }
+            if ($canEvaluateStrength && is_a($field, PasswordField::class)) {
+                $field->setAttribute('data-strengthurl', $this->Link('strength'));
             }
 
             $fieldContent .= $field->FieldHolder(['AttributesHTML' => $this->getAttributesHTMLForChild($field)]);

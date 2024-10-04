@@ -2,6 +2,12 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Control\Director;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Validation\PasswordValidator;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+
 /**
  * Password input field.
  */
