@@ -49,6 +49,8 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      */
     protected ?string $searchField = null;
 
+    private string $placeHolderText = '';
+
     /**
      * @inheritDoc
      */
@@ -245,6 +247,24 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         return false;
     }
 
+    /**
+     * Get the text to be used as a placeholder in the search field.
+     * If blank, the placeholder will be generated based on the class held in the GridField.
+     */
+    public function getPlaceHolderText(): string
+    {
+        return $this->placeHolderText;
+    }
+
+    /**
+     * Set the text to be used as a placeholder in the search field.
+     * If blank, this text will be generated based on the class held in the GridField.
+     */
+    public function setPlaceHolderText(string $placeHolderText): static
+    {
+        $this->placeHolderText = $placeHolderText;
+        return $this;
+    }
 
     /**
      * Generate a search context based on the model class of the of the GridField
@@ -318,7 +338,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         $schema = [
             'formSchemaUrl' => $schemaUrl,
             'name' => $searchField,
-            'placeholder' => _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $this->getTitle($gridField, $inst)]),
+            'placeholder' => $this->getPlaceHolder($inst),
             'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
             'gridfield' => $gridField->getName(),
             'searchAction' => $searchAction->getAttribute('name'),
@@ -328,19 +348,6 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         ];
 
         return json_encode($schema);
-    }
-
-    private function getTitle(GridField $gridField, object $inst): string
-    {
-        if ($gridField->Title) {
-            return $gridField->Title;
-        }
-
-        if (ClassInfo::hasMethod($inst, 'i18n_plural_name')) {
-            return $inst->i18n_plural_name();
-        }
-
-        return ClassInfo::shortName($inst);
     }
 
     /**
@@ -386,7 +393,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $field->addExtraClass('stacked no-change-track');
         }
 
-        $name = $this->getTitle($gridField, singleton($gridField->getModelClass()));
+        $name = $this->getTitle(singleton($gridField->getModelClass()));
 
         $this->searchForm = $form = new Form(
             $gridField,
@@ -455,5 +462,33 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
                 _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
             )
         ];
+    }
+
+    /**
+     * Get the text that will be used as a placeholder in the search field.
+     *
+     * @param object $obj An instance of the class that will be searched against.
+     * If getPlaceHolderText is empty, this object will be used to build the placeholder
+     * e.g. 'Search "My Data Object"'
+     */
+    private function getPlaceHolder(object $obj): string
+    {
+        $placeholder = $this->getPlaceHolderText();
+        if (!empty($placeholder)) {
+            return $placeholder;
+        }
+        if ($obj) {
+            return _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $this->getTitle($obj)]);
+        }
+        return _t(__CLASS__ . '.Search_Default', 'Search');
+    }
+
+    private function getTitle(object $inst): string
+    {
+        if (ClassInfo::hasMethod($inst, 'i18n_plural_name')) {
+            return $inst->i18n_plural_name();
+        }
+
+        return ClassInfo::shortName($inst);
     }
 }

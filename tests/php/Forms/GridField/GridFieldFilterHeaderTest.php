@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\Tests\GridField;
 
 use LogicException;
+use ReflectionMethod;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
@@ -116,6 +117,29 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertEquals('test', $searchSchema->filters->Search__Name);
         $this->assertEquals('place', $searchSchema->filters->Search__City);
         $this->assertEquals('testfield', $searchSchema->gridfield);
+    }
+
+    /**
+     * Tests the private method that returns the placeholder for the search field
+     */
+    public function testGetPlaceHolder()
+    {
+        $gridField = new GridField('test');
+        $filterHeader = new GridFieldFilterHeader();
+        $reflectionGetPlaceHolder = new ReflectionMethod($filterHeader, 'getPlaceHolder');
+        $reflectionGetPlaceHolder->setAccessible(true);
+
+        // No explicit placeholder or model i18n_plural_name method
+        $this->assertSame('Search "ArrayData"', $reflectionGetPlaceHolder->invoke($filterHeader, new ArrayData()));
+
+        // No explicit placeholder, but model has i18n_plural_name method
+        $model = new DataObject();
+        $this->assertSame('Search "' . $model->i18n_plural_name() . '"', $reflectionGetPlaceHolder->invoke($filterHeader, $model));
+
+        // Explicit placeholder is set, which overrides both of the above cases
+        $filterHeader->setPlaceHolderText('This is the text');
+        $this->assertSame('This is the text', $reflectionGetPlaceHolder->invoke($filterHeader, $model));
+        $this->assertSame('This is the text', $reflectionGetPlaceHolder->invoke($filterHeader, new ArrayData()));
     }
 
     public function testHandleActionReset()
