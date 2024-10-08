@@ -237,7 +237,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      */
     public function sql(&$parameters = [])
     {
-        return $this->dataQuery->query()->sql($parameters);
+        return $this->dataQuery->sql($parameters);
     }
 
     /**
@@ -1040,7 +1040,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
 
     private function executeQuery(): Query
     {
-        $query = $this->dataQuery->query()->execute();
+        $query = $this->dataQuery->execute();
         $this->fetchEagerLoadRelations($query);
         return $query;
     }

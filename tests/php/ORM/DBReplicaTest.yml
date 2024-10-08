@@ -1,0 +1,18 @@
+SilverStripe\ORM\Tests\DBReplicaTest\TestObject:
+  test:
+    Title: 'test'
+SilverStripe\Security\Permission:
+  test:
+    Code: 'CMS_ACCESS_Something'
+SilverStripe\Security\Group:
+  test:
+    Title: 'test'
+    Permissions:
+      - =>SilverStripe\Security\Permission.test
+SilverStripe\Security\Member:
+  cmsuser:
+    FirstName: 'CmsUser'
+    Groups:
+      - =>SilverStripe\Security\Group.test
+  random:
+    FirstName: 'Random'

@@ -146,6 +146,14 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     private static $default_classname = null;
 
     /**
+     * Whether this DataObject class must only use the primary database and not a read-only replica
+     * Note that this will be only be enforced when using DataQuery::execute() or
+     * another method that uses calls DataQuery::execute() internally e.g. DataObject::get()
+     * This will not be enforced when using low-level ORM functionality to query data e.g. SQLSelect or DB::query()
+     */
+    private static bool $must_use_primary_db = false;
+
+    /**
      * Data stored in this objects database record. An array indexed by fieldname.
      *
      * Use {@link toMap()} if you want an array representation
