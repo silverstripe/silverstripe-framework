@@ -73,6 +73,8 @@ class SearchableDropdownTraitTest extends SapphireTest
         $this->assertSame('My empty string', $field->getPlaceholder());
         $field->setPlaceholder('My placeholder');
         $this->assertSame('My placeholder', $field->getPlaceholder());
+        $readonlyField = $field->performReadonlyTransformation();
+        $this->assertSame('', $readonlyField->getPlaceholder());
     }
 
     public function testSeachContext(): void
