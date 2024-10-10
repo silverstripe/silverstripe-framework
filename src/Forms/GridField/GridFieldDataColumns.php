@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 use LogicException;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -228,9 +229,11 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param ViewableData $record
      * @param string $columnName
      * @return string|null - returns null if it could not found a value
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     protected function getValueFromRelation($record, $columnName)
     {
+        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it.');
         $fieldNameParts = explode('.', $columnName ?? '');
         $tmpItem = clone($record);
         for ($idx = 0; $idx < sizeof($fieldNameParts ?? []); $idx++) {
