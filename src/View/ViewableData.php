@@ -426,9 +426,11 @@ class ViewableData implements IteratorAggregate
      *
      * @param string $field
      * @return string
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     public function castingClass($field)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
         // Strip arguments
         $spec = $this->castingHelper($field);
         return trim(strtok($spec ?? '', '(') ?? '');
@@ -439,9 +441,11 @@ class ViewableData implements IteratorAggregate
      *
      * @param string $field
      * @return string 'xml'|'raw'
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     public function escapeTypeForField($field)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
         $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
         /** @var DBField $type */
@@ -488,9 +492,11 @@ class ViewableData implements IteratorAggregate
      * @param string $fieldName Name of field
      * @param array $arguments List of optional arguments given
      * @return string
+     * @deprecated 5.4.0 Will be made private
      */
     protected function objCacheName($fieldName, $arguments)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be made private');
         return $arguments
             ? $fieldName . ":" . var_export($arguments, true)
             : $fieldName;
@@ -546,6 +552,9 @@ class ViewableData implements IteratorAggregate
      */
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
+        if ($cacheName !== null) {
+            Deprecation::noticeWithNoReplacment('5.4.0', 'The $cacheName parameter has been deprecated and will be removed');
+        }
         if (!$cacheName && $cache) {
             $cacheName = $this->objCacheName($fieldName, $arguments);
         }
@@ -588,9 +597,11 @@ class ViewableData implements IteratorAggregate
      * @param array $arguments
      * @param string $identifier an optional custom cache identifier
      * @return Object|DBField
+     * @deprecated 5.4.0 use obj() instead
      */
     public function cachedCall($fieldName, $arguments = [], $identifier = null)
     {
+        Deprecation::notice('5.4.0', 'Use obj() instead');
         return $this->obj($fieldName, $arguments, true, $identifier);
     }
 
@@ -617,9 +628,11 @@ class ViewableData implements IteratorAggregate
      * @param array $arguments
      * @param bool $cache
      * @return string
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
      */
     public function XML_val($field, $arguments = [], $cache = false)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         $result = $this->obj($field, $arguments, $cache);
         // Might contain additional formatting over ->XML(). E.g. parse shortcodes, nl2br()
         return $result->forTemplate();
@@ -630,9 +643,11 @@ class ViewableData implements IteratorAggregate
      *
      * @param array $fields an array of field names
      * @return array
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
      */
     public function getXMLValues($fields)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         $result = [];
 
         foreach ($fields as $field) {

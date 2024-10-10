@@ -5,6 +5,7 @@ namespace SilverStripe\View;
 use ArrayIterator;
 use Countable;
 use Iterator;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBFloat;
@@ -123,14 +124,21 @@ class SSViewer_Scope
      * Returns the current "active" item
      *
      * @return object
+     * @deprecated 5.4.0 use getCurrentItem() instead.
      */
     public function getItem()
     {
+        Deprecation::notice('5.4.0', 'use getCurrentItem() instead.');
         $item = $this->itemIterator ? $this->itemIterator->current() : $this->item;
         if (is_scalar($item)) {
             $item = $this->convertScalarToDBField($item);
         }
         return $item;
+    }
+
+    public function getCurrentItem()
+    {
+        return $this->getItem();
     }
 
     /**
@@ -185,7 +193,7 @@ class SSViewer_Scope
      */
     public function getObj($name, $arguments = [], $cache = false, $cacheName = null)
     {
-        $on = $this->getItem();
+        $on = $this->getCurrentItem();
         if ($on === null) {
             return null;
         }
@@ -198,9 +206,11 @@ class SSViewer_Scope
      * @param bool $cache
      * @param string $cacheName
      * @return $this
+     * @deprecated 5.4.0 Will be renamed scopeToIntermediateValue()
      */
     public function obj($name, $arguments = [], $cache = false, $cacheName = null)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be renamed scopeToIntermediateValue()');
         switch ($name) {
             case 'Up':
                 if ($this->upIndex === null) {
@@ -252,7 +262,7 @@ class SSViewer_Scope
      */
     public function self()
     {
-        $result = $this->getItem();
+        $result = $this->getCurrentItem();
         $this->resetLocalScope();
 
         return $result;
@@ -350,8 +360,12 @@ class SSViewer_Scope
      */
     public function __call($name, $arguments)
     {
-        $on = $this->getItem();
-        $retval = $on ? $on->$name(...$arguments) : null;
+        $on = $this->getCurrentItem();
+        if ($on instanceof ViewableData && $name === 'XML_val') {
+            $retval = $on->XML_val(...$arguments);
+        } else {
+            $retval = $on ? $on->$name(...$arguments) : null;
+        }
 
         $this->resetLocalScope();
         return $retval;
