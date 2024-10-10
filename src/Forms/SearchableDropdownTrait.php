@@ -598,7 +598,7 @@ trait SearchableDropdownTrait
         $field->setReadonly(true);
 
         // Remove the text "Type to search..." on a read-only field
-        $field->setPlaceholder('');
+        // $field->setPlaceholder('');
 
         return $field;
     }
