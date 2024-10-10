@@ -9,6 +9,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Handles finding templates from a stack of template manifest objects.
@@ -182,9 +183,11 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
      * @return string Absolute path to resolved template file, or null if not resolved.
      * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
      * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     public function findTemplate($template, $themes = null)
     {
+        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it.');
         if ($themes === null) {
             $themes = SSViewer::get_themes();
         }
@@ -211,7 +214,7 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
         foreach ($templateList as $i => $template) {
             // Check if passed list of templates in array format
             if (is_array($template)) {
-                $path = $this->findTemplate($template, $themes);
+                $path = Deprecation::withSuppressedNotice(fn() => $this->findTemplate($template, $themes));
                 if ($path) {
                     $this->getCache()->set($cacheKey, $path);
                     return $path;

@@ -17,6 +17,7 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use LogicException;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * This class is is responsible for adding objects to another object's has_many
@@ -283,7 +284,7 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
         $json = [];
         Config::nest();
         SSViewer::config()->set('source_file_comments', false);
-        $viewer = SSViewer::fromString($this->resultsFormat);
+        $viewer = Deprecation::withSuppressedNotice(fn() => SSViewer::fromString($this->resultsFormat));
         foreach ($results as $result) {
             if (!$result->canView()) {
                 continue;

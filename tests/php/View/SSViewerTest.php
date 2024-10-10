@@ -13,6 +13,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayList;
@@ -196,7 +197,7 @@ class SSViewerTest extends SapphireTest
      */
     public function render($templateString, $data = null, $cacheTemplate = false)
     {
-        $t = SSViewer::fromString($templateString, $cacheTemplate);
+        $t = Deprecation::withSuppressedNotice(fn() => SSViewer::fromString($templateString, $cacheTemplate));
         if (!$data) {
             $data = new SSViewerTest\TestFixture();
         }
@@ -1304,29 +1305,29 @@ after'
         // Value casted as "Text"
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$TextValue')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$TextValue'))->process($vd)
         );
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$TextValue.RAW')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$TextValue.RAW'))->process($vd)
         );
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$TextValue.XML')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$TextValue.XML'))->process($vd)
         );
 
         // Value casted as "HTMLText"
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$HTMLValue')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$HTMLValue'))->process($vd)
         );
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$HTMLValue.RAW')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$HTMLValue.RAW'))->process($vd)
         );
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$HTMLValue.XML'))->process($vd)
         );
 
         // Uncasted value (falls back to ViewableData::$default_cast="Text")
@@ -1334,15 +1335,15 @@ after'
         $vd->UncastedValue = '<b>html</b>';
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$UncastedValue')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$UncastedValue'))->process($vd)
         );
         $this->assertEquals(
             '<b>html</b>',
-            $t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$UncastedValue.RAW'))->process($vd)
         );
         $this->assertEquals(
             '&lt;b&gt;html&lt;/b&gt;',
-            $t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
+            Deprecation::withSuppressedNotice(fn() => SSViewer::fromString('$UncastedValue.XML'))->process($vd)
         );
     }
 
@@ -2039,7 +2040,9 @@ EOC;
     public function testLoopIteratorIterator()
     {
         $list = new PaginatedList(new ArrayList());
-        $viewer = new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>');
+        $viewer = Deprecation::withSuppressedNotice(
+            fn() => new SSViewer_FromString('<% loop List %>$ID - $FirstName<br /><% end_loop %>')
+        );
         $result = $viewer->process(new ArrayData(['List' => $list]));
         $this->assertEquals($result, '');
     }
@@ -2182,7 +2185,9 @@ EOC;
             }
         );
 
-        $template = new SSViewer_FromString("<% test %><% end_test %>", $parser);
+        $template = Deprecation::withSuppressedNotice(
+            fn() => new SSViewer_FromString("<% test %><% end_test %>", $parser)
+        );
         $template->process(new SSViewerTest\TestFixture());
 
         $this->assertEquals(1, $count);
@@ -2199,7 +2204,7 @@ EOC;
             }
         );
 
-        $template = new SSViewer_FromString("<% test %>", $parser);
+        $template = Deprecation::withSuppressedNotice(fn() => new SSViewer_FromString("<% test %>", $parser));
         $template->process(new SSViewerTest\TestFixture());
 
         $this->assertEquals(1, $count);

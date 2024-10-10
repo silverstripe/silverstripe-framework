@@ -3,9 +3,11 @@
 namespace SilverStripe\View;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Special SSViewer that will process a template passed as a string, rather than a filename.
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()
  */
 class SSViewer_FromString extends SSViewer
 {
@@ -37,8 +39,13 @@ class SSViewer_FromString extends SSViewer
      */
     public function __construct($content, TemplateParser $parser = null)
     {
+        Deprecation::notice(
+            '5.4.0',
+            'Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()',
+            Deprecation::SCOPE_CLASS
+        );
         if ($parser) {
-            $this->setParser($parser);
+            Deprecation::withSuppressedNotice(fn() => $this->setParser($parser));
         }
 
         $this->content = $content;
@@ -53,13 +60,17 @@ class SSViewer_FromString extends SSViewer
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . ".cache.$hash";
 
         if (!file_exists($cacheFile ?? '') || isset($_GET['flush'])) {
-            $content = $this->parseTemplateContent($this->content, "string sha1=$hash");
+            $content = Deprecation::withSuppressedNotice(
+                fn() => $this->parseTemplateContent($this->content, "string sha1=$hash")
+            );
             $fh = fopen($cacheFile ?? '', 'w');
             fwrite($fh, $content ?? '');
             fclose($fh);
         }
 
-        $val = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, null, $scope);
+        $val = Deprecation::withSuppressedNotice(
+            fn() => $this->includeGeneratedTemplate($cacheFile, $item, $arguments, null, $scope)
+        );
 
         if ($this->cacheTemplate !== null) {
             $cacheTemplate = $this->cacheTemplate;

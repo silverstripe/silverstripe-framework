@@ -12,6 +12,7 @@ use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -402,9 +403,11 @@ class Email extends SymfonyEmail
             return $this->HTMLTemplate;
         }
 
-        return ThemeResourceLoader::inst()->findTemplate(
-            SSViewer::get_templates_by_class(static::class, '', Email::class),
-            SSViewer::get_themes()
+        return Deprecation::withSuppressedNotice(
+            fn() => ThemeResourceLoader::inst()->findTemplate(
+                SSViewer::get_templates_by_class(static::class, '', Email::class),
+                SSViewer::get_themes()
+            )
         );
     }
 

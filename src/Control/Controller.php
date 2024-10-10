@@ -4,6 +4,7 @@ namespace SilverStripe\Control;
 
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\Debug;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
@@ -455,7 +456,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
         $class = static::class;
         while ($class != 'SilverStripe\\Control\\RequestHandler') {
             $templateName = strtok($class ?? '', '_') . '_' . $action;
-            if (SSViewer::hasTemplate($templateName)) {
+            $templateExists = Deprecation::withSuppressedNotice(fn() => SSViewer::hasTemplate($templateName));
+            if ($templateExists) {
                 return $class;
             }
 
@@ -487,7 +489,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             $parentClass = get_parent_class($parentClass ?? '');
         }
 
-        return SSViewer::hasTemplate($templates);
+        return Deprecation::withSuppressedNotice(fn() => SSViewer::hasTemplate($templates));
     }
 
     /**
