@@ -46,6 +46,8 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
     private static $table_name = "Permission";
 
+    private static bool $must_use_primary_db = true;
+
     /**
      * This is the value to use for the "Type" field if a permission should be
      * granted.
@@ -233,15 +235,15 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         }
 
         // Raw SQL for efficiency
-        $permission = DB::prepared_query(
+        $permission = DB::withPrimary(fn() => DB::prepared_query(
             "SELECT \"ID\"
-			FROM \"Permission\"
-			WHERE (
-				\"Code\" IN ($codeClause $adminClause)
-				AND \"Type\" = ?
-				AND \"GroupID\" IN ($groupClause)
-				$argClause
-			)",
+            FROM \"Permission\"
+            WHERE (
+                \"Code\" IN ($codeClause $adminClause)
+                AND \"Type\" = ?
+                AND \"GroupID\" IN ($groupClause)
+                $argClause
+            )",
             array_merge(
                 $codeParams,
                 $adminParams,
@@ -249,7 +251,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 $groupParams,
                 $argParams
             )
-        )->value();
+        )->value());
 
         if ($permission) {
             return $permission;
@@ -257,15 +259,15 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         // Strict checking disabled?
         if (!static::config()->strict_checking || !$strict) {
-            $hasPermission = DB::prepared_query(
+            $hasPermission = DB::withPrimary(fn() => DB::prepared_query(
                 "SELECT COUNT(*)
-				FROM \"Permission\"
-				WHERE (
-					\"Code\" IN ($codeClause) AND
-					\"Type\" = ?
-				)",
+                FROM \"Permission\"
+                WHERE (
+                    \"Code\" IN ($codeClause) AND
+                    \"Type\" = ?
+                )",
                 array_merge($codeParams, [Permission::GRANT_PERMISSION])
-            )->value();
+            )->value());
 
             if (!$hasPermission) {
                 return false;
@@ -288,25 +290,29 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
         if ($groupList) {
             $groupCSV = implode(", ", $groupList);
 
-            $allowed = array_unique(DB::query("
-				SELECT \"Code\"
-				FROM \"Permission\"
-				WHERE \"Type\" = " . Permission::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+            $allowed = array_unique(
+                DB::withPrimary(fn() => DB::query("
+                    SELECT \"Code\"
+                    FROM \"Permission\"
+                    WHERE \"Type\" = " . Permission::GRANT_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
 
-				UNION
+                    UNION
 
-				SELECT \"Code\"
-				FROM \"PermissionRoleCode\" PRC
-				INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
-				INNER JOIN \"Group_Roles\" GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
-				WHERE \"GroupID\" IN ($groupCSV)
-			")->column() ?? []);
+                    SELECT \"Code\"
+                    FROM \"PermissionRoleCode\" PRC
+                    INNER JOIN \"PermissionRole\" PR ON PRC.\"RoleID\" = PR.\"ID\"
+                    INNER JOIN \"Group_Roles\" GR ON GR.\"PermissionRoleID\" = PR.\"ID\"
+                    WHERE \"GroupID\" IN ($groupCSV)
+                "))->column() ?? []
+            );
 
-            $denied = array_unique(DB::query("
-				SELECT \"Code\"
-				FROM \"Permission\"
-				WHERE \"Type\" = " . Permission::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
-			")->column() ?? []);
+            $denied = array_unique(
+                DB::withPrimary(fn() => DB::query("
+                    SELECT \"Code\"
+                    FROM \"Permission\"
+                    WHERE \"Type\" = " . Permission::DENY_PERMISSION . " AND \"GroupID\" IN ($groupCSV)
+                "))->column() ?? []
+            );
 
             return array_diff($allowed ?? [], $denied);
         }
@@ -584,7 +590,9 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                 $flatCodeArray[] = $code;
             }
         }
-        $otherPerms = DB::query("SELECT DISTINCT \"Code\" From \"Permission\" WHERE \"Code\" != ''")->column();
+        $otherPerms = DB::withPrimary(
+            fn() => DB::query("SELECT DISTINCT \"Code\" From \"Permission\" WHERE \"Code\" != ''")->column()
+        );
 
         if ($otherPerms) {
             foreach ($otherPerms as $otherPerm) {

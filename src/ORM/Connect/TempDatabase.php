@@ -43,7 +43,7 @@ class TempDatabase
      *
      * @param string $name DB Connection name to use
      */
-    public function __construct($name = 'default')
+    public function __construct($name = DB::CONN_PRIMARY)
     {
         $this->name = $name;
     }

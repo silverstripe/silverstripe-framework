@@ -105,6 +105,8 @@ class Member extends DataObject
 
     private static $table_name = "Member";
 
+    private static bool $must_use_primary_db = true;
+
     private static $default_sort = '"Surname", "FirstName"';
 
     private static $indexes = [

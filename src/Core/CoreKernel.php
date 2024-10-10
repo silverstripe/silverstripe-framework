@@ -7,12 +7,14 @@ use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\ORM\Connect\NullDatabase;
 use SilverStripe\ORM\DB;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Simple Kernel container
  */
 class CoreKernel extends BaseKernel
 {
+
     protected bool $bootDatabase = true;
 
     /**
@@ -38,7 +40,7 @@ class CoreKernel extends BaseKernel
         $this->flush = $flush;
 
         if (!$this->bootDatabase) {
-            DB::set_conn(new NullDatabase());
+            DB::set_conn(new NullDatabase(), DB::CONN_PRIMARY);
         }
 
         $this->bootPHP();
@@ -73,7 +75,7 @@ class CoreKernel extends BaseKernel
     }
 
     /**
-     * Load default database configuration from the $database and $databaseConfig globals
+     * Load database configuration from the $database and $databaseConfig globals
      */
     protected function bootDatabaseGlobals()
     {
@@ -84,41 +86,62 @@ class CoreKernel extends BaseKernel
         global $databaseConfig;
         global $database;
 
-        // Case 1: $databaseConfig global exists. Merge $database in as needed
-        if (!empty($databaseConfig)) {
-            if (!empty($database)) {
-                $databaseConfig['database'] =  $this->getDatabasePrefix() . $database . $this->getDatabaseSuffix();
-            }
-
-            // Only set it if its valid, otherwise ignore $databaseConfig entirely
-            if (!empty($databaseConfig['database'])) {
-                DB::setConfig($databaseConfig);
-
-                return;
-            }
+        // Ensure global database config has prefix and suffix applied
+        if (!empty($databaseConfig) && !empty($database)) {
+            $databaseConfig['database'] = $this->getDatabasePrefix() . $database . $this->getDatabaseSuffix();
         }
 
-        // Case 2: $database merged into existing config
-        if (!empty($database)) {
-            $existing = DB::getConfig();
-            $existing['database'] = $this->getDatabasePrefix() . $database . $this->getDatabaseSuffix();
+        // Set config for primary and any replicas
+        for ($i = 0; $i <= DB::MAX_REPLICAS; $i++) {
+            if ($i === 0) {
+                $name = DB::CONN_PRIMARY;
+            } else {
+                $name = DB::getReplicaConfigKey($i);
+                if (!DB::hasConfig($name)) {
+                    break;
+                }
+            }
 
-            DB::setConfig($existing);
+            // Case 1: $databaseConfig global exists
+            // Only set it if its valid, otherwise ignore $databaseConfig entirely
+            if (!empty($databaseConfig) && !empty($databaseConfig['database'])) {
+                DB::setConfig($databaseConfig, $name);
+                return;
+            }
+
+            // Case 2: $databaseConfig global does not exist
+            // Merge $database global into existing config
+            if (!empty($database)) {
+                $dbConfig = DB::getConfig($name);
+                $dbConfig['database'] = $this->getDatabasePrefix() . $database . $this->getDatabaseSuffix();
+                DB::setConfig($dbConfig, $name);
+            }
         }
     }
 
     /**
-     * Load default database configuration from environment variable
+     * Load database configuration from environment variables
      */
     protected function bootDatabaseEnvVars()
     {
         if (!$this->bootDatabase) {
             return;
         }
-        // Set default database config
+        // Set primary database config
         $databaseConfig = $this->getDatabaseConfig();
         $databaseConfig['database'] = $this->getDatabaseName();
-        DB::setConfig($databaseConfig);
+        DB::setConfig($databaseConfig, DB::CONN_PRIMARY);
+
+        // Set database replicas config
+        for ($i = 1; $i <= DB::MAX_REPLICAS; $i++) {
+            $envKey = $this->getReplicaEnvKey('SS_DATABASE_SERVER', $i);
+            if (!Environment::hasEnv($envKey)) {
+                break;
+            }
+            $replicaDatabaseConfig = $this->getDatabaseReplicaConfig($i);
+            $configKey = DB::getReplicaConfigKey($i);
+            DB::setConfig($replicaDatabaseConfig, $configKey);
+        }
     }
 
     /**
@@ -128,11 +151,71 @@ class CoreKernel extends BaseKernel
      */
     protected function getDatabaseConfig()
     {
+        return $this->getSingleDataBaseConfig(0);
+    }
+
+    private function getDatabaseReplicaConfig(int $replica)
+    {
+        if ($replica <= 0) {
+            throw new InvalidArgumentException('Replica number must be greater than 0');
+        }
+        return $this->getSingleDataBaseConfig($replica);
+    }
+
+    /**
+     * Convert a database key to a replica key
+     * e.g. SS_DATABASE_SERVER -> SS_DATABASE_SERVER_REPLICA_01
+     *
+     * @param string $key - The key to look up in the environment
+     * @param int $replica - Replica number
+     */
+    private function getReplicaEnvKey(string $key, int $replica): string
+    {
+        if ($replica <= 0) {
+            throw new InvalidArgumentException('Replica number must be greater than 0');
+        }
+        // Do not allow replicas to define keys that could lead to unexpected behaviour if
+        // they do not match the primary database configuration
+        if (in_array($key, ['SS_DATABASE_CLASS', 'SS_DATABASE_NAME', 'SS_DATABASE_CHOOSE_NAME'])) {
+            return $key;
+        }
+        // Left pad replica number with a zeros to match the length of the maximum replica number
+        $len = strlen((string) DB::MAX_REPLICAS);
+        return $key . '_REPLICA_' . str_pad($replica, $len, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Reads a single database configuration variable from the environment
+     * For replica databases, it will first attempt to find replica-specific configuration
+     * before falling back to the primary configuration.
+     *
+     * Replicate specific configuration has `_REPLICA_01` appended to the key
+     * where 01 is the replica number.
+     *
+     * @param string $key - The key to look up in the environment
+     * @param int $replica - Replica number. Passing 0 will return the primary database configuration
+     */
+    private function getDatabaseConfigVariable(string $key, int $replica): string
+    {
+        if ($replica > 0) {
+            $key = $this->getReplicaEnvKey($key, $replica);
+        }
+        if (Environment::hasEnv($key)) {
+            return Environment::getEnv($key);
+        }
+        return '';
+    }
+
+    /**
+     * @param int $replica - Replica number. Passing 0 will return the primary database configuration
+     */
+    private function getSingleDataBaseConfig(int $replica): array
+    {
         $databaseConfig = [
-            "type" => Environment::getEnv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
-            "server" => Environment::getEnv('SS_DATABASE_SERVER') ?: 'localhost',
-            "username" => Environment::getEnv('SS_DATABASE_USERNAME') ?: null,
-            "password" => Environment::getEnv('SS_DATABASE_PASSWORD') ?: null,
+            "type" => $this->getDatabaseConfigVariable('SS_DATABASE_CLASS', $replica) ?: 'MySQLDatabase',
+            "server" => $this->getDatabaseConfigVariable('SS_DATABASE_SERVER', $replica) ?: 'localhost',
+            "username" => $this->getDatabaseConfigVariable('SS_DATABASE_USERNAME', $replica) ?: null,
+            "password" => $this->getDatabaseConfigVariable('SS_DATABASE_PASSWORD', $replica) ?: null,
         ];
 
         // Only add SSL keys in the array if there is an actual value associated with them
@@ -143,7 +226,7 @@ class CoreKernel extends BaseKernel
             'ssl_cipher' => 'SS_DATABASE_SSL_CIPHER',
         ];
         foreach ($sslConf as $key => $envVar) {
-            $envValue = Environment::getEnv($envVar);
+            $envValue = $this->getDatabaseConfigVariable($envVar, $replica);
             if ($envValue) {
                 $databaseConfig[$key] = $envValue;
             }
@@ -159,25 +242,25 @@ class CoreKernel extends BaseKernel
         }
 
         // Set the port if called for
-        $dbPort = Environment::getEnv('SS_DATABASE_PORT');
+        $dbPort = $this->getDatabaseConfigVariable('SS_DATABASE_PORT', $replica);
         if ($dbPort) {
             $databaseConfig['port'] = $dbPort;
         }
 
         // Set the timezone if called for
-        $dbTZ = Environment::getEnv('SS_DATABASE_TIMEZONE');
+        $dbTZ = $this->getDatabaseConfigVariable('SS_DATABASE_TIMEZONE', $replica);
         if ($dbTZ) {
             $databaseConfig['timezone'] = $dbTZ;
         }
 
         // For schema enabled drivers:
-        $dbSchema = Environment::getEnv('SS_DATABASE_SCHEMA');
+        $dbSchema = $this->getDatabaseConfigVariable('SS_DATABASE_SCHEMA', $replica);
         if ($dbSchema) {
             $databaseConfig["schema"] = $dbSchema;
         }
 
         // For SQlite3 memory databases (mainly for testing purposes)
-        $dbMemory = Environment::getEnv('SS_DATABASE_MEMORY');
+        $dbMemory = $this->getDatabaseConfigVariable('SS_DATABASE_MEMORY', $replica);
         if ($dbMemory) {
             $databaseConfig["memory"] = $dbMemory;
         }
@@ -205,6 +288,7 @@ class CoreKernel extends BaseKernel
 
     /**
      * Get name of database
+     * Note that any replicas must have the same database name as the primary database
      *
      * @return string
      */

@@ -48,7 +48,7 @@ use ReflectionClass;
 use SilverStripe\Dev\Exceptions\ExpectedErrorException;
 use SilverStripe\Dev\Exceptions\ExpectedNoticeException;
 use SilverStripe\Dev\Exceptions\ExpectedWarningException;
-use SilverStripe\Dev\Exceptions\UnexpectedErrorException;
+use SilverStripe\ORM\DB;
 
 /**
  * Test case class for the Silverstripe framework.
@@ -434,6 +434,9 @@ abstract class SapphireTest extends TestCase implements TestOnly
      */
     public static function setUpBeforeClass(): void
     {
+        // Disallow the use of DB replicas in tests
+        DB::setMustUsePrimary();
+
         // Start tests
         static::start();
 

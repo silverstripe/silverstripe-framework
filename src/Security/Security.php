@@ -437,6 +437,12 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function setCurrentUser($currentUser = null)
     {
+        // Always use the primary database and not a replica if a CMS user is logged in
+        // This is to ensure that when viewing content on the frontend it is always
+        // up to date i.e. not from an unsynced replica
+        if ($currentUser && Permission::checkMember($currentUser, 'CMS_ACCESS')) {
+            DB::setMustUsePrimary();
+        }
         Security::$currentUser = $currentUser;
     }
 

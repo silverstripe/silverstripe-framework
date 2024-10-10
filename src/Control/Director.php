@@ -17,6 +17,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\ORM\DB;
 
 /**
  * Director is responsible for processing URLs, and providing environment information.
@@ -83,6 +84,14 @@ class Director implements TemplateGlobalProvider
      * @var string
      */
     private static $default_base_url = '`SS_BASE_URL`';
+
+    /**
+     * List of routing rule patterns that must only use the primary database and not a replica
+     */
+    private static array $rule_patterns_must_use_primary_db = [
+        'dev',
+        'Security',
+    ];
 
     public function __construct()
     {
@@ -295,6 +304,18 @@ class Director implements TemplateGlobalProvider
     public function handleRequest(HTTPRequest $request)
     {
         Injector::inst()->registerService($request, HTTPRequest::class);
+
+        // Check if primary database must be used based on request rules
+        // Note this check must happend before the rules are processed as
+        // $shiftOnSuccess param is passed as true in `$request->match($pattern, true)` later on in
+        // this method, which modifies `$this->dirParts`, thus affecting `$request->match($rule)` directly below
+        $primaryDbOnlyRules = Director::config()->uninherited('rule_patterns_must_use_primary_db');
+        foreach ($primaryDbOnlyRules as $rule) {
+            if ($request->match($rule)) {
+                DB::setMustUsePrimary();
+                break;
+            }
+        }
 
         $rules = Director::config()->uninherited('rules');
 

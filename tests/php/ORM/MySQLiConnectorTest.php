@@ -41,7 +41,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
     {
         parent::setUp();
 
-        $config = DB::getConfig();
+        $config = DB::getConfig(DB::CONN_PRIMARY);
 
         if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             $this->markTestSkipped("The test only relevant for MySQL - but $config[type] is in use");
