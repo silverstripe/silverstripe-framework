@@ -85,7 +85,7 @@ class GridState extends HiddenField
     public function getData()
     {
         if (!$this->data) {
-            $this->data = new GridState_Data();
+            $this->data = new GridState_Data([], $this);
         }
 
         return $this->data;
@@ -97,6 +97,11 @@ class GridState extends HiddenField
     public function getList()
     {
         return $this->grid->getList();
+    }
+
+    public function getGridField(): GridField
+    {
+        return $this->grid;
     }
 
     /**
