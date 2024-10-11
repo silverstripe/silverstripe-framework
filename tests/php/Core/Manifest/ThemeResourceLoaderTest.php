@@ -9,6 +9,7 @@ use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Tests for the {@link TemplateLoader} class.
@@ -73,41 +74,46 @@ class ThemeResourceLoaderTest extends SapphireTest
     {
         $this->assertEquals(
             "$this->base/module/templates/Page.ss",
-            $this->loader->findTemplate('Page', ['$default'])
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate('Page', ['$default']))
         );
 
         $this->assertEquals(
             "$this->base/module/templates/Layout/Page.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
+            Deprecation::withSuppressedNotice(
+                fn() => $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
+            )
         );
     }
 
     public function testFindNestedThemeTemplates()
     {
         // Without including the theme this template cannot be found
-        $this->assertEquals(null, $this->loader->findTemplate('NestedThemePage', ['$default']));
+        $this->assertEquals(
+            null,
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate('NestedThemePage', ['$default']))
+        );
 
         // With a nested theme available then it is available
         $this->assertEquals(
             "{$this->base}/module/themes/subtheme/templates/NestedThemePage.ss",
-            $this->loader->findTemplate(
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate(
                 'NestedThemePage',
                 [
                     'silverstripe/module:subtheme',
                     '$default'
                 ]
-            )
+            ))
         );
 
         // Can also be found if excluding $default theme
         $this->assertEquals(
             "{$this->base}/module/themes/subtheme/templates/NestedThemePage.ss",
-            $this->loader->findTemplate(
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate(
                 'NestedThemePage',
                 [
                     'silverstripe/module:subtheme',
                 ]
-            )
+            ))
         );
     }
 
@@ -116,7 +122,7 @@ class ThemeResourceLoaderTest extends SapphireTest
         // Test that "type" is respected properly
         $this->assertEquals(
             "{$this->base}/module/templates/MyNamespace/Layout/MyClass.ss",
-            $this->loader->findTemplate(
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate(
                 [
                     [
                         'type' => 'Layout',
@@ -133,13 +139,13 @@ class ThemeResourceLoaderTest extends SapphireTest
                     'theme',
                     '$default',
                 ]
-            )
+            ))
         );
 
         // Non-typed template can be found even if looking for typed theme at a lower priority
         $this->assertEquals(
             "{$this->base}/module/templates/MyNamespace/MyClass.ss",
-            $this->loader->findTemplate(
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate(
                 [
                     [
                         'type' => 'Layout',
@@ -156,7 +162,7 @@ class ThemeResourceLoaderTest extends SapphireTest
                     'theme',
                     '$default',
                 ]
-            )
+            ))
         );
     }
 
@@ -165,30 +171,32 @@ class ThemeResourceLoaderTest extends SapphireTest
         // Items given as full paths are returned directly
         $this->assertEquals(
             "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate("$this->base/themes/theme/templates/Page.ss", ['theme'])
+            Deprecation::withSuppressedNotice(
+                fn() => $this->loader->findTemplate("$this->base/themes/theme/templates/Page.ss", ['theme'])
+            )
         );
 
         $this->assertEquals(
             "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate(
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate(
                 [
                     "$this->base/themes/theme/templates/Page.ss",
                     "Page"
                 ],
                 ['theme']
-            )
+            ))
         );
 
         // Ensure checks for file_exists
         $this->assertEquals(
             "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate(
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate(
                 [
                     "$this->base/themes/theme/templates/NotAPage.ss",
                     "$this->base/themes/theme/templates/Page.ss",
                 ],
                 ['theme']
-            )
+            ))
         );
     }
 
@@ -199,12 +207,14 @@ class ThemeResourceLoaderTest extends SapphireTest
     {
         $this->assertEquals(
             "$this->base/themes/theme/templates/Page.ss",
-            $this->loader->findTemplate('Page', ['theme'])
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate('Page', ['theme']))
         );
 
         $this->assertEquals(
             "$this->base/themes/theme/templates/Layout/Page.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['theme'])
+            Deprecation::withSuppressedNotice(
+                fn() => $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['theme'])
+            )
         );
     }
 
@@ -221,12 +231,14 @@ class ThemeResourceLoaderTest extends SapphireTest
 
         $this->assertEquals(
             "$this->base/myproject/templates/Page.ss",
-            $this->loader->findTemplate('Page', ['$default'])
+            Deprecation::withSuppressedNotice(fn() => $this->loader->findTemplate('Page', ['$default']))
         );
 
         $this->assertEquals(
             "$this->base/myproject/templates/Layout/Page.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
+            Deprecation::withSuppressedNotice(
+                fn() => $this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
+            )
         );
 
         $this->removeTestTemplates($templates);
@@ -239,12 +251,16 @@ class ThemeResourceLoaderTest extends SapphireTest
     {
         $this->assertEquals(
             "$this->base/themes/theme/templates/CustomThemePage.ss",
-            $this->loader->findTemplate('CustomThemePage', ['theme', '$default'])
+            Deprecation::withSuppressedNotice(
+                fn() => $this->loader->findTemplate('CustomThemePage', ['theme', '$default'])
+            )
         );
 
         $this->assertEquals(
             "$this->base/module/templates/Layout/CustomThemePage.ss",
-            $this->loader->findTemplate(['type' => 'Layout', 'CustomThemePage'], ['theme', '$default'])
+            Deprecation::withSuppressedNotice(
+                fn() => $this->loader->findTemplate(['type' => 'Layout', 'CustomThemePage'], ['theme', '$default'])
+            )
         );
     }
 
@@ -390,7 +406,7 @@ class ThemeResourceLoaderTest extends SapphireTest
 
         $loader = new ThemeResourceLoader();
         $loader->setCache($mockCache);
-        $loader->findTemplate('Page', ['$default']);
+        Deprecation::withSuppressedNotice(fn() => $loader->findTemplate('Page', ['$default']));
     }
 
     public function testFindTemplateWithCacheHit()
@@ -402,6 +418,9 @@ class ThemeResourceLoaderTest extends SapphireTest
 
         $loader = new ThemeResourceLoader();
         $loader->setCache($mockCache);
-        $this->assertSame('mock_template.ss', $loader->findTemplate('Page', ['$default']));
+        $this->assertSame(
+            'mock_template.ss',
+            Deprecation::withSuppressedNotice(fn() => $loader->findTemplate('Page', ['$default']))
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace SilverStripe\View\Tests;
 
 use ReflectionMethod;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
@@ -77,12 +78,12 @@ class ViewableDataTest extends SapphireTest
     {
         $caster = new ViewableDataTest\Castable();
 
-        $this->assertEquals('casted', $caster->XML_val('alwaysCasted'));
-        $this->assertEquals('casted', $caster->XML_val('noCastingInformation'));
+        $this->assertEquals('casted', Deprecation::withSuppressedNotice(fn() => $caster->XML_val('alwaysCasted')));
+        $this->assertEquals('casted', Deprecation::withSuppressedNotice(fn() => $caster->XML_val('noCastingInformation')));
 
         // Test automatic escaping is applied even to fields with no 'casting'
-        $this->assertEquals('casted', $caster->XML_val('unsafeXML'));
-        $this->assertEquals('&lt;foo&gt;', $caster->XML_val('castedUnsafeXML'));
+        $this->assertEquals('casted', Deprecation::withSuppressedNotice(fn() => $caster->XML_val('unsafeXML')));
+        $this->assertEquals('&lt;foo&gt;', Deprecation::withSuppressedNotice(fn() => $caster->XML_val('castedUnsafeXML')));
     }
 
     public function testArrayCustomise()
@@ -95,11 +96,11 @@ class ViewableDataTest extends SapphireTest
              ]
         );
 
-        $this->assertEquals('test', $viewableData->XML_val('test'));
-        $this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
+        $this->assertEquals('test', Deprecation::withSuppressedNotice(fn() => $viewableData->XML_val('test')));
+        $this->assertEquals('casted', Deprecation::withSuppressedNotice(fn() => $viewableData->XML_val('alwaysCasted')));
 
-        $this->assertEquals('overwritten', $newViewableData->XML_val('test'));
-        $this->assertEquals('overwritten', $newViewableData->XML_val('alwaysCasted'));
+        $this->assertEquals('overwritten', Deprecation::withSuppressedNotice(fn() => $newViewableData->XML_val('test')));
+        $this->assertEquals('overwritten', Deprecation::withSuppressedNotice(fn() => $newViewableData->XML_val('alwaysCasted')));
 
         $this->assertEquals('castable', $viewableData->forTemplate());
         $this->assertEquals('castable', $newViewableData->forTemplate());
@@ -110,11 +111,11 @@ class ViewableDataTest extends SapphireTest
         $viewableData    = new ViewableDataTest\Castable();
         $newViewableData = $viewableData->customise(new ViewableDataTest\RequiresCasting());
 
-        $this->assertEquals('test', $viewableData->XML_val('test'));
-        $this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
+        $this->assertEquals('test', Deprecation::withSuppressedNotice(fn() => $viewableData->XML_val('test')));
+        $this->assertEquals('casted', Deprecation::withSuppressedNotice(fn() => $viewableData->XML_val('alwaysCasted')));
 
-        $this->assertEquals('overwritten', $newViewableData->XML_val('test'));
-        $this->assertEquals('casted', $newViewableData->XML_val('alwaysCasted'));
+        $this->assertEquals('overwritten', Deprecation::withSuppressedNotice(fn() => $newViewableData->XML_val('test')));
+        $this->assertEquals('casted', Deprecation::withSuppressedNotice(fn() => $newViewableData->XML_val('alwaysCasted')));
 
         $this->assertEquals('castable', $viewableData->forTemplate());
         $this->assertEquals('casted', $newViewableData->forTemplate());
@@ -147,7 +148,7 @@ class ViewableDataTest extends SapphireTest
         foreach ($expected as $field => $class) {
             $this->assertEquals(
                 $class,
-                $obj->castingClass($field),
+                Deprecation::withSuppressedNotice(fn() => $obj->castingClass($field)),
                 "castingClass() returns correct results for ::\$$field"
             );
         }
@@ -159,7 +160,7 @@ class ViewableDataTest extends SapphireTest
 
         // Save a literal string into cache
         $cache = true;
-        $uncastedData = $obj->obj('noCastingInformation', null, false, $cache);
+        $uncastedData = $obj->obj('noCastingInformation', null, $cache);
 
         // Fetch the cached string as an object
         $forceReturnedObject = true;
@@ -184,15 +185,15 @@ class ViewableDataTest extends SapphireTest
         $objCached->Test = 'AAA';
         $objNotCached->Test = 'AAA';
 
-        $this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
-        $this->assertEquals('AAA', $objNotCached->obj('Test', null, true, true));
+        $this->assertEquals('AAA', $objCached->obj('Test', null, true));
+        $this->assertEquals('AAA', $objNotCached->obj('Test', null, true));
 
         $objCached->Test = 'BBB';
         $objNotCached->Test = 'BBB';
 
         // Cached data must be always the same
-        $this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
-        $this->assertEquals('BBB', $objNotCached->obj('Test', null, true, true));
+        $this->assertEquals('AAA', $objCached->obj('Test', null, true));
+        $this->assertEquals('BBB', $objNotCached->obj('Test', null, true));
     }
 
     public function testSetFailover()

@@ -8,6 +8,7 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
@@ -73,7 +74,7 @@ trait i18nTestManifest
     {
         // force SSViewer_DataPresenter to cache global template vars before we switch to the
         // test-project class manifest (since it will lose visibility of core classes)
-        $presenter = new SSViewer_DataPresenter(new ViewableData());
+        $presenter = Deprecation::withSuppressedNotice(fn() => new SSViewer_DataPresenter(new ViewableData()));
         unset($presenter);
 
         // Switch to test manifest

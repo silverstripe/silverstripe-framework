@@ -8,6 +8,7 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use Exception;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\Parsers\HTMLValue;
 
 /**
@@ -129,7 +130,9 @@ class HTMLEditorField extends TextareaField
      */
     public function saveInto(DataObjectInterface $record)
     {
-        if ($record->hasField($this->name) && $record->escapeTypeForField($this->name) != 'xml') {
+        if ($record->hasField($this->name)
+            && Deprecation::withSuppressedNotice(fn () => $record->escapeTypeForField($this->name)) != 'xml'
+        ) {
             throw new Exception(
                 'HTMLEditorField->saveInto(): This field should save into a HTMLText or HTMLVarchar field.'
             );
