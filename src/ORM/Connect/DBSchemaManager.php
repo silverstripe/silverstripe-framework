@@ -358,6 +358,7 @@ abstract class DBSchemaManager
      * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
      * @param array $options Create table options (ENGINE, etc.)
      * @param array|bool $extensions List of extensions
+     * @return void
      */
     public function requireTable(
         $table,
