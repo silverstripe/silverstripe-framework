@@ -8,6 +8,7 @@ use SilverStripe\Forms\NullableField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
+use SilverStripe\Core\Validation\FieldValidation\StringFieldValidator;
 
 /**
  * Class Varchar represents a variable-length string of up to 255 characters, designed to store raw text
@@ -18,6 +19,10 @@ use SilverStripe\ORM\DB;
  */
 class DBVarchar extends DBString
 {
+    private static array $field_validators = [
+        StringFieldValidator::class => [null, 'getSize'],
+    ];
+
     private static array $casting = [
         'Initial' => 'Text',
         'URL' => 'Text',
