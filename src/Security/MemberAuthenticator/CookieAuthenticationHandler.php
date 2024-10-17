@@ -175,22 +175,8 @@ class CookieAuthenticationHandler implements AuthenticationHandler
             $this->cascadeInTo->logIn($member, false, $request);
         }
 
-        // Renew the token
-        Deprecation::withSuppressedNotice(fn() => $rememberLoginHash->renew());
-
-        // Send the new token to the client if it was changed
-        if ($rememberLoginHash->getToken()) {
-            $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
-            Cookie::set(
-                $this->getTokenCookieName(),
-                $member->ID . ':' . $rememberLoginHash->getToken(),
-                $tokenExpiryDays,
-                null,
-                null,
-                false,
-                true
-            );
-        }
+        // Session renewal hook
+        $rememberLoginHash->extend('onAfterRenewSession');
 
         // Audit logging hook
         $member->extend('memberAutoLoggedIn');
