@@ -627,9 +627,8 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
      * Caution: All parameters are expected to be URI-encoded already.
      *
      * @param string|array $arg One or more link segments, or list of link segments as an array
-     * @return string
      */
-    public static function join_links($arg = null)
+    public static function join_links($arg = null): string
     {
         if (func_num_args() === 1 && is_array($arg)) {
             $args = $arg;
