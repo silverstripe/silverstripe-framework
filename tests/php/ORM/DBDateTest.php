@@ -10,6 +10,7 @@ use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Core\Validation\ValidationException;
 
 class DBDateTest extends SapphireTest
 {
@@ -89,20 +90,6 @@ class DBDateTest extends SapphireTest
             DBField::create_field('Date', '2003-03-04')->Nice(),
             "Date->Nice() works with YYYY-MM-DD format"
         );
-    }
-
-    public function testMDYConversion()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid date: '3/16/2003'. Use y-MM-dd to prevent this error.");
-        DBField::create_field('Date', '3/16/2003');
-    }
-
-    public function testY2kCorrection()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid date: '03-03-04'. Use y-MM-dd to prevent this error.");
-        DBField::create_field('Date', '03-03-04');
     }
 
     public function testInvertedYearCorrection()
@@ -194,31 +181,70 @@ class DBDateTest extends SapphireTest
         );
     }
 
-    public function testSetNullAndZeroValues()
+    public static function provideSetValue()
     {
-        $date = DBField::create_field('Date', '');
-        $this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
+        return [
+            'date' => [
+                'value' => '1998-04-05',
+                'expected' => '1998-04-05'
+            ],
+            'int' => [
+                'value' => 978797878,
+                'expected' => '2001-01-06'
+            ],
+            'int-string' => [
+                'value' => '978797878',
+                'expected' => '2001-01-06'
+            ],
+            'blank-string' => [
+                'value' => '',
+                'expected' => ''
+            ],
+            'null' => [
+                'value' => null,
+                'expected' => null
+            ],
+            'false' => [
+                'value' => false,
+                'expected' => false
+            ],
+            'empty-array' => [
+                'value' => [],
+                'expected' => []
+            ],
+            'zero-string' => [
+                'value' => '0',
+                'expected' => '1970-01-01'
+            ],
+            'zero-int' => [
+                'value' => 0,
+                'expected' => '1970-01-01'
+            ],
+            'zero-date' => [
+                'value' => '0000-00-00',
+                'expected' => '0000-00-00'
+            ],
+            'zero-date-slashes' => [
+                'value' => '00/00/0000',
+                'expected' => '00/00/0000'
+            ],
+            'wrong-format-a' => [
+                'value' => '3/16/2003',
+                'expected' => '3/16/2003',
+            ],
+            'wrong-format-b' => [
+                'value' => '03-03-04',
+                'expected' => '2003-03-04',
+            ],
+        ];
+    }
 
-        $date = DBField::create_field('Date', null);
-        $this->assertNull($date->getValue(), 'NULL is set as NULL');
-
-        $date = DBField::create_field('Date', false);
-        $this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
-
-        $date = DBField::create_field('Date', []);
-        $this->assertNull($date->getValue(), 'Empty array evaluates to NULL');
-
-        $date = DBField::create_field('Date', '0');
-        $this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
-
-        $date = DBField::create_field('Date', 0);
-        $this->assertEquals('1970-01-01', $date->getValue(), 'Zero is UNIX epoch date');
-
-        $date = DBField::create_field('Date', '0000-00-00 00:00:00');
-        $this->assertNull($date->getValue(), '0000-00-00 00:00:00 is set as NULL');
-
-        $date = DBField::create_field('Date', '00/00/0000');
-        $this->assertNull($date->getValue(), '00/00/0000 is set as NULL');
+    #[DataProvider('provideSetValue')]
+    public function testSetValue(mixed $value, mixed $expected)
+    {
+        $field = new DBDate('MyField');
+        $field->setValue($value);
+        $this->assertSame($expected, $field->getValue());
     }
 
     public function testDayOfMonth()

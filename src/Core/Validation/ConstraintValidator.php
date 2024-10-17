@@ -35,9 +35,9 @@ class ConstraintValidator
         /** @var ConstraintViolationInterface $violation */
         foreach ($violations as $violation) {
             if ($fieldName) {
-                $result->addFieldError($fieldName, $violation->getMessage());
+                $result->addFieldError($fieldName, $violation->getMessage(), value: $value);
             } else {
-                $result->addError($violation->getMessage());
+                $result->addError($violation->getMessage(), value: $value);
             }
         }
 

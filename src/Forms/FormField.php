@@ -15,6 +15,7 @@ use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\FieldValidatorsTrait;
 
 /**
  * Represents a field in a form.
@@ -44,6 +45,7 @@ class FormField extends RequestHandler
 {
     use AttributesHTML;
     use FormMessage;
+    use FieldValidatorsTrait;
 
     /** @see $schemaDataType */
     const SCHEMA_DATA_TYPE_STRING = 'String';
@@ -424,12 +426,10 @@ class FormField extends RequestHandler
 
     /**
      * Returns the field name.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
@@ -443,14 +443,30 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Returns the field value.
+     * Alias of getValue()
      *
      * @see FormField::setSubmittedValue()
      * @return mixed
      */
     public function Value()
     {
+        return $this->getValue();
+    }
+
+    /**
+     * Returns the field value.
+     */
+    public function getValue(): mixed
+    {
         return $this->value;
+    }
+
+    /**
+     * Get the value of this field for field validation
+     */
+    public function getValueForValidation(): mixed
+    {
+        return $this->getValue();
     }
 
     /**
@@ -1231,15 +1247,32 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Abstract method each {@link FormField} subclass must implement, determines whether the field
-     * is valid or not based on the value.
+     * Subclasses can define an existing FieldValidatorClass to validate the FormField value
+     * They may also override this method to provide custom validation logic
      *
      * @param Validator $validator
      * @return bool
      */
     public function validate($validator)
     {
-        return $this->extendValidationResult(true, $validator);
+        $isValid = true;
+        $result = ValidationResult::create();
+        if ($this->getValue() === null) {
+            // Skip field validation if the value is null
+            return $this->extendValidationResult($isValid, $validator);
+        }
+        $fieldValidators = $this->getFieldValidators();
+        foreach ($fieldValidators as $fieldValidator) {
+            $validationResult = $fieldValidator->validate();
+            if (!$validationResult->isValid()) {
+                $result->combineAnd($validationResult);
+            }
+        }
+        if (!$result->isValid()) {
+            $isValid = false;
+            $validator->getResult()->combineAnd($result);
+        }
+        return $this->extendValidationResult($isValid, $validator);
     }
 
     /**

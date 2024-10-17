@@ -24,22 +24,23 @@ class DecimalTest extends SapphireTest
     {
         parent::setUp();
         $this->testDataObject = $this->objFromFixture(DecimalTest\TestObject::class, 'test-dataobject');
+        $x=1;
     }
 
     public function testDefaultValue()
     {
-        $this->assertEquals(
+        $this->assertSame(
+            0.0,
             $this->testDataObject->MyDecimal1,
-            0,
-            'Database default for Decimal type is 0'
+            'Database default for Decimal type is 0.0'
         );
     }
 
     public function testSpecifiedDefaultValue()
     {
-        $this->assertEquals(
-            $this->testDataObject->MyDecimal2,
+        $this->assertSame(
             2.5,
+            $this->testDataObject->MyDecimal2,
             'Default value for Decimal type is set to 2.5'
         );
     }
@@ -52,37 +53,37 @@ class DecimalTest extends SapphireTest
 
     public function testSpecifiedDefaultValueInDefaultsArray()
     {
-        $this->assertEquals(
+        $this->assertSame(
             $this->testDataObject->MyDecimal4,
-            4,
+            4.0,
             'Default value for Decimal type is set to 4'
         );
     }
 
     public function testLongValueStoredCorrectly()
     {
-        $this->assertEquals(
-            $this->testDataObject->MyDecimal5,
+        $this->assertSame(
             1.0,
+            $this->testDataObject->MyDecimal5,
             'Long default long decimal value is rounded correctly'
         );
 
         $this->assertEqualsWithDelta(
-            $this->testDataObject->MyDecimal5,
             0.99999999999999999999,
+            $this->testDataObject->MyDecimal5,
             PHP_FLOAT_EPSILON,
             'Long default long decimal value is correct within float epsilon'
         );
 
-        $this->assertEquals(
-            $this->testDataObject->MyDecimal6,
+        $this->assertSame(
             8.0,
+            $this->testDataObject->MyDecimal6,
             'Long decimal value with a default value is rounded correctly'
         );
 
         $this->assertEqualsWithDelta(
-            $this->testDataObject->MyDecimal6,
             7.99999999999999999999,
+            $this->testDataObject->MyDecimal6,
             PHP_FLOAT_EPSILON,
             'Long decimal value is within epsilon if longer than allowed number of float digits'
         );

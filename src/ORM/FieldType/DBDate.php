@@ -12,6 +12,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\DateFieldValidator;
 
 /**
  * Represents a date field.
@@ -33,6 +34,7 @@ class DBDate extends DBField
 {
     /**
      * Standard ISO format string for date in CLDR standard format
+     * This is equivalent to php date format "Y-m-d" e.g. 2024-08-31
      */
     public const ISO_DATE = 'y-MM-dd';
 
@@ -42,13 +44,14 @@ class DBDate extends DBField
      */
     public const ISO_LOCALE = 'en_US';
 
+    private static array $field_validators = [
+        DateFieldValidator::class,
+    ];
+
     public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
-        $value = $this->parseDate($value);
-        if ($value === false) {
-            throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
-            );
+        if ($value !== null) {
+            $value = $this->parseDate($value);
         }
         $this->value = $value;
         return $this;
@@ -58,15 +61,10 @@ class DBDate extends DBField
      * Parse timestamp or iso8601-ish date into standard iso8601 format
      *
      * @param mixed $value
-     * @return string|null|false Formatted date, null if empty but valid, or false if invalid
+     * @return mixed Formatted date, or the original value if it couldn't be parsed
      */
-    protected function parseDate(mixed $value): string|null|false
+    protected function parseDate(mixed $value): mixed
     {
-        // Skip empty values
-        if (empty($value) && !is_numeric($value)) {
-            return null;
-        }
-
         // Determine value to parse
         if (is_array($value)) {
             $source = $value; // parse array
@@ -74,19 +72,23 @@ class DBDate extends DBField
             $source = $value; // parse timestamp
         } else {
             // Convert US date -> iso, fix y2k, etc
-            $value = $this->fixInputDate($value);
-            if (is_null($value)) {
-                return null;
+            $fixedValue = $this->fixInputDate($value);
+            if ($fixedValue === '') {
+                // Dates with an invalid format will be caught by validator later
+                return $value;
             }
-            $source = strtotime($value ?? ''); // convert string to timestamp
+            // convert string to timestamp
+            $source = strtotime($fixedValue ?? '');
         }
-        if ($value === false) {
-            return false;
+        if (!$source && $source !== 0 and $source !== '0') {
+            // Unable to parse date, keep as is so that the validator can catch it later
+            // Note that 0 and '0' are valid dates for Jan 1 1970
+            return $value;
         }
-
         // Format as iso8601
         $formatter = $this->getInternalFormatter();
-        return $formatter->format($source);
+        $ret = $formatter->format($source);
+        return $ret;
     }
 
     /**
@@ -554,26 +556,14 @@ class DBDate extends DBField
 
     /**
      * Fix non-iso dates
-     *
-     * @param string $value
-     * @return string
      */
-    protected function fixInputDate($value)
+    protected function fixInputDate(string $value): string
     {
-        // split
         [$year, $month, $day, $time] = $this->explodeDateString($value);
-
-        if ((int)$year === 0 && (int)$month === 0 && (int)$day === 0) {
-            return null;
+        if (!checkdate((int) $month, (int) $day, (int) $year)) {
+            return '';
         }
-        // Validate date
-        if (!checkdate($month ?? 0, $day ?? 0, $year ?? 0)) {
-            throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
-            );
-        }
-
-        // Convert to y-m-d
+        // Convert to Y-m-d
         return sprintf('%d-%02d-%02d%s', $year, $month, $day, $time);
     }
 
@@ -591,11 +581,8 @@ class DBDate extends DBField
             $value ?? '',
             $matches
         )) {
-            throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
-            );
+            return [0, 0, 0, ''];
         }
-
         $parts = [
             $matches['first'],
             $matches['second'],
@@ -604,11 +591,6 @@ class DBDate extends DBField
         // Flip d-m-y to y-m-d
         if ($parts[0] < 1000 && $parts[2] > 1000) {
             $parts = array_reverse($parts ?? []);
-        }
-        if ($parts[0] < 1000 && (int)$parts[0] !== 0) {
-            throw new InvalidArgumentException(
-                "Invalid date: '$value'. Use " . DBDate::ISO_DATE . " to prevent this error."
-            );
         }
         $parts[] = $matches['time'];
         return $parts;
