@@ -154,7 +154,7 @@ class FieldGroup extends CompositeField
         /** @var FormField $subfield */
         $messages = [];
         foreach ($dataFields as $subfield) {
-            $message = $subfield->obj('Message')->forTemplate();
+            $message = $subfield->obj('Message')?->forTemplate();
             if ($message) {
                 $messages[] = rtrim($message ?? '', ".");
             }

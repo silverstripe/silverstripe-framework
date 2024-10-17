@@ -6,12 +6,13 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
 use Exception;
+use Stringable;
 
 /**
  * Abstract base class for an object representing an SQL query.
  * The various parts of the SQL query can be manipulated individually.
  */
-abstract class SQLExpression
+abstract class SQLExpression implements Stringable
 {
 
     /**
@@ -44,10 +45,8 @@ abstract class SQLExpression
 
     /**
      * Return the generated SQL string for this query
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         try {
             $sql = $this->sql($parameters);

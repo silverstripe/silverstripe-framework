@@ -3,6 +3,7 @@
 namespace SilverStripe\i18n\Messages\Symfony;
 
 use SilverStripe\Core\Flushable;
+use Stringable;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 
 /**
@@ -12,10 +13,9 @@ use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
  * @link https://media.giphy.com/media/fRRD3T37DeY6Y/giphy.gif for use case
  * @see DirectoryResource
  */
-class FlushInvalidatedResource implements SelfCheckingResourceInterface, Flushable
+class FlushInvalidatedResource implements SelfCheckingResourceInterface, Flushable, Stringable
 {
-
-    public function __toString()
+    public function __toString(): string
     {
         return md5(__CLASS__);
     }

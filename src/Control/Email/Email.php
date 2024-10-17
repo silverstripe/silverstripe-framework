@@ -46,7 +46,7 @@ class Email extends SymfonyEmail
     private static string|array $admin_email = '';
 
     /**
-     * The name of the HTML template to render the email with (without *.ss extension)
+     * The name of the HTML template to render the email with
      */
     private string $HTMLTemplate = '';
 
@@ -398,26 +398,21 @@ class Email extends SymfonyEmail
         return $this;
     }
 
-    public function getHTMLTemplate(): string
+    public function getHTMLTemplate(): string|array
     {
         if ($this->HTMLTemplate) {
             return $this->HTMLTemplate;
         }
 
-        return ThemeResourceLoader::inst()->findTemplate(
-            SSViewer::get_templates_by_class(static::class, '', Email::class),
-            SSViewer::get_themes()
-        );
+        return SSViewer::get_templates_by_class(static::class, '', Email::class);
     }
 
     /**
-     * Set the template to render the email with
+     * Set the template to render the email with.
+     * Do not include a file extension unless you are referencing a full absolute file path.
      */
     public function setHTMLTemplate(string $template): static
     {
-        if (substr($template ?? '', -3) == '.ss') {
-            $template = substr($template ?? '', 0, -3);
-        }
         $this->HTMLTemplate = $template;
         return $this;
     }
@@ -431,13 +426,11 @@ class Email extends SymfonyEmail
     }
 
     /**
-     * Set the template to render the plain part with
+     * Set the template to render the plain part with.
+     * Do not include a file extension unless you are referencing a full absolute file path.
      */
     public function setPlainTemplate(string $template): static
     {
-        if (substr($template ?? '', -3) == '.ss') {
-            $template = substr($template ?? '', 0, -3);
-        }
         $this->plainTemplate = $template;
         return $this;
     }

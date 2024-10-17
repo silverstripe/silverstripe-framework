@@ -47,7 +47,7 @@ class DBVarchar extends DBString
      * can be useful if you want to have text fields with a length limit that
      * is dictated by the DB field.
      *
-     * TextField::create('Title')->setMaxLength(singleton('SiteTree')->dbObject('Title')->getSize())
+     * TextField::create('Title')->setMaxLength(singleton('SiteTree')->dbObject('Title')?->getSize())
      *
      * @return int The size of the field
      */

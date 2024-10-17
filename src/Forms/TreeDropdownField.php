@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -519,13 +520,20 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
 
         // Allow to pass values to be selected within the ajax request
         $value = $request->requestVar('forceValue') ?: $this->value;
-        if ($value && ($values = preg_split('/,\s*/', $value ?? ''))) {
+        if ($value instanceof SS_List) {
+            $values = $value;
+        } elseif ($value) {
+            $values = preg_split('/,\s*/', $value ?? '');
+        } else {
+            $values = [];
+        }
+        if (!empty($values)) {
             foreach ($values as $value) {
                 if (!$value || $value == 'unchanged') {
                     continue;
                 }
 
-                $object = $this->objectForKey($value);
+                $object = is_object($value) ? $value : $this->objectForKey($value);
                 if (!$object) {
                     continue;
                 }
@@ -870,14 +878,14 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
                 $ancestors = $record->getAncestors(true)->reverse();
 
                 foreach ($ancestors as $parent) {
-                    $title = $parent->obj($this->getTitleField())->getValue();
+                    $title = $parent->obj($this->getTitleField())?->getValue();
                     $titlePath .= $title . '/';
                 }
             }
             $data['data']['valueObject'] = [
-                'id' => $record->obj($this->getKeyField())->getValue(),
-                'title' => $record->obj($this->getTitleField())->getValue(),
-                'treetitle' => $record->obj($this->getLabelField())->getSchemaValue(),
+                'id' => $record->obj($this->getKeyField())?->getValue(),
+                'title' => $record->obj($this->getTitleField())?->getValue(),
+                'treetitle' => $record->obj($this->getLabelField())?->getSchemaValue(),
                 'titlePath' => $titlePath,
             ];
         }

@@ -36,7 +36,7 @@ class TestComponent_ItemRequest extends RequestHandler
 
     public function showform()
     {
-        return "<head>" . SSViewer::get_base_tag("") . "</head>" . $this->Form()->forTemplate();
+        return "<head>" . SSViewer::getBaseTag() . "</head>" . $this->Form()->forTemplate();
     }
 
     public function Form()

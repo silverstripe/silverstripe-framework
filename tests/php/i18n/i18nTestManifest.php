@@ -17,10 +17,11 @@ use SilverStripe\i18n\Tests\i18nTest\MyObject;
 use SilverStripe\i18n\Tests\i18nTest\MySubObject;
 use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\SSViewer_DataPresenter;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Model\ModelData;
+use SilverStripe\View\SSViewer_Scope;
+use SilverStripe\View\ViewLayerData;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -71,9 +72,9 @@ trait i18nTestManifest
 
     public function setupManifest()
     {
-        // force SSViewer_DataPresenter to cache global template vars before we switch to the
+        // force SSViewer_Scope to cache global template vars before we switch to the
         // test-project class manifest (since it will lose visibility of core classes)
-        $presenter = new SSViewer_DataPresenter(new ModelData());
+        $presenter = new SSViewer_Scope(new ViewLayerData([]));
         unset($presenter);
 
         // Switch to test manifest
