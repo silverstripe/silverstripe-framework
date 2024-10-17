@@ -23,6 +23,8 @@ class DeprecationTest extends SapphireTest
 
     private bool $noticesWereEnabled = false;
 
+    private bool $showSupportedNoticesWasEnabled = false;
+
     protected function setup(): void
     {
         // Use custom error handler for two reasons:
@@ -31,6 +33,7 @@ class DeprecationTest extends SapphireTest
         //   https://github.com/laminas/laminas-di/pull/30#issuecomment-927585210
         parent::setup();
         $this->noticesWereEnabled = Deprecation::isEnabled();
+        $this->showSupportedNoticesWasEnabled = Deprecation::getShowNoticesCalledFromSupportedCode();
         $this->oldHandler = set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline) {
             if ($errno === E_USER_DEPRECATED) {
                 if (str_contains($errstr, 'SilverStripe\\Dev\\Tests\\DeprecationTest')) {
@@ -46,6 +49,8 @@ class DeprecationTest extends SapphireTest
             // Fallback to default PHP error handler
             return false;
         });
+        // This is required to clear out the notice from instantiating DeprecationTestObject in TableBuilder::buildTables().
+        Deprecation::outputNotices();
     }
 
     protected function tearDown(): void
@@ -55,6 +60,7 @@ class DeprecationTest extends SapphireTest
         } else {
             Deprecation::disable();
         }
+        Deprecation::setShowNoticesCalledFromSupportedCode($this->showSupportedNoticesWasEnabled);
         restore_error_handler();
         $this->oldHandler = null;
         parent::tearDown();
@@ -66,6 +72,18 @@ class DeprecationTest extends SapphireTest
         return 'abc';
     }
 
+    private function myDeprecatedMethodNoReplacement(): string
+    {
+        Deprecation::noticeWithNoReplacment('1.2.3');
+        return 'abc';
+    }
+
+    private function enableDeprecationNotices(bool $showNoReplacementNotices = false): void
+    {
+        Deprecation::enable($showNoReplacementNotices);
+        Deprecation::setShowNoticesCalledFromSupportedCode(true);
+    }
+
     public function testNotice()
     {
         $message = implode(' ', [
@@ -75,11 +93,34 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         $ret = $this->myDeprecatedMethod();
         $this->assertSame('abc', $ret);
         // call outputNotices() directly because the regular shutdown function that emits
         // the notices within Deprecation won't be called until after this unit-test has finished
+        Deprecation::outputNotices();
+    }
+
+    public function testNoticeNoReplacement()
+    {
+        $message = implode(' ', [
+            'SilverStripe\Dev\Tests\DeprecationTest->myDeprecatedMethodNoReplacement is deprecated.',
+            'Will be removed without equivalent functionality to replace it.',
+            'Called from SilverStripe\Dev\Tests\DeprecationTest->testNoticeNoReplacement.'
+        ]);
+        $this->expectDeprecation();
+        $this->expectDeprecationMessage($message);
+        $this->enableDeprecationNotices(true);
+        $ret = $this->myDeprecatedMethodNoReplacement();
+        $this->assertSame('abc', $ret);
+        Deprecation::outputNotices();
+    }
+
+    public function testNoticeNoReplacementNoSupressed()
+    {
+        $this->enableDeprecationNotices();
+        $ret = $this->myDeprecatedMethodNoReplacement();
+        $this->assertSame('abc', $ret);
         Deprecation::outputNotices();
     }
 
@@ -92,7 +133,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         $ret = call_user_func([$this, 'myDeprecatedMethod']);
         $this->assertSame('abc', $ret);
         Deprecation::outputNotices();
@@ -107,7 +148,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         $ret = call_user_func_array([$this, 'myDeprecatedMethod'], []);
         $this->assertSame('abc', $ret);
         Deprecation::outputNotices();
@@ -115,7 +156,7 @@ class DeprecationTest extends SapphireTest
 
     public function testwithSuppressedNoticeDefault()
     {
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         $ret = Deprecation::withSuppressedNotice(function () {
             return $this->myDeprecatedMethod();
         });
@@ -132,7 +173,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable(true);
+        $this->enableDeprecationNotices(true);
         $ret = Deprecation::withSuppressedNotice(function () {
             return $this->myDeprecatedMethod();
         });
@@ -149,7 +190,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable(true);
+        $this->enableDeprecationNotices(true);
         $ret = Deprecation::withSuppressedNotice(function () {
             return call_user_func([$this, 'myDeprecatedMethod']);
         });
@@ -166,7 +207,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable(true);
+        $this->enableDeprecationNotices(true);
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice('123', 'My message.');
         });
@@ -182,7 +223,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable(true);
+        $this->enableDeprecationNotices(true);
         // using this syntax because my IDE was complaining about DeprecationTestObject not existing
         // when trying to use `new DeprecationTestObject();`
         $class = DeprecationTestObject::class;
@@ -199,7 +240,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable(true);
+        $this->enableDeprecationNotices(true);
         Injector::inst()->get(DeprecationTestObject::class);
         Deprecation::outputNotices();
     }
@@ -217,6 +258,50 @@ class DeprecationTest extends SapphireTest
         Deprecation::outputNotices();
     }
 
+    public function testshowNoticesCalledFromSupportedCode()
+    {
+        $this->expectNotToPerformAssertions();
+        $this->enableDeprecationNotices(true);
+        // showNoticesCalledFromSupportedCode is set to true by default for these unit tests
+        // as it is testing code within vendor/silverstripe
+        // This test is to ensure that the method works as expected when we disable this
+        // and we should expect no exceptions to be thrown
+        //
+        // Note specifically NOT testing the following because it's counted as being called
+        // from phpunit itself, which is not considered supported code
+        // Deprecation::withSuppressedNotice(function () {
+        //     Deprecation::notice('123', 'My message.');
+        // });
+        Deprecation::setShowNoticesCalledFromSupportedCode(false);
+        // notice()
+        $this->myDeprecatedMethod();
+        // noticeNoReplacement()
+        $this->myDeprecatedMethodNoReplacement();
+        // callUserFunc()
+        call_user_func([$this, 'myDeprecatedMethod']);
+        // callUserFuncArray()
+        call_user_func_array([$this, 'myDeprecatedMethod'], []);
+        // withSuppressedNotice()
+        Deprecation::withSuppressedNotice(
+            fn() => $this->myDeprecatedMethod()
+        );
+        // withSuppressedNoticeTrue()
+        Deprecation::withSuppressedNotice(function () {
+            $this->myDeprecatedMethod();
+        });
+        // withSuppressedNoticeTrueCallUserFunc()
+        Deprecation::withSuppressedNotice(function () {
+            call_user_func([$this, 'myDeprecatedMethod']);
+        });
+        // classWithSuppressedNotice()
+        $class = DeprecationTestObject::class;
+        new $class();
+        // classWithInjectorwithSuppressedNotice()
+        Injector::inst()->get(DeprecationTestObject::class);
+        // Output notices - there should be none
+        Deprecation::outputNotices();
+    }
+
     // The following tests would be better to put in the silverstripe/config module, however this is not
     // possible to do in a clean way as the config for the DeprecationTestObject will not load if it
     // is inside the silverstripe/config directory, as there is no _config.php file or _config folder.
@@ -231,7 +316,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         Config::inst()->get(DeprecationTestObject::class, 'first_config');
         Deprecation::outputNotices();
     }
@@ -244,7 +329,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         Config::inst()->get(DeprecationTestObject::class, 'second_config');
         Deprecation::outputNotices();
     }
@@ -254,7 +339,7 @@ class DeprecationTest extends SapphireTest
         $message = 'Config SilverStripe\Dev\Tests\DeprecationTest\DeprecationTestObject.third_config is deprecated.';
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         Config::inst()->get(DeprecationTestObject::class, 'third_config');
         Deprecation::outputNotices();
     }
@@ -267,7 +352,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         Config::modify()->set(DeprecationTestObject::class, 'first_config', 'abc');
         Deprecation::outputNotices();
     }
@@ -280,7 +365,7 @@ class DeprecationTest extends SapphireTest
         ]);
         $this->expectDeprecation();
         $this->expectDeprecationMessage($message);
-        Deprecation::enable();
+        $this->enableDeprecationNotices();
         Config::modify()->merge(DeprecationTestObject::class, 'array_config', ['abc']);
         Deprecation::outputNotices();
     }
@@ -366,7 +451,7 @@ class DeprecationTest extends SapphireTest
         switch ($varName) {
             case 'SS_DEPRECATION_ENABLED':
                 if ($configVal) {
-                    Deprecation::enable();
+                    $this->enableDeprecationNotices();
                 } else {
                     Deprecation::disable();
                 }
@@ -542,7 +627,7 @@ class DeprecationTest extends SapphireTest
     private function setEnabledViaStatic(bool $enabled): void
     {
         if ($enabled) {
-            Deprecation::enable();
+            $this->enableDeprecationNotices();
         } else {
             Deprecation::disable();
         }
