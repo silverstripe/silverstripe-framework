@@ -665,7 +665,6 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         // Localise all permission categories
         $keys[__CLASS__ . '.AdminGroup'] = 'Administrator';
-        $keys[__CLASS__ . '.CMS_ACCESS_CATEGORY'] = 'CMS Access';
         $keys[__CLASS__ . '.CONTENT_CATEGORY'] = 'Content permissions';
         $keys[__CLASS__ . '.PERMISSIONS_CATEGORY'] = 'Roles and access permissions';
         return $keys;
