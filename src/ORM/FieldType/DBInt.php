@@ -15,7 +15,8 @@ class DBInt extends DBField
 
     public function __construct($name = null, $defaultVal = 0)
     {
-        $this->defaultVal = is_int($defaultVal) ? $defaultVal : 0;
+        $defaultValue = is_int($defaultVal) ? $defaultVal : 0;
+        $this->setDefaultValue($defaultValue);
 
         parent::__construct($name);
     }
@@ -43,7 +44,7 @@ class DBInt extends DBField
             'datatype' => 'int',
             'precision' => 11,
             'null' => 'not null',
-            'default' => $this->defaultVal,
+            'default' => $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
         $values = ['type' => 'int', 'parts' => $parts];
