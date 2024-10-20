@@ -10,7 +10,6 @@ use SilverStripe\Model\List\PaginatedList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Queries\SQLSelect;
 use Exception;
 
 /**
@@ -31,7 +30,7 @@ class MySQLDatabase extends Database implements TransactionManager
      * @config
      * @var String
      */
-    private static $connection_charset = 'utf8';
+    private static $connection_charset = 'utf8mb4';
 
     /**
      * Default connection collation
@@ -39,7 +38,7 @@ class MySQLDatabase extends Database implements TransactionManager
      * @config
      * @var string
      */
-    private static $connection_collation = 'utf8_general_ci';
+    private static $connection_collation = 'utf8mb4_unicode_ci';
 
     /**
      * Default charset
@@ -47,7 +46,7 @@ class MySQLDatabase extends Database implements TransactionManager
      * @config
      * @var string
      */
-    private static $charset = 'utf8';
+    private static $charset = 'utf8mb4';
 
     /**
      * SQL Mode used on connections to MySQL. Defaults to ANSI. For basic ORM
@@ -73,7 +72,7 @@ class MySQLDatabase extends Database implements TransactionManager
      * @config
      * @var string
      */
-    private static $collation = 'utf8_general_ci';
+    private static $collation = 'utf8mb4_unicode_ci';
 
     public function connect($parameters)
     {
