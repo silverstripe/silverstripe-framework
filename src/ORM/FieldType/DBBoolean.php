@@ -15,7 +15,8 @@ class DBBoolean extends DBField
 {
     public function __construct(?string $name = null, bool|int $defaultVal = 0)
     {
-        $this->defaultVal = ($defaultVal) ? 1 : 0;
+        $defaultValue = $defaultVal ? 1 : 0;
+        $this->setDefaultValue($defaultValue);
 
         parent::__construct($name);
     }
@@ -27,7 +28,7 @@ class DBBoolean extends DBField
             'precision' => 1,
             'sign' => 'unsigned',
             'null' => 'not null',
-            'default' => $this->defaultVal,
+            'default' => $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
         $values = ['type' => 'boolean', 'parts' => $parts];

@@ -103,6 +103,7 @@ abstract class DBField extends ModelData implements DBIndexable
      * Default value in the database.
      * Might be overridden on DataObject-level, but still useful for setting defaults on
      * already existing records after a db-build.
+     * @deprecated 5.4.0 Use getDefaultValue() and setDefaultValue() instead
      */
     protected mixed $defaultVal = null;
 

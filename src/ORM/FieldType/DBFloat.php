@@ -13,7 +13,8 @@ class DBFloat extends DBField
 {
     public function __construct(?string $name = null, float|int $defaultVal = 0)
     {
-        $this->defaultVal = is_float($defaultVal) ? $defaultVal : (float) 0;
+        $defaultValue = is_float($defaultVal) ? $defaultVal : (float) 0;
+        $this->setDefaultValue($defaultValue);
 
         parent::__construct($name);
     }
@@ -23,7 +24,7 @@ class DBFloat extends DBField
         $parts = [
             'datatype' => 'float',
             'null' => 'not null',
-            'default' => $this->defaultVal,
+            'default' => $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
         $values = ['type' => 'float', 'parts' => $parts];
