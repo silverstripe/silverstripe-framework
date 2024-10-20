@@ -19,7 +19,6 @@ use SilverStripe\View\TemplateGlobalProvider;
  */
 class Controller extends RequestHandler implements TemplateGlobalProvider
 {
-
     /**
      * An array of arguments extracted from the URL.
      *
