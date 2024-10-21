@@ -17,33 +17,78 @@ class DBTimeTest extends SapphireTest
         i18n::set_locale('en_NZ');
     }
 
-    public static function dataTestParse()
+    public static function provideSetValue()
     {
         return [
-            // Test am-pm conversion
-            ['11:01 pm', '23:01:00'],
-            ['11:01 am', '11:01:00'],
-            ['12:01 pm', '12:01:00'],
-            ['12:01 am', '00:01:00'],
-            // Test seconds
-            ['11:01.01 pm', '23:01:01'],
-            ['12:01.01', '12:01:01'],
+            'time-11pm' => [
+                'value' => '11:01 pm',
+                'expected' => '23:01:00'
+            ],
+            'time-11am' => [
+                'value' => '11:01 am',
+                'expected' => '11:01:00'
+            ],
+            'time-12am' => [
+                'value' => '12:01 am',
+                'expected' => '00:01:00'
+            ],
+            'time-12pm' => [
+                'value' => '12:01 pm',
+                'expected' => '12:01:00'
+            ],
+            'time-11pm-seconds' => [
+                'value' => '11:01.01 pm',
+                'expected' => '23:01:01'
+            ],
+            'time-12-seconds' => [
+                'value' => '12:01.01',
+                'expected' => '12:01:01'
+            ],
+            'wrong-format-works' => [
+                'value' => '12.34.56',
+                'expected' => '12:34:56',
+            ],
+            'int' => [
+                'value' => 6789,
+                'expected' => '01:53:09'
+            ],
+            'int-string' => [
+                'value' => '6789',
+                'expected' => '01:53:09'
+            ],
+            'zero-string' => [
+                'value' => '0',
+                'expected' => '00:00:00'
+            ],
+            'zero-int' => [
+                'value' => 0,
+                'expected' => '00:00:00'
+            ],
+            'blank-string' => [
+                'value' => '',
+                'expected' => ''
+            ],
+            'null' => [
+                'value' => null,
+                'expected' => null
+            ],
+            'false' => [
+                'value' => false,
+                'expected' => false
+            ],
+            'empty-array' => [
+                'value' => [],
+                'expected' => []
+            ],
         ];
     }
 
-    /**
-     * @param string $input
-     * @param string $expected
-     */
-    #[DataProvider('dataTestParse')]
-    public function testParse($input, $expected)
+    #[DataProvider('provideSetValue')]
+    public function testSetValue(mixed $value, mixed $expected)
     {
-        $time = DBField::create_field('Time', $input);
-        $this->assertEquals(
-            $expected,
-            $time->getValue(),
-            "Date parsed from {$input} should be {$expected}"
-        );
+        $field = new DBTime('MyField');
+        $field->setValue($value);
+        $this->assertSame($expected, $field->getValue());
     }
 
     public function testNice()

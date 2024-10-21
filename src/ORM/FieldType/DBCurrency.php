@@ -31,6 +31,9 @@ class DBCurrency extends DBDecimal
      */
     public function Nice(): string
     {
+        if (!is_float($this->value)) {
+            return '';
+        }
         $val = static::config()->get('currency_symbol') . number_format(abs($this->value ?? 0.0) ?? 0.0, 2);
         if ($this->value < 0) {
             return "($val)";
@@ -44,6 +47,9 @@ class DBCurrency extends DBDecimal
      */
     public function Whole(): string
     {
+        if (!is_float($this->value)) {
+            return '';
+        }
         $val = static::config()->get('currency_symbol') . number_format(abs($this->value ?? 0.0) ?? 0.0, 0);
         if ($this->value < 0) {
             return "($val)";
@@ -53,15 +59,14 @@ class DBCurrency extends DBDecimal
 
     public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
-        $matches = null;
-        if (is_numeric($value)) {
-            $this->value = $value;
-        } elseif (preg_match('/-?\$?[0-9,]+(.[0-9]+)?([Ee][0-9]+)?/', $value ?? '', $matches)) {
-            $this->value = str_replace(['$', ',', static::config()->get('currency_symbol')], '', $matches[0] ?? '');
-        } else {
-            $this->value = 0;
+        parent::setValue($value, $record, $markChanged);
+        if (is_string($this->value)) {
+            $symbol = static::config()->get('currency_symbol');
+            $val = str_replace(['$', ',', $symbol], '', $this->value);
+            if (is_numeric($val)) {
+                $this->value = (float) $val;
+            }
         }
-
         return $this;
     }
 

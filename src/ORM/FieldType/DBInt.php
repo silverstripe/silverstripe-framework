@@ -2,33 +2,46 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Core\Validation\FieldValidation\IntFieldValidator;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\ArrayData;
+use SilverStripe\Model\ModelData;
 
 /**
- * Represents a signed 32 bit integer field.
+ * Represents a signed 32 bit integer field
+ *
+ * Ints are always signed i.e. they can be negative
+ * Their range is -2147483648 to 2147483647
  */
 class DBInt extends DBField
 {
+    private static array $field_validators = [
+        IntFieldValidator::class
+    ];
+
     public function __construct(?string $name = null, int $defaultVal = 0)
     {
-        $defaultValue = is_int($defaultVal) ? $defaultVal : 0;
-        $this->setDefaultValue($defaultValue);
-
+        $this->setDefaultValue($defaultVal);
         parent::__construct($name);
     }
 
-    /**
-     * Ensure int values are always returned.
-     * This is for mis-configured databases that return strings.
-     */
-    public function getValue(): ?int
+    public function getField($fieldName): mixed
     {
-        return (int) $this->value;
+        return $this->value;
+    }
+
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
+    {
+        parent::setValue($value, $record, $markChanged);
+        // Cast int like strings as ints
+        if (is_string($this->value) && preg_match('/^-?\d+$/', $this->value)) {
+            $this->value = (int) $value;
+        }
+        return $this;
     }
 
     /**
@@ -72,7 +85,7 @@ class DBInt extends DBField
         return NumericField::create($this->name, $title);
     }
 
-    public function nullValue(): ?int
+    public function nullValue(): int
     {
         return 0;
     }

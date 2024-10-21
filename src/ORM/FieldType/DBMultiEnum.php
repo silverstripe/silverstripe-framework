@@ -3,6 +3,9 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Validation\FieldValidation\EnumFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\MultiEnumFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\StringFieldValidator;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\MultiSelectField;
 use SilverStripe\ORM\Connect\MySQLDatabase;
@@ -13,6 +16,14 @@ use SilverStripe\ORM\DB;
  */
 class DBMultiEnum extends DBEnum
 {
+    private static array $field_validators = [
+        // disable parent field validators
+        StringFieldValidator::class => null,
+        EnumFieldValidator::class => null,
+        // enable multi enum field validator
+        MultiEnumFieldValidator::class => ['getEnum'],
+    ];
+
     public function __construct($name = null, $enum = null, $default = null)
     {
         // MultiEnum needs to take care of its own defaults
@@ -32,6 +43,15 @@ class DBMultiEnum extends DBEnum
             }
             $this->default = implode(',', $defaults);
         }
+    }
+
+    public function getValueForValidation(): array
+    {
+        $value = parent::getValueForValidation();
+        if (is_array($value)) {
+            return $value;
+        }
+        return explode(',', (string) $value);
     }
 
     public function requireField(): void

@@ -39,6 +39,7 @@ use SilverStripe\Security\PermissionCheckboxSetField_Readonly;
 use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\Forms\SearchableDropdownField;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\ORM\FieldType\DBInt;
 
 class FormFieldTest extends SapphireTest
 {

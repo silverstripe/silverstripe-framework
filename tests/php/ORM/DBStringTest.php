@@ -7,6 +7,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DBStringTest\MyStringField;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DBStringTest extends SapphireTest
 {

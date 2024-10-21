@@ -63,6 +63,11 @@ class DBForeignKey extends DBInt
         if ($record instanceof DataObject) {
             $this->object = $record;
         }
+        // Convert blank string to 0, this is sometimes required when calling DataObject::setCastedValue()
+        // after a form submission where the value is a blank string when no value is selected
+        if ($value === '') {
+            $value = 0;
+        }
         return parent::setValue($value, $record, $markChanged);
     }
 }

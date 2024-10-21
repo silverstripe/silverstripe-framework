@@ -444,8 +444,8 @@ class Member extends DataObject
         if (!$this->PasswordExpiry) {
             return false;
         }
-
-        return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry ?? '');
+        $expired = strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry ?? '');
+        return $expired;
     }
 
     /**
@@ -1691,7 +1691,7 @@ class Member extends DataObject
 
         // Overwrite the Password property with the hashed value
         $this->Password = $encryption_details['password'];
-        $this->Salt = $encryption_details['salt'];
+        $this->Salt = $encryption_details['salt'] ?: '';
         $this->PasswordEncryption = $encryption_details['algorithm'];
 
         // If we haven't manually set a password expiry
