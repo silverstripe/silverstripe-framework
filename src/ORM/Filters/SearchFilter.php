@@ -339,7 +339,7 @@ abstract class SearchFilter
 
         /** @var DBField $dbField */
         $dbField = singleton($this->model)->dbObject($this->name);
-        $dbField->setValue($this->value);
+        $dbField?->setValue($this->value);
         return $dbField->RAW();
     }
 

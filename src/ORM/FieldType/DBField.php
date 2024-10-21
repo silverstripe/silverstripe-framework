@@ -521,11 +521,6 @@ abstract class DBField extends ModelData implements DBIndexable
 DBG;
     }
 
-    public function __toString(): string
-    {
-        return (string)$this->forTemplate();
-    }
-
     public function getArrayValue()
     {
         return $this->arrayValue;

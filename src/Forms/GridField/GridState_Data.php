@@ -2,13 +2,15 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use Stringable;
+
 /**
  * Simple set of data, similar to stdClass, but without the notice-level
  * errors.
  *
  * @see GridState
  */
-class GridState_Data
+class GridState_Data implements Stringable
 {
 
     /**
@@ -94,7 +96,7 @@ class GridState_Data
         unset($this->data[$name]);
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if (!$this->data) {
             return "";

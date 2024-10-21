@@ -73,7 +73,7 @@ abstract class DBComposite extends DBField
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             // Write sub-manipulation
             $fieldObject = $this->dbObject($field);
-            $fieldObject->writeToManipulation($manipulation);
+            $fieldObject?->writeToManipulation($manipulation);
         }
     }
 
@@ -137,7 +137,7 @@ abstract class DBComposite extends DBField
         // By default all fields
         foreach ($this->compositeDatabaseFields() as $field => $spec) {
             $fieldObject = $this->dbObject($field);
-            if (!$fieldObject->exists()) {
+            if (!$fieldObject?->exists()) {
                 return false;
             }
         }

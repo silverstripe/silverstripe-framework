@@ -171,7 +171,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
         return $this->dataClass;
     }
 
-    public function dbObject($fieldName): ?DBField
+    public function dbObject(string $fieldName): ?DBField
     {
         return singleton($this->dataClass)->dbObject($fieldName);
     }
