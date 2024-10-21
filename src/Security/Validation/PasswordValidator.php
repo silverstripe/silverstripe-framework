@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberPassword;
+use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 /**
  * Abstract validator with functionality for checking for reusing old passwords.
@@ -68,5 +69,64 @@ abstract class PasswordValidator
     {
         $this->historicalPasswordCount = $count;
         return $this;
+    }
+
+    /**
+     * Get the required strength of a password based on the consts in
+     * Symfony\Component\Validator\Constraints\PasswordStrength
+     * Default return -1 for validators that do not support this
+     *
+     */
+    public function getRequiredStrength(): int
+    {
+        return -1;
+    }
+
+    /**
+     * Check if this validator can evaluate password strength.
+     */
+    public function canEvaluateStrength(): bool
+    {
+        return false;
+    }
+
+    /**
+     * Evaluate the strength of a password based on the consts in
+     * Symfony\Component\Validator\Constraints\PasswordStrength
+     * Default return -1 for validators that do not support this
+     */
+    public function evaluateStrength(string $password): int
+    {
+        return -1;
+    }
+
+    /**
+     * Textual representation of an evaluated password strength
+     */
+    public static function getStrengthLevel(int $strength): string
+    {
+        return match ($strength) {
+            PasswordStrength::STRENGTH_VERY_WEAK => _t(
+                PasswordValidator::class . '.VERYWEAK',
+                'very weak'
+            ),
+            PasswordStrength::STRENGTH_WEAK => _t(
+                PasswordValidator::class . '.WEAK',
+                'weak'
+            ),
+            PasswordStrength::STRENGTH_MEDIUM => _t(
+                PasswordValidator::class . '.MEDIUM',
+                'medium'
+            ),
+            PasswordStrength::STRENGTH_STRONG => _t(
+                PasswordValidator::class . '.STRONG',
+                'strong'
+            ),
+            PasswordStrength::STRENGTH_VERY_STRONG => _t(
+                PasswordValidator::class . '.VERYSTRONG',
+                'very strong'
+            ),
+            default => '',
+        };
     }
 }
