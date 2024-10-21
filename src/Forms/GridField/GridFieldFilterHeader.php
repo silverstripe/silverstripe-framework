@@ -11,7 +11,6 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
-use SilverStripe\Model\List\Filterable;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\ArrayData;
@@ -109,13 +108,13 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      */
     protected function checkDataType($dataList)
     {
-        if ($dataList instanceof Filterable) {
+        if ($dataList instanceof SS_List) {
             return true;
         } else {
             // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
-                    static::class . " expects an SS_Filterable list to be passed to the GridField."
+                    static::class . " expects an SS_List list to be passed to the GridField."
                 );
             }
             return false;
@@ -209,7 +208,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     public function canFilterAnyColumns($gridField)
     {
         $list = $gridField->getList();
-        if (!($list instanceof Filterable) || !$this->checkDataType($list)) {
+        if (!($list instanceof SS_List) || !$this->checkDataType($list)) {
             return false;
         }
         $modelClass = $gridField->getModelClass();

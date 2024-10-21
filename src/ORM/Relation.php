@@ -2,9 +2,6 @@
 
 namespace SilverStripe\ORM;
 
-use SilverStripe\Model\List\Filterable;
-use SilverStripe\Model\List\Limitable;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\FieldType\DBField;
 
@@ -19,11 +16,8 @@ use SilverStripe\ORM\FieldType\DBField;
  *
  * @template T
  * @extends SS_List<T>
- * @extends Filterable<T>
- * @extends Sortable<T>
- * @extends Limitable<T>
  */
-interface Relation extends SS_List, Filterable, Sortable, Limitable
+interface Relation extends SS_List
 {
 
     /**

@@ -14,10 +14,7 @@ use SilverStripe\ORM\Connect\Query;
 use Traversable;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\Model\List\Filterable;
-use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Map;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Filters\SearchFilterable;
 
@@ -43,11 +40,8 @@ use SilverStripe\ORM\Filters\SearchFilterable;
  *
  * @template T of DataObject
  * @implements SS_List<T>
- * @implements Filterable<T>
- * @implements Sortable<T>
- * @implements Limitable<T>
  */
-class DataList extends ModelData implements SS_List, Filterable, Sortable, Limitable
+class DataList extends ModelData implements SS_List
 {
     use SearchFilterable;
 
@@ -474,7 +468,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * Raw SQL is not accepted, only actual field names can be passed
      *
-     * @see Filterable::filter()
+     * @see SS_List::filter()
      *
      * @example $list = $list->filter('Name', 'bob'); // only bob in the list
      * @example $list = $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -591,7 +585,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
     /**
      * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
      * future implementation.
-     * @see Filterable::filterByCallback()
+     * @see SS_List::filterByCallback()
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback

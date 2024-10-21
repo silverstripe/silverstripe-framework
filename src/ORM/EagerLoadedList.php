@@ -11,10 +11,7 @@ use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\ArrayLib;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\Model\List\Filterable;
-use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Map;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Filters\SearchFilterable;
 use Traversable;
@@ -32,11 +29,8 @@ use Traversable;
  * @template T of DataObject
  * @implements Relation<T>
  * @implements SS_List<T>
- * @implements Filterable<T>
- * @implements Sortable<T>
- * @implements Limitable<T>
  */
-class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable, Sortable, Limitable
+class EagerLoadedList extends ModelData implements Relation, SS_List
 {
     use SearchFilterable;
 

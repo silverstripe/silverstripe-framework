@@ -15,8 +15,8 @@ use Traversable;
 /**
  * A list object that wraps around an array of objects or arrays.
  *
- * Note that (like DataLists), the implementations of the methods from SS_Filterable, SS_Sortable and
- * SS_Limitable return a new instance of ArrayList, rather than modifying the existing instance.
+ * Note that (like DataLists), the implementations of the methods from SS_List return a new instance of ArrayList,
+ * rather than modifying the existing instance.
  *
  * For easy reference, methods that operate in this way are:
  *
@@ -28,11 +28,8 @@ use Traversable;
  *
  * @template T
  * @implements SS_List<T>
- * @implements Filterable<T>
- * @implements Sortable<T>
- * @implements Limitable<T>
  */
-class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limitable
+class ArrayList extends ModelData implements SS_List
 {
     use SearchFilterable;
 
@@ -597,7 +594,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
     /**
      * Filter the list to include items with these characteristics
      *
-     * @see Filterable::filter()
+     * @see SS_List::filter()
      * @example $list->filter('Name', 'bob'); // only bob in the list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
      * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
