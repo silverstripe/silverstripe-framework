@@ -111,8 +111,8 @@ class DeprecationTest extends SapphireTest
             'Will be removed without equivalent functionality to replace it.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testNoticeNoReplacement.'
         ]);
-        $this->expectDeprecation();
-        $this->expectDeprecationMessage($message);
+        $this->expectException(DeprecationTestException::class);
+        $this->expectExceptionMessage($message);
         $this->enableDeprecationNotices(true);
         $ret = $this->myDeprecatedMethodNoReplacement();
         $this->assertSame('abc', $ret);

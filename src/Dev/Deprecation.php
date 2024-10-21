@@ -391,7 +391,7 @@ class Deprecation
                 }
 
                 // Getting a backtrace is slow, so we only do it if we need it
-                $backtrace = null;
+                $backtrace = [];
 
                 // Get the calling scope
                 if ($scope == Deprecation::SCOPE_METHOD) {
