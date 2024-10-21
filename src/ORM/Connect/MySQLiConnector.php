@@ -278,16 +278,7 @@ class MySQLiConnector extends DBConnector
      */
     public function bindParameters(mysqli_stmt $statement, array $parameters)
     {
-        // Because mysqli_stmt::bind_param arguments must be passed by reference
-        // we need to do a bit of hackery
-        $boundNames = [];
-        $parametersCount = count($parameters ?? []);
-        for ($i = 0; $i < $parametersCount; $i++) {
-            $boundName = "param$i";
-            $$boundName = $parameters[$i];
-            $boundNames[] = &$$boundName;
-        }
-        $statement->bind_param(...$boundNames);
+        $statement->bind_param(...$parameters);
     }
 
     public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR)
