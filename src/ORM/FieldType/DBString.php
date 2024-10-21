@@ -2,11 +2,18 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\StringFieldValidator;
+
 /**
  * An abstract base class for the string field types (i.e. Varchar and Text)
  */
 abstract class DBString extends DBField
 {
+    private static array $field_validators = [
+        StringFieldValidator::class,
+    ];
+
     private static array $casting = [
         'LimitCharacters' => 'Text',
         'LimitCharactersToClosestWord' => 'Text',
@@ -17,13 +24,14 @@ abstract class DBString extends DBField
     ];
 
     /**
-     * Set the default value for "nullify empty"
+     * Set the default value for "nullify empty" and 'default'
      *
      * {@inheritDoc}
      */
     public function __construct($name = null, $options = [])
     {
         $this->options['nullifyEmpty'] = true;
+        $this->options['default'] = '';
         parent::__construct($name, $options);
     }
 

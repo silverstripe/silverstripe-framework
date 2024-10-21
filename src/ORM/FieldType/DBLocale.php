@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Core\Validation\FieldValidation\LocaleFieldValidator;
 use SilverStripe\i18n\i18n;
 
 /**
@@ -9,6 +10,10 @@ use SilverStripe\i18n\i18n;
  */
 class DBLocale extends DBVarchar
 {
+    private static array $field_validators = [
+        LocaleFieldValidator::class,
+    ];
+
     public function __construct(?string $name = null, int $size = 16)
     {
         parent::__construct($name, $size);

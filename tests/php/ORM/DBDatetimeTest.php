@@ -79,24 +79,6 @@ class DBDatetimeTest extends SapphireTest
         );
     }
 
-    public function testSetNullAndZeroValues()
-    {
-        $date = DBDatetime::create_field('Datetime', '');
-        $this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
-
-        $date = DBDatetime::create_field('Datetime', null);
-        $this->assertNull($date->getValue(), 'NULL is set as NULL');
-
-        $date = DBDatetime::create_field('Datetime', false);
-        $this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
-
-        $date = DBDatetime::create_field('Datetime', '0');
-        $this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'String zero is UNIX epoch time');
-
-        $date = DBDatetime::create_field('Datetime', 0);
-        $this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
-    }
-
     public function testExtendedDateTimes()
     {
         $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
@@ -347,5 +329,51 @@ class DBDatetimeTest extends SapphireTest
         $before = (new DBDateTime())->setValue($timeBefore);
         $after = (new DBDateTime())->setValue($timeAfter);
         $this->assertSame($expected, DBDatetime::getTimeBetween($before, $after));
+    }
+
+    public static function provideSetValue(): array
+    {
+        return [
+            'int' => [
+                'value' => 800001234,
+                'expected' => '1995-05-09 06:33:54',
+            ],
+            'string-int' => [
+                'value' => '800001234',
+                'expected' => '1995-05-09 06:33:54',
+            ],
+            'zero' => [
+                'value' => 0,
+                'expected' => '1970-01-01 00:00:00',
+            ],
+            'zeroed' => [
+                'value' => '0000-00-00 00:00:00',
+                'expected' => '0000-00-00 00:00:00',
+            ],
+            'non-date-string' => [
+                'value' => 'fish',
+                'expected' => 'fish',
+            ],
+            'null' => [
+                'value' => null,
+                'expected' => null,
+            ],
+            'true' => [
+                'value' => true,
+                'expected' => true,
+            ],
+            'false' => [
+                'value' => false,
+                'expected' => false,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSetValue')]
+    public function testSetValue(mixed $value, mixed $expected): void
+    {
+        $field = new DBDatetime('MyField');
+        $field->setValue($value);
+        $this->assertSame($expected, $field->getValue());
     }
 }

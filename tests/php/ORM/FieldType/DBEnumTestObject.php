@@ -11,5 +11,6 @@ class DBEnumTestObject extends DataObject
 
     private static $db = [
         'Colour' => 'Enum("Red,Blue,Green")',
+        'ColourWithDefault' => 'Enum("Red,Blue,Green","Blue")',
     ];
 }

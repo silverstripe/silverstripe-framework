@@ -43,7 +43,7 @@ class SelectionGroup_Item extends CompositeField
         return $this;
     }
 
-    function getValue()
+    function getValue(): mixed
     {
         return $this->value;
     }

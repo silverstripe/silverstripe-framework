@@ -11,6 +11,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\TimeFieldValidator;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -26,33 +27,30 @@ class DBTime extends DBField
 {
     /**
      * Standard ISO format string for time in CLDR standard format
+     * This is equivalent to php date format "H:i:s" e.g. 09:30:00
      */
     public const ISO_TIME = 'HH:mm:ss';
+
+    private static array $field_validators = [
+        TimeFieldValidator::class,
+    ];
 
     public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {
         $value = $this->parseTime($value);
-        if ($value === false) {
-            throw new InvalidArgumentException(
-                'Invalid date passed. Use ' . $this->getISOFormat() . ' to prevent this error.'
-            );
-        }
         $this->value = $value;
         return $this;
     }
 
     /**
      * Parse timestamp or iso8601-ish date into standard iso8601 format
-     *
-     * @return string|null|false Formatted time, null if empty but valid, or false if invalid
      */
-    protected function parseTime(mixed $value): string|null|false
+    protected function parseTime(mixed $value): mixed
     {
-        // Skip empty values
+        // Return empty dates as-is, they will get caught by validator later
         if (empty($value) && !is_numeric($value)) {
-            return null;
+            return $value;
         }
-
         // Determine value to parse
         if (is_array($value)) {
             $source = $value; // parse array
@@ -62,14 +60,16 @@ class DBTime extends DBField
             // Convert using strtotime
             $source = strtotime($value ?? '');
         }
-        if ($value === false) {
-            return false;
-        }
-
         // Format as iso8601
         $formatter = $this->getFormatter();
         $formatter->setPattern($this->getISOFormat());
-        return $formatter->format($source);
+        $formatted = $formatter->format($source);
+        // If it failed to format, return the original value so that it can
+        // be caught by the validator
+        if ($formatted === false) {
+            return $value;
+        }
+        return $formatted;
     }
 
     /**

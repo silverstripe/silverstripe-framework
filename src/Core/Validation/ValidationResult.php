@@ -47,6 +47,11 @@ class ValidationResult
     const CAST_TEXT = 'text';
 
     /**
+     * Default value of $value parameter
+     */
+    private const VALUE_UNSET = '_VALUE_UNSET_';
+
+    /**
      * Is the result valid or not.
      * Note that there can be non-error messages in the list.
      *
@@ -71,11 +76,17 @@ class ValidationResult
      *                            This can be usedful for ensuring no duplicate messages
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
+     * @param mixed $value The value that failed validation
      * @return $this
      */
-    public function addError($message, $messageType = ValidationResult::TYPE_ERROR, $code = null, $cast = ValidationResult::CAST_TEXT)
-    {
-        return $this->addFieldError(null, $message, $messageType, $code, $cast);
+    public function addError(
+        $message,
+        $messageType = ValidationResult::TYPE_ERROR,
+        $code = null,
+        $cast = ValidationResult::CAST_TEXT,
+        $value = ValidationResult::VALUE_UNSET,
+    ) {
+        return $this->addFieldError(null, $message, $messageType, $code, $cast, $value);
     }
 
     /**
@@ -89,6 +100,7 @@ class ValidationResult
      *                            This can be usedful for ensuring no duplicate messages
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
+     * @param mixed $value The value that failed validation
      * @return $this
      */
     public function addFieldError(
@@ -96,10 +108,11 @@ class ValidationResult
         $message,
         $messageType = ValidationResult::TYPE_ERROR,
         $code = null,
-        $cast = ValidationResult::CAST_TEXT
+        $cast = ValidationResult::CAST_TEXT,
+        $value = ValidationResult::VALUE_UNSET,
     ) {
         $this->isValid = false;
-        return $this->addFieldMessage($fieldName, $message, $messageType, $code, $cast);
+        return $this->addFieldMessage($fieldName, $message, $messageType, $code, $cast, $value);
     }
 
     /**
@@ -112,11 +125,17 @@ class ValidationResult
      *                            This can be usedful for ensuring no duplicate messages
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
+     * @param mixed $value The value that failed validation
      * @return $this
      */
-    public function addMessage($message, $messageType = ValidationResult::TYPE_ERROR, $code = null, $cast = ValidationResult::CAST_TEXT)
-    {
-        return $this->addFieldMessage(null, $message, $messageType, $code, $cast);
+    public function addMessage(
+        $message,
+        $messageType = ValidationResult::TYPE_ERROR,
+        $code = null,
+        $cast = ValidationResult::CAST_TEXT,
+        $value = ValidationResult::VALUE_UNSET,
+    ) {
+        return $this->addFieldMessage(null, $message, $messageType, $code, $cast, $value);
     }
 
     /**
@@ -130,6 +149,7 @@ class ValidationResult
      *                            This can be usedful for ensuring no duplicate messages
      * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
      * Bool values will be treated as plain text flag.
+     * @param mixed $value The value that failed validation
      * @return $this
      */
     public function addFieldMessage(
@@ -137,7 +157,8 @@ class ValidationResult
         $message,
         $messageType = ValidationResult::TYPE_ERROR,
         $code = null,
-        $cast = ValidationResult::CAST_TEXT
+        $cast = ValidationResult::CAST_TEXT,
+        $value = ValidationResult::VALUE_UNSET,
     ) {
         if ($code && is_numeric($code)) {
             throw new InvalidArgumentException("Don't use a numeric code '$code'.  Use a string.");
@@ -151,7 +172,9 @@ class ValidationResult
             'messageType' => $messageType,
             'messageCast' => $cast,
         ];
-
+        if ($value !== ValidationResult::VALUE_UNSET) {
+            $metadata['value'] = $value;
+        }
         if ($code) {
             $this->messages[$code] = $metadata;
         } else {

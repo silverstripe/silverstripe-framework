@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\DecimalFieldValidator;
 
 /**
  * Represents a decimal field from 0-1 containing a percentage value.
@@ -17,6 +18,10 @@ use SilverStripe\Model\ModelData;
  */
 class DBPercentage extends DBDecimal
 {
+    private static array $field_validators = [
+        DecimalFieldValidator::class => ['getWholeSize', 'getDecimalSize', 'getMinValue', 'getMaxValue'],
+    ];
+
     /**
      * Create a new Decimal field.
      */
@@ -27,6 +32,16 @@ class DBPercentage extends DBDecimal
         }
 
         parent::__construct($name, $precision + 1, $precision);
+    }
+
+    public function getMinValue(): float
+    {
+        return 0.0;
+    }
+
+    public function getMaxValue(): float
+    {
+        return 1.0;
     }
 
     /**
