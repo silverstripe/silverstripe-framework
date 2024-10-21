@@ -11,14 +11,11 @@ use Traversable;
  * functionality. It passes through list methods to the underlying list
  * implementation.
  *
- * @template TList of SS_List&Sortable&Filterable&Limitable
+ * @template TList of SS_List
  * @template T
  * @implements SS_List<T>
- * @implements Sortable<T>
- * @implements Filterable<T>
- * @implements Limitable<T>
  */
-abstract class ListDecorator extends ModelData implements SS_List, Sortable, Filterable, Limitable
+abstract class ListDecorator extends ModelData implements SS_List
 {
     /**
      * @var TList<T>
@@ -28,7 +25,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     /**
      * @param TList<T> $list
      */
-    public function __construct(SS_List&Sortable&Filterable&Limitable $list)
+    public function __construct(SS_List $list)
     {
         $this->setList($list);
         parent::__construct();
@@ -37,7 +34,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     /**
      * @return TList<T>
      */
-    public function getList(): SS_List&Sortable&Filterable&Limitable
+    public function getList(): SS_List
     {
         return $this->list;
     }
@@ -53,7 +50,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      * @param TListA<TA> $list
      * @return static<TListA, TA>
      */
-    public function setList(SS_List&Sortable&Filterable&Limitable $list): ListDecorator
+    public function setList(SS_List $list): ListDecorator
     {
         $this->list = $list;
         $this->failover = $this->list;
@@ -249,7 +246,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     /**
      * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
      * future implementation.
-     * @see Filterable::filterByCallback()
+     * @see SS_List::filterByCallback()
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
      * @param callable $callback
@@ -275,7 +272,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     /**
      * @return TList<T>
      */
-    public function limit(?int $length, int $offset = 0): SS_List&Sortable&Filterable&Limitable
+    public function limit(?int $length, int $offset = 0): SS_List
     {
         return $this->list->limit($length, $offset);
     }
