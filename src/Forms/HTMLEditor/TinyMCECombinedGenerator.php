@@ -237,13 +237,6 @@ SCRIPT;
         return $url;
     }
 
-    /**
-     * This function is triggered early in the request if the "flush" query
-     * parameter has been set. Each class that implements Flushable implements
-     * this function which looks after it's own specific flushing functionality.
-     *
-     * @see FlushMiddleware
-     */
     public static function flush()
     {
         $dir = dirname(static::config()->get('filename_base') ?? '');

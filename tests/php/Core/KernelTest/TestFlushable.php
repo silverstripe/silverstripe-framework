@@ -1,6 +1,6 @@
 <?php
 
-namespace SilverStripe\Control\Tests\FlushMiddlewareTest;
+namespace SilverStripe\Core\Tests\KernelTest;
 
 use SilverStripe\Core\Flushable;
 use SilverStripe\Dev\TestOnly;

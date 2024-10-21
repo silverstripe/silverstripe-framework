@@ -9,7 +9,6 @@ SilverStripe\Core\Injector\Injector:
         TrustedProxyMiddleware: '%$SilverStripe\Control\Middleware\TrustedProxyMiddleware'
         AllowedHostsMiddleware: '%$SilverStripe\Control\Middleware\AllowedHostsMiddleware'
         SessionMiddleware: '%$SilverStripe\Control\Middleware\SessionMiddleware'
-        FlushMiddleware: '%$SilverStripe\Control\Middleware\FlushMiddleware'
         ChangeDetectionMiddleware: '%$SilverStripe\Control\Middleware\ChangeDetectionMiddleware'
         HTTPCacheControleMiddleware: '%$SilverStripe\Control\Middleware\HTTPCacheControlMiddleware'
         CanonicalURLMiddleware: '%$SilverStripe\Control\Middleware\CanonicalURLMiddleware'
