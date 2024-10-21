@@ -171,11 +171,14 @@ trait CustomMethods
         }
         // Lazy define methods
         $lowerClass = strtolower(static::class);
-        if (!isset(self::class::$extra_methods[$lowerClass])) {
+        $lowerMethod = strtolower($method);
+        if (!array_key_exists($lowerClass, self::class::$extra_methods)
+            || !array_key_exists($lowerMethod, self::class::$extra_methods[$lowerClass])
+        ) {
             $this->defineMethods();
         }
 
-        return self::class::$extra_methods[$lowerClass][strtolower($method)] ?? null;
+        return self::class::$extra_methods[$lowerClass][$lowerMethod] ?? null;
     }
 
     /**

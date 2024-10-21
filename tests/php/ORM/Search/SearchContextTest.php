@@ -138,16 +138,36 @@ class SearchContextTest extends SapphireTest
     public function testUserDefinedFieldsAppearInSearchContext()
     {
         $company = SearchContextTest\Company::singleton();
+        $searchName = $company->getGeneralSearchFieldName();
+        $expected = new FieldList(
+            new HiddenField($searchName, 'General Search'),
+            (new TextField("Name", 'Name'))
+                ->setMaxLength(255),
+            new TextareaField("Industry", 'Industry'),
+            new NumericField("AnnualProfit", 'The Almighty Annual Profit')
+        );
         $context = $company->getDefaultSearchContext();
+        $actual = $context->getFields();
+        $this->assertSame($expected->count(), $actual->count());
         $this->assertEquals(
-            new FieldList(
-                new HiddenField($company->getGeneralSearchFieldName(), 'General Search'),
-                (new TextField("Name", 'Name'))
-                    ->setMaxLength(255),
-                new TextareaField("Industry", 'Industry'),
-                new NumericField("AnnualProfit", 'The Almighty Annual Profit')
-            ),
-            $context->getFields()
+            $expected->fieldByName($searchName)->Title,
+            $actual->fieldByName($searchName)->Title
+        );
+        $this->assertEquals(
+            $expected->fieldByName('Name')->Title,
+            $actual->fieldByName('Name')->Title
+        );
+        $this->assertEquals(
+            $expected->fieldByName('Name')->getMaxLength(),
+            $actual->fieldByName('Name')->getMaxLength()
+        );
+        $this->assertEquals(
+            $expected->fieldByName('Industry')->Title,
+            $actual->fieldByName('Industry')->Title
+        );
+        $this->assertEquals(
+            $expected->fieldByName('AnnualProfit')->Title,
+            $actual->fieldByName('AnnualProfit')->Title
         );
     }
 
