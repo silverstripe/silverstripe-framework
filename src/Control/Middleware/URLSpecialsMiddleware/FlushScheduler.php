@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Control\Middleware\URLSpecialsMiddleware;
 
-use SilverStripe\Core\BaseKernel;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
@@ -28,15 +27,13 @@ trait FlushScheduler
      */
     public function scheduleFlush(HTTPRequest $request)
     {
-        $flush = array_key_exists('flush', $request->getVars() ?? []) || ($request->getURL() === 'dev/build');
-
-        $kernel = Injector::inst()->get(Kernel::class);
-        if (!$flush || (method_exists($kernel, 'isFlushed') && $kernel->isFlushed())) {
-            return false;
+        if ($request->getURL() === 'dev/build') {
+            $kernel = Injector::inst()->get(Kernel::class);
+            if (!$kernel->isFlushed()) {
+                ScheduledFlushDiscoverer::scheduleFlush($kernel);
+                return true;
+            }
         }
-
-        ScheduledFlushDiscoverer::scheduleFlush($kernel);
-
-        return true;
+        return false;
     }
 }

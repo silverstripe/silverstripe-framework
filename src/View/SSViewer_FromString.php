@@ -5,6 +5,8 @@ namespace SilverStripe\View;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 
 /**
  * Special SSViewer that will process a template passed as a string, rather than a filename.
@@ -60,7 +62,7 @@ class SSViewer_FromString extends SSViewer
         $hash = sha1($this->content ?? '');
         $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . ".cache.$hash";
 
-        if (!file_exists($cacheFile ?? '') || isset($_GET['flush'])) {
+        if (!file_exists($cacheFile ?? '') || Injector::inst()->get(Kernel::class)->isFlushed()) {
             $content = $this->parseTemplateContent($this->content, "string sha1=$hash");
             $fh = fopen($cacheFile ?? '', 'w');
             fwrite($fh, $content ?? '');
