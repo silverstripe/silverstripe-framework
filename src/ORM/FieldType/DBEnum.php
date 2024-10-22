@@ -38,7 +38,7 @@ class DBEnum extends DBString
     /**
      * Clear all cached enum values.
      */
-    public static function flushCache(): void
+    public static function clearStaticCache(): void
     {
         DBEnum::$enum_cache = [];
     }
@@ -176,7 +176,7 @@ class DBEnum extends DBString
      * If table or name are not set, or if it is not a valid field on the given table,
      * then only known enum values are returned.
      *
-     * Values cached in this method can be cleared via `DBEnum::flushCache();`
+     * Values cached in this method can be cleared via `DBEnum::clearStaticCache();`
      */
     public function getEnumObsolete(): array
     {

@@ -568,6 +568,16 @@ class Hierarchy extends Extension
     }
 
     /**
+     * Get the title that will be used in TreeDropdownField and other tree structures.
+     */
+    public function getTreeTitle(): string
+    {
+        $title = $this->getOwner()->MenuTitle ?? $this->getOwner()->Title;
+        $this->getOwner()->extend('updateTreeTitle', $title);
+        return $title; // @TODO see if we need to escape this (it was escaped in Group and is in File too)
+    }
+
+    /**
      * Flush all Hierarchy caches:
      * - Children (instance)
      * - NumChildren (instance)

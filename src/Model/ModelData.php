@@ -74,9 +74,36 @@ class ModelData
 
     private array $objCache = [];
 
+    private $_cache_statusFlags = null;
+
     public function __construct()
     {
         // no-op
+    }
+
+    /**
+     * Flags provides the user with additional data about the current page status.
+     *
+     * Mostly this is used for versioning, but can be used for other purposes (e.g. localisation).
+     * Each page can have more than one status flag.
+     *
+     * Returns an associative array of a unique key to a (localized) title for the flag.
+     * The unique key can be reused as a CSS class.
+     *
+     * Example (simple):
+     *   "deletedonlive" => "Deleted"
+     *
+     * Example (with optional title attribute):
+     *   "deletedonlive" => ['text' => "Deleted", 'title' => 'This page has been deleted']
+     */
+    public function getStatusFlags(bool $cached = true): array
+    {
+        if (!$this->_cache_statusFlags || !$cached) {
+            $flags = [];
+            $this->extend('updateStatusFlags', $flags);
+            $this->_cache_statusFlags = $flags;
+        }
+        return $this->_cache_statusFlags;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -676,5 +703,19 @@ class ModelData
     public function Debug(): ModelData|string
     {
         return ModelDataDebugger::create($this);
+    }
+
+    /**
+     * Clears record-specific cached data.
+     *
+     * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
+     *                            When false will just clear session-local cached data
+     */
+    public function flushCache(bool $persistent = true): static
+    {
+        $this->objCacheClear();
+        $this->_cache_statusFlags = null;
+        $this->extend('onFlushCache');
+        return $this;
     }
 }

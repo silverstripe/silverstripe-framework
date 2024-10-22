@@ -197,7 +197,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         $schema = DataObject::getSchema();
 
         // Test with blank entries
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
         $do1 = new TestObject();
         $fields = $schema->databaseFields(TestObject::class, false);
         // May be overridden from DBClassName to DBClassNameVarchar by config
@@ -215,7 +215,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Test with instance of subclass
         $item1 = new TestIndexObject();
         $item1->write();
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -228,7 +228,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         // Test with instance of main class
         $item2 = new TestObject();
         $item2->write();
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
         $this->assertEquals(
             [
                 TestObject::class,
@@ -243,7 +243,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         $item1->write();
         $item2 = new TestObject();
         $item2->write();
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
         $this->assertEquals(
             [
                 TestObject::class,

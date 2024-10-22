@@ -95,7 +95,7 @@ class DBEnumTest extends SapphireTest
         // Test values with a record
         $obj->Colour = 'Red';
         $obj->write();
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
 
         $this->assertEquals(
             ['Red', 'Blue', 'Green'],
@@ -104,7 +104,7 @@ class DBEnumTest extends SapphireTest
 
         // If the value is removed from the enum, obsolete content is still retained
         $colourField->setEnum(['Blue', 'Green', 'Purple']);
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
 
         $this->assertEquals(
             ['Blue', 'Green', 'Purple', 'Red'], // Red on the end now, because it's obsolete
@@ -135,7 +135,7 @@ class DBEnumTest extends SapphireTest
         // If obsolete records are deleted, the extra values go away
         $obj->delete();
         $obj2->delete();
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
         $this->assertEquals(
             ['Blue', 'Green'],
             $colourField->getEnumObsolete()
