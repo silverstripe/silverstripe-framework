@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Kernel;
 
 /**
  * This class keeps track of the available database adapters
@@ -155,8 +156,8 @@ class DatabaseAdapterRegistry implements Flushable
      */
     protected static function getConfigureDatabasePaths(): array
     {
-        // autoconfigure() will get called before flush() on ?flush, so manually flush just to ensure no weirdness
-        if (isset($_GET['flush'])) {
+        // autoconfigure() will get called before flush() on flush, so manually flush just to ensure no weirdness
+        if (Injector::inst()->get(Kernel::class)->isFlushed()) {
             static::flush();
         }
         try {

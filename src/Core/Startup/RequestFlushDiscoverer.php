@@ -44,7 +44,6 @@ class RequestFlushDiscoverer implements FlushDiscoverer
     /**
      * Checks whether the request contains any flush indicators
      *
-     *
      * @return null|bool flush or don't care
      */
     protected function lookupRequest()
