@@ -495,16 +495,6 @@ class Group extends DataObject
     }
 
     /**
-     * @return string
-     */
-    public function getTreeTitle()
-    {
-        $title = htmlspecialchars($this->Title ?? '', ENT_QUOTES);
-        $this->extend('updateTreeTitle', $title);
-        return $title;
-    }
-
-    /**
      * Overloaded to ensure the code is always descent.
      *
      * @param string $val

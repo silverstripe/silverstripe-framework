@@ -618,6 +618,30 @@ class Hierarchy extends Extension
     }
 
     /**
+     * Return the CSS classes to apply to this node in the CMS tree.
+     */
+    public function CMSTreeClasses(): string
+    {
+        $owner = $this->getOwner();
+        $classes = sprintf('class-%s', Convert::raw2htmlid(get_class($owner)));
+
+        if (!$owner->canAddChildren()) {
+            $classes .= " nochildren";
+        }
+
+        if (!$owner->canEdit() && !$owner->canAddChildren()) {
+            if (!$owner->canView()) {
+                $classes .= " disabled";
+            } else {
+                $classes .= " edit-disabled";
+            }
+        }
+
+        $owner->invokeWithExtensions('updateCMSTreeClasses', $classes);
+        return $classes;
+    }
+
+    /**
      * Find the first class in the inheritance chain that has Hierarchy extension applied
      *
      * @return string
@@ -775,6 +799,17 @@ class Hierarchy extends Extension
         }
         $crumbs[] = $this->owner->getTitle();
         return implode($separator ?? '', $crumbs);
+    }
+
+    /**
+     * Get the title that will be used in TreeDropdownField and other tree structures.
+     */
+    public function getTreeTitle(): string
+    {
+        $owner = $this->getOwner();
+        $title = $owner->MenuTitle ?: $owner->Title;
+        $owner->extend('updateTreeTitle', $title);
+        return Convert::raw2xml($title ?? '');
     }
 
     /**
