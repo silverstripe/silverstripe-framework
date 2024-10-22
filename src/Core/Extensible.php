@@ -511,7 +511,7 @@ trait Extensible
         // Setup all extension instances for this instance
         $this->extension_instances = [];
         foreach (ClassInfo::ancestry(static::class) as $class) {
-            if (in_array($class, self::$unextendable_classes)) {
+            if (in_array($class, self::class::$unextendable_classes)) {
                 continue;
             }
             $extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
