@@ -70,3 +70,6 @@ SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject:
   obj5ba:
     Parent: =>SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject.obj5b
     Title: Obj 5ba
+SilverStripe\ORM\Tests\HierarchyTest\NoEditTestObject:
+  no-edit1:
+    Title: Obj no-edit 1

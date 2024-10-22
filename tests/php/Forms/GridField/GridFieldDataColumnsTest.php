@@ -4,11 +4,13 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use InvalidArgumentException;
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_Base;
+use SilverStripe\Forms\Tests\GridField\GridFieldDataColumnsTest\TestStatusFlagsObject;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
 use stdClass;
@@ -87,5 +89,82 @@ class GridFieldDataColumnsTest extends SapphireTest
         );
 
         $component->getDisplayFields($gridField);
+    }
+
+    public static function provideGetColumnContentHasStatusFlags(): array
+    {
+        return [
+            'turned off' => [
+                'displayStatusFlags' => false,
+                'columnsForStatusFlag' => [],
+                'columnsHaveFlags' => [
+                    'Title' => false,
+                    'AnotherField' => false,
+                ],
+            ],
+            'turned on, default col' => [
+                'displayStatusFlags' => true,
+                'columnsForStatusFlag' => [],
+                'columnsHaveFlags' => [
+                    'Title' => true,
+                    'AnotherField' => false,
+                ],
+            ],
+            'turned on, explicit col' => [
+                'displayStatusFlags' => true,
+                'columnsForStatusFlag' => ['AnotherField'],
+                'columnsHaveFlags' => [
+                    'Title' => false,
+                    'AnotherField' => true,
+                ],
+            ],
+            'turned on, missing col' => [
+                'displayStatusFlags' => true,
+                'columnsForStatusFlag' => ['MissingField'],
+                'columnsHaveFlags' => [
+                    'Title' => false,
+                    'AnotherField' => false,
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('provideGetColumnContentHasStatusFlags')]
+    public function testGetColumnContentHasStatusFlags(
+        bool $displayStatusFlags,
+        array $columnsForStatusFlag,
+        array $columnsHaveFlags
+    ): void {
+        $model = new TestStatusFlagsObject();
+        $gridfield = new GridField('testfield', 'testfield', new ArrayList([$model]));
+        $columns = $gridfield->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $columns->setDisplayFields(['Title' => 'Title', 'AnotherField' => 'AnotherField']);
+        $columns->setDisplayStatusFlags($displayStatusFlags);
+        // For this test an empty array means "use the default" - we'll test passing in an empty aray separately.
+        if (!empty($columnsForStatusFlag)) {
+            $columns->setColumnsForStatusFlag($columnsForStatusFlag);
+        }
+        // Let columns check for an appropriate column to render the flags in
+        $cols = [];
+        $columns->augmentColumns($gridfield, $cols);
+
+        $flags = $model->getStatusFlagMarkup('ss-gridfield-badge');
+        foreach ($columnsHaveFlags as $column => $hasFlags) {
+            if ($hasFlags) {
+                $this->assertStringContainsString($flags, $columns->getColumnContent($gridfield, $model, $column));
+            } else {
+                $this->assertStringNotContainsString($flags, $columns->getColumnContent($gridfield, $model, $column));
+            }
+        }
+    }
+
+    public function testSetColumnsForStatusFlagEmptyArray(): void
+    {
+        $model = new TestStatusFlagsObject();
+        $gridfield = new GridField('testfield', 'testfield', new ArrayList([$model]));
+        $columns = $gridfield->getConfig()->getComponentByType(GridFieldDataColumns::class);
+
+        $this->expectException(InvalidArgumentException::class);
+        $columns->setColumnsForStatusFlag([]);
     }
 }

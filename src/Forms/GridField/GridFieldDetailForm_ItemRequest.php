@@ -32,6 +32,7 @@ use SilverStripe\Model\ArrayData;
 use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBField;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
 {
@@ -930,11 +931,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $items = $this->popupController->Breadcrumbs($unlinked);
 
         if (!$items) {
+            /** @var ArrayList<ArrayData> $items */
             $items = ArrayList::create();
         }
 
-        if ($this->record && $this->record->ID) {
-            $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
+        $record = $this->getRecord();
+        if ($record && $record->ID) {
+            $title = ($record->Title) ? $record->Title : "#{$record->ID}";
             $items->push(ArrayData::create([
                 'Title' => $title,
                 'Link' => $this->Link()
@@ -950,6 +953,11 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($item->Link) {
                 $item->Link = $this->gridField->addAllStateToUrl($item->Link);
             }
+        }
+
+        $statusFlags = $record->getStatusFlagMarkup('badge--breadcrumbs');
+        if ($statusFlags) {
+            $items->last()->setField('Extra', DBField::create_field('HTMLFragment', $statusFlags));
         }
 
         $this->extend('updateBreadcrumbs', $items);

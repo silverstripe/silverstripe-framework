@@ -116,17 +116,13 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
 {
     /**
      * Human-readable singular name.
-     * @var string
-     * @config
      */
-    private static $singular_name = null;
+    private static ?string $singular_name = null;
 
     /**
      * Human-readable plural name
-     * @var string
-     * @config
      */
-    private static $plural_name = null;
+    private static ?string $plural_name = null;
 
     /**
      * Description of the class.
@@ -150,7 +146,6 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      * @var string
      */
     private static $default_classname = null;
-
     /**
      * Whether this DataObject class must only use the primary database and not a read-only replica
      * Note that this will be only be enforced when using DataQuery::execute() or
@@ -957,40 +952,23 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
 
     /**
      * Get description for this class
-     * @return null|string
      */
-    public function classDescription()
+    public function classDescription(): ?string
     {
         return static::config()->get('class_description', Config::UNINHERITED);
     }
 
     /**
      * Get localised description for this class
-     * @return null|string
      */
-    public function i18n_classDescription()
+    public function i18n_classDescription(): ?string
     {
         $notDefined = 'NOT_DEFINED';
-        $baseDescription = $this->classDescription() ?? $notDefined;
-
-        // Check the new i18n key first
-        $description = _t(static::class . '.CLASS_DESCRIPTION', $baseDescription);
-        if ($description !== $baseDescription) {
-            return $description;
-        }
-
-        // Fall back on the deprecated localisation key
-        $legacyI18n = _t(static::class . '.DESCRIPTION', $baseDescription);
-        if ($legacyI18n !== $baseDescription) {
-            return $legacyI18n;
-        }
-
-        // If there was no description available in config nor in i18n, return null
-        if ($baseDescription === $notDefined) {
+        $description = _t(static::class.'.CLASS_DESCRIPTION', $this->classDescription() ?? $notDefined);
+        if ($description === $notDefined) {
             return null;
         }
-        // Return raw description
-        return $baseDescription;
+        return $description;
     }
 
     /**
@@ -3562,14 +3540,14 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     }
 
     /**
-     * Flush the cached results for all relations (has_one, has_many, many_many)
-     * Also clears any cached aggregate data.
+     * @inheritDoc
      *
-     * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
+     * Also flush the cached results for all relations (has_one, has_many, many_many)
+     *
+     * @param bool $persistent When true will also clear persistent data stored in the Cache system.
      *                            When false will just clear session-local cached data
-     * @return static $this
      */
-    public function flushCache($persistent = true)
+    public function flushCache(bool $persistent = true): static
     {
         if (static::class == DataObject::class) {
             DataObject::$_cache_get_one = [];
@@ -3583,11 +3561,9 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
             }
         }
 
-        $this->extend('onFlushCache');
-
         $this->components = [];
         $this->eagerLoadedData = [];
-        return $this;
+        return parent::flushCache();
     }
 
     /**

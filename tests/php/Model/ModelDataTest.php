@@ -398,4 +398,35 @@ class ModelDataTest extends SapphireTest
         $modelData->arr = $arr;
         $this->assertInstanceOf($expectedClass, $modelData->obj('arr'));
     }
+
+    public function testGetStatusFlags(): void
+    {
+        // no flags by default
+        $modelData = new ModelData();
+        $this->assertSame([], $modelData->getStatusFlags());
+
+        // test updateStatusFlags extension hook
+        $modelData = new ModelDataTestObject();
+        $this->assertSame([
+            'myKey1' => 'some flag',
+            'myKey2' => [
+                'text' => 'another flag',
+                'title' => 'title attr',
+            ],
+        ], $modelData->getStatusFlags());
+    }
+
+    public function testGetStatusFlagMarkup(): void
+    {
+        // no flags means no markup by default
+        $modelData = new ModelData();
+        $this->assertSame('', $modelData->getStatusFlagMarkup('my-css-class'));
+
+        // test updateStatusFlags extension hook
+        $modelData = new ModelDataTestObject();
+        $this->assertSame(
+            '<span class="badge status-myKey1 my-css-class">some flag</span><span class="badge status-myKey2 my-css-class" title="title attr">another flag</span>',
+            $modelData->getStatusFlagMarkup('my-css-class')
+        );
+    }
 }

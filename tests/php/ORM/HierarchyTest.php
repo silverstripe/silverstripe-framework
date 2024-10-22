@@ -2,9 +2,13 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionClass;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Hierarchy\Hierarchy;
 
 class HierarchyTest extends SapphireTest
 {
@@ -16,6 +20,16 @@ class HierarchyTest extends SapphireTest
         HierarchyTest\HideTestSubObject::class,
         HierarchyTest\HierarchyOnSubclassTestObject::class,
         HierarchyTest\HierarchyOnSubclassTestSubObject::class,
+        HierarchyTest\NoEditTestObject::class,
+        HierarchyTest\HierarchyModel::class,
+        HierarchyTest\SortableHierarchyModel::class,
+        HierarchyTest\TestAllowedChildrenA::class,
+        HierarchyTest\TestAllowedChildrenB::class,
+        HierarchyTest\TestAllowedChildrenC::class,
+        HierarchyTest\TestAllowedChildrenCext::class,
+        HierarchyTest\TestAllowedChildrenD::class,
+        HierarchyTest\TestAllowedChildrenE::class,
+        HierarchyTest\TestAllowedChildrenHidden::class,
     ];
 
     public static function getExtraDataObjects()
@@ -68,12 +82,12 @@ class HierarchyTest extends SapphireTest
 
         // Check that obj1-3 appear at the top level of the AllHistoricalChildren tree
         $this->assertEquals(
-            ["Obj 1", "Obj 2", "Obj 3"],
+            ['Obj 1', 'Obj 2', 'Obj 3', 'Obj no-edit 1'],
             HierarchyTest\TestObject::singleton()->AllHistoricalChildren()->column('Title')
         );
 
         // Check numHistoricalChildren
-        $this->assertEquals(3, HierarchyTest\TestObject::singleton()->numHistoricalChildren());
+        $this->assertEquals(4, HierarchyTest\TestObject::singleton()->numHistoricalChildren());
 
         // Check that both obj 2 children are returned
         /** @var HierarchyTest\TestObject $obj2 */
@@ -293,5 +307,379 @@ class HierarchyTest extends SapphireTest
         }
         $this->assertEquals($obj4->stageChildren()->Count(), 1);
         $this->assertEquals($obj4->liveChildren()->Count(), 1);
+    }
+
+    /**
+     * Check canCreate permissions respect allowed_children config.
+     *
+     * Note we are intentionally note testing all possible allowed_children config here since allowedChildren()
+     * will be called and there are dedicated tests for that method.
+     */
+    public function testCanCreate(): void
+    {
+        $singleton = singleton(HierarchyTest\TestObject::class);
+        $reflectionHierarchy = new ReflectionClass(Hierarchy::class);
+        $reflectionHierarchy->setStaticPropertyValue('cache_allowedChildren', []);
+
+        // Test logged out users cannot create (i.e. we're not breaking default permissions)
+        $this->logOut();
+        $this->assertFalse($singleton->canCreate());
+
+        // Login with admin permissions (default return true on DataObject)
+        $this->logInWithPermission('ADMIN');
+        $this->assertTrue($singleton->canCreate());
+
+        // Test creation underneath a parent which this user can edit
+        $parent = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
+        $this->assertTrue($singleton->canCreate(null, ['Parent' => $parent]));
+
+        // Test creation underneath a parent which this user CANNOT edit
+        $parent = $this->objFromFixture(HierarchyTest\NoEditTestObject::class, 'no-edit1');
+        $this->assertFalse($singleton->canCreate(null, ['Parent' => $parent]));
+
+        // Test creation underneath a parent which explicitly allows it
+        HierarchyTest\HideTestSubObject::config()->set('allowed_children', [HierarchyTest\HideTestObject::class]);
+        $singleton2 = HierarchyTest\HideTestObject::singleton();
+        $reflectionHierarchy->setStaticPropertyValue('cache_allowedChildren', []);
+        $parent = $this->objFromFixture(HierarchyTest\HideTestSubObject::class, 'obj4b');
+        $this->assertTrue($singleton2->canCreate(null, ['Parent' => $parent]));
+
+        // Test creation underneath a parent which implicitly does NOT allow it
+        HierarchyTest\HideTestSubObject::config()->set('allowed_children', [HierarchyTest\HideTestSubObject::class]);
+        $reflectionHierarchy->setStaticPropertyValue('cache_allowedChildren', []);
+        $parent = $this->objFromFixture(HierarchyTest\HideTestSubObject::class, 'obj4b');
+        $this->assertFalse($singleton2->canCreate(null, ['Parent' => $parent]));
+
+        // Test we don't check for allowedChildren on parent context if it's not in the same hierarchy
+        $parent = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
+        HierarchyTest\HideTestObject::config()->set('allowed_children', [HierarchyTest\HideTestObject::class]);
+        $this->assertTrue($singleton->canCreate(null, ['Parent' => $parent]));
+    }
+
+    public function testCanAddChildren()
+    {
+        $record = new HierarchyTest\TestObject();
+
+        // Can't add children if unauthenticated (default canEdit permissions)
+        $this->logOut();
+        $this->assertFalse($record->canAddChildren());
+
+        // Admin can add children by default
+        $this->logInWithPermission('ADMIN');
+        $this->assertTrue($record->canAddChildren());
+
+        // Can't add children to archived records
+        $record->publishSingle();
+        $record->doArchive();
+        $this->assertFalse($record->canAddChildren());
+
+        // Can't add children to models that don't allow children
+        $record = new HierarchyTest\TestAllowedChildrenE();
+        $this->assertFalse($record->canAddChildren());
+
+        // Can't edit, so can't add children
+        $record = new HierarchyTest\NoEditTestObject();
+        $this->assertFalse($record->canAddChildren());
+    }
+
+    public static function provideAllowedChildren(): array
+    {
+        return [
+            'implicitly allows entire unhidden hierarchy' => [
+                'className' => HierarchyTest\HierarchyModel::class,
+                'expected' => [
+                    HierarchyTest\HierarchyModel::class,
+                    HierarchyTest\TestAllowedChildrenA::class,
+                    HierarchyTest\TestAllowedChildrenB::class,
+                    HierarchyTest\TestAllowedChildrenC::class,
+                    HierarchyTest\TestAllowedChildrenD::class,
+                    HierarchyTest\TestAllowedChildrenE::class,
+                    HierarchyTest\TestAllowedChildrenCext::class,
+                ],
+            ],
+            'directly sets allowed child' => [
+                'className' => HierarchyTest\TestAllowedChildrenA::class,
+                'expected' => [
+                    HierarchyTest\TestAllowedChildrenB::class,
+                ],
+            ],
+            'subclasses are allowed implicitly' => [
+                'className' => HierarchyTest\TestAllowedChildrenB::class,
+                'expected' => [
+                    HierarchyTest\TestAllowedChildrenC::class,
+                    HierarchyTest\TestAllowedChildrenCext::class,
+                ],
+            ],
+            'multiple classes can be defined' => [
+                'className' => HierarchyTest\TestAllowedChildrenC::class,
+                'expected' => [
+                    HierarchyTest\TestAllowedChildrenA::class,
+                    HierarchyTest\TestAllowedChildrenD::class,
+                ],
+            ],
+            'overrides (rather than merging with) parent class config' => [
+                'className' => HierarchyTest\TestAllowedChildrenCext::class,
+                'expected' => [
+                    HierarchyTest\TestAllowedChildrenB::class,
+                ],
+            ],
+            'explicitly excludes subclasses of the allowed child' => [
+                'className' => HierarchyTest\TestAllowedChildrenD::class,
+                'expected' => [
+                    HierarchyTest\TestAllowedChildrenC::class,
+                ],
+            ],
+            'explicitly allows no children' => [
+                'className' => HierarchyTest\TestAllowedChildrenE::class,
+                'expected' => [],
+            ],
+        ];
+    }
+
+    /**
+     * Tests that various types of SiteTree classes will or will not be returned from the allowedChildren method
+     */
+    #[DataProvider('provideAllowedChildren')]
+    public function testAllowedChildren(string $className, array $expected): void
+    {
+        $class = new $className();
+        $this->assertSame($expected, $class->allowedChildren());
+    }
+
+    public static function provideValidationAllowedChildren(): array
+    {
+        return [
+            'Does allow children on unrestricted parent' => [
+                'parentClass' => HierarchyTest\HierarchyModel::class,
+                'validateClass' => HierarchyTest\TestAllowedChildrenB::class,
+                'expected' => true,
+            ],
+            'Does allow child specifically allowed by parent' => [
+                'parentClass' => HierarchyTest\TestAllowedChildrenA::class,
+                'validateClass' => HierarchyTest\TestAllowedChildrenB::class,
+                'expected' => true,
+            ],
+            'Doesnt allow child on parents specifically restricting children' => [
+                'parentClass' => HierarchyTest\TestAllowedChildrenC::class,
+                'validateClass' => HierarchyTest\TestAllowedChildrenB::class,
+                'expected' => false,
+            ],
+            'Doesnt allow child on parents disallowing all children' => [
+                'parentClass' => HierarchyTest\TestAllowedChildrenE::class,
+                'validateClass' => HierarchyTest\TestAllowedChildrenB::class,
+                'expected' => false,
+            ],
+            'Does allow subclasses of allowed children by default' => [
+                'parentClass' => HierarchyTest\TestAllowedChildrenB::class,
+                'validateClass' => HierarchyTest\TestAllowedChildrenCext::class,
+                'expected' => true,
+            ],
+            'Doesnt allow child where only parent class is allowed on parent node, and asterisk prefixing is used' => [
+                'parentClass' => HierarchyTest\TestAllowedChildrenD::class,
+                'validateClass' => HierarchyTest\TestAllowedChildrenCext::class,
+                'expected' => false,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideValidationAllowedChildren')]
+    public function testValidationAllowedChildren(string $parentClass, string $validateClass, bool $expected): void
+    {
+        $parent = new $parentClass();
+        $parent->write();
+        $toValidate = new $validateClass();
+        $toValidate->ParentID = $parent->ID;
+
+        $this->assertSame($expected, $toValidate->validate()->isValid());
+    }
+
+    public static function provideValidationCanBeRoot(): array
+    {
+        return [
+            [
+                'canBeRoot' => true,
+                'hasParent' => true,
+                'expected' => true,
+            ],
+            [
+                'canBeRoot' => true,
+                'hasParent' => false,
+                'expected' => true,
+            ],
+            [
+                'canBeRoot' => false,
+                'hasParent' => true,
+                'expected' => true,
+            ],
+            [
+                'canBeRoot' => false,
+                'hasParent' => false,
+                'expected' => false,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideValidationCanBeRoot')]
+    public function testValidationCanBeRoot(bool $canBeRoot, bool $hasParent, bool $expected): void
+    {
+        $record = new HierarchyTest\HierarchyModel();
+        if ($hasParent) {
+            $parent = new HierarchyTest\HierarchyModel();
+            $parent->write();
+            $record->ParentID = $parent->ID;
+        }
+
+        HierarchyTest\HierarchyModel::config()->set('can_be_root', $canBeRoot);
+        $this->assertSame($expected, $record->validate()->isValid());
+    }
+
+    /**
+     * Test that duplicateWithChildren() works on models with no sort field
+     */
+    public function testDuplicateWithChildren(): void
+    {
+        $parent = new HierarchyTest\HierarchyModel();
+        $parent->Title = 'Parent';
+        $parent->write();
+
+        $child1 = new HierarchyTest\HierarchyModel();
+        $child1->ParentID = $parent->ID;
+        $child1->Title = 'Child 1';
+        $child1->write();
+
+        $child2 = new HierarchyTest\HierarchyModel();
+        $child2->ParentID = $parent->ID;
+        $child2->Title = 'Child 2';
+        $child2->write();
+
+        $duplicateParent = $parent->duplicateWithChildren();
+        $duplicateChildren = $duplicateParent->AllChildren()->toArray();
+        $this->assertCount(2, $duplicateChildren);
+
+        $duplicateChild1 = array_shift($duplicateChildren);
+        $duplicateChild2 = array_shift($duplicateChildren);
+
+        // Kept titles, but have new IDs
+        $this->assertEquals($child1->Title, $duplicateChild1->Title);
+        $this->assertEquals($child2->Title, $duplicateChild2->Title);
+        $this->assertNotEquals($duplicateChild1->ID, $child1->ID);
+        $this->assertNotEquals($duplicateChild2->ID, $child2->ID);
+    }
+
+    /**
+     * Test that duplicateWithChildren() works on models which do have a sort field
+     */
+    public function testDuplicateWithChildrenRetainSort(): void
+    {
+        $parent = new HierarchyTest\SortableHierarchyModel();
+        $parent->Title = 'Parent';
+        $parent->write();
+
+        $child1 = new HierarchyTest\SortableHierarchyModel();
+        $child1->ParentID = $parent->ID;
+        $child1->Title = 'Child 1';
+        $child1->Sort = 2;
+        $child1->write();
+
+        $child2 = new HierarchyTest\SortableHierarchyModel();
+        $child2->ParentID = $parent->ID;
+        $child2->Title = 'Child 2';
+        $child2->Sort = 1;
+        $child2->write();
+
+        $duplicateParent = $parent->duplicateWithChildren();
+        $duplicateChildren = $duplicateParent->AllChildren()->toArray();
+        $this->assertCount(2, $duplicateChildren);
+
+        $duplicateChild2 = array_shift($duplicateChildren);
+        $duplicateChild1 = array_shift($duplicateChildren);
+
+        // Kept titles, but have new IDs
+        $this->assertEquals($child1->Title, $duplicateChild1->Title);
+        $this->assertEquals($child2->Title, $duplicateChild2->Title);
+        $this->assertNotEquals($duplicateChild1->ID, $child1->ID);
+        $this->assertNotEquals($duplicateChild2->ID, $child2->ID);
+
+        // assertGreaterThan works by having the LOWER value first
+        $this->assertGreaterThan($duplicateChild2->Sort, $duplicateChild1->Sort);
+    }
+
+    public static function provideDefaultChild(): array
+    {
+        return [
+            'defaults to first allowed child' => [
+                'class' => HierarchyTest\HierarchyModel::class,
+                'defaultChildConfig' => null,
+                'expected' => HierarchyTest\HierarchyModel::class,
+            ],
+            'respects default_child config' => [
+                'class' => HierarchyTest\HierarchyModel::class,
+                'defaultChildConfig' => HierarchyTest\TestAllowedChildrenA::class,
+                'expected' => HierarchyTest\TestAllowedChildrenA::class,
+            ],
+            'doesnt allow children outside of class hierarchy' => [
+                'class' => HierarchyTest\HierarchyModel::class,
+                'defaultChildConfig' => HierarchyTest\SortableHierarchyModel::class,
+                'expected' => HierarchyTest\HierarchyModel::class,
+            ],
+            'doesnt allow hidden children' => [
+                'class' => HierarchyTest\HierarchyModel::class,
+                'defaultChildConfig' => HierarchyTest\TestAllowedChildrenHidden::class,
+                'expected' => HierarchyTest\HierarchyModel::class,
+            ],
+            'doesnt allow children that arent in allow list' => [
+                'class' => HierarchyTest\TestAllowedChildrenA::class,
+                'defaultChildConfig' => HierarchyTest\TestAllowedChildrenA::class,
+                'expected' => HierarchyTest\TestAllowedChildrenB::class,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideDefaultChild')]
+    public function testDefaultChild(string $class, ?string $defaultChildConfig, ?string $expected): void
+    {
+        Config::forClass($class)->set('default_child', $defaultChildConfig);
+        /** @var DataObject&Hierarchy $obj */
+        $obj = new $class();
+
+        $this->assertSame($expected, $obj->defaultChild());
+    }
+
+    public static function provideDefaultParent(): array
+    {
+        // These are subject to change but the current behaviour is very naive
+        // so that's what we're validating against here
+        return [
+            'no default value' => [
+                'class' => HierarchyTest\HierarchyModel::class,
+                'defaultParentConfig' => null,
+                'expected' => null,
+            ],
+            'respects default_parent config' => [
+                'class' => HierarchyTest\HierarchyModel::class,
+                'defaultParentConfig' => HierarchyTest\TestAllowedChildrenA::class,
+                'expected' => HierarchyTest\TestAllowedChildrenA::class,
+            ],
+            'doesnt validate if the class is in our hierarchy' => [
+                'class' => HierarchyTest\SortableHierarchyModel::class,
+                'defaultParentConfig' => HierarchyTest\HierarchyModel::class,
+                'expected' => HierarchyTest\HierarchyModel::class,
+            ],
+            'doesnt validate against allowedChildren of the parent class' => [
+                'class' => HierarchyTest\TestAllowedChildrenA::class,
+                'defaultParentConfig' => HierarchyTest\TestAllowedChildrenA::class,
+                'expected' => HierarchyTest\TestAllowedChildrenA::class,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideDefaultParent')]
+    public function testDefaultParent(string $class, ?string $defaultParentConfig, ?string $expected): void
+    {
+        Config::forClass($class)->set('default_parent', $defaultParentConfig);
+        /** @var DataObject&Hierarchy $obj */
+        $obj = new $class();
+
+        $this->assertSame($expected, $obj->defaultParent());
     }
 }

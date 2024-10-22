@@ -6,14 +6,12 @@ use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Model\ModelData;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * @see GridField
  */
 class GridFieldDataColumns extends AbstractGridFieldComponent implements GridField_ColumnProvider
 {
-
     /**
      * @var array
      */
@@ -31,6 +29,15 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      */
     protected $displayFields = [];
 
+    private bool $displayStatusFlags = true;
+
+    private array $columnsForStatusFlag = [
+        'Title',
+        'Name',
+    ];
+
+    private ?string $statusFlagColumn = null;
+
     /**
      * Modify the list of columns displayed in the table.
      * See {@link GridFieldDataColumns->getDisplayFields()} and {@link GridFieldDataColumns}.
@@ -44,6 +51,10 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
 
         foreach ($baseColumns as $col) {
             $columns[] = $col;
+            // Find the column to add status flags to
+            if ($this->statusFlagColumn === null && in_array($col, $this->getColumnsForStatusFlag())) {
+                $this->statusFlagColumn = $col;
+            }
         }
 
         $columns = array_unique($columns ?? []);
@@ -58,6 +69,45 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     public function getColumnsHandled($gridField)
     {
         return array_keys($this->getDisplayFields($gridField) ?? []);
+    }
+
+    /**
+     * Set whether status flags are displayed in this gridfield
+     */
+    public function setDisplayStatusFlags(bool $display): static
+    {
+        $this->displayStatusFlags = $display;
+        return $this;
+    }
+
+    /**
+     * Get whether status flags are displayed in this gridfield
+     */
+    public function getDisplayStatusFlags(): bool
+    {
+        return $this->displayStatusFlags;
+    }
+
+    /**
+     * Set which columns can be used to display the status flags.
+     * The first column from this list found in the gridfield will be used.
+     */
+    public function setColumnsForStatusFlag(array $columns): static
+    {
+        if (empty($columns)) {
+            throw new InvalidArgumentException('Columns array must not be empty');
+        }
+        $this->columnsForStatusFlag = $columns;
+        return $this;
+    }
+
+    /**
+     * Get which columns can be used to display the status flags.
+     * The first column from this list found in the gridfield will be used.
+     */
+    public function getColumnsForStatusFlag(): array
+    {
+        return $this->columnsForStatusFlag;
     }
 
     /**
@@ -182,6 +232,11 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
         $value = $this->formatValue($gridField, $record, $columnName, $value);
         // Do any final escaping
         $value = $this->escapeValue($gridField, $value);
+
+        // Add on status flags
+        if ($this->getDisplayStatusFlags() && $columnName === $this->statusFlagColumn) {
+            $value .= $record->getStatusFlagMarkup('ss-gridfield-badge');
+        }
 
         return $value;
     }

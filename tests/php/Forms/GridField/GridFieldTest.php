@@ -13,8 +13,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldConfig_Base;
-use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
@@ -37,7 +35,6 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
-use SilverStripe\Versioned\VersionedGridFieldStateExtension;
 
 class GridFieldTest extends SapphireTest
 {
@@ -46,15 +43,6 @@ class GridFieldTest extends SapphireTest
         Cheerleader::class,
         Player::class,
         Team::class,
-    ];
-
-    protected static $illegal_extensions = [
-        GridFieldConfig_RecordEditor::class => [
-            VersionedGridFieldStateExtension::class,
-        ],
-        GridFieldConfig_Base::class => [
-            VersionedGridFieldStateExtension::class,
-        ],
     ];
 
     public function testGridField()

@@ -21,4 +21,13 @@ class ModelDataTestExtension extends Extension implements TestOnly
     {
         return 'Public function';
     }
+
+    public function updateStatusFlags(array &$flags): void
+    {
+        $flags['myKey1'] = 'some flag';
+        $flags['myKey2'] = [
+            'text' => 'another flag',
+            'title' => 'title attr',
+        ];
+    }
 }

@@ -5,7 +5,6 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Validation\FieldValidation\OptionFieldValidator;
 use SilverStripe\Core\Resettable;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SelectField;
@@ -42,16 +41,6 @@ class DBEnum extends DBString implements Resettable
      * nested arrays with keys mapped to field names. The values of the lowest level array are the enum values
      */
     protected static array $enum_cache = [];
-
-    /**
-     * Clear all cached enum values.
-     * @deprecated 5.4.0 Use reset() instead.
-     */
-    public static function flushCache(): void
-    {
-        Deprecation::notice('5.4.0', 'Use reset() instead.');
-        static::reset();
-    }
 
     public static function reset(): void
     {

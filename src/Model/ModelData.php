@@ -17,6 +17,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\CastingService;
+use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
 use UnexpectedValueException;
 
@@ -47,6 +48,7 @@ class ModelData
     private static array $casting = [
         'CSSClasses' => 'Varchar',
         'forTemplate' => 'HTMLText',
+        'StatusFlagMarkup' => 'HTMLFragment',
     ];
 
     /**
@@ -73,6 +75,8 @@ class ModelData
     protected ?ModelData $customisedObject = null;
 
     private array $objCache = [];
+
+    private $_cache_statusFlags = null;
 
     public function __construct()
     {
@@ -488,6 +492,52 @@ class ModelData
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
 
     /**
+     * Flags provides the user with additional data about the current page status.
+     *
+     * Mostly this is used for versioning, but can be used for other purposes (e.g. localisation).
+     * Each page can have more than one status flag.
+     *
+     * Returns an associative array of a unique key to a (localized) title for the flag.
+     * The unique key can be reused as a CSS class.
+     *
+     * Example (simple):
+     *   "deletedonlive" => "Deleted"
+     *
+     * Example (with optional title attribute):
+     *   "deletedonlive" => ['text' => "Deleted", 'title' => 'This page has been deleted']
+     */
+    public function getStatusFlags(bool $cached = true): array
+    {
+        if (!$this->_cache_statusFlags || !$cached) {
+            $flags = [];
+            $this->extend('updateStatusFlags', $flags);
+            $this->_cache_statusFlags = $flags;
+        }
+        return $this->_cache_statusFlags;
+    }
+
+    /**
+     * Get the HTML markup for rendering status flags for this model.
+     */
+    public function getStatusFlagMarkup(string $additionalCssClass = ''): string
+    {
+        $flagContent = '';
+        foreach ($this->getStatusFlags() as $class => $data) {
+            $flagAttributes = [
+                'class' => rtrim("badge status-{$class} $additionalCssClass"),
+            ];
+            if (is_string($data)) {
+                $data = ['text' => $data];
+            }
+            if (isset($data['title'])) {
+                $flagAttributes['title'] = $data['title'];
+            }
+            $flagContent .= HTML::createTag('span', $flagAttributes, Convert::raw2xml($data['text']));
+        }
+        return $flagContent;
+    }
+
+    /**
      * Find appropriate templates for SSViewer to use to render this object
      */
     public function getViewerTemplates(string $suffix = ''): array
@@ -543,6 +593,17 @@ class ModelData
     public function Debug(): ModelData|string
     {
         return ModelDataDebugger::create($this);
+    }
+
+    /**
+     * Clears record-specific cached data.
+     */
+    public function flushCache(): static
+    {
+        $this->objCacheClear();
+        $this->_cache_statusFlags = null;
+        $this->extend('onFlushCache');
+        return $this;
     }
 
     /**

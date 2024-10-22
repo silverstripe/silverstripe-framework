@@ -17,6 +17,9 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use Exception;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\HiddenClass;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
@@ -28,6 +31,47 @@ use SilverStripe\Model\ModelData;
  */
 class Hierarchy extends Extension
 {
+    /**
+     * The name of the dedicated sort field, if there is one.
+     * Will be null if there's no field for sorting this model.
+     * Does not affect default_sort which needs to be configured separately.
+     */
+    private static ?string $sort_field = null;
+
+    /**
+     * The default child class for this model.
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     */
+    private static ?string $default_child = null;
+
+    /**
+     * The default parent class for this model.
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     */
+    private static ?string $default_parent = null;
+
+    /**
+     * Indicates what kind of children this model can have.
+     * This can be an array of allowed child classes, or the string "none" -
+     * indicating that this model can't have children.
+     * If a classname is prefixed by "*", such as "*App\Model\MyModel", then only that
+     * class is allowed - no subclasses. Otherwise, the class and all its
+     * subclasses are allowed.
+     * To control allowed children on root level (no parent), use {@link $can_be_root}.
+     *
+     * Leaving this array empty means this model can have children of any class that is a subclass
+     * of the first class in its class hierarchy to have the Hierarchy extension, including records of the same class.
+     *
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     */
+    private static array $allowed_children = [];
+
+    /**
+     * Controls whether a record can be in the root of the hierarchy.
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     */
+    private static bool $can_be_root = true;
+
     /**
      * The lower bounds for the amount of nodes to mark. If set, the logic will expand nodes until it reaches at least
      * this number, and then stops. Root nodes will always show regardless of this setting. Further nodes can be
@@ -99,10 +143,14 @@ class Hierarchy extends Extension
      * A cache used by numChildren().
      * Clear through {@link flushCache()}.
      * version (int)0 means not on this stage.
-     *
-     * @var array
      */
-    protected static $cache_numChildren = [];
+    protected static array $cache_numChildren = [];
+
+    /**
+     * Used as a cache for allowedChildren()
+     * Drastically reduces admin page load when there are a lot of subclass types
+     */
+    protected static array $cache_allowedChildren = [];
 
     public static function get_extra_config($class, $extension, $args)
     {
@@ -113,13 +161,52 @@ class Hierarchy extends Extension
 
     /**
      * Validate the owner object - check for existence of infinite loops.
-     *
-     * @param ValidationResult $validationResult
      */
     protected function updateValidate(ValidationResult $validationResult)
     {
-        // The object is new, won't be looping.
         $owner = $this->owner;
+        $this->validateNonCyclicalHierarchy($validationResult);
+
+        // "Can be root" validation
+        if (!$owner::config()->get('can_be_root') && !$owner->ParentID) {
+            $validationResult->addError(
+                _t(
+                    __CLASS__ . '.TypeOnRootNotAllowed',
+                    'Model type "{type}" is not allowed on the root level',
+                    ['type' => $owner->i18n_singular_name()]
+                ),
+                ValidationResult::TYPE_ERROR,
+                'CAN_BE_ROOT'
+            );
+        }
+
+        // Allowed children validation
+        $parent = $owner->getParent();
+        if ($parent && $parent->exists()) {
+            // No need to check for subclasses or instanceof, as allowedChildren() already
+            // deconstructs any inheritance trees already.
+            $allowed = $parent->allowedChildren();
+            $subject = $owner->hasMethod('getRecordForAllowedChildrenValidation')
+                ? $owner->getRecordForAllowedChildrenValidation()
+                : $owner;
+            if (!in_array($subject->ClassName, $allowed ?? [])) {
+                $validationResult->addError(
+                    _t(
+                        __CLASS__ . '.ChildTypeNotAllowed',
+                        'Model type "{type}" not allowed as child of this parent record',
+                        ['type' => $subject->i18n_singular_name()]
+                    ),
+                    ValidationResult::TYPE_ERROR,
+                    'ALLOWED_CHILDREN'
+                );
+            }
+        }
+    }
+
+    private function validateNonCyclicalHierarchy(ValidationResult $validationResult): void
+    {
+        $owner = $this->owner;
+        // The object is new, won't be looping.
         if (!$owner->ID) {
             return;
         }
@@ -127,7 +214,7 @@ class Hierarchy extends Extension
         if (!$owner->ParentID) {
             return;
         }
-        // The parent has not changed, skip the check for performance reasons.
+        // The parent has not changed, skip the checks for performance reasons.
         if (!$owner->isChanged('ParentID')) {
             return;
         }
@@ -152,7 +239,6 @@ class Hierarchy extends Extension
             $node = $node->Parent();
         }
     }
-
 
     /**
      * Get a list of this DataObject's and all it's descendants IDs.
@@ -184,6 +270,32 @@ class Hierarchy extends Extension
                 $this->loadDescendantIDListInto($idList, $child);
             }
         }
+    }
+
+    /**
+     * Duplicates each child of this record recursively and returns the top-level duplicate record.
+     * If there is a sort field, new sort values are set for the duplicates to retain their sort order.
+     */
+    public function duplicateWithChildren(): DataObject
+    {
+        $owner = $this->getOwner();
+        $clone = $owner->duplicate();
+        $children = $owner->AllChildren();
+        $sortField = $owner->getSortField();
+
+        $sort = 1;
+        foreach ($children as $child) {
+            $childClone = $child->duplicateWithChildren();
+            $childClone->ParentID = $clone->ID;
+            if ($sortField) {
+                //retain sort order by manually setting sort values
+                $childClone->$sortField = $sort;
+                $sort++;
+            }
+            $childClone->write();
+        }
+
+        return $clone;
     }
 
     /**
@@ -393,6 +505,104 @@ class Hierarchy extends Extension
     }
 
     /**
+     * Returns the class name of the default class for children of this page.
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     */
+    public function defaultChild(): ?string
+    {
+        $owner = $this->getOwner();
+        $default = $owner::config()->get('default_child');
+        $allowed = $this->allowedChildren();
+        if (empty($allowed)) {
+            return null;
+        }
+        if (!$default || !in_array($default, $allowed)) {
+            $default = reset($allowed);
+        }
+        return $default;
+    }
+
+    /**
+     * Returns the class name of the default class for the parent of this page.
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     * Doesn't check the allowedChildren config for the parent class.
+     */
+    public function defaultParent(): ?string
+    {
+        return $this->getOwner()::config()->get('default_parent');
+    }
+
+    /**
+     * Returns an array of the class names of classes that are allowed to be children of this class.
+     * Note that this is intended for use with CMSMain and may not be respected with other model management methods.
+     *
+     * @return string[]
+     */
+    public function allowedChildren(): array
+    {
+        $owner = $this->getOwner();
+        if (isset(static::$cache_allowedChildren[$owner->ClassName])) {
+            $allowedChildren = static::$cache_allowedChildren[$owner->ClassName];
+        } else {
+            // Get config from the highest class in the hierarchy to define it.
+            // This avoids merged config, meaning each class that defines the allowed children defines it from scratch.
+            $baseClass = $this->getHierarchyBaseClass();
+            $class = get_class($owner);
+            $candidates = null;
+            while ($class) {
+                if (Config::inst()->exists($class, 'allowed_children', Config::UNINHERITED)) {
+                    $candidates = Config::inst()->get($class, 'allowed_children', Config::UNINHERITED);
+                    break;
+                }
+                // Stop checking if we've hit the first class in the class hierarchy which has this extension
+                if ($class === $baseClass) {
+                    break;
+                }
+                $class = get_parent_class($class);
+            }
+            if ($candidates === 'none') {
+                return [];
+            }
+
+            // If we're using a superclass, check if we've already processed its allowed children list
+            if ($class !== $owner->ClassName && isset(static::$cache_allowedChildren[$class])) {
+                $allowedChildren = static::$cache_allowedChildren[$class];
+                static::$cache_allowedChildren[$owner->ClassName] = $allowedChildren;
+                return $allowedChildren;
+            }
+
+            // Set the highest available class (and implicitly its subclasses) as being allowed.
+            if (!$candidates) {
+                $candidates = [$baseClass];
+            }
+
+            // Parse candidate list
+            $allowedChildren = [];
+            foreach ((array)$candidates as $candidate) {
+                // If a classname is prefixed by "*", such as "*App\Model\MyModel", then only that class is allowed - no subclasses.
+                // Otherwise, the class and all its subclasses are allowed.
+                if (substr($candidate, 0, 1) == '*') {
+                    $allowedChildren[] = substr($candidate, 1);
+                } elseif ($subclasses = ClassInfo::subclassesFor($candidate)) {
+                    foreach ($subclasses as $subclass) {
+                        if (!is_a($subclass, HiddenClass::class, true)) {
+                            $allowedChildren[] = $subclass;
+                        }
+                    }
+                }
+            }
+            static::$cache_allowedChildren[$owner->ClassName] = $allowedChildren;
+            // Make sure we don't have to re-process if this is the allowed children set of a superclass
+            if ($class !== $owner->ClassName) {
+                static::$cache_allowedChildren[$class] = $allowedChildren;
+            }
+        }
+        $owner->extend('updateAllowedChildren', $allowedChildren);
+
+        return $allowedChildren;
+    }
+
+    /**
      * Checks if we're on a controller where we should filter. ie. Are we loading the SiteTree?
      *
      * @return bool
@@ -568,6 +778,50 @@ class Hierarchy extends Extension
     }
 
     /**
+     * Get the name of the dedicated sort field, if there is one.
+     */
+    public function getSortField(): ?string
+    {
+        return $this->getOwner()::config()->get('sort_field');
+    }
+
+    /**
+     * Returns true if the current user can add children to this page.
+     *
+     * Denies permission if any of the following conditions is true:
+     * - the record is versioned and archived
+     * - canAddChildren() on a extension returns false
+     * - canEdit() is not granted
+     * - allowed_children is not set to "none"
+     */
+    public function canAddChildren(?Member $member = null): bool
+    {
+        $owner = $this->getOwner();
+        // Disable adding children to archived records
+        if ($owner->hasExtension(Versioned::class) && $owner->isArchived()) {
+            return false;
+        }
+
+        if (!$member) {
+            $member = Security::getCurrentUser();
+        }
+
+        // Standard mechanism for accepting permission changes from extensions
+        $extended = $owner->extendedCan('canAddChildren', $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+
+        return $owner->canEdit($member) && $owner::config()->get('allowed_children') !== 'none';
+    }
+
+    protected function extendCanAddChildren()
+    {
+        // Prevent canAddChildren from extending itself
+        return null;
+    }
+
+    /**
      * Flush all Hierarchy caches:
      * - Children (instance)
      * - NumChildren (instance)
@@ -576,5 +830,24 @@ class Hierarchy extends Extension
     {
         $this->owner->_cache_children = null;
         Hierarchy::$cache_numChildren = [];
+    }
+
+    /**
+     * Block creating children not allowed for the parent type
+     */
+    protected function canCreate(?Member $member, array $context): ?bool
+    {
+        // Parent is added to context through CMSMain
+        // Note that not having a parent doesn't necessarily mean this record is being
+        // created at the root, so we can't check against can_be_root here.
+        $parent = isset($context['Parent']) ? $context['Parent'] : null;
+        $parentInHierarchy = ($parent && is_a($parent, $this->getHierarchyBaseClass()));
+        if ($parentInHierarchy && !in_array(get_class($this->getOwner()), $parent->allowedChildren())) {
+            return false;
+        }
+        if ($parent?->exists() && $parentInHierarchy && !$parent->canAddChildren($member)) {
+            return false;
+        }
+        return null;
     }
 }

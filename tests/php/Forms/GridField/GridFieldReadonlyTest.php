@@ -22,7 +22,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
 use SilverStripe\Forms\Tests\GridField\GridFieldReadonlyTest\GridFieldViewButtonReplacement;
-use SilverStripe\Versioned\VersionedGridFieldState\VersionedGridFieldState;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class GridFieldReadonlyTest extends SapphireTest
@@ -77,7 +76,6 @@ class GridFieldReadonlyTest extends SapphireTest
         $gridConfig->addComponent($pagination = new GridFieldPaginator(2));
         $gridConfig->addComponent(new GridFieldDetailForm());
         $gridConfig->addComponent(new GridFieldDeleteAction());
-        $gridConfig->addComponent(new VersionedGridFieldState());
 
         $gridField = GridField::create(
             'Cheerleaders',
