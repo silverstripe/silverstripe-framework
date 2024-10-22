@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Model\ModelData;
 use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -13,7 +14,7 @@ use SilverStripe\ORM\FieldType\DBField;
  * data that is scope-independant (like BaseURL), or type-specific data that is layered on top cross-cut like
  * (like $FirstLast etc).
  *
- * It's separate from SSViewer_Scope to keep that fairly complex code as clean as possible.
+ * @deprecated 5.4.0 Will be merged into SilverStripe\View\SSViewer_Scope
  */
 class SSViewer_DataPresenter extends SSViewer_Scope
 {
@@ -67,6 +68,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
         array $underlay = null,
         SSViewer_Scope $inheritedScope = null
     ) {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be merged into ' . SSViewer_Scope::class, Deprecation::SCOPE_CLASS);
         parent::__construct($item, $inheritedScope);
 
         $this->overlay = $overlay ?: [];

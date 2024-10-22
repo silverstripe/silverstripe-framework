@@ -15,6 +15,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Core\ArrayLib;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
@@ -385,9 +386,12 @@ class ModelData
 
     /**
      * Get the class name a field on this object will be casted to.
+     *
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     public function castingClass(string $field): string
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
         // Strip arguments
         $spec = $this->castingHelper($field);
         return trim(strtok($spec ?? '', '(') ?? '');
@@ -397,9 +401,11 @@ class ModelData
      * Return the string-format type for the given field.
      *
      * @return string 'xml'|'raw'
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     public function escapeTypeForField(string $field): string
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
         $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
         /** @var DBField $type */
@@ -445,9 +451,11 @@ class ModelData
      * @param string $fieldName Name of field
      * @param array $arguments List of optional arguments given
      * @return string
+     * @deprecated 5.4.0 Will be made private
      */
     protected function objCacheName($fieldName, $arguments)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be made private');
         return $arguments
             ? $fieldName . ":" . var_export($arguments, true)
             : $fieldName;
@@ -506,6 +514,9 @@ class ModelData
         bool $cache = false,
         ?string $cacheName = null
     ): ?object {
+        if ($cacheName !== null) {
+            Deprecation::noticeWithNoReplacment('5.4.0', 'The $cacheName parameter has been deprecated and will be removed');
+        }
         $hasObj = false;
         if (!$cacheName && $cache) {
             $cacheName = $this->objCacheName($fieldName, $arguments);
@@ -569,9 +580,11 @@ class ModelData
      * without re-running the method.
      *
      * @return Object|DBField
+     * @deprecated 5.4.0 use obj() instead
      */
     public function cachedCall(string $fieldName, array $arguments = [], ?string $cacheName = null): object
     {
+        Deprecation::notice('5.4.0', 'Use obj() instead');
         return $this->obj($fieldName, $arguments, true, $cacheName);
     }
 
@@ -591,9 +604,12 @@ class ModelData
     /**
      * Get the string value of a field on this object that has been suitable escaped to be inserted directly into a
      * template.
+     *
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
      */
     public function XML_val(string $field, array $arguments = [], bool $cache = false): string
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         $result = $this->obj($field, $arguments, $cache);
         if (!$result) {
             return '';
@@ -606,9 +622,11 @@ class ModelData
      * Get an array of XML-escaped values by field name
      *
      * @param array $fields an array of field names
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
      */
     public function getXMLValues(array $fields): array
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         $result = [];
 
         foreach ($fields as $field) {
