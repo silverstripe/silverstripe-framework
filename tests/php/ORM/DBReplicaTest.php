@@ -172,6 +172,10 @@ class DBReplicaTest extends FunctionalTest
                 'path' => 'test/dev',
                 'expected' => 'replica_01'
             ],
+            // Note that we are not testing a missing route because in recipe-core specifically
+            // there apprears to be no database calls made at all when the route is missing
+            // so the last connection name is recorded as 'primary', which was as part of setting
+            // up the unit test class, rather the simulated GET request in the unit test
         ];
     }
 
@@ -180,10 +184,12 @@ class DBReplicaTest extends FunctionalTest
     {
         // Create a custom rule to test our controller that should default to using a replica
         $rules = Config::inst()->get(Director::class, 'rules');
+        $rules['test/dev'] = TestController::class;
         $rules['test'] = TestController::class;
         // Ensure that routes staring with '$' are at the bottom of the assoc array index and don't override
         // our new 'test' route
         uksort($rules, fn($a, $b) => str_starts_with($a, '$') ? 1 : (str_starts_with($b, '$') ? -1 : 0));
+        Config::modify()->set(Director::class, 'rules', $rules);
         $this->get($path);
         $this->assertSame($expected, $this->getLastConnectionName());
     }
