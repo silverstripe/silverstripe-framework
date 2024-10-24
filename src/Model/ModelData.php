@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Model;
 
-use Exception;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionMethod;
@@ -12,14 +11,12 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Core\ArrayLib;
-use SilverStripe\Dev\Deprecation;
-use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Model\ArrayData;
+use SilverStripe\View\CastingService;
 use SilverStripe\View\SSViewer;
 use UnexpectedValueException;
 
@@ -39,7 +36,7 @@ class ModelData
     use Configurable;
 
     /**
-     * An array of objects to cast certain fields to. This is set up as an array in the format:
+     * An array of DBField classes to cast certain fields to. This is set up as an array in the format:
      *
      * <code>
      * public static $casting = array (
@@ -48,16 +45,18 @@ class ModelData
      * </code>
      */
     private static array $casting = [
-        'CSSClasses' => 'Varchar'
+        'CSSClasses' => 'Varchar',
+        'forTemplate' => 'HTMLText',
     ];
 
     /**
-     * The default object to cast scalar fields to if casting information is not specified, and casting to an object
+     * The default class to cast scalar fields to if casting information is not specified, and casting to an object
      * is required.
+     * This can be any injectable service name but must resolve to a DBField subclass.
+     *
+     * If null, casting will be determined based on the type of value (e.g. integers will be cast to DBInt)
      */
-    private static string $default_cast = 'Text';
-
-    private static array $casting_cache = [];
+    private static ?string $default_cast = null;
 
     /**
      * Acts as a PHP 8.2+ compliant replacement for dynamic properties
@@ -205,6 +204,7 @@ class ModelData
 
     public function setDynamicData(string $field, mixed $value): static
     {
+        $this->objCacheClear();
         $this->dynamicData[$field] = $value;
         return $this;
     }
@@ -252,8 +252,7 @@ class ModelData
     // -----------------------------------------------------------------------------------------------------------------
 
     /**
-     * Add methods from the {@link ModelData::$failover} object, as well as wrapping any methods prefixed with an
-     * underscore into a {@link ModelData::cachedCall()}.
+     * Add methods from the {@link ModelData::$failover} object
      *
      * @throws LogicException
      */
@@ -314,6 +313,15 @@ class ModelData
         return static::class;
     }
 
+    /**
+     * Return the HTML markup that represents this model when it is directly injected into a template (e.g. using $Me).
+     * By default this attempts to render the model using templates based on the class hierarchy.
+     */
+    public function forTemplate(): string
+    {
+        return $this->renderWith($this->getViewerTemplates());
+    }
+
     public function getCustomisedObj(): ?ModelData
     {
         return $this->customisedObject;
@@ -327,14 +335,10 @@ class ModelData
     // CASTING ---------------------------------------------------------------------------------------------------------
 
     /**
-     * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object)
+     * Return the "casting helper" (an injectable service name)
      * for a field on this object. This helper will be a subclass of DBField.
-     *
-     * @param bool $useFallback If true, fall back on the default casting helper if there isn't an explicit one.
-     * @return string|null Casting helper As a constructor pattern, and may include arguments.
-     * @throws Exception
      */
-    public function castingHelper(string $field, bool $useFallback = true): ?string
+    public function castingHelper(string $field): ?string
     {
         // Get casting if it has been configured.
         // DB fields and PHP methods are all case insensitive so we normalise casing before checking.
@@ -347,70 +351,13 @@ class ModelData
         // If no specific cast is declared, fall back to failover.
         $failover = $this->getFailover();
         if ($failover) {
-            $cast = $failover->castingHelper($field, $useFallback);
+            $cast = $failover->castingHelper($field);
             if ($cast) {
                 return $cast;
             }
-        }
-
-        if ($useFallback) {
-            return $this->defaultCastingHelper($field);
         }
 
         return null;
-    }
-
-    /**
-     * Return the default "casting helper" for use when no explicit casting helper is defined.
-     * This helper will be a subclass of DBField. See castingHelper()
-     */
-    protected function defaultCastingHelper(string $field): string
-    {
-        // If there is a failover, the default_cast will always
-        // be drawn from this object instead of the top level object.
-        $failover = $this->getFailover();
-        if ($failover) {
-            $cast = $failover->defaultCastingHelper($field);
-            if ($cast) {
-                return $cast;
-            }
-        }
-
-        // Fall back to raw default_cast
-        $default = $this->config()->get('default_cast');
-        if (empty($default)) {
-            throw new Exception('No default_cast');
-        }
-        return $default;
-    }
-
-    /**
-     * Get the class name a field on this object will be casted to.
-     *
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
-     */
-    public function castingClass(string $field): string
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
-        // Strip arguments
-        $spec = $this->castingHelper($field);
-        return trim(strtok($spec ?? '', '(') ?? '');
-    }
-
-    /**
-     * Return the string-format type for the given field.
-     *
-     * @return string 'xml'|'raw'
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
-     */
-    public function escapeTypeForField(string $field): string
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
-        $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
-
-        /** @var DBField $type */
-        $type = Injector::inst()->get($class, true);
-        return $type->config()->get('escape_type');
     }
 
     // TEMPLATE ACCESS LAYER -------------------------------------------------------------------------------------------
@@ -423,9 +370,9 @@ class ModelData
      *  - an SSViewer instance
      *
      * @param string|array|SSViewer $template the template to render into
-     * @param ModelData|array|null $customFields fields to customise() the object with before rendering
+     * @param ModelData|array $customFields fields to customise() the object with before rendering
      */
-    public function renderWith($template, ModelData|array|null $customFields = null): DBHTMLText
+    public function renderWith($template, ModelData|array $customFields = []): DBHTMLText
     {
         if (!is_object($template)) {
             $template = SSViewer::create($template);
@@ -435,9 +382,10 @@ class ModelData
 
         if ($customFields instanceof ModelData) {
             $data = $data->customise($customFields);
+            $customFields = [];
         }
         if ($template instanceof SSViewer) {
-            return $template->process($data, is_array($customFields) ? $customFields : null);
+            return $template->process($data, $customFields);
         }
 
         throw new UnexpectedValueException(
@@ -446,29 +394,11 @@ class ModelData
     }
 
     /**
-     * Generate the cache name for a field
-     *
-     * @param string $fieldName Name of field
-     * @param array $arguments List of optional arguments given
-     * @return string
-     * @deprecated 5.4.0 Will be made private
+     * Get a cached value from the field cache for a field
      */
-    protected function objCacheName($fieldName, $arguments)
+    public function objCacheGet(string $fieldName, array $arguments = []): mixed
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be made private');
-        return $arguments
-            ? $fieldName . ":" . var_export($arguments, true)
-            : $fieldName;
-    }
-
-    /**
-     * Get a cached value from the field cache
-     *
-     * @param string $key Cache key
-     * @return mixed
-     */
-    protected function objCacheGet($key)
-    {
+        $key = $this->objCacheName($fieldName, $arguments);
         if (isset($this->objCache[$key])) {
             return $this->objCache[$key];
         }
@@ -476,24 +406,19 @@ class ModelData
     }
 
     /**
-     * Store a value in the field cache
-     *
-     * @param string $key Cache key
-     * @param mixed $value
-     * @return $this
+     * Store a value in the field cache for a field
      */
-    protected function objCacheSet($key, $value)
+    public function objCacheSet(string $fieldName, array $arguments, mixed $value): static
     {
+        $key = $this->objCacheName($fieldName, $arguments);
         $this->objCache[$key] = $value;
         return $this;
     }
 
     /**
      * Clear object cache
-     *
-     * @return $this
      */
-    protected function objCacheClear()
+    public function objCacheClear(): static
     {
         $this->objCache = [];
         return $this;
@@ -505,87 +430,46 @@ class ModelData
      *
      * @return object|DBField|null The specific object representing the field, or null if there is no
      * property, method, or dynamic data available for that field.
-     * Note that if there is a property or method that returns null, a relevant DBField instance will
-     * be returned.
      */
     public function obj(
         string $fieldName,
         array $arguments = [],
-        bool $cache = false,
-        ?string $cacheName = null
+        bool $cache = false
     ): ?object {
-        if ($cacheName !== null) {
-            Deprecation::noticeWithNoReplacment('5.4.0', 'The $cacheName parameter has been deprecated and will be removed');
-        }
-        $hasObj = false;
-        if (!$cacheName && $cache) {
-            $cacheName = $this->objCacheName($fieldName, $arguments);
-        }
-
         // Check pre-cached value
-        $value = $cache ? $this->objCacheGet($cacheName) : null;
-        if ($value !== null) {
-            return $value;
-        }
+        $value = $cache ? $this->objCacheGet($fieldName, $arguments) : null;
+        if ($value === null) {
+            $hasObj = false;
+            // Load value from record
+            if ($this->hasMethod($fieldName)) {
+                // Try methods first - there's a LOT of logic that assumes this will be checked first.
+                $hasObj = true;
+                $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
+            } else {
+                $getter = "get{$fieldName}";
+                $hasGetter = $this->hasMethod($getter) && $this->isAccessibleMethod($getter);
+                // Try fields and getters if there was no method with that name.
+                $hasObj = $this->hasField($fieldName) || $hasGetter;
+                if ($hasGetter && !empty($arguments)) {
+                    $value = $this->$getter(...$arguments);
+                } else {
+                    $value = $this->$fieldName;
+                }
+            }
 
-        // Load value from record
-        if ($this->hasMethod($fieldName)) {
-            $hasObj = true;
-            $value = call_user_func_array([$this, $fieldName], $arguments ?: []);
-        } else {
-            $hasObj = $this->hasField($fieldName) || ($this->hasMethod("get{$fieldName}") && $this->isAccessibleMethod("get{$fieldName}"));
-            $value = $this->$fieldName;
-        }
+            // Record in cache
+            if ($value !== null && $cache) {
+                $this->objCacheSet($fieldName, $arguments, $value);
+            }
 
-        // Return null early if there's no backing for this field
-        // i.e. no poperty, no method, etc - it just doesn't exist on this model.
-        if (!$hasObj && $value === null) {
-            return null;
-        }
-
-        // Try to cast object if we have an explicit cast set
-        if (!is_object($value)) {
-            $castingHelper = $this->castingHelper($fieldName, false);
-            if ($castingHelper !== null) {
-                $valueObject = Injector::inst()->create($castingHelper, $fieldName);
-                $valueObject->setValue($value, $this);
-                $value = $valueObject;
+            // Return null early if there's no backing for this field
+            // i.e. no poperty, no method, etc - it just doesn't exist on this model.
+            if (!$hasObj && $value === null) {
+                return null;
             }
         }
 
-        // Wrap list arrays in ModelData so templates can handle them
-        if (is_array($value) && array_is_list($value)) {
-            $value = ArrayList::create($value);
-        }
-
-        // Fallback on default casting
-        if (!is_object($value)) {
-            // Force cast
-            $castingHelper = $this->defaultCastingHelper($fieldName);
-            $valueObject = Injector::inst()->create($castingHelper, $fieldName);
-            $valueObject->setValue($value, $this);
-            $value = $valueObject;
-        }
-
-        // Record in cache
-        if ($cache) {
-            $this->objCacheSet($cacheName, $value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * A simple wrapper around {@link ModelData::obj()} that automatically caches the result so it can be used again
-     * without re-running the method.
-     *
-     * @return Object|DBField
-     * @deprecated 5.4.0 use obj() instead
-     */
-    public function cachedCall(string $fieldName, array $arguments = [], ?string $cacheName = null): object
-    {
-        Deprecation::notice('5.4.0', 'Use obj() instead');
-        return $this->obj($fieldName, $arguments, true, $cacheName);
+        return CastingService::singleton()->cast($value, $this, $fieldName, true);
     }
 
     /**
@@ -599,41 +483,6 @@ class ModelData
             return $result->exists();
         }
         return (bool) $result;
-    }
-
-    /**
-     * Get the string value of a field on this object that has been suitable escaped to be inserted directly into a
-     * template.
-     *
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public function XML_val(string $field, array $arguments = [], bool $cache = false): string
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        $result = $this->obj($field, $arguments, $cache);
-        if (!$result) {
-            return '';
-        }
-        // Might contain additional formatting over ->XML(). E.g. parse shortcodes, nl2br()
-        return $result->forTemplate();
-    }
-
-    /**
-     * Get an array of XML-escaped values by field name
-     *
-     * @param array $fields an array of field names
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public function getXMLValues(array $fields): array
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        $result = [];
-
-        foreach ($fields as $field) {
-            $result[$field] = $this->XML_val($field);
-        }
-
-        return $result;
     }
 
     // UTILITY METHODS -------------------------------------------------------------------------------------------------
@@ -694,5 +543,16 @@ class ModelData
     public function Debug(): ModelData|string
     {
         return ModelDataDebugger::create($this);
+    }
+
+    /**
+     * Generate the cache name for a field
+     */
+    private function objCacheName(string $fieldName, array $arguments = []): string
+    {
+        $name = empty($arguments)
+            ? $fieldName
+            : $fieldName . ":" . var_export($arguments, true);
+        return md5($name);
     }
 }

@@ -5,42 +5,20 @@ namespace SilverStripe\View;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\ClassInfo;
-use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Control\Director;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Security\Permission;
 use InvalidArgumentException;
-use SilverStripe\Model\ModelData;
-use SilverStripe\Dev\Deprecation;
+use SilverStripe\Core\Injector\Injector;
 
 /**
- * Parses a template file with an *.ss file extension.
+ * Class that manages themes and interacts with TemplateEngine classes to render templates.
  *
- * In addition to a full template in the templates/ folder, a template in
- * templates/Content or templates/Layout will be rendered into $Content and
- * $Layout, respectively.
- *
- * A single template can be parsed by multiple nested {@link SSViewer} instances
- * through $Layout/$Content placeholders, as well as <% include MyTemplateFile %> template commands.
- *
- * <b>Themes</b>
- *
- * See http://doc.silverstripe.org/themes and http://doc.silverstripe.org/themes:developing
- *
- * <b>Caching</b>
- *
- * Compiled templates are cached via {@link Cache}, usually on the filesystem.
- * If you put ?flush=1 on your URL, it will force the template to be recompiled.
- *
- * @see http://doc.silverstripe.org/themes
- * @see http://doc.silverstripe.org/themes:developing
+ * Ensures rendered templates are normalised, e.g have appropriate resources from the Requirements API.
  */
-class SSViewer implements Flushable
+class SSViewer
 {
     use Configurable;
     use Injectable;
@@ -58,18 +36,8 @@ class SSViewer implements Flushable
     /**
      * A list (highest priority first) of themes to use
      * Only used when {@link $theme_enabled} is set to TRUE.
-     *
-     * @config
-     * @var string
      */
-    private static $themes = [];
-
-    /**
-     * Overridden value of $themes config
-     *
-     * @var array
-     */
-    protected static $current_themes = null;
+    private static array $themes = [];
 
     /**
      * Use the theme. Set to FALSE in order to disable themes,
@@ -77,203 +45,89 @@ class SSViewer implements Flushable
      * such as an administrative interface separate from the website theme.
      * It retains the theme settings to be re-enabled, for example when a website content
      * needs to be rendered from within this administrative interface.
-     *
-     * @config
-     * @var bool
      */
-    private static $theme_enabled = true;
+    private static bool $theme_enabled = true;
 
     /**
-     * Default prepended cache key for partial caching
-     *
-     * @config
-     * @var string
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine.global_key
+     * If true, rendered templates will include comments indicating which template file was used.
+     * May not be supported for some rendering engines.
      */
-    private static $global_key = '$CurrentReadingMode, $CurrentUser.ID';
-
-    /**
-     * @config
-     * @var bool
-     */
-    private static $source_file_comments = false;
+    private static bool $source_file_comments = false;
 
     /**
      * Set if hash links should be rewritten
-     *
-     * @config
-     * @var bool
      */
-    private static $rewrite_hash_links = true;
+    private static bool $rewrite_hash_links = true;
+
+    /**
+     * Overridden value of $themes config
+     */
+    protected static array $current_themes = [];
 
     /**
      * Overridden value of rewrite_hash_links config
      *
-     * @var bool
+     * Can be set to "php" to rewrite hash links with PHP executable code.
      */
-    protected static $current_rewrite_hash_links = null;
+    protected static null|bool|string $current_rewrite_hash_links = null;
 
     /**
      * Instance variable to disable rewrite_hash_links (overrides global default)
      * Leave null to use global state.
      *
-     * @var bool|null
+     * Can be set to "php" to rewrite hash links with PHP executable code.
      */
-    protected $rewriteHashlinks = null;
+    protected null|bool|string $rewriteHashlinks = null;
 
     /**
-     * @internal
-     * @ignore
+     * Determines whether resources from the Requirements API are included in a processed result.
      */
-    private static $template_cache_flushed = false;
+    protected bool $includeRequirements = true;
+
+    private TemplateEngine $templateEngine;
 
     /**
-     * @internal
-     * @ignore
-     */
-    private static $cacheblock_cache_flushed = false;
-
-    /**
-     * List of items being processed
-     *
-     * @var array
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
-     */
-    protected static $topLevel = [];
-
-    /**
-     * List of templates to select from
-     *
-     * @var array
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
-     */
-    protected $templates = null;
-
-    /**
-     * Absolute path to chosen template file
-     *
-     * @var string
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
-     */
-    protected $chosen = null;
-
-    /**
-     * Templates to use when looking up 'Layout' or 'Content'
-     *
-     * @var array
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
-     */
-    protected $subTemplates = [];
-
-    /**
-     * @var bool
-     */
-    protected $includeRequirements = true;
-
-    /**
-     * @var TemplateParser
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
-     */
-    protected $parser;
-
-    /**
-     * @var CacheInterface
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
-     */
-    protected $partialCacheStore = null;
-
-    /**
-     * @param string|array $templates If passed as a string with .ss extension, used as the "main" template.
+     * @param string|array $templates If passed as a string, used as the "main" template.
      *  If passed as an array, it can be used for template inheritance (first found template "wins").
      *  Usually the array values are PHP class names, which directly correlate to template names.
      *  <code>
      *  array('MySpecificPage', 'MyPage', 'Page')
      *  </code>
-     * @param TemplateParser $parser
      */
-    public function __construct($templates, TemplateParser $parser = null)
+    public function __construct(string|array $templates, ?TemplateEngine $templateEngine = null)
     {
-        if ($parser) {
-            Deprecation::noticeWithNoReplacment('5.4.0', 'The $parser parameter is deprecated and will be removed');
-            $this->setParser($parser);
+        if ($templateEngine) {
+            $templateEngine->setTemplate($templates);
+        } else {
+            $templateEngine = Injector::inst()->create(TemplateEngine::class, $templates);
         }
-
-        $this->setTemplate($templates);
-
-        if (!$this->chosen) {
-            $message = 'None of the following templates could be found: ';
-            $message .= print_r($templates, true);
-
-            $themes = SSViewer::get_themes();
-            if (!$themes) {
-                $message .= ' (no theme in use)';
-            } else {
-                $message .= ' in themes "' . print_r($themes, true) . '"';
-            }
-
-            user_error($message ?? '', E_USER_WARNING);
-        }
-    }
-
-    /**
-     * Triggered early in the request when someone requests a flush.
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::flush()
-     */
-    public static function flush()
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::flush()');
-        SSViewer::flush_template_cache(true);
-        SSViewer::flush_cacheblock_cache(true);
-    }
-
-    /**
-     * Create a template from a string instead of a .ss file
-     *
-     * @param string $content The template content
-     * @param bool|void $cacheTemplate Whether or not to cache the template from string
-     * @return SSViewer
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()
-     */
-    public static function fromString($content, $cacheTemplate = null)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()');
-        $viewer = SSViewer_FromString::create($content);
-        if ($cacheTemplate !== null) {
-            $viewer->setCacheTemplate($cacheTemplate);
-        }
-        return $viewer;
+        $this->setTemplateEngine($templateEngine);
     }
 
     /**
      * Assign the list of active themes to apply.
      * If default themes should be included add $default as the last entry.
-     *
-     * @param array $themes
      */
-    public static function set_themes($themes = [])
+    public static function set_themes(array $themes): void
     {
         static::$current_themes = $themes;
     }
 
     /**
      * Add to the list of active themes to apply
-     *
-     * @param array $themes
      */
-    public static function add_themes($themes = [])
+    public static function add_themes(array $themes)
     {
         $currentThemes = SSViewer::get_themes();
         $finalThemes = array_merge($themes, $currentThemes);
         // array_values is used to ensure sequential array keys as array_unique can leave gaps
-        static::set_themes(array_values(array_unique($finalThemes ?? [])));
+        static::set_themes(array_values(array_unique($finalThemes)));
     }
 
     /**
      * Get the list of active themes
-     *
-     * @return array
      */
-    public static function get_themes()
+    public static function get_themes(): array
     {
         $default = [SSViewer::PUBLIC_THEME, SSViewer::DEFAULT_THEME];
 
@@ -283,7 +137,7 @@ class SSViewer implements Flushable
 
         // Explicit list is assigned
         $themes = static::$current_themes;
-        if (!isset($themes)) {
+        if (empty($themes)) {
             $themes = SSViewer::config()->uninherited('themes');
         }
         if ($themes) {
@@ -295,23 +149,26 @@ class SSViewer implements Flushable
 
     /**
      * Traverses the given the given class context looking for candidate template names
-     * which match each item in the class hierarchy. The resulting list of template candidates
-     * may or may not exist, but you can invoke {@see SSViewer::chooseTemplate} on any list
-     * to determine the best candidate based on the current themes.
+     * which match each item in the class hierarchy.
+     *
+     * This method does NOT check the filesystem, so the resulting list of template candidates
+     * may or may not exist - but you can pass these template candidates into the SSViewer
+     * constructor or into a TemplateEngine.
+     *
+     * If you really need know if a template file exists, you can call hasTemplate() on a TemplateEngine.
      *
      * @param string|object $classOrObject Valid class name, or object
-     * @param string $suffix
      * @param string $baseClass Class to halt ancestry search at
-     * @return array
      */
-    public static function get_templates_by_class($classOrObject, $suffix = '', $baseClass = null)
-    {
+    public static function get_templates_by_class(
+        string|object $classOrObject,
+        string $suffix = '',
+        ?string $baseClass = null
+    ): array {
         // Figure out the class name from the supplied context.
-        if (!is_object($classOrObject) && !(
-            is_string($classOrObject) && class_exists($classOrObject ?? '')
-        )) {
+        if (is_string($classOrObject) && !class_exists($classOrObject ?? '')) {
             throw new InvalidArgumentException(
-                'SSViewer::get_templates_by_class() expects a valid class name as its first parameter.'
+                'SSViewer::get_templates_by_class() expects a valid class name or instantiated object as its first parameter.'
             );
         }
 
@@ -322,12 +179,12 @@ class SSViewer implements Flushable
             $templates[] = $template;
             $templates[] = ['type' => 'Includes', $template];
 
-            // If the class is "PageController" (PSR-2 compatibility) or "Page_Controller" (legacy), look for Page.ss
+            // If the class is "PageController" (PSR-2 compatibility) or "Page_Controller" (legacy), look for Page template
             if (preg_match('/^(?<name>.+[^\\\\])_?Controller$/iU', $class ?? '', $matches)) {
                 $templates[] = $matches['name'] . $suffix;
             }
 
-            if ($baseClass && $class == $baseClass) {
+            if ($baseClass && $class === $baseClass) {
                 break;
             }
         }
@@ -336,28 +193,66 @@ class SSViewer implements Flushable
     }
 
     /**
-     * Get the current item being processed
+     * Get an associative array of names to information about callable template provider methods.
      *
-     * @return ModelData
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     * @var boolean $createObject If true, methods will be called on instantiated objects rather than statically on the class.
      */
-    public static function topLevel()
+    public static function getMethodsFromProvider(string $providerInterface, $methodName, bool $createObject = false): array
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
-        if (SSViewer::$topLevel) {
-            return SSViewer::$topLevel[sizeof(SSViewer::$topLevel)-1];
+        $implementors = ClassInfo::implementorsOf($providerInterface);
+        if ($implementors) {
+            foreach ($implementors as $implementor) {
+                // Create a new instance of the object for method calls
+                if ($createObject) {
+                    $implementor = new $implementor();
+                    $exposedVariables = $implementor->$methodName();
+                } else {
+                    $exposedVariables = $implementor::$methodName();
+                }
+
+                foreach ($exposedVariables as $varName => $details) {
+                    if (!is_array($details)) {
+                        $details = ['method' => $details];
+                    }
+
+                    // If just a value (and not a key => value pair), use method name for both key and value
+                    if (is_numeric($varName)) {
+                        $varName = $details['method'];
+                    }
+
+                    // Add in a reference to the implementing class (might be a string class name or an instance)
+                    $details['implementor'] = $implementor;
+
+                    // And a callable array
+                    if (isset($details['method'])) {
+                        $details['callable'] = [$implementor, $details['method']];
+                    }
+
+                    // Save with both uppercase & lowercase first letter, so either works
+                    $lcFirst = strtolower($varName[0] ?? '') . substr($varName ?? '', 1);
+                    $result[$lcFirst] = $details;
+                    $result[ucfirst($varName)] = $details;
+                }
+            }
         }
-        return null;
+
+        return $result;
+    }
+
+    /**
+     * Get the template engine used to render templates for this viewer
+     */
+    public function getTemplateEngine(): TemplateEngine
+    {
+        return $this->templateEngine;
     }
 
     /**
      * Check if rewrite hash links are enabled on this instance
-     *
-     * @return bool
      */
-    public function getRewriteHashLinks()
+    public function getRewriteHashLinks(): null|bool|string
     {
-        if (isset($this->rewriteHashlinks)) {
+        if ($this->rewriteHashlinks !== null) {
             return $this->rewriteHashlinks;
         }
         return static::getRewriteHashLinksDefault();
@@ -365,11 +260,8 @@ class SSViewer implements Flushable
 
     /**
      * Set if hash links are rewritten for this instance
-     *
-     * @param bool $rewrite
-     * @return $this
      */
-    public function setRewriteHashLinks($rewrite)
+    public function setRewriteHashLinks(null|bool|string $rewrite): static
     {
         $this->rewriteHashlinks = $rewrite;
         return $this;
@@ -377,13 +269,11 @@ class SSViewer implements Flushable
 
     /**
      * Get default value for rewrite hash links for all modules
-     *
-     * @return bool
      */
-    public static function getRewriteHashLinksDefault()
+    public static function getRewriteHashLinksDefault(): null|bool|string
     {
         // Check if config overridden
-        if (isset(static::$current_rewrite_hash_links)) {
+        if (static::$current_rewrite_hash_links !== null) {
             return static::$current_rewrite_hash_links;
         }
         return Config::inst()->get(static::class, 'rewrite_hash_links');
@@ -391,231 +281,27 @@ class SSViewer implements Flushable
 
     /**
      * Set default rewrite hash links
-     *
-     * @param bool $rewrite
      */
-    public static function setRewriteHashLinksDefault($rewrite)
+    public static function setRewriteHashLinksDefault(null|bool|string $rewrite)
     {
         static::$current_rewrite_hash_links = $rewrite;
     }
 
     /**
-     * @param string|array $templates
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::setTemplate()
-     */
-    public function setTemplate($templates)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::setTemplate()');
-        $this->templates = $templates;
-        $this->chosen = $this->chooseTemplate($templates);
-        $this->subTemplates = [];
-    }
-
-    /**
-     * Find the template to use for a given list
-     *
-     * @param array|string $templates
-     * @return string
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public static function chooseTemplate($templates)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        return ThemeResourceLoader::inst()->findTemplate($templates, SSViewer::get_themes());
-    }
-
-    /**
-     * Set the template parser that will be used in template generation
-     *
-     * @param TemplateParser $parser
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::setParser()
-     */
-    public function setParser(TemplateParser $parser)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::setParser()');
-        $this->parser = $parser;
-    }
-
-    /**
-     * Returns the parser that is set for template generation
-     *
-     * @return TemplateParser
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::getParser()
-     */
-    public function getParser()
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::getParser()');
-        if (!$this->parser) {
-            $this->setParser(Injector::inst()->get('SilverStripe\\View\\SSTemplateParser'));
-        }
-        return $this->parser;
-    }
-
-    /**
-     * Returns true if at least one of the listed templates exists.
-     *
-     * @param array|string $templates
-     *
-     * @return bool
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::hasTemplate()
-     */
-    public static function hasTemplate($templates)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::hasTemplate()');
-        return (bool)ThemeResourceLoader::inst()->findTemplate($templates, SSViewer::get_themes());
-    }
-
-    /**
      * Call this to disable rewriting of <a href="#xxx"> links.  This is useful in Ajax applications.
      * It returns the SSViewer objects, so that you can call new SSViewer("X")->dontRewriteHashlinks()->process();
-     *
-     * @return $this
      */
-    public function dontRewriteHashlinks()
+    public function dontRewriteHashlinks(): static
     {
         return $this->setRewriteHashLinks(false);
     }
 
     /**
-     * @return string
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public function exists()
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        return $this->chosen;
-    }
-
-    /**
-     * @param string $identifier A template name without '.ss' extension or path
-     * @param string $type The template type, either "main", "Includes" or "Layout"
-     * @return string Full system path to a template file
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public static function getTemplateFileByType($identifier, $type = null)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        return ThemeResourceLoader::inst()->findTemplate(['type' => $type, $identifier], SSViewer::get_themes());
-    }
-
-    /**
-     * Clears all parsed template files in the cache folder.
-     *
-     * Can only be called once per request (there may be multiple SSViewer instances).
-     *
-     * @param bool $force Set this to true to force a re-flush. If left to false, flushing
-     * may only be performed once a request.
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::flushTemplateCache()
-     */
-    public static function flush_template_cache($force = false)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::flushTemplateCache()');
-        if (!SSViewer::$template_cache_flushed || $force) {
-            $dir = dir(TEMP_PATH);
-            while (false !== ($file = $dir->read())) {
-                if (strstr($file ?? '', '.cache')) {
-                    unlink(TEMP_PATH . DIRECTORY_SEPARATOR . $file);
-                }
-            }
-            SSViewer::$template_cache_flushed = true;
-        }
-    }
-
-    /**
-     * Clears all partial cache blocks.
-     *
-     * Can only be called once per request (there may be multiple SSViewer instances).
-     *
-     * @param bool $force Set this to true to force a re-flush. If left to false, flushing
-     * may only be performed once a request.
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::flushCacheBlockCache()
-     */
-    public static function flush_cacheblock_cache($force = false)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::flushCacheBlockCache()');
-        if (!SSViewer::$cacheblock_cache_flushed || $force) {
-            $cache = Injector::inst()->get(CacheInterface::class . '.cacheblock');
-            $cache->clear();
-
-
-            SSViewer::$cacheblock_cache_flushed = true;
-        }
-    }
-
-    /**
-     * Set the cache object to use when storing / retrieving partial cache blocks.
-     *
-     * @param CacheInterface $cache
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::setPartialCacheStore()
-     */
-    public function setPartialCacheStore($cache)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::setPartialCacheStore()');
-        $this->partialCacheStore = $cache;
-    }
-
-    /**
-     * Get the cache object to use when storing / retrieving partial cache blocks.
-     *
-     * @return CacheInterface
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::getPartialCacheStore()
-     */
-    public function getPartialCacheStore()
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::getPartialCacheStore()');
-        if ($this->partialCacheStore) {
-            return $this->partialCacheStore;
-        }
-
-        return Injector::inst()->get(CacheInterface::class . '.cacheblock');
-    }
-
-    /**
      * Flag whether to include the requirements in this response.
-     *
-     * @param bool $incl
      */
-    public function includeRequirements($incl = true)
+    public function includeRequirements(bool $incl = true)
     {
         $this->includeRequirements = $incl;
-    }
-
-    /**
-     * An internal utility function to set up variables in preparation for including a compiled
-     * template, then do the include
-     *
-     * Effectively this is the common code that both SSViewer#process and SSViewer_FromString#process call
-     *
-     * @param string $cacheFile The path to the file that contains the template compiled to PHP
-     * @param ModelData $item The item to use as the root scope for the template
-     * @param array $overlay Any variables to layer on top of the scope
-     * @param array $underlay Any variables to layer underneath the scope
-     * @param SSViewer_Scope|null $inheritedScope The current scope of a parent template including a sub-template
-     * @return string The result of executing the template
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::includeGeneratedTemplate()
-     */
-    protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay, $inheritedScope = null)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::includeGeneratedTemplate()');
-        if (isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
-            $lines = file($cacheFile ?? '');
-            echo "<h2>Template: $cacheFile</h2>";
-            echo "<pre>";
-            foreach ($lines as $num => $line) {
-                echo str_pad($num+1, 5) . htmlentities($line, ENT_COMPAT, 'UTF-8');
-            }
-            echo "</pre>";
-        }
-
-        $cache = $this->getPartialCacheStore();
-        $scope = new SSViewer_DataPresenter($item, $overlay, $underlay, $inheritedScope);
-        $val = '';
-
-        // Placeholder for values exposed to $cacheFile
-        [$cache, $scope, $val];
-        include($cacheFile);
-
-        return $val;
     }
 
     /**
@@ -629,72 +315,24 @@ class SSViewer implements Flushable
      *
      * Note: You can call this method indirectly by {@link ModelData->renderWith()}.
      *
-     * @param ModelData $item
-     * @param array|null $arguments Arguments to an included template
-     * @param ModelData $inheritedScope The current scope of a parent template including a sub-template
-     * @return DBHTMLText Parsed template output.
+     * @param array $overlay Associative array of fields for use in the template.
+     * These will override properties and methods with the same name from $data and from global
+     * template providers.
      */
-    public function process($item, $arguments = null, $inheritedScope = null)
+    public function process(mixed $item, array $overlay = []): DBHTMLText
     {
-        if ($inheritedScope !== null) {
-            Deprecation::noticeWithNoReplacment('5.4.0', 'The $inheritedScope parameter is deprecated and will be removed');
-        }
+        $item = ViewLayerData::create($item);
         // Set hashlinks and temporarily modify global state
         $rewrite = $this->getRewriteHashLinks();
         $origRewriteDefault = static::getRewriteHashLinksDefault();
         static::setRewriteHashLinksDefault($rewrite);
 
-        SSViewer::$topLevel[] = $item;
-
-        $template = $this->chosen;
-
-        $cacheFile = TEMP_PATH . DIRECTORY_SEPARATOR . '.cache'
-            . str_replace(['\\','/',':'], '.', Director::makeRelative(realpath($template ?? '')) ?? '');
-        $lastEdited = filemtime($template ?? '');
-
-        if (!file_exists($cacheFile ?? '') || filemtime($cacheFile ?? '') < $lastEdited) {
-            $content = file_get_contents($template ?? '');
-            $content = $this->parseTemplateContent($content, $template);
-
-            $fh = fopen($cacheFile ?? '', 'w');
-            fwrite($fh, $content ?? '');
-            fclose($fh);
-        }
-
-        $underlay = ['I18NNamespace' => basename($template ?? '')];
-
-        // Makes the rendered sub-templates available on the parent item,
-        // through $Content and $Layout placeholders.
-        foreach (['Content', 'Layout'] as $subtemplate) {
-            // Detect sub-template to use
-            $sub = $this->getSubtemplateFor($subtemplate);
-            if (!$sub) {
-                continue;
-            }
-
-            // Create lazy-evaluated underlay for this subtemplate
-            $underlay[$subtemplate] = function () use ($item, $arguments, $sub) {
-                $subtemplateViewer = clone $this;
-                // Disable requirements - this will be handled by the parent template
-                $subtemplateViewer->includeRequirements(false);
-                // Select the right template
-                $subtemplateViewer->setTemplate($sub);
-
-                // Render if available
-                if ($subtemplateViewer->exists()) {
-                    return $subtemplateViewer->process($item, $arguments);
-                }
-                return null;
-            };
-        }
-
-        $output = $this->includeGeneratedTemplate($cacheFile, $item, $arguments, $underlay, $inheritedScope);
+        // Actually render the template
+        $output = $this->getTemplateEngine()->render($item, $overlay);
 
         if ($this->includeRequirements) {
             $output = Requirements::includeInHTML($output);
         }
-
-        array_pop(SSViewer::$topLevel);
 
         // If we have our crazy base tag, then fix # links referencing the current page.
         if ($rewrite) {
@@ -711,183 +349,14 @@ PHP;
             }
         }
 
+        // Wrap the HTML in a `DBHTMLText`. We use `HTMLFragment` here because shortcodes should
+        // already have been processed, so this avoids unnecessarily trying to process them again
         /** @var DBHTMLText $html */
         $html = DBField::create_field('HTMLFragment', $output);
 
         // Reset global state
         static::setRewriteHashLinksDefault($origRewriteDefault);
         return $html;
-    }
-
-    /**
-     * Get the appropriate template to use for the named sub-template, or null if none are appropriate
-     *
-     * @param string $subtemplate Sub-template to use
-     *
-     * @return array|null
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::getSubtemplateFor()
-     */
-    protected function getSubtemplateFor($subtemplate)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::getSubtemplateFor()');
-        // Get explicit subtemplate name
-        if (isset($this->subTemplates[$subtemplate])) {
-            return $this->subTemplates[$subtemplate];
-        }
-
-        // Don't apply sub-templates if type is already specified (e.g. 'Includes')
-        if (isset($this->templates['type'])) {
-            return null;
-        }
-
-        // Filter out any other typed templates as we can only add, not change type
-        $templates = array_filter(
-            (array)$this->templates,
-            function ($template) {
-                return !isset($template['type']);
-            }
-        );
-        if (empty($templates)) {
-            return null;
-        }
-
-        // Set type to subtemplate
-        $templates['type'] = $subtemplate;
-        return $templates;
-    }
-
-    /**
-     * Execute the given template, passing it the given data.
-     * Used by the <% include %> template tag to process templates.
-     *
-     * @param string $template Template name
-     * @param mixed $data Data context
-     * @param array $arguments Additional arguments
-     * @param Object $scope
-     * @param bool $globalRequirements
-     *
-     * @return string Evaluated result
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::execute_template()
-     */
-    public static function execute_template($template, $data, $arguments = null, $scope = null, $globalRequirements = false)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\View\SSTemplateEngine::execute_template()'
-        );
-        $v = SSViewer::create($template);
-
-        if ($globalRequirements) {
-            $v->includeRequirements(false);
-        } else {
-            //nest a requirements backend for our template rendering
-            $origBackend = Requirements::backend();
-            Requirements::set_backend(Requirements_Backend::create());
-        }
-        try {
-            return $v->process($data, $arguments, $scope);
-        } finally {
-            if (!$globalRequirements) {
-                Requirements::set_backend($origBackend);
-            }
-        }
-    }
-
-    /**
-     * Execute the evaluated string, passing it the given data.
-     * Used by partial caching to evaluate custom cache keys expressed using
-     * template expressions
-     *
-     * @param string $content Input string
-     * @param mixed $data Data context
-     * @param array $arguments Additional arguments
-     * @param bool $globalRequirements
-     *
-     * @return string Evaluated result
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()
-     */
-    public static function execute_string($content, $data, $arguments = null, $globalRequirements = false)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()');
-        $v = SSViewer::fromString($content);
-
-        if ($globalRequirements) {
-            $v->includeRequirements(false);
-        } else {
-            //nest a requirements backend for our template rendering
-            $origBackend = Requirements::backend();
-            Requirements::set_backend(Requirements_Backend::create());
-        }
-        try {
-            return $v->process($data, $arguments);
-        } finally {
-            if (!$globalRequirements) {
-                Requirements::set_backend($origBackend);
-            }
-        }
-    }
-
-    /**
-     * Parse given template contents
-     *
-     * @param string $content The template contents
-     * @param string $template The template file name
-     * @return string
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::parseTemplateContent()
-     */
-    public function parseTemplateContent($content, $template = "")
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::parseTemplateContent()');
-        return $this->getParser()->compileString(
-            $content,
-            $template,
-            Director::isDev() && SSViewer::config()->uninherited('source_file_comments')
-        );
-    }
-
-    /**
-     * Returns the filenames of the template that will be rendered.  It is a map that may contain
-     * 'Content' & 'Layout', and will have to contain 'main'
-     *
-     * @return array
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public function templates()
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        return array_merge(['main' => $this->chosen], $this->subTemplates);
-    }
-
-    /**
-     * @param string $type "Layout" or "main"
-     * @param string $file Full system path to the template file
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
-     */
-    public function setTemplateFile($type, $file)
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        if (!$type || $type == 'main') {
-            $this->chosen = $file;
-        } else {
-            $this->subTemplates[$type] = $file;
-        }
-    }
-
-    /**
-     * Return an appropriate base tag for the given template.
-     * It will be closed on an XHTML document, and unclosed on an HTML document.
-     *
-     * @param string $contentGeneratedSoFar The content of the template generated so far; it should contain
-     * the DOCTYPE declaration.
-     * @return string
-     * @deprecated 5.4.0 Use getBaseTag() instead
-     */
-    public static function get_base_tag($contentGeneratedSoFar)
-    {
-        Deprecation::notice('5.4.0', 'Use getBaseTag() instead');
-        // Is the document XHTML?
-        $isXhtml = preg_match('/<!DOCTYPE[^>]+xhtml/i', $contentGeneratedSoFar ?? '');
-        return static::getBaseTag($isXhtml);
     }
 
     /**
@@ -900,9 +369,20 @@ PHP;
     {
         // Base href should always have a trailing slash
         $base = rtrim(Director::absoluteBaseURL(), '/') . '/';
+
         if ($isXhtml) {
             return "<base href=\"$base\" />";
         }
-        return "<base href=\"$base\"><!--[if lte IE 6]></base><![endif]-->";
+        return "<base href=\"$base\">";
+    }
+
+    /**
+     * Get the engine used to render templates for this viewer.
+     * Note that this is intentionally not public to avoid the engine being set after instantiation.
+     */
+    protected function setTemplateEngine(TemplateEngine $engine): static
+    {
+        $this->templateEngine = $engine;
+        return $this;
     }
 }

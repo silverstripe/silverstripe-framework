@@ -226,9 +226,6 @@ class PolyOutput extends Output
     {
         $listInfo = $this->listTypeStack[array_key_last($this->listTypeStack)];
         $listType = $listInfo['type'];
-        if ($listType === PolyOutput::LIST_ORDERED) {
-            echo '';
-        }
         if ($options === null) {
             $options = $listInfo['options'];
         }

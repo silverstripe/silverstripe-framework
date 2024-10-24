@@ -572,7 +572,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         }
 
         $res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] :
-            str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '');
+            str_replace('$$FINAL', 'getValueAsArgument', $sub['php'] ?? '');
     }
 
     /* Call: Method:Word ( "(" < :CallArguments? > ")" )? */
@@ -765,8 +765,8 @@ class SSTemplateParser extends Parser implements TemplateParser
     }
 
     /**
-     * The basic generated PHP of LookupStep and LastLookupStep is the same, except that LookupStep calls 'obj' to
-     * get the next ModelData in the sequence, and LastLookupStep calls different methods (XML_val, hasValue, obj)
+     * The basic generated PHP of LookupStep and LastLookupStep is the same, except that LookupStep calls 'scopeToIntermediateValue' to
+     * get the next ModelData in the sequence, and LastLookupStep calls different methods (getOutputValue, hasValue, scopeToIntermediateValue)
      * depending on the context the lookup is used in.
      */
     function Lookup_AddLookupStep(&$res, $sub, $method)
@@ -777,15 +777,17 @@ class SSTemplateParser extends Parser implements TemplateParser
 
         if (isset($sub['Call']['CallArguments']) && isset($sub['Call']['CallArguments']['php'])) {
             $arguments = $sub['Call']['CallArguments']['php'];
-            $res['php'] .= "->$method('$property', [$arguments], true)";
+            $type = ViewLayerData::TYPE_METHOD;
+            $res['php'] .= "->$method('$property', [$arguments], '$type')";
         } else {
-            $res['php'] .= "->$method('$property', [], true)";
+            $type = ViewLayerData::TYPE_PROPERTY;
+            $res['php'] .= "->$method('$property', [], '$type')";
         }
     }
 
     function Lookup_LookupStep(&$res, $sub)
     {
-        $this->Lookup_AddLookupStep($res, $sub, 'obj');
+        $this->Lookup_AddLookupStep($res, $sub, 'scopeToIntermediateValue');
     }
 
     function Lookup_LastLookupStep(&$res, $sub)
@@ -1009,7 +1011,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function InjectionVariables_Argument(&$res, $sub)
     {
-        $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '') . ',';
+        $res['php'] .= str_replace('$$FINAL', 'getOutputValue', $sub['php'] ?? '') . ',';
     }
 
     function InjectionVariables__finalise(&$res)
@@ -1158,7 +1160,7 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function Injection_STR(&$res, $sub)
     {
-        $res['php'] = '$val .= '. str_replace('$$FINAL', 'XML_val', $sub['Lookup']['php'] ?? '') . ';';
+        $res['php'] = '$val .= '. str_replace('$$FINAL', 'getOutputValue', $sub['Lookup']['php'] ?? '') . ';';
     }
 
     /* DollarMarkedLookup: SimpleInjection */
@@ -1818,10 +1820,10 @@ class SSTemplateParser extends Parser implements TemplateParser
             if (!empty($res['php'])) {
                 $res['php'] .= $sub['string_php'];
             } else {
-                $res['php'] = str_replace('$$FINAL', 'XML_val', $sub['lookup_php'] ?? '');
+                $res['php'] = str_replace('$$FINAL', 'getOutputValue', $sub['lookup_php'] ?? '');
             }
         } else {
-            $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '');
+            $res['php'] .= str_replace('$$FINAL', 'getOutputValue', $sub['php'] ?? '');
         }
     }
 
@@ -1886,8 +1888,6 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['php'] .= '((bool)'.$sub['php'].')';
         } else {
             $php = ($sub['ArgumentMode'] == 'default' ? $sub['lookup_php'] : $sub['php']);
-            // TODO: kinda hacky - maybe we need a way to pass state down the parse chain so
-            // Lookup_LastLookupStep and Argument_BareWord can produce hasValue instead of XML_val
             $res['php'] .= str_replace('$$FINAL', 'hasValue', $php ?? '');
         }
     }
@@ -2470,7 +2470,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             $res['php'] = '';
         }
 
-        $res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php'] ?? '');
+        $res['php'] .= str_replace('$$FINAL', 'getOutputValue', $sub['php'] ?? '');
     }
 
     /* CacheBlockTemplate: (Comment | Translate | If | Require |    OldI18NTag | Include | ClosedBlock |
@@ -3428,7 +3428,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         // the passed cache key, the block index, and the sha hash of the template.
         $res['php'] .= '$keyExpression = function() use ($scope, $cache) {' . PHP_EOL;
         $res['php'] .= '$val = \'\';' . PHP_EOL;
-        if ($globalKey = SSViewer::config()->get('global_key')) {
+        if ($globalKey = SSTemplateEngine::config()->get('global_key')) {
             // Embed the code necessary to evaluate the globalKey directly into the template,
             // so that SSTemplateParser only needs to be called during template regeneration.
             // Warning: If the global key is changed, it's necessary to flush the template cache.
@@ -3587,7 +3587,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     {
         $entity = $sub['String']['text'];
         if (strpos($entity ?? '', '.') === false) {
-            $res['php'] .= "\$scope->XML_val('I18NNamespace').'.$entity'";
+            $res['php'] .= "\$scope->getOutputValue('I18NNamespace').'.$entity'";
         } else {
             $res['php'] .= "'$entity'";
         }
@@ -3792,7 +3792,7 @@ class SSTemplateParser extends Parser implements TemplateParser
                 break;
 
             default:
-                $res['php'] .= str_replace('$$FINAL', 'obj', $sub['php'] ?? '') . '->self()';
+                $res['php'] .= str_replace('$$FINAL', 'scopeToIntermediateValue', $sub['php'] ?? '') . '->self()';
                 break;
         }
     }
@@ -3896,8 +3896,8 @@ class SSTemplateParser extends Parser implements TemplateParser
         $template = $res['template'];
         $arguments = $res['arguments'];
 
-        // Note: 'type' here is important to disable subTemplates in SSViewer::getSubtemplateFor()
-        $res['php'] = '$val .= \\SilverStripe\\View\\SSViewer::execute_template([["type" => "Includes", '.$template.'], '.$template.'], $scope->getCurrentItem(), [' .
+        // Note: 'type' here is important to disable subTemplates in SSTemplateEngine::getSubtemplateFor()
+        $res['php'] = '$val .= \\SilverStripe\\View\\SSTemplateEngine::execute_template([["type" => "Includes", '.$template.'], '.$template.'], $scope->getCurrentItem(), [' .
             implode(',', $arguments)."], \$scope, true);\n";
 
         if ($this->includeDebuggingComments) { // Add include filename comments on dev sites
@@ -4263,9 +4263,9 @@ class SSTemplateParser extends Parser implements TemplateParser
                 'arguments only.', $this);
         }
 
-        //loop without arguments loops on the current scope
+        // loop without arguments loops on the current scope
         if ($res['ArgumentCount'] == 0) {
-            $on = '$scope->locally()->obj(\'Me\', [], true)';
+            $on = '$scope->locally()->self()';
         } else {    //loop in the normal way
             $arg = $res['Arguments'][0];
             if ($arg['ArgumentMode'] == 'string') {
@@ -4273,13 +4273,13 @@ class SSTemplateParser extends Parser implements TemplateParser
             }
             $on = str_replace(
                 '$$FINAL',
-                'obj',
+                'scopeToIntermediateValue',
                 ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']
             );
         }
 
         return
-            $on . '; $scope->pushScope(); while (($key = $scope->next()) !== false) {' . PHP_EOL .
+            $on . '; $scope->pushScope(); while ($scope->next() !== false) {' . PHP_EOL .
                 $res['Template']['php'] . PHP_EOL .
             '}; $scope->popScope(); ';
     }
@@ -4299,7 +4299,7 @@ class SSTemplateParser extends Parser implements TemplateParser
             throw new SSTemplateParseException('Control block cant take string as argument.', $this);
         }
 
-        $on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+        $on = str_replace('$$FINAL', 'scopeToIntermediateValue', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
         return
             $on . '; $scope->pushScope();' . PHP_EOL .
                 $res['Template']['php'] . PHP_EOL .
@@ -4402,27 +4402,6 @@ class SSTemplateParser extends Parser implements TemplateParser
     }
 
     /**
-     * This is an open block handler, for the <% debug %> utility tag
-     */
-    function OpenBlock_Handle_Debug(&$res)
-    {
-        if ($res['ArgumentCount'] == 0) {
-            return '$scope->debug();';
-        } elseif ($res['ArgumentCount'] == 1) {
-            $arg = $res['Arguments'][0];
-
-            if ($arg['ArgumentMode'] == 'string') {
-                return 'Debug::show('.$arg['php'].');';
-            }
-
-            $php = ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php'];
-            return '$val .= Debug::show('.str_replace('FINALGET!', 'cachedCall', $php ?? '').');';
-        } else {
-            throw new SSTemplateParseException('Debug takes 0 or 1 argument only.', $this);
-        }
-    }
-
-    /**
      * This is an open block handler, for the <% base_tag %> tag
      */
     function OpenBlock_Handle_Base_tag(&$res)
@@ -4430,7 +4409,9 @@ class SSTemplateParser extends Parser implements TemplateParser
         if ($res['ArgumentCount'] != 0) {
             throw new SSTemplateParseException('Base_tag takes no arguments', $this);
         }
-        return '$val .= \\SilverStripe\\View\\SSViewer::get_base_tag($val);';
+        $code = '$isXhtml = preg_match(\'/<!DOCTYPE[^>]+xhtml/i\', $val);';
+        $code .= PHP_EOL . '$val .= \\SilverStripe\\View\\SSViewer::getBaseTag($isXhtml);';
+        return $code;
     }
 
     /**
@@ -5321,9 +5302,9 @@ EOC;
      * @param string $templateName The name of the template, normally the filename the template source was loaded from
      * @param bool $includeDebuggingComments True is debugging comments should be included in the output
      * @param bool $topTemplate True if this is a top template, false if it's just a template
-     * @return mixed|string The php that, when executed (via include or exec) will behave as per the template source
+     * @return string The php that, when executed (via include or exec) will behave as per the template source
      */
-    public function compileString($string, $templateName = "", $includeDebuggingComments = false, $topTemplate = true)
+    public function compileString(string $string, string $templateName = "", bool $includeDebuggingComments = false, bool $topTemplate = true): string
     {
         if (!trim($string ?? '')) {
             $code = '';
@@ -5332,8 +5313,7 @@ EOC;
 
             $this->includeDebuggingComments = $includeDebuggingComments;
 
-            // Ignore UTF8 BOM at beginning of string. TODO: Confirm this is needed, make sure SSViewer handles UTF
-            // (and other encodings) properly
+            // Ignore UTF8 BOM at beginning of string.
             if (substr($string ?? '', 0, 3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
                 $this->pos = 3;
             }
@@ -5365,7 +5345,7 @@ EOC;
      * @param string $templateName
      * @return string $code
      */
-    protected function includeDebuggingComments($code, $templateName)
+    protected function includeDebuggingComments(string $code, string $templateName): string
     {
         // If this template contains a doctype, put it right after it,
         // if not, put it after the <html> tag to avoid IE glitches
@@ -5399,11 +5379,10 @@ EOC;
      * Compiles some file that contains template source code, and returns the php code that will execute as per that
      * source
      *
-     * @static
-     * @param  $template - A file path that contains template source code
-     * @return mixed|string - The php that, when executed (via include or exec) will behave as per the template source
+     * @param string $template - A file path that contains template source code
+     * @return string - The php that, when executed (via include or exec) will behave as per the template source
      */
-    public function compileFile($template)
+    public function compileFile(string $template): string
     {
         return $this->compileString(file_get_contents($template ?? ''), $template);
     }

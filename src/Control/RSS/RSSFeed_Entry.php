@@ -47,7 +47,7 @@ class RSSFeed_Entry extends ModelData
      */
     public function __construct($entry, $titleField, $descriptionField, $authorField)
     {
-        $this->failover = $entry;
+        $this->setFailover($entry);
         $this->titleField = $titleField;
         $this->descriptionField = $descriptionField;
         $this->authorField = $authorField;
@@ -58,7 +58,7 @@ class RSSFeed_Entry extends ModelData
     /**
      * Get the description of this entry
      *
-     * @return DBField Returns the description of the entry.
+     * @return DBField|null Returns the description of the entry.
      */
     public function Title()
     {
@@ -68,7 +68,7 @@ class RSSFeed_Entry extends ModelData
     /**
      * Get the description of this entry
      *
-     * @return DBField Returns the description of the entry.
+     * @return DBField|null Returns the description of the entry.
      */
     public function Description()
     {
@@ -85,7 +85,7 @@ class RSSFeed_Entry extends ModelData
     /**
      * Get the author of this entry
      *
-     * @return DBField Returns the author of the entry.
+     * @return DBField|null Returns the author of the entry.
      */
     public function Author()
     {
@@ -96,7 +96,7 @@ class RSSFeed_Entry extends ModelData
      * Return the safely casted field
      *
      * @param string $fieldName Name of field
-     * @return DBField
+     * @return DBField|null
      */
     public function rssField($fieldName)
     {

@@ -44,8 +44,6 @@ abstract class SQLExpression
 
     /**
      * Return the generated SQL string for this query
-     *
-     * @return string
      */
     public function __toString()
     {
