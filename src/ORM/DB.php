@@ -550,15 +550,16 @@ class DB
      * as necessary.
      *
      * @param string $table The name of the table
-     * @param string $fieldSchema A list of the fields to create, in the same form as DataObject::$db
-     * @param string $indexSchema A list of indexes to create.  The keys of the array are the names of the index.
+     * @param array $fieldSchema|null A list of the fields to create, in the same form as DataObject::$db
+     * @param array $indexSchema|null A list of indexes to create. See {@link require_index()}
      * The values of the array can be one of:
      *   - true: Create a single column index on the field named the same as the index.
-     *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
+     *   - ['fields' => ['A','B','C'], 'type' => 'index/unique/fulltext']: This gives you full
      *     control over the index.
      * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
-     * @param string $options SQL statement to append to the CREATE TABLE call.
-     * @param array $extensions List of extensions
+     * @param array|null $options Create table options (ENGINE, etc.)
+     * @param array|bool|null $extensions List of extensions
+     * @return void
      */
     public static function require_table(
         $table,
