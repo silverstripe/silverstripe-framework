@@ -139,7 +139,6 @@ trait SearchableDropdownTrait
                 return $emptyString;
             }
         }
-        $name = $this->getName();
         if ($this->getUseDynamicPlaceholder()) {
             if ($this->getIsSearchable()) {
                 if (!$this->getIsLazyLoaded()) {
@@ -597,6 +596,9 @@ trait SearchableDropdownTrait
         $field = call_user_func('SilverStripe\\Forms\\FormField::castedCopy', SearchableLookupField::class);
         $field->setSource($this->sourceList);
         $field->setReadonly(true);
+
+        // Remove the text "Type to search..." on a read-only field
+        // $field->setPlaceholder('');
 
         return $field;
     }
