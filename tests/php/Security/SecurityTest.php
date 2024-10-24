@@ -681,7 +681,7 @@ class SecurityTest extends FunctionalTest
     public function testDatabaseIsReadyWithInsufficientMemberColumns()
     {
         Security::clear_database_is_ready();
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
 
         // Assumption: The database has been built correctly by the test runner,
         // and has all columns present in the ORM

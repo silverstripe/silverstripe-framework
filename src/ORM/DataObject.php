@@ -3511,14 +3511,11 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     }
 
     /**
-     * Flush the cached results for all relations (has_one, has_many, many_many)
-     * Also clears any cached aggregate data.
+     * @inheritDoc
      *
-     * @param boolean $persistent When true will also clear persistent data stored in the Cache system.
-     *                            When false will just clear session-local cached data
-     * @return static $this
+     * Also flush the cached results for all relations (has_one, has_many, many_many)
      */
-    public function flushCache($persistent = true)
+    public function flushCache(bool $persistent = true): static
     {
         if (static::class == DataObject::class) {
             DataObject::$_cache_get_one = [];
@@ -3532,11 +3529,9 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
             }
         }
 
-        $this->extend('onFlushCache');
-
         $this->components = [];
         $this->eagerLoadedData = [];
-        return $this;
+        return parent::flushCache($persistent);
     }
 
     /**
@@ -3563,7 +3558,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      */
     public static function reset()
     {
-        DBEnum::flushCache();
+        DBEnum::clearStaticCache();
         ClassInfo::reset_db_cache();
         static::getSchema()->reset();
         DataObject::$_cache_get_one = [];
