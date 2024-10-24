@@ -693,9 +693,13 @@ class ViewableData implements IteratorAggregate
      * access to itself.
      *
      * @return ViewableData
+     * @deprecated 5.3.0 Will be replaced with special handling in templates.
      */
     public function Me()
     {
+        Deprecation::withNoReplacement(
+            fn () => Deprecation::notice('5.3.0', 'Will be replaced with special handling in templates.')
+        );
         return $this;
     }
 
