@@ -6,6 +6,9 @@ use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\ORM\FieldType\DBDecimal;
 
 class DBCompositeTest extends SapphireTest
 {
@@ -139,5 +142,13 @@ class DBCompositeTest extends SapphireTest
         // of the DoubleMoney field based on the initial values
         // $this->assertSame($moneyField, $obj->dbObject('DoubleMoney'));
         // $this->assertEquals(20, $obj->dbObject('DoubleMoney')->getAmount());
+    }
+
+    public function testGetValueForValidation(): void
+    {
+        $obj = DBCompositeTest\DBDoubleMoney::create();
+        $expected = [DBVarchar::class, DBDecimal::class];
+        $actual = array_map('get_class', $obj->getValueForValidation());
+        $this->assertSame($expected, $actual);
     }
 }

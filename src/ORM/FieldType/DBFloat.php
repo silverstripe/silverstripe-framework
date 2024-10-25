@@ -13,9 +13,7 @@ class DBFloat extends DBField
 {
     public function __construct(?string $name = null, float|int $defaultVal = 0)
     {
-        $defaultValue = is_float($defaultVal) ? $defaultVal : (float) 0;
-        $this->setDefaultValue($defaultValue);
-
+        $this->setDefaultValue((float) $defaultVal);
         parent::__construct($name);
     }
 
@@ -60,7 +58,7 @@ class DBFloat extends DBField
 
     public function nullValue(): ?int
     {
-        return 0;
+        return 0.0;
     }
 
     public function prepValueForDB(mixed $value): array|float|int|null

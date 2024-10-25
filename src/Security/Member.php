@@ -444,7 +444,6 @@ class Member extends DataObject
         if (!$this->PasswordExpiry) {
             return false;
         }
-
         return strtotime(date('Y-m-d')) >= strtotime($this->PasswordExpiry ?? '');
     }
 

@@ -119,10 +119,8 @@ class CompositeField extends FormField
      * Returns the name (ID) for the element.
      * If the CompositeField doesn't have a name, but we still want the ID/name to be set.
      * This code generates the ID from the nested children.
-     *
-     * @return String $name
      */
-    public function getName()
+    public function getName(): string
     {
         if ($this->name) {
             return $this->name;

@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Validation\FieldValidation\IntFieldValidator;
 use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SearchableDropdownField;
@@ -25,6 +26,10 @@ use SilverStripe\Model\ModelData;
 class DBForeignKey extends DBInt
 {
     protected ?DataObject $object;
+
+    private static array $field_validators = [
+        IntFieldValidator::class => ['getMinValue'],
+    ];
 
     /**
      * Number of related objects to show in a scaffolded searchable dropdown field before it
@@ -63,6 +68,16 @@ class DBForeignKey extends DBInt
         if ($record instanceof DataObject) {
             $this->object = $record;
         }
+        // Convert blank string to 0, this is sometimes required when calling DataObject::setCastedValue()
+        // after a form submission where the value is a blank string when no value is selected
+        if ($value === '') {
+            $value = 0;
+        }
         return parent::setValue($value, $record, $markChanged);
+    }
+
+    public function getMinValue(): int
+    {
+        return 0;
     }
 }

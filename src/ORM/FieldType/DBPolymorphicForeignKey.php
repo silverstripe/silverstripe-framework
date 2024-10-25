@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\CompositeFieldValidator;
 
 /**
  * A special ForeignKey class that handles relations with arbitrary class types
@@ -14,7 +15,7 @@ class DBPolymorphicForeignKey extends DBComposite
     private static bool $index = true;
 
     private static array $composite_db = [
-        'ID' => 'Int',
+        'ID' => 'ForeignKey',
         'Class' => "DBClassName('" . DataObject::class . "', ['index' => false])"
     ];
 

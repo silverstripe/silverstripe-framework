@@ -8,6 +8,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\CompositeFieldValidator;
 
 /**
  * Extend this class when designing a {@link DBField} that doesn't have a 1-1 mapping with a database field.
@@ -25,6 +26,10 @@ use SilverStripe\Model\ModelData;
  */
 abstract class DBComposite extends DBField
 {
+    private static array $field_validators = [
+        CompositeFieldValidator::class,
+    ];
+
     /**
      * Similar to {@link DataObject::$db},
      * holds an array of composite field names.
@@ -188,6 +193,15 @@ abstract class DBComposite extends DBField
             }
         }
         return $this;
+    }
+
+    public function getValueForValidation(): mixed
+    {
+        $fields = [];
+        foreach (array_keys($this->compositeDatabaseFields()) as $fieldName) {
+            $fields[] = $this->dbObject($fieldName);
+        }
+        return $fields;
     }
 
     /**
