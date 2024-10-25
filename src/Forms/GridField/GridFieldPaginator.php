@@ -3,7 +3,6 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\Model\ArrayData;
@@ -89,13 +88,13 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      */
     protected function checkDataType($dataList)
     {
-        if ($dataList instanceof Limitable) {
+        if ($dataList instanceof SS_List) {
             return true;
         } else {
             // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
-                    static::class . " expects an SS_Limitable list to be passed to the GridField."
+                    static::class . " expects an SS_List list to be passed to the GridField."
                 );
             }
             return false;
@@ -183,7 +182,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
             $startRow = 0;
         }
 
-        if (!($dataList instanceof Limitable) || ($dataList instanceof UnsavedRelationList)) {
+        if (!($dataList instanceof SS_List) || ($dataList instanceof UnsavedRelationList)) {
             return $dataList;
         }
 

@@ -215,13 +215,8 @@ class ManyManyList extends RelationList
      * Column names should be ANSI quoted.
      * @throws Exception
      */
-    public function add($item, $extraFields = [])
+    public function add(mixed $item, array $extraFields = []): void
     {
-        // Ensure nulls or empty strings are correctly treated as empty arrays
-        if (empty($extraFields)) {
-            $extraFields = [];
-        }
-
         // Determine ID of new record
         $itemID = null;
         if (is_numeric($item)) {

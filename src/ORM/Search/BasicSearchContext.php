@@ -8,11 +8,9 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Model\List\Filterable;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
-use SilverStripe\Model\List\Limitable;
-use SilverStripe\Model\List\Sortable;
+use SilverStripe\Model\List\SS_List;
 
 /**
  * A SearchContext that can be used with non-ORM data.
@@ -37,12 +35,12 @@ class BasicSearchContext extends SearchContext
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
      * @param array|bool|string $sort Field to sort on.
      * @param array|null|string $limit
-     * @param Filterable&Sortable&Limitable $existingQuery
+     * @param SS_List $existingQuery
      */
-    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null): Filterable&Sortable&Limitable
+    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null): SS_List
     {
-        if (!$existingQuery || !($existingQuery instanceof Filterable) || !($existingQuery instanceof Sortable) || !($existingQuery instanceof Limitable)) {
-            throw new InvalidArgumentException('getQuery requires a pre-existing filterable/sortable/limitable list to be passed as $existingQuery.');
+        if (!$existingQuery || !is_a($existingQuery, SS_List::class)) {
+            throw new InvalidArgumentException('getQuery requires a pre-existing SS_List list to be passed as $existingQuery.');
         }
 
         if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['array', 'NULL', 'string']))) {
@@ -98,7 +96,7 @@ class BasicSearchContext extends SearchContext
         return $applied;
     }
 
-    private function applyGeneralSearchField(array &$searchParams, Filterable $existingQuery): Filterable
+    private function applyGeneralSearchField(array &$searchParams, SS_List $existingQuery): SS_List
     {
         $generalFieldName = static::config()->get('general_search_field_name');
         if (array_key_exists($generalFieldName, $searchParams)) {

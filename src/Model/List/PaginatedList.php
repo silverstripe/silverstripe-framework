@@ -228,7 +228,7 @@ class PaginatedList extends ListDecorator
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $result = [];
 

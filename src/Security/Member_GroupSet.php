@@ -71,7 +71,7 @@ class Member_GroupSet extends ManyManyList
         return parent::foreignIDFilter($id);
     }
 
-    public function add($item, $extraFields = null)
+    public function add(mixed $item, ?array $extraFields = null): void
     {
         // Get Group.ID
         $itemID = null;

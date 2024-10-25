@@ -110,7 +110,7 @@ class PolymorphicHasManyList extends HasManyList
         ));
     }
 
-    public function add($item)
+    public function add(mixed $item): void
     {
         if (is_numeric($item)) {
             $item = DataObject::get_by_id($this->dataClass, $item);

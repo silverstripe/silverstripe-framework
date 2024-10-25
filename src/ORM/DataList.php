@@ -10,14 +10,12 @@ use Exception;
 use InvalidArgumentException;
 use LogicException;
 use BadMethodCallException;
+use Dflydev\DotAccessData\Data;
 use SilverStripe\ORM\Connect\Query;
 use Traversable;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\Model\List\Filterable;
-use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Map;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Filters\SearchFilterable;
 
@@ -43,11 +41,8 @@ use SilverStripe\ORM\Filters\SearchFilterable;
  *
  * @template T of DataObject
  * @implements SS_List<T>
- * @implements Filterable<T>
- * @implements Sortable<T>
- * @implements Limitable<T>
  */
-class DataList extends ModelData implements SS_List, Filterable, Sortable, Limitable
+class DataList extends ModelData implements SS_List
 {
     use SearchFilterable;
 
@@ -286,11 +281,8 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
 
     /**
      * Returns true if this DataList can be sorted by the given field.
-     *
-     * @param string $fieldName
-     * @return boolean
      */
-    public function canSortBy($fieldName)
+    public function canSortBy(string $fieldName): bool
     {
         return $this->dataQuery()->query()->canSortBy($fieldName);
     }
@@ -299,9 +291,8 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * Returns true if this DataList can be filtered by the given field.
      *
      * @param string $fieldName (May be a related field in dot notation like Member.FirstName)
-     * @return boolean
      */
-    public function canFilterBy($fieldName)
+    public function canFilterBy(string $fieldName): bool
     {
         $model = singleton($this->dataClass);
         $relations = explode(".", $fieldName ?? '');
@@ -474,7 +465,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * Raw SQL is not accepted, only actual field names can be passed
      *
-     * @see Filterable::filter()
+     * @see SS_List::filter()
      *
      * @example $list = $list->filter('Name', 'bob'); // only bob in the list
      * @example $list = $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
@@ -490,17 +481,16 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
      * @return static<T>
      */
-    public function filter()
+    public function filter(...$args): static
     {
         // Validate and process arguments
-        $arguments = func_get_args();
-        switch (sizeof($arguments ?? [])) {
+        switch (sizeof($args ?? [])) {
             case 1:
-                $filters = $arguments[0];
+                $filters = $args[0];
 
                 break;
             case 2:
-                $filters = [$arguments[0] => $arguments[1]];
+                $filters = [$args[0] => $args[1]];
 
                 break;
             default:
@@ -552,15 +542,15 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * @param string|array See {@link filter()}
      * @return static<T>
      */
-    public function filterAny()
+    public function filterAny(...$args): static
     {
-        $numberFuncArgs = count(func_get_args());
+        $numberFuncArgs = count($args);
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-            $whereArguments = func_get_arg(0);
+        if ($numberFuncArgs == 1 && is_array($args[0])) {
+            $whereArguments = $args[0];
         } elseif ($numberFuncArgs == 2) {
-            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+            $whereArguments[$args[0]] = $args[1];
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to filterAny()');
         }
@@ -591,20 +581,12 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
     /**
      * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
      * future implementation.
-     * @see Filterable::filterByCallback()
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
-     * @param callable $callback
      * @return ArrayList<T>
      */
-    public function filterByCallback($callback)
+    public function filterByCallback(callable $callback): SS_List
     {
-        if (!is_callable($callback)) {
-            throw new LogicException(sprintf(
-                "SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
-                gettype($callback)
-            ));
-        }
         $output = ArrayList::create();
         foreach ($this as $item) {
             if (call_user_func($callback, $item, $this)) {
@@ -693,15 +675,15 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * @param string [optional]
      * @return static<T>
      */
-    public function exclude()
+    public function exclude(...$args): static
     {
-        $numberFuncArgs = count(func_get_args());
+        $numberFuncArgs = count($args);
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-            $whereArguments = func_get_arg(0);
+        if ($numberFuncArgs == 1 && is_array($args[0])) {
+            $whereArguments = $args[0];
         } elseif ($numberFuncArgs == 2) {
-            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+            $whereArguments[$args[0]] = $args[1];
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
         }
@@ -733,15 +715,15 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * @return static<T>
      */
-    public function excludeAny()
+    public function excludeAny(...$args): static
     {
-        $numberFuncArgs = count(func_get_args());
+        $numberFuncArgs = count($args);
         $whereArguments = [];
 
-        if ($numberFuncArgs == 1 && is_array(func_get_arg(0))) {
-            $whereArguments = func_get_arg(0);
+        if ($numberFuncArgs == 1 && is_array($args[0])) {
+            $whereArguments = $args[0];
         } elseif ($numberFuncArgs == 2) {
-            $whereArguments[func_get_arg(0)] = func_get_arg(1);
+            $whereArguments[$args[0]] = $args[1];
         } else {
             throw new InvalidArgumentException('Incorrect number of arguments passed to excludeAny()');
         }
@@ -837,7 +819,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * This is when the query is actually executed.
      * @return array<T>
      */
-    public function toArray()
+    public function toArray(): array
     {
         $results = [];
 
@@ -850,10 +832,8 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
 
     /**
      * Return this list as an array and every object it as an sub array as well
-     *
-     * @return array
      */
-    public function toNestedArray()
+    public function toNestedArray(): array
     {
         $result = [];
 
@@ -864,7 +844,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
         return $result;
     }
 
-    public function each($callback)
+    public function each(callable $callback): static
     {
         foreach ($this as $row) {
             $callback($row);
@@ -888,9 +868,8 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * @param string $keyField - the 'key' field of the result array
      * @param string $titleField - the value field of the result array
-     * @return Map
      */
-    public function map($keyField = 'ID', $titleField = 'Title')
+    public function map(string $keyField = 'ID', string $titleField = 'Title'): Map
     {
         return new Map($this, $keyField, $titleField);
     }
@@ -1672,7 +1651,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * The object returned is not cached, unlike {@link DataObject::get_one()}
      * @return T|null
      */
-    public function first()
+    public function first(): ?DataObject
     {
         // We need to trigger eager loading by iterating over the list, rather than just fetching
         // the first row from the dataQuery.
@@ -1691,7 +1670,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * The object returned is not cached, unlike {@link DataObject::get_one()}
      * @return T|null
      */
-    public function last()
+    public function last(): ?DataObject
     {
         // We need to trigger eager loading by iterating over the list, rather than just fetching
         // the last row from the dataQuery.
@@ -1718,11 +1697,9 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * The object returned is not cached, unlike {@link DataObject::get_one()}
      *
-     * @param string $key
-     * @param string $value
      * @return T|null
      */
-    public function find($key, $value)
+    public function find(string $key, mixed $value): ?DataObject
     {
         return $this->filter($key, $value)->first();
     }
@@ -1740,7 +1717,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
         });
     }
 
-    public function byIDs($ids)
+    public function byIDs(array $ids): static
     {
         return $this->filter('ID', $ids);
     }
@@ -1749,20 +1726,18 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * Return the first DataObject with the given ID
      *
      * The object returned is not cached, unlike {@link DataObject::get_by_id()}
+     *
      * @return T|null
      */
-    public function byID($id)
+    public function byID(int|string|null $id): ?DataObject
     {
         return $this->filter('ID', $id)->first();
     }
 
     /**
      * Returns an array of a single field value for all items in the list.
-     *
-     * @param string $colName
-     * @return array
      */
-    public function column($colName = "ID")
+    public function column(string $colName = "ID"): array
     {
         if ($this->finalisedQuery) {
             $finalisedQuery = clone $this->finalisedQuery;
@@ -1779,7 +1754,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      * @param string $colName
      * @return array
      */
-    public function columnUnique($colName = "ID")
+    public function columnUnique(string $colName = "ID"): array
     {
         return $this->dataQuery->distinct(true)->column($colName);
     }
@@ -1928,7 +1903,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * @param DataObject|int $item
      */
-    public function add($item)
+    public function add(mixed $item): void
     {
         // Nothing needs to happen by default
         // TO DO: If a filter is given to this data list then
@@ -1951,14 +1926,18 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * @param DataObject $item
      */
-    public function remove($item)
+    public function remove(mixed $item)
     {
+        if (!is_a($item, $this->dataClass)) {
+            throw new InvalidArgumentException('Item must be an instance of ' . $this->dataClass);
+        }
         // By default, we remove an item from a DataList by deleting it.
         $this->removeByID($item->ID);
     }
 
     /**
      * Remove an item from this DataList by ID
+     * There is no return type defined as different subclasses may return different types
      *
      * @param int $itemID The primary ID
      */
@@ -1976,7 +1955,7 @@ class DataList extends ModelData implements SS_List, Filterable, Sortable, Limit
      *
      * @return static<T>
      */
-    public function reverse()
+    public function reverse(): static
     {
         return $this->alterDataQuery(function (DataQuery $query) {
             $query->reverseSort();

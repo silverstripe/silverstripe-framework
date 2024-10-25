@@ -10,6 +10,7 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\List\ListDecorator;
 use SilverStripe\Model\List\SS_List;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Model\List\Map;
 
 /**
  * This test class is testing that ListDecorator correctly proxies its calls through to the underlying SS_List
@@ -61,8 +62,20 @@ class ListDecoratorTest extends SapphireTest
     #[DataProvider('filterProvider')]
     public function testExclude($input)
     {
-        $this->list->expects($this->once())->method('exclude')->with($input)->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->exclude($input));
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('exclude')->with($input)->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->exclude($input));
+    }
+
+    /**
+     * @param array $input
+     */
+    #[DataProvider('filterProvider')]
+    public function testExcludeAny($input)
+    {
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('excludeAny')->with($input)->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->excludeAny($input));
     }
 
     /**
@@ -71,8 +84,9 @@ class ListDecoratorTest extends SapphireTest
     #[DataProvider('filterProvider')]
     public function testFilter($input)
     {
-        $this->list->expects($this->once())->method('filter')->with($input)->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->filter($input));
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('filter')->with($input)->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->filter($input));
     }
 
     /**
@@ -81,8 +95,9 @@ class ListDecoratorTest extends SapphireTest
     #[DataProvider('filterProvider')]
     public function testFilterAny($input)
     {
-        $this->list->expects($this->once())->method('filterAny')->with($input)->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->filterAny($input));
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('filterAny')->with($input)->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->filterAny($input));
     }
 
     /**
@@ -91,8 +106,9 @@ class ListDecoratorTest extends SapphireTest
     #[DataProvider('filterProvider')]
     public function testSort($input)
     {
-        $this->list->expects($this->once())->method('sort')->with($input)->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->sort($input));
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('sort')->with($input)->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->sort($input));
     }
 
     /**
@@ -112,13 +128,6 @@ class ListDecoratorTest extends SapphireTest
     {
         $this->list->expects($this->once())->method('canFilterBy')->with('Title')->willReturn(false);
         $this->assertFalse($this->decorator->canFilterBy('Title'));
-    }
-
-    public function testFilterByCallbackThrowsExceptionWhenGivenNonCallable()
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("SS_Filterable::filterByCallback() passed callback must be callable, 'boolean' given");
-        $this->decorator->filterByCallback(true);
     }
 
     public function testFilterByCallback()
@@ -163,8 +172,9 @@ class ListDecoratorTest extends SapphireTest
         $callable = function () {
             // noop
         };
-        $this->list->expects($this->once())->method('each')->with($callable)->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->each($callable));
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('each')->with($callable)->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->each($callable));
     }
 
     public function testOffsetExists()
@@ -180,20 +190,22 @@ class ListDecoratorTest extends SapphireTest
 
     public function testColumnUnique()
     {
-        $this->list->expects($this->once())->method('columnUnique')->with('ID')->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->columnUnique('ID'));
+        $this->list->expects($this->once())->method('columnUnique')->with('ID')->willReturn(['foo']);
+        $this->assertSame(['foo'], $this->decorator->columnUnique('ID'));
     }
 
     public function testMap()
     {
-        $this->list->expects($this->once())->method('map')->with('ID', 'Title')->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->map('ID', 'Title'));
+        $return = new Map(new ArrayList());
+        $this->list->expects($this->once())->method('map')->with('ID', 'Title')->willReturn($return);
+        $this->assertSame($return, $this->decorator->map('ID', 'Title'));
     }
 
     public function testReverse()
     {
-        $this->list->expects($this->once())->method('reverse')->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->reverse());
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('reverse')->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->reverse());
     }
 
     public function testOffsetGet()
@@ -216,8 +228,9 @@ class ListDecoratorTest extends SapphireTest
 
     public function testByIDs()
     {
-        $this->list->expects($this->once())->method('byIDs')->with([1, 2])->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->byIDs([1, 2]));
+        $mock = $this->createMock(ArrayList::class);
+        $this->list->expects($this->once())->method('byIDs')->with([1, 2])->willReturn($mock);
+        $this->assertSame($mock, $this->decorator->byIDs([1, 2]));
     }
 
     public function testToArray()
@@ -259,7 +272,7 @@ class ListDecoratorTest extends SapphireTest
 
     public function testAdd()
     {
-        $this->list->expects($this->once())->method('add')->with('foo')->willReturn('mock');
+        $this->list->expects($this->once())->method('add')->with('foo');
         $this->decorator->add('foo');
     }
 
@@ -277,7 +290,7 @@ class ListDecoratorTest extends SapphireTest
 
     public function testColumn()
     {
-        $this->list->expects($this->once())->method('column')->with('DOB')->willReturn('mock');
-        $this->assertSame('mock', $this->decorator->column('DOB'));
+        $this->list->expects($this->once())->method('column')->with('DOB')->willReturn(['foo']);
+        $this->assertSame(['foo'], $this->decorator->column('DOB'));
     }
 }

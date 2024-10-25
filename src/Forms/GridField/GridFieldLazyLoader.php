@@ -5,7 +5,6 @@ namespace SilverStripe\Forms\GridField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\Model\List\Filterable;
 use SilverStripe\Model\List\SS_List;
 
 /**
@@ -28,7 +27,7 @@ class GridFieldLazyLoader extends AbstractGridFieldComponent implements GridFiel
     {
         // If we are lazy loading an empty the list
         if ($this->isLazy($gridField)) {
-            if ($dataList instanceof Filterable) {
+            if ($dataList instanceof SS_List) {
                 // If our original list can be filtered, filter out all results.
                 $dataList = $dataList->byIDs([-1]);
             } else {

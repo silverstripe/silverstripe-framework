@@ -10,7 +10,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\EagerLoadedList;
 use SilverStripe\ORM\DB;
-use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
 use SilverStripe\ORM\Tests\DataObjectTest\Player;
@@ -923,6 +923,13 @@ class EagerLoadedListTest extends SapphireTest
         $this->assertFalse($list->hasID($obj->ID));
     }
 
+    public function testRemoveWrongDataClass()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $list = Team::get();
+        $list->remove(Player::get()->first());
+    }
+
     public function testCanSortBy()
     {
         // Basic check
@@ -1690,7 +1697,7 @@ class EagerLoadedListTest extends SapphireTest
 
         $this->assertEquals(2, $list->count());
         $this->assertEquals($expected, $result, 'List should only contain comments from Team 1 (Joe and Bob)');
-        $this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
+        $this->assertTrue($list instanceof SS_List, 'The List should be of type SS_List');
     }
 
     public function testSimpleExclude()

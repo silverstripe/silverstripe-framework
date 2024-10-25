@@ -22,9 +22,6 @@ use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Model\List\Filterable;
-use SilverStripe\Model\List\Limitable;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\View\HTML;
 use SilverStripe\Model\ModelData;
@@ -86,7 +83,7 @@ class GridField extends FormField
     /**
      * Data source.
      *
-     * @var SS_List&Filterable&Sortable&Limitable
+     * @var SS_List
      */
     protected $list = null;
 
@@ -397,7 +394,7 @@ class GridField extends FormField
     /**
      * Set the data source.
      *
-     * @param SS_List&Filterable&Sortable&Limitable $list
+     * @param SS_List $list
      *
      * @return $this
      */
@@ -411,7 +408,7 @@ class GridField extends FormField
     /**
      * Get the data source.
      *
-     * @return SS_List&Filterable&Sortable&Limitable
+     * @return SS_List
      */
     public function getList()
     {
@@ -421,7 +418,7 @@ class GridField extends FormField
     /**
      * Get the data source after applying every {@link GridField_DataManipulator} to it.
      *
-     * @return SS_List&Filterable&Sortable&Limitable
+     * @return SS_List
      */
     public function getManipulatedList()
     {

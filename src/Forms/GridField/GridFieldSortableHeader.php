@@ -4,7 +4,6 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\ORM\DataObjectSchema;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\DataObject;
@@ -78,13 +77,13 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      */
     protected function checkDataType($dataList)
     {
-        if ($dataList instanceof Sortable) {
+        if ($dataList instanceof SS_List) {
             return true;
         } else {
             // This will be changed to always throw an exception in a future major release.
             if ($this->throwExceptionOnBadDataType) {
                 throw new LogicException(
-                    static::class . " expects an SS_Sortable list to be passed to the GridField."
+                    static::class . " expects an SS_List list to be passed to the GridField."
                 );
             }
             return false;
@@ -246,7 +245,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * {@link DataQuery} first.
      *
      * @param GridField $gridField
-     * @param SS_List&Sortable $dataList
+     * @param SS_List $dataList
      * @return SS_List
      */
     public function getManipulatedData(GridField $gridField, SS_List $dataList)

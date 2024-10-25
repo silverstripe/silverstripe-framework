@@ -72,10 +72,9 @@ class UnsavedRelationList extends ArrayList implements Relation
     /**
      * Add an item to this relationship
      *
-     * @param mixed $item
-     * @param array $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
+     * @param null|array $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
      */
-    public function add($item, $extraFields = null)
+    public function add(mixed $item, ?array $extraFields = null): void
     {
         $this->push($item, $extraFields);
     }
@@ -88,7 +87,7 @@ class UnsavedRelationList extends ArrayList implements Relation
     public function changeToList(RelationList $list)
     {
         foreach ($this->items as $key => $item) {
-            $list->add($item, $this->extraFields[$key]);
+            $list->add($item, $this->extraFields[$key] ?? []);
         }
     }
 
@@ -136,7 +135,7 @@ class UnsavedRelationList extends ArrayList implements Relation
      * Return an array of the actual items that this relation contains at this stage.
      * This is when the query is actually executed.
      */
-    public function toArray()
+    public function toArray(): array
     {
         $items = [];
         foreach ($this->items as $key => $item) {
@@ -231,7 +230,7 @@ class UnsavedRelationList extends ArrayList implements Relation
         return $ids;
     }
 
-    public function first()
+    public function first(): ?DataObject
     {
         $item = reset($this->items) ?: null;
         if (is_numeric($item)) {
@@ -243,7 +242,7 @@ class UnsavedRelationList extends ArrayList implements Relation
         return $item;
     }
 
-    public function last()
+    public function last(): ?DataObject
     {
         $item = end($this->items) ?: null;
         if (is_numeric($item)) {
@@ -257,11 +256,8 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * Returns an array of a single field value for all items in the list.
-     *
-     * @param string $colName
-     * @return array
      */
-    public function column($colName = 'ID')
+    public function column(string $colName = 'ID'): array
     {
         $list = new ArrayList($this->toArray());
         return $list->column($colName);
@@ -269,11 +265,8 @@ class UnsavedRelationList extends ArrayList implements Relation
 
     /**
      * Returns a unique array of a single field value for all items in the list.
-     *
-     * @param  string $colName
-     * @return array
      */
-    public function columnUnique($colName = "ID")
+    public function columnUnique(string $colName = "ID"): array
     {
         $list = new ArrayList($this->toArray());
         return $list->columnUnique($colName);
