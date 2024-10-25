@@ -11,10 +11,7 @@ use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Core\ArrayLib;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\Model\List\Filterable;
-use SilverStripe\Model\List\Limitable;
 use SilverStripe\Model\List\Map;
-use SilverStripe\Model\List\Sortable;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Filters\SearchFilterable;
 use Traversable;
@@ -32,11 +29,8 @@ use Traversable;
  * @template T of DataObject
  * @implements Relation<T>
  * @implements SS_List<T>
- * @implements Filterable<T>
- * @implements Sortable<T>
- * @implements Limitable<T>
  */
-class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable, Sortable, Limitable
+class EagerLoadedList extends ModelData implements Relation, SS_List
 {
     use SearchFilterable;
 
@@ -268,7 +262,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
     /**
      * Not implemented - use addRow instead.
      */
-    public function add($item)
+    public function add(mixed $item): void
     {
         throw new BadMethodCallException('Cannot add a DataObject record to EagerLoadedList. Use addRow() to add database rows.');
     }
@@ -276,9 +270,14 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
     /**
      * Removes a record from the list. Note that the record will not be removed from the
      * database - this list is read-only.
+     *
+     * @param DataObject $item
      */
-    public function remove($item): static
+    public function remove(mixed $item)
     {
+        if (!is_a($item, $this->dataClass)) {
+            throw new InvalidArgumentException('Item must be an instance of ' . $this->dataClass);
+        }
         $id = $item->ID;
         if (array_key_exists($id, $this->rows)) {
             unset($this->rows[$id]);
@@ -304,12 +303,12 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
         return $this->byID(array_key_last($rows));
     }
 
-    public function map($keyField = 'ID', $titleField = 'Title'): Map
+    public function map(string $keyField = 'ID', string $titleField = 'Title'): Map
     {
         return new Map($this, $keyField, $titleField);
     }
 
-    public function column($colName = 'ID'): array
+    public function column(string $colName = 'ID'): array
     {
         $rows = $this->getFinalisedRows();
 
@@ -332,15 +331,13 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
 
     /**
      * Returns a unique array of a single field value for all the items in the list
-     *
-     * @param string $colName
      */
-    public function columnUnique($colName = 'ID'): array
+    public function columnUnique(string $colName = 'ID'): array
     {
         return array_unique($this->column($colName));
     }
 
-    public function each($callback): static
+    public function each(callable $callback): static
     {
         foreach ($this as $row) {
             $callback($row);
@@ -470,7 +467,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
         return $this->count() !== 0;
     }
 
-    public function canFilterBy($fieldName): bool
+    public function canFilterBy(string $fieldName): bool
     {
         if (!is_string($fieldName) || empty($this->rows)) {
             return false;
@@ -480,12 +477,12 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
         return array_key_exists($fieldName, $this->rows[$id]);
     }
 
-    public function canSortBy($fieldName): bool
+    public function canSortBy(string $fieldName): bool
     {
         return $this->canFilterBy($fieldName);
     }
 
-    public function find($key, $value): ?DataObject
+    public function find(string $key, mixed $value): ?DataObject
     {
         return $this->filter($key, $value)->first();
     }
@@ -644,15 +641,8 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
     /**
      * @return ArrayList<T>
      */
-    public function filterByCallback($callback): ArrayList
+    public function filterByCallback(callable $callback): SS_List
     {
-        if (!is_callable($callback)) {
-            throw new LogicException(sprintf(
-                "SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
-                gettype($callback)
-            ));
-        }
-
         $output = ArrayList::create();
         foreach ($this as $item) {
             if (call_user_func($callback, $item, $this)) {
@@ -662,7 +652,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
         return $output;
     }
 
-    public function byID($id): ?DataObject
+    public function byID(int|string|null $id): ?DataObject
     {
         $rows = $this->getFinalisedRows();
         if (!array_key_exists($id, $rows)) {
@@ -671,10 +661,10 @@ class EagerLoadedList extends ModelData implements Relation, SS_List, Filterable
         return $this->createDataObject($rows[$id]);
     }
 
-    public function byIDs($ids): static
+    public function byIDs(array $ids): static
     {
         $list = clone $this;
-        $ids = array_map('intval', (array) $ids);
+        $ids = array_map('intval', $ids);
         $list->rows = ArrayLib::filter_keys($list->rows, $ids);
         return $list;
     }

@@ -5,7 +5,7 @@ namespace SilverStripe\Model\Tests\List;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\Model\List\Map;
 use stdClass;
@@ -1455,7 +1455,7 @@ class ArrayListTest extends SapphireTest
         $this->assertEquals(2, $list->count());
         $this->assertEquals($steve, $list[0]->toMap(), 'List should only contain Steve and Clair');
         $this->assertEquals($clair, $list[1]->toMap(), 'List should only contain Steve and Clair');
-        $this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
+        $this->assertTrue($list instanceof SS_List, 'The List should be of type SS_List');
     }
 
     /**

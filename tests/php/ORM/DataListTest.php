@@ -12,7 +12,7 @@ use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DB;
-use SilverStripe\Model\List\Filterable;
+use SilverStripe\Model\List\SS_List;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Tests\DataObjectTest\DataListQueryCounter;
 use SilverStripe\ORM\Tests\DataObjectTest\Fixture;
@@ -519,6 +519,13 @@ class DataListTest extends SapphireTest
         $this->assertNotNull($list->byID($obj->ID));
         $list->remove($obj);
         $this->assertNull($list->byID($obj->ID));
+    }
+
+    public function testRemoveWrongDataClass()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $list = Team::get();
+        $list->remove(Player::get()->first());
     }
 
     /**
@@ -1591,7 +1598,7 @@ class DataListTest extends SapphireTest
 
         $this->assertEquals(2, $list->count());
         $this->assertEquals($expected, $result, 'List should only contain comments from Team 1 (Joe and Bob)');
-        $this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
+        $this->assertTrue($list instanceof SS_List, 'The List should be of type SS_List');
     }
 
     /**

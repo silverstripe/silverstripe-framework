@@ -15,8 +15,8 @@ use Traversable;
 /**
  * A list object that wraps around an array of objects or arrays.
  *
- * Note that (like DataLists), the implementations of the methods from SS_Filterable, SS_Sortable and
- * SS_Limitable return a new instance of ArrayList, rather than modifying the existing instance.
+ * Note that (like DataLists), the implementations of the methods from SS_List return a new instance of ArrayList,
+ * rather than modifying the existing instance.
  *
  * For easy reference, methods that operate in this way are:
  *
@@ -28,11 +28,8 @@ use Traversable;
  *
  * @template T
  * @implements SS_List<T>
- * @implements Filterable<T>
- * @implements Sortable<T>
- * @implements Limitable<T>
  */
-class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limitable
+class ArrayList extends ModelData implements SS_List
 {
     use SearchFilterable;
 
@@ -134,18 +131,15 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @return array<T>
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->items;
     }
 
     /**
      * Walks the list using the specified callback
-     *
-     * @param callable $callback
-     * @return $this
      */
-    public function each($callback)
+    public function each(callable $callback): static
     {
         foreach ($this as $item) {
             $callback($item);
@@ -166,7 +160,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
     /**
      * Return this list as an array and every object it as an sub array as well
      */
-    public function toNestedArray()
+    public function toNestedArray(): array
     {
         $result = [];
 
@@ -214,20 +208,16 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
 
     /**
      * Add this $item into this list
-     *
-     * @param mixed $item
      */
-    public function add($item)
+    public function add(mixed $item): void
     {
         $this->push($item);
     }
 
     /**
      * Remove this item from this list
-     *
-     * @param mixed $item
      */
-    public function remove($item)
+    public function remove(mixed $item)
     {
         $renumberKeys = false;
         foreach ($this->items as $key => $value) {
@@ -341,7 +331,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
         return array_shift($this->items);
     }
 
-    public function first()
+    public function first(): mixed
     {
         if (empty($this->items)) {
             return null;
@@ -350,7 +340,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
         return reset($this->items);
     }
 
-    public function last()
+    public function last(): mixed
     {
         if (empty($this->items)) {
             return null;
@@ -364,9 +354,8 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @param string $keyfield The 'key' field of the result array
      * @param string $titlefield The value field of the result array
-     * @return Map
      */
-    public function map($keyfield = 'ID', $titlefield = 'Title')
+    public function map(string $keyfield = 'ID', string $titlefield = 'Title'): Map
     {
         $list = clone $this;
         return new Map($list, $keyfield, $titlefield);
@@ -374,11 +363,8 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
 
     /**
      * Returns an array of a single field value for all items in the list.
-     *
-     * @param string $colName
-     * @return array
      */
-    public function column($colName = 'ID')
+    public function column(string $colName = 'ID'): array
     {
         $result = [];
 
@@ -391,22 +377,16 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
 
     /**
      * Returns a unique array of a single field value for all the items in the list
-     *
-     * @param string $colName
-     * @return array
      */
-    public function columnUnique($colName = 'ID')
+    public function columnUnique(string $colName = 'ID'): array
     {
         return array_unique($this->column($colName) ?? []);
     }
 
     /**
      * You can always sort a ArrayList
-     *
-     * @param string $by
-     * @return bool
      */
-    public function canSortBy($by)
+    public function canSortBy(string $by): bool
     {
         return true;
     }
@@ -416,7 +396,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @return static<T>
      */
-    public function reverse()
+    public function reverse(): static
     {
         $list = clone $this;
         $list->items = array_reverse($this->items ?? []);
@@ -476,10 +456,8 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @return static<T>
      */
-    public function sort()
+    public function sort(...$args): static
     {
-        $args = func_get_args();
-
         if (count($args ?? [])==0) {
             return $this;
         }
@@ -559,11 +537,8 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      * Returns true if the given column can be used to filter the records.
      *
      * It works by checking the fields available in the first record of the list.
-     *
-     * @param string $by
-     * @return bool
      */
-    public function canFilterBy($by)
+    public function canFilterBy(string $by): bool
     {
         if (empty($this->items)) {
             return false;
@@ -585,11 +560,9 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
     /**
      * Find the first item of this list where the given key = value
      *
-     * @param string $key
-     * @param mixed $value
      * @return T|null
      */
-    public function find($key, $value)
+    public function find(string $key, mixed $value): mixed
     {
         return $this->filter($key, $value)->first();
     }
@@ -597,7 +570,7 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
     /**
      * Filter the list to include items with these characteristics
      *
-     * @see Filterable::filter()
+     * @see SS_List::filter()
      * @example $list->filter('Name', 'bob'); // only bob in the list
      * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
      * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
@@ -611,9 +584,9 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @return static<T>
      */
-    public function filter()
+    public function filter(...$args): static
     {
-        $filters = $this->normaliseFilterArgs(...func_get_args());
+        $filters = $this->normaliseFilterArgs(...$args);
         return $this->filterOrExclude($filters);
     }
 
@@ -638,9 +611,9 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      * @param string|array See {@link filter()}
      * @return static<T>
      */
-    public function filterAny()
+    public function filterAny(...$args): static
     {
-        $filters = $this->normaliseFilterArgs(...func_get_args());
+        $filters = $this->normaliseFilterArgs(...$args);
         return $this->filterOrExclude($filters, true, true);
     }
 
@@ -661,9 +634,9 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @return static<T>
      */
-    public function exclude()
+    public function exclude(...$args): static
     {
-        $filters = $this->normaliseFilterArgs(...func_get_args());
+        $filters = $this->normaliseFilterArgs(...$args);
         return $this->filterOrExclude($filters, false);
     }
 
@@ -688,9 +661,9 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      * @param string|array See {@link filter()}
      * @return static<T>
      */
-    public function excludeAny(): static
+    public function excludeAny(...$args): static
     {
-        $filters = $this->normaliseFilterArgs(...func_get_args());
+        $filters = $this->normaliseFilterArgs(...$args);
         return $this->filterOrExclude($filters, false, true);
     }
 
@@ -836,13 +809,13 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
      *
      * @return static<T>
      */
-    public function byIDs($ids)
+    public function byIDs(array $ids): static
     {
         $ids = array_map('intval', $ids ?? []); // sanitize
         return $this->filter('ID', $ids);
     }
 
-    public function byID($id)
+    public function byID(int|string|null $id): mixed
     {
         $firstElement = $this->filter("ID", $id)->first();
 
@@ -854,21 +827,13 @@ class ArrayList extends ModelData implements SS_List, Filterable, Sortable, Limi
     }
 
     /**
-     * @see Filterable::filterByCallback()
+     * @see SS_List::filterByCallback()
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
-     * @param callable $callback
      * @return static<T>
      */
-    public function filterByCallback($callback)
+    public function filterByCallback(callable $callback): static
     {
-        if (!is_callable($callback)) {
-            throw new LogicException(sprintf(
-                "SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
-                gettype($callback)
-            ));
-        }
-
         $output = static::create();
 
         foreach ($this as $item) {

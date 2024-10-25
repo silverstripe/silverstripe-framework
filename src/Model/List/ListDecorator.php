@@ -5,30 +5,28 @@ namespace SilverStripe\Model\List;
 use SilverStripe\Model\ModelData;
 use LogicException;
 use Traversable;
+use BadMethodCallException;
 
 /**
  * A base class for decorators that wrap around a list to provide additional
  * functionality. It passes through list methods to the underlying list
  * implementation.
  *
- * @template TList of SS_List&Sortable&Filterable&Limitable
+ * @template TList of SS_List
  * @template T
  * @implements SS_List<T>
- * @implements Sortable<T>
- * @implements Filterable<T>
- * @implements Limitable<T>
  */
-abstract class ListDecorator extends ModelData implements SS_List, Sortable, Filterable, Limitable
+abstract class ListDecorator extends ModelData implements SS_List
 {
     /**
      * @var TList<T>
      */
-    protected SS_List&Sortable&Filterable&Limitable $list;
+    protected SS_List $list;
 
     /**
      * @param TList<T> $list
      */
-    public function __construct(SS_List&Sortable&Filterable&Limitable $list)
+    public function __construct(SS_List $list)
     {
         $this->setList($list);
         parent::__construct();
@@ -37,7 +35,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     /**
      * @return TList<T>
      */
-    public function getList(): SS_List&Sortable&Filterable&Limitable
+    public function getList(): SS_List
     {
         return $this->list;
     }
@@ -53,7 +51,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      * @param TListA<TA> $list
      * @return static<TListA, TA>
      */
-    public function setList(SS_List&Sortable&Filterable&Limitable $list): ListDecorator
+    public function setList(SS_List $list): ListDecorator
     {
         $this->list = $list;
         $this->failover = $this->list;
@@ -83,22 +81,22 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
         $this->list->offsetUnset($key);
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return $this->list->toArray();
     }
 
-    public function toNestedArray()
+    public function toNestedArray(): array
     {
         return $this->list->toNestedArray();
     }
 
-    public function add($item)
+    public function add(mixed $item): void
     {
         $this->list->add($item);
     }
 
-    public function remove($itemObject)
+    public function remove(mixed $itemObject)
     {
         $this->list->remove($itemObject);
     }
@@ -113,15 +111,15 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
 
     public function exists(): bool
     {
-        return $this->list->exists();
+        return $this->count() > 0;
     }
 
-    public function first()
+    public function first(): mixed
     {
         return $this->list->first();
     }
 
-    public function last()
+    public function last(): mixed
     {
         return $this->list->last();
     }
@@ -134,50 +132,62 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
         return $this->list->count();
     }
 
-    public function Count(): int
+    public function count(): int
     {
         return $this->list->count();
     }
 
     public function forTemplate(): string
     {
-        return $this->list->forTemplate();
+        if (method_exists($this->list, 'forTemplate')) {
+            return call_user_func([$this->list, 'forTemplate']);
+        }
+        throw new BadMethodCallException(sprintf(
+            "Method 'forTemplate' not found on class '%s'",
+            get_class($this->list)
+        ));
     }
 
-    public function map($index = 'ID', $titleField = 'Title')
+    public function map(string $index = 'ID', string $titleField = 'Title'): Map
     {
         return $this->list->map($index, $titleField);
     }
 
-    public function find($key, $value)
+    public function find(string $key, mixed $value): mixed
     {
         return $this->list->find($key, $value);
     }
 
-    public function column($value = 'ID')
+    public function column(string $value = 'ID'): array
     {
         return $this->list->column($value);
     }
 
-    public function columnUnique($value = "ID")
+    public function columnUnique(string $value = "ID"): array
     {
-        return $this->list->columnUnique($value);
+        if (method_exists($this->list, 'columnUnique')) {
+            return call_user_func([$this->list, 'columnUnique'], $value);
+        }
+        throw new BadMethodCallException(sprintf(
+            "Method 'columnUnique' not found on class '%s'",
+            get_class($this->list)
+        ));
     }
 
     /**
      * @return TList<T>
      */
-    public function each($callback)
+    public function each(callable $callback): SS_List
     {
         return $this->list->each($callback);
     }
 
-    public function canSortBy($by)
+    public function canSortBy(string $by): bool
     {
         return $this->list->canSortBy($by);
     }
 
-    public function reverse()
+    public function reverse(): SS_List
     {
         return $this->list->reverse();
     }
@@ -193,12 +203,12 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      *
      * @return TList<T>
      */
-    public function sort()
+    public function sort(...$args): SS_List
     {
-        return $this->list->sort(...func_get_args());
+        return $this->list->sort(...$args);
     }
 
-    public function canFilterBy($by)
+    public function canFilterBy(string $by): bool
     {
         return $this->list->canFilterBy($by);
     }
@@ -213,9 +223,9 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      *
      * @return TList<T>
      */
-    public function filter()
+    public function filter(...$args): SS_List
     {
-        return $this->list->filter(...func_get_args());
+        return $this->list->filter(...$args);
     }
 
     /**
@@ -241,28 +251,21 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      *
      * @return TList<T>
      */
-    public function filterAny()
+    public function filterAny(...$args): SS_List
     {
-        return $this->list->filterAny(...func_get_args());
+        return $this->list->filterAny(...$args);
     }
 
     /**
      * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
      * future implementation.
-     * @see Filterable::filterByCallback()
+     * @see SS_List::filterByCallback()
      *
      * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
-     * @param callable $callback
-     * @return ArrayList<T>
+     * @return SS_List<T>
      */
-    public function filterByCallback($callback)
+    public function filterByCallback(callable $callback): SS_List
     {
-        if (!is_callable($callback)) {
-            throw new LogicException(sprintf(
-                "SS_Filterable::filterByCallback() passed callback must be callable, '%s' given",
-                gettype($callback)
-            ));
-        }
         $output = ArrayList::create();
         foreach ($this->list as $item) {
             if ($callback($item, $this->list)) {
@@ -275,12 +278,12 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
     /**
      * @return TList<T>
      */
-    public function limit(?int $length, int $offset = 0): SS_List&Sortable&Filterable&Limitable
+    public function limit(?int $length, int $offset = 0): SS_List
     {
         return $this->list->limit($length, $offset);
     }
 
-    public function byID($id)
+    public function byID(int|string|null $id): mixed
     {
         return $this->list->byID($id);
     }
@@ -292,7 +295,7 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      *
      * @return TList<T>
      */
-    public function byIDs($ids)
+    public function byIDs(array $ids): SS_List
     {
         return $this->list->byIDs($ids);
     }
@@ -307,13 +310,36 @@ abstract class ListDecorator extends ModelData implements SS_List, Sortable, Fil
      *
      * @return TList<T>
      */
-    public function exclude()
+    public function exclude(...$args): SS_List
     {
-        return $this->list->exclude(...func_get_args());
+        return $this->list->exclude(...$args);
+    }
+
+    /**
+     * Return a copy of this list which does not contain any items with any of these params
+     *
+     * @example $list = $list->excludeAny('Name', 'bob'); // exclude bob from list
+     * @example $list = $list->excludeAny('Name', array('aziz', 'bob'); // exclude aziz and bob from list
+     * @example $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>21)); // exclude bob or Age 21
+     * @example $list = $list->excludeAny(array('Name'=>'bob, 'Age'=>array(21, 43))); // exclude bob or Age 21 or 43
+     * @example $list = $list->excludeAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+     *          // bob, phil, 21 or 43 would be excluded
+     *
+     * @return TList<T>
+     */
+    public function excludeAny(...$args): SS_List
+    {
+        return $this->list->excludeAny(...$args);
     }
 
     public function debug(): string
     {
-        return $this->list->debug();
+        if (method_exists($this->list, 'debug')) {
+            return call_user_func([$this->list, 'debug']);
+        }
+        throw new BadMethodCallException(sprintf(
+            "Method 'debug' not found on class '%s'",
+            get_class($this->list)
+        ));
     }
 }

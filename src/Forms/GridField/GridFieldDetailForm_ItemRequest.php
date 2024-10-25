@@ -810,7 +810,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $this->extend('onAfterSave', $this->record);
 
         $extraData = $this->getExtraSavedData($this->record, $list);
-        $list->add($this->record, $extraData);
+        $list->add($this->record, $extraData ?: []);
 
         return $this->record;
     }
