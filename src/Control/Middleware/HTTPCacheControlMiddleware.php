@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
@@ -35,6 +36,12 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function process(HTTPRequest $request, callable $delegate)
     {
+        // Disable cache when flushing
+        $kernel = Injector::inst()->get(Kernel::class);
+        if ($kernel->isFlushed()) {
+            $this->disableCache(true);
+        }
+
         try {
             $response = $delegate($request);
         } catch (HTTPResponse_Exception $ex) {

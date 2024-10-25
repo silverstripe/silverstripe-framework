@@ -15,6 +15,7 @@ use SilverStripe\Core\Environment;
 use ReflectionClass;
 use SilverStripe\ORM\DB;
 use ReflectionObject;
+use SilverStripe\Core\Tests\KernelTest\TestFlushable;
 
 class KernelTest extends SapphireTest
 {
@@ -85,7 +86,7 @@ class KernelTest extends SapphireTest
 
         $kernel->getConfigLoader()->getManifest();
     }
-    
+
     public function testReplicaDatabaseVarsLoaded()
     {
         // Set environment variables for a fake replica database
@@ -112,5 +113,17 @@ class KernelTest extends SapphireTest
             'username' => 'alien',
             'password' => 'hi_people',
         ], $configs['replica_01']);
+    }
+
+    public function testImplementorsAreCalled()
+    {
+        TestFlushable::$flushed = false;
+
+        $kernel = Injector::inst()->get(Kernel::class);
+        $kernel->boot(true);
+        $this->assertTrue(TestFlushable::$flushed);
+
+        // reset the kernel Flush flag
+        $kernel->boot();
     }
 }

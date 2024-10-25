@@ -52,6 +52,14 @@ class CoreKernel extends BaseKernel
         $this->validateDatabase();
 
         $this->setBooted(true);
+
+        // Flush everything else that can be flushed, now that we're booted.
+        if ($flush) {
+            foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
+                /** @var Flushable|string $class */
+                $class::flush();
+            }
+        }
     }
 
     /**
