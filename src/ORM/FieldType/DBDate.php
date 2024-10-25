@@ -12,6 +12,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\DateFieldValidator;
 
 /**
  * Represents a date field.
@@ -33,6 +34,7 @@ class DBDate extends DBField
 {
     /**
      * Standard ISO format string for date in CLDR standard format
+     * This is equivalent to php date format "Y-m-d" e.g. 2024-08-31
      */
     public const ISO_DATE = 'y-MM-dd';
 
@@ -41,6 +43,10 @@ class DBDate extends DBField
      * locale-specific numeric localisation breaking internal date strings.
      */
     public const ISO_LOCALE = 'en_US';
+
+    private static array $field_validators = [
+        DateFieldValidator::class,
+    ];
 
     public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {

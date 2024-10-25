@@ -73,8 +73,12 @@ class ValidationResult
      * Bool values will be treated as plain text flag.
      * @return $this
      */
-    public function addError($message, $messageType = ValidationResult::TYPE_ERROR, $code = null, $cast = ValidationResult::CAST_TEXT)
-    {
+    public function addError(
+        $message,
+        $messageType = ValidationResult::TYPE_ERROR,
+        $code = null,
+        $cast = ValidationResult::CAST_TEXT,
+    ) {
         return $this->addFieldError(null, $message, $messageType, $code, $cast);
     }
 
@@ -96,7 +100,7 @@ class ValidationResult
         $message,
         $messageType = ValidationResult::TYPE_ERROR,
         $code = null,
-        $cast = ValidationResult::CAST_TEXT
+        $cast = ValidationResult::CAST_TEXT,
     ) {
         $this->isValid = false;
         return $this->addFieldMessage($fieldName, $message, $messageType, $code, $cast);
@@ -114,8 +118,12 @@ class ValidationResult
      * Bool values will be treated as plain text flag.
      * @return $this
      */
-    public function addMessage($message, $messageType = ValidationResult::TYPE_ERROR, $code = null, $cast = ValidationResult::CAST_TEXT)
-    {
+    public function addMessage(
+        $message,
+        $messageType = ValidationResult::TYPE_ERROR,
+        $code = null,
+        $cast = ValidationResult::CAST_TEXT,
+    ) {
         return $this->addFieldMessage(null, $message, $messageType, $code, $cast);
     }
 
@@ -137,7 +145,7 @@ class ValidationResult
         $message,
         $messageType = ValidationResult::TYPE_ERROR,
         $code = null,
-        $cast = ValidationResult::CAST_TEXT
+        $cast = ValidationResult::CAST_TEXT,
     ) {
         if ($code && is_numeric($code)) {
             throw new InvalidArgumentException("Don't use a numeric code '$code'.  Use a string.");
@@ -151,7 +159,6 @@ class ValidationResult
             'messageType' => $messageType,
             'messageCast' => $cast,
         ];
-
         if ($code) {
             $this->messages[$code] = $metadata;
         } else {

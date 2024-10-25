@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use SilverStripe\Core\Validation\FieldValidation\BooleanFieldValidator;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
@@ -9,15 +10,18 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Model\ModelData;
 
 /**
- * Represents a boolean field.
+ * Represents a boolean field
+ * Values are stored in the database as tinyint i.e. 1 or 0
  */
 class DBBoolean extends DBField
 {
-    public function __construct(?string $name = null, bool|int $defaultVal = 0)
-    {
-        $defaultValue = $defaultVal ? 1 : 0;
-        $this->setDefaultValue($defaultValue);
+    private static array $field_validators = [
+        BooleanFieldValidator::class,
+    ];
 
+    public function __construct(?string $name = null, bool|int $defaultVal = false)
+    {
+        $this->setDefaultValue($defaultVal);
         parent::__construct($name);
     }
 
@@ -28,11 +32,24 @@ class DBBoolean extends DBField
             'precision' => 1,
             'sign' => 'unsigned',
             'null' => 'not null',
-            'default' => $this->getDefaultValue(),
+            'default' => (int) $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
         $values = ['type' => 'boolean', 'parts' => $parts];
         DB::require_field($this->tableName, $this->name, $values);
+    }
+
+    public function setDefaultValue(mixed $defaultValue): static
+    {
+        $value = (int) $this->convertBooleanLikeValue($defaultValue);
+        return parent::setDefaultValue($value);
+    }
+
+    public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
+    {
+        $value = $this->convertBooleanLikeValue($value);
+        parent::setValue($value);
+        return $this;
     }
 
     public function Nice(): string
@@ -52,7 +69,7 @@ class DBBoolean extends DBField
             if ($this->value instanceof DBField) {
                 $this->value->saveInto($dataObject);
             } else {
-                $dataObject->__set($fieldName, $this->value ? 1 : 0);
+                $dataObject->__set($fieldName, (bool) $this->value);
             }
         } else {
             $class = static::class;
@@ -70,8 +87,8 @@ class DBBoolean extends DBField
         $anyText = _t(__CLASS__ . '.ANY', 'Any');
         $source = [
             '' => $anyText,
-            1 => _t(__CLASS__ . '.YESANSWER', 'Yes'),
-            0 => _t(__CLASS__ . '.NOANSWER', 'No')
+            '1' => _t(__CLASS__ . '.YESANSWER', 'Yes'),
+            '0' => _t(__CLASS__ . '.NOANSWER', 'No')
         ];
 
         return DropdownField::create($this->name, $title, $source)
@@ -85,22 +102,35 @@ class DBBoolean extends DBField
 
     public function prepValueForDB(mixed $value): array|int|null
     {
-        if (is_bool($value)) {
-            return $value ? 1 : 0;
-        }
-        if (empty($value)) {
-            return 0;
-        }
+        $bool = $this->convertBooleanLikeValue($value);
+        // Ensure a tiny int is returned no matter what e.g. value is an
+        return $bool ? 1 : 0;
+    }
+
+    /**
+     * Convert boolean-like values to boolean
+     * Does not convert non-boolean-like values e.g. array - will be handled by the FieldValidator
+     */
+    private function convertBooleanLikeValue(mixed $value): mixed
+    {
         if (is_string($value)) {
-            switch (strtolower($value ?? '')) {
+            switch (strtolower($value)) {
                 case 'false':
                 case 'f':
-                    return 0;
+                case '0':
+                    return false;
                 case 'true':
                 case 't':
-                    return 1;
+                case '1':
+                    return true;
             }
         }
-        return $value ? 1 : 0;
+        if ($value === 0) {
+            return false;
+        }
+        if ($value === 1) {
+            return true;
+        }
+        return $value;
     }
 }

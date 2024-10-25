@@ -106,7 +106,7 @@ class FieldGroup extends CompositeField
      * In some cases the FieldGroup doesn't have a title, but we still want
      * the ID / name to be set. This code, generates the ID from the nested children
      */
-    public function getName()
+    public function getName(): string
     {
         if ($this->name) {
             return $this->name;

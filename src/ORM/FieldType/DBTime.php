@@ -11,6 +11,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\TimeFieldValidator;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -26,8 +27,13 @@ class DBTime extends DBField
 {
     /**
      * Standard ISO format string for time in CLDR standard format
+     * This is equivalent to php date format "H:i:s" e.g. 09:30:00
      */
     public const ISO_TIME = 'HH:mm:ss';
+
+    private static array $field_validators = [
+        TimeFieldValidator::class,
+    ];
 
     public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static
     {

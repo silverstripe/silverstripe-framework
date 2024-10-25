@@ -118,7 +118,7 @@ class DBEnumTest extends SapphireTest
 
         $obj2 = new FieldType\DBEnumTestObject();
         $obj2->Colour = 'Purple';
-        $obj2->write();
+        $obj2->write(skipValidation: true);
 
         $this->assertEquals(
             ['Purple', 'Red'],
@@ -140,5 +140,57 @@ class DBEnumTest extends SapphireTest
             ['Blue', 'Green'],
             $colourField->getEnumObsolete()
         );
+    }
+
+    public static function provideSetValue(): array
+    {
+        return [
+            'string' => [
+                'value' => 'green',
+                'expected' => 'green',
+            ],
+            'string-not-in-set' => [
+                'value' => 'purple',
+                'expected' => 'purple',
+            ],
+            'int' => [
+                'value' => 123,
+                'expected' => 123,
+            ],
+            'empty-string' => [
+                'value' => '',
+                'expected' => '',
+            ],
+            'null' => [
+                'value' => null,
+                'expected' => null,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSetValue')]
+    public function testSetValue(mixed $value, mixed $expected): void
+    {
+        $field = new DBEnum('TestField', ['red', 'green', 'blue'], 'blue');
+        $field->setValue($value);
+        $this->assertSame($expected, $field->getValue());
+    }
+
+    public function testSaveDefaultValue()
+    {
+        $obj = new FieldType\DBEnumTestObject();
+        $id = $obj->write();
+        // Fetch the object from the database
+        $obj = FieldType\DBEnumTestObject::get()->byID($id);
+        $this->assertEquals('Red', $obj->Colour);
+        $this->assertEquals('Blue', $obj->ColourWithDefault);
+        // Set value to null and save
+        $obj->Colour = null;
+        $obj->ColourWithDefault = null;
+        $obj->write();
+        // Fetch the object from the database
+        $obj = FieldType\DBEnumTestObject::get()->byID($id);
+        $this->assertEquals(null, $obj->Colour);
+        $this->assertEquals(null, $obj->ColourWithDefault);
     }
 }

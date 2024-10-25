@@ -1238,6 +1238,12 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     public function validate()
     {
         $result = ValidationResult::create();
+        // Call DBField::validate() on every DBField
+        $specs = DataObject::getSchema()->fieldSpecs(static::class);
+        foreach (array_keys($specs) as $fieldName) {
+            $dbField = $this->dbObject($fieldName);
+            $result->combineAnd($dbField->validate());
+        }
         $this->extend('updateValidate', $result);
         return $result;
     }

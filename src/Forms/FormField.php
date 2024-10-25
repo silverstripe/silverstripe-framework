@@ -15,6 +15,7 @@ use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\View\AttributesHTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\FieldValidationTrait;
 
 /**
  * Represents a field in a form.
@@ -44,6 +45,7 @@ class FormField extends RequestHandler
 {
     use AttributesHTML;
     use FormMessage;
+    use FieldValidationTrait;
 
     /** @see $schemaDataType */
     const SCHEMA_DATA_TYPE_STRING = 'String';
@@ -424,12 +426,10 @@ class FormField extends RequestHandler
 
     /**
      * Returns the field name.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
     }
 
     /**
@@ -1231,8 +1231,8 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Abstract method each {@link FormField} subclass must implement, determines whether the field
-     * is valid or not based on the value.
+     * Subclasses can define an existing FieldValidatorClass to validate the FormField value
+     * They may also override this method to provide custom validation logic
      *
      * @param Validator $validator
      * @return bool

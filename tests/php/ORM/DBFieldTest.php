@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\Assets\Image;
+use Exception;
 use SilverStripe\ORM\FieldType\DBBigInt;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBCurrency;
@@ -30,6 +30,32 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBYear;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Core\ClassInfo;
+use ReflectionClass;
+use SilverStripe\Core\Validation\FieldValidation\BooleanFieldValidator;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Core\Validation\FieldValidation\BigIntFieldValidator;
+use SilverStripe\ORM\FieldType\DBClassName;
+use ReflectionMethod;
+use SilverStripe\Core\Validation\FieldValidation\CompositeFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\DateFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\DecimalFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\EmailFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\OptionFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\IntFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\IpFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\LocaleFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\MultiOptionFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\StringFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\TimeFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\UrlFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\YearFieldValidator;
+use SilverStripe\ORM\FieldType\DBUrl;
+use SilverStripe\ORM\FieldType\DBPolymorphicRelationAwareForeignKey;
+use SilverStripe\ORM\FieldType\DBIp;
+use SilverStripe\ORM\FieldType\DBEmail;
+use SilverStripe\Core\Validation\FieldValidation\DatetimeFieldValidator;
+use SilverStripe\ORM\FieldType\DBClassNameVarchar;
 
 /**
  * Tests for DBField objects.
@@ -391,5 +417,180 @@ class DBFieldTest extends SapphireTest
         $obj->MyTestField = $field;
 
         $this->assertEquals('new value', $obj->getField('MyTestField'));
+    }
+
+    public function testDefaultValues(): void
+    {
+        $expectedBaseDefault = null;
+        $expectedDefaults = [
+            DBBoolean::class => false,
+            DBDecimal::class => 0.0,
+            DBInt::class => 0,
+            DBFloat::class => 0.0,
+        ];
+        $count = 0;
+        $classes = ClassInfo::subclassesFor(DBField::class);
+        foreach ($classes as $class) {
+            if (is_a($class, TestOnly::class, true)) {
+                continue;
+            }
+            if (!str_starts_with($class, 'SilverStripe\ORM\FieldType')) {
+                continue;
+            }
+            $reflector = new ReflectionClass($class);
+            if ($reflector->isAbstract()) {
+                continue;
+            }
+            $expected = $expectedBaseDefault;
+            foreach ($expectedDefaults as $baseClass => $default) {
+                if ($class === $baseClass || is_subclass_of($class, $baseClass)) {
+                    $expected = $default;
+                    break;
+                }
+            }
+            $field = new $class('TestField');
+            $this->assertSame($expected, $field->getValue(), $class);
+            $count++;
+        }
+        // Assert that we have tested all classes e.g. namespace wasn't changed, no new classes were added
+        // that haven't been tested
+        $this->assertSame(29, $count);
+    }
+
+    public function testFieldValidatorConfig(): void
+    {
+        $expectedFieldValidators = [
+            DBBigInt::class => [
+                BigIntFieldValidator::class,
+            ],
+            DBBoolean::class => [
+                BooleanFieldValidator::class,
+            ],
+            DBClassName::class => [
+                StringFieldValidator::class,
+                OptionFieldValidator::class,
+            ],
+            DBClassNameVarchar::class => [
+                StringFieldValidator::class,
+                OptionFieldValidator::class,
+            ],
+            DBCurrency::class => [
+                DecimalFieldValidator::class,
+            ],
+            DBDate::class => [
+                DateFieldValidator::class,
+            ],
+            DBDatetime::class => [
+                DatetimeFieldValidator::class,
+            ],
+            DBDecimal::class => [
+                DecimalFieldValidator::class,
+            ],
+            DBDouble::class => [],
+            DBEmail::class => [
+                StringFieldValidator::class,
+                EmailFieldValidator::class,
+            ],
+            DBEnum::class => [
+                StringFieldValidator::class,
+                OptionFieldValidator::class,
+            ],
+            DBFloat::class => [],
+            DBForeignKey::class => [
+                IntFieldValidator::class,
+            ],
+            DBHTMLText::class => [
+                StringFieldValidator::class,
+            ],
+            DBHTMLVarchar::class => [
+                StringFieldValidator::class,
+            ],
+            DBInt::class => [
+                IntFieldValidator::class,
+            ],
+            DBIp::class => [
+                StringFieldValidator::class,
+                IpFieldValidator::class,
+            ],
+            DBLocale::class => [
+                StringFieldValidator::class,
+                LocaleFieldValidator::class,
+            ],
+            DBMoney::class => [
+                CompositeFieldValidator::class,
+            ],
+            DBMultiEnum::class => [
+                MultiOptionFieldValidator::class,
+            ],
+            DBPercentage::class => [
+                DecimalFieldValidator::class,
+            ],
+            DBPolymorphicForeignKey::class => [],
+            DBPolymorphicRelationAwareForeignKey::class => [],
+            DBPrimaryKey::class => [
+                IntFieldValidator::class,
+            ],
+            DBText::class => [
+                StringFieldValidator::class,
+            ],
+            DBTime::class => [
+                TimeFieldValidator::class,
+            ],
+            DBUrl::class => [
+                StringFieldValidator::class,
+                UrlFieldValidator::class,
+            ],
+            DBVarchar::class => [
+                StringFieldValidator::class,
+            ],
+            DBYear::class => [
+                YearFieldValidator::class,
+            ],
+        ];
+        $count = 0;
+        $classes = ClassInfo::subclassesFor(DBField::class);
+        foreach ($classes as $class) {
+            if (is_a($class, TestOnly::class, true)) {
+                continue;
+            }
+            if (!str_starts_with($class, 'SilverStripe\ORM\FieldType')) {
+                continue;
+            }
+            $reflector = new ReflectionClass($class);
+            if ($reflector->isAbstract()) {
+                continue;
+            }
+            if (!array_key_exists($class, $expectedFieldValidators)) {
+                throw new Exception("No field validator config found for $class");
+            }
+            $expected = $expectedFieldValidators[$class];
+            $method = new ReflectionMethod($class, 'getFieldValidators');
+            $method->setAccessible(true);
+            $obj = new $class('MyField');
+            $actual = array_map('get_class', $method->invoke($obj));
+            $this->assertSame($expected, $actual, $class);
+            $count++;
+        }
+        // Assert that we have tested all classes e.g. namespace wasn't changed, no new classes were added
+        // that haven't been tested
+        $this->assertSame(29, $count);
+    }
+
+    public function testSkipValidateIfNull()
+    {
+        $field = new DBInt('MyField');
+        $field->setValue(null);
+        // assert value isn't getting changed on setValue();
+        $this->assertNull($field->getValue());
+        // assert that field validators were not called
+        $this->assertTrue($field->validate()->isValid());
+        // assert that IntFieldValidator was applied to the field
+        $method = new ReflectionMethod(DBInt::class, 'getFieldValidators');
+        $method->setAccessible(true);
+        $actual = array_map('get_class', $method->invoke($field));
+        $this->assertSame([IntFieldValidator::class], $actual);
+        // assert that IntFieldValidator considers null as invalid
+        $validator = new IntFieldValidator('Test', null);
+        $this->assertFalse($validator->validate()->isValid());
     }
 }

@@ -13,6 +13,8 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\DateFieldValidator;
+use SilverStripe\Core\Validation\FieldValidation\DatetimeFieldValidator;
 
 /**
  * Represents a date-time field.
@@ -39,6 +41,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     /**
      * Standard ISO format string for date and time in CLDR standard format,
      * with a whitespace separating date and time (common database representation, e.g. in MySQL).
+     * This is equivalent to php date format "Y-m-d H:i:s" e.g. 2024-08-31 09:30:00
      */
     public const ISO_DATETIME = 'y-MM-dd HH:mm:ss';
 
@@ -47,6 +50,13 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      * with a "T" separator between date and time (W3C standard, e.g. for HTML5 datetime-local fields).
      */
     public const ISO_DATETIME_NORMALISED = 'y-MM-dd\'T\'HH:mm:ss';
+
+    private static array $field_validators = [
+        // Remove parent validator
+        DateFieldValidator::class => null,
+        // Add datetime validator
+        DatetimeFieldValidator::class,
+    ];
 
     /**
      * Flag idicating if this field is considered immutable

@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\Core\Validation\FieldValidation\OptionFieldValidator;
 
 /**
  * An alternative to DBClassName that stores the class name as a varchar instead of an enum
@@ -24,4 +25,8 @@ use SilverStripe\ORM\FieldType\DBVarchar;
 class DBClassNameVarchar extends DBVarchar
 {
     use DBClassNameTrait;
+
+    private static array $field_validators = [
+        OptionFieldValidator::class => ['getEnum'],
+    ];
 }

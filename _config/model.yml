@@ -20,6 +20,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBDecimal
   Double:
     class: SilverStripe\ORM\FieldType\DBDouble
+  Email:
+    class: SilverStripe\ORM\FieldType\DBEmail
   Enum:
     class: SilverStripe\ORM\FieldType\DBEnum
   Float:
@@ -36,6 +38,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBHTMLVarchar
   Int:
     class: SilverStripe\ORM\FieldType\DBInt
+  IP:
+    class: SilverStripe\ORM\FieldType\DBIp
   BigInt:
     class: SilverStripe\ORM\FieldType\DBBigInt
   Locale:
@@ -58,6 +62,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBText
   Time:
     class: SilverStripe\ORM\FieldType\DBTime
+  URL:
+    class: SilverStripe\ORM\FieldType\DBUrl
   Varchar:
     class: SilverStripe\ORM\FieldType\DBVarchar
   Year:

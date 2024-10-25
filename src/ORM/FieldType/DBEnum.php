@@ -3,12 +3,14 @@
 namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Validation\FieldValidation\OptionFieldValidator;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SelectField;
 use SilverStripe\Core\ArrayLib;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DB;
+use SilverStripe\Model\ModelData;
 
 /**
  * Class Enum represents an enumeration of a set of strings.
@@ -17,6 +19,10 @@ use SilverStripe\ORM\DB;
  */
 class DBEnum extends DBString
 {
+    private static array $field_validators = [
+        OptionFieldValidator::class => ['getEnum'],
+    ];
+
     /**
      * List of enum values
      */
@@ -73,14 +79,14 @@ class DBEnum extends DBString
 
             // If there's a default, then use this
             if ($default && !is_int($default)) {
-                if (in_array($default, $enum ?? [])) {
+                if (in_array($default, $enum)) {
                     $this->setDefault($default);
                 } else {
                     throw new \InvalidArgumentException(
                         "Enum::__construct() The default value '$default' does not match any item in the enumeration"
                     );
                 }
-            } elseif (is_int($default) && $default < count($enum ?? [])) {
+            } elseif (is_int($default) && $default < count($enum)) {
                 // Set to specified index if given
                 $this->setDefault($enum[$default]);
             } else {

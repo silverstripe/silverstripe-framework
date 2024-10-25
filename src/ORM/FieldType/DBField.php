@@ -10,6 +10,8 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Model\ModelData;
+use SilverStripe\Core\Validation\FieldValidation\FieldValidationTrait;
+use SilverStripe\Core\Validation\FieldValidation\FieldValidationInterface;
 
 /**
  * Single field in the database.
@@ -41,8 +43,9 @@ use SilverStripe\Model\ModelData;
  * }
  * </code>
  */
-abstract class DBField extends ModelData implements DBIndexable
+abstract class DBField extends ModelData implements DBIndexable, FieldValidationInterface
 {
+    use FieldValidationTrait;
 
     /**
      * Raw value of this field
@@ -99,13 +102,14 @@ abstract class DBField extends ModelData implements DBIndexable
         'ProcessedRAW' => 'HTMLFragment',
     ];
 
+    private static array $field_validators = [];
+
     /**
      * Default value in the database.
      * Might be overridden on DataObject-level, but still useful for setting defaults on
      * already existing records after a db-build.
-     * @deprecated 5.4.0 Use getDefaultValue() and setDefaultValue() instead
      */
-    protected mixed $defaultVal = null;
+    private mixed $defaultValue = null;
 
     /**
      * Provide the DBField name and an array of options, e.g. ['index' => true], or ['nullifyEmpty' => false]
@@ -122,6 +126,9 @@ abstract class DBField extends ModelData implements DBIndexable
             }
             $this->setOptions($options);
         }
+        // Setting value needs to happen below the call to setOptions() in case the default value is set there
+        $value = $this->getDefaultValue();
+        $this->setValue($value);
 
         parent::__construct();
     }
@@ -162,7 +169,7 @@ abstract class DBField extends ModelData implements DBIndexable
      *
      * If you try an alter the name a warning will be thrown.
      */
-    public function setName(?string $name): static
+    public function setName(string $name): static
     {
         if ($this->name && $this->name !== $name) {
             user_error("DBField::setName() shouldn't be called once a DBField already has a name."
@@ -191,6 +198,17 @@ abstract class DBField extends ModelData implements DBIndexable
     }
 
     /**
+     * Get the value of this field for field validation
+     *
+     * Intended to be overridden by subclasses when there is a need to provide
+     * a different value so that it is suitable for validation e.g. DBComposite
+     */
+    public function getValueForValidation(): mixed
+    {
+        return $this->getValue();
+    }
+
+    /**
      * Set the value of this field in various formats.
      * Used by {@link DataObject->getField()}, {@link DataObject->setCastedField()}
      * {@link DataObject->dbObject()} and {@link DataObject->write()}.
@@ -215,7 +233,7 @@ abstract class DBField extends ModelData implements DBIndexable
      */
     public function getDefaultValue(): mixed
     {
-        return $this->defaultVal;
+        return $this->defaultValue;
     }
 
     /**
@@ -223,7 +241,7 @@ abstract class DBField extends ModelData implements DBIndexable
      */
     public function setDefaultValue(mixed $defaultValue): static
     {
-        $this->defaultVal = $defaultValue;
+        $this->defaultValue = $defaultValue;
         return $this;
     }
 
