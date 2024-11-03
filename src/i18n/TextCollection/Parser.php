@@ -3,7 +3,7 @@
 namespace SilverStripe\i18n\TextCollection;
 
 use SilverStripe\i18n\i18n;
-use SilverStripe\View\SSTemplateParser;
+use SilverStripe\TemplateEngine\SSTemplateParser;
 
 /**
  * Parser that scans through a template and extracts the parameters to the _t and <%t calls

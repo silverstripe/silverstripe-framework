@@ -1,1 +1,0 @@
-MySubclass.ss

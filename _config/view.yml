@@ -3,4 +3,4 @@ Name: view-config
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\View\TemplateEngine:
-    class: 'SilverStripe\View\SSTemplateEngine'
+    class: 'SilverStripe\TemplateEngine\SSTemplateEngine'

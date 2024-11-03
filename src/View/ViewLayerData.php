@@ -54,7 +54,7 @@ class ViewLayerData implements IteratorAggregate, Stringable
     }
 
     /**
-     * Needed so we can rewind in SSViewer_Scope::next() after getting itemIteratorTotal without throwing an exception.
+     * Needed so we can rewind in ScopeManager::next() after getting itemIteratorTotal without throwing an exception.
      */
     public function getIteratorCount(): int
     {

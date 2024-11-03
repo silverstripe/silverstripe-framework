@@ -262,7 +262,7 @@ class InjectorTest extends SapphireTest
                         '`BASE_PATH`',
                         '`TEMP_PATH`',
                         '`NOT_DEFINED`',
-                        'THIRDPARTY_DIR' // Not back-tick escaped
+                        'FRAMEWORK_DIR' // Not back-tick escaped
                     ]
                 ],
             ]
@@ -275,7 +275,7 @@ class InjectorTest extends SapphireTest
                 BASE_PATH,
                 TEMP_PATH,
                 null,
-                'THIRDPARTY_DIR',
+                'FRAMEWORK_DIR',
             ],
             $another->filters
         );

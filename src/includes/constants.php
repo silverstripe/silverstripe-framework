@@ -26,8 +26,6 @@ use SilverStripe\Core\TempFolder;
  * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
  * - PUBLIC_DIR: Webroot path relative to project root - always evaluates to "public"
  * - PUBLIC_PATH: Absolute path to webroot, e.g. "/var/www/project/public"
- * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
- * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
  * - RESOURCES_DIR: Name of the directory where vendor assets will be exposed, e.g. "_resources"
  */
 
@@ -173,8 +171,6 @@ if (strpos(FRAMEWORK_PATH, BASE_PATH) !== 0) {
     throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
 }
 define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTORY_SEPARATOR));
-define('THIRDPARTY_DIR', FRAMEWORK_DIR ? (FRAMEWORK_DIR . '/thirdparty') : 'thirdparty');
-define('THIRDPARTY_PATH', FRAMEWORK_PATH . DIRECTORY_SEPARATOR . 'thirdparty');
 
 if (!defined('ASSETS_DIR')) {
     define('ASSETS_DIR', 'assets');

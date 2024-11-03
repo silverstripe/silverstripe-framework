@@ -20,7 +20,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Model\ModelData;
-use SilverStripe\View\SSViewer_Scope;
+use SilverStripe\TemplateEngine\ScopeManager;
 use SilverStripe\View\ViewLayerData;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
@@ -72,9 +72,9 @@ trait i18nTestManifest
 
     public function setupManifest()
     {
-        // force SSViewer_Scope to cache global template vars before we switch to the
+        // force ScopeManager to cache global template vars before we switch to the
         // test-project class manifest (since it will lose visibility of core classes)
-        $presenter = new SSViewer_Scope(new ViewLayerData([]));
+        $presenter = new ScopeManager(new ViewLayerData([]));
         unset($presenter);
 
         // Switch to test manifest

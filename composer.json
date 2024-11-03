@@ -40,6 +40,7 @@
         "silverstripe/config": "^3",
         "silverstripe/assets": "^3",
         "silverstripe/supported-modules": "^1.1",
+        "silverstripe/template-engine": "^1",
         "silverstripe/vendor-plugin": "^2",
         "sminnee/callbacklist": "^0.1.1",
         "symfony/cache": "^7.0",
