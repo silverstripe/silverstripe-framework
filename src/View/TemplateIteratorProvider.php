@@ -7,6 +7,8 @@ namespace SilverStripe\View;
  * scope in a template that returns values dependent on the state of the iterator of the current scope.
  *
  * SSViewer_BasicIteratorSupport is an example of this. See also @TemplateGlobalProvider
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\TemplateEngine\TemplateIteratorProvider
  */
 interface TemplateIteratorProvider
 {

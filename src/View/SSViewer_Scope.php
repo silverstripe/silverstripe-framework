@@ -30,6 +30,8 @@ use SilverStripe\ORM\FieldType\DBField;
  * We also keep the index of the current starting point for lookups. A lookup is a sequence of obj calls -
  * when in a loop or with tag the end result becomes the new scope, but for injections, we throw away the lookup
  * and revert back to the original scope once we've got the value we're after
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\TemplateEngine\ScopeManager
  */
 class SSViewer_Scope
 {
@@ -113,6 +115,11 @@ class SSViewer_Scope
      */
     public function __construct($item, SSViewer_Scope $inheritedScope = null)
     {
+        Deprecation::noticeWithNoReplacment(
+            '5.4.0',
+            'Will be renamed to SilverStripe\TemplateEngine\ScopeManager',
+            Deprecation::SCOPE_CLASS
+        );
         $this->item = $item;
 
         $this->itemIterator = ($inheritedScope) ? $inheritedScope->itemIterator : null;

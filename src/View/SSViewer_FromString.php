@@ -7,7 +7,7 @@ use SilverStripe\Dev\Deprecation;
 
 /**
  * Special SSViewer that will process a template passed as a string, rather than a filename.
- * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::renderString()
  */
 class SSViewer_FromString extends SSViewer
 {
@@ -41,7 +41,7 @@ class SSViewer_FromString extends SSViewer
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()',
+            'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::renderString()',
             Deprecation::SCOPE_CLASS
         );
         if ($parser) {

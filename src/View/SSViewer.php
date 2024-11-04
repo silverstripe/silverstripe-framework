@@ -87,7 +87,7 @@ class SSViewer implements Flushable
      *
      * @config
      * @var string
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine.global_key
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine.global_key
      */
     private static $global_key = '$CurrentReadingMode, $CurrentUser.ID';
 
@@ -136,7 +136,7 @@ class SSViewer implements Flushable
      * List of items being processed
      *
      * @var array
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine
      */
     protected static $topLevel = [];
 
@@ -144,7 +144,7 @@ class SSViewer implements Flushable
      * List of templates to select from
      *
      * @var array
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine
      */
     protected $templates = null;
 
@@ -152,7 +152,7 @@ class SSViewer implements Flushable
      * Absolute path to chosen template file
      *
      * @var string
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine
      */
     protected $chosen = null;
 
@@ -160,7 +160,7 @@ class SSViewer implements Flushable
      * Templates to use when looking up 'Layout' or 'Content'
      *
      * @var array
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine
      */
     protected $subTemplates = [];
 
@@ -171,13 +171,13 @@ class SSViewer implements Flushable
 
     /**
      * @var TemplateParser
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine
      */
     protected $parser;
 
     /**
      * @var CacheInterface
-     * @deprecated 5.4.0 Will be moved to SilverStripe\View\SSTemplateEngine
+     * @deprecated 5.4.0 Will be moved to SilverStripe\TemplateEngine\SSTemplateEngine
      */
     protected $partialCacheStore = null;
 
@@ -216,11 +216,11 @@ class SSViewer implements Flushable
 
     /**
      * Triggered early in the request when someone requests a flush.
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::flush()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::flush()
      */
     public static function flush()
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::flush()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::flush()');
         SSViewer::flush_template_cache(true);
         SSViewer::flush_cacheblock_cache(true);
     }
@@ -231,11 +231,11 @@ class SSViewer implements Flushable
      * @param string $content The template content
      * @param bool|void $cacheTemplate Whether or not to cache the template from string
      * @return SSViewer
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::renderString()
      */
     public static function fromString($content, $cacheTemplate = null)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::renderString()');
         $viewer = SSViewer_FromString::create($content);
         if ($cacheTemplate !== null) {
             $viewer->setCacheTemplate($cacheTemplate);
@@ -400,11 +400,11 @@ class SSViewer implements Flushable
 
     /**
      * @param string|array $templates
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::setTemplate()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::setTemplate()
      */
     public function setTemplate($templates)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::setTemplate()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::setTemplate()');
         $this->templates = $templates;
         $this->chosen = $this->chooseTemplate($templates);
         $this->subTemplates = [];
@@ -427,11 +427,11 @@ class SSViewer implements Flushable
      * Set the template parser that will be used in template generation
      *
      * @param TemplateParser $parser
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::setParser()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::setParser()
      */
     public function setParser(TemplateParser $parser)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::setParser()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::setParser()');
         $this->parser = $parser;
     }
 
@@ -439,11 +439,11 @@ class SSViewer implements Flushable
      * Returns the parser that is set for template generation
      *
      * @return TemplateParser
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::getParser()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::getParser()
      */
     public function getParser()
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::getParser()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::getParser()');
         if (!$this->parser) {
             $this->setParser(Injector::inst()->get('SilverStripe\\View\\SSTemplateParser'));
         }
@@ -456,11 +456,11 @@ class SSViewer implements Flushable
      * @param array|string $templates
      *
      * @return bool
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::hasTemplate()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::hasTemplate()
      */
     public static function hasTemplate($templates)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::hasTemplate()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::hasTemplate()');
         return (bool)ThemeResourceLoader::inst()->findTemplate($templates, SSViewer::get_themes());
     }
 
@@ -504,11 +504,11 @@ class SSViewer implements Flushable
      *
      * @param bool $force Set this to true to force a re-flush. If left to false, flushing
      * may only be performed once a request.
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::flushTemplateCache()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::flushTemplateCache()
      */
     public static function flush_template_cache($force = false)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::flushTemplateCache()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::flushTemplateCache()');
         if (!SSViewer::$template_cache_flushed || $force) {
             $dir = dir(TEMP_PATH);
             while (false !== ($file = $dir->read())) {
@@ -527,11 +527,11 @@ class SSViewer implements Flushable
      *
      * @param bool $force Set this to true to force a re-flush. If left to false, flushing
      * may only be performed once a request.
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::flushCacheBlockCache()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::flushCacheBlockCache()
      */
     public static function flush_cacheblock_cache($force = false)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::flushCacheBlockCache()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::flushCacheBlockCache()');
         if (!SSViewer::$cacheblock_cache_flushed || $force) {
             $cache = Injector::inst()->get(CacheInterface::class . '.cacheblock');
             $cache->clear();
@@ -545,11 +545,11 @@ class SSViewer implements Flushable
      * Set the cache object to use when storing / retrieving partial cache blocks.
      *
      * @param CacheInterface $cache
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::setPartialCacheStore()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::setPartialCacheStore()
      */
     public function setPartialCacheStore($cache)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::setPartialCacheStore()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::setPartialCacheStore()');
         $this->partialCacheStore = $cache;
     }
 
@@ -557,11 +557,11 @@ class SSViewer implements Flushable
      * Get the cache object to use when storing / retrieving partial cache blocks.
      *
      * @return CacheInterface
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::getPartialCacheStore()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::getPartialCacheStore()
      */
     public function getPartialCacheStore()
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::getPartialCacheStore()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::getPartialCacheStore()');
         if ($this->partialCacheStore) {
             return $this->partialCacheStore;
         }
@@ -591,11 +591,11 @@ class SSViewer implements Flushable
      * @param array $underlay Any variables to layer underneath the scope
      * @param SSViewer_Scope|null $inheritedScope The current scope of a parent template including a sub-template
      * @return string The result of executing the template
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::includeGeneratedTemplate()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::includeGeneratedTemplate()
      */
     protected function includeGeneratedTemplate($cacheFile, $item, $overlay, $underlay, $inheritedScope = null)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::includeGeneratedTemplate()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::includeGeneratedTemplate()');
         if (isset($_GET['showtemplate']) && $_GET['showtemplate'] && Permission::check('ADMIN')) {
             $lines = file($cacheFile ?? '');
             echo "<h2>Template: $cacheFile</h2>";
@@ -724,11 +724,11 @@ PHP;
      * @param string $subtemplate Sub-template to use
      *
      * @return array|null
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::getSubtemplateFor()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::getSubtemplateFor()
      */
     protected function getSubtemplateFor($subtemplate)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::getSubtemplateFor()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::getSubtemplateFor()');
         // Get explicit subtemplate name
         if (isset($this->subTemplates[$subtemplate])) {
             return $this->subTemplates[$subtemplate];
@@ -766,13 +766,13 @@ PHP;
      * @param bool $globalRequirements
      *
      * @return string Evaluated result
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::execute_template()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::execute_template()
      */
     public static function execute_template($template, $data, $arguments = null, $scope = null, $globalRequirements = false)
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with SilverStripe\View\SSTemplateEngine::execute_template()'
+            'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::execute_template()'
         );
         $v = SSViewer::create($template);
 
@@ -803,11 +803,11 @@ PHP;
      * @param bool $globalRequirements
      *
      * @return string Evaluated result
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::renderString()
      */
     public static function execute_string($content, $data, $arguments = null, $globalRequirements = false)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::renderString()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::renderString()');
         $v = SSViewer::fromString($content);
 
         if ($globalRequirements) {
@@ -832,11 +832,11 @@ PHP;
      * @param string $content The template contents
      * @param string $template The template file name
      * @return string
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\View\SSTemplateEngine::parseTemplateContent()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::parseTemplateContent()
      */
     public function parseTemplateContent($content, $template = "")
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\View\SSTemplateEngine::parseTemplateContent()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with SilverStripe\TemplateEngine\SSTemplateEngine::parseTemplateContent()');
         return $this->getParser()->compileString(
             $content,
             $template,

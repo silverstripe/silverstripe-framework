@@ -33,6 +33,7 @@ namespace SilverStripe\View;
 use SilverStripe\Core\Injector\Injector;
 use Parser;
 use InvalidArgumentException;
+use SilverStripe\Dev\Deprecation;
 
 // We want this to work when run by hand too
 if (defined('THIRDPARTY_PATH')) {
@@ -72,6 +73,8 @@ if (defined('THIRDPARTY_PATH')) {
   *
   * Angle Bracket: angle brackets "<" and ">" are used to eat whitespace between template elements
   * N: eats white space including newlines (using in legacy _t support)
+  *
+  * @deprecated 5.4.0 Will be renamed to SilverStripe\TemplateEngine\SSTemplateParser
   */
 class SSTemplateParser extends Parser implements TemplateParser
 {
@@ -119,6 +122,11 @@ class SSTemplateParser extends Parser implements TemplateParser
      */
     function construct($matchrule, $name, $arguments = null)
     {
+        Deprecation::noticeWithNoReplacment(
+            '5.4.0',
+            'Will be renamed to SilverStripe\TemplateEngine\SSTemplateParser',
+            Deprecation::SCOPE_CLASS
+        );
         $res = parent::construct($matchrule, $name, $arguments);
         if (!isset($res['php'])) {
             $res['php'] = '';

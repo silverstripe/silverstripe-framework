@@ -2,9 +2,13 @@
 
 namespace SilverStripe\View;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * Defines an extra set of basic methods that can be used in templates
  * that are not defined on sub-classes of {@link ViewableData}.
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\TemplateEngine\BasicIteratorSupport
  */
 class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
 {
@@ -17,6 +21,15 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
      * @var int
      */
     protected $iteratorTotalItems;
+
+    public function __construct()
+    {
+        Deprecation::noticeWithNoReplacment(
+            '5.4.0',
+            'Will be renamed to SilverStripe\TemplateEngine\BasicIteratorSupport',
+            Deprecation::SCOPE_CLASS
+        );
+    }
 
     /**
      * @return array

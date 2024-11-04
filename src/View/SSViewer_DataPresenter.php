@@ -12,7 +12,7 @@ use SilverStripe\ORM\FieldType\DBField;
  * data that is scope-independant (like BaseURL), or type-specific data that is layered on top cross-cut like
  * (like $FirstLast etc).
  *
- * @deprecated 5.4.0 Will be merged into SilverStripe\View\SSViewer_Scope
+ * @deprecated 5.4.0 Will be merged into SilverStripe\TemplateEngine\ScopeManager
  */
 class SSViewer_DataPresenter extends SSViewer_Scope
 {

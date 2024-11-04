@@ -4,6 +4,8 @@ namespace SilverStripe\View;
 
 /**
  * This interface needs to be implemented by any template parser that is used in SSViewer
+ *
+ * @deprecated 5.4.0 Will be renamed to SilverStripe\TemplateEngine\TemplateParser
  */
 interface TemplateParser
 {
