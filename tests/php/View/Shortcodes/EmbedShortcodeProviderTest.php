@@ -2,12 +2,16 @@
 
 namespace SilverStripe\View\Tests\Shortcodes;
 
+use Embed\Extractor;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\View\Shortcodes\EmbedShortcodeProvider;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Tests\Embed\EmbedUnitTest;
+use SilverStripe\View\Embed\EmbedContainer;
+use stdClass;
+use RuntimeException;
 
 class EmbedShortcodeProviderTest extends EmbedUnitTest
 {
@@ -126,7 +130,7 @@ class EmbedShortcodeProviderTest extends EmbedUnitTest
         );
         $this->assertEqualIgnoringWhitespace(
             <<<EOT
-            <div style="width:1024px;"><a data-flickr-embed="true" href="https://www.flickr.com/photos/philocycler/32119532132/" title="birdbyPhilocycler,onFlickr"><img src="https://live.staticflickr.com/759/32119532132_50c3f7933f_b.jpg" width="1024" height="742" alt="bird"></a><script asyncsrc="https://embedr.flickr.com/assets/client-code.js" charset="utf-8"></script><p class="caption">Birdy</p></div>
+            <div style="width:1024px;"><iframe frameborder="0"src="data:text/html;charset=utf-8,%3Ca%20data-flickr-embed%3D%22true%22%20href%3D%22https%3A%2F%2Fwww.flickr.com%2Fphotos%2Fphilocycler%2F32119532132%2F%22%20title%3D%22bird%20by%20Philocycler%2C%20on%20Flickr%22%3E%3Cimg%20src%3D%22https%3A%2F%2Flive.staticflickr.com%2F759%2F32119532132_50c3f7933f_b.jpg%22%20width%3D%221024%22%20height%3D%22742%22%20alt%3D%22bird%22%3E%3C%2Fa%3E%3Cscript%20async%20src%3D%22https%3A%2F%2Fembedr.flickr.com%2Fassets%2Fclient-code.js%22%20charset%3D%22utf-8%22%3E%3C%2Fscript%3E" style="width:1024px;height:742px;"></iframe><p class="caption">Birdy</p></div>
             EOT,
             $html
         );
@@ -216,5 +220,212 @@ class EmbedShortcodeProviderTest extends EmbedUnitTest
             EOT,
             $html
         );
+    }
+
+    public function provideSandboxHtml(): array
+    {
+        return [
+            'normal' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<divstyle="width:100px;"><iframe frameborder="0"src="data:text/html;'
+                . 'charset=utf-8,Some%20content"style="width:100px;"></iframe></div>',
+            ],
+            'normal-with-attrs' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => 'Some content',
+                'attrs' => [
+                    'frameborder' => '1',
+                    'style' => 'width:200px;height:200px',
+                    'data-something' => 'lorem'
+                ],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe frameborder="1"style="width:200px;'
+                . 'height:200px;width:100px;" data-something="lorem" src="data:text/html;charset=utf-8,'
+                . 'Some%20content"></iframe></div>',
+            ],
+            'excluded' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => ['example.com'],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;">Some content</div>',
+            ],
+            'subdomain-excluded' => [
+                'url' => 'http://sub.example.com/embed',
+                'excluded' => ['example.com'],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;">Some content</div>',
+            ],
+            'config-includes-protocol' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => ['http://example.com'],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;">Some content</div>',
+            ],
+            'config-includes-wrong-protocol' => [
+                'url' => 'https://example.com/embed',
+                'excluded' => ['http://example.com'],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;">Some content</div>',
+            ],
+            'umatched-config' => [
+                'url' => 'https://example.com/embed',
+                'excluded' => ['somewhere.com'],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe frameborder="0" src="data:text/html;'
+                . 'charset=utf-8,Some%20content"style="width:100px;"></iframe></div>',
+            ],
+            'invalid-config' => [
+                'url' => 'https://example.com/embed',
+                'excluded' => [123],
+                'html' => 'Some content',
+                'attrs' => [],
+                'exception' => true,
+                'expected' => '',
+            ],
+            'iframe' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="https://example.com/content"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="https://example.com/content"></iframe></div>',
+            ],
+            'iframe-short' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="https://example.com/content"/>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe frameborder="0" src="data:text/html;charset=utf-8,'
+                . '%3Ciframe%20src%3D%22https%3A%2F%2Fexample.com%2Fcontent%22%2F%3E" style="width:100px;">'
+                . '</iframe></div>',
+            ],
+            'iframe-whitespace-in-tags' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe   src="https://example.com/content"  ></iframe   >',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="https://example.com/content"></iframe></div>',
+            ],
+            'iframe-with-content-inside' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe><div>something</div></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<divstyle="width:100px;"><iframe frameborder="0"src="data:text/html;charset=utf-8,'
+                . '%3Ciframe%3E%3Cdiv%3Esomething%3C%2Fdiv%3E%3C%2Fiframe%3E"style="width:100px;"></iframe></div>',
+            ],
+            'closed-iframe' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '</iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe frameborder="0"src="data:text/html;'
+                . 'charset=utf-8,%3C%2Fiframe%3E"style="width:100px;"></iframe></div>',
+            ],
+            'malicious-iframe-1' => [
+                'url' => 'https://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe></iframe>bad<iframe></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<divstyle="width:100px;"><iframe frameborder="0"src="data:text/html;'
+                . 'charset=utf-8,%3Ciframe%3E%3C%2Fiframe%3Ebad%3Ciframe%3E%3C%2Fiframe%3E"'
+                . 'style="width:100px;"></iframe></div>',
+            ],
+            'malicious-iframe-2' => [
+                'url' => 'https://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="http://example.com/thing"></iframe>bad<iframe src="http://example.com/thing"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe frameborder="0"src="data:text/html;'
+                . 'charset=utf-8,%3Ciframe%20src%3D%22http%3A%2F%2Fexample.com%2Fthing%22%3E%3C%2F'
+                . 'iframe%3Ebad%3Ciframe%20src%3D%22http%3A%2F%2Fexample.com%2Fthing%22%3E%3C'
+                . '%2Fiframe%3E"style="width:100px;"></iframe></div>',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideSandboxHtml
+     */
+    public function testSandboxHtml(
+        string $url,
+        array $excluded,
+        string $html,
+        array $attrs,
+        bool $exception,
+        string $expected
+    ): void {
+        if ($exception) {
+            $this->expectException(RuntimeException::class);
+        }
+        $embeddable = $this->getEmbeddable($url, $html);
+        $attributes = ['width' => 100];
+        EmbedShortcodeProvider::config()->set('domains_excluded_from_sandboxing', $excluded);
+        EmbedShortcodeProvider::config()->set('sandboxed_iframe_attributes', $attrs);
+        $actual = EmbedShortcodeProvider::embeddableToHtml($embeddable, $attributes);
+        if (!$exception) {
+            $this->assertEqualIgnoringWhitespace($expected, $actual);
+        }
+    }
+
+    private function getEmbeddable(string $url, string $html)
+    {
+        return new class($url, $html) extends EmbedContainer {
+            private $_url;
+            private $_html;
+            public function __construct($url, $html)
+            {
+                $this->_url = $url;
+                $this->_html = $html;
+                parent::__construct($url);
+            }
+            public function getType()
+            {
+                return 'rich';
+            }
+            public function getExtractor(): Extractor
+            {
+                return new class($this->_url, $this->_html) extends Extractor {
+                    protected $_url;
+                    private $_html;
+                    public function __construct($url, $html)
+                    {
+                        $this->_url = $url;
+                        $this->_html = $html;
+                    }
+                    public function __get($name)
+                    {
+                        $code = new stdClass;
+                        $code->html = $this->_html;
+                        return match ($name) {
+                            'code' => $code,
+                            'url' => $this->_url,
+                            default => null,
+                        };
+                    }
+                };
+            }
+        };
     }
 }

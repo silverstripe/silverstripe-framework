@@ -6,6 +6,7 @@ use Embed\Http\NetworkException;
 use Embed\Http\RequestException;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
+use RuntimeException;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ArrayList;
@@ -27,6 +28,31 @@ use SilverStripe\View\Embed\EmbedContainer;
 class EmbedShortcodeProvider implements ShortcodeHandler
 {
     use Configurable;
+
+    /**
+     * Domains to exclude from sandboxing content in an iframe
+     * This will also exclude any subdomains
+     * e.g. if 'example.com' is excluded then 'www.example.com' will also be excluded
+     * Do not include the protocol in the domain i.e. exclude the leading https://
+     */
+    private static array $domains_excluded_from_sandboxing = [];
+
+    /**
+     * Attributes to add to the iframe when sandboxing
+     * Note that the 'src' attribute cannot be set via config
+     * If a style attribute is set via config, width and height values will be overriden by
+     * any shortcode width and height arguments
+     */
+    private static array $sandboxed_iframe_attributes = [];
+
+    /**
+     * The url of the last extractor used
+     * This is used instead of adding a new param to an existing method
+     * which would be backwards incompatible
+     *
+     * @internal
+     */
+    private static string $extractorUrl = '';
 
     /**
      * Gets the list of shortcodes provided by this handler
@@ -140,6 +166,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             return '';
         }
         $extractor = $embeddable->getExtractor();
+        EmbedShortcodeProvider::$extractorUrl = (string) $extractor->url;
         $type = $embeddable->getType();
         if ($type === 'video' || $type === 'rich') {
             // Attempt to inherit width (but leave height auto)
@@ -194,6 +221,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             ]));
         }
 
+        $content = EmbedShortcodeProvider::sandboxHtml($content, $arguments);
         $data = [
             'Arguments' => $arguments,
             'Attributes' => $attributes,
@@ -341,5 +369,73 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     private static function cleanKeySegment(string $str): string
     {
         return preg_replace('/[^a-zA-Z0-9\-]/', '', $str ?? '');
+    }
+
+    /**
+     * Wrap potentially dangerous html embeds in an iframe to sandbox them
+     * Potentially dangerous html embeds would could be those that contain <script> or <style> tags
+     * or html that contains an on*= attribute
+     */
+    private static function sandboxHtml(string $html, array $arguments)
+    {
+        // Do not sandbox if the domain is excluded
+        if (EmbedShortcodeProvider::domainIsExcludedFromSandboxing()) {
+            return $html;
+        }
+        // Do not sandbox if the html is already an iframe
+        if (preg_match('#^<iframe[^>]*>#', $html) && preg_match('#</iframe\s*>$#', $html)) {
+            // Prevent things like <iframe><script>alert(1)</script></iframe>
+            // and <iframe></iframe><unsafe stuff here/><iframe></iframe>
+            // If there's more than 2 HTML tags then sandbox it
+            if (substr_count($html, '<') <= 2) {
+                return $html;
+            }
+        }
+        // Sandbox the html in an iframe
+        $style = '';
+        if (!empty($arguments['width'])) {
+            $style .= 'width:' . intval($arguments['width']) . 'px;';
+        }
+        if (!empty($arguments['height'])) {
+            $style .= 'height:' . intval($arguments['height']) . 'px;';
+        }
+        $attrs = array_merge([
+            'frameborder' => '0',
+        ], static::config()->get('sandboxed_iframe_attributes'));
+        $attrs['src'] = 'data:text/html;charset=utf-8,' . rawurlencode($html);
+        if (array_key_exists('style', $attrs)) {
+            $attrs['style'] .= ";$style";
+            $attrs['style'] = ltrim($attrs['style'], ';');
+        } else {
+            $attrs['style'] = $style;
+        }
+        $html = HTML::createTag('iframe', $attrs);
+        return $html;
+    }
+
+    /**
+     * Check if the domain is excluded from sandboxing based on config
+     */
+    private static function domainIsExcludedFromSandboxing(): bool
+    {
+        $domain = (string) parse_url(EmbedShortcodeProvider::$extractorUrl, PHP_URL_HOST);
+        $config = static::config()->get('domains_excluded_from_sandboxing');
+        foreach ($config as $excluded) {
+            if (!is_string($excluded)) {
+                throw new RuntimeException('domains_excluded_from_sandboxing must be an array of strings');
+            }
+            $excludedDomain = parse_url($excluded, PHP_URL_HOST);
+            if (!$excludedDomain) {
+                // Try adding a protocol so that parse_url can parse it
+                $excludedDomain = parse_url('http://' . $excluded, PHP_URL_HOST);
+            }
+            if (!$excludedDomain) {
+                throw new RuntimeException('Not a valid domain: ' . $excluded);
+            }
+            if (str_ends_with($domain, $excludedDomain)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
