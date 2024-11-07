@@ -164,16 +164,20 @@ class Debug
         if (Director::is_cli()) {
             return false;
         }
+        $accepted = [];
 
         // Get current request if registered
         if (!$request && Injector::inst()->has(HTTPRequest::class)) {
             $request = Injector::inst()->get(HTTPRequest::class);
         }
-        if (!$request) {
-            return false;
+        if ($request) {
+            $accepted = $request->getAcceptMimetypes(false);
+        } elseif (isset($_SERVER['HTTP_ACCEPT'])) {
+            // If there's no request object available, fallback to global $_SERVER
+            // This can happen in some circumstances when a PHP error is triggered
+            // during a regular HTTP request
+            $accepted = preg_split('#\s*,\s*#', $_SERVER['HTTP_ACCEPT']);
         }
-        // Request must include text/html
-        $accepted = $request->getAcceptMimetypes(false);
 
         // Explicit opt in
         if (in_array('text/html', $accepted ?? [])) {
