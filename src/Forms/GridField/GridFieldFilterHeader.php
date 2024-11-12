@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use LogicException;
-use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\FormSchemaController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
@@ -425,7 +425,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
         }
 
-        $parts = $gridField->getRequest()->getHeader(LeftAndMain::SCHEMA_HEADER);
+        $parts = $gridField->getRequest()->getHeader(FormSchemaController::SCHEMA_HEADER);
         $schemaID = $gridField->getRequest()->getURL();
         $data = FormSchema::singleton()
             ->getMultipartSchema($parts, $schemaID, $form);
