@@ -30,7 +30,9 @@
       "disabled": false,
       "autoFocus": false,
       "customValidationMessage": "",
-      "attributes": [],
+      "attributes": {
+        "class": "text"
+      },
       "data": {
         "maxlength": null
       },
@@ -53,7 +55,9 @@
       "disabled": false,
       "autoFocus": false,
       "customValidationMessage": "",
-      "attributes": [],
+      "attributes": {
+        "class": "hidden"
+      },
       "data": [],
       "validation": []
     }
@@ -77,7 +81,8 @@
       "autoFocus": false,
       "customValidationMessage": "",
       "attributes": {
-        "type": "submit"
+        "type": "submit",
+        "class": "action"
       },
       "data": {
         "icon": "save"
@@ -102,7 +107,8 @@
       "autoFocus": false,
       "customValidationMessage": "",
       "attributes": {
-        "type": "button"
+        "type": "button",
+        "class": "action"
       },
       "data": {
         "icon": null
@@ -126,7 +132,10 @@
       "disabled": false,
       "autoFocus": false,
       "customValidationMessage": "",
-      "attributes": [],
+      "attributes": {
+        "class": "field CompositeField popover",
+        "tabindex": null
+      },
       "data": {
         "popoverTitle": null,
         "placement": "bottom",
@@ -159,7 +168,8 @@
           "autoFocus": false,
           "customValidationMessage": "",
           "attributes": {
-            "type": "submit"
+            "type": "submit",
+            "class": "action"
           },
           "data": {
             "icon": null
@@ -184,7 +194,8 @@
           "autoFocus": false,
           "customValidationMessage": "",
           "attributes": {
-            "type": "submit"
+            "type": "submit",
+            "class": "action"
           },
           "data": {
             "icon": null

@@ -1493,6 +1493,16 @@ class FormField extends RequestHandler
         if ($titleTip instanceof Tip) {
             $data['titleTip'] = $titleTip->getTipSchema();
         }
+        $attributes = $this->getAttributes();
+        // Remove value from attributes because otherwise it breaks react fields
+        unset($attributes['value']);
+        // Remove above attributes from attributes list to avoid double-ups
+        foreach (array_keys($data) as $key) {
+            // HTML attributes are always lowercase so we need to make sure to transform our js key names
+            // to lowercase before unsetting them.
+            unset($attributes[strtolower($key)]);
+        }
+        $data['attributes'] = $attributes;
         return $data;
     }
 
@@ -1560,6 +1570,18 @@ class FormField extends RequestHandler
         }
         $this->extend('updateSchemaValidation', $validationList);
         return $validationList;
+    }
+
+    /**
+     * Gets the data-schema and data-state attributes for the input element.
+     * Can't be included in getAttributesHtml because that would result in
+     * an infinite loop.
+     */
+    public function getSchemaAttributesHtml(): DBHTMLText
+    {
+        $content = 'data-schema="' . htmlspecialchars(json_encode($this->getSchemaData()))
+            . '" data-state="' . htmlspecialchars(json_encode($this->getSchemaState())) . '"';
+        return DBHTMLText::create()->setValue($content);
     }
 
     /**

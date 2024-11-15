@@ -36,7 +36,13 @@
                     "length": 40
                 }
             },
-            "attributes": [],
+            "attributes": {
+              "class": "text",
+              "required": "required",
+              "aria-required": "true",
+              "maxLength": 40,
+              "size": 30
+            },
             "data": {
               "maxlength": 40
             }
@@ -62,7 +68,12 @@
             "validation": {
                 "date": true
             },
-            "attributes": [],
+            "attributes": {
+              "class": "date text",
+              "lang": "en-US",
+              "min": null,
+              "max": null
+            },
             "data": {
                 "html5": true,
                 "min": null,
@@ -90,7 +101,9 @@
             "validation": {
                 "numeric": true
             },
-            "attributes": [],
+            "attributes": {
+              "class": "numeric text"
+            },
             "data": {
                 "maxlength": null
             }
@@ -115,7 +128,9 @@
             "validation": {
                 "currency": true
             },
-            "attributes": [],
+            "attributes": {
+              "class": "currency text"
+            },
             "data": {
                 "maxlength": null
             }
@@ -138,7 +153,9 @@
             "autoFocus": false,
             "customValidationMessage": "",
             "validation": [],
-            "attributes": [],
+            "attributes": {
+              "class": "hidden"
+            },
             "data": []
         }
     ],

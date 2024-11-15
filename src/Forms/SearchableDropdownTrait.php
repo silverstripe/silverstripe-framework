@@ -312,7 +312,6 @@ trait SearchableDropdownTrait
             parent::getAttributes(),
             [
                 'name' => $name,
-                'data-schema' => json_encode($this->getSchemaData()),
             ]
         );
     }

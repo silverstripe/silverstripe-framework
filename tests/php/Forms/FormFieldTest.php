@@ -414,6 +414,16 @@ class FormFieldTest extends SapphireTest
         $this->assertSame('Test tip', $schema['titleTip']['content']);
     }
 
+    public function testGetSchemaDataDefaultsAttributes()
+    {
+        $field = new FormField('MyField');
+        $field->setAttribute('foo', 'bar');
+        $this->assertEquals('bar', $field->getAttribute('foo'));
+        $schema = $field->getSchemaDataDefaults();
+        $this->assertArrayHasKey('foo', $schema['attributes']);
+        $this->assertEquals('bar', $schema['attributes']['foo']);
+    }
+
     public function testGetSchemaData()
     {
         $field = new FormField('MyField');
