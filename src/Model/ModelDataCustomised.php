@@ -24,10 +24,10 @@ class ModelDataCustomised extends ModelData
     public function __call($method, $arguments)
     {
         if ($this->customised->hasMethod($method)) {
-            return call_user_func_array([$this->customised, $method], $arguments ?? []);
+            return $this->customised->$method(...$arguments);
         }
 
-        return call_user_func_array([$this->original, $method], $arguments ?? []);
+        return $this->original->$method(...$arguments);
     }
 
     public function __get(string $property): mixed

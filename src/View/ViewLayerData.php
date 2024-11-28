@@ -244,12 +244,41 @@ class ViewLayerData implements IteratorAggregate, Stringable
             } catch (BadMethodCallException $e) {
                 // Only throw the exception if we weren't relying on __call
                 // It's common for __call to throw BadMethodCallException for methods that aren't "implemented"
-                // so we just want to return null in those cases.
-                if (!$hasDynamicMethods) {
+                // so we just want to return null in those cases - but only if it's a direct result of our method call.
+                if (!$hasDynamicMethods || $this->mustThrow($e->getTrace())) {
                     throw $e;
                 }
             }
         }
         return null;
+    }
+
+    private function mustThrow(array $trace): bool
+    {
+        $dataClass = get_class($this->data);
+        foreach ($trace as $data) {
+            $class = $data['class'] ?? '';
+            $method = $data['function'] ?? '';
+            if ($class === ViewLayerData::class) {
+                // If we hit ViewLayerData::callDataMethod() we've finished checking the relevant parts of the stack
+                if ($method === 'callDataMethod') {
+                    break;
+                }
+                // If we're trying to call some other method on ViewLayerData and it causes problems, throw the exception.
+                return true;
+            }
+            // If we find a non __call method return true
+            // This means our method exists, but it tried to call something else which doesn't
+            if ($method !== '__call') {
+                return true;
+            }
+            // If we break class inheritance return true
+            if (!is_a($class, $dataClass, true) && !is_a($dataClass, $class, true)) {
+                return true;
+            }
+        }
+        // Hitting this means `callDataMethod()` only hit `__call()` methods inside the class hierarchy of our data, which
+        // means the method we were actually trying to call is missing and we can safely ignore the exception.
+        return false;
     }
 }

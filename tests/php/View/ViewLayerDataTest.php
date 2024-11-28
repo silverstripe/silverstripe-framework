@@ -5,7 +5,6 @@ namespace SilverStripe\View\Tests;
 use ArrayIterator;
 use BadMethodCallException;
 use Error;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Model\ArrayData;
@@ -20,6 +19,7 @@ use SilverStripe\View\Tests\ViewLayerDataTest\ExtensibleObjectExtension;
 use SilverStripe\View\Tests\ViewLayerDataTest\GetCountObject;
 use SilverStripe\View\Tests\ViewLayerDataTest\NonIterableObject;
 use SilverStripe\View\Tests\ViewLayerDataTest\StringableObject;
+use SilverStripe\View\Tests\ViewLayerDataTest\TestBadMethodCallObjectSubclass;
 use SilverStripe\View\Tests\ViewLayerDataTest\TestFixture;
 use SilverStripe\View\Tests\ViewLayerDataTest\TestFixtureComplex;
 use SilverStripe\View\ViewLayerData;
@@ -706,5 +706,40 @@ class ViewLayerDataTest extends SapphireTest
         $this->assertTrue(isset($viewLayerData->Me));
         $this->assertSame('some other class', $viewLayerData->getRawDataValue('ClassName'));
         $this->assertSame('something else', $viewLayerData->getRawDataValue('Me'));
+    }
+
+    public static function provideCallDataMethodExceptionCatching(): array
+    {
+        return [
+            'exception thrown directly in __call()' => [
+                'method' => 'directMethod',
+                'exceptionCaught' => true,
+            ],
+            'exception thrown in __call() on superclass' => [
+                'method' => 'inheritedMethod',
+                'exceptionCaught' => true,
+            ],
+            'exception thrown outside __call()' => [
+                'method' => 'realMethod',
+                'exceptionCaught' => false,
+            ],
+            'exception thrown in __call() in a different class hierarchy' => [
+                'method' => 'anotherClass',
+                'exceptionCaught' => false,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideCallDataMethodExceptionCatching')]
+    public function testCallDataMethodExceptionCatching(string $method, bool $exceptionCaught): void
+    {
+        $data = new TestBadMethodCallObjectSubclass();
+        $viewLayerData = new ViewLayerData($data);
+        if (!$exceptionCaught) {
+            $this->expectException(BadMethodCallException::class);
+        }
+
+        $result = $viewLayerData->$method();
+        $this->assertNull($result);
     }
 }
