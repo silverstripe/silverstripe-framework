@@ -62,9 +62,9 @@ class SSViewer_DataPresenter extends SSViewer_Scope
      */
     public function __construct(
         $item,
-        array $overlay = null,
-        array $underlay = null,
-        SSViewer_Scope $inheritedScope = null
+        ?array $overlay = null,
+        ?array $underlay = null,
+        ?SSViewer_Scope $inheritedScope = null
     ) {
         Deprecation::noticeWithNoReplacment('5.4.0', 'Will be merged into ' . SSViewer_Scope::class, Deprecation::SCOPE_CLASS);
         parent::__construct($item, $inheritedScope);

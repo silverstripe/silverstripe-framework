@@ -226,7 +226,7 @@ class Email extends SymfonyEmail
     /**
      * Passing a string of HTML for $body will have no affect if you also call either setData() or addData()
      */
-    public function setBody(AbstractPart|string $body = null): static
+    public function setBody(AbstractPart|string|null $body = null): static
     {
         if ($body instanceof AbstractPart) {
             // pass to Symfony\Component\Mime\Message::setBody()
@@ -324,7 +324,7 @@ class Email extends SymfonyEmail
         return $this->attachFromPath($path, $alias, $mime);
     }
 
-    public function addAttachmentFromData(string $data, string $name, string $mime = null): static
+    public function addAttachmentFromData(string $data, string $name, ?string $mime = null): static
     {
         return $this->attach($data, $name, $mime);
     }

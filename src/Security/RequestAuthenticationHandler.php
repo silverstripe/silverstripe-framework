@@ -54,7 +54,7 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      * @param bool $persistent
      * @param HTTPRequest $request
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
+    public function logIn(Member $member, $persistent = false, ?HTTPRequest $request = null)
     {
         $member->beforeMemberLoggedIn();
 
@@ -71,7 +71,7 @@ class RequestAuthenticationHandler implements AuthenticationHandler
      *
      * @param HTTPRequest $request
      */
-    public function logOut(HTTPRequest $request = null)
+    public function logOut(?HTTPRequest $request = null)
     {
         $member = Security::getCurrentUser();
         if ($member) {

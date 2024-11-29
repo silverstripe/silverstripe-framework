@@ -23,7 +23,7 @@ class CMSMemberAuthenticator extends MemberAuthenticator
      * @param Member|null $member
      * @return Member
      */
-    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
+    protected function authenticateMember($data, ?ValidationResult &$result = null, ?Member $member = null)
     {
         // Attempt to identify by temporary ID
         if (!empty($data['tempid'])) {

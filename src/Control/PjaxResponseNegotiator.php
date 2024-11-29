@@ -41,7 +41,7 @@ class PjaxResponseNegotiator
      * @param array $callbacks
      * @param HTTPResponse $response An existing response to reuse (optional)
      */
-    public function __construct($callbacks = [], HTTPResponse $response = null)
+    public function __construct($callbacks = [], ?HTTPResponse $response = null)
     {
         $this->callbacks = $callbacks;
         $this->response = $response ?: HTTPResponse::create();

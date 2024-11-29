@@ -157,7 +157,7 @@ class GridField extends FormField
      * @param SS_List $dataList
      * @param GridFieldConfig $config
      */
-    public function __construct($name, $title = null, SS_List $dataList = null, GridFieldConfig $config = null)
+    public function __construct($name, $title = null, ?SS_List $dataList = null, ?GridFieldConfig $config = null)
     {
         parent::__construct($name, $title, null);
 

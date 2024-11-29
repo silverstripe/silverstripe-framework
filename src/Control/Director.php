@@ -486,7 +486,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return string Host name, including port (if present)
      */
-    public static function host(HTTPRequest $request = null)
+    public static function host(?HTTPRequest $request = null)
     {
         // Check if overridden by alternate_base_url
         if ($baseURL = static::config()->get('alternate_base_url')) {
@@ -528,7 +528,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return int|null
      */
-    public static function port(HTTPRequest $request = null)
+    public static function port(?HTTPRequest $request = null)
     {
         $host = static::host($request);
         return (int)parse_url($host ?? '', PHP_URL_PORT) ?: null;
@@ -540,7 +540,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest|null $request
      * @return string|null
      */
-    public static function hostName(HTTPRequest $request = null)
+    public static function hostName(?HTTPRequest $request = null)
     {
         $host = static::host($request);
         return parse_url($host ?? '', PHP_URL_HOST) ?: null;
@@ -553,7 +553,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool|string
      */
-    public static function protocolAndHost(HTTPRequest $request = null)
+    public static function protocolAndHost(?HTTPRequest $request = null)
     {
         return static::protocol($request) . static::host($request);
     }
@@ -564,7 +564,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return string
      */
-    public static function protocol(HTTPRequest $request = null)
+    public static function protocol(?HTTPRequest $request = null)
     {
         return (Director::is_https($request)) ? 'https://' : 'http://';
     }
@@ -575,7 +575,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool
      */
-    public static function is_https(HTTPRequest $request = null)
+    public static function is_https(?HTTPRequest $request = null)
     {
         // Check override from alternate_base_url
         if ($baseURL = static::config()->uninherited('alternate_base_url')) {
@@ -900,7 +900,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest|null $request
      * @return string
      */
-    public static function absoluteBaseURLWithAuth(HTTPRequest $request = null)
+    public static function absoluteBaseURLWithAuth(?HTTPRequest $request = null)
     {
         // Detect basic auth
         $login = '';
@@ -960,7 +960,7 @@ class Director implements TemplateGlobalProvider
      * Can include port number.
      * @param HTTPRequest|null $request Request object to check
      */
-    public static function forceSSL($patterns = null, $secureDomain = null, HTTPRequest $request = null)
+    public static function forceSSL($patterns = null, $secureDomain = null, ?HTTPRequest $request = null)
     {
         $handler = CanonicalURLMiddleware::singleton()->setForceSSL(true);
         if ($patterns) {
@@ -977,7 +977,7 @@ class Director implements TemplateGlobalProvider
      *
      * @param HTTPRequest $request
      */
-    public static function forceWWW(HTTPRequest $request = null)
+    public static function forceWWW(?HTTPRequest $request = null)
     {
         $handler = CanonicalURLMiddleware::singleton()->setForceWWW(true);
         $handler->throwRedirectIfNeeded($request);
@@ -993,7 +993,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return bool
      */
-    public static function is_ajax(HTTPRequest $request = null)
+    public static function is_ajax(?HTTPRequest $request = null)
     {
         $request = Director::currentRequest($request);
         if ($request) {
@@ -1038,7 +1038,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return string|null null if not overridden, otherwise the actual value
      */
-    public static function get_session_environment_type(HTTPRequest $request = null)
+    public static function get_session_environment_type(?HTTPRequest $request = null)
     {
         $request = static::currentRequest($request);
 
@@ -1114,7 +1114,7 @@ class Director implements TemplateGlobalProvider
      * @param HTTPRequest $request
      * @return HTTPRequest Request object if one is both current and valid
      */
-    protected static function currentRequest(HTTPRequest $request = null)
+    protected static function currentRequest(?HTTPRequest $request = null)
     {
         // Ensure we only use a registered HTTPRequest and don't
         // incidentally construct a singleton

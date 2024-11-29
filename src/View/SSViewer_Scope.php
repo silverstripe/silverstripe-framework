@@ -114,7 +114,7 @@ class SSViewer_Scope
      * @var object $item
      * @var SSViewer_Scope $inheritedScope
      */
-    public function __construct($item, SSViewer_Scope $inheritedScope = null)
+    public function __construct($item, ?SSViewer_Scope $inheritedScope = null)
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',

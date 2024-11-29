@@ -31,7 +31,7 @@ class MemberAuthenticator implements Authenticator
             | Authenticator::RESET_PASSWORD | Authenticator::CHECK_PASSWORD;
     }
 
-    public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null)
+    public function authenticate(array $data, HTTPRequest $request, ?ValidationResult &$result = null)
     {
         // Find authenticated member
         if (class_exists(Versioned::class)) {
@@ -62,7 +62,7 @@ class MemberAuthenticator implements Authenticator
      * @param Member $member This third parameter is used in the CMSAuthenticator(s)
      * @return Member Found member, regardless of successful login
      */
-    protected function authenticateMember($data, ValidationResult &$result = null, Member $member = null)
+    protected function authenticateMember($data, ?ValidationResult &$result = null, ?Member $member = null)
     {
         $email = !empty($data['Email']) ? $data['Email'] : null;
         $result = $result ?: ValidationResult::create();
@@ -135,7 +135,7 @@ class MemberAuthenticator implements Authenticator
      * @param ValidationResult $result
      * @return ValidationResult
      */
-    public function checkPassword(Member $member, $password, ValidationResult &$result = null)
+    public function checkPassword(Member $member, $password, ?ValidationResult &$result = null)
     {
         // Check if allowed to login
         $result = $member->validateCanLogin($result);

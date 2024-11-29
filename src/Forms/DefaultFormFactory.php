@@ -33,7 +33,7 @@ class DefaultFormFactory implements FormFactory
      * @return Form
      * @throws InvalidArgumentException When required context is missing
      */
-    public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])
+    public function getForm(?RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = [])
     {
         // Validate context
         foreach ($this->getRequiredContext() as $required) {
@@ -64,7 +64,7 @@ class DefaultFormFactory implements FormFactory
      * @param array $context
      * @return FieldList
      */
-    protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormFields(?RequestHandler $controller = null, $name, $context = [])
     {
         // Fall back to standard "getCMSFields" which itself uses the FormScaffolder as a fallback
         $fields = $context['Record']->getCMSFields();
@@ -80,7 +80,7 @@ class DefaultFormFactory implements FormFactory
      * @param array $context
      * @return FieldList
      */
-    protected function getFormActions(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormActions(?RequestHandler $controller = null, $name, $context = [])
     {
         $actions = $context['Record']->getCMSActions();
         $this->invokeWithExtensions('updateFormActions', $actions, $controller, $name, $context);
@@ -93,7 +93,7 @@ class DefaultFormFactory implements FormFactory
      * @param array $context
      * @return null|Validator
      */
-    protected function getFormValidator(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormValidator(?RequestHandler $controller = null, $name, $context = [])
     {
         if (!$context['Record'] instanceof DataObject) {
             return null;

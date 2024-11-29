@@ -18,7 +18,7 @@ class MemcachedCacheFactory implements CacheFactory
     /**
      * @param Memcached $memcachedClient
      */
-    public function __construct(Memcached $memcachedClient = null)
+    public function __construct(?Memcached $memcachedClient = null)
     {
         $this->memcachedClient = $memcachedClient;
     }

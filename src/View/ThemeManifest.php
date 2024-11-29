@@ -63,7 +63,7 @@ class ThemeManifest implements ThemeList
      * @param string $project Path to application code
      * @param CacheFactory $cacheFactory Cache factory to generate backend cache with
      */
-    public function __construct($base, $project = null, CacheFactory $cacheFactory = null)
+    public function __construct($base, $project = null, ?CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
         $this->project = $project;

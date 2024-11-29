@@ -18,7 +18,7 @@ trait HttpRequestMockBuilder
      *
      * @return HTTPRequest
      */
-    public function buildRequestMock($url, $getVars = [], $postVars = [], $method = null, Session $session = null)
+    public function buildRequestMock($url, $getVars = [], $postVars = [], $method = null, ?Session $session = null)
     {
         if (is_null($session)) {
             $session = new Session([]);

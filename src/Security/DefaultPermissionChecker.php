@@ -16,7 +16,7 @@ interface DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canEdit(Member $member = null);
+    public function canEdit(?Member $member = null);
 
     /**
      * Can root be viewed?
@@ -24,7 +24,7 @@ interface DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canView(Member $member = null);
+    public function canView(?Member $member = null);
 
     /**
      * Can root be deleted?
@@ -32,7 +32,7 @@ interface DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canDelete(Member $member = null);
+    public function canDelete(?Member $member = null);
 
     /**
      * Can root objects be created?
@@ -40,5 +40,5 @@ interface DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canCreate(Member $member = null);
+    public function canCreate(?Member $member = null);
 }

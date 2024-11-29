@@ -207,7 +207,7 @@ class BasicAuth
      * @param HTTPRequest|null $request
      * @throws HTTPResponse_Exception
      */
-    public static function protect_site_if_necessary(HTTPRequest $request = null)
+    public static function protect_site_if_necessary(?HTTPRequest $request = null)
     {
         $config = static::config();
 

@@ -73,7 +73,7 @@ class ModuleManifest
      * @param string $base The project base path.
      * @param CacheFactory $cacheFactory Cache factory to use
      */
-    public function __construct($base, CacheFactory $cacheFactory = null)
+    public function __construct($base, ?CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
         $this->cacheKey = sha1($base ?? '') . '_modules';

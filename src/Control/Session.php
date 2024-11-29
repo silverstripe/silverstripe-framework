@@ -404,7 +404,7 @@ class Session
      * @param bool $removeCookie
      * @param HTTPRequest $request The request for which to destroy a session
      */
-    public function destroy($removeCookie = true, HTTPRequest $request = null)
+    public function destroy($removeCookie = true, ?HTTPRequest $request = null)
     {
         if (session_id()) {
             if ($removeCookie) {

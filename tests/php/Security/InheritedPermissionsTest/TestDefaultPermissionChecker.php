@@ -17,7 +17,7 @@ class TestDefaultPermissionChecker implements DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canEdit(Member $member = null)
+    public function canEdit(?Member $member = null)
     {
         return $this->canEdit;
     }
@@ -28,7 +28,7 @@ class TestDefaultPermissionChecker implements DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canView(Member $member = null)
+    public function canView(?Member $member = null)
     {
         return $this->canView;
     }
@@ -39,7 +39,7 @@ class TestDefaultPermissionChecker implements DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canDelete(Member $member = null)
+    public function canDelete(?Member $member = null)
     {
         return $this->canEdit;
     }
@@ -50,7 +50,7 @@ class TestDefaultPermissionChecker implements DefaultPermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canCreate(Member $member = null)
+    public function canCreate(?Member $member = null)
     {
         return $this->canEdit;
     }

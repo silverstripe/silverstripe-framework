@@ -103,7 +103,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param string $baseClass Base class
      * @param CacheInterface $cache
      */
-    public function __construct($baseClass, CacheInterface $cache = null)
+    public function __construct($baseClass, ?CacheInterface $cache = null)
     {
         if (!is_a($baseClass, DataObject::class, true)) {
             throw new InvalidArgumentException('Invalid DataObject class: ' . $baseClass);
@@ -249,7 +249,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
     protected function batchPermissionCheck(
         $type,
         $ids,
-        Member $member = null,
+        ?Member $member = null,
         $globalPermission = [],
         $useCached = true
     ) {
@@ -353,7 +353,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         $globalPermission,
         DataList $stageRecords,
         $groupIDsSQLList,
-        Member $member = null
+        ?Member $member = null
     ) {
         // Initialise all IDs to false
         $result = array_fill_keys($stageRecords->column('ID') ?? [], false);
@@ -453,7 +453,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param bool $useCached
      * @return array
      */
-    public function canEditMultiple($ids, Member $member = null, $useCached = true)
+    public function canEditMultiple($ids, ?Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(
             InheritedPermissions::EDIT,
@@ -470,7 +470,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param bool $useCached
      * @return array
      */
-    public function canViewMultiple($ids, Member $member = null, $useCached = true)
+    public function canViewMultiple($ids, ?Member $member = null, $useCached = true)
     {
         return $this->batchPermissionCheck(InheritedPermissions::VIEW, $ids, $member, [], $useCached);
     }
@@ -481,7 +481,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param bool $useCached
      * @return array
      */
-    public function canDeleteMultiple($ids, Member $member = null, $useCached = true)
+    public function canDeleteMultiple($ids, ?Member $member = null, $useCached = true)
     {
         // Validate ids
         $ids = array_filter($ids ?? [], 'is_numeric');
@@ -555,7 +555,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member|null $member
      * @return bool|mixed
      */
-    public function canDelete($id, Member $member = null)
+    public function canDelete($id, ?Member $member = null)
     {
         // No ID: Check default permission
         if (!$id) {
@@ -577,7 +577,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member|null $member
      * @return bool|mixed
      */
-    public function canEdit($id, Member $member = null)
+    public function canEdit($id, ?Member $member = null)
     {
         // No ID: Check default permission
         if (!$id) {
@@ -599,7 +599,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member|null $member
      * @return bool|mixed
      */
-    public function canView($id, Member $member = null)
+    public function canView($id, ?Member $member = null)
     {
         // No ID: Check default permission
         if (!$id) {
@@ -700,7 +700,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
      * @param Member $member
      * @return bool
      */
-    protected function checkDefaultPermissions($type, Member $member = null)
+    protected function checkDefaultPermissions($type, ?Member $member = null)
     {
         $defaultPermissions = $this->getDefaultPermissions();
         if (!$defaultPermissions) {

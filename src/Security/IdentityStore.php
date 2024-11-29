@@ -19,12 +19,12 @@ interface IdentityStore
      * @param Boolean $persistent boolean If set to true, the login may persist beyond the current session.
      * @param HTTPRequest $request The request of the visitor that is logging in, to get, for example, cookies.
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null);
+    public function logIn(Member $member, $persistent = false, ?HTTPRequest $request = null);
 
     /**
      * Log any logged-in member out of this identity store.
      *
      * @param HTTPRequest $request The request of the visitor that is logging out, to get, for example, cookies.
      */
-    public function logOut(HTTPRequest $request = null);
+    public function logOut(?HTTPRequest $request = null);
 }

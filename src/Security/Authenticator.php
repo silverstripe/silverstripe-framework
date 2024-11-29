@@ -110,7 +110,7 @@ interface Authenticator
      * @param ValidationResult $result A validationresult which is either valid or contains the error message(s)
      * @return Member The matched member, or null if the authentication fails
      */
-    public function authenticate(array $data, HTTPRequest $request, ValidationResult &$result = null);
+    public function authenticate(array $data, HTTPRequest $request, ?ValidationResult &$result = null);
 
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
@@ -123,5 +123,5 @@ interface Authenticator
      * @param ValidationResult $result
      * @return ValidationResult
      */
-    public function checkPassword(Member $member, $password, ValidationResult &$result = null);
+    public function checkPassword(Member $member, $password, ?ValidationResult &$result = null);
 }

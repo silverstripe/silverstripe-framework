@@ -50,7 +50,7 @@ class FormSchema
      * @param ValidationResult $result Required for 'error' response
      * @return array
      */
-    public function getMultipartSchema($schemaParts, $schemaID, Form $form = null, ValidationResult $result = null)
+    public function getMultipartSchema($schemaParts, $schemaID, ?Form $form = null, ?ValidationResult $result = null)
     {
         if (!is_array($schemaParts)) {
             $schemaParts = preg_split('#\s*,\s*#', $schemaParts ?? '') ?: [];

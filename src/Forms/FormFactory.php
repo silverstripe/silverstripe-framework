@@ -25,7 +25,7 @@ interface FormFactory
      * Custom factories may support more advanced parameters.
      * @return Form
      */
-    public function getForm(RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = []);
+    public function getForm(?RequestHandler $controller = null, $name = FormFactory::DEFAULT_NAME, $context = []);
 
     /**
      * Return list of mandatory context keys

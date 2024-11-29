@@ -18,7 +18,7 @@ class EditFormFactory extends DefaultFormFactory
         ControllerExtension::class
     ];
 
-    protected function getFormFields(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormFields(?RequestHandler $controller = null, $name, $context = [])
     {
         $fields = new FieldList(
             new HiddenField('ID'),
@@ -28,7 +28,7 @@ class EditFormFactory extends DefaultFormFactory
         return $fields;
     }
 
-    protected function getFormActions(RequestHandler $controller = null, $name, $context = [])
+    protected function getFormActions(?RequestHandler $controller = null, $name, $context = [])
     {
         $actions = new FieldList(
             new FormAction('save', 'Save')

@@ -39,7 +39,7 @@ class DefaultCacheFactory implements CacheFactory
      * @param array $args List of global options to merge with args during create()
      * @param LoggerInterface $logger Logger instance to assign
      */
-    public function __construct($args = [], LoggerInterface $logger = null)
+    public function __construct($args = [], ?LoggerInterface $logger = null)
     {
         $this->args = $args;
         $this->logger = $logger;

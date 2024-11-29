@@ -17,7 +17,7 @@ use SilverStripe\Core\Environment;
  */
 class ManifestCacheFactory extends DefaultCacheFactory
 {
-    public function __construct(array $args = [], LoggerInterface $logger = null)
+    public function __construct(array $args = [], ?LoggerInterface $logger = null)
     {
         // Build default manifest logger
         if (!$logger) {

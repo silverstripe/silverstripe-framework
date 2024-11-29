@@ -33,7 +33,7 @@ class CoreConfigFactory
      *
      * @param CacheFactory $cacheFactory
      */
-    public function __construct(CacheFactory $cacheFactory = null)
+    public function __construct(?CacheFactory $cacheFactory = null)
     {
         $this->cacheFactory = $cacheFactory;
     }

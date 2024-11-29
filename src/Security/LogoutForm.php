@@ -22,11 +22,11 @@ class LogoutForm extends Form
      * {@inheritdoc}
      */
     public function __construct(
-        RequestHandler $controller = null,
+        ?RequestHandler $controller = null,
         $name = LogoutForm::DEFAULT_NAME,
-        FieldList $fields = null,
-        FieldList $actions = null,
-        Validator $validator = null
+        ?FieldList $fields = null,
+        ?FieldList $actions = null,
+        ?Validator $validator = null
     ) {
         $this->setController($controller);
 

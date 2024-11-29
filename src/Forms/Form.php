@@ -277,11 +277,11 @@ class Form extends ViewableData implements HasRequestHandler
      * @param Validator|null $validator Override the default validator instance (Default: {@link RequiredFields})
      */
     public function __construct(
-        RequestHandler $controller = null,
+        ?RequestHandler $controller = null,
         $name = Form::DEFAULT_NAME,
-        FieldList $fields = null,
-        FieldList $actions = null,
-        Validator $validator = null
+        ?FieldList $fields = null,
+        ?FieldList $actions = null,
+        ?Validator $validator = null
     ) {
         parent::__construct();
 
@@ -1130,7 +1130,7 @@ class Form extends ViewableData implements HasRequestHandler
      * @param RequestHandler $controller
      * @return $this
      */
-    public function setController(RequestHandler $controller = null)
+    public function setController(?RequestHandler $controller = null)
     {
         $this->controller = $controller;
         return $this;

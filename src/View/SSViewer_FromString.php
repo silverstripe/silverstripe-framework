@@ -37,7 +37,7 @@ class SSViewer_FromString extends SSViewer
      * @param string $content
      * @param TemplateParser $parser
      */
-    public function __construct($content, TemplateParser $parser = null)
+    public function __construct($content, ?TemplateParser $parser = null)
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',

@@ -927,7 +927,7 @@ class i18nTextCollector
      * @param Module $module
      * @return array
      */
-    public function collectFromEntityProviders($filePath, Module $module = null)
+    public function collectFromEntityProviders($filePath, ?Module $module = null)
     {
         $entities = [];
         $classes = ClassInfo::classes_for_file($filePath);

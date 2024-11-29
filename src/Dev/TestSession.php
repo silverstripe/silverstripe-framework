@@ -206,7 +206,7 @@ class TestSession
      * @param array $data Map of GET/POST data.
      * @param bool $withSecurityToken Submit with the form's security token if there is one.
      */
-    public function submitForm(string $formID, string $button = null, array $data = [], bool $withSecurityToken = true): HTTPResponse
+    public function submitForm(string $formID, ?string $button = null, array $data = [], bool $withSecurityToken = true): HTTPResponse
     {
         $page = $this->lastPage();
         if ($page) {

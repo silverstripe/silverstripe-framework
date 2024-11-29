@@ -198,7 +198,7 @@ class ClassManifest
      * @param string $base The manifest base path.
      * @param CacheFactory $cacheFactory Optional cache to use. Set to null to not cache.
      */
-    public function __construct($base, CacheFactory $cacheFactory = null)
+    public function __construct($base, ?CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
         $this->cacheFactory = $cacheFactory;

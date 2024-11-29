@@ -190,7 +190,7 @@ class SSViewer implements Flushable
      *  </code>
      * @param TemplateParser $parser
      */
-    public function __construct($templates, TemplateParser $parser = null)
+    public function __construct($templates, ?TemplateParser $parser = null)
     {
         if ($parser) {
             Deprecation::noticeWithNoReplacment('5.4.0', 'The $parser parameter is deprecated and will be removed');

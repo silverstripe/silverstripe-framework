@@ -33,7 +33,7 @@ class TestMailer implements MailerInterface
         $this->dispatcher = $dispatcher;
     }
 
-    public function send(RawMessage $message, Envelope $envelope = null): void
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         if (!is_a($message, Email::class)) {
             throw new InvalidArgumentException('$message must be a ' . Email::class);
@@ -122,7 +122,7 @@ class TestMailer implements MailerInterface
         return implode(',', array_map(fn(Address $address) => $address->getAddress(), $addresses));
     }
 
-    private function dispatchEvent(Email $email, Envelope $envelope = null): void
+    private function dispatchEvent(Email $email, ?Envelope $envelope = null): void
     {
         $sender = $email->getSender()[0] ?? $email->getFrom()[0] ?? new Address('test.sender@example.com');
         $recipients = empty($email->getTo()) ? [new Address('test.recipient@example.com')] : $email->getTo();

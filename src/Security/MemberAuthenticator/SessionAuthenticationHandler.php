@@ -71,7 +71,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      * @param bool $persistent
      * @param HTTPRequest $request
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
+    public function logIn(Member $member, $persistent = false, ?HTTPRequest $request = null)
     {
         static::regenerateSessionId();
         $request = $request ?: Controller::curr()->getRequest();
@@ -116,7 +116,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
     /**
      * @param HTTPRequest $request
      */
-    public function logOut(HTTPRequest $request = null)
+    public function logOut(?HTTPRequest $request = null)
     {
         $request = $request ?: Controller::curr()->getRequest();
         $request->getSession()->destroy(true, $request);

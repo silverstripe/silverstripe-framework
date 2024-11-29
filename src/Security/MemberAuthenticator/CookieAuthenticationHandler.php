@@ -203,7 +203,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
      * @param bool $persistent
      * @param HTTPRequest $request
      */
-    public function logIn(Member $member, $persistent = false, HTTPRequest $request = null)
+    public function logIn(Member $member, $persistent = false, ?HTTPRequest $request = null)
     {
         // Cleans up any potential previous hash for this member on this device
         if ($alcDevice = Cookie::get($this->getDeviceCookieName())) {
@@ -243,7 +243,7 @@ class CookieAuthenticationHandler implements AuthenticationHandler
     /**
      * @param HTTPRequest $request
      */
-    public function logOut(HTTPRequest $request = null)
+    public function logOut(?HTTPRequest $request = null)
     {
         $member = Security::getCurrentUser();
         if ($member) {

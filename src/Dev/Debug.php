@@ -38,7 +38,7 @@ class Debug
      * @param bool $showHeader
      * @param HTTPRequest|null $request
      */
-    public static function show($val, $showHeader = true, HTTPRequest $request = null)
+    public static function show($val, $showHeader = true, ?HTTPRequest $request = null)
     {
         // Don't show on live
         if (Director::isLive()) {
@@ -80,7 +80,7 @@ class Debug
      * @param bool $showHeader
      * @param HTTPRequest $request
      */
-    public static function endshow($val, $showHeader = true, HTTPRequest $request = null)
+    public static function endshow($val, $showHeader = true, ?HTTPRequest $request = null)
     {
         // Don't show on live
         if (Director::isLive()) {
@@ -100,7 +100,7 @@ class Debug
      * @param mixed $val
      * @param HTTPRequest $request Current request to influence output format
      */
-    public static function dump($val, HTTPRequest $request = null)
+    public static function dump($val, ?HTTPRequest $request = null)
     {
         echo Debug::create_debug_view($request)
             ->renderVariable($val, Debug::caller());
@@ -113,7 +113,7 @@ class Debug
      * @param HTTPRequest $request
      * @return string
      */
-    public static function text($val, HTTPRequest $request = null)
+    public static function text($val, ?HTTPRequest $request = null)
     {
         return static::create_debug_view($request)
             ->debugVariableText($val);
@@ -127,7 +127,7 @@ class Debug
      * @param bool $showHeader
      * @param HTTPRequest|null $request
      */
-    public static function message($message, $showHeader = true, HTTPRequest $request = null)
+    public static function message($message, $showHeader = true, ?HTTPRequest $request = null)
     {
         // Don't show on live
         if (Director::isLive()) {
@@ -144,7 +144,7 @@ class Debug
      * @param HTTPRequest $request Optional request to target this view for
      * @return DebugView
      */
-    public static function create_debug_view(HTTPRequest $request = null)
+    public static function create_debug_view(?HTTPRequest $request = null)
     {
         $service = static::supportsHTML($request)
             ? DebugView::class
@@ -158,7 +158,7 @@ class Debug
      * @param HTTPRequest $request
      * @return bool
      */
-    protected static function supportsHTML(HTTPRequest $request = null)
+    protected static function supportsHTML(?HTTPRequest $request = null)
     {
         // No HTML output in CLI
         if (Director::is_cli()) {

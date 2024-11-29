@@ -95,7 +95,7 @@ abstract class HTMLEditorConfig
      * @param HTMLEditorConfig $config Config to set, or null to clear
      * @return HTMLEditorConfig The assigned config
      */
-    public static function set_config($identifier, HTMLEditorConfig $config = null)
+    public static function set_config($identifier, ?HTMLEditorConfig $config = null)
     {
         if ($config) {
             HTMLEditorConfig::$configs[$identifier] = $config;

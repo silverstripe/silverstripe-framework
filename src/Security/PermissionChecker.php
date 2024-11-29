@@ -17,7 +17,7 @@ interface PermissionChecker
      * @return array A map where the IDs are keys and the values are
      * booleans stating whether the given object can be edited
      */
-    public function canEditMultiple($ids, Member $member = null, $useCached = true);
+    public function canEditMultiple($ids, ?Member $member = null, $useCached = true);
 
     /**
      * Get the canView information for a number of objects
@@ -27,7 +27,7 @@ interface PermissionChecker
      * @param bool $useCached
      * @return mixed
      */
-    public function canViewMultiple($ids, Member $member = null, $useCached = true);
+    public function canViewMultiple($ids, ?Member $member = null, $useCached = true);
 
     /**
      * Get the 'can edit' information for a number of SiteTree pages.
@@ -37,7 +37,7 @@ interface PermissionChecker
      * @param bool $useCached Return values from the permission cache if they exist
      * @return array
      */
-    public function canDeleteMultiple($ids, Member $member = null, $useCached = true);
+    public function canDeleteMultiple($ids, ?Member $member = null, $useCached = true);
 
     /**
      * Check delete permission for a single record ID
@@ -46,7 +46,7 @@ interface PermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canDelete($id, Member $member = null);
+    public function canDelete($id, ?Member $member = null);
 
     /**
      * Check edit permission for a single record ID
@@ -55,7 +55,7 @@ interface PermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canEdit($id, Member $member = null);
+    public function canEdit($id, ?Member $member = null);
 
     /**
      * Check view permission for a single record ID
@@ -64,5 +64,5 @@ interface PermissionChecker
      * @param Member $member
      * @return bool
      */
-    public function canView($id, Member $member = null);
+    public function canView($id, ?Member $member = null);
 }

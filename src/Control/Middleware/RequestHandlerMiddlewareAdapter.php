@@ -18,7 +18,7 @@ class RequestHandlerMiddlewareAdapter extends RequestHandler
      */
     protected $requestHandler = null;
 
-    public function __construct(RequestHandler $handler = null)
+    public function __construct(?RequestHandler $handler = null)
     {
         if ($handler) {
             $this->setRequestHandler($handler);
