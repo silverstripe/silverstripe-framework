@@ -102,10 +102,6 @@ class DebugView
             'title' => 'User Warning',
             'class' => 'warning'
         ],
-        E_STRICT => [
-            'title' => 'Strict Notice',
-            'class' => 'notice'
-        ],
         E_RECOVERABLE_ERROR => [
             'title' => 'Recoverable Error',
             'class' => 'warning'

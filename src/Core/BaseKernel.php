@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core;
 
+use Exception;
 use InvalidArgumentException;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -21,13 +22,12 @@ use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\DebugView;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Logging\ErrorHandler;
 use SilverStripe\View\PublicThemes;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
-use Exception;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Simple Kernel container
@@ -142,10 +142,10 @@ abstract class BaseKernel implements Kernel
     {
         if ($this->getEnvironment() === BaseKernel::LIVE) {
             // limited to fatal errors and warnings in live mode
-            error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
+            error_reporting(E_ALL & ~(E_DEPRECATED | E_NOTICE));
         } else {
             // Report all errors in dev / test mode
-            error_reporting(E_ALL | E_STRICT);
+            error_reporting(E_ALL);
         }
 
         /**
