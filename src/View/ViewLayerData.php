@@ -255,7 +255,6 @@ class ViewLayerData implements IteratorAggregate, Stringable
 
     private function mustThrow(array $trace): bool
     {
-        $dataClass = get_class($this->data);
         foreach ($trace as $data) {
             $class = $data['class'] ?? '';
             $method = $data['function'] ?? '';
@@ -270,10 +269,6 @@ class ViewLayerData implements IteratorAggregate, Stringable
             // If we find a non __call method return true
             // This means our method exists, but it tried to call something else which doesn't
             if ($method !== '__call') {
-                return true;
-            }
-            // If we break class inheritance return true
-            if (!is_a($class, $dataClass, true) && !is_a($dataClass, $class, true)) {
                 return true;
             }
         }

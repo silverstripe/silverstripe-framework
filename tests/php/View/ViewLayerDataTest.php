@@ -723,9 +723,11 @@ class ViewLayerDataTest extends SapphireTest
                 'method' => 'realMethod',
                 'exceptionCaught' => false,
             ],
+            // This happens if one class is used to wrap another, so it relies on calling
+            // methods on the wrapped class which may not share its class hierarchy.
             'exception thrown in __call() in a different class hierarchy' => [
                 'method' => 'anotherClass',
-                'exceptionCaught' => false,
+                'exceptionCaught' => true,
             ],
         ];
     }
