@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use Composer\InstalledVersions;
 use LogicException;
 use ReflectionClass;
 use SilverStripe\Core\ClassInfo;
@@ -932,9 +933,6 @@ class FormFieldTest extends SapphireTest
             SelectionGroup_Item::class => [
                 CompositeFieldValidator::class,
             ],
-            SegmentField::class => [
-                StringFieldValidator::class,
-            ],
             SingleLookupField::class => [],
             Tab::class => [
                 CompositeFieldValidator::class,
@@ -967,6 +965,11 @@ class FormFieldTest extends SapphireTest
                 StringFieldValidator::class,
             ],
         ];
+        if (InstalledVersions::isInstalled('silverstripe/segment-field')) {
+            $expectedFieldValidators[SegmentField::class] = [
+                StringFieldValidator::class,
+            ];
+        }
         $count = 0;
         foreach ($this->getFormFieldClasses() as $class) {
             if (!array_key_exists($class, $expectedFieldValidators)) {
@@ -983,7 +986,7 @@ class FormFieldTest extends SapphireTest
         }
         // Assert that we have tested all classes e.g. namespace wasn't changed, no new classes were added
         // that haven't been tested
-        $this->assertSame(58, $count);
+        $this->assertSame(count($expectedFieldValidators), $count);
     }
 
     private function instantiateFormField(string $class): FormField
