@@ -160,7 +160,7 @@ class HTMLValue extends ModelData
         $doc = $this->getDocument();
 
         if ($doc && method_exists($doc, $method ?? '')) {
-            return call_user_func_array([$doc, $method], $arguments ?? []);
+            return $doc->$method(...$arguments);
         } else {
             return parent::__call($method, $arguments);
         }

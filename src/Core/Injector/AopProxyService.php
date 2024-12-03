@@ -47,7 +47,7 @@ class AopProxyService
             }
 
             if ($continue) {
-                $result = call_user_func_array([$this->proxied, $method], $args ?? []);
+                $result = $this->proxied->$method(...$args);
 
                 if (isset($this->afterCall[$method])) {
                     $methods = $this->afterCall[$method];
