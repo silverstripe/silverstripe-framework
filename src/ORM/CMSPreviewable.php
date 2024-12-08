@@ -35,6 +35,7 @@ interface CMSPreviewable
      * @return string Link to the CMS-author view. Should point to a
      * controller subclassing {@link LeftAndMain}. Example:
      * http://mysite.com/admin/edit/6
+     * @deprecated 5.4.0 Will be renamed to getCMSEditLink()
      */
     public function CMSEditLink();
 }
