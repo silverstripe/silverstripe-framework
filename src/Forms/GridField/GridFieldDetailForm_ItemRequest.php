@@ -567,13 +567,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $this->saveFormIntoRecord($data, $form);
 
         $link = '<a href="' . $this->Link('edit') . '">"'
-            . htmlspecialchars($this->record->Title ?? '', ENT_QUOTES)
+            . Convert::raw2xml($this->record->Title ?? '', ENT_QUOTES)
             . '"</a>';
         $message = _t(
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Saved',
             'Saved {name} {link}',
             [
-                'name' => $this->getModelName(),
+                'name' => Convert::raw2xml($this->getModelName()),
                 'link' => $link
             ]
         );
@@ -834,8 +834,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Deleted',
             'Deleted {type} "{name}"',
             [
-                'type' => $this->getModelName(),
-                'name' => $this->record->Title
+                'type' => Convert::raw2xml($this->getModelName()),
+                'name' => Convert::raw2xml($this->record->Title)
             ]
         );
 
