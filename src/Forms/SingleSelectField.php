@@ -53,12 +53,13 @@ abstract class SingleSelectField extends SelectField
     public function getDefaultValue()
     {
         $value = $this->Value();
+        $validValues = $this->getValidValues();
         // assign value to field, such as first option available
-        if ($value === null) {
+        if ($value === null || !in_array($value, $validValues)) {
             if ($this->getHasEmptyDefault()) {
                 $value = '';
             } else {
-                $values = $this->getValidValues();
+                $values = $validValues;
                 $value = array_shift($values);
             }
         }
