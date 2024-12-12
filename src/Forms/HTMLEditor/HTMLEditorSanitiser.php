@@ -6,6 +6,7 @@ use DOMAttr;
 use DOMElement;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\XssSanitiser;
 use SilverStripe\View\Parsers\HTMLValue;
 use stdClass;
 
@@ -289,6 +290,10 @@ class HTMLEditorSanitiser
     {
         $linkRelValue = $this->config()->get('link_rel_value');
         $doc = $html->getDocument();
+        // Get a sanitiser but don't deny any specific attributes or elements, since that's
+        // handled as part of the element rules.
+        $xssSanitiser = XssSanitiser::create();
+        $xssSanitiser->setElementsToRemove([])->setAttributesToRemove([]);
 
         /** @var DOMElement $el */
         foreach ($html->query('//body//*') as $el) {
@@ -342,16 +347,8 @@ class HTMLEditorSanitiser
                     $el->setAttribute($attr, $forced);
                 }
 
-                // Matches "javascript:" with any arbitrary linebreaks inbetween the characters.
-                $regex = '#^\s*(' . implode('\s*', str_split('javascript:')) . '|' . implode('\s*', str_split('data:text/html;')) . ')#i';
-                // Strip out javascript execution in href or src attributes.
-                foreach (['src', 'href', 'data'] as $dangerAttribute) {
-                    if ($el->hasAttribute($dangerAttribute)) {
-                        if (preg_match($regex, $el->getAttribute($dangerAttribute))) {
-                            $el->removeAttribute($dangerAttribute);
-                        }
-                    }
-                }
+                // Explicit XSS sanitisation for anything that there's really no sensible use case for in a WYSIWYG
+                $xssSanitiser->sanitiseElement($el);
             }
 
             if ($el->tagName === 'a' && $linkRelValue !== null) {

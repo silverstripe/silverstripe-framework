@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
+use SilverStripe\Core\XssSanitiser;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ViewableData;
 
@@ -33,6 +34,7 @@ trait FormMessage
 
     /**
      * Returns the field message, used by form validation.
+     * If the current cast is ValidationResult::CAST_HTML, the message will be sanitised.
      *
      * Use {@link setError()} to set this property.
      *
@@ -40,7 +42,11 @@ trait FormMessage
      */
     public function getMessage()
     {
-        return $this->message;
+        $message = $this->message;
+        if ($this->getMessageCast() === ValidationResult::CAST_HTML) {
+            $message = XssSanitiser::create()->sanitiseString($message);
+        }
+        return $message;
     }
 
     /**
