@@ -5,6 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
+use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\View\ViewableData;
 use Exception;
 use InvalidArgumentException;
@@ -1349,6 +1350,10 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $fetchList = $relationList->forForeignID($parentIDs);
         $fetchList = $this->manipulateEagerLoadingQuery($fetchList, $relationChain, $relationType);
         $fetchedRows = $fetchList->getFinalisedQuery();
+        $query = $fetchList->dataQuery()->query();
+        $fetchedOrderBy = $query->getOrderBy();
+        $childTables = $query->queriedTables();
+        $childTable = reset($childTables);
 
         foreach ($fetchedRows as $row) {
             $fetchedRowsArray[$row['ID']] = $row;
@@ -1361,15 +1366,18 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         $joinRows = [];
         if (!empty($parentIDs) && !empty($fetchedIDs)) {
             $fetchedIDsAsString = implode(',', $fetchedIDs);
-            $joinRows = DB::query(
-                'SELECT * FROM "' . $joinTable
+            $joinRows = SQLSelect::create()
+                // Only select join columns to avoid ambiguity with joined child table columns
+                ->setSelect('"' . $joinTable . '".' . "*")
+                ->setFrom('"' . $joinTable . '"')
                 // Only get joins relevant for the parent list
-                . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
-                // Exclude any children that got filtered out
-                . ' AND ' . $childIDField . ' IN (' . $fetchedIDsAsString . ')'
-                // Respect sort order of fetched items
-                . ' ORDER BY FIELD(' . $childIDField . ', ' . $fetchedIDsAsString . ')'
-            );
+                ->addWhere('"' . $joinTable . '"."' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')')
+                // Exclude children that got filtered out
+                ->addWhere('"' . $joinTable . '"."' . $childIDField . '" IN (' . $fetchedIDsAsString . ')')
+                // Respect sort order of fetched children by joining child table and using its order by clause
+                ->addLeftJoin($childTable, "$childTable.ID = $joinTable.$childIDField")
+                ->setOrderBy($fetchedOrderBy)
+                ->execute();
         }
 
         // Store the children in an EagerLoadedList against the correct parent
