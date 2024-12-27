@@ -733,19 +733,6 @@ class i18nTextCollector
                     continue;
                 }
 
-                // If inside this translation, some elements might be unreachable
-                if (in_array($id, [T_VARIABLE, T_STATIC]) ||
-                    ($id === T_STRING && in_array($text, ['static', 'parent']))
-                ) {
-                    // Un-collectable strings such as _t(static::class.'.KEY').
-                    // Should be provided by i18nEntityProvider instead
-                    $inTransFn = false;
-                    $inArrayClosedBy = false;
-                    $inConcat = false;
-                    $currentEntity = [];
-                    continue;
-                }
-
                 // Start collecting i18nTextCollector::class declarations
                 if ($id === T_STRING && $text === 'self') {
                     $inSelf = true;
@@ -844,6 +831,10 @@ class i18nTextCollector
                             $default = $currentEntity[1];
                             if (!empty($currentEntity[2])) {
                                 $comment = $currentEntity[2];
+                            }
+                        } else {
+                            if ($this->getWarnOnEmptyDefault()) {
+                                trigger_error("Missing localisation default for key " . $key, E_USER_NOTICE);
                             }
                         }
                         // Save in appropriate format

@@ -138,51 +138,72 @@ class i18n implements TemplateGlobalProvider
      * This is the main translator function. Returns the string defined by $entity according to the
      * currently set locale.
      *
-     * Also supports pluralisation of strings. Pass in a `count` argument, as well as a
-     * default value with `|` pipe-delimited options for each plural form.
+     * It supports:
+     *  - Pluralisation by passing a `count` argument plus a `|`-delimited `$default`.
+     *  - Standard associative injection arrays to replace "{key}" or "$key" placeholders.
+     *  - Multiple scalar arguments that map to "$var" placeholders in `$default`.
+     *  - (Optional) If you want a textual "comment" for the text collector, you can pass an
+     *    array like ["default" => "...", "comment" => "..."] as the second argument, or handle a custom rule.
      *
      * @param string $entity Entity that identifies the string. It must be in the form
      * "Namespace.Entity" where Namespace will be usually the class name where this
      * string is used and Entity identifies the string inside the namespace.
      * @param mixed $arg Additional arguments are parsed as such:
-     *  - Next string argument is a default. Pass in a `|` pipe-delimited value with `{count}`
-     *    to do pluralisation.
-     *  - Any other string argument after default is context for i18nTextCollector
-     *  - Any array argument in any order is an injection parameter list. Pass in a `count`
-     *    injection parameter to pluralise.
-     * @return string
+     *   - The **first** encountered string is `$default`.
+     *   - **Any** array encountered merges into $injection. (For example: ["name"=>"John", "count"=>2])
+     *   - All other scalars are appended to $scalarInjections. (This allows "single-scalar" or "multi-scalar" usage.)
+     *
+     * @return string The translated string (including any runtime injections).
+     *
+     * @throws InvalidArgumentException If a non-associative injection array is used without sprintf placeholders.
+     * @throws Exception If we detect `%s` style placeholders but have no `$default`.
      */
-    public static function _t($entity, $arg = null)
+    public static function _t(string $entity, mixed $args): string
     {
         // Detect args
         $default = null;
         $injection = [];
-        foreach (array_slice(func_get_args(), 1) as $arg) {
+        $scalarInjections = [];
+
+        // Gather the arguments
+        foreach ($args as $arg) {
+            // If we don't yet have a default and this argument is a string, treat it as default
+            if ($default === null && is_string($arg)) {
+                $default = $arg;
+                continue;
+            }
+
+            // If it's an array => merge into injection
             if (is_array($arg)) {
-                $injection = $arg;
-            } elseif (!isset($default)) {
-                $default = $arg ?: '';
+                $injection = array_merge($injection, $arg);
+                continue;
+            }
+
+            // If it's scalar => treat it as a scalar injection
+            if (is_scalar($arg)) {
+                $scalarInjections[] = (string)$arg;
             }
         }
 
         // Encourage the provision of default values so that text collector can discover new strings
         if (!$default && i18n::config()->uninherited('missing_default_warning')) {
             user_error("Missing default for localisation key $entity", E_USER_WARNING);
+            $default = '';
         }
 
         // Deprecate legacy injection format (`string %s, %d`)
         // inject the variables from injectionArray (if present)
         $sprintfArgs = [];
         if ($default && !preg_match('/\{[\w\d]*\}/i', $default ?? '') && preg_match('/%[s,d]/', $default ?? '')) {
-            $sprintfArgs = array_values($injection ?? []);
+            $sprintfArgs = array_values($injection);
             $injection = [];
         }
 
         // If injection isn't associative, assume legacy injection format
         $failUnlessSprintf = false;
-        if ($injection && array_values($injection ?? []) === $injection) {
+        if ($injection && array_values($injection) === $injection) {
             $failUnlessSprintf = true; // Note: Will trigger either a deprecation error or exception below
-            $sprintfArgs = array_values($injection ?? []);
+            $sprintfArgs = array_values($injection);
             $injection = [];
         }
 
@@ -195,6 +216,30 @@ class i18n implements TemplateGlobalProvider
         }
 
         // Pass back to translation backend
+        if (!$sprintfArgs && !$isPlural && $scalarInjections) {
+            // For example, if $default = "Hello $name from $city" => placeholders are [$name, $city].
+            if (preg_match_all('/\$([a-zA-Z_]\w*)/', $default, $matches)) {
+                $i = 0;
+                foreach ($matches[1] as $varName) {
+                    if (isset($scalarInjections[$i])) {
+                        // If user hasn't specified that varName in $injection, we fill it
+                        if (!array_key_exists($varName, $injection)) {
+                            $injection[$varName] = $scalarInjections[$i];
+                        }
+                        $i++;
+                    } else {
+                        // no more scalars => stop
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Pass to message provider
+        // Since we are no longer forcibly storing a "comment", if a dev wants it,
+        // they can pass an array ["default"=>"some text", "comment"=>"..."]
+        // or handle that logic themselves.
+        $result = null;
         if ($isPlural) {
             $result = static::getMessageProvider()->pluralise($entity, $default, $injection, $count);
         } else {

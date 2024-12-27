@@ -84,6 +84,17 @@ class SymfonyMessageProvider implements MessageProvider
         $this->loadedLocales[$locale] = true;
     }
 
+    /**
+     * Translate the given $entity key. If no translation is found in the current locale,
+     * it will fallback to $default. Also performs variable replacement for both
+     * {placeholders} and $variables, and can handle single-scalar injection.
+     *
+     * @param string $entity    The localisation key, e.g. "MyNamespace.MyKey"
+     * @param mixed  $default   The default text or an array with ['default' => '...', 'comment' => '...']
+     * @param mixed  $injection Either an associative array of replacements (e.g. ['type' => 'Office']),
+     *                          or a single scalar which will replace '$type' by that scalar.
+     * @return string           The resulting translated string after injections.
+     */
     public function translate($entity, $default, $injection)
     {
         // Ensure localisation is ready
@@ -101,9 +112,40 @@ class SymfonyMessageProvider implements MessageProvider
             $result = $this->getTranslator()->trans($default, $arguments, 'messages', $locale);
         }
 
+        // Perform $variable replacement if $injection is an array or a single or multi scalars
+        if (is_array($injection) && !empty($injection)) {
+            foreach ($injection as $k => $v) {
+                $result = str_replace('$' . $k, (string)$v, $result);
+            }
+        } elseif (!is_array($injection) && !empty($injection)) {
+            $scalars = [$injection];
+
+            if (preg_match_all('/\$([a-zA-Z_]\w*)/', $result, $matches)) {
+                $i = 0;
+                foreach ($matches[1] as $varName) {
+                    if (isset($scalars[$i])) {
+                        $result = str_replace('$' . $varName, (string)$scalars[$i], $result);
+                        $i++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
         return $result;
     }
 
+    /**
+     * Perform plural translation for the given $entity key. If no translation is found,
+     * fallback to $default. Also performs variable injection for {placeholders} and $variables.
+     *
+     * @param string $entity    Localisation key, e.g. "MyNamespace.MyKey"
+     * @param mixed  $default   A pipe-delimited string or array with plurals, or a fallback default
+     * @param mixed  $injection Either an associative array of replacements or a single scalar
+     * @param int    $count     Numeric value to determine which plural form to use
+     * @return string           The resulting translated string after plural logic and injections
+     */
     public function pluralise($entity, $default, $injection, $count)
     {
         if (is_array($default)) {
@@ -124,6 +166,27 @@ class SymfonyMessageProvider implements MessageProvider
         // Manually inject default if no translation found
         if ($entity === $result) {
             $result = $this->getTranslator()->trans($default, $arguments, 'messages', $locale);
+        }
+
+        // Perform $variable replacement if $injection is an array or a single or multi scalars
+        if (is_array($injection) && !empty($injection)) {
+            foreach ($injection as $k => $v) {
+                $result = str_replace('$' . $k, (string)$v, $result);
+            }
+        } elseif (!is_array($injection) && !empty($injection)) {
+            $scalars = [$injection];
+
+            if (preg_match_all('/\$([a-zA-Z_]\w*)/', $result, $matches)) {
+                $i = 0;
+                foreach ($matches[1] as $varName) {
+                    if (isset($scalars[$i])) {
+                        $result = str_replace('$' . $varName, (string)$scalars[$i], $result);
+                        $i++;
+                    } else {
+                        break;
+                    }
+                }
+            }
         }
 
         return $result;
