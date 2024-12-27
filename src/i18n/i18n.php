@@ -158,7 +158,7 @@ class i18n implements TemplateGlobalProvider
      * @throws InvalidArgumentException If a non-associative injection array is used without sprintf placeholders.
      * @throws Exception If we detect `%s` style placeholders but have no `$default`.
      */
-    public static function _t(string $entity, mixed $args): string
+    public static function _t($entity, $args)
     {
         // Detect args
         $default = null;
