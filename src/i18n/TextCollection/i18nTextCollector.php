@@ -277,7 +277,7 @@ class i18nTextCollector
         // bubble-compare each group of modules
         for ($i = 0; $i < count($modules ?? []) - 1; $i++) {
             $left = array_keys($entitiesByModule[$modules[$i]] ?? []);
-            for ($j = $i+1; $j < count($modules ?? []); $j++) {
+            for ($j = $i + 1; $j < count($modules ?? []); $j++) {
                 $right = array_keys($entitiesByModule[$modules[$j]] ?? []);
                 $conflicts = array_intersect($left ?? [], $right);
                 $allConflicts = array_merge($allConflicts, $conflicts);
@@ -618,14 +618,40 @@ class i18nTextCollector
         $potentialClassName = null;
         $currentUse = null;
         $currentUseAlias = null;
+        $inVar = null;
+        $resetVar = false;
+        $stringVariables = [];
         foreach ($tokens as $token) {
             // Shuffle last token to $lastToken
             $previousToken = $thisToken;
             $thisToken = $token;
+
             if (is_array($token)) {
                 list($id, $text, $lineNo) = $token;
                 // minus 2 is used so the the line we get corresponds with what number token_get_all() returned
                 $line = $lines[$lineNo - 2] ?? '';
+
+                // Track string variables, store all $myString = 'my value'; into a temporary array
+                // This allows _t('Entity.Key', $str); syntax
+                // Does not support "my $var value", use "my {var} value" instead with proper context
+                if ($id === T_VARIABLE) {
+                    $inVar = $text;
+
+                    // Reset variable if redefined later in scope
+                    if (!empty($stringVariables[$inVar])) {
+                        $resetVar = true;
+                    }
+                }
+                if ($id === T_CONSTANT_ENCAPSED_STRING && $inVar && $text) {
+                    if (!isset($stringVariables[$inVar]) || $resetVar) {
+                        $stringVariables[$inVar] = '';
+                        $resetVar = false;
+                    }
+                    $stringVariables[$inVar] .= $this->processString($text);
+                }
+                if ($text === ';') {
+                    $inVar = null;
+                }
 
                 // Collect use statements so we can get fully qualified class names
                 // Note that T_USE will match both use statements and anonymous functions with the "use" keyword
@@ -733,8 +759,27 @@ class i18nTextCollector
                     continue;
                 }
 
+                // Allow _t(Entity.Key, 'translation', $var) and expand _t(Entity.Key, $var)
+                if ($id == T_VARIABLE && !empty($currentEntity)) {
+                    // We have a translation, eg: _t(Entity.Key, 'translation', $var)
+                    if (count($currentEntity) == 2) {
+                        continue;
+                    }
+
+                    // The variable is the second argument or present in the parameter
+                    // Try to find it _t(Entity.Key, $var)
+                    $stringValue = $stringVariables[$text] ?? null;
+
+                    // It's translated, continue
+                    if ($stringValue) {
+                        $currentEntity[] = $stringValue;
+                        continue;
+                    }
+                }
+
                 // If inside this translation, some elements might be unreachable
-                if (in_array($id, [T_VARIABLE, T_STATIC]) ||
+                if (
+                    in_array($id, [T_VARIABLE, T_STATIC]) ||
                     ($id === T_STRING && in_array($text, ['static', 'parent']))
                 ) {
                     // Un-collectable strings such as _t(static::class.'.KEY').
@@ -754,26 +799,7 @@ class i18nTextCollector
 
                 // Check text
                 if ($id == T_CONSTANT_ENCAPSED_STRING) {
-                    // Fixed quoting escapes, and remove leading/trailing quotes
-                    if (preg_match('/^\'(?<text>.*)\'$/s', $text ?? '', $matches)) {
-                        $text = preg_replace_callback(
-                            '/\\\\([\\\\\'])/s', // only \ and '
-                            function ($input) {
-                                return stripcslashes($input[0] ?? '');
-                            },
-                            $matches['text'] ?? ''
-                        );
-                    } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text ?? '', $matches)) {
-                        $text = preg_replace_callback(
-                            '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|\x[0-9A-Fa-f]{1,2})/s', // rich replacement
-                            function ($input) {
-                                return stripcslashes($input[0] ?? '');
-                            },
-                            $matches['text'] ?? ''
-                        );
-                    } else {
-                        throw new LogicException("Invalid string escape: " . $text);
-                    }
+                    $text = $this->processString($text);
                 } elseif ($id === T_CLASS_C || $id === T_TRAIT_C) {
                     // Evaluate __CLASS__ . '.KEY' and i18nTextCollector::class concatenation
                     $text = implode('\\', $currentClass);
@@ -879,6 +905,31 @@ class i18nTextCollector
         ksort($entities);
 
         return $entities;
+    }
+
+    private function processString(string $text): string
+    {
+        // Fixed quoting escapes, and remove leading/trailing quotes
+        if (preg_match('/^\'(?<text>.*)\'$/s', $text ?? '', $matches)) {
+            $text = preg_replace_callback(
+                '/\\\\([\\\\\'])/s', // only \ and '
+                function ($input) {
+                    return stripcslashes($input[0] ?? '');
+                },
+                $matches['text'] ?? ''
+            );
+        } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text ?? '', $matches)) {
+            $text = preg_replace_callback(
+                '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|\x[0-9A-Fa-f]{1,2})/s', // rich replacement
+                function ($input) {
+                    return stripcslashes($input[0] ?? '');
+                },
+                $matches['text'] ?? ''
+            );
+        } else {
+            throw new LogicException("Invalid string escape: " . $text);
+        }
+        return $text;
     }
 
     /**
@@ -1064,7 +1115,8 @@ class i18nTextCollector
 
             // Check if this extension is included
             $extension = pathinfo($path ?? '', PATHINFO_EXTENSION);
-            if (in_array($extension, $this->fileExtensions ?? [])
+            if (
+                in_array($extension, $this->fileExtensions ?? [])
                 && (!$type || $type === $extension)
             ) {
                 $fileList[$path] = $path;
