@@ -618,8 +618,8 @@ class i18nTextCollector
         $potentialClassName = null;
         $currentUse = null;
         $currentUseAlias = null;
+
         $inVar = null;
-        $resetVar = false;
         $stringVariables = [];
         foreach ($tokens as $token) {
             // Shuffle last token to $lastToken
@@ -631,23 +631,13 @@ class i18nTextCollector
                 // minus 2 is used so the the line we get corresponds with what number token_get_all() returned
                 $line = $lines[$lineNo - 2] ?? '';
 
-                // Track string variables, store all $myString = 'my value'; into a temporary array
-                // This allows _t('Entity.Key', $str); syntax
-                // Does not support "my $var value", use "my {var} value" instead with proper context
+                // Track string variables
                 if ($id === T_VARIABLE) {
                     $inVar = $text;
-
-                    // Reset variable if redefined later in scope
-                    if (!empty($stringVariables[$inVar])) {
-                        $resetVar = true;
-                    }
                 }
                 if ($id === T_CONSTANT_ENCAPSED_STRING && $inVar && $text) {
-                    if (!isset($stringVariables[$inVar]) || $resetVar) {
-                        $stringVariables[$inVar] = '';
-                        $resetVar = false;
-                    }
-                    $stringVariables[$inVar] .= $this->processString($text);
+                    $stringVariables[$inVar] = $text;
+                    $inVar = null;
                 }
                 if ($text === ';') {
                     $inVar = null;
@@ -772,14 +762,17 @@ class i18nTextCollector
 
                     // It's translated, continue
                     if ($stringValue) {
-                        $currentEntity[] = $stringValue;
-                        continue;
+                        $stringValue = $this->processString($stringValue);
+                        // Deal with ''
+                        if ($stringValue) {
+                            $currentEntity[] = $stringValue;
+                            continue;
+                        }
                     }
                 }
 
                 // If inside this translation, some elements might be unreachable
-                if (
-                    in_array($id, [T_VARIABLE, T_STATIC]) ||
+                if (in_array($id, [T_VARIABLE, T_STATIC]) ||
                     ($id === T_STRING && in_array($text, ['static', 'parent']))
                 ) {
                     // Un-collectable strings such as _t(static::class.'.KEY').
@@ -1115,8 +1108,7 @@ class i18nTextCollector
 
             // Check if this extension is included
             $extension = pathinfo($path ?? '', PATHINFO_EXTENSION);
-            if (
-                in_array($extension, $this->fileExtensions ?? [])
+            if (in_array($extension, $this->fileExtensions ?? [])
                 && (!$type || $type === $extension)
             ) {
                 $fileList[$path] = $path;
