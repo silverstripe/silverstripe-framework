@@ -256,7 +256,7 @@ class LostPasswordHandler extends RequestHandler
             return true;
         } catch (TransportExceptionInterface | RfcComplianceException $e) {
             /** @var LoggerInterface $logger */
-            $logger = Injector::inst()->get(LoggerInterface::class . '.errorhandler');
+            $logger = Injector::inst()->get(LoggerInterface::class);
             $logger->error('Error sending email in ' . __FILE__ . ' line ' . __LINE__ . ": {$e->getMessage()}");
             return false;
         }

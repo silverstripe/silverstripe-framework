@@ -16,14 +16,16 @@ SilverStripe\Core\Injector\Injector:
       pushDefaultLogger: [ pushLogger, [ '%$Psr\Log\LoggerInterface' ] ]
       pushErrorHandler: [ pushLogger, [ '%$Psr\Log\LoggerInterface.errorhandler' ] ]
 
-  # Default implementation for use as a standard logger. Up to developers to attach their own
-  # handlers
+  # Default implementation for use as a standard logger. Used for logging custom messages.
+  # Projects should attach log handlers to this logging service.
   Psr\Log\LoggerInterface:
     type: singleton
     class: Monolog\Logger
     constructor:
       - "error-log"
-  # Core error handling
+  # Core error handling - only uncaught exceptions and PHP errors should be caught by this handler.
+  # This handler displays those errors in the browser and CLI.
+  # Projects should not attach log handlers to this error handler service.
   Psr\Log\LoggerInterface.errorhandler:
     type: singleton
     class: Monolog\Logger
