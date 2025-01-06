@@ -239,9 +239,11 @@ class VersionProvider
 
     /**
      * @return string
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     protected function getComposerLockPath(): string
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         return BASE_PATH . '/composer.lock';
     }
 }

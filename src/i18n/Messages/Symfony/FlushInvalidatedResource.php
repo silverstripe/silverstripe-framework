@@ -3,6 +3,7 @@
 namespace SilverStripe\i18n\Messages\Symfony;
 
 use SilverStripe\Core\Flushable;
+use SilverStripe\Dev\Deprecation;
 use Symfony\Component\Config\Resource\SelfCheckingResourceInterface;
 
 /**
@@ -20,9 +21,12 @@ class FlushInvalidatedResource implements SelfCheckingResourceInterface, Flushab
         return md5(__CLASS__);
     }
 
+    /**
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     */
     public function getResource()
     {
-        // @deprecated at 3.0, do nothing
+        Deprecation::noticeWithNoReplacment('5.4.0');
         return null;
     }
 
