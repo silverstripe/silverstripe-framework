@@ -618,7 +618,6 @@ class i18nTextCollector
         $potentialClassName = null;
         $currentUse = null;
         $currentUseAlias = null;
-
         $inVar = null;
         $stringVariables = [];
         foreach ($tokens as $token) {
