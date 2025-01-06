@@ -172,7 +172,7 @@ abstract class BulkLoader extends ViewableData
                     if (!$record->canDelete()) {
                         $type = $record->i18n_singular_name();
                         throw new HTTPResponse_Exception(
-                            _t(__CLASS__ . '.CANNOT_DELETE', "Not allowed to delete '$type' records"),
+                            _t(__CLASS__ . '.CANNOT_DELETE', "Not allowed to delete {type} records", ["type" => $type]),
                             403
                         );
                     }
