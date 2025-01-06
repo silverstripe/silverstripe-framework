@@ -10,7 +10,6 @@ use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Calculates batch permissions for nested objects for:
@@ -635,20 +634,6 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
             default:
                 throw new InvalidArgumentException("Invalid argument type $type");
         }
-    }
-
-    /**
-     * Get join table for type
-     * Defaults to those provided by {@see InheritedPermissionsExtension)
-     *
-     * @deprecated 5.1.0 Use getGroupJoinTable() instead
-     * @param string $type
-     * @return string
-     */
-    protected function getJoinTable($type)
-    {
-        Deprecation::notice('5.1.0', 'Use getGroupJoinTable() instead');
-        return $this->getGroupJoinTable($type);
     }
 
     /**

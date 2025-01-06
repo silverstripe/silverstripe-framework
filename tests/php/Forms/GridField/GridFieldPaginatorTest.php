@@ -95,7 +95,6 @@ class GridFieldPaginatorTest extends FunctionalTest
         // set up the paginator
         /** @var GridFieldPaginator $paginator */
         $paginator = $this->gridField->getConfig()->getComponentByType(GridFieldPaginator::class);
-        $paginator->setThrowExceptionOnBadDataType(true);
         $paginator->setItemsPerPage(1);
         $paginator->getManipulatedData($this->gridField, $this->list);
 

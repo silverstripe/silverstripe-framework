@@ -4,7 +4,6 @@ namespace SilverStripe\Core\Manifest;
 
 use InvalidArgumentException;
 use Composer\InstalledVersions;
-use SilverStripe\Dev\Deprecation;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -46,7 +45,7 @@ class VersionProvider
      */
     public function getVersion()
     {
-        $key = preg_replace("/[^A-Za-z0-9]/", '_', $this->getComposerLockPath() . '_all');
+        $key = $this->getCacheKey();
         $version = $this->getCachedValue($key);
         if ($version) {
             return $version;
@@ -82,7 +81,7 @@ class VersionProvider
      */
     public function getModuleVersion(string $module): string
     {
-        $key = preg_replace("/[^A-Za-z0-9]/", '_', $this->getComposerLockPath() . '_' . $module);
+        $key = $this->getCacheKey($module);
         $version = $this->getCachedValue($key);
         if ($version) {
             return $version;
@@ -197,53 +196,8 @@ class VersionProvider
         return $versions;
     }
 
-    /**
-     * Load composer.lock's contents and return it
-     *
-     * @deprecated 5.1 Has been replaced by composer-runtime-api
-     * @param bool $cache
-     * @return array
-     */
-    protected function getComposerLock($cache = true)
+    protected function getCacheKey(string $module = '_all'): string
     {
-        Deprecation::notice("5.1", "Has been replaced by composer-runtime-api", Deprecation::SCOPE_METHOD);
-        $composerLockPath = $this->getComposerLockPath();
-        if (!file_exists($composerLockPath)) {
-            return [];
-        }
-
-        $lockData = [];
-        $jsonData = file_get_contents($composerLockPath);
-        $jsonData = $jsonData ? $jsonData : '';
-        $cacheKey = md5($jsonData);
-
-        if ($cache) {
-            $cache = Injector::inst()->get(CacheInterface::class . '.VersionProvider_composerlock');
-            if ($versions = $cache->get($cacheKey)) {
-                $lockData = json_decode($versions, true);
-            }
-        }
-
-        if (empty($lockData) && $jsonData) {
-            $lockData = json_decode($jsonData, true);
-
-            if ($cache) {
-                $cache->set($cacheKey, $jsonData);
-            }
-        }
-
-        $lockData = $lockData ? $lockData : [];
-
-        return $lockData;
-    }
-
-    /**
-     * @return string
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
-     */
-    protected function getComposerLockPath(): string
-    {
-        Deprecation::noticeWithNoReplacment('5.4.0');
-        return BASE_PATH . '/composer.lock';
+        return preg_replace("/[^A-Za-z0-9]/", '_', BASE_PATH . $module);
     }
 }

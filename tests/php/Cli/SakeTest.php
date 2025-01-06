@@ -3,7 +3,6 @@
 namespace SilverStripe\Cli\Tests;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Error\Deprecated;
 use ReflectionClass;
 use SilverStripe\Cli\Sake;
 use SilverStripe\Cli\Tests\SakeTest\TestBuildTask;

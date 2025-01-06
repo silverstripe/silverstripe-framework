@@ -5,7 +5,6 @@ namespace SilverStripe\Control\Middleware;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Middleware\URLSpecialsMiddleware\FlushScheduler;
-use SilverStripe\Control\Middleware\URLSpecialsMiddleware\SessionEnvTypeSwitcher;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Security\RandomGenerator;
@@ -29,18 +28,13 @@ use SilverStripe\Security\RandomGenerator;
 class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
 {
     use FlushScheduler;
-    use SessionEnvTypeSwitcher;
 
     /**
      * Initializes the middleware with the required rules
      */
     public function __construct()
     {
-        parent::__construct(
-            new ConfirmationMiddleware\GetParameter("flush"),
-            new ConfirmationMiddleware\GetParameter("isDev"),
-            new ConfirmationMiddleware\GetParameter("isTest")
-        );
+        parent::__construct(new ConfirmationMiddleware\GetParameter("flush"));
     }
 
     /**
@@ -57,9 +51,8 @@ class URLSpecialsMiddleware extends PermissionAwareConfirmationMiddleware
     public function buildImpactRedirect(HTTPRequest $request)
     {
         $flush = $this->scheduleFlush($request);
-        $env_type = $this->setSessionEnvType($request);
 
-        if ($flush || $env_type) {
+        if ($flush) {
             // the token only purpose is to invalidate browser/proxy cache
             $request['urlspecialstoken'] = bin2hex(random_bytes(4));
 

@@ -61,9 +61,8 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
 
     /**
      * @inheritdoc
-     * @param bool $addState DEPRECATED: Should be removed in major release
      */
-    public function getUrl($gridField, $record, $columnName, $addState = true)
+    public function getUrl($gridField, $record, $columnName)
     {
         $link = Controller::join_links(
             $gridField->Link('item'),
@@ -71,7 +70,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
             'edit'
         );
 
-        return $gridField->addAllStateToUrl($link, $addState);
+        return $gridField->addAllStateToUrl($link);
     }
 
     /**
@@ -149,7 +148,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
         // which can make the form readonly if no edit permissions are available.
 
         $data = new ArrayData([
-            'Link' => $this->getURL($gridField, $record, $columnName, false),
+            'Link' => $this->getURL($gridField, $record, $columnName),
             'ExtraClass' => $this->getExtraClass()
         ]);
 

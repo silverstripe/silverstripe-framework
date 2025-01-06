@@ -65,16 +65,13 @@ class GridFieldTest extends SapphireTest
         $expectedComponents = new ArrayList([
             new GridFieldToolbarHeader(),
             new GridFieldButtonRow(),
-            $sort = new GridFieldSortableHeader(),
-            $filter = new GridFieldFilterHeader(),
+            new GridFieldSortableHeader(),
+            new GridFieldFilterHeader(),
             new GridFieldDataColumns(),
             new GridFieldPageCount('toolbar-header-right'),
-            $pagination = new GridFieldPaginator(),
+            new GridFieldPaginator(),
             new GridState_Component(),
         ]);
-        $sort->setThrowExceptionOnBadDataType(false);
-        $filter->setThrowExceptionOnBadDataType(false);
-        $pagination->setThrowExceptionOnBadDataType(false);
 
         $this->assertEquals($expectedComponents, $obj->getConfig()->getComponents(), 'Testing default Config');
     }
@@ -299,7 +296,8 @@ class GridFieldTest extends SapphireTest
     public function testHandleActionBadArgument()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $obj = new GridField('testfield', 'testfield');
+        $list = ArrayList::create();
+        $obj = new GridField('testfield', 'testfield', $list);
         $obj->handleAlterAction('prft', [], []);
     }
 

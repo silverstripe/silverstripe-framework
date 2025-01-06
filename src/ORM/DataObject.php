@@ -2014,10 +2014,8 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
         // Determine type and nature of foreign relation
         $details = $schema->getHasManyComponentDetails(static::class, $componentName);
         if ($details['polymorphic']) {
-            $result = PolymorphicHasManyList::create($componentClass, $details['joinField'], static::class);
-            if ($details['needsRelation']) {
-                Deprecation::withSuppressedNotice(fn () => $result->setForeignRelation($componentName));
-            }
+            $relation = $details['needsRelation'] ? $componentName : null;
+            $result = PolymorphicHasManyList::create($componentClass, $details['joinField'], static::class, $relation);
         } else {
             $result = HasManyList::create($componentClass, $details['joinField']);
         }
@@ -4135,31 +4133,6 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     public function isInDB()
     {
         return is_numeric($this->ID) && $this->ID > 0;
-    }
-
-    /*
-     * @ignore
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
-     */
-    private static $subclass_access = true;
-
-    /**
-     * Temporarily disable subclass access in data object qeur
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
-     */
-    public static function disable_subclass_access()
-    {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
-        DataObject::$subclass_access = false;
-    }
-
-    /**
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
-     */
-    public static function enable_subclass_access()
-    {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
-        DataObject::$subclass_access = true;
     }
 
     //-------------------------------------------------------------------------------------------//

@@ -80,12 +80,12 @@ class MemberTest extends FunctionalTest
 
     public function testPasswordEncryptionUpdatedOnChangedPassword()
     {
-        Config::modify()->set(Security::class, 'password_encryption_algorithm', 'none');
+        Config::modify()->set(Security::class, 'password_encryption_algorithm', 'sha1');
         $member = Member::create();
         $member->Password = 'password';
         $member->write();
-        $this->assertEquals('password', $member->Password);
-        $this->assertEquals('none', $member->PasswordEncryption);
+        $this->assertNotEquals('password', $member->Password);
+        $this->assertEquals('sha1', $member->PasswordEncryption);
         Config::modify()->set(Security::class, 'password_encryption_algorithm', 'blowfish');
         $member->Password = 'newpassword';
         $member->write();

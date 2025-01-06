@@ -120,19 +120,6 @@ class Deprecation
     /**
      * Used to wrap deprecated methods and deprecated config get()/set() called from the vendor
      * dir that projects have no ability to change.
-     *
-     * @return mixed
-     * @deprecated 5.4.0 Use withSuppressedNotice() instead
-     */
-    public static function withNoReplacement(callable $func)
-    {
-        Deprecation::notice('5.4.0', 'Use withSuppressedNotice() instead');
-        return Deprecation::withSuppressedNotice($func);
-    }
-
-    /**
-     * Used to wrap deprecated methods and deprecated config get()/set() called from the vendor
-     * dir that projects have no ability to change.
      */
     public static function withSuppressedNotice(callable $func): mixed
     {

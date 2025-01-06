@@ -13,7 +13,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Path;
 use SilverStripe\PolyExecution\PolyCommand;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
@@ -1052,35 +1051,6 @@ class Director implements TemplateGlobalProvider
     {
         $kernel = Injector::inst()->get(Kernel::class);
         return $kernel->getEnvironment();
-    }
-
-
-    /**
-     * Returns the session environment override
-     *
-     * @internal This method is not a part of public API and will be deleted without a deprecation warning
-     *
-     * @param HTTPRequest $request
-     *
-     * @return string|null null if not overridden, otherwise the actual value
-     * @deprecated 5.4.0 Use get_environment_type() instead.
-     */
-    public static function get_session_environment_type(?HTTPRequest $request = null)
-    {
-        Deprecation::notice('5.4.0', 'Use get_environment_type() instead.');
-        $request = static::currentRequest($request);
-
-        if (!$request) {
-            return null;
-        }
-
-        $session = $request->getSession();
-
-        if (!empty($session->get('isDev'))) {
-            return Kernel::DEV;
-        } elseif (!empty($session->get('isTest'))) {
-            return Kernel::TEST;
-        }
     }
 
     /**

@@ -9,7 +9,6 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Core\Path;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Handles finding templates from a stack of template manifest objects.

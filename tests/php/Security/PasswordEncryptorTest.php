@@ -142,27 +142,4 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertTrue($e->check(sha1('mypassword'), 'mypassword'));
         $this->assertFalse($e->check(sha1('mypassword'), 'mywrongpassword'));
     }
-
-    /**
-     * See http://open.silverstripe.org/ticket/3004
-     *
-     * Handy command for reproducing via CLI on different architectures:
-     *  php -r "echo(base_convert(sha1('mypassword'), 16, 36));"
-     */
-    public function testEncryptorLegacyPHPHashCheck()
-    {
-        Config::modify()->merge(
-            PasswordEncryptor::class,
-            'encryptors',
-            ['test_sha1legacy' => [PasswordEncryptor_LegacyPHPHash::class => 'sha1']]
-        );
-        $e = Deprecation::withSuppressedNotice(fn() => PasswordEncryptor::create_for_algorithm('test_sha1legacy'));
-        // precomputed hashes for 'mypassword' from different architectures
-        $amdHash = 'h1fj0a6m4o6k0sosks88oo08ko4gc4s';
-        $intelHash = 'h1fj0a6m4o0g04ocg00o4kwoc4wowws';
-        $wrongHash = 'h1fjxxxxxxxxxxxxxxxxxxxxxxxxxxx';
-        $this->assertTrue($e->check($amdHash, "mypassword"));
-        $this->assertTrue($e->check($intelHash, "mypassword"));
-        $this->assertFalse($e->check($wrongHash, "mypassword"));
-    }
 }

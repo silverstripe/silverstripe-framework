@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * A simple readonly, paginated view of records, with sortable and searchable
  * headers.
@@ -19,18 +17,11 @@ class GridFieldConfig_Base extends GridFieldConfig
         parent::__construct();
         $this->addComponent(GridFieldToolbarHeader::create());
         $this->addComponent(GridFieldButtonRow::create('before'));
-        $this->addComponent($sort = GridFieldSortableHeader::create());
-        $this->addComponent($filter = GridFieldFilterHeader::create());
+        $this->addComponent(GridFieldSortableHeader::create());
+        $this->addComponent(GridFieldFilterHeader::create());
         $this->addComponent(GridFieldDataColumns::create());
         $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
-        $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
-
-        Deprecation::withSuppressedNotice(function () use ($sort, $filter, $pagination) {
-            $sort->setThrowExceptionOnBadDataType(false);
-            $filter->setThrowExceptionOnBadDataType(false);
-            $pagination->setThrowExceptionOnBadDataType(false);
-        });
-
+        $this->addComponent(GridFieldPaginator::create($itemsPerPage));
         $this->extend('updateConfig');
     }
 }

@@ -12,7 +12,6 @@ use SilverStripe\Core\Startup\CallbackFlushDiscoverer;
 use SilverStripe\Core\Startup\RequestFlushDiscoverer;
 use SilverStripe\Core\Startup\ScheduledFlushDiscoverer;
 use SilverStripe\Core\Startup\DeployFlushDiscoverer;
-use SilverStripe\Dev\Deprecation;
 
 class HTTPApplication implements Application
 {
@@ -166,8 +165,6 @@ class HTTPApplication implements Application
      */
     private function warnAboutDeprecatedSetups()
     {
-        if (defined('CUSTOM_INCLUDE_PATH')) {
-            Deprecation::notice('5.4.0', 'Use of the "CUSTOM_INCLUDE_PATH" constant is deprecated.', Deprecation::SCOPE_GLOBAL);
-        }
+        // noop
     }
 }

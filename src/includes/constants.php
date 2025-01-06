@@ -17,7 +17,6 @@ use SilverStripe\Core\TempFolder;
  *   See Director::baseFolder(). Can be overwritten by Config::modify()->set(Director::class, 'alternate_base_folder', ).
  * - TEMP_PATH: Path to temporary folder for manifest and template caches. May be relative to project root or an
  *   absolute path. No trailing slash. Can be set with the SS_TEMP_PATH environment variable.
- * - TEMP_FOLDER: DEPRECATED. Same as TEMP_PATH.
  * - ASSETS_DIR: Dir for assets folder. e.g. "assets"
  * - ASSETS_PATH: Full path to assets folder. e.g. "/var/www/my-webroot/assets"
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
@@ -186,16 +185,9 @@ if (!defined('ASSETS_PATH')) {
     });
 }
 
-// Custom include path - deprecated
-if (defined('CUSTOM_INCLUDE_PATH')) {
-    set_include_path(CUSTOM_INCLUDE_PATH . PATH_SEPARATOR . get_include_path());
-}
-
 // Define the temporary folder if it wasn't defined yet
 if (!defined('TEMP_PATH')) {
-    if (defined('TEMP_FOLDER')) {
-        define('TEMP_PATH', TEMP_FOLDER);
-    } elseif ($path = Environment::getEnv('SS_TEMP_PATH')) {
+    if ($path = Environment::getEnv('SS_TEMP_PATH')) {
         // If path is relative, rewrite it to be relative to BASE_PATH - as web requests are relative to
         // public/index.php, and we don't want the TEMP_PATH to be inside the public/ directory by default
         if (ltrim($path ?? '', DIRECTORY_SEPARATOR) === $path) {
@@ -205,11 +197,6 @@ if (!defined('TEMP_PATH')) {
     } else {
         define('TEMP_PATH', TempFolder::getTempFolder(BASE_PATH));
     }
-}
-
-// Define the temporary folder for backwards compatibility
-if (!defined('TEMP_FOLDER')) {
-    define('TEMP_FOLDER', TEMP_PATH);
 }
 
 // Define the resource dir constant that will be use to exposed vendor assets

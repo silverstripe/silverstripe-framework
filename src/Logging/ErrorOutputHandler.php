@@ -4,7 +4,6 @@ namespace SilverStripe\Logging;
 
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Level;
 use Monolog\LogRecord;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -31,18 +30,6 @@ class ErrorOutputHandler extends AbstractProcessingHandler
      * @var FormatterInterface
      */
     private $cliFormatter = null;
-
-    public function __construct(int|string|Level $level = Level::Debug, bool $bubble = true)
-    {
-        parent::__construct($level, $bubble);
-        Deprecation::withSuppressedNotice(function () {
-            Deprecation::notice(
-                '5.4.0',
-                'Will be renamed to ErrorOutputHandler',
-                Deprecation::SCOPE_CLASS
-            );
-        });
-    }
 
     /**
      * Get the mime type to use when displaying this error.

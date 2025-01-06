@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Dev\Deprecation;
-
 /**
  * Similar to {@link GridFieldConfig_RecordEditor}, but adds features to work
  * on has-many or many-many relationships.
@@ -30,7 +28,6 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig
     public function __construct($itemsPerPage = null)
     {
         parent::__construct();
-
         $this->addComponent(GridFieldButtonRow::create('before'));
         $this->addComponent(GridFieldAddNewButton::create('buttons-before-left'));
         $this->addComponent(GridFieldAddExistingAutocompleter::create('buttons-before-right'));
@@ -44,13 +41,6 @@ class GridFieldConfig_RelationEditor extends GridFieldConfig
         $this->addComponent(GridFieldPageCount::create('toolbar-header-right'));
         $this->addComponent($pagination = GridFieldPaginator::create($itemsPerPage));
         $this->addComponent(GridFieldDetailForm::create());
-
-        Deprecation::withSuppressedNotice(function () use ($sort, $filter, $pagination) {
-            $sort->setThrowExceptionOnBadDataType(false);
-            $filter->setThrowExceptionOnBadDataType(false);
-            $pagination->setThrowExceptionOnBadDataType(false);
-        });
-
         $this->extend('updateConfig');
     }
 }

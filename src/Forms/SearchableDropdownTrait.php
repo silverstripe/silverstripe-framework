@@ -139,7 +139,6 @@ trait SearchableDropdownTrait
                 return $emptyString;
             }
         }
-        $name = $this->getName();
         if ($this->getUseDynamicPlaceholder()) {
             if ($this->getIsSearchable()) {
                 if (!$this->getIsLazyLoaded()) {

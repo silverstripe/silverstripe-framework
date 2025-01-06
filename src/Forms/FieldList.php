@@ -7,7 +7,6 @@ use RuntimeException;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * A list designed to hold form field instances.
@@ -212,10 +211,6 @@ class FieldList extends ArrayList
      */
     public function addFieldsToTab(string $tabName, array $fields, ?string $insertBefore = null): static
     {
-        if (!is_array($fields)) {
-            Deprecation::notice('5.3.0', '$fields will need to be passed as an array in CMS 6', Deprecation::SCOPE_METHOD);
-        }
-
         $this->flushFieldsCache();
 
         // Find the tab
@@ -261,10 +256,6 @@ class FieldList extends ArrayList
      */
     public function removeFieldsFromTab(string $tabName, array $fields): static
     {
-        if (!is_array($fields)) {
-            Deprecation::notice('5.3.0', '$fields will need to be passed as an array in CMS 6', Deprecation::SCOPE_METHOD);
-        }
-
         $this->flushFieldsCache();
 
         // Find the tab

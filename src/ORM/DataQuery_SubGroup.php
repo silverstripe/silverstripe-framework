@@ -28,20 +28,8 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup
      */
     protected $havingQuery;
 
-    /**
-     * @param DataQuery $base
-     * @param string $connective
-     * @param string $clause
-     */
-    public function __construct(DataQuery $base, $connective)
+    public function __construct(DataQuery $base, string $connective, string $clause = 'WHERE')
     {
-        // using func_get_args to add a 3rd param while retaining BC
-        // @deprecated - add a 3rd param for CMS 6 - string $clause = 'WHERE'
-        $clause = 'WHERE';
-        $args = func_get_args();
-        if (count($args) > 2) {
-            $clause = $args[2];
-        }
         parent::__construct($base->dataClass);
         $this->query = $base->query;
         $this->clause = strtoupper($clause);

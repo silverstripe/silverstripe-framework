@@ -93,19 +93,12 @@ class HTTP
      * </code>
      *
      * @param string $content The HTML to search for links to rewrite.
-     * @param callable $code Either a string that can evaluate to an expression to rewrite links
-     * (depreciated), or a callable that takes a single parameter and returns the rewritten URL.
+     * @param callable $code A callable that takes a single parameter and returns the rewritten URL.
      *
      * @return string The content with all links rewritten as per the logic specified in $code.
      */
-    public static function urlRewriter($content, $code)
+    public static function urlRewriter($content, callable $code)
     {
-        if (!is_callable($code)) {
-            throw new InvalidArgumentException(
-                'HTTP::urlRewriter expects a callable as the second parameter'
-            );
-        }
-
         // Replace attributes
         $attribs = ["src", "background", "a" => "href", "link" => "href", "base" => "href"];
         $regExps = [];
