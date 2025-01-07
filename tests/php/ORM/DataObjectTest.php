@@ -377,7 +377,7 @@ class DataObjectTest extends SapphireTest
         $this->assertEquals('Phil', $comments->first()->Name);
 
         // Test limit
-        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', "\"Name\" ASC", '', '1,2');
+        $comments = DataObject::get(DataObjectTest\TeamComment::class, '', "\"Name\" ASC", '1,2');
         $this->assertEquals(2, $comments->count());
         $this->assertEquals('Joe', $comments->first()->Name);
         $this->assertEquals('Phil', $comments->last()->Name);

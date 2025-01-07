@@ -3419,7 +3419,6 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      * Supports parameterised queries. See SQLSelect::addWhere() for syntax examples.
      * @param string|array|null $sort Passed to DataList::sort()
      * BY clause.  If omitted, DataObject::$default_sort will be used.
-     * @param string $join Deprecated 3.0 Join clause. Use leftJoin($table, $joinClause) instead.
      * @param string|array $limit A limit expression to be inserted into the LIMIT clause.
      * @param string $containerClass The container class to return the results in.
      *
@@ -3429,7 +3428,6 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
         $callerClass = null,
         $filter = "",
         $sort = "",
-        $join = "",
         $limit = null,
         $containerClass = DataList::class
     ) {
@@ -3439,17 +3437,12 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
             if ($callerClass === DataObject::class) {
                 throw new InvalidArgumentException('Call <classname>::get() instead of DataObject::get()');
             }
-            if ($filter || $sort || $join || $limit || ($containerClass !== DataList::class)) {
+            if ($filter || $sort || $limit || ($containerClass !== DataList::class)) {
                 throw new InvalidArgumentException('If calling <classname>::get() then you shouldn\'t pass any other'
                     . ' arguments');
             }
         } elseif ($callerClass === DataObject::class) {
             throw new InvalidArgumentException('DataObject::get() cannot query non-subclass DataObject directly');
-        }
-        if ($join) {
-            throw new InvalidArgumentException(
-                'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
-            );
         }
 
         // Build and decorate with args
