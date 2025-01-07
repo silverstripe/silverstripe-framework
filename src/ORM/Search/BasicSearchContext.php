@@ -33,26 +33,14 @@ class BasicSearchContext extends SearchContext
      *  If a filter is applied to a relationship in dot notation,
      *  the parameter name should have the dots replaced with double underscores,
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
-     * @param array|bool|string $sort Field to sort on.
+     * @param array|false|string $sort Field to sort on.
      * @param int|array|null $limit
      * @param SS_List $existingQuery
      */
-    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null): SS_List
+    public function getQuery($searchParams, $sort = false, int|array|null $limit = null, $existingQuery = null): SS_List
     {
         if (!$existingQuery || !is_a($existingQuery, SS_List::class)) {
             throw new InvalidArgumentException('getQuery requires a pre-existing SS_List list to be passed as $existingQuery.');
-        }
-
-        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['array', 'NULL', 'integer']))) {
-            Deprecation::notice(
-                '5.1.0',
-                '$limit should be type of int|array|null'
-            );
-            if (is_string($limit) && is_numeric($limit)) {
-                $limit = (int) $limit;
-            } else {
-                $limit = null;
-            }
         }
 
         $searchParams = $this->applySearchFilters($this->normaliseSearchParams($searchParams));

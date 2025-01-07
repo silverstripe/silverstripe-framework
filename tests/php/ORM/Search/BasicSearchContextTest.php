@@ -266,26 +266,6 @@ class BasicSearchContextTest extends SapphireTest
                     'Sara',
                 ],
             ],
-            'limit numeric string' => [
-                'limit' => '4',
-                'expected' => [
-                    'James',
-                    'John',
-                    'Jane',
-                    'Hemi',
-                ],
-            ],
-            'limit invalid string' => [
-                'limit' => 'blah',
-                'expected' => [
-                    'James',
-                    'John',
-                    'Jane',
-                    'Hemi',
-                    'Sara',
-                    'MatchNothing',
-                ],
-            ],
         ];
     }
 

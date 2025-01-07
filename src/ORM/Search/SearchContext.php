@@ -142,22 +142,15 @@ class SearchContext
      *  If a filter is applied to a relationship in dot notation,
      *  the parameter name should have the dots replaced with double underscores,
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
-     * @param array|bool|string $sort Database column to sort on.
+     * @param array|false|string $sort Database column to sort on.
      *  Falls back to {@link DataObject::$default_sort} if not provided.
      * @param int|array|null $limit
      * @param DataList $existingQuery
      * @return DataList<T>
      * @throws Exception
      */
-    public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null)
+    public function getQuery($searchParams, $sort = false, int|array|null $limit = null, $existingQuery = null)
     {
-        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['integer', 'array', 'NULL']))) {
-            Deprecation::notice(
-                '5.1.0',
-                '$limit should be type of int|array|null'
-            );
-            $limit = null;
-        }
         $this->setSearchParams($searchParams);
         $query = $this->prepareQuery($sort, $limit, $existingQuery);
         return $this->search($query);
@@ -197,9 +190,6 @@ class SearchContext
         }
         $query = null;
         if ($existingQuery) {
-            if (!($existingQuery instanceof DataList)) {
-                throw new InvalidArgumentException("existingQuery must be DataList");
-            }
             if ($existingQuery->dataClass() != $this->modelClass) {
                 throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass()
                     . ", $this->modelClass expected.");
