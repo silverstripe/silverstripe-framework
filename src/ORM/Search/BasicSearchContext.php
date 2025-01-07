@@ -36,7 +36,7 @@ class BasicSearchContext extends SearchContext
      *  the parameter name should have the dots replaced with double underscores,
      *  for example "Comments__Name" instead of the filter name "Comments.Name".
      * @param array|bool|string $sort Field to sort on.
-     * @param array|null|string $limit
+     * @param int|array|null $limit
      * @param Filterable&Sortable&Limitable $existingQuery
      */
     public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null): Filterable&Sortable&Limitable
@@ -45,12 +45,16 @@ class BasicSearchContext extends SearchContext
             throw new InvalidArgumentException('getQuery requires a pre-existing filterable/sortable/limitable list to be passed as $existingQuery.');
         }
 
-        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['array', 'NULL', 'string']))) {
+        if ((count(func_get_args()) >= 3) && (!in_array(gettype($limit), ['array', 'NULL', 'integer']))) {
             Deprecation::notice(
                 '5.1.0',
-                '$limit should be type of array|string|null'
+                '$limit should be type of int|array|null'
             );
-            $limit = null;
+            if (is_string($limit) && is_numeric($limit)) {
+                $limit = (int) $limit;
+            } else {
+                $limit = null;
+            }
         }
 
         $searchParams = $this->applySearchFilters($this->normaliseSearchParams($searchParams));
@@ -67,7 +71,14 @@ class BasicSearchContext extends SearchContext
         }
 
         // Limit must be last so that ArrayList results don't have an applied limit before they can be filtered/sorted.
-        $result = $result->limit($limit);
+        if (is_array($limit)) {
+            $result = $result->limit(
+                isset($limit['limit']) ? $limit['limit'] : null,
+                isset($limit['start']) ? $limit['start'] : null
+            );
+        } else {
+            $result = $result->limit($limit);
+        }
 
         return $result;
     }
