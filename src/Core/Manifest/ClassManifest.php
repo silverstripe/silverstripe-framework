@@ -597,7 +597,7 @@ class ClassManifest
             $classes = $data['classes'];
             $interfaces = $data['interfaces'];
             $traits = $data['traits'];
-            $enums = $data['enums'] ?? [];
+            $enums = $data['enums'];
         } else {
             $changed = true;
             // Build from php file parser
@@ -696,6 +696,7 @@ class ClassManifest
                 'classes' => $classes,
                 'interfaces' => $interfaces,
                 'traits' => $traits,
+                'enums' => $enums,
             ];
             $this->cache->set($key, $cache);
         }
@@ -774,7 +775,7 @@ class ClassManifest
         if (!$data || !is_array($data)) {
             return false;
         }
-        foreach (['classes', 'interfaces', 'traits'] as $key) {
+        foreach (['classes', 'interfaces', 'traits', 'enums'] as $key) {
             // Must be set
             if (!isset($data[$key])) {
                 return false;
