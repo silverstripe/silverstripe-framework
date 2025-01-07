@@ -54,6 +54,19 @@ class ClassManifest
     protected $cacheKey;
 
     /**
+     * In memory cache array for individually parsed files
+     * @var array|null
+     */
+    protected ?array $filesCache = null;
+
+    /**
+     * Key to use for files cache
+     *
+     * @var string
+     */
+    protected string $filesCacheKey;
+
+    /**
      * Array of properties to cache
      *
      * @var array
@@ -203,6 +216,7 @@ class ClassManifest
         $this->base = $base;
         $this->cacheFactory = $cacheFactory;
         $this->cacheKey = 'manifest';
+        $this->filesCacheKey = 'manifestFiles';
     }
 
     private function buildCache($includeTests = false)
@@ -563,6 +577,7 @@ class ClassManifest
 
         if ($this->cache) {
             $data = $this->getState();
+            $this->cache->set($this->filesCacheKey, $this->filesCache);
             $this->cache->set($this->cacheKey, $data);
             $this->cache->set('generated_at', time());
             $this->cache->delete('regenerate');
@@ -586,6 +601,10 @@ class ClassManifest
         // slow. A combination of the file name and file contents hash are used,
         // since just using the datetime lead to problems with upgrading.
         $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename ?? '') . '_' . md5_file($pathname ?? '');
+
+        if ($this->cache && $this->filesCache === null) {
+            $this->filesCache = $this->cache->get($this->filesCacheKey);
+        }
 
         // Attempt to load from cache
         // Note: $classes, $interfaces and $traits arrays have correct-case keys, not lowercase
@@ -696,8 +715,10 @@ class ClassManifest
                 'classes' => $classes,
                 'interfaces' => $interfaces,
                 'traits' => $traits,
+                'enums' => $enums,
             ];
-            $this->cache->set($key, $cache);
+
+            $this->filesCache[$key] = $cache;
         }
     }
 
