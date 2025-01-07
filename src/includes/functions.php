@@ -60,6 +60,6 @@ function project()
  */
 function _t($entity, $arg = null)
 {
-    // Pass args directly to handle deprecation
+    // Pass args directly as we allow variable args.
     return call_user_func_array([i18n::class, '_t'], func_get_args());
 }

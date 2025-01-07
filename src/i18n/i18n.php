@@ -10,6 +10,7 @@ use SilverStripe\i18n\Data\Sources;
 use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\View\TemplateGlobalProvider;
 use InvalidArgumentException;
+use SilverStripe\Core\ArrayLib;
 
 /**
  * Base-class for storage and retrieval of translated entities.
@@ -170,20 +171,9 @@ class i18n implements TemplateGlobalProvider
             user_error("Missing default for localisation key $entity", E_USER_WARNING);
         }
 
-        // Deprecate legacy injection format (`string %s, %d`)
-        // inject the variables from injectionArray (if present)
-        $sprintfArgs = [];
-        if ($default && !preg_match('/\{[\w\d]*\}/i', $default ?? '') && preg_match('/%[s,d]/', $default ?? '')) {
-            $sprintfArgs = array_values($injection ?? []);
-            $injection = [];
-        }
-
-        // If injection isn't associative, assume legacy injection format
-        $failUnlessSprintf = false;
-        if ($injection && array_values($injection ?? []) === $injection) {
-            $failUnlessSprintf = true; // Note: Will trigger either a deprecation error or exception below
-            $sprintfArgs = array_values($injection ?? []);
-            $injection = [];
+        // Injection must be associative
+        if (!empty($injection) && !ArrayLib::is_associative($injection)) {
+            throw new InvalidArgumentException('Injection must be an associative array');
         }
 
         // Detect plurals: Has a {count} argument as well as a `|` pipe delimited string (if provided)
@@ -199,16 +189,6 @@ class i18n implements TemplateGlobalProvider
             $result = static::getMessageProvider()->pluralise($entity, $default, $injection, $count);
         } else {
             $result = static::getMessageProvider()->translate($entity, $default, $injection);
-        }
-
-        if (!$default && !preg_match('/\{[\w\d]*\}/i', $result ?? '') && preg_match('/%[s,d]/', $result ?? '')) {
-            throw new Exception('sprintf style localisation cannot be used in translations - detected in $result');
-        }
-
-        if ($failUnlessSprintf) {
-            // Note: After removing deprecated code, you can move this error up into the is-associative check
-            // Neither default nor translated strings were %s substituted, and our array isn't associative
-            throw new InvalidArgumentException('Injection must be an associative array');
         }
 
         return $result;
