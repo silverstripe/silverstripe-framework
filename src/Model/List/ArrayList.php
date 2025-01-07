@@ -5,7 +5,6 @@ namespace SilverStripe\Model\List;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilterable;
 use SilverStripe\Model\ArrayData;
@@ -32,14 +31,6 @@ use Traversable;
 class ArrayList extends ModelData implements SS_List
 {
     use SearchFilterable;
-
-    /**
-     * Whether filter and exclude calls should be case sensitive by default or not.
-     * This configuration property is here for backwards compatability.
-     *
-     * @deprecated 5.1.0 use SearchFilter.default_case_sensitive instead
-     */
-    private static bool $default_case_sensitive = true;
 
     /**
      * Holds the items in the list
@@ -690,17 +681,6 @@ class ArrayList extends ModelData implements SS_List
                 $hasNullFilter = true;
             }
             $searchFilter = $this->createSearchFilter($filterKey, $filterValue);
-
-            // Apply default case sensitivity for backwards compatability
-            if (!str_contains($filterKey, ':case') && !str_contains($filterKey, ':nocase')) {
-                $caseSensitive = Deprecation::withSuppressedNotice(fn() => static::config()->get('default_case_sensitive'));
-                if ($caseSensitive && in_array('case', $searchFilter->getSupportedModifiers())) {
-                    $searchFilter->setModifiers($searchFilter->getModifiers() + ['case']);
-                } elseif (!$caseSensitive && in_array('nocase', $searchFilter->getSupportedModifiers())) {
-                    $searchFilter->setModifiers($searchFilter->getModifiers() + ['nocase']);
-                }
-            }
-
             $searchFilters[$filterKey] = $searchFilter;
         }
 

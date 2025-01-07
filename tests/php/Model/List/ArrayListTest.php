@@ -349,20 +349,20 @@ class ArrayListTest extends SapphireTest
         return [
             // test a couple of search filters
             // don't need to be as explicit as the filter tests, just check the syntax works
-            'exact match not case sensitive' => [
-                'args' => ['NoCase:nocase', 'case sensitive'],
+            'exact match case insensitive' => [
+                'args' => ['NoCase', 'case sensitive'],
                 'objects' => $objects,
                 'expected' => $objects[0],
             ],
             'startswith match' => [
                 'args' => ['StartsWithTest:StartsWith', 'test'],
                 'objects' => $objects,
-                'expected' => $objects[3],
-            ],
-            'startswith match no case' => [
-                'args' => ['StartsWithTest:StartsWith:nocase', 'test'],
-                'objects' => $objects,
                 'expected' => $objects[0],
+            ],
+            'startswith match case' => [
+                'args' => ['StartsWithTest:StartsWith:case', 'test'],
+                'objects' => $objects,
+                'expected' => $objects[3],
             ],
             'startswith match negated' => [
                 'args' => ['StartsWithTest:StartsWith:not', 'Test'],
@@ -1187,20 +1187,20 @@ class ArrayListTest extends SapphireTest
                 'expected' => [$objects[3], $objects[4]],
             ],
             // case sensitivity checks
-            'exact match case sensitive' => [
+            'exact match case insensitive' => [
                 'args' => [['NoCase' => 'case sensitive']],
                 'objects' => $objects,
-                'expected' => [$objects[1]],
-            ],
-            'exact match case insensitive' => [
-                'args' => ['NoCase:nocase', 'case sensitive'],
-                'objects' => $objects,
                 'expected' => [$objects[0], $objects[1]],
+            ],
+            'exact match case sensitive' => [
+                'args' => ['NoCase:case', 'case sensitive'],
+                'objects' => $objects,
+                'expected' => [$objects[1]],
             ],
             'exact match mixed case filters' => [
                 'args' => [[
                     'NoCase:nocase' => 'case sensitive',
-                    'CaseSensitive' => 'case sensitive',
+                    'CaseSensitive:case' => 'case sensitive',
                 ]],
                 'objects' => $objects,
                 'expected' => [$objects[1]],
@@ -1218,14 +1218,14 @@ class ArrayListTest extends SapphireTest
             ],
             // partialmatch filter
             'partial match' => [
-                'args' => ['StartsWithTest:PartialMatch', 'start'],
-                'objects' => $objects,
-                'expected' => [$objects[2]],
-            ],
-            'partial match with modifier' => [
-                'args' => [['StartsWithTest:PartialMatch:nocase' => 'start']],
+                'args' => [['StartsWithTest:PartialMatch' => 'start']],
                 'objects' => $objects,
                 'expected' => [$objects[1], $objects[2]],
+            ],
+            'partial match with modifier' => [
+                'args' => ['StartsWithTest:PartialMatch:case', 'start'],
+                'objects' => $objects,
+                'expected' => [$objects[2]],
             ],
             // greaterthan filter
             'greaterthan match' => [
@@ -1324,12 +1324,12 @@ class ArrayListTest extends SapphireTest
             'partial match' => [
                 'args' => ['StartsWithTest:PartialMatch', 'start'],
                 'objects' => $objects,
-                'expected' => [$objects[2]],
+                'expected' => [$objects[1], $objects[2]],
             ],
             'partial match with modifier' => [
-                'args' => ['StartsWithTest:PartialMatch:nocase', 'start'],
+                'args' => ['StartsWithTest:PartialMatch:case', 'start'],
                 'objects' => $objects,
-                'expected' => [$objects[1], $objects[2]],
+                'expected' => [$objects[2]],
             ],
             'greaterthan match' => [
                 'args' => ['GreaterThan100:GreaterThan', 100],
