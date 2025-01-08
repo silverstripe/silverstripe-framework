@@ -26,16 +26,4 @@ class SearchableDropdownField extends DropdownField implements HasOneRelationFie
         $this->addExtraClass('ss-searchable-dropdown-field');
         $this->setHasEmptyDefault(true);
     }
-
-    /**
-     * @param string $string
-     * @return $this
-     *
-     * @deprecated 5.2.0 Use setPlaceholder() instead
-     */
-    public function setEmptyString($string)
-    {
-        Deprecation::notice('5.2.0', 'Use setPlaceholder() instead');
-        return parent::setEmptyString($string);
-    }
 }

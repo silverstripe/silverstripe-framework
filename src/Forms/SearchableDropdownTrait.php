@@ -159,8 +159,7 @@ trait SearchableDropdownTrait
      * Calling this will also call setHasEmptyDefault(true), if the method exists on the class,
      * which is required for the placeholder functionality to work on SearchableDropdownField
      *
-     * In the case of SearchableDropField this method should be used instead of setEmptyString() which
-     * will be remvoved in a future version
+     * In the case of SearchableDropField this method should be used instead of setEmptyString()
      */
     public function setPlaceholder(string $placeholder): static
     {
