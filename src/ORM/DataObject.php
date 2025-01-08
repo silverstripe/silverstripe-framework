@@ -2682,21 +2682,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     public function getCMSCompositeValidator(): CompositeValidator
     {
         $compositeValidator = CompositeValidator::create();
-
-        // Support for the old method during the deprecation period
-        if ($this->hasMethod('getCMSValidator')) {
-            Deprecation::notice(
-                '5.4.0',
-                'The getCMSValidator() method is deprecated and won\'t be supported in a future major release.'
-                    . ' Override getCMSCompositeValidator() instead.',
-                Deprecation::SCOPE_GLOBAL
-            );
-            $compositeValidator->addValidator($this->getCMSValidator());
-        }
-
-        // Extend validator - forward support, will be supported beyond 5.0.0
         $this->invokeWithExtensions('updateCMSCompositeValidator', $compositeValidator);
-
         return $compositeValidator;
     }
 

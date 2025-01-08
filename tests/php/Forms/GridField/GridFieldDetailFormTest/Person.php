@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\Validation\CompositeValidator;
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
@@ -65,14 +66,16 @@ class Person extends DataObject implements TestOnly
         return $fields;
     }
 
-    public function getCMSValidator()
+    public function getCMSCompositeValidator(): CompositeValidator
     {
-        return new RequiredFieldsValidator(
+        $validator = parent::getCMSCompositeValidator();
+        $validator->addValidator(new RequiredFieldsValidator(
             [
             'FirstName',
             'Surname'
             ]
-        );
+        ));
+        return $validator;
     }
 
     public function getCMSEditLink(): ?string
