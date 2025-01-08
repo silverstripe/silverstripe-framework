@@ -2706,6 +2706,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
         // Support for the old method during the deprecation period
         if ($this->hasMethod('getCMSValidator')) {
+            Deprecation::notice(
+                '5.4.0',
+                'The getCMSValidator() method is deprecated and won\'t be supported in a future major release.'
+                    . ' Override getCMSCompositeValidator() instead.',
+                Deprecation::SCOPE_GLOBAL
+            );
             $compositeValidator->addValidator($this->getCMSValidator());
         }
 
