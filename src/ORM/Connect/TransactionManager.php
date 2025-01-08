@@ -16,8 +16,8 @@ interface TransactionManager
     /**
      * Start a prepared transaction
      *
-     * @param string|boolean $transactionMode Transaction mode, or false to ignore. Deprecated and will be removed in SS5.
-     * @param string|boolean $sessionCharacteristics Session characteristics, or false to ignore. Deprecated and will be removed in SS5.
+     * @param string|boolean $transactionMode Transaction mode, or false to ignore.
+     * @param string|boolean $sessionCharacteristics Session characteristics, or false to ignore.
      * @throws DatabaseException on failure
      * @return bool True on success
      */
