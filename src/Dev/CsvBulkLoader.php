@@ -185,7 +185,7 @@ class CsvBulkLoader extends BulkLoader
         if ($this->getCheckPermissions() && !$preview && $alreadyExists && !$existingObj->canEdit()) {
             $type = $existingObj->i18n_singular_name();
             throw new HTTPResponse_Exception(
-                _t(BulkLoader::class . '.CANNOT_EDIT', "Not allowed to edit '$type' records"),
+                _t(BulkLoader::class . '.CANNOT_EDIT', "Not allowed to edit '{type}' records", ["type" => $type]),
                 403
             );
         }
@@ -197,7 +197,7 @@ class CsvBulkLoader extends BulkLoader
         if ($this->getCheckPermissions() && !$preview && !$alreadyExists && !$obj->canCreate()) {
             $type = $obj->i18n_singular_name();
             throw new HTTPResponse_Exception(
-                _t(BulkLoader::class . '.CANNOT_CREATE', "Not allowed to create '$type' records"),
+                _t(BulkLoader::class . '.CANNOT_CREATE', "Not allowed to create '{type}' records", ["type" => $type]),
                 403
             );
         }
@@ -233,7 +233,7 @@ class CsvBulkLoader extends BulkLoader
                         if ($this->getCheckPermissions() && !$relationObj->canCreate()) {
                             $type = $relationObj->i18n_singular_name();
                             throw new HTTPResponse_Exception(
-                                _t(BulkLoader::class . '.CANNOT_CREATE', "Not allowed to create '$type' records"),
+                                _t(BulkLoader::class . '.CANNOT_CREATE', "Not allowed to create '{type}' records", ["type" => $type]),
                                 403
                             );
                         }
@@ -255,7 +255,7 @@ class CsvBulkLoader extends BulkLoader
                     if ($this->getCheckPermissions() && !$relationObj->canEdit()) {
                         $type = $relationObj->i18n_singular_name();
                         throw new HTTPResponse_Exception(
-                            _t(BulkLoader::class . '.CANNOT_EDIT', "Not allowed to edit '$type' records"),
+                            _t(BulkLoader::class . '.CANNOT_EDIT', "Not allowed to edit '{type}' records", ["type" => $type]),
                             403
                         );
                     }
