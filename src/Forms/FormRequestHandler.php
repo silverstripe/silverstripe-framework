@@ -134,7 +134,7 @@ class FormRequestHandler extends RequestHandler
         $allowedFields = array_keys($this->form->Fields()->saveableFields() ?? []);
 
         // Populate the form
-        $this->form->loadDataFrom($vars, true, $allowedFields);
+        $this->form->loadDataFrom($vars, Form::MERGE_CLEAR_MISSING, $allowedFields);
 
         // Protection against CSRF attacks
         $token = $this->form->getSecurityToken();

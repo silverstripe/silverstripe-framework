@@ -1337,9 +1337,6 @@ class Form extends ViewableData implements HasRequestHandler
      *  do not want them parsed as submitted data. MERGE_AS_SUBMITTED_VALUE does the opposite and forces the data to be
      *  parsed as it would be submitted from a form.
      *
-     *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
-     *  MERGE_CLEAR_MISSING
-     *
      * @param array $fieldList An optional list of fields to process.  This can be useful when you have a
      * form that has some fields that save to one object, and some that save to another.
      * @return $this
@@ -1353,8 +1350,20 @@ class Form extends ViewableData implements HasRequestHandler
 
         // Handle the backwards compatible case of passing "true" as the second argument
         if ($mergeStrategy === true) {
+            Deprecation::notice(
+                '5.4.0',
+                'Passing `true` to the $mergeStrategy argument in ' . Form::class . '::loadDataFrom() is deprecated.'
+                    . ' Pass ' . Form::class . '::MERGE_CLEAR_MISSING instead.',
+                Deprecation::SCOPE_GLOBAL
+            );
             $mergeStrategy = Form::MERGE_CLEAR_MISSING;
         } elseif ($mergeStrategy === false) {
+            Deprecation::notice(
+                '5.4.0',
+                'Passing `false` to the $mergeStrategy argument in ' . Form::class . '::loadDataFrom() is deprecated.'
+                    . ' Pass 0 instead.',
+                Deprecation::SCOPE_GLOBAL
+            );
             $mergeStrategy = 0;
         }
 
