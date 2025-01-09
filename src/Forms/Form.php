@@ -1338,32 +1338,8 @@ class Form extends ModelData implements HasRequestHandler, ValidationInterface
      * form that has some fields that save to one object, and some that save to another.
      * @return $this
      */
-    public function loadDataFrom($data, $mergeStrategy = 0, $fieldList = null)
+    public function loadDataFrom(object|array $data, int $mergeStrategy = 0, array $fieldList = [])
     {
-        if (!is_object($data) && !is_array($data)) {
-            user_error("Form::loadDataFrom() not passed an array or an object", E_USER_WARNING);
-            return $this;
-        }
-
-        // Handle the backwards compatible case of passing "true" as the second argument
-        if ($mergeStrategy === true) {
-            Deprecation::notice(
-                '5.4.0',
-                'Passing `true` to the $mergeStrategy argument in ' . Form::class . '::loadDataFrom() is deprecated.'
-                    . ' Pass ' . Form::class . '::MERGE_CLEAR_MISSING instead.',
-                Deprecation::SCOPE_GLOBAL
-            );
-            $mergeStrategy = Form::MERGE_CLEAR_MISSING;
-        } elseif ($mergeStrategy === false) {
-            Deprecation::notice(
-                '5.4.0',
-                'Passing `false` to the $mergeStrategy argument in ' . Form::class . '::loadDataFrom() is deprecated.'
-                    . ' Pass 0 instead.',
-                Deprecation::SCOPE_GLOBAL
-            );
-            $mergeStrategy = 0;
-        }
-
         // If an object is passed, save it for historical reference through {@link getRecord()}
         // Also use this to determine if we are loading a submitted form, or loading
         // from a record
@@ -1392,7 +1368,7 @@ class Form extends ModelData implements HasRequestHandler, ValidationInterface
             $name = $field->getName();
 
             // Skip fields that have been excluded
-            if ($fieldList && !in_array($name, $fieldList ?? [])) {
+            if (!empty($fieldList) && !in_array($name, $fieldList)) {
                 continue;
             }
 

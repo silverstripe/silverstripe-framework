@@ -207,16 +207,9 @@ class MySQLDatabase extends Database implements TransactionManager
             }
         }
 
-        // Always ensure that only pages with ShowInSearch = 1 can be searched
+        // Always ensure that only pages/files with ShowInSearch = 1 can be searched
         $extraFilters[$pageClass] .= " AND ShowInSearch <> 0";
-
-        // File.ShowInSearch was added later, keep the database driver backwards compatible
-        // by checking for its existence first
-        $fileTable = DataObject::getSchema()->tableName($fileClass);
-        $fields = $this->getSchemaManager()->fieldList($fileTable);
-        if (array_key_exists('ShowInSearch', $fields ?? [])) {
-            $extraFilters[$fileClass] .= " AND ShowInSearch <> 0";
-        }
+        $extraFilters[$fileClass] .= " AND ShowInSearch <> 0";
 
         $limit = (int)$start . ", " . (int)$pageLength;
 
