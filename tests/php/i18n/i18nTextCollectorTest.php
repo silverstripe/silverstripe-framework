@@ -974,4 +974,50 @@ PHP;
         $this->assertArrayHasKey("{$otherRoot}/code/i18nTestModuleDecorator.php", $otherFiles);
         $this->assertArrayHasKey("{$otherRoot}/templates/i18nOtherModule.ss", $otherFiles);
     }
+
+    public function testItCanCollectVariables()
+    {
+        $c = i18nTextCollector::create();
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
+
+        $php = <<<'PHP'
+        $concatdouble = "t" . "est" . "";
+        $concat = 't' . 'e' . 's'
+            . 't' ;
+        $str = 'wrong';
+        $str = 'test';
+        _t('TestEntity.CONCATDBLKEY', $concatdouble);
+        _t('TestEntity.CONCATKEY', $concat);
+        _t('TestEntity.VARKEY', $str);
+        _t('TestEntity.REGULARKEY', 'test');
+PHP;
+
+        $collectedTranslatables = $c->collectFromCode($php, null, $mymodule);
+        $this->assertEquals([
+            'TestEntity.CONCATDBLKEY' => "test",
+            'TestEntity.CONCATKEY' => "test",
+            'TestEntity.VARKEY' => "test",
+            'TestEntity.REGULARKEY' => "test",
+        ], $collectedTranslatables);
+    }
+
+    public function testItCanUseVariableAsContext()
+    {
+        $c = i18nTextCollector::create();
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
+
+        $php = <<<'PHP'
+        $args = ['type' => 'var'];
+        _t('TestEntity.VARCONTEXT', 'test {type}', $args);
+        _t('TestEntity.VARIADICCONTEXT', 'test {type}', ...$args);
+        _t('TestEntity.REGULARCONTEXT', 'test {type}', ['type' => 'var']);
+PHP;
+
+        $collectedTranslatables = $c->collectFromCode($php, null, $mymodule);
+        $this->assertEquals([
+            'TestEntity.VARCONTEXT' => "test {type}",
+            'TestEntity.VARIADICCONTEXT' => "test {type}",
+            'TestEntity.REGULARCONTEXT' => "test {type}",
+        ], $collectedTranslatables);
+    }
 }
