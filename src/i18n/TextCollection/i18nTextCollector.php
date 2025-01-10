@@ -924,9 +924,14 @@ class i18nTextCollector
         return $entities;
     }
 
+    /**
+     * Fixed quoting escapes, and remove leading/trailing quotes
+     * @throws LogicException if there is no single or double quotes
+     * @param string $text
+     * @return string
+     */
     private function processString(string $text): string
     {
-        // Fixed quoting escapes, and remove leading/trailing quotes
         if (preg_match('/^\'(?<text>.*)\'$/s', $text ?? '', $matches)) {
             $text = preg_replace_callback(
                 '/\\\\([\\\\\'])/s', // only \ and '
