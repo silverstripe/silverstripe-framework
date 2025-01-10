@@ -17,14 +17,6 @@ class HTTP
     use Configurable;
 
     /**
-     * Set to true to disable all deprecated HTTP Cache settings
-     *
-     * @var bool
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
-     */
-    private static $ignoreDeprecatedCaching = false;
-
-    /**
      * Mapping of extension to mime types
      *
      * @var array

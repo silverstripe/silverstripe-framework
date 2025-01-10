@@ -6,7 +6,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\SessionManager\Models\LoginSession;
-use SilverStripe\Dev\Deprecation;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class RememberLoginHashTest extends SapphireTest
@@ -111,18 +110,12 @@ class RememberLoginHashTest extends SapphireTest
 
         $member = $this->objFromFixture(Member::class, 'main');
 
-        Deprecation::withSuppressedNotice(
-            fn() => RememberLoginHash::config()->set('replace_token_during_session_renewal', $replaceToken)
-        );
-
         $hash = RememberLoginHash::generate($member);
         $oldToken = $hash->getToken();
         $oldHash = $hash->Hash;
 
         // Fetch the token from the DB - otherwise we still have the token from when this was originally created
         $storedHash = RememberLoginHash::get()->find('ID', $hash->ID);
-
-        Deprecation::withSuppressedNotice(fn() => $storedHash->renew());
 
         if ($replaceToken) {
             $this->assertNotEquals($oldToken, $storedHash->getToken());

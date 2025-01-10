@@ -6,7 +6,6 @@ use DateInterval;
 use DateTime;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Persists a token associated with a device for users who opted for the "Remember Me"

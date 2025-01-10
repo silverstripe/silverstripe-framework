@@ -7,7 +7,6 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\Model\List\SS_List;

@@ -29,8 +29,6 @@ class SQLSelectTest extends SapphireTest
         SQLSelectTest\CteRecursiveObject::class,
     ];
 
-    protected $oldDeprecation = null;
-
     public function testCount()
     {
 

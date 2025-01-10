@@ -19,7 +19,6 @@ use InvalidArgumentException;
 use Exception;
 use LogicException;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataQuery;
 
 /**

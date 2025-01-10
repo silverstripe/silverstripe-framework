@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Logging\MonologErrorHandler;
-use SilverStripe\Dev\Deprecation;
 
 class MonologErrorHandlerTest extends SapphireTest
 {
@@ -20,9 +19,6 @@ class MonologErrorHandlerTest extends SapphireTest
 
     public function testSetLoggerResetsStack()
     {
-        if (Deprecation::isEnabled()) {
-            $this->markTestSkipped('Test calls deprecated code');
-        }
         /** @var LoggerInterface $logger */
         $logger = $this->createMock(LoggerInterface::class);
 

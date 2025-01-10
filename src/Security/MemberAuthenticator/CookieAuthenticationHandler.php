@@ -10,7 +10,6 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * Authenticate a member passed on a session cookie
