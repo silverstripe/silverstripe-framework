@@ -619,28 +619,53 @@ class i18nTextCollector
         $currentUse = null;
         $currentUseAlias = null;
         $inVar = null;
+        $inVarText = '';
         $stringVariables = [];
         foreach ($tokens as $token) {
             // Shuffle last token to $lastToken
             $previousToken = $thisToken;
             $thisToken = $token;
 
+            // Track string variables
+            // Store when reaching end of statement if we have content
+            if ($token === ";" && $inVar) {
+                if ($inVarText) {
+                    $stringVariables[$inVar] = $inVarText;
+                }
+                $inVar = null;
+                continue;
+            }
+            // End track string variables
+
+            // Not all tokens are returned as an array.
+            // If a token is not variable, but instead it is one particular constant string, it is returned as a string instead.
+            // You don't get a line number.
+            // This is the case for braces( "{", "}"), parentheses ("(", ")"), brackets ("[", "]"), comma (","), semi-colon (";")...
             if (is_array($token)) {
                 list($id, $text, $lineNo) = $token;
                 // minus 2 is used so the the line we get corresponds with what number token_get_all() returned
                 $line = $lines[$lineNo - 2] ?? '';
 
+                // Ignore whitespace
+                if ($id === T_WHITESPACE) {
+                    continue;
+                }
+
                 // Track string variables
-                if ($id === T_VARIABLE) {
-                    $inVar = $text;
+                if (!$inTransFn) {
+                    if ($id === T_VARIABLE) {
+                        $inVar = $text;
+                        $inVarText = '';
+                        continue;
+                    }
+                    if ($id === T_CONSTANT_ENCAPSED_STRING && $inVar && $text) {
+                        // We need to call process strings because $text is like 'my' or 'string' or "my" or "string"
+                        // This can be called multiple time, eg: $str = 'my' . 'string';
+                        $inVarText .= $this->processString($text);
+                        continue;
+                    }
                 }
-                if ($id === T_CONSTANT_ENCAPSED_STRING && $inVar && $text) {
-                    $stringVariables[$inVar] = $text;
-                    $inVar = null;
-                }
-                if ($text === ';') {
-                    $inVar = null;
-                }
+                // End track string variables
 
                 // Collect use statements so we can get fully qualified class names
                 // Note that T_USE will match both use statements and anonymous functions with the "use" keyword
