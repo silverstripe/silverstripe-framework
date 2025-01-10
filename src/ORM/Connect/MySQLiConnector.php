@@ -306,7 +306,12 @@ class MySQLiConnector extends DBConnector
             }
 
             // Safely execute the statement
-            $statement->execute();
+            try {
+                $statement->execute();
+            } catch (mysqli_sql_exception $e) {
+                $success = false;
+                $this->databaseError($e->getMessage(), E_USER_ERROR, $sql, $parameters);
+            }
         }
 
         if (!$success || $statement->error) {
