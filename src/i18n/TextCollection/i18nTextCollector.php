@@ -786,12 +786,8 @@ class i18nTextCollector
 
                     // It's translated, continue
                     if ($stringValue) {
-                        $stringValue = $this->processString($stringValue);
-                        // Deal with ''
-                        if ($stringValue) {
-                            $currentEntity[] = $stringValue;
-                            continue;
-                        }
+                        $currentEntity[] = $stringValue;
+                        continue;
                     }
                 }
 
