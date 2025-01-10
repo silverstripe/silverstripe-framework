@@ -45,7 +45,6 @@ class YamlReaderTest extends SapphireTest
     {
         $path = __DIR__ . '/i18nTest/_fakewebroot/i18ntestmodule/lang/en_corrupt.yml';
         $this->expectException(InvalidResourceException::class);
-        // Error parsing YAML, invalid file "...\tests\php\i18n/i18nTest/_fakewebroot/i18ntestmodule/lang/en_corrupt.yml". Message: A colon cannot be used in an unquoted mapping value at line 5 (near "  - Invalid # this should throw "A colon cannot be used in an unquoted mapping value at line 5"").
         $this->expectExceptionMessageMatches('@^Error parsing YAML, invalid file \".*en_corrupt\.yml\"\. Message: ([\w ].*) line 5 @');
         $reader = new YamlReader();
         $reader->read('en', $path);
