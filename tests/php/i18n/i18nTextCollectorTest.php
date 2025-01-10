@@ -40,6 +40,25 @@ class i18nTextCollectorTest extends SapphireTest
         parent::tearDown();
     }
 
+    /**
+     * This helper function allows to expect error messages in a PHPUnit 10 compatible way
+     * @param string $message
+     * @param callable $callback
+     * @param mixed ...$args
+     * @return void
+     */
+    protected function assertThrowableMessage(
+        string $message,
+        callable $callback,
+        ...$args
+    ): void {
+        try {
+            $callback(...$args);
+        } catch (\Throwable $e) {
+            $this->assertEquals($message, $e->getMessage());
+        }
+    }
+
     public function testConcatenationInEntityValues()
     {
         $c = i18nTextCollector::create();
@@ -115,10 +134,9 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3');
-
-        $c->collectFromTemplate($html, null, $mymodule);
+        $this->assertThrowableMessage('Missing localisation default for key i18nTestModule.INJECTIONS_3', function () use ($c, $html, $mymodule) {
+            $c->collectFromTemplate($html, null, $mymodule);
+        });
     }
 
     public function testCollectFromTemplateSimple()
@@ -130,7 +148,7 @@ SS;
 <%t Test.SINGLEQUOTE 'Single Quote' %>
 SS;
         $this->assertEquals(
-            [ 'Test.SINGLEQUOTE' => 'Single Quote' ],
+            ['Test.SINGLEQUOTE' => 'Single Quote'],
             $c->collectFromTemplate($html, null, $mymodule)
         );
 
@@ -138,7 +156,7 @@ SS;
 <%t   Test.DOUBLEQUOTE "Double Quote and Spaces"    %>
 SS;
         $this->assertEquals(
-            [ 'Test.DOUBLEQUOTE' => "Double Quote and Spaces" ],
+            ['Test.DOUBLEQUOTE' => "Double Quote and Spaces"],
             $c->collectFromTemplate($html, null, $mymodule)
         );
 
@@ -146,7 +164,7 @@ SS;
 <%t Test.NOSEMICOLON "No Semicolon" %>
 SS;
         $this->assertEquals(
-            [ 'Test.NOSEMICOLON' => "No Semicolon" ],
+            ['Test.NOSEMICOLON' => "No Semicolon"],
             $c->collectFromTemplate($html, null, $mymodule)
         );
     }
@@ -161,7 +179,7 @@ SS;
 <%t Test.PRIOANDCOMMENT ' Prio and Value with "Double Quotes"' is 'Comment with "Double Quotes"' %>
 SS;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => [
+            ['Test.PRIOANDCOMMENT' => [
                 'default' => ' Prio and Value with "Double Quotes"',
                 'comment' => 'Comment with "Double Quotes"',
             ]],
@@ -172,7 +190,7 @@ SS;
 <%t Test.PRIOANDCOMMENT " Prio and Value with 'Single Quotes'" is "Comment with 'Single Quotes'" %>
 SS;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => [
+            ['Test.PRIOANDCOMMENT' => [
                 'default' => " Prio and Value with 'Single Quotes'",
                 'comment' => "Comment with 'Single Quotes'",
             ]],
@@ -190,10 +208,9 @@ SS;
 
         // Test warning is raised on empty default
         $c->setWarnOnEmptyDefault(true);
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing localisation default for key Test.PRIOANDCOMMENT');
-
-        $c->collectFromTemplate($html, 'Test', $mymodule);
+        $this->assertThrowableMessage('Missing localisation default for key Test.PRIOANDCOMMENT', function () use ($c, $html, $mymodule) {
+            $c->collectFromTemplate($html, 'Test', $mymodule);
+        });
     }
 
 
@@ -206,7 +223,7 @@ SS;
 _t('Test.SINGLEQUOTE','Single Quote');
 PHP;
         $this->assertEquals(
-            [ 'Test.SINGLEQUOTE' => 'Single Quote' ],
+            ['Test.SINGLEQUOTE' => 'Single Quote'],
             $c->collectFromCode($php, null, $mymodule)
         );
 
@@ -214,7 +231,7 @@ PHP;
 _t(  "Test.DOUBLEQUOTE", "Double Quote and Spaces"   );
 PHP;
         $this->assertEquals(
-            [ 'Test.DOUBLEQUOTE' => "Double Quote and Spaces" ],
+            ['Test.DOUBLEQUOTE' => "Double Quote and Spaces"],
             $c->collectFromCode($php, null, $mymodule)
         );
     }
@@ -231,7 +248,7 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            [ 'Test.NEWLINES' => "New Lines" ],
+            ['Test.NEWLINES' => "New Lines"],
             $c->collectFromCode($php, null, $mymodule)
         );
 
@@ -262,10 +279,10 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => [
+            ['Test.PRIOANDCOMMENT' => [
                 'default' => " Value with 'Single Quotes'",
                 'comment' => "Comment with 'Single Quotes'"
-            ] ],
+            ]],
             $c->collectFromCode($php, null, $mymodule)
         );
 
@@ -276,7 +293,7 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => "Value with 'Escaped Single Quotes'" ],
+            ['Test.PRIOANDCOMMENT' => "Value with 'Escaped Single Quotes'"],
             $c->collectFromCode($php, null, $mymodule)
         );
 
@@ -289,7 +306,7 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => "Doublequoted Value with 'Unescaped Single Quotes'"],
+            ['Test.PRIOANDCOMMENT' => "Doublequoted Value with 'Unescaped Single Quotes'"],
             $c->collectFromCode($php, null, $mymodule)
         );
     }
@@ -456,8 +473,9 @@ Line 2'
 PHP;
 
         $eol = PHP_EOL;
+        $php = str_replace("\n", PHP_EOL, $php);
         $this->assertEquals(
-            [ 'Test.NEWLINESINGLEQUOTE' => "Line 1{$eol}Line 2" ],
+            ['Test.NEWLINESINGLEQUOTE' => "Line 1{$eol}Line 2"],
             $c->collectFromCode($php, null, $mymodule)
         );
 
@@ -468,8 +486,9 @@ _t(
 Line 2"
 );
 PHP;
+        $php = str_replace("\n", PHP_EOL, $php);
         $this->assertEquals(
-            [ 'Test.NEWLINEDOUBLEQUOTE' => "Line 1{$eol}Line 2" ],
+            ['Test.NEWLINEDOUBLEQUOTE' => "Line 1{$eol}Line 2"],
             $c->collectFromCode($php, null, $mymodule)
         );
     }
@@ -523,14 +542,13 @@ PHP;
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
         // Test warning is raised on empty default
-        $this->expectNotice();
-        $this->expectNoticeMessage('Missing localisation default for key i18nTestModule.INJECTIONS4');
-
-        $php = <<<PHP
-_t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
+        $this->assertThrowableMessage('Missing localisation default for key i18nTestModule.INJECTIONS4', function () use ($c, $mymodule) {
+            $php = <<<PHP
+            _t('i18nTestModule.INJECTIONS4', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 PHP;
-        $c->setWarnOnEmptyDefault(true);
-        $c->collectFromCode($php, null, $mymodule);
+            $c->setWarnOnEmptyDefault(true);
+            $c->collectFromCode($php, null, $mymodule);
+        });
     }
 
     public function testUncollectableCode()
@@ -547,7 +565,7 @@ PHP;
         $collectedTranslatables = $c->collectFromCode($php, null, $mymodule);
 
         // Only one item is collectable
-        $expectedArray = [ 'Collectable.KEY4' => 'Default' ];
+        $expectedArray = ['Collectable.KEY4' => 'Default'];
         $this->assertEquals($expectedArray, $collectedTranslatables);
     }
 
@@ -945,34 +963,38 @@ PHP;
 
         // Non-standard modules can't be safely filtered, so just index everything
         $nonStandardFiles = $collector->getFileListForModule_Test('i18nnonstandardmodule');
-        $nonStandardRoot = $this->alternateBasePath . '/i18nnonstandardmodule';
+        $nonStandardRoot = $this->alternateBasePath . DIRECTORY_SEPARATOR . 'i18nnonstandardmodule';
         $this->assertEquals(3, count($nonStandardFiles ?? []));
-        $this->assertArrayHasKey("{$nonStandardRoot}/_config.php", $nonStandardFiles);
+        $this->assertArrayHasKey("{$nonStandardRoot}/_config.php", $nonStandardFiles, "Files are :" . json_encode($nonStandardFiles));
         $this->assertArrayHasKey("{$nonStandardRoot}/phpfile.php", $nonStandardFiles);
         $this->assertArrayHasKey("{$nonStandardRoot}/template.ss", $nonStandardFiles);
 
         // Normal module should have predictable dir structure
         $testFiles = $collector->getFileListForModule_Test('i18ntestmodule');
-        $testRoot = $this->alternateBasePath . '/i18ntestmodule';
+        $testRoot = $this->alternateBasePath . DIRECTORY_SEPARATOR . 'i18ntestmodule';
+        $codeRoot = $testRoot . DIRECTORY_SEPARATOR . 'code';
+        $templatesRoot = $testRoot . DIRECTORY_SEPARATOR . 'templates';
         $this->assertEquals(7, count($testFiles ?? []));
         // Code in code folder is detected
-        $this->assertArrayHasKey("{$testRoot}/code/i18nTestModule.php", $testFiles);
-        $this->assertArrayHasKey("{$testRoot}/code/subfolder/_config.php", $testFiles);
-        $this->assertArrayHasKey("{$testRoot}/code/subfolder/i18nTestSubModule.php", $testFiles);
-        $this->assertArrayHasKey("{$testRoot}/code/subfolder/i18nTestNamespacedClass.php", $testFiles);
+        $this->assertArrayHasKey("{$codeRoot}/i18nTestModule.php", $testFiles, "Files are :" . json_encode($testFiles));
+        $this->assertArrayHasKey("{$codeRoot}/subfolder/_config.php", $testFiles);
+        $this->assertArrayHasKey("{$codeRoot}/subfolder/i18nTestSubModule.php", $testFiles);
+        $this->assertArrayHasKey("{$codeRoot}/subfolder/i18nTestNamespacedClass.php", $testFiles);
         // Templates in templates folder is detected
-        $this->assertArrayHasKey("{$testRoot}/templates/Includes/i18nTestModuleInclude.ss", $testFiles);
-        $this->assertArrayHasKey("{$testRoot}/templates/Layout/i18nTestModule.ss", $testFiles);
-        $this->assertArrayHasKey("{$testRoot}/templates/i18nTestModule.ss", $testFiles);
+        $this->assertArrayHasKey("{$templatesRoot}/Includes/i18nTestModuleInclude.ss", $testFiles);
+        $this->assertArrayHasKey("{$templatesRoot}/Layout/i18nTestModule.ss", $testFiles);
+        $this->assertArrayHasKey("{$templatesRoot}/i18nTestModule.ss", $testFiles);
 
         // Standard modules with code in odd places should only have code in those directories detected
         $otherFiles = $collector->getFileListForModule_Test('i18nothermodule');
-        $otherRoot = $this->alternateBasePath . '/i18nothermodule';
+        $otherRoot = $this->alternateBasePath . DIRECTORY_SEPARATOR . 'i18nothermodule';
+        $codeRoot = $otherRoot . DIRECTORY_SEPARATOR . 'code';
+        $templatesRoot = $otherRoot . DIRECTORY_SEPARATOR . 'templates';
         $this->assertEquals(4, count($otherFiles ?? []));
         // Only detect well-behaved files
-        $this->assertArrayHasKey("{$otherRoot}/code/i18nOtherModule.php", $otherFiles);
-        $this->assertArrayHasKey("{$otherRoot}/code/i18nProviderClass.php", $otherFiles);
-        $this->assertArrayHasKey("{$otherRoot}/code/i18nTestModuleDecorator.php", $otherFiles);
-        $this->assertArrayHasKey("{$otherRoot}/templates/i18nOtherModule.ss", $otherFiles);
+        $this->assertArrayHasKey("{$codeRoot}/i18nOtherModule.php", $otherFiles, "Files are :" . json_encode($otherFiles));
+        $this->assertArrayHasKey("{$codeRoot}/i18nProviderClass.php", $otherFiles);
+        $this->assertArrayHasKey("{$codeRoot}/i18nTestModuleDecorator.php", $otherFiles);
+        $this->assertArrayHasKey("{$templatesRoot}/i18nOtherModule.ss", $otherFiles);
     }
 }
