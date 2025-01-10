@@ -610,7 +610,7 @@ class ClassManifest
         // Note: $classes, $interfaces and $traits arrays have correct-case keys, not lowercase
         $changed = false;
         if ($this->cache
-            && ($data = $this->cache->get($key))
+            && ($data = $this->filesCache[$key] ?? null)
             && $this->validateItemCache($data)
         ) {
             $classes = $data['classes'];
