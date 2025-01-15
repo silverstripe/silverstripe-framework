@@ -6,6 +6,8 @@ use mysqli_driver;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\DatabaseException;
+use SilverStripe\ORM\Connect\DuplicateEntryException;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
 use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
@@ -43,11 +45,41 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
 
         $config = DB::getConfig();
 
+        // NOTE this also runs for MariaDB.
         if (strtolower(substr($config['type'] ?? '', 0, 5)) !== 'mysql') {
             $this->markTestSkipped("The test only relevant for MySQL - but $config[type] is in use");
         }
 
+        // Build a table for the duplicate entry tests
+        DB::get_schema()->schemaUpdate(function () {
+            DB::quiet(true);
+            DB::require_table(
+                'duplicate_entry_table',
+                [
+                    'ID' => 'PrimaryKey',
+                    'Title' => 'Varchar',
+                    'Name' => 'Varchar',
+                ],
+                [
+                    'MyIndex' => [
+                        'type' => 'unique',
+                        'columns' => ['Title', 'Name'],
+                    ],
+                ],
+                options: DataObject::config()->get('create_table_options')
+            );
+        });
+
         $this->config = $config;
+    }
+
+    protected function tearDown(): void
+    {
+        DB::get_schema()->schemaUpdate(function () {
+            DB::quiet(true);
+            DB::get_schema()->dontRequireTable('duplicate_entry_table');
+        });
+        parent::tearDown();
     }
 
     /**
@@ -143,24 +175,91 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $this->assertEquals('rst', $result[1][0]);
     }
 
-    public function testQueryThrowsDatabaseErrorOnMySQLiError()
+    public function provideQueryThrowsException()
+    {
+        return [
+            [
+                // Uses errors, not exceptions
+                'reportMode' => MYSQLI_REPORT_OFF,
+            ],
+            [
+                // Uses exceptions. This is the default since PHP 8.1
+                // See https://www.php.net/manual/en/mysqli-driver.report-mode.php
+                'reportMode' => MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideQueryThrowsException
+     */
+    public function testQueryThrowsDatabaseError(int $reportMode): void
     {
         $connector = $this->getConnector();
         $driver = new mysqli_driver();
         // The default with PHP >= 8.0
-        $driver->report_mode = MYSQLI_REPORT_OFF;
-        $this->expectException(DatabaseException::class);
+        $driver->report_mode = $reportMode;
         $connector = $this->getConnector(null, null, true);
+        $this->expectException(DatabaseException::class);
         $connector->query('force an error with invalid SQL');
     }
 
-    public function testQueryThrowsDatabaseErrorOnMySQLiException()
+    /**
+     * @dataProvider provideQueryThrowsException
+     */
+    public function testQueryThrowsDuplicateEntryException(int $reportMode): void
     {
+        $connector = $this->getConnector();
         $driver = new mysqli_driver();
-        // The default since PHP 8.1 - https://www.php.net/manual/en/mysqli-driver.report-mode.php
-        $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
-        $this->expectException(DatabaseException::class);
+        $driver->report_mode = $reportMode;
+        $connector = DB::get_conn();
+        // Create the first item
+        $connector->query('INSERT INTO duplicate_entry_table (Title, Name) VALUES (\'My Title\', \'My Name\');');
+        $this->expectException(DuplicateEntryException::class);
+        // Create the duplicate item
+        $connector->query('INSERT INTO duplicate_entry_table (Title, Name) VALUES (\'My Title\', \'My Name\');');
+    }
+
+    /**
+     * @dataProvider provideQueryThrowsException
+     */
+    public function testPreparedQueryThrowsDatabaseError(int $reportMode): void
+    {
+        $connector = $this->getConnector();
+        $driver = new mysqli_driver();
+        $driver->report_mode = $reportMode;
         $connector = $this->getConnector(null, null, true);
-        $connector->query('force an error with invalid SQL');
+        $this->expectException(DatabaseException::class);
+        $connector->preparedQuery('force an error with invalid SQL', []);
+    }
+
+    /**
+     * @dataProvider provideQueryThrowsException
+     */
+    public function testPreparedQueryThrowsDuplicateEntryException(int $reportMode): void
+    {
+        $connector = $this->getConnector();
+        $driver = new mysqli_driver();
+        $driver->report_mode = $reportMode;
+        $connector = DB::get_conn();
+        // Create the first item
+        $connector->preparedQuery('INSERT INTO duplicate_entry_table (Title, Name) VALUES (?, ?);', ['My Title', 'My Name']);
+        $this->expectException(DuplicateEntryException::class);
+        // Create the duplicate item
+        $connector->preparedQuery('INSERT INTO duplicate_entry_table (Title, Name) VALUES (?, ?);', ['My Title', 'My Name']);
+    }
+
+    /**
+     * @dataProvider provideQueryThrowsException
+     */
+    public function testPrepareStatementThrowsDatabaseError(int $reportMode): void
+    {
+        $connector = $this->getConnector();
+        $driver = new mysqli_driver();
+        $driver->report_mode = $reportMode;
+        $connector = $this->getConnector(null, null, true);
+        $success = false;
+        $this->expectException(DatabaseException::class);
+        $connector->prepareStatement('force an error with invalid SQL', $success);
     }
 }

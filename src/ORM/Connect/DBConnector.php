@@ -52,7 +52,7 @@ abstract class DBConnector
 
         // Format query if given
         if (!empty($sql)) {
-            $formatter = new SQLFormatter();
+            $formatter = SQLFormatter::create();
             $formattedSQL = $formatter->formatPlain($sql);
             $msg = "Couldn't run query:\n\n{$formattedSQL}\n\n{$msg}";
         }
@@ -64,6 +64,23 @@ abstract class DBConnector
         } else {
             user_error($msg ?? '', $errorLevel ?? 0);
         }
+    }
+
+    protected function duplicateEntryError(
+        string $msg,
+        ?string $keyName,
+        ?string $duplicatedValue,
+        ?string $sql = null,
+        array $parameters = []
+    ): void {
+        // Format query if given
+        if (!empty($sql)) {
+            $formatter = SQLFormatter::create();
+            $formattedSQL = $formatter->formatPlain($sql);
+            $msg = "Couldn't run query:\n\n{$formattedSQL}\n\n{$msg}";
+        }
+
+        throw new DuplicateEntryException($msg, $keyName, $duplicatedValue, $sql, $parameters);
     }
 
     /**

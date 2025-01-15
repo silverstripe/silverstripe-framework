@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use Exception;
 use mysqli;
 use mysqli_sql_exception;
 use mysqli_stmt;
@@ -65,12 +66,18 @@ class MySQLiConnector extends DBConnector
         // Record last statement for error reporting
         $statement = $this->dbConn->stmt_init();
         $this->setLastStatement($statement);
+
         try {
             $success = $statement->prepare($sql);
         } catch (mysqli_sql_exception $e) {
             $success = false;
-            $this->databaseError($e->getMessage(), E_USER_ERROR, $sql);
+            $this->throwRelevantError($e->getMessage(), $e->getCode(), E_USER_ERROR, $sql, []);
         }
+
+        if (!$success || $statement->error) {
+            $this->throwRelevantError($this->getLastError(), $this->getLastErrorCode(), E_USER_ERROR, $sql, []);
+        }
+
         return $statement;
     }
 
@@ -190,17 +197,19 @@ class MySQLiConnector extends DBConnector
     {
         $this->beforeQuery($sql);
 
-        $error = null;
+        $exception = null;
         $handle = null;
 
         try {
             // Benchmark query
             $handle = $this->dbConn->query($sql ?? '', MYSQLI_STORE_RESULT);
         } catch (mysqli_sql_exception $e) {
-            $error = $e->getMessage();
+            $exception = $e;
         } finally {
             if (!$handle || $this->dbConn->error) {
-                $this->databaseError($error ?? $this->getLastError(), $errorLevel, $sql);
+                $errorMsg = $exception ? $exception->getMessage() : $this->getLastError();
+                $errorCode = $exception ? $exception->getCode() : $this->getLastErrorCode();
+                $this->throwRelevantError($errorMsg, $errorCode, $errorLevel, $sql, []);
                 return null;
             }
         }
@@ -319,13 +328,13 @@ class MySQLiConnector extends DBConnector
                 $statement->execute();
             } catch (mysqli_sql_exception $e) {
                 $success = false;
-                $this->databaseError($e->getMessage(), E_USER_ERROR, $sql, $parameters);
+                $this->throwRelevantError($e->getMessage(), $e->getCode(), $errorLevel, $sql, $parameters);
             }
         }
 
         if (!$success || $statement->error) {
             $values = $this->parameterValues($parameters);
-            $this->databaseError($this->getLastError(), $errorLevel, $sql, $values);
+            $this->throwRelevantError($this->getLastError(), $this->getLastErrorCode(), $errorLevel, $sql, $values);
             return null;
         }
 
@@ -381,5 +390,39 @@ class MySQLiConnector extends DBConnector
             return $this->lastStatement->error;
         }
         return $this->dbConn->error;
+    }
+
+    public function getLastErrorCode(): int
+    {
+        // Check if a statement was used for the most recent query
+        if ($this->lastStatement && $this->lastStatement->errno) {
+            return $this->lastStatement->errno;
+        }
+        return $this->dbConn->errno;
+    }
+
+    /**
+     * Throw the correct DatabaseException for this error
+     *
+     * @throws DatabaseException
+     */
+    private function throwRelevantError(string $message, int $code, int $errorLevel, ?string $sql, array $parameters): void
+    {
+        if ($errorLevel === E_USER_ERROR && ($code === 1062 || $code === 1586)) {
+            // error 1062 is for a duplicate entry
+            // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry
+            // error 1586 is ALSO for a duplicate entry and uses the same error message
+            // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry_with_key_name
+            preg_match('/Duplicate entry \'(?P<val>[^\']+)\' for key \'?(?P<key>[^\']+)\'?/', $message, $matches);
+            // MySQL includes the table name in the key, but MariaDB doesn't.
+            $key = $matches['key'];
+            if (str_contains($key ?? '', '.')) {
+                $parts = explode('.', $key);
+                $key = array_pop($parts);
+            }
+            $this->duplicateEntryError($message, $key, $matches['val'], $sql, $parameters);
+        } else {
+            $this->databaseError($message, $errorLevel, $sql, $parameters);
+        }
     }
 }

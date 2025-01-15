@@ -68,6 +68,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\OverriddenDataObject::class,
         DataObjectTest\InjectedDataObject::class,
         DataObjectTest\SettersAndGetters::class,
+        DataObjectTest\UniqueIndexObject::class,
     ];
 
     protected function setUp(): void
@@ -2781,5 +2782,62 @@ class DataObjectTest extends SapphireTest
 
         $databaseBackedField = $method->invokeArgs($class, [$fieldPath]);
         $this->assertSame($expected, $databaseBackedField);
+    }
+
+    public function provideExceptionForUniqueIndexViolation()
+    {
+        return [
+            'violate SingleFieldIndex only' => [
+                'fieldsRecordOne' => [
+                    'SingleField' => 'Same Value',
+                    'Name' => 'Value1',
+                    'Code' => 'Value1',
+                ],
+                'fieldsRecordTwo' => [
+                    'SingleField' => 'Same Value',
+                    'Name' => 'Value2',
+                    'Code' => 'Value2',
+                ],
+                'expectedMessage' => 'Cannot create duplicate Unique Index Object with "Single field" set to "Same Value"',
+            ],
+            'violate MultiFieldIndex only' => [
+                'fieldsRecordOne' => [
+                    'SingleField' => 'Value1',
+                    'Name' => 'Name Value',
+                    'Code' => 'Code Value',
+                ],
+                'fieldsRecordTwo' => [
+                    'SingleField' => 'Value2',
+                    'Name' => 'Name Value',
+                    'Code' => 'Code Value',
+                ],
+                'expectedMessage' => 'Cannot create duplicate Unique Index Object - at least one of the following fields need to be changed: Name, Code',
+            ],
+            'violate both indexes' => [
+                'fieldsRecordOne' => [
+                    'SingleField' => 'Same Value',
+                    'Name' => 'Name Value',
+                    'Code' => 'Code Value',
+                ],
+                'fieldsRecordTwo' => [
+                    'SingleField' => 'Same Value',
+                    'Name' => 'Name Value',
+                    'Code' => 'Code Value',
+                ],
+                'expectedMessage' => 'Cannot create duplicate Unique Index Object with "Single field" set to "Same Value"',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideExceptionForUniqueIndexViolation
+     */
+    public function testExceptionForUniqueIndexViolation(array $fieldsRecordOne, array $fieldsRecordTwo, string $expectedMessage): void
+    {
+        DataObjectTest\UniqueIndexObject::create($fieldsRecordOne)->write();
+        $record2 = DataObjectTest\UniqueIndexObject::create($fieldsRecordTwo);
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage($expectedMessage);
+        $record2->write();
     }
 }

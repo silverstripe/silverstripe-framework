@@ -24,6 +24,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\ORM\Connect\DuplicateEntryException;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -1642,13 +1643,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             }
             $this->record['LastEdited'] = $now;
 
-            // New records have their insert into the base data table done first, so that they can pass the
-            // generated primary key on to the rest of the manipulation
-            $baseTable = $this->baseTable();
-            $this->writeBaseRecord($baseTable, $now);
-
-            // Write the DB manipulation for all changed fields
-            $this->writeManipulation($baseTable, $now, $isNewRecord);
+            // Try write the changes - but throw a validation exception if we violate a unique index
+            try {
+                // New records have their insert into the base data table done first, so that they can pass the
+                // generated primary key on to the rest of the manipulation
+                $baseTable = $this->baseTable();
+                $this->writeBaseRecord($baseTable, $now);
+                // Write the DB manipulation for all changed fields
+                $this->writeManipulation($baseTable, $now, $isNewRecord);
+            } catch (DuplicateEntryException $e) {
+                throw new ValidationException($this->buildValidationResultForDuplicateEntry($e));
+            }
 
             // If there's any relations that couldn't be saved before, save them now (we have an ID here)
             $this->writeRelations();
@@ -4637,5 +4642,39 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         $service = Injector::inst()->get(RelatedDataService::class);
         return $service->findAll($this, $excludedClasses);
+    }
+
+    private function buildValidationResultForDuplicateEntry(DuplicateEntryException $exception): ValidationResult
+    {
+        $key = $exception->getKeyName();
+        $singleName = static::i18n_singular_name();
+        $indexes = DataObject::getSchema()->databaseIndexes(static::class);
+        $columns = $indexes[$key]['columns'] ?? [];
+        $validationResult = ValidationResult::create();
+        if (empty($columns)) {
+            $validationResult->addError(_t(
+                __CLASS__ . '.NO_DUPLICATE',
+                'Cannot create duplicate {type}',
+                ['type' => $singleName]
+            ));
+        } elseif (count($columns) === 1) {
+            $duplicateField = $columns[0];
+            $validationResult->addFieldError(
+                $duplicateField,
+                _t(
+                    __CLASS__ . '.NO_DUPLICATE_SINGLE_FIELD',
+                    'Cannot create duplicate {type} with "{field}" set to "{value}"',
+                    ['type' => $singleName, 'field' => $this->fieldLabel($duplicateField), 'value' => $exception->getDuplicatedValue()]
+                )
+            );
+        } else {
+            $duplicateFieldNames = array_map(fn ($column) => $this->fieldLabel($column), $columns);
+            $validationResult->addError(_t(
+                __CLASS__ . '.NO_DUPLICATE_MULTI_FIELD',
+                'Cannot create duplicate {type} - at least one of the following fields need to be changed: {fields}',
+                ['type' => $singleName, 'fields' => implode(', ', $duplicateFieldNames)]
+            ));
+        }
+        return $validationResult;
     }
 }
