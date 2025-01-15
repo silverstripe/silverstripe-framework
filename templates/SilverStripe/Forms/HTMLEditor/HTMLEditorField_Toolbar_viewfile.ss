@@ -10,7 +10,7 @@
 	</div>
 
 	<div class="ss-uploadfield-item-info">
-		<label class="ss-uploadfield-item-name">
+		<label class="form-label ss-uploadfield-item-name">
 			<span class="name" title="$Name">
 				$Name
 			</span>

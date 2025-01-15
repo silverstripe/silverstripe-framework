@@ -253,7 +253,7 @@ class PermissionCheckboxSetField extends FormField
                         $options .= "<li class=\"$extraClass\">"
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
-                            . "<label {$title}for=\"$itemID\">"
+                            . "<label class=\"form-label\" {$title}for=\"$itemID\">"
                             . "<span class=\"font-icon-$icon\"></span>"
                             . "{$value}{$inheritMessage}</label>"
                             . "</li>\n";
@@ -261,7 +261,7 @@ class PermissionCheckboxSetField extends FormField
                         $options .= "<li class=\"$extraClass\">"
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
-                            . "<label {$title}for=\"$itemID\">{$value}{$inheritMessage}</label>"
+                            . "<label class=\"form-label\" {$title}for=\"$itemID\">{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     }
                 }

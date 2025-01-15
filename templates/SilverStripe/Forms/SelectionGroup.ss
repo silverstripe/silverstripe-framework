@@ -13,7 +13,7 @@
 	<ul class="SelectionGroup<% if extraClass %> $extraClass<% end_if %>">
 	<% loop $FieldSet %>
 		<li <% if Selected %>class="selected"<% end_if %>>
-			<label>{$RadioButton} {$RadioLabel}</label>
+			<label class="form-label">{$RadioButton} {$RadioLabel}</label>
 			<% if $FieldList %>
 				$FieldHolder
 			<% end_if %>

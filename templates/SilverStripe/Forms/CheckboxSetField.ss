@@ -3,7 +3,7 @@
 		<% loop $Options %>
 			<li class="$Class" role="$Role">
 				<input id="$ID" class="checkbox" name="$Name" type="checkbox" value="$Value.ATT"<% if $isChecked %> checked="checked"<% end_if %><% if $isDisabled %> disabled="disabled"<% end_if %> />
-				<label for="$ID">$Title</label>
+				<label class="form-label" for="$ID">$Title</label>
 			</li>
 		<% end_loop %>
 	<% else %>
