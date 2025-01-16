@@ -55,14 +55,11 @@ class ClassManifest
 
     /**
      * In memory cache array for individually parsed files
-     * @var array|null
      */
     protected ?array $filesCache = null;
 
     /**
      * Key to use for files cache
-     *
-     * @var string
      */
     protected string $filesCacheKey;
 
