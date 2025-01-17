@@ -981,11 +981,16 @@ PHP;
         $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
 
         $php = <<<'PHP'
+        $zeroval = "0"; // it can collect "falsy" values
+        $concatagain = "t";;;; // lots of semicolons shouldn't cause any issue
+        $concatagain .= "est";
         $concatdouble = "t" . "est" . "";
         $concat = 't' . 'e' . 's'
-            . 't' ;
+            . 't' ; // we can use concatenation for readibility
         $str = 'wrong';
-        $str = 'test';
+        $str = 'test'; // value can be overwritten later
+        _t('TestEntity.ZEROVAL', $zeroval);
+        _t('TestEntity.CONCATAGAIN', $concatagain);
         _t('TestEntity.CONCATDBLKEY', $concatdouble);
         _t('TestEntity.CONCATKEY', $concat);
         _t('TestEntity.VARKEY', $str);
@@ -994,6 +999,8 @@ PHP;
 
         $collectedTranslatables = $c->collectFromCode($php, null, $mymodule);
         $this->assertEquals([
+            'TestEntity.ZEROVAL' => "0",
+            'TestEntity.CONCATAGAIN' => "test",
             'TestEntity.CONCATDBLKEY' => "test",
             'TestEntity.CONCATKEY' => "test",
             'TestEntity.VARKEY' => "test",
