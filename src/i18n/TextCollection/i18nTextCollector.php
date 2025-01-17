@@ -773,9 +773,9 @@ class i18nTextCollector
                     continue;
                 }
 
-                // Allow _t(Entity.Key, 'translation', $var) and expand _t(Entity.Key, $var)
+                // Allow _t(Entity.Key, 'default text', $var) and expand _t(Entity.Key, $var)
                 if ($id == T_VARIABLE && !empty($currentEntity)) {
-                    // We have a default text, eg: _t(Entity.Key, 'translation', $var)
+                    // We have a default text, eg: _t(Entity.Key, 'default text', $var)
                     if (count($currentEntity) == 2) {
                         continue;
                     }
@@ -784,7 +784,7 @@ class i18nTextCollector
                     // Try to find it _t(Entity.Key, $var)
                     $stringValue = $stringVariables[$text] ?? null;
 
-                    // It's translated, continue
+                    // It has a default translation, continue
                     if ($stringValue) {
                         $currentEntity[] = $stringValue;
                         continue;
