@@ -618,9 +618,9 @@ class i18nTextCollector
         $potentialClassName = null;
         $currentUse = null;
         $currentUseAlias = null;
-        $inVar = null;
-        $inVarText = '';
-        $stringVariables = [];
+        $inVar = null; // Tracks string variables
+        $inVarText = ''; // Tracks the content of the current string variable
+        $stringVariables = []; // Store all string variables by name
         foreach ($tokens as $token) {
             // Shuffle last token to $lastToken
             $previousToken = $thisToken;
