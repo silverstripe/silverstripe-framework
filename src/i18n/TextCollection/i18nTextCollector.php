@@ -775,7 +775,7 @@ class i18nTextCollector
 
                 // Allow _t(Entity.Key, 'translation', $var) and expand _t(Entity.Key, $var)
                 if ($id == T_VARIABLE && !empty($currentEntity)) {
-                    // We have a translation, eg: _t(Entity.Key, 'translation', $var)
+                    // We have a default text, eg: _t(Entity.Key, 'translation', $var)
                     if (count($currentEntity) == 2) {
                         continue;
                     }
