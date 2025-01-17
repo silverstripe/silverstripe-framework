@@ -658,7 +658,7 @@ class i18nTextCollector
                         $inVarText = '';
                         continue;
                     }
-                    if ($id === T_CONSTANT_ENCAPSED_STRING && $inVar && $text) {
+                    if ($id === T_CONSTANT_ENCAPSED_STRING && $inVar !== null && $text !== null) {
                         // We need to call process strings because $text is like 'my' or 'string' or "my" or "string"
                         // This can be called multiple time, eg: $str = 'my' . 'string';
                         $inVarText .= $this->processString($text);
