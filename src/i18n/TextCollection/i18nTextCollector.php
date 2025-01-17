@@ -619,6 +619,7 @@ class i18nTextCollector
         $currentUse = null;
         $currentUseAlias = null;
         $inVar = null; // Tracks string variables
+        $inVarConcat =  false; // Track if we do things $x .= 'my str'
         $inVarText = ''; // Tracks the content of the current string variable
         $stringVariables = []; // Store all string variables by name
         foreach ($tokens as $token) {
@@ -629,11 +630,15 @@ class i18nTextCollector
             // Track string variables
             // Store when reaching end of statement if we have content
             if ($token === ";" && $inVar) {
-                if ($inVarText) {
-                    $stringVariables[$inVar] = $inVarText;
+                if (strlen($inVarText) > 0) {
+                    if ($inVarConcat && isset($stringVariables[$inVar])) {
+                        $stringVariables[$inVar] .= $inVarText;
+                    } else {
+                        $stringVariables[$inVar] = $inVarText;
+                    }
                 }
                 $inVar = null;
-                continue;
+                $inVarConcat = false;
             }
             // End track string variables
 
@@ -653,6 +658,9 @@ class i18nTextCollector
 
                 // Track string variables
                 if (!$inTransFn) {
+                    if ($id === T_CONCAT_EQUAL && $inVar) {
+                        $inVarConcat = true;
+                    }
                     if ($id === T_VARIABLE) {
                         $inVar = $text;
                         $inVarText = '';
@@ -785,7 +793,7 @@ class i18nTextCollector
                     $stringValue = $stringVariables[$text] ?? null;
 
                     // It has a default translation, continue
-                    if ($stringValue) {
+                    if ($stringValue !== null) {
                         $currentEntity[] = $stringValue;
                         continue;
                     }
@@ -877,16 +885,9 @@ class i18nTextCollector
                     // Ensure key is valid before saving
                     if (!empty($currentEntity[0])) {
                         $key = $currentEntity[0];
-                        $default = '';
-                        $comment = '';
-                        if (!empty($currentEntity[1])) {
-                            $default = $currentEntity[1];
-                            if (!empty($currentEntity[2])) {
-                                $comment = $currentEntity[2];
-                            }
-                        }
-                        // Save in appropriate format
-                        if ($default) {
+                        $default = $currentEntity[1] ?? '';
+                        $comment = $currentEntity[2] ?? '';
+                        if (strlen($default) > 0) {
                             $plurals = i18n::parse_plurals($default);
                             // Use array form if either plural or metadata is provided
                             if ($plurals) {
