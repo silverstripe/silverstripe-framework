@@ -75,14 +75,6 @@ class ChangePasswordHandler extends RequestHandler
 
         // Check whether we are merely changing password, or resetting.
         if ($token !== null && $member && $member->validateAutoLoginToken($token)) {
-            $this->setSessionToken($member, $token);
-
-            // Redirect to myself, but without the hash in the URL
-            return $this->redirect($this->link);
-        }
-
-        $session = $this->getRequest()->getSession();
-        if ($session->get('AutoLoginHash')) {
             $message = DBField::create_field(
                 'HTMLFragment',
                 '<p>' . _t(
@@ -91,10 +83,12 @@ class ChangePasswordHandler extends RequestHandler
                 ) . '</p>'
             );
 
-            // Subsequent request after the "first load with hash" (see previous if clause).
+            $form = $this->changePasswordForm();
+            $form->addAutoLoginHash($member->encryptWithUserSettings($token));
+
             return [
                 'Content' => $message,
-                'Form'    => $this->changePasswordForm()
+                'Form'    => $form,
             ];
         }
 
@@ -110,7 +104,7 @@ class ChangePasswordHandler extends RequestHandler
 
             return [
                 'Content' => $message,
-                'Form'    => $this->changePasswordForm()
+                'Form'    => $this->changePasswordForm(),
             ];
         }
         // Show a friendly message saying the login token has expired
@@ -142,23 +136,6 @@ class ChangePasswordHandler extends RequestHandler
                 'You must be logged in in order to change your password!'
             )
         );
-    }
-
-
-    /**
-     * @param Member $member
-     * @param string $token
-     */
-    protected function setSessionToken($member, $token)
-    {
-        // if there is a current member, they should be logged out
-        if ($curMember = Security::getCurrentUser()) {
-            Injector::inst()->get(IdentityStore::class)->logOut();
-        }
-
-        $this->getRequest()->getSession()->regenerateSessionId();
-        // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
-        $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
     }
 
     /**
@@ -215,16 +192,13 @@ class ChangePasswordHandler extends RequestHandler
             return $this->redirectBackToForm();
         }
 
-        $session = $this->getRequest()->getSession();
         if (!$member) {
-            if ($session->get('AutoLoginHash')) {
-                $member = Member::member_from_autologinhash($session->get('AutoLoginHash'));
+            if (isset($data['AutoLoginHash'])) {
+                $member = Member::member_from_autologinhash($data['AutoLoginHash']);
             }
 
-            // The user is not logged in and no valid auto login hash is available
+            // The user is not logged in and no valid token was provided
             if (!$member) {
-                $session->clear('AutoLoginHash');
-
                 return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
             }
         }
@@ -240,7 +214,7 @@ class ChangePasswordHandler extends RequestHandler
             );
 
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-            return $this->redirectBackToForm();
+            return $this->redirectBackToForm($member->ID, $data['AutoLoginHash']);
         }
 
         // Fail if passwords do not match
@@ -254,7 +228,7 @@ class ChangePasswordHandler extends RequestHandler
             );
 
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-            return $this->redirectBackToForm();
+            return $this->redirectBackToForm($member->ID, $data['AutoLoginHash']);
         }
 
         // Check if the new password is accepted
@@ -262,7 +236,7 @@ class ChangePasswordHandler extends RequestHandler
         if (!$validationResult->isValid()) {
             $form->setSessionValidationResult($validationResult);
 
-            return $this->redirectBackToForm();
+            return $this->redirectBackToForm($member->ID, $data['AutoLoginHash']);
         }
 
         // Clear locked out status
@@ -293,8 +267,6 @@ class ChangePasswordHandler extends RequestHandler
             $identityStore->logIn($member, false, $this->getRequest());
         }
 
-        $session->clear('AutoLoginHash');
-
         // Redirect to backurl
         $backURL = $this->getBackURL();
         if ($backURL
@@ -319,10 +291,18 @@ class ChangePasswordHandler extends RequestHandler
      *
      * @return HTTPResponse
      */
-    public function redirectBackToForm()
+    public function redirectBackToForm(?int $withMemberID = null, ?string $withToken = null)
     {
         // Redirect back to form
-        $url = $this->addBackURLParam(Security::singleton()->Link('changepassword'));
+        $url = Security::singleton()->Link('changepassword');
+
+        // Include token data if performing an unauthenticated password reset
+        if ($withMemberID && $withToken) {
+            $url = Controller::join_links($url, "?m={$withMemberID}&t={$withToken}");
+        }
+
+        // Add Back URL if available
+        $url = $this->addBackURLParam($url);
 
         return $this->redirect($url);
     }

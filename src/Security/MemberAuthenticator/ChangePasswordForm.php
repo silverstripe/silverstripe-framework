@@ -79,4 +79,14 @@ class ChangePasswordForm extends Form
 
         return $actions;
     }
+
+    /**
+     * Adds a hidden field to the form with the given autologin hash, to support the "forgot password" workflow.
+     */
+    public function addAutoLoginHash(string $hash): ChangePasswordForm
+    {
+        $this->fields->push(HiddenField::create('AutoLoginHash', 'AutoLoginHash', $hash));
+
+        return $this;
+    }
 }
