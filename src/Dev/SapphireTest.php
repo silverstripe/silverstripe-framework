@@ -37,10 +37,12 @@ use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
+use SilverStripe\SupportedModules\MetaData;
 use SilverStripe\View\SSViewer;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\NullTransport;
+use SilverStripe\Core\Path;
 
 /**
  * Test case class for the Silverstripe framework.
@@ -280,21 +282,13 @@ abstract class SapphireTest extends TestCase implements TestOnly
         // Call state helpers
         static::$state->setUp($this);
 
-        // i18n needs to be set to the defaults or tests fail
-        if (class_exists(i18n::class)) {
-            i18n::set_locale(i18n::config()->uninherited('default_locale'));
-        }
+        $this->setI18nLocale();
 
         // Set default timezone consistently to avoid NZ-specific dependencies
         date_default_timezone_set('UTC');
 
-        if (class_exists(Member::class)) {
-            Member::set_password_validator(null);
-        }
-
-        if (class_exists(Cookie::class)) {
-            Cookie::config()->set('report_errors', false);
-        }
+        Member::set_password_validator(null);
+        Cookie::config()->set('report_errors', false);
 
         if (class_exists(RootURLController::class)) {
             RootURLController::reset();
@@ -1238,5 +1232,38 @@ abstract class SapphireTest extends TestCase implements TestOnly
         DBDatetime::set_mock_now($now);
 
         return $now;
+    }
+
+    /**
+     * Sets the locale which unit-tests should be run in
+     */
+    private function setI18nLocale(): void
+    {
+        $path = $this->getCurrentRelativePath();
+        $packagistName = '';
+        if (preg_match('#(^|/)vendor/([^/]+/[^/]+)/.+#', $path, $matches)) {
+            // Running unit tests of a module in the vendor folder
+            $packagistName = $matches[2];
+        } else {
+            // Running unit tests of a module or project in the root folder
+            $file = Path::join(BASE_PATH, 'composer.json');
+            if (file_exists($file)) {
+                $json = json_decode(file_get_contents($file), true);
+                $packagistName = $json['name'] ?? '';
+            }
+        }
+        $metaData = MetaData::getMetaDataByPackagistName($packagistName);
+        $isSupportedModule = !empty($metaData);
+        if ($isSupportedModule) {
+            // Anything that is in silverstripe/supported-module has unit tests in en_US
+            // Update the default_locale config in case in case any config at the project level or any
+            // installed optional module has set it to a non-en_US locale
+            i18n::config()->set('default_locale', 'en_US');
+            i18n::set_locale('en_US');
+        } else {
+            // Set the locale to the default_locale, which may have been set at project level to a
+            // non-en_US locale and the project unit tests expect that locale to be set
+            i18n::set_locale(i18n::config()->get('default_locale'));
+        }
     }
 }
