@@ -22,6 +22,9 @@ use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TeamGroup;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\Search\BasicSearchContext;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\View\ArrayData;
 
 class GridFieldFilterHeaderTest extends SapphireTest
@@ -267,5 +270,76 @@ class GridFieldFilterHeaderTest extends SapphireTest
         );
 
         $component->getSearchContext($gridField);
+    }
+
+    public function testGetBasicSearchContext(): void
+    {
+        $arrayList = new ArrayList();
+        $arrayList->setDataClass(Team::class);
+        $arrayListFilter = new GridFieldFilterHeader();
+        $arrayListGridField = new GridField('dummy', 'dummy', $arrayList);
+        $arrayListSearchContext = $arrayListFilter->getSearchContext($arrayListGridField);
+
+        $dataList = Team::get();
+        $dataListFilter = new GridFieldFilterHeader();
+        $dataListGridField = new GridField('dummy', 'dummy', $dataList);
+        $dataListSearchContext = $dataListFilter->getSearchContext($dataListGridField);
+
+        $this->assertInstanceOf(
+            BasicSearchContext::class,
+            $arrayListSearchContext,
+            'We expect a basic search context as our GridField list is provied via ArrayList'
+        );
+
+        $this->assertNotInstanceOf(
+            BasicSearchContext::class,
+            $dataListSearchContext,
+            'We expect a regular search context as our GridField list is provied via DataList'
+        );
+
+        $arrayListSearchFields = $arrayListSearchContext
+            ->getSearchFields()
+            ->column('Name');
+
+        $dataListSearchFields = $dataListSearchContext
+            ->getSearchFields()
+            ->column('Name');
+
+        $this->assertSame(
+            $arrayListSearchFields,
+            $dataListSearchFields,
+            'We expect the search fields to be the same regardless of how data is provided to the GridField'
+        );
+
+        $arrayListFilters = $arrayListSearchContext->getFilters();
+        $dataListFilters = $dataListSearchContext->getFilters();
+
+        $getFilterName = static function (SearchFilter $filter): string {
+            return $filter->getName();
+        };
+        $arrayListSearchFilterNames = array_map($getFilterName, $arrayListFilters);
+        $dataListSearchFilterNames = array_map($getFilterName, $dataListFilters);
+        $arrayListSearchFilterNames = array_values($arrayListSearchFilterNames);
+        $dataListSearchFilterNames = array_values($dataListSearchFilterNames);
+
+        $this->assertSame(
+            $arrayListSearchFilterNames,
+            $dataListSearchFilterNames,
+            'We expect the search filters to be the same regardless of how data is provided to the GridField'
+        );
+
+        $getFilterType = static function (SearchFilter $filter): string {
+            return $filter::class;
+        };
+        $arrayListSearchFilterTypes = array_map($getFilterType, $arrayListFilters);
+        $dataListSearchFilterTypes = array_map($getFilterType, $dataListFilters);
+        $arrayListSearchFilterTypes = array_values($arrayListSearchFilterTypes);
+        $dataListSearchFilterTypes = array_values($dataListSearchFilterTypes);
+
+        $this->assertNotSame(
+            $arrayListSearchFilterTypes,
+            $dataListSearchFilterTypes,
+            'We expect the search filters to be different as the filtering is different based on how data is provided to the GridField'
+        );
     }
 }

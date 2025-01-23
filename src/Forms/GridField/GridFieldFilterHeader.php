@@ -11,7 +11,10 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
+use SilverStripe\ORM\Search\BasicSearchContext;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\View\ArrayData;
@@ -283,7 +286,18 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
                     . " or implement a getDefaultSearchContext() method on $modelClass"
                 );
             }
-            $this->searchContext = $singleton->getDefaultSearchContext();
+
+            $list = $gridField->getList();
+            $searchContext = $singleton->getDefaultSearchContext();
+
+            // In case we are working with an ArrayList we need to conver the search context into a basic search context
+            // This is because the scaffolded filters are inteded to use ORM for data searching,
+            // they rely on DataList functionality which is not avaialble on an ArayList
+            if ($list instanceof ArrayList) {
+                $searchContext = $this->getBasicSearchContext($gridField, $searchContext);
+            }
+
+            $this->searchContext = $searchContext;
         }
 
         return $this->searchContext;
@@ -490,5 +504,37 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         }
 
         return ClassInfo::shortName($inst);
+    }
+
+    /**
+     * Transform search contex into basic search context (preserve all releavnt search settings)
+     *
+     * @param GridField $gridField
+     * @param SearchContext $searchContext
+     * @return BasicSearchContext
+     */
+    private function getBasicSearchContext(GridField $gridField, SearchContext $searchContext): BasicSearchContext
+    {
+        // Retrieve filters settings as these can be carried over as is
+        $defaultSearchFields = $searchContext->getSearchFields();
+        $defaultFilters = $searchContext->getFilters();
+        $list = $gridField->getList();
+
+        // Carry over any search form settings
+        $basicSearchContext = BasicSearchContext::create($list->dataClass());
+        $basicSearchContext->setFields($defaultSearchFields);
+
+        // Carry over filter configuration (make changes to filter classes so they work with ArrayList data)
+        foreach ($defaultFilters as $defaultFilter) {
+            $fieldFilter = PartialMatchFilter::create(
+            // Use name instead of full name as this plain filter doesn't understand relations
+                $defaultFilter->getName(),
+                $defaultFilter->getValue(),
+                $defaultFilter->getModifiers(),
+            );
+            $basicSearchContext->addFilter($fieldFilter);
+        }
+
+        return $basicSearchContext;
     }
 }
