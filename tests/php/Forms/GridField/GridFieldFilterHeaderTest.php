@@ -288,13 +288,13 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertInstanceOf(
             BasicSearchContext::class,
             $arrayListSearchContext,
-            'We expect a basic search context as our GridField list is provied via ArrayList'
+            'We expect a basic search context as our GridField list is provided via ArrayList'
         );
 
         $this->assertNotInstanceOf(
             BasicSearchContext::class,
             $dataListSearchContext,
-            'We expect a regular search context as our GridField list is provied via DataList'
+            'We expect a regular search context as our GridField list is provided via DataList'
         );
 
         $arrayListSearchFields = $arrayListSearchContext
