@@ -290,9 +290,9 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $list = $gridField->getList();
             $searchContext = $singleton->getDefaultSearchContext();
 
-            // In case we are working with an ArrayList we need to conver the search context into a basic search context
-            // This is because the scaffolded filters are inteded to use ORM for data searching,
-            // they rely on DataList functionality which is not avaialble on an ArayList
+            // In case we are working with an ArrayList we need to convert the search context into a basic search context
+            // This is because the scaffolded filters are intended to use ORM for data searching,
+            // they rely on DataList functionality which is not available on an ArrayList
             if ($list instanceof ArrayList) {
                 $searchContext = $this->getBasicSearchContext($gridField, $searchContext);
             }
@@ -507,7 +507,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     }
 
     /**
-     * Transform search contex into basic search context (preserve all releavnt search settings)
+     * Transform search context into basic search context (preserve all relevant search settings)
      *
      * @param GridField $gridField
      * @param SearchContext $searchContext
