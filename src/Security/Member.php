@@ -21,14 +21,17 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TreeMultiselectField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBForeignKey;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Map;
@@ -1365,28 +1368,31 @@ class Member extends DataObject
             $fields->removeByName('RememberLoginHashes');
 
             if (Permission::check('EDIT_PERMISSIONS')) {
-                // Filter allowed groups
                 $groups = Group::get();
-                $disallowedGroupIDs = $this->disallowedGroups();
-                if ($disallowedGroupIDs) {
+
+                if ($disallowedGroupIDs = $this->disallowedGroups()) {
                     $groups = $groups->exclude('ID', $disallowedGroupIDs);
                 }
-                $groupsMap = [];
-                foreach ($groups as $group) {
-                    // Listboxfield values are escaped, use ASCII char instead of &raquo;
-                    $groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
-                }
-                asort($groupsMap);
+
+                $threshold = Group::config()->get('dropdown_field_threshold');
+                $overThreshold = $groups->count() > $threshold;
+
                 $fields->addFieldToTab(
                     'Root.Main',
-                    ListboxField::create('DirectGroups', Group::singleton()->i18n_plural_name())
-                        ->setSource($groupsMap)
-                        ->setAttribute(
-                            'data-placeholder',
-                            _t(__CLASS__ . '.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
-                        )
+                    SearchableMultiDropdownField::create(
+                        'DirectGroups',
+                        Group::singleton()->i18n_plural_name(),
+                        $groups,
+                        null,
+                        'BreadcrumbTitle'
+                    )
+                        ->setIsSearchable(true)
+                        ->setUseSearchContext(true)
+                        ->setSearchContext(Group::get_search_context_for_dropdown())
+                        ->setIsLazyLoaded($overThreshold)
+                        ->setLazyLoadLimit($threshold)
+                        ->setPlaceholder(_t(__CLASS__ . '.ADDGROUP', 'Add group', 'Placeholder text for a dropdown'))
                 );
-
 
                 // Add permission field (readonly to avoid complicated group assignment logic).
                 // This should only be available for existing records, as new records start

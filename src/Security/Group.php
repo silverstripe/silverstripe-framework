@@ -23,6 +23,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextareaField;
@@ -33,6 +34,7 @@ use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\UnsavedRelationList;
 
 /**
@@ -91,6 +93,37 @@ class Group extends DataObject
         'Sort' => true,
     ];
 
+    /**
+     * Specify the limit from when groups should be lazyloaded for the SearchableDropdownField
+     *
+     * @var int
+     * @config
+     */
+    private static $dropdown_field_threshold = 100;
+
+    /**
+     * Create a search context which is used for the SearchableDropdownField
+     * in {@see Group::getCMSFields()} and {@see Member::getCMSFields()}
+     *
+     * @return SearchContext
+     */
+    public static function get_search_context_for_dropdown(): SearchContext
+    {
+        $group = Group::singleton();
+
+        return SearchContext::create(
+            Group::class,
+            FieldList::create(
+                TextField::create('Title', $group->fieldLabel('Title')),
+                TextField::create('Description', $group->fieldLabel('Description')),
+            ),
+            [
+                'Title' => 'PartialFilter',
+                'Description' => 'PartialFilter',
+            ]
+        );
+    }
+
     public function getAllChildren()
     {
         $doSet = new ArrayList();
@@ -122,6 +155,10 @@ class Group extends DataObject
      */
     public function getCMSFields()
     {
+        $groups = Group::get();
+        $threshold = Group::config()->get('dropdown_field_threshold');
+        $overThreshold = $groups->count() > $threshold;
+
         $fields = new FieldList(
             new TabSet(
                 "Root",
@@ -129,11 +166,23 @@ class Group extends DataObject
                     'Members',
                     _t(__CLASS__ . '.MEMBERS', 'Members'),
                     new TextField("Title", $this->fieldLabel('Title')),
-                    $parentidfield = DropdownField::create(
+                    $parentidfield = SearchableDropdownField::create(
                         'ParentID',
                         $this->fieldLabel('Parent'),
-                        $this->getDecodedBreadcrumbs()
-                    )->setEmptyString(' '),
+                        $groups,
+                        null,
+                        'BreadcrumbTitle'
+                    )
+                        ->setIsSearchable(true)
+                        ->setUseSearchContext(true)
+                        ->setSearchContext(Group::get_search_context_for_dropdown())
+                        ->setPlaceholder(_t(
+                            __CLASS__ . '.PARENT_GROUP_PLACEHOLDER',
+                            'Select parent group',
+                            'Placeholder text for a dropdown'
+                        ))
+                        ->setIsLazyLoaded($overThreshold)
+                        ->setLazyLoadLimit($threshold),
                     new TextareaField('Description', $this->fieldLabel('Description'))
                 ),
                 $permissionsTab = new Tab(
@@ -461,6 +510,16 @@ class Group extends DataObject
     }
 
     /**
+     * Label which can be used inside a SearchableDropdownField for example
+     *
+     * @return string
+     */
+    public function getBreadcrumbTitle(): string
+    {
+        return $this->getBreadcrumbs(' > ');
+    }
+
+    /**
      * @return string
      */
     public function getTreeTitle()
@@ -503,12 +562,12 @@ class Group extends DataObject
             }
         }
 
-        $currentGroups = Group::get()
-            ->filter('ID:not', $this->ID)
-            ->map('Code', 'Title')
-            ->toArray();
+        $hasGroupWithSameTitle = Group::get()
+            ->exclude('ID', $this->ID)
+            ->filter('Title', $this->Title)
+            ->exists();
 
-        if (in_array($this->Title, $currentGroups)) {
+        if ($hasGroupWithSameTitle) {
             $result->addError(
                 _t(
                     'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
@@ -711,16 +770,21 @@ class Group extends DataObject
      */
     private function dedupeCode(): void
     {
-        $currentGroups = Group::get()
-            ->exclude('ID', $this->ID)
-            ->map('Code', 'Title')
-            ->toArray();
         $code = $this->Code;
         $count = 2;
-        while (isset($currentGroups[$code])) {
-            $code = $this->Code . '-' . $count;
-            $count++;
+
+        if ($code) {
+            while ($this->checkIfCodeExists($code)) {
+                $code = $this->Code . '-' . $count;
+                $count++;
+            }
+
+            $this->setField('Code', $code);
         }
-        $this->setField('Code', $code);
+    }
+
+    private function checkIfCodeExists(string $code): bool
+    {
+        return Group::get()->filter('Code', $code)->exclude('ID', $this->ID)->exists();
     }
 }
