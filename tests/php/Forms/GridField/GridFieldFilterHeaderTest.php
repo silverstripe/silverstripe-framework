@@ -22,6 +22,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest\TeamGroup;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Search\BasicSearchContext;
 use SilverStripe\ORM\Search\SearchContext;
@@ -332,14 +333,15 @@ class GridFieldFilterHeaderTest extends SapphireTest
             return $filter::class;
         };
         $arrayListSearchFilterTypes = array_map($getFilterType, $arrayListFilters);
-        $dataListSearchFilterTypes = array_map($getFilterType, $dataListFilters);
-        $arrayListSearchFilterTypes = array_values($arrayListSearchFilterTypes);
-        $dataListSearchFilterTypes = array_values($dataListSearchFilterTypes);
+        $arrayListSearchFilterTypes = array_unique($arrayListSearchFilterTypes);
 
-        $this->assertNotSame(
-            $arrayListSearchFilterTypes,
-            $dataListSearchFilterTypes,
-            'We expect the search filters to be different as the filtering is different based on how data is provided to the GridField'
+        $this->assertCount(1, $arrayListSearchFilterTypes, 'We expect all filters to be of the same type');
+        $arrayListSearchFilterType = array_shift($arrayListSearchFilterTypes);
+
+        $this->assertEquals(
+            PartialMatchFilter::class,
+            $arrayListSearchFilterType,
+            'We expect partial match filters'
         );
     }
 }
