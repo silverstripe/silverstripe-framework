@@ -516,7 +516,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         $list = $gridField->getList();
 
         // Carry over any search form settings
-        $basicSearchContext = BasicSearchContext::create($list->dataClass());
+        $basicSearchContext = BasicSearchContext::create($gridField->getModelClass());
         $basicSearchContext->setFields($defaultSearchFields);
 
         // Carry over filter configuration (make changes to filter classes so they work with this list)
