@@ -275,8 +275,8 @@ class GridField extends FormField
         $hadEditButton = $copyConfig->getComponentByType(GridFieldEditButton::class) !== null;
 
         // get the whitelist for allowable readonly components
-        $allowedComponents = $this->getReadonlyComponents();
-        foreach ($this->getConfig()->getComponents() as $component) {
+        $allowedComponents = $copy->getReadonlyComponents();
+        foreach ($copy->getConfig()->getComponents() as $component) {
             // if a component doesn't exist, remove it from the readonly version.
             if (!in_array(get_class($component), $allowedComponents ?? [])) {
                 $copyConfig->removeComponent($component);
@@ -297,7 +297,7 @@ class GridField extends FormField
             }
         }
 
-        $copy->extend('afterPerformReadonlyTransformation', $this);
+        $copy->extend('afterPerformReadonlyTransformation', $copy);
 
         return $copy;
     }
@@ -1344,6 +1344,11 @@ class GridField extends FormField
                 $component->handleSave($this, $record);
             }
         }
+    }
+
+    public function __clone(): void
+    {
+        $this->config = clone $this->config;
     }
 
     /**

@@ -4176,15 +4176,15 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      * it is constructed here. Otherwise, the default filter specified in
      * {@link DBField} is used.
      *
-     * @return array
+     * @return SearchFilter[]
      */
-    public function defaultSearchFilters()
+    public function defaultSearchFilters(): array
     {
         $filters = [];
 
         foreach ($this->searchableFields() as $name => $spec) {
             if (empty($spec['filter'])) {
-                $filters[$name] = 'PartialMatchFilter';
+                $filters[$name] = Injector::inst()->create('PartialMatchFilter', $name);
             } elseif ($spec['filter'] instanceof SearchFilter) {
                 $filters[$name] = $spec['filter'];
             } else {

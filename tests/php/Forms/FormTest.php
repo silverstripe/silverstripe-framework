@@ -39,9 +39,12 @@ use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 use SilverStripe\Security\MemberAuthenticator\LostPasswordHandler;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\SudoModePasswordField;
 use SilverStripe\Security\SudoMode\SudoModeServiceInterface;
 use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\Validation\CompositeValidator;
+use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 
 class FormTest extends FunctionalTest
 {
@@ -1420,5 +1423,221 @@ class FormTest extends FunctionalTest
         } else {
             $this->assertNotEmpty($messages);
         }
+    }
+
+    /**
+     * Test cloning a form deep clones all its fields, actions, and validators.
+     */
+    public function testClone()
+    {
+        $fields = new FieldList([
+            $field1 = new CompositeField([
+                $field2 = new TextField('my-text-field', value: '123'),
+            ]),
+            $field3 = new LiteralField('literal-test', 'some content'),
+        ]);
+        $actions = new FieldList([
+            $action1 = new FormAction('some-action', 'action name'),
+        ]);
+        $validator = new CompositeValidator([
+            $childValidator1 = new RequiredFieldsValidator(['Field1', 'FieldTwo']),
+            $childValidator2 = new CompositeValidator([
+                $childValidator3 = new RequiredFieldsValidator(['Field3', 'FieldFour']),
+            ]),
+        ]);
+        $form = new Form(fields: $fields, actions: $actions, validator: $validator);
+
+        $clone = clone $form;
+
+        // Ensure clones look the same but aren't the same object
+        $this->assertNotSame($clone, $form);
+        $originalFormValues = [
+            $form->getName(),
+            $form->getAttributes(),
+            $form->extraClass(),
+        ];
+        $this->assertSame(
+            $originalFormValues,
+            [
+                $clone->getName(),
+                $clone->getAttributes(),
+                $clone->extraClass(),
+            ]
+        );
+        // Test fields
+        $cloneFields = $clone->Fields();
+        $this->assertNotSame($fields, $cloneFields);
+        $cloneField1 = $cloneFields->first();
+        $cloneField2 = $cloneField1->getChildren()->first();
+        $cloneField3 = $cloneFields->last();
+        $this->assertNotSame($field1, $cloneField1);
+        $this->assertNotSame($field2, $cloneField2);
+        $this->assertNotSame($field3, $cloneField3);
+        // Test actions
+        $cloneActions = $clone->Actions();
+        $this->assertNotSame($actions, $cloneActions);
+        $cloneAction1 = $cloneActions->first();
+        $this->assertNotSame($action1, $cloneAction1);
+        // Test validators
+        /** @var CompositeValidator $cloneValidator */
+        $cloneValidator = $clone->getValidator();
+        $cloneChildValidator1 = $cloneValidator->getValidators()[0];
+        $cloneChildValidator2 = $cloneValidator->getValidators()[1];
+        $cloneChildValidator3 = $cloneChildValidator2->getValidators()[0];
+        $this->assertNotSame($validator, $cloneValidator);
+        $this->assertNotSame($childValidator1, $cloneChildValidator1);
+        $this->assertNotSame($childValidator2, $cloneChildValidator2);
+        $this->assertNotSame($childValidator3, $cloneChildValidator3);
+        $this->assertSame(
+            [
+                $childValidator1->getRequired(),
+                $childValidator3->getRequired(),
+            ],
+            [
+                $cloneChildValidator1->getRequired(),
+                $cloneChildValidator3->getRequired(),
+            ]
+        );
+
+        // Ensure everything belongs to the right form
+        // Note FieldList doesn't have a concept of belonging to a form
+        $items = [
+            'orig' => [
+                $field1,
+                $field2,
+                $field3,
+                $action1,
+                $validator,
+                $childValidator1,
+                $childValidator2,
+                $childValidator3,
+            ],
+            'clone' => [
+                $cloneField1,
+                $cloneField2,
+                $cloneField3,
+                $cloneAction1,
+                $cloneValidator,
+                $cloneChildValidator1,
+                $cloneChildValidator2,
+                $cloneChildValidator3,
+            ],
+        ];
+        foreach ($items as $type => $list) {
+            $owner = $type === 'orig' ? $form : $clone;
+            foreach ($list as $item) {
+                $this->assertSame($owner, $item->getForm());
+            }
+        }
+
+        // Ensure changes don't affect original
+        $clone->removeExtraClass('booger')
+            ->addExtraClass('wigwam')
+            ->setName('my-form')
+            ->setAttribute('data-test', 'value2');
+        $this->assertSame(
+            $originalFormValues,
+            [
+                $form->getName(),
+                $form->getAttributes(),
+                $form->extraClass(),
+            ],
+        );
+        $this->assertSame(
+            [
+                'my-form',
+                array_merge(
+                    $form->getAttributes(),
+                    [
+                        'id' => 'Form_my-form',
+                        'class' => 'wigwam',
+                        'data-test' => 'value2',
+                    ]
+                ),
+                'wigwam',
+            ],
+            [
+                $clone->getName(),
+                $clone->getAttributes(),
+                $clone->extraClass(),
+            ]
+        );
+        // Test fields
+        $cloneField2->setValue('abba')->setName('text-field-clone');
+        $cloneField3->setContent('My literal content');
+        $this->assertSame(
+            [
+                'my-text-field',
+                '123',
+                'some content',
+            ],
+            [
+                $field2->getName(),
+                $field2->getValue(),
+                $field3->getContent(),
+            ]
+        );
+        $this->assertSame(
+            [
+                'text-field-clone',
+                'abba',
+                'My literal content',
+            ],
+            [
+                $cloneField2->getName(),
+                $cloneField2->getValue(),
+                $cloneField3->getContent(),
+            ]
+        );
+        // Test actions
+        $cloneAction1->setName('my-new-name')->setTitle('another name');
+        $this->assertSame(
+            [
+                'action_some-action',
+                'action name',
+            ],
+            [
+                $action1->getName(),
+                $action1->Title(),
+            ]
+        );
+        $this->assertSame(
+            [
+                'my-new-name',
+                'another name',
+            ],
+            [
+                $cloneAction1->getName(),
+                $cloneAction1->Title(),
+            ]
+        );
+        // Test validators
+        $cloneValidator->removeValidatorsByType(RequiredFieldsValidator::class);
+        $cloneChildValidator3->removeRequiredField('FieldFour')->addRequiredField('Field5');
+        $this->assertSame(
+            [
+                $childValidator1,
+                $childValidator2,
+            ],
+            $validator->getValidators()
+        );
+        $this->assertSame(
+            [1 => $cloneChildValidator2],
+            $cloneValidator->getValidators()
+        );
+        $this->assertSame(
+            [
+                'Field3',
+                'FieldFour',
+            ],
+            $childValidator3->getRequired()
+        );
+        $this->assertSame(
+            [
+                'Field3',
+                'Field5',
+            ],
+            $cloneChildValidator3->getRequired()
+        );
     }
 }

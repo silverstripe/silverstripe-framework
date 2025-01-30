@@ -4,16 +4,15 @@ namespace SilverStripe\Forms;
 
 use BadMethodCallException;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Core\Validation\ValidationException;
+use SilverStripe\Forms\Schema\FormSchema;
 
 class FormRequestHandler extends RequestHandler
 {
@@ -27,6 +26,7 @@ class FormRequestHandler extends RequestHandler
      * @var array
      */
     private static $allowed_actions = [
+        'getSchema',
         'handleField',
         'httpSubmission',
         'forTemplate',
@@ -37,6 +37,7 @@ class FormRequestHandler extends RequestHandler
      * @var array
      */
     private static $url_handlers = [
+        'GET schema' => 'getSchema',
         'field/$FieldName!' => 'handleField',
         'POST ' => 'httpSubmission',
         'GET ' => 'httpSubmission',
@@ -67,6 +68,18 @@ class FormRequestHandler extends RequestHandler
         }
     }
 
+    /**
+     * Gets a JSON schema representing a form.
+     */
+    public function getSchema(HTTPRequest $request): HTTPResponse
+    {
+        $schemaID = $request->getURL();
+        $parts = $request->getHeader(FormSchema::SCHEMA_HEADER);
+        $data = FormSchema::singleton()->getMultipartSchema($parts, $schemaID, $this->form);
+        $response = HTTPResponse::create(json_encode($data));
+        $response->addHeader('Content-Type', 'application/json');
+        return $response;
+    }
 
     /**
      * Get link for this form

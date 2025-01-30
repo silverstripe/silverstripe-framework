@@ -3,22 +3,14 @@
 namespace SilverStripe\Forms\GridField;
 
 use LogicException;
-use SilverStripe\Admin\FormSchemaController;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Dev\Deprecation;
-use SilverStripe\Forms\CompositeField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\Filters\PartialMatchFilter;
 use SilverStripe\ORM\Search\BasicSearchContext;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\Model\List\SS_List;
-use SilverStripe\Model\ArrayData;
-use SilverStripe\View\SSViewer;
+use SilverStripe\ORM\Search\SearchContextForm;
 
 /**
  * GridFieldFilterHeader alters the {@link GridField} with some filtering
@@ -52,7 +44,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     public function getURLHandlers($gridField)
     {
         return [
-            'GET schema/SearchForm' => 'getSearchFormSchema'
+            'GET SearchForm' => 'getSearchForm',
         ];
     }
 
@@ -119,11 +111,8 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         if ($actionName === 'filter') {
             $filterValues = $data['filter'][$gridField->getName()] ?? null;
             if ($filterValues !== null) {
-                $form = $this->getSearchForm($gridField);
-                $this->removeSearchPrefixFromFields($form->Fields());
-                $form->loadDataFrom($filterValues);
-                foreach ($filterValues as $fieldName => $rawFilterValue) {
-                    $state->Columns->$fieldName = $form->Fields()->dataFieldByName($fieldName)?->dataValue() ?? $rawFilterValue;
+                foreach ($filterValues as $fieldName => $value) {
+                    $state->Columns->$fieldName = $value;
                 }
             }
         }
@@ -158,6 +147,9 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         if (empty($filterArguments)) {
             return $dataList;
         }
+
+        $form = $this->getSearchForm($gridField);
+        $filterArguments = $form->prepareValuesForSearchContext($filterArguments);
 
         $dataListClone = clone($dataList);
         $results = $this->getSearchContext($gridField)
@@ -276,144 +268,23 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
     }
 
     /**
-     * Returns the search field schema for the component
-     *
-     * @param GridField $gridfield
-     * @return string
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\ORM\Search\SearchContextForm::getSchemaData()
+     * Returns the search form for the component if relevant
      */
-    public function getSearchFieldSchema(GridField $gridField)
+    public function getSearchForm(GridField $gridField): ?SearchContextForm
     {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\ORM\Search\SearchContextForm::getSchemaData()'
-        );
-        $schemaUrl = Controller::join_links($gridField->Link(), 'schema/SearchForm');
-        $inst = singleton($gridField->getModelClass());
-        $context = $this->getSearchContext($gridField);
-        $params = $gridField->getRequest()->postVar('filter') ?: [];
-        if (array_key_exists($gridField->getName(), $params ?? [])) {
-            $params = $params[$gridField->getName()];
-        }
-        if ($context->getSearchParams()) {
-            $params = array_merge($context->getSearchParams(), $params);
-        }
-        $context->setSearchParams($params);
+        if (!$this->searchForm) {
+            $searchContext = $this->getSearchContext($gridField);
 
-        $searchField = $this->getSearchField() ?: $inst->config()->get('general_search_field');
-        if (!$searchField) {
-            $searchField = $context->getSearchFields()->first();
-            $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
-        }
-
-        // Prefix "Search__" onto the filters to match the field names in the actual form
-        $filters = $context->getSearchParams();
-        if (!empty($filters)) {
-            $filters = array_combine(array_map(function ($key) {
-                return 'Search__' . $key;
-            }, array_keys($filters ?? [])), $filters ?? []);
-        }
-
-        $searchAction = GridField_FormAction::create($gridField, 'filter', false, 'filter', null);
-        $clearAction = GridField_FormAction::create($gridField, 'reset', false, 'reset', null);
-        $schema = [
-            'formSchemaUrl' => $schemaUrl,
-            'name' => $searchField,
-            'placeholder' => $this->getPlaceHolder($inst),
-            'filters' => $filters ?: new \stdClass, // stdClass maps to empty json object '{}'
-            'gridfield' => $gridField->getName(),
-            'searchAction' => $searchAction->getAttribute('name'),
-            'searchActionState' => $searchAction->getAttribute('data-action-state'),
-            'clearAction' => $clearAction->getAttribute('name'),
-            'clearActionState' => $clearAction->getAttribute('data-action-state'),
-        ];
-
-        return json_encode($schema);
-    }
-
-    /**
-     * Returns the search form for the component
-     *
-     * @param GridField $gridField
-     * @return Form|null
-     */
-    public function getSearchForm(GridField $gridField)
-    {
-        $searchContext = $this->getSearchContext($gridField);
-        $searchFields = $searchContext->getSearchFields();
-
-        if ($searchFields->count() === 0) {
-            return null;
-        }
-
-        if ($this->searchForm) {
-            return $this->searchForm;
-        }
-
-        $this->addSearchPrefixToFields($searchFields);
-
-        // Update field titles to match column titles
-        $columns = $gridField->getColumns();
-        foreach ($columns as $columnField) {
-            $metadata = $gridField->getColumnMetadata($columnField);
-            // Get the field name, without any modifications
-            $name = explode('.', $columnField ?? '');
-            $title = $metadata['title'];
-            $field = $searchFields->fieldByName($name[0]);
-
-            if ($field) {
-                $field->setTitle($title);
+            if ($searchContext->getSearchFields()->count() === 0) {
+                return null;
             }
+
+            $this->searchForm = SearchContextForm::create($gridField, $searchContext);
+            $this->searchForm->setHTMLID('GridField_' . $gridField->getName() . '_SearchForm');
+            $this->searchForm->addExtraClass('form--no-dividers');
         }
-
-        $this->updateFieldClasses($searchFields);
-
-        $name = $this->getTitle(singleton($gridField->getModelClass()));
-
-        $this->searchForm = $form = new Form(
-            $gridField,
-            $name . "SearchForm",
-            $searchFields,
-            new FieldList()
-        );
-
-        $form->setFormMethod('get');
-        $form->setFormAction($gridField->Link());
-        $form->addExtraClass('cms-search-form form--no-dividers');
-        $form->disableSecurityToken(); // This form is not tied to session so we disable this
-        $form->loadDataFrom($searchContext->getSearchParams());
 
         return $this->searchForm;
-    }
-
-    /**
-     * Returns the search form schema for the component
-     *
-     * @param GridField $gridfield
-     * @return HTTPResponse
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\FormRequestHandler::getSchema()
-     */
-    public function getSearchFormSchema(GridField $gridField)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\Forms\FormRequestHandler::getSchema()'
-        );
-        $form = $this->getSearchForm($gridField);
-
-        // If there are no filterable fields, return a 400 response
-        if (!$form) {
-            return new HTTPResponse(_t(__CLASS__ . '.SearchFormFaliure', 'No search form could be generated'), 400);
-        }
-
-        $parts = $gridField->getRequest()->getHeader(FormSchema::SCHEMA_HEADER);
-        $schemaID = $gridField->getRequest()->getURL();
-        $data = FormSchema::singleton()
-            ->getMultipartSchema($parts, $schemaID, $form);
-
-        $response = new HTTPResponse(json_encode($data));
-        $response->addHeader('Content-Type', 'application/json');
-        return $response;
     }
 
     /**
@@ -424,52 +295,17 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      */
     public function getHTMLFragments($gridField)
     {
-        $forTemplate = new ArrayData([]);
-
         if (!$this->canFilterAnyColumns($gridField)) {
             return null;
         }
 
-        $fieldSchema = $this->getSearchFieldSchema($gridField);
-        $forTemplate->SearchFieldSchema = $fieldSchema;
-        $searchTemplates = SSViewer::get_templates_by_class($this, '_Search', __CLASS__);
+        $form = $this->getSearchForm($gridField);
+        $isFiltered = !empty($this->getSearchContext($gridField)->getSearchParams());
+
         return [
-            'before' => $forTemplate->renderWith($searchTemplates),
-            'buttons-before-right' => sprintf(
-                '<button type="button" name="showFilter" aria-label="%s" title="%s"' .
-                ' class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>',
-                _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter"),
-                _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
-            )
+            'before' => $form->getPlaceHolder($isFiltered),
+            'buttons-before-right' => $form->getFilterButton($isFiltered),
         ];
-    }
-
-    /**
-     * Get the text that will be used as a placeholder in the search field.
-     *
-     * @param object $obj An instance of the class that will be searched against.
-     * If getPlaceHolderText is empty, this object will be used to build the placeholder
-     * e.g. 'Search "My Data Object"'
-     */
-    private function getPlaceHolder(object $obj): string
-    {
-        $placeholder = $this->getPlaceHolderText();
-        if (!empty($placeholder)) {
-            return $placeholder;
-        }
-        if ($obj) {
-            return _t(__CLASS__ . '.Search', 'Search "{name}"', ['name' => $this->getTitle($obj)]);
-        }
-        return _t(__CLASS__ . '.Search_Default', 'Search');
-    }
-
-    private function getTitle(object $inst): string
-    {
-        if (ClassInfo::hasMethod($inst, 'i18n_plural_name')) {
-            return $inst->i18n_plural_name();
-        }
-
-        return ClassInfo::shortName($inst);
     }
 
     /**
@@ -480,7 +316,6 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         // Retrieve filters settings as these can be carried over as is
         $defaultSearchFields = $searchContext->getSearchFields();
         $defaultFilters = $searchContext->getFilters();
-        $list = $gridField->getList();
 
         // Carry over any search form settings
         $basicSearchContext = BasicSearchContext::create($gridField->getModelClass());
@@ -498,41 +333,5 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
         }
 
         return $basicSearchContext;
-    }
-
-    /*
-     * Append a prefix to search field names to prevent conflicts with other fields in the search form
-     */
-    private function addSearchPrefixToFields(FieldList $fields): void
-    {
-        foreach ($fields as $field) {
-            $field->setName('Search__' . $field->getName());
-            if ($field instanceof CompositeField) {
-                $this->addSearchPrefixToFields($field->getChildren());
-            }
-        }
-    }
-
-    private function removeSearchPrefixFromFields(FieldList $fields): void
-    {
-        foreach ($fields as $field) {
-            $field->setName(str_replace('Search__', '', $field->getName()));
-            if ($field instanceof CompositeField) {
-                $this->removeSearchPrefixFromFields($field->getChildren());
-            }
-        }
-    }
-
-    /**
-     * Update CSS classes for form fields, including nested inside composite fields
-     */
-    private function updateFieldClasses(FieldList $fields): void
-    {
-        foreach ($fields as $field) {
-            $field->addExtraClass('stacked no-change-track');
-            if ($field instanceof CompositeField) {
-                $this->updateFieldClasses($field->getChildren());
-            }
-        }
     }
 }

@@ -155,4 +155,13 @@ class GridFieldConfig
         }
         return null;
     }
+
+    public function __clone(): void
+    {
+        $components = $this->components;
+        $this->components = ArrayList::create();
+        foreach ($components as $component) {
+            $this->components->add(clone $component);
+        }
+    }
 }

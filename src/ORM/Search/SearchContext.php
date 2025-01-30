@@ -18,6 +18,7 @@ use SilverStripe\Forms\CheckboxField;
 use InvalidArgumentException;
 use Exception;
 use LogicException;
+use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\DateField;
 use SilverStripe\ORM\DataQuery;
@@ -225,10 +226,8 @@ class SearchContext
 
     /**
      * Takes a search phrase or search term and searches for it across all searchable fields.
-     *
-     * @param string|array $searchPhrase
      */
-    private function generalSearchAcrossFields($searchPhrase, DataQuery $subGroup, array $searchableFields): void
+    protected function generalSearchAcrossFields(string|array $searchPhrase, DataQuery $subGroup, array $searchableFields): void
     {
         $formFields = $this->getSearchFields();
         foreach ($searchableFields as $field => $spec) {
@@ -300,7 +299,7 @@ class SearchContext
      * @param string|array $searchPhrase
      * @return DataList<T>
      */
-    private function individualFieldSearch(DataList $query, array $searchableFields, string $searchField, $searchPhrase): DataList
+    protected function individualFieldSearch(DataList $query, array $searchableFields, string $searchField, $searchPhrase): DataList
     {
         $filter = $this->getFilter($searchField);
         if (!$filter) {
@@ -344,7 +343,7 @@ class SearchContext
     /**
      * Apply a SearchFilter to a DataQuery for a given field's specifications
      */
-    private function applyFilter(SearchFilter $filter, DataQuery $dataQuery, array $searchableFieldSpec): void
+    protected function applyFilter(SearchFilter $filter, DataQuery $dataQuery, array $searchableFieldSpec): void
     {
         if ($filter->isEmpty()) {
             return;
@@ -513,6 +512,11 @@ class SearchContext
     public function getSearchParams()
     {
         return $this->searchParams;
+    }
+
+    public function getModelClass(): string
+    {
+        return $this->modelClass;
     }
 
     /**

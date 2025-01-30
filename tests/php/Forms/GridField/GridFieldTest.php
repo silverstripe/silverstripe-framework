@@ -33,6 +33,7 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\Forms\Tests\ValidatorTest\TestValidator;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 
@@ -618,5 +619,21 @@ class GridFieldTest extends SapphireTest
             $gridField->addAllStateToUrl($link),
             '/class-name/item/1?gridState-Test%5BState%5D%5BColumn%5D=Name'
         );
+    }
+
+    /**
+     * Test that cloning a GridField deep clones the components
+     */
+    public function testClone()
+    {
+        $config = new GridFieldConfig_Base();
+        $gridField = new GridField('my-gridfield', config: $config);
+        $clone = clone $gridField;
+
+        $this->assertNotSame($gridField, $clone);
+        $this->assertNotSame($config, $clone->getConfig());
+        foreach ($config->getComponents() as $component) {
+            $this->assertNotSame($component, $clone->getConfig()->getComponentsByType(get_class($component)));
+        }
     }
 }

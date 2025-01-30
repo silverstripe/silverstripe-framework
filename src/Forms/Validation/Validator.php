@@ -6,6 +6,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Extensible;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Forms\Form;
 
 /**
  * This validation class handles all form and custom form validation through the use of Required
@@ -23,10 +24,7 @@ abstract class Validator
         $this->resetResult();
     }
 
-    /**
-     * @var Form $form
-     */
-    protected $form;
+    protected Form $form;
 
     /**
      * @var ValidationResult $result
@@ -38,14 +36,15 @@ abstract class Validator
      */
     private $enabled = true;
 
-    /**
-     * @param Form $form
-     * @return $this
-     */
-    public function setForm($form)
+    public function setForm(Form $form): static
     {
         $this->form = $form;
         return $this;
+    }
+
+    public function getForm(): Form
+    {
+        return $this->form;
     }
 
     /**

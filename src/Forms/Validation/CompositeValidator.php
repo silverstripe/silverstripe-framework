@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Validation;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\Forms\Form;
 
 /**
  * CompositeValidator can contain between 0 and many different types of Validators. Each Validator is itself still
@@ -51,11 +52,8 @@ class CompositeValidator extends Validator
 
     /**
      * Set the provided Form to the CompositeValidator and each Validator that has been added.
-     *
-     * @param Form $form
-     * @return Validator
      */
-    public function setForm($form)
+    public function setForm(Form $form): static
     {
         foreach ($this->getValidators() as $validator) {
             $validator->setForm($form);
@@ -203,6 +201,13 @@ class CompositeValidator extends Validator
         }
 
         return true;
+    }
+
+    public function __clone(): void
+    {
+        foreach ($this->validators as $key => $validator) {
+            $this->validators[$key] = clone $validator;
+        }
     }
 
     /**

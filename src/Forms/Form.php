@@ -308,7 +308,9 @@ class Form extends ModelData implements HasRequestHandler, ValidationInterface
         }
 
         // Form error controls
-        $this->restoreFormState();
+        if ($controller) {
+            $this->restoreFormState();
+        }
 
         // Check if CSRF protection is enabled, either on the parent controller or from the default setting. Note that
         // method_exists() is used as some controllers (e.g. GroupTest) do not always extend from Object.
@@ -1788,6 +1790,21 @@ class Form extends ModelData implements HasRequestHandler, ValidationInterface
             unset($this->extraClasses[$class]);
         }
         return $this;
+    }
+
+    public function __clone(): void
+    {
+        $this->fields = clone $this->fields;
+        $this->actions = clone $this->actions;
+        if ($this->validator) {
+            $this->setValidator(clone $this->validator);
+        }
+        foreach ($this->fields as $field) {
+            $field->setForm($this);
+        }
+        foreach ($this->actions as $action) {
+            $action->setForm($this);
+        }
     }
 
     public function debug(): string

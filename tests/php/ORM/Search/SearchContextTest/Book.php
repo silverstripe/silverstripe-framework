@@ -13,4 +13,6 @@ class Book extends DataObject implements TestOnly
         'Title' => 'Varchar',
         'Summary' => 'Varchar'
     ];
+
+    private static string $general_search_field_name = '';
 }

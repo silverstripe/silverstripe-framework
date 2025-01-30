@@ -4,8 +4,10 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use LogicException;
 use ReflectionMethod;
+use ReflectionProperty;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -78,73 +80,15 @@ class GridFieldFilterHeaderTest extends SapphireTest
      */
     public function testRenderHeaders()
     {
-        $htmlFragment = $this->component->getHTMLFragments($this->gridField);
+        $htmlFragments = $this->component->getHTMLFragments($this->gridField);
+        $beforeParser = new CSSContentParser($htmlFragments['before']);
+        // Just check some key elements are there - the rest of the details we entrust to the SearchContextForm.
+        $this->assertNotEmpty($beforeParser->getBySelector('#GridField_testfield_SearchForm'));
+        $this->assertNotEmpty($beforeParser->getBySelector('.search-holder'));
 
-        // Check that the output is the new search field
-        $this->assertStringContainsString('<div class="search-holder grid-field__search-holder grid-field__search-holder--hidden"', $htmlFragment['before']);
-        $this->assertStringContainsString('Open search and filter', $htmlFragment['buttons-before-right']);
-    }
 
-    public function testSearchFieldSchema()
-    {
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField) ?? '');
-        $modelClass = $this->gridField->getModelClass();
-        /** @var DataObject $obj */
-        $obj = new $modelClass();
-
-        $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
-        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema->name);
-        $this->assertEquals('Search "Teams"', $searchSchema->placeholder);
-        $this->assertEquals(new \stdClass, $searchSchema->filters);
-
-        $request = new HTTPRequest(
-            'POST',
-            'field/testfield',
-            [],
-            [
-                'filter' => [
-                    'testfield' => [
-                        'Name' => 'test',
-                        'City' => 'place'
-                    ]
-                ],
-            ]
-        );
-        $this->gridField->setRequest($request);
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField) ?? '');
-        $modelClass = $this->gridField->getModelClass();
-        /** @var DataObject $obj */
-        $obj = new $modelClass();
-
-        $this->assertEquals('field/testfield/schema/SearchForm', $searchSchema->formSchemaUrl);
-        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema->name);
-        $this->assertEquals('Search "Teams"', $searchSchema->placeholder);
-        $this->assertEquals('test', $searchSchema->filters->Search__Name);
-        $this->assertEquals('place', $searchSchema->filters->Search__City);
-        $this->assertEquals('testfield', $searchSchema->gridfield);
-    }
-
-    /**
-     * Tests the private method that returns the placeholder for the search field
-     */
-    public function testGetPlaceHolder()
-    {
-        $gridField = new GridField('test');
-        $filterHeader = new GridFieldFilterHeader();
-        $reflectionGetPlaceHolder = new ReflectionMethod($filterHeader, 'getPlaceHolder');
-        $reflectionGetPlaceHolder->setAccessible(true);
-
-        // No explicit placeholder or model i18n_plural_name method
-        $this->assertSame('Search "ArrayData"', $reflectionGetPlaceHolder->invoke($filterHeader, new ArrayData()));
-
-        // No explicit placeholder, but model has i18n_plural_name method
-        $model = new DataObject();
-        $this->assertSame('Search "' . $model->i18n_plural_name() . '"', $reflectionGetPlaceHolder->invoke($filterHeader, $model));
-
-        // Explicit placeholder is set, which overrides both of the above cases
-        $filterHeader->setPlaceHolderText('This is the text');
-        $this->assertSame('This is the text', $reflectionGetPlaceHolder->invoke($filterHeader, $model));
-        $this->assertSame('This is the text', $reflectionGetPlaceHolder->invoke($filterHeader, new ArrayData()));
+        $beforeRightParser = new CSSContentParser($htmlFragments['buttons-before-right']);
+        $this->assertNotEmpty($beforeRightParser->getBySelector('.view-controls button["showFilter"]'));
     }
 
     public function testHandleActionReset()
@@ -183,28 +127,33 @@ class GridFieldFilterHeaderTest extends SapphireTest
         $this->assertEquals('Search__TestCompositeNested', $fields[7]->Name);
         // Make sure there aren't additional fields we're not testing for
         $this->assertCount(8, $fields);
-        $this->assertEquals('TeamsSearchForm', $searchForm->Name);
+        $this->assertEquals('GridField_testfield_SearchForm', $searchForm->getHTMLID());
         $this->assertTrue($searchForm->hasExtraClass('cms-search-form'));
         foreach ($fields as $field) {
             $this->assertTrue($field->hasExtraClass('stacked'));
-            $this->assertTrue($field->hasExtraClass('no-change-track'));
         }
     }
 
     public function testCustomSearchField()
     {
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
+        $reflectionForm = new ReflectionProperty($this->component, 'searchForm');
+        $form = $this->component->getSearchForm($this->gridField);
+        $searchSchema = $form->getSchemaData();
         $modelClass = $this->gridField->getModelClass();
         $obj = new $modelClass();
-        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema->name);
+        $this->assertEquals($obj->getGeneralSearchFieldName(), $searchSchema['name']);
 
         Config::modify()->set(Team::class, 'general_search_field', 'CustomSearch');
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
-        $this->assertEquals('CustomSearch', $searchSchema->name);
+        $reflectionForm->setValue($this->component, null);
+        $form = $this->component->getSearchForm($this->gridField);
+        $searchSchema = $form->getSchemaData();
+        $this->assertEquals('CustomSearch', $searchSchema['name']);
 
         $this->component->setSearchField('ReallyCustomSearch');
-        $searchSchema = json_decode($this->component->getSearchFieldSchema($this->gridField));
-        $this->assertEquals('ReallyCustomSearch', $searchSchema->name);
+        $reflectionForm->setValue($this->component, null);
+        $form = $this->component->getSearchForm($this->gridField);
+        $searchSchema = $form->getSchemaData();
+        $this->assertEquals('ReallyCustomSearch', $searchSchema['name']);
 
         $this->assertEquals('ReallyCustomSearch', $this->component->getSearchField());
     }
