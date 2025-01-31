@@ -143,11 +143,17 @@ class GridFieldFilterHeaderTest extends SapphireTest
     {
         $searchForm = $this->component->getSearchForm($this->gridField);
         $this->assertTrue($searchForm instanceof Form);
-        $fields = $searchForm->Fields()->toArray();
+        $fields = $searchForm->Fields()->flattenFields()->toArray();
         $this->assertEquals('Search__q', $fields[0]->Name);
         $this->assertEquals('Search__Name', $fields[1]->Name);
         $this->assertEquals('Search__City', $fields[2]->Name);
         $this->assertEquals('Search__Cheerleader__Hat__Colour', $fields[3]->Name);
+        $this->assertEquals('Search__TestCompositeSingleTestCompositeNestedGroup', $fields[4]->Name);
+        $this->assertEquals('Search__TestCompositeSingle', $fields[5]->Name);
+        $this->assertEquals('Search__TestCompositeNestedGroup', $fields[6]->Name);
+        $this->assertEquals('Search__TestCompositeNested', $fields[7]->Name);
+        // Make sure there aren't additional fields we're not testing for
+        $this->assertCount(8, $fields);
         $this->assertEquals('TeamsSearchForm', $searchForm->Name);
         $this->assertTrue($searchForm->hasExtraClass('cms-search-form'));
         foreach ($fields as $field) {

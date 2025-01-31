@@ -3,6 +3,8 @@
 namespace SilverStripe\Forms\Tests\GridField\GridFieldFilterHeaderTest;
 
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 
 class Team extends DataObject implements TestOnly
@@ -28,5 +30,17 @@ class Team extends DataObject implements TestOnly
     public function getMySummaryField()
     {
         return 'MY SUMMARY FIELD';
+    }
+
+    public function scaffoldSearchFields($_params = null)
+    {
+        $fields = parent::scaffoldSearchFields($_params);
+        $fields->add(new CompositeField([
+            new TextField('TestCompositeSingle'),
+            new CompositeField([
+                new TextField('TestCompositeNested'),
+            ])
+        ]));
+        return $fields;
     }
 }

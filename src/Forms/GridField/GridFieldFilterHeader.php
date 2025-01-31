@@ -8,6 +8,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Schema\FormSchema;
@@ -305,7 +306,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $searchField = $searchField && property_exists($searchField, 'name') ? $searchField->name : null;
         }
 
-        // Prefix "Search__" onto the filters for the React component
+        // Prefix "Search__" onto the filters to match the field names in the actual form
         $filters = $context->getSearchParams();
         if (!empty($filters)) {
             $filters = array_combine(array_map(function ($key) {
@@ -362,14 +363,10 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             return $this->searchForm;
         }
 
-        // Append a prefix to search field names to prevent conflicts with other fields in the search form
-        foreach ($searchFields as $field) {
-            $field->setName('Search__' . $field->getName());
-        }
-
-        $columns = $gridField->getColumns();
+        $this->addSearchPrefixToFields($searchFields);
 
         // Update field titles to match column titles
+        $columns = $gridField->getColumns();
         foreach ($columns as $columnField) {
             $metadata = $gridField->getColumnMetadata($columnField);
             // Get the field name, without any modifications
@@ -382,9 +379,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             }
         }
 
-        foreach ($searchFields->getIterator() as $field) {
-            $field->addExtraClass('stacked no-change-track');
-        }
+        $this->updateFieldClasses($searchFields);
 
         $name = $this->getTitle($gridField, singleton($gridField->getModelClass()));
 
@@ -455,5 +450,31 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
                 _t('SilverStripe\\Forms\\GridField\\GridField.OpenFilter', "Open search and filter")
             )
         ];
+    }
+
+    /**
+     * Append a prefix to search field names to prevent conflicts with other fields in the search form
+     */
+    private function addSearchPrefixToFields(FieldList $fields): void
+    {
+        foreach ($fields as $field) {
+            $field->setName('Search__' . $field->getName());
+            if ($field instanceof CompositeField) {
+                $this->addSearchPrefixToFields($field->getChildren());
+            }
+        }
+    }
+
+    /**
+     * Update CSS classes for form fields, including nested inside composite fields
+     */
+    private function updateFieldClasses(FieldList $fields): void
+    {
+        foreach ($fields as $field) {
+            $field->addExtraClass('stacked no-change-track');
+            if ($field instanceof CompositeField) {
+                $this->updateFieldClasses($field->getChildren());
+            }
+        }
     }
 }
