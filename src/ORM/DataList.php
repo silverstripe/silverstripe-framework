@@ -1377,15 +1377,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
             // Use sortByField to generate the ORDER BY clause
             $orderByClause = DB::get_conn()->sortByField($childIDField, $fetchedIDs);
 
-            $joinQuery = DB::query(
-                'SELECT * FROM "' . $joinTable
+            // Build the query with the order clause
+            $joinQuery = 'SELECT * FROM "' . $joinTable
                 // Only get joins relevant for the parent list
                 . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
                 // Exclude any children that got filtered out
                 . ' AND ' . $childIDField . ' IN (' . implode(',', $fetchedIDs) . ')'
                 // Respect sort order of fetched items
-                . ' ORDER BY ' . $orderByClause
-            );
+                . ' ORDER BY ' . $orderByClause;
 
             // Execute the query
             $joinRows = DB::query($joinQuery);
