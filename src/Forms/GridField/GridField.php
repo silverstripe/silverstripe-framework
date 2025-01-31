@@ -524,6 +524,7 @@ class GridField extends FormField
         $columns = $this->getColumns();
 
         $list = $this->getManipulatedList();
+        $total = null; // can be populated by GridFieldPaginator
 
         $content = [
             'before' => '',
@@ -547,6 +548,9 @@ class GridField extends FormField
                         $content[$fragmentKey] .= $fragmentValue . "\n";
                     }
                 }
+            }
+            if ($item instanceof GridFieldPaginator) {
+                $total = $item->getTemplateParameters($this)->NumRecords;
             }
         }
 
@@ -630,7 +634,9 @@ class GridField extends FormField
             }
         }
 
-        $total = count($list ?? []);
+        if ($total === null) {
+            $total = count($list ?? []);
+        }
 
         if ($total > 0) {
             $rows = [];
