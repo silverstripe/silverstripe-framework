@@ -1705,6 +1705,12 @@ class Member extends DataObject
         $currentName = '';
         $currentPriority = 0;
 
+        // If we don't have a custom config, no need to look in all groups
+        $editorConfigMap = HTMLEditorConfig::get_available_configs_map();
+        if (count($editorConfigMap) === 1 && isset($editorConfigMap['cms'])) {
+            return 'cms';
+        }
+
         foreach ($this->Groups() as $group) {
             $configName = $group->HtmlEditorConfig;
             if ($configName) {
