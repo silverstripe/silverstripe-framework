@@ -494,4 +494,63 @@ class DatabaseTest extends SapphireTest
             $i++;
         }
     }
+
+    /**
+     * Test that the sortByField method correctly generates an ORDER BY clause
+     * and the query returns results in the expected order.
+     */
+    public function testSortByFieldIntegration()
+    {
+        // Define test data
+        $parentIDs = [1, 2];
+        $fetchedIDs = [3, 2, 1]; // Expected order
+        $expectedOrder = [3, 2, 1];
+
+        $joinTable = 'TestJoinTable';
+        $parentIDField = 'ParentID';
+        $childIDField = 'ChildID';
+
+        // Create a temporary test table
+        DB::query("
+            CREATE TEMPORARY TABLE {$joinTable} (
+                {$childIDField} INT NOT NULL,
+                {$parentIDField} INT NOT NULL
+            )
+        ");
+
+        // Insert mock data
+        DB::query("
+            INSERT INTO {$joinTable} ({$childIDField}, {$parentIDField})
+            VALUES (1, 1), (2, 2), (3, 1)
+        ");
+
+        // Use sortByField to generate the ORDER BY clause
+        $orderByClause = DB::get_conn()->sortByField($childIDField, $fetchedIDs);
+
+        // Build the query with sortByField
+        $query = "
+            SELECT *
+            FROM {$joinTable}
+            WHERE {$parentIDField} IN (" . implode(',', $parentIDs) . ")
+              AND {$childIDField} IN (" . implode(',', $fetchedIDs) . ")
+            ORDER BY {$orderByClause}
+        ";
+
+        // Execute the query and convert results to an array
+        $result = DB::query($query);
+        $rows = [];
+        foreach ($result as $row) {
+            $rows[] = $row;
+        }
+
+        // Extract the actual order of fetched ChildIDs
+        $actualOrder = array_column($rows, $childIDField);
+
+        // Assert that the results are ordered as expected
+        $this->assertEquals(
+            $expectedOrder,
+            $actualOrder,
+            'The results should maintain the custom order defined by fetchedIDs'
+        );
+    }
 }

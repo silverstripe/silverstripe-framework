@@ -586,4 +586,22 @@ class MySQLDatabase extends Database implements TransactionManager
             $this->query("ALTER TABLE \"$table\" AUTO_INCREMENT = 1");
         }
     }
+
+    /**
+     * Generate SQL for sorting by a specific field using MySQL's FIELD function.
+     *
+     * @param string $field The name of the field to sort by.
+     * @param array $values The values to order by.
+     * @return string SQL snippet for ordering.
+     */
+    public function sortByField(string $field, array $values): string
+    {
+        $escapedValues = [];
+        foreach ($values as $value) {
+            $escaped = is_int($value) ? $value : "'" . addslashes($value) . "'";
+            $escapedValues[] = $escaped;
+        }
+        $sqlIds = implode(',', $escapedValues);
+        return "FIELD({$field}, {$sqlIds})";
+    }
 }
