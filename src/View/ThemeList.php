@@ -15,7 +15,7 @@ interface ThemeList
      *     '/mysite',
      *     'vendor/module:themename',
      *     '/framework/admin'
-     *     'simple'
+     *     'my-theme'
      *   ]
      * </code>
      *
