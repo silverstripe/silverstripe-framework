@@ -1707,8 +1707,12 @@ class Member extends DataObject
 
         // If we don't have a custom config, no need to look in all groups
         $editorConfigMap = HTMLEditorConfig::get_available_configs_map();
-        if (count($editorConfigMap) === 1 && isset($editorConfigMap['cms'])) {
+        $editorConfigCount = count($editorConfigMap);
+        if ($editorConfigCount === 0) {
             return 'cms';
+        }
+        if ($editorConfigCount === 1) {
+            return key($editorConfigMap);
         }
 
         foreach ($this->Groups() as $group) {
