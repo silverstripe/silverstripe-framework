@@ -139,6 +139,11 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
 
     protected $totalItems = 0;
 
+    public function getTotalItems(): int
+    {
+        return $this->totalItems;
+    }
+
     /**
      * Retrieves/Sets up the state object used to store and retrieve information
      * about the current paging details of this GridField
