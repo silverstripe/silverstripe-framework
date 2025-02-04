@@ -550,10 +550,7 @@ class GridField extends FormField
                 }
             }
             if ($item instanceof GridFieldPaginator) {
-                $parameters = $item->getTemplateParameters($this);
-                if ($parameters) {
-                    $total = $parameters->NumRecords;
-                }
+                $total = $item->getTotalItems();
             }
         }
 
