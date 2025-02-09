@@ -6,6 +6,9 @@ use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\FieldType\DBHTMLVarchar;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -30,6 +33,8 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @var array
      */
     protected $displayFields = [];
+
+    private bool $doEscapeFields = true;
 
     /**
      * Modify the list of columns displayed in the table.
@@ -153,6 +158,28 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
     }
 
     /**
+     * Determines whether this component escapes strings returned from getColumnContent().
+     *
+     * This is useful because by default strings are escaped for use in HTML. This
+     * means there are some circumstances in which the escaping done here can result
+     * in double escaping those values further down the line, such as use with
+     * GridFieldPrintButton which temporarily sets this to false.
+     */
+    public function setDoEscapeFields(bool $doEscapeFields): static
+    {
+        $this->doEscapeFields = $doEscapeFields;
+        return $this;
+    }
+
+    /**
+     * Get whether this component escapes strings returned from getColumnContent().
+     */
+    public function getDoEscapeFields(): bool
+    {
+        return $this->doEscapeFields;
+    }
+
+    /**
      * HTML for the column, content of the <td> element.
      *
      * @param GridField $gridField
@@ -265,12 +292,24 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
             // If the value is an object, we do one of two things
             if (method_exists($value, 'Nice')) {
                 // If it has a "Nice" method, call that & make sure the result is safe
-                $value = nl2br(Convert::raw2xml($value->Nice()) ?? '');
+                $value = $value->Nice();
+                if ($this->getDoEscapeFields()) {
+                    $value = nl2br(Convert::raw2xml($value));
+                }
             } else {
-                // Otherwise call forTemplate - the result of this should already be safe
-                $value = $value->forTemplate();
+                if (!$this->getDoEscapeFields()
+                    && is_a($value, DBField::class, false)
+                    && !is_a($value, DBHTMLText::class, false)
+                    && !is_a($value, DBHTMLVarchar::class, false)
+                ) {
+                    // For DBFields other than HTML variants, if we're not escaping values, get the raw value.
+                    $value = $value->RAW();
+                } else {
+                    // Otherwise, check forTemplate() which is assumed to be safe.
+                    $value = $value->forTemplate();
+                }
             }
-        } else {
+        } elseif ($this->getDoEscapeFields()) {
             // Otherwise, just treat as a text string & make sure the result is safe
             $value = nl2br(Convert::raw2xml($value) ?? '');
         }

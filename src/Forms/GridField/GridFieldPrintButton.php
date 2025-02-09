@@ -4,11 +4,11 @@ namespace SilverStripe\Forms\GridField;
 
 use LogicException;
 use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\FieldType\DBHTMLVarchar;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
@@ -231,7 +231,11 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
         $items = $gridField->getManipulatedList();
         $itemRows = new ArrayList();
 
+        // If there's a GridFieldDataColumns component, ensure it doesn't escape raw strings
+        // as that would result in double escaping when we render out the print template.
         $gridFieldColumnsComponent = $gridField->getConfig()->getComponentByType(GridFieldDataColumns::class);
+        $origDoEscapeFields = $gridFieldColumnsComponent?->getDoEscapeFields();
+        $gridFieldColumnsComponent?->setDoEscapeFields(false);
 
         /** @var ViewableData $item */
         foreach ($items->limit(null) as $item) {
@@ -244,8 +248,13 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
                         ? strip_tags($gridFieldColumnsComponent->getColumnContent($gridField, $item, $field))
                         : $gridField->getDataFieldValue($item, $field);
 
+                    // The value is used in a template, so to prevent XSS attacks we can't allow an HTML field here.
+                    // Getting the raw string here means it will end up being default-casted to DBText which is safe.
+                    if (is_a($value, DBHTMLText::class, false) || is_a($value, DBHTMLVarchar::class, false)) {
+                        $value = $value->__toString();
+                    }
                     $itemRow->push(new ArrayData([
-                        "CellString" => $value,
+                        'CellString' => $value,
                     ]));
                 }
 
@@ -257,6 +266,8 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
                 $item->destroy();
             }
         }
+
+        $gridFieldColumnsComponent?->setDoEscapeFields($origDoEscapeFields);
 
         $ret = new ArrayData([
             "Title" => $this->getTitle($gridField),
