@@ -65,16 +65,6 @@ class DBInt extends DBField
         DB::require_field($this->tableName, $this->name, $values);
     }
 
-    public function Times(): SS_List
-    {
-        $output = new ArrayList();
-        for ($i = 0; $i < $this->value; $i++) {
-            $output->push(ArrayData::create(['Number' => $i + 1]));
-        }
-
-        return $output;
-    }
-
     public function Nice(): string
     {
         return sprintf('%d', $this->value);
