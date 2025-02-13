@@ -27,6 +27,7 @@ use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\View\ThemeResourceLoader;
 use Exception;
+use SilverStripe\Control\Middleware\AllowedHostsMiddleware;
 use SilverStripe\Dev\Deprecation;
 
 /**
@@ -222,6 +223,9 @@ abstract class BaseKernel implements Kernel
     {
         // After loading all other app manifests, include _config.php files
         $this->getModuleLoader()->getManifest()->activateConfig();
+
+        // Ensure everything is set up correctly
+        $this->validateConfiguration();
     }
 
     /**
@@ -388,6 +392,7 @@ abstract class BaseKernel implements Kernel
         $this->getInjectorLoader()
             ->getManifest()
             ->registerService($this, Kernel::class);
+
         return $this;
     }
 
@@ -468,5 +473,28 @@ abstract class BaseKernel implements Kernel
     {
         $this->themeResourceLoader = $themeResourceLoader;
         return $this;
+    }
+
+    /**
+     * Validate configuration of the application is in a good state, ready for use.
+     *
+     * This method can be used to warn developers of any misconfiguration, or configuration
+     * which is missing but should be set according to best practice.
+     *
+     * In some cases, this could be used to halt execution if configuration critical to operation
+     * has not been set.
+     */
+    protected function validateConfiguration(): void
+    {
+        // Log a warning if allowed hosts hasn't been configured.
+        // This can include wildcard, but it must be explicitly set to ensure the developer is aware
+        // of the level of protection their application has against host header injection attacks.
+        $allowedHostsMiddleware = Injector::inst()->get(AllowedHostsMiddleware::class, true);
+        if (empty($allowedHostsMiddleware->getAllowedHosts())) {
+            Injector::inst()->get(LoggerInterface::class)->warning(
+                'Allowed hosts has not been set. Your application could be vulnerable to host header injection attacks.'
+                . ' Either set the SS_ALLOWED_HOSTS environment variable or the AllowedHosts property on ' . AllowedHostsMiddleware::class
+            );
+        }
     }
 }
