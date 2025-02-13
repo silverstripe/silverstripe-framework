@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests\GridField;
 
 use LogicException;
 use ReflectionMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Dev\CSSContentParser;
@@ -98,7 +99,7 @@ class GridFieldPrintButtonTest extends SapphireTest
         $this->assertSame($names, $foundNames);
     }
 
-    public function provideHandlePrintEscaping(): array
+    public static function provideHandlePrintEscaping(): array
     {
         return [
             // Without data columns component
@@ -193,9 +194,8 @@ class GridFieldPrintButtonTest extends SapphireTest
      * Explicitly tests that the following are both true:
      * - XML entities are not double-escaped
      * - XSS attack vectors are not introduced
-     *
-     * @dataProvider provideHandlePrintEscaping
      */
+    #[DataProvider('provideHandlePrintEscaping')]
     public function testHandlePrintEscaping(string|DBField $value, bool $useGridFieldDataColumns, string $expected): void
     {
         $component = new GridFieldPrintButton();

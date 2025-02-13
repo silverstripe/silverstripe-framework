@@ -2855,9 +2855,7 @@ class DataObjectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideProvideI18nEntities
-     */
+    #[DataProvider('provideProvideI18nEntities')]
     public function testProvideI18nEntities(?string $classDescription, bool $expected): void
     {
         $obj = new class extends DataObject {
@@ -2870,7 +2868,7 @@ class DataObjectTest extends SapphireTest
             {
                 return 'Clouds';
             }
-            public function classDescription()
+            public function classDescription(): ?string
             {
                 return $this->classDescription;
             }
