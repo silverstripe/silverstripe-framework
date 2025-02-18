@@ -3,20 +3,276 @@ Name: corehtml
 ---
 SilverStripe\Core\Injector\Injector:
   SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
-    class: SilverStripe\Forms\HTMLEditor\TinyMCEConfig
-  SilverStripe\Forms\HTMLEditor\TinyMCEScriptGenerator: '%$SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator'
-  SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator:
-    class: SilverStripe\Forms\HTMLEditor\TinyMCECombinedGenerator
-    properties:
-      AssetHandler: '%$SilverStripe\Assets\Storage\GeneratedAssetHandler'
+    class: 'SilverStripe\Forms\HTMLEditor\TextAreaConfig'
 
-SilverStripe\Forms\HTMLEditor\TinyMCEConfig:
-  image_size_presets:
-    - width: 600
-      i18n: SilverStripe\Forms\HTMLEditor\TinyMCEConfig.BEST_FIT
-      text: Best fit
-      name: bestfit
-      default: true
-    - i18n: SilverStripe\Forms\HTMLEditor\TinyMCEConfig.ORIGINAL
-      text: Original
-      name: originalsize
+SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
+  default_element_rules:
+    _global:
+      attributes:
+        id: true
+        class: true
+        style: true
+        title: true
+    a:
+      attributes:
+        accesskey: true
+        class: true
+        dir: true
+        href: true
+        id: true
+        name: true
+        rel: true
+        rev: true
+        target: true
+        tabindex: true
+        title: true
+        type: true
+    address:
+      attributes:
+        class: true
+        align: true
+    b:
+      convertTo: 'strong'
+    blockquote:
+      removeIfEmpty: true
+      attributes:
+        dir: true
+        class: true
+    br: true
+    caption:
+      attributes:
+        id: true
+        dir: true
+        class: true
+    cite:
+      removeIfEmpty: true
+      attributes:
+        dir: true
+        class: true
+        id: true
+        title: true
+    dd:
+      attributes:
+        id: true
+        class: true
+        title: true
+        dir: true
+    div:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    dl:
+      attributes:
+        id: true
+        class: true
+        title: true
+        dir: true
+    dt:
+      attributes:
+        id: true
+        class: true
+        title: true
+        dir: true
+    em:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    h1:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    h2:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    h3:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    h4:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    h5:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    h6:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        align: true
+        style: true
+    hr:
+      attributes:
+        class: true
+    i:
+      convertTo: 'em'
+    img:
+      attributes:
+        id: true
+        dir: true
+        longdesc: true
+        usemap: true
+        class: true
+        src: true
+        border: true
+        alt:
+          value: ''
+          valueType: 'default'
+        title: true
+        hspace: true
+        vspace: true
+        width: true
+        height: true
+        align: true
+        name: true
+        data*: true
+    li:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    ol:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    p:
+      padIfEmpty: true
+      attributes:
+        align: true
+        class: true
+        dir: true
+        id: true
+        style: true
+    pre:
+      removeIfEmpty: true
+      attributes:
+        class: true
+        align: true
+    span:
+      removeIfEmpty: true
+      attributes:
+        class: true
+        align: true
+        style: true
+    strike:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    strong:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    sub:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    sup:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    table:
+      removeIfEmpty: true
+      attributes:
+        cellspacing: true
+        cellpadding: true
+        width: true
+        height: true
+        class: true
+        align: true
+        summary: true
+        dir: true
+        id: true
+        style: true
+    tbody:
+      attributes:
+        id: true
+        class: true
+        style: true
+    td:
+      padIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        colspan: true
+        rowspan: true
+        width: true
+        height: true
+        align: true
+        valign: true
+        scope: true
+        style: true
+    th:
+      padIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        colspan: true
+        rowspan: true
+        width: true
+        height: true
+        align: true
+        valign: true
+        scope: true
+        style: true
+    thead:
+      attributes:
+        id: true
+        class: true
+        style: true
+    tfoot:
+      attributes:
+        id: true
+        class: true
+        style: true
+    tr:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        dir: true
+        class: true
+        rowspan: true
+        width: true
+        height: true
+        align: true
+        valign: true
+        bgcolor: true
+        background: true
+        bordercolor: true
+        style: true
+    u:
+      removeIfEmpty: true
+      attributes:
+        class: true
+    ul:
+      removeIfEmpty: true
+      attributes:
+        class: true

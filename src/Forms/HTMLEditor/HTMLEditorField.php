@@ -13,7 +13,7 @@ use SilverStripe\View\CastingService;
 use SilverStripe\View\Parsers\HTMLValue;
 
 /**
- * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
+ * A WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
  * are created from `<textarea>` tags, which are then converted with JavaScript.
  *
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
@@ -28,8 +28,6 @@ class HTMLEditorField extends TextareaField
     ];
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HTML;
-
-    protected $schemaComponent = 'HtmlEditorField';
 
     /**
      * @config
@@ -52,14 +50,6 @@ class HTMLEditorField extends TextareaField
      * @var int
      */
     private static $default_rows = 20;
-
-    /**
-     * Extra height per row
-     *
-     * @var int
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorConfig.fixed_row_height
-     */
-    private static $fixed_row_height = 20;
 
     /**
      * ID or instance of editorconfig
@@ -94,6 +84,11 @@ class HTMLEditorField extends TextareaField
     {
         $this->editorConfig = $config;
         return $this;
+    }
+
+    public function getSchemaComponent()
+    {
+        return $this->getEditorConfig()->getSchemaComponent();
     }
 
     /**
@@ -137,13 +132,13 @@ class HTMLEditorField extends TextareaField
 
         // Sanitise if requested
         $htmlValue = HTMLValue::create($this->getValue());
-        if (HTMLEditorField::config()->sanitise_server_side) {
+        if (static::config()->get('sanitise_server_side')) {
             $config = $this->getEditorConfig();
             $santiser = HTMLEditorSanitiser::create($config);
             $santiser->sanitise($htmlValue);
         }
 
-        // optionally manipulate the HTML after a TinyMCE edit and prior to a save
+        // optionally manipulate the HTML prior to storing it on the record
         $this->extend('processHTML', $htmlValue);
 
         // Store into record
@@ -206,22 +201,16 @@ class HTMLEditorField extends TextareaField
     }
 
     /**
-     * Set height of editor based on number of rows
+     * Set height of editor based on number of rows.
+     *
+     * This uses a clone because different HMTLEditorField instances may use different number of rows
+     * and the config is a singleton.
      */
     private function setEditorHeight(HTMLEditorConfig $config): HTMLEditorConfig
     {
-        $rowHeight = $this->config()->get('fixed_row_height');
-        if ($rowHeight && ($config instanceof TinyMCEConfig)) {
-            $rows = (int) $this->getRows();
-            $height = $rows * $rowHeight;
-            $config = clone $config;
-            if ($height) {
-                $config->setOption('height', 'auto');
-                $config->setOption('row_height', sprintf('%dpx', $height));
-            }
-        }
-
-        return $config;
+        $clone = clone $config;
+        $clone->setRows($this->rows);
+        return $clone;
     }
 
     private function usesXmlFriendlyField(DataObjectInterface $record): bool

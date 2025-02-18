@@ -235,7 +235,7 @@ class StandardRelatedDataService implements RelatedDataService
             }
         }
 
-        // Prevent duplicate queries which can happen when an Image is inserted on a Page subclass via TinyMCE
+        // Prevent duplicate queries which can happen when an Image is inserted on a Page subclass via HTMLEditorField
         // and FileLink will make the same query multiple times for all the different page subclasses because
         // the FileLink is associated with the Base Page class database table
         $queryIden = implode('-', array_merge($selectFields, [$joinTableName, $whereField, $record->ID]));

@@ -7,16 +7,12 @@ use DOMElement;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\XssSanitiser;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\Parsers\HTMLValue;
 use stdClass;
 
 /**
- * Sanitises an HTMLValue so it's contents are the elements and attributes that are whitelisted
- * using the same configuration as TinyMCE
- *
- * See www.tinymce.com/wiki.php/configuration:valid_elements for details on the spec of TinyMCE's
- * whitelist configuration
+ * Sanitises an HTMLValue so it's contents are the elements and attributes that are allowed
+ * using the given HTMLEditorConfig
  */
 class HTMLEditorSanitiser
 {
@@ -24,308 +20,39 @@ class HTMLEditorSanitiser
     use Injectable;
 
     /**
-     * rel attribute to add to link elements which have a target attribute (usually "_blank")
-     * this is to done to prevent reverse tabnabbing - see https://www.owasp.org/index.php/Reverse_Tabnabbing
-     * noopener includes the behaviour we want, though some browsers don't yet support it and rely
-     * upon using noreferrer instead - see https://caniuse.com/rel-noopener for current browser compatibility
-     * set this to null if you would like to disable this behaviour
-     * set this to an empty string if you would like to remove rel attributes that were previously set
+     * "rel" attribute value to add to link elements which have a target attribute (usually "_blank").
      *
-     * @var string
+     * This is to done to prevent reverse tabnabbing - see https://www.owasp.org/index.php/Reverse_Tabnabbing.
+     * noopener includes the behaviour we want, though some browsers don't yet support it and rely
+     * upon using noreferrer instead - see https://caniuse.com/rel-noopener for current browser compatibility.
+     * Set this to null if you would like to disable this behaviour.
+     * Set this to an empty string if you would like to remove rel attributes that were previously set.
      */
-    private static $link_rel_value = 'noopener noreferrer';
+    private static string $link_rel_value = 'noopener noreferrer';
 
     /**
-     * @var stdClass - $element => $rule hash for whitelist element rules where the element name isn't a pattern
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet
+     * Rules determining which elements and attributes are allowed and which should be removed.
      */
-    protected $elements = [];
-
-    /**
-     * @var stdClass - Sequential list of whitelist element rules where the element name is a pattern
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet
-     */
-    protected $elementPatterns = [];
-
-    /**
-     * @var stdClass - The list of attributes that apply to all further whitelisted elements added
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet
-     */
-    protected $globalAttributes = [];
+    private HTMLEditorRuleSet $ruleSet;
 
     /**
      * Construct a sanitiser from a given HTMLEditorConfig
      *
      * Note that we build data structures from the current state of HTMLEditorConfig - later changes to
-     * the passed instance won't cause this instance to update it's whitelist
+     * the config won't change the ruleset used by this sanitiser instance.
      *
      * @param HTMLEditorConfig $config
      */
     public function __construct(HTMLEditorConfig $config)
     {
-        $valid = $config->getOption('valid_elements');
-        if ($valid) {
-            $this->addValidElements($valid);
-        }
-
-        $valid = $config->getOption('extended_valid_elements');
-        if ($valid) {
-            $this->addValidElements($valid);
-        }
-    }
-
-    /**
-     * Given a TinyMCE pattern (close to unix glob style), create a regex that does the match
-     *
-     * @param $str - The TinyMCE pattern
-     * @return string - The equivalent regex
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet::patternToRegex()
-     */
-    protected function patternToRegex($str)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet::patternToRegex()'
-        );
-        return '/^' . preg_replace('/([?+*])/', '.$1', $str ?? '') . '$/';
-    }
-
-    /**
-     * Given a valid_elements string, parse out the actual element and attribute rules and add to the
-     * internal whitelist
-     *
-     * Logic based heavily on javascript version from tiny_mce_src.js
-     *
-     * @param string $validElements - The valid_elements or extended_valid_elements string to add to the whitelist
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet
-     */
-    protected function addValidElements($validElements)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet'
-        );
-        $elementRuleRegExp = '/^([#+\-])?([^\[\/]+)(?:\/([^\[]+))?(?:\[([^\]]+)\])?$/';
-        $attrRuleRegExp = '/^([!\-])?(\w+::\w+|[^=:<]+)?(?:([=:<])(.*))?$/';
-        $hasPatternsRegExp = '/[*?+]/';
-
-        foreach (explode(',', $validElements ?? '') as $validElement) {
-            if (preg_match($elementRuleRegExp ?? '', $validElement ?? '', $matches)) {
-                $prefix = isset($matches[1]) ? $matches[1] : null;
-                $elementName = isset($matches[2]) ? $matches[2] : null;
-                $outputName = isset($matches[3]) ? $matches[3] : null;
-                $attrData = isset($matches[4]) ? $matches[4] : null;
-
-                // Create the new element
-                $element = new stdClass();
-                $element->attributes = [];
-                $element->attributePatterns = [];
-
-                $element->attributesRequired = [];
-                $element->attributesDefault = [];
-                $element->attributesForced = [];
-
-                foreach (['#' => 'paddEmpty', '-' => 'removeEmpty'] as $match => $means) {
-                    $element->$means = ($prefix === $match);
-                }
-
-                // Copy attributes from global rule into current rule
-                if ($this->globalAttributes) {
-                    $element->attributes = array_merge($element->attributes, $this->globalAttributes);
-                }
-
-                // Attributes defined
-                if ($attrData) {
-                    foreach (explode('|', $attrData ?? '') as $attr) {
-                        if (preg_match($attrRuleRegExp ?? '', $attr ?? '', $matches)) {
-                            $attr = new stdClass();
-
-                            $attrType = isset($matches[1]) ? $matches[1] : null;
-                            $attrName = isset($matches[2]) ? str_replace('::', ':', $matches[2]) : null;
-                            $prefix = isset($matches[3]) ? $matches[3] : null;
-                            $value = isset($matches[4]) ? $matches[4] : null;
-
-                            // Required
-                            if ($attrType === '!') {
-                                $element->attributesRequired[] = $attrName;
-                                $attr->required = true;
-                            } elseif ($attrType === '-') {
-                                // Denied from global
-                                unset($element->attributes[$attrName]);
-                                continue;
-                            }
-
-                            // Default value
-                            if ($prefix) {
-                                if ($prefix === '=') { // Default value
-                                    $element->attributesDefault[$attrName] = $value;
-                                    $attr->defaultValue = $value;
-                                } elseif ($prefix === ':') {
-                                    // Forced value
-                                    $element->attributesForced[$attrName] = $value;
-                                    $attr->forcedValue = $value;
-                                } elseif ($prefix === '<') {
-                                    // Required values
-                                    $attr->validValues = explode('?', $value ?? '');
-                                }
-                            }
-
-                            // Check for attribute patterns
-                            if (preg_match($hasPatternsRegExp ?? '', $attrName ?? '')) {
-                                $attr->pattern = $this->patternToRegex($attrName);
-                                $element->attributePatterns[] = $attr;
-                            } else {
-                                $element->attributes[$attrName] = $attr;
-                            }
-                        }
-                    }
-                }
-
-                // Global rule, store away these for later usage
-                if (!$this->globalAttributes && $elementName == '@') {
-                    $this->globalAttributes = $element->attributes;
-                }
-
-                // Handle substitute elements such as b/strong
-                if ($outputName) {
-                    $element->outputName = $elementName;
-                    $this->elements[$outputName] = $element;
-                }
-
-                // Add pattern or exact element
-                if (preg_match($hasPatternsRegExp ?? '', $elementName ?? '')) {
-                    $element->pattern = $this->patternToRegex($elementName);
-                    $this->elementPatterns[] = $element;
-                } else {
-                    $this->elements[$elementName] = $element;
-                }
-            }
-        }
-    }
-
-    /**
-     * Given an element tag, return the rule structure for that element
-     * @param string $tag The element tag
-     * @return stdClass The element rule
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet::getRuleForElement()
-     */
-    protected function getRuleForElement($tag)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet::getRuleForElement()'
-        );
-        if (isset($this->elements[$tag])) {
-            return $this->elements[$tag];
-        }
-        foreach ($this->elementPatterns as $element) {
-            if (preg_match($element->pattern ?? '', $tag ?? '')) {
-                return $element;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Given an attribute name, return the rule structure for that attribute
-     *
-     * @param object $elementRule
-     * @param string $name The attribute name
-     * @return stdClass The attribute rule
-     * @deprecated 5.4.0 Will be replaced with logic in SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule
-     */
-    protected function getRuleForAttribute($elementRule, $name)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with logic in SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule'
-        );
-        if (isset($elementRule->attributes[$name])) {
-            return $elementRule->attributes[$name];
-        }
-        foreach ($elementRule->attributePatterns as $attribute) {
-            if (preg_match($attribute->pattern ?? '', $name ?? '')) {
-                return $attribute;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Given a DOMElement and an element rule, check if that element passes the rule
-     * @param DOMElement $element The element to check
-     * @param stdClass $rule The rule to check against
-     * @return bool True if the element passes (and so can be kept), false if it fails (and so needs stripping)
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet::isElementAllowed()
-     */
-    protected function elementMatchesRule($element, $rule = null)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet::isElementAllowed()'
-        );
-        // If the rule doesn't exist at all, the element isn't allowed
-        if (!$rule) {
-            return false;
-        }
-
-        // If the rule has attributes required, check them to see if this element has at least one
-        if ($rule->attributesRequired) {
-            $hasMatch = false;
-
-            foreach ($rule->attributesRequired as $attr) {
-                if ($element->getAttribute($attr)) {
-                    $hasMatch = true;
-                    break;
-                }
-            }
-
-            if (!$hasMatch) {
-                return false;
-            }
-        }
-
-        // If the rule says to remove empty elements, and this element is empty, remove it
-        if ($rule->removeEmpty && !$element->firstChild) {
-            return false;
-        }
-
-        // No further tests required, element passes
-        return true;
-    }
-
-    /**
-     * Given a DOMAttr and an attribute rule, check if that attribute passes the rule
-     * @param DOMAttr $attr - the attribute to check
-     * @param stdClass $rule - the rule to check against
-     * @return bool - true if the attribute passes (and so can be kept), false if it fails (and so needs stripping)
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule::isAttributeAllowed()
-     */
-    protected function attributeMatchesRule($attr, $rule = null)
-    {
-        Deprecation::noticeWithNoReplacment(
-            '5.4.0',
-            'Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule::isAttributeAllowed()'
-        );
-        // If the rule doesn't exist at all, the attribute isn't allowed
-        if (!$rule) {
-            return false;
-        }
-
-        // If the rule has a set of valid values, check them to see if this attribute is one
-        if (isset($rule->validValues) && !in_array($attr->value, $rule->validValues ?? [])) {
-            return false;
-        }
-
-        // No further tests required, attribute passes
-        return true;
+        $this->ruleSet = $config->getElementRuleSet();
     }
 
     /**
      * Given an SS_HTMLValue instance, will remove and elements and attributes that are
-     * not explicitly included in the whitelist passed to __construct on instance creation
+     * not explicitly allowed in the HTMLEditorConfig
      *
-     * @param HTMLValue $html - The HTMLValue to remove any non-whitelisted elements & attributes from
+     * @param HTMLValue $html - The HTMLValue to remove any non-allowed elements & attributes from
      */
     public function sanitise(HTMLValue $html)
     {
@@ -338,10 +65,8 @@ class HTMLEditorSanitiser
 
         /** @var DOMElement $el */
         foreach ($html->query('//body//*') as $el) {
-            $elementRule = $this->getRuleForElement($el->tagName);
-
             // If this element isn't allowed, strip it
-            if (!$this->elementMatchesRule($el, $elementRule)) {
+            if (!$this->ruleSet->isElementAllowed($el)) {
                 // If it's a script or style, we don't keep contents
                 if ($el->tagName === 'script' || $el->tagName === 'style') {
                     $el->parentNode->removeChild($el);
@@ -357,35 +82,57 @@ class HTMLEditorSanitiser
                     $el->parentNode->replaceChild($frag, $el);
                 }
             } else {
+                $elementRule = $this->ruleSet->getRuleForElement($el->tagName);
                 // Otherwise tidy the element
                 // First, if we're supposed to pad & this element is empty, fix that
-                if ($elementRule->paddEmpty && !$el->firstChild) {
+                if ($elementRule->getPadEmpty() && !$el->firstChild) {
                     $el->nodeValue = '&nbsp;';
                 }
 
-                // Then filter out any non-whitelisted attributes
+                // Set default and forced values for attributes.
+                foreach ($elementRule->getAttributeRules() as $attributeRule) {
+                    // Pattern rules can't have forced or default values so we don't need to check them.
+                    if ($attributeRule->getNameIsPattern()) {
+                        continue;
+                    }
+                    $attrName = $attributeRule->getName();
+                    // Set default values
+                    $defaultValue = $attributeRule->getDefaultValue();
+                    if ($defaultValue !== null && !$el->getAttribute($attrName)) {
+                        $el->setAttribute($attrName, $defaultValue);
+                    }
+                    // Set forced values
+                    $forcedValue = $attributeRule->getForcedValue();
+                    if ($forcedValue !== null) {
+                        $el->setAttribute($attrName, $forcedValue);
+                    }
+                }
+
+                // Filter out any non-allowed attributes
                 $children = $el->attributes;
                 $i = $children->length;
                 while ($i--) {
+                    /** @var DOMAttr $attr */
                     $attr = $children->item($i);
-                    $attributeRule = $this->getRuleForAttribute($elementRule, $attr->name);
 
                     // If this attribute isn't allowed, strip it
-                    if (!$this->attributeMatchesRule($attr, $attributeRule)) {
+                    if ($attr && !$elementRule->isAttributeAllowed($attr)) {
                         $el->removeAttributeNode($attr);
                     }
                 }
 
-                // Then enforce any default attributes
-                foreach ($elementRule->attributesDefault as $attr => $default) {
-                    if (!$el->getAttribute($attr)) {
-                        $el->setAttribute($attr, $default);
+                // Substitute element at appropriate
+                $elementRuleName = $elementRule->getName();
+                if (!$elementRule->getNameIsPattern() && $elementRuleName !== $el->tagName) {
+                    $replacementElement = $doc->createElement($elementRuleName);
+                    foreach ($el->attributes as $attr) {
+                        $replacementElement->setAttributeNode($attr);
                     }
-                }
-
-                // And any forced attributes
-                foreach ($elementRule->attributesForced as $attr => $forced) {
-                    $el->setAttribute($attr, $forced);
+                    foreach ($el->childNodes as $child) {
+                        $replacementElement->appendChild($child);
+                    }
+                    $el->replaceWith($replacementElement);
+                    $el = $replacementElement;
                 }
 
                 // Explicit XSS sanitisation for anything that there's really no sensible use case for in a WYSIWYG

@@ -2,202 +2,276 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser;
 use SilverStripe\View\Parsers\HTMLValue;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule;
+use SilverStripe\Forms\HTMLEditor\TextAreaConfig;
 
 class HTMLEditorSanitiserTest extends FunctionalTest
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        // Make sure we're using the TextAreaConfig even if a module provides an alternative.
+        Injector::inst()->load([
+            HTMLEditorConfig::class => [
+                'class' => TextAreaConfig::class,
+            ]
+        ]);
+    }
 
     public static function provideSanitise(): array
     {
         return [
-            [
-                'p,strong',
-                '<p>Leave Alone</p><div>Strip parent<strong>But keep children</strong> in order</div>',
-                '<p>Leave Alone</p>Strip parent<strong>But keep children</strong> in order',
-                'Non-whitelisted elements are stripped, but children are kept'
+            'no allowed elements' => [
+                'validElements' => [],
+                'input' => '<p>No elements</p><div> are allowed <strong>isnt that</strong> just sad</div>',
+                'expected' => 'No elements are allowed isnt that just sad',
             ],
-            [
-                'p,strong',
-                '<div>A <strong>B <div>Nested elements are still filtered</div> C</strong> D</div>',
-                'A <strong>B Nested elements are still filtered C</strong> D',
-                'Non-whitelisted elements are stripped even when children of non-whitelisted elements'
+            'remove not-allowed but keep allowed children' => [
+                'validElements' => ['p' => true, 'strong' => true],
+                'input' => '<p>Leave Alone</p><div>Strip parent<strong>But keep children</strong> in order</div>',
+                'expected' => '<p>Leave Alone</p>Strip parent<strong>But keep children</strong> in order',
             ],
-            [
-                'p',
-                '<p>Keep</p><script>Strip <strong>including children</strong></script>',
-                '<p>Keep</p>',
-                'Non-whitelisted script elements are totally stripped, including any children'
+            'remove not-allowed even if child of allowed' => [
+                'validElements' => ['p' => true, 'strong' => true],
+                'input' => '<div>A <strong>B <div>Nested elements are still filtered</div> C</strong> D</div><strong></strong>',
+                'expected' => 'A <strong>B Nested elements are still filtered C</strong> D<strong></strong>',
             ],
-            [
-                'p[id]',
-                '<p id="keep" bad="strip">Test</p>',
-                '<p id="keep">Test</p>',
-                'Non-whitelisted attributes are stripped'
+            'remove not allowed even if child of NOT allowed' => [
+                'validElements' => ['p' => true, 'strong' => ['removeIfEmpty' => true]],
+                'input' => '<div>A <strong>B <div>Nested elements are still filtered</div> C</strong> D</div><strong></strong>',
+                'expected' => 'A <strong>B Nested elements are still filtered C</strong> D',
             ],
-            [
-                'p[default1=default1|default2=default2|force1:force1|force2:force2]',
-                '<p default1="specific1" force1="specific1">Test</p>',
-                '<p default1="specific1" force1="force1" default2="default2" force2="force2">Test</p>',
-                'Default attributes are set when not present in input, forced attributes are always set'
+            'another check for removing not allowed elements' => [
+                'validElements' => ['p' => true],
+                'input' => '<p>Keep</p><script>Strip <strong>including children</strong></script>',
+                'expected' => '<p>Keep</p>',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="/test" target="_blank">Test</a>',
-                '<a href="/test" target="_blank" rel="noopener noreferrer">Test</a>',
-                'noopener rel attribute is added when target attribute is set'
+            'pad empty element' => [
+                'validElements' => ['p' => true, 'strong' => ['padEmpty' => true]],
+                'input' => '<div>A <strong>B <div>Nested elements are still filtered</div> C</strong> D</div><strong></strong>',
+                'expected' => 'A <strong>B Nested elements are still filtered C</strong> D<strong>&nbsp;</strong>',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="/test" target="_top">Test</a>',
-                '<a href="/test" target="_top" rel="noopener noreferrer">Test</a>',
-                'noopener rel attribute is added when target is _top instead of _blank'
+            'keep attrs that are allowed' => [
+                'validElements' => ['p' => ['attributes' => ['id' => true]]],
+                'input' => '<p id="keep" bad="strip">Test</p><p>no id is fine too</p>',
+                'expected' => '<p id="keep">Test</p><p>no id is fine too</p>',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="/test" rel="noopener noreferrer">Test</a>',
-                '<a href="/test">Test</a>',
-                'noopener rel attribute is removed when target is not set'
+            'keep attrs that are globally allowed' => [
+                'validElements' => [HTMLEditorElementRule::GLOBAL_NAME => ['attributes' => ['id' => true]], 'p' => true],
+                'input' => '<p id="keep" bad="strip">Test</p><p>no id is fine too</p>',
+                'expected' => '<p id="keep">Test</p><p>no id is fine too</p>',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="/test" rel="noopener noreferrer" target="_blank">Test</a>',
-                '<a href="/test" target="_blank">Test</a>',
-                'noopener rel attribute is removed when link_rel_value is an empty string'
+            'remove element if missing a required attribute' => [
+                // Note that only one required attribute has to be present for the element to be allowed
+                'validElements' => ['p' => ['attributes' => ['id' => ['isRequired' => true], 'style' => ['isRequired' => true]]]],
+                'input' => '<p style="wow">with style is okay</p><p id="keep" bad="strip">Test</p><p>no p if no id</p>',
+                'expected' => '<p style="wow">with style is okay</p><p id="keep">Test</p>no p if no id',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="/test" target="_blank">Test</a>',
-                '<a href="/test" target="_blank">Test</a>',
-                'noopener rel attribute is unchanged when link_rel_value is null'
+            'remove element with no attributes' => [
+                'validElements' => ['p' => ['removeIfNoAttributes' => true, 'attributes' => ['id' => true]]],
+                'input' => '<p id="keep" bad="strip">Test</p><p>no attributes, no p tag</p>',
+                'expected' => '<p id="keep">Test</p>no attributes, no p tag',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="javascript:alert(0);">Test</a>',
-                '<a>Test</a>',
-                'Javascript in the href attribute of a link is completely removed'
+            'set default and forced values' => [
+                'validElements' => ['p' => ['attributes' => [
+                    'default1' => ['value' => 'default1', 'valueType' => 'default'],
+                    'default2' => ['value' => 'default2', 'valueType' => 'default'],
+                    'force1' => ['value' => 'force1', 'valueType' => 'forced'],
+                    'force2' => ['value' => 'force2', 'valueType' => 'forced'],
+                ]]],
+                'input' => '<p default1="specific1" force1="specific1">Test</p>',
+                'expected' => '<p default1="specific1" force1="force1" default2="default2" force2="force2">Test</p>',
             ],
-            [
-                'a[href|target|rel]',
-                '<a href="' . implode("\n", str_split(' javascript:')) . '">Test</a>',
-                '<a>Test</a>',
-                'Javascript in the href attribute of a link is completely removed even for multiline markup'
+            'set empty default and forced values' => [
+                'validElements' => ['p' => ['attributes' => [
+                    'default1' => ['value' => '', 'valueType' => 'default'],
+                    'force1' => ['value' => '', 'valueType' => 'forced'],
+                ]]],
+                'input' => '<p force1="specific1">Test</p>',
+                'expected' => '<p force1="" default1="">Test</p>',
             ],
-            [
-                'map[name],area[href|shape|coords]',
-                '<map name="test"><area shape="rect" coords="34,44,270,350" href="javascript:alert(0);"></map>',
-                '<map name="test"><area shape="rect" coords="34,44,270,350"></map>',
-                'Javascript in the href attribute of a map\'s clickable area is completely removed'
+            'set null default and forced values' => [
+                'validElements' => ['p' => ['attributes' => [
+                    'default1' => ['value' => null, 'valueType' => 'default'],
+                    'force1' => ['value' => null, 'valueType' => 'forced'],
+                ]]],
+                'input' => '<p force1="specific1">Test</p>',
+                'expected' => '<p force1="specific1">Test</p>',
             ],
-            [
-                'iframe[src]',
-                '<iframe src="javascript:alert(0);"></iframe>',
-                '<iframe></iframe>',
-                'Javascript in the src attribute of an iframe is completely removed'
+            'validate attribute values' => [
+                'validElements' => ['p' => ['attributes' => [
+                    'id' => ['value' => ['v1', 'v2'], 'valueType' => 'valid'],
+                    'class' => ['value' => 'oooh', 'valueType' => 'valid'],
+                ]]],
+                'input' => '<p id="v1" class="oooh">Test</p><p id="v2" class="what">Test</p><p id="v3">Test</p>',
+                'expected' => '<p id="v1" class="oooh">Test</p><p id="v2">Test</p><p>Test</p>',
             ],
-            [
-                'iframe[src]',
-                '<iframe src="jAvAsCrIpT:alert(0);"></iframe>',
-                '<iframe></iframe>',
-                'Mixed case javascript in the src attribute of an iframe is completely removed'
+            'substitute element tags' => [
+                'validElements' => [
+                    'strong' => ['attributes' => ['id' => true]],
+                    'b' => ['convertTo' => 'strong'],
+                ],
+                'input' => '<b id="1">Test</b><strong id="2">Boldened</strong>',
+                'expected' => '<strong id="1">Test</strong><strong id="2">Boldened</strong>',
             ],
-            [
-                'iframe[src]',
-                "<iframe src=\"java\tscript:alert(0);\"></iframe>",
-                '<iframe></iframe>',
-                'Javascript with tab elements the src attribute of an iframe is completely removed'
+            'chained substitute element tags' => [
+                'validElements' => [
+                    'strong' => ['attributes' => ['id' => true]],
+                    'span' => ['convertTo' => 'b'],
+                    'b' => ['convertTo' => 'strong'],
+                    'a' => ['convertTo' => 'strong'],
+                ],
+                'input' => '<b id="1">Test</b><strong id="2">Boldened</strong><a>link is strong</a><span>span is strong</span>',
+                'expected' => '<strong id="1">Test</strong><strong id="2">Boldened</strong><strong>link is strong</strong><strong>span is strong</strong>',
             ],
-            [
-                'object[data]',
-                '<object data="OK"></object>',
-                '<object data="OK"></object>',
-                'Object with OK content in the data attribute is retained'
+            'chained substitute element tags different order' => [
+                'validElements' => [
+                    'b' => ['convertTo' => 'strong'],
+                    'span' => ['convertTo' => 'b'],
+                    'a' => ['convertTo' => 'strong'],
+                    'strong' => ['attributes' => ['id' => true]],
+                ],
+                'input' => '<b id="1">Test</b><strong id="2">Boldened</strong><a>link is strong</a><span>span is strong</span>',
+                'expected' => '<strong id="1">Test</strong><strong id="2">Boldened</strong><strong>link is strong</strong><strong>span is strong</strong>',
             ],
-            [
-                'object[data]',
-                '<object data=javascript:alert()>',
-                '<object></object>',
-                'Object with dangerous javascript content in data attribute is completely removed'
+            'remove JS in link href' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'input' => '<a href="javascript:alert(0);">Test</a>',
+                'expected' => '<a>Test</a>',
             ],
-            [
-                'object[data]',
-                '<object data="javascript:alert()">',
-                '<object></object>',
-                'Object with dangerous javascript content in data attribute with quotes is completely removed'
+            'remove multiline JS in link href' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'input' => '<a href="' . implode("\n", str_split(' javascript:')) . '">Test</a>',
+                'expected' => '<a>Test</a>',
             ],
-            [
-                'object[data]',
-                '<object data="data:text/html;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
-                '<object></object>',
-                'Object with dangerous html content in data attribute is completely removed'
+            'remove JS in area href' => [
+                'validElements' => [
+                    'map' => ['attributes' => ['name' => true]],
+                    'area' => ['attributes' => ['href' => true, 'shape' => true, 'coords' => true]]
+                ],
+                'input' => '<map name="test"><area shape="rect" coords="34,44,270,350" href="javascript:alert(0);"></map>',
+                'expected' => '<map name="test"><area shape="rect" coords="34,44,270,350"></map>',
             ],
-            [
-                'object[data]',
-                '<object data="' . implode("\n", str_split(' DATA:TEXT/HTML;')) . 'base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
-                '<object></object>',
-                'Object with split upper-case dangerous html content in data attribute is completely removed'
+            'area href not hardcoded to be removed' => [
+                'validElements' => [
+                    'map' => ['attributes' => ['name' => true]],
+                    'area' => ['attributes' => ['href' => true, 'shape' => true, 'coords' => true]]
+                ],
+                'input' => '<map name="test"><area shape="rect" coords="34,44,270,350" href="valid-href"></map>',
+                'expected' => '<map name="test"><area shape="rect" coords="34,44,270,350" href="valid-href"></map>',
             ],
-            [
-                'object[data]',
-                '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
-                '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4="></object>',
-                'Object with safe xml content in data attribute is retained'
+            'remove JS in iframe src' => [
+                'validElements' => ['iframe' => ['attributes' => ['src' => true]]],
+                'input' => '<iframe src="javascript:alert(0);"></iframe>',
+                'expected' => '<iframe></iframe>',
             ],
-            [
-                'img[src]',
-                '<img src="https://owasp.org/myimage.jpg" style="url:xss" onerror="alert(1)">',
-                '<img src="https://owasp.org/myimage.jpg">',
-                'XSS vulnerable attributes starting with on or style are removed via configuration'
+            'remove mixed case JS in iframe src' => [
+                'validElements' => ['iframe' => ['attributes' => ['src' => true]]],
+                'input' => '<iframe src="jAvAsCrIpT:alert(0);"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            'remove tabbed JS in iframe src' => [
+                'validElements' => ['iframe' => ['attributes' => ['src' => true]]],
+                'input' => "<iframe src=\"java\tscript:alert(0);\"></iframe>",
+                'expected' => '<iframe></iframe>',
+            ],
+            'keep safe data attributes when allowed' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="OK"></object>',
+                'expected' => '<object data="OK"></object>',
+            ],
+            'remove JS in data attribute' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data=javascript:alert()>',
+                'expected' => '<object></object>',
+            ],
+            'remove JS from data attribute with quotes' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="javascript:alert()">',
+                'expected' => '<object></object>',
+            ],
+            'remove text/html from data attribute' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="data:text/html;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                'expected' => '<object></object>',
+            ],
+            'remove weirdly formatted text/html from data attribute' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="' . implode("\n", str_split(' DATA:TEXT/HTML;')) . 'base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                'expected' => '<object></object>',
+            ],
+            'keep text/xml content in data attribute' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                'expected' => '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4="></object>',
             ],
         ];
     }
 
     #[DataProvider('provideSanitise')]
-    public function testSanitisation(string $validElements, string $input, string $output, string $desc): void
-    {
-        foreach (['valid_elements', 'extended_valid_elements'] as $configType) {
-            $config = HTMLEditorConfig::get('htmleditorsanitisertest_' . $configType);
-            $config->setOptions([$configType => $validElements]);
-            // Remove default valid elements if we're testing extended valid elements
-            if ($configType !== 'valid_elements') {
-                $config->setOptions(['valid_elements' => '']);
-            }
-            $sanitiser = new HtmlEditorSanitiser($config);
-
-            $value = 'noopener noreferrer';
-            if (strpos($desc ?? '', 'link_rel_value is an empty string') !== false) {
-                $value = '';
-            } elseif (strpos($desc ?? '', 'link_rel_value is null') !== false) {
-                $value = null;
-            }
-
-            HTMLEditorSanitiser::config()->set('link_rel_value', $value);
-
-            $htmlValue = HTMLValue::create($input);
-            $sanitiser->sanitise($htmlValue);
-
-            $this->assertEquals($output, $htmlValue->getContent(), "{$desc} - using config type: {$configType}");
-        }
-    }
-
-    /**
-     * Ensure that when there are no valid elements at all for a configuration set,
-     * nothing is allowed.
-     */
-    public function testSanitiseNoValidElements(): void
+    public function testSanitise(array $validElements, string $input, string $expected): void
     {
         $config = HTMLEditorConfig::get('htmleditorsanitisertest');
-        $config->setOptions(['valid_elements' => '']);
-        $config->setOptions(['extended_valid_elements' => '']);
-        $sanitiser = new HtmlEditorSanitiser($config);
+        $config->setElementRulesFromArray($validElements);
+        $sanitiser = new HTMLEditorSanitiser($config);
+        $htmlValue = new HTMLValue($input);
 
-        $htmlValue = HTMLValue::create('<p>standard text</p><table><tbody><tr><th><a href="some-link">text</a></th></tr><tr><td>Header</td></tr></tbody></table>');
         $sanitiser->sanitise($htmlValue);
+        $this->assertEquals($expected, $htmlValue->getContent());
+    }
 
-        $this->assertEquals('standard texttextHeader', $htmlValue->getContent());
+    public static function provideSanitiseLinkRel(): array
+    {
+        return [
+            'rel attr added if target is set' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'linkRelValue' => 'noopener noreferrer',
+                'input' => '<a href="/test" target="_blank">Test</a>',
+                'expected' => '<a href="/test" target="_blank" rel="noopener noreferrer">Test</a>',
+            ],
+            'rel attr added regardless of target value' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'linkRelValue' => 'noopener noreferrer',
+                'input' => '<a href="/test" target="_top">Test</a>',
+                'expected' => '<a href="/test" target="_top" rel="noopener noreferrer">Test</a>',
+            ],
+            'rel attr removed if target is not set' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'linkRelValue' => 'noopener noreferrer',
+                'input' => '<a href="/test" rel="noopener noreferrer">Test</a>',
+                'expected' => '<a href="/test">Test</a>',
+            ],
+            'rel attr removed if relVal is empty string' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'linkRelValue' => '',
+                'input' => '<a href="/test" rel="noopener noreferrer" target="_blank">Test</a>',
+                'expected' => '<a href="/test" target="_blank">Test</a>',
+            ],
+            'rel attr unchanged if relVal is null' => [
+                'validElements' => ['a' => ['attributes' => ['href' => true, 'target' => true, 'rel' => true]]],
+                'linkRelValue' => null,
+                'input' => '<a href="/test" target="_blank">Test</a>',
+                'expected' => '<a href="/test" target="_blank">Test</a>',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSanitiseLinkRel')]
+    public function testSanitiseLinkRel(array $validElements, ?string $linkRelValue, string $input, string $expected): void
+    {
+        $config = HTMLEditorConfig::get('htmleditorsanitisertest');
+        $config->setElementRulesFromArray($validElements);
+        $sanitiser = new HTMLEditorSanitiser($config);
+        HTMLEditorSanitiser::config()->set('link_rel_value', $linkRelValue);
+        $htmlValue = new HTMLValue($input);
+
+        $sanitiser->sanitise($htmlValue);
+        $this->assertEquals($expected, $htmlValue->getContent());
     }
 }

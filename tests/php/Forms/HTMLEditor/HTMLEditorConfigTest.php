@@ -2,18 +2,15 @@
 
 namespace SilverStripe\Forms\Tests\HTMLEditor;
 
-use Exception;
-use SilverStripe\Control\Director;
-use SilverStripe\Control\SimpleResourceURLGenerator;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\ModuleLoader;
-use SilverStripe\Core\Manifest\ModuleManifest;
-use SilverStripe\Core\Manifest\ResourceURLGenerator;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorAttributeRule;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
-use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorElementRule;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorRuleSet;
+use SilverStripe\Forms\HTMLEditor\TextAreaConfig;
+use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\NullEditorConfig;
 
 class HTMLEditorConfigTest extends SapphireTest
 {
@@ -22,149 +19,321 @@ class HTMLEditorConfigTest extends SapphireTest
     {
         parent::setUp();
 
-        TinyMCEConfig::config()->set('base_dir', 'test/thirdparty/tinymce');
-    }
-
-    public function testEnablePluginsByString()
-    {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins('plugin1');
-        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
-    }
-
-    public function testEnablePluginsByArray()
-    {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins(['plugin1', 'plugin2']);
-        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
-        $this->assertContains('plugin2', array_keys($c->getPlugins() ?? []));
-    }
-
-    public function testEnablePluginsByMultipleStringParameters()
-    {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins('plugin1', 'plugin2');
-        $this->assertContains('plugin1', array_keys($c->getPlugins() ?? []));
-        $this->assertContains('plugin2', array_keys($c->getPlugins() ?? []));
-    }
-
-    public function testEnablePluginsByArrayWithPaths()
-    {
-        // Disable nonces
-        $urlGenerator = new SimpleResourceURLGenerator();
-        Injector::inst()->registerService($urlGenerator, ResourceURLGenerator::class);
-
-        Config::modify()->set(Director::class, 'alternate_base_url', 'http://mysite.com/subdir');
-        $c = new TinyMCEConfig();
-        $c->setTheme('modern');
-        $c->setOption('language', 'es');
-        $c->disablePlugins('table', 'emoticons', 'code', 'link', 'importcss', 'lists', 'autolink', 'searchreplace', 'visualblocks', 'wordcount');
-        $c->enablePlugins(
-            [
-                'plugin1' => 'mypath/plugin1.js',
-                'plugin2' => '/anotherbase/mypath/plugin2.js',
-                'plugin3' => 'https://www.google.com/plugin.js',
-                'plugin4' => null,
-                'plugin5' => null,
+        // Make sure we're using the TextAreaConfig even if a module provides an alternative.
+        Injector::inst()->load([
+            HTMLEditorConfig::class => [
+                'class' => TextAreaConfig::class,
             ]
-        );
-        $attributes = $c->getAttributes();
-        $config = json_decode($attributes['data-config'] ?? '', true);
-        $plugins = $config['external_plugins'];
-        $this->assertNotEmpty($plugins);
-
-        // Plugin specified via relative url
-        $this->assertContains('plugin1', array_keys($plugins ?? []));
-        $this->assertEquals(
-            'http://mysite.com/subdir/mypath/plugin1.js',
-            $plugins['plugin1']
-        );
-
-        // Plugin specified via root-relative url
-        $this->assertContains('plugin2', array_keys($plugins ?? []));
-        $this->assertEquals(
-            'http://mysite.com/anotherbase/mypath/plugin2.js',
-            $plugins['plugin2']
-        );
-
-        // Plugin specified with absolute url
-        $this->assertContains('plugin3', array_keys($plugins ?? []));
-        $this->assertEquals(
-            'https://www.google.com/plugin.js',
-            $plugins['plugin3']
-        );
-
-        // Plugin specified with standard location
-        $this->assertContains('plugin4', array_keys($plugins ?? []));
-        $this->assertEquals(
-            '/subdir/test/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
-            $plugins['plugin4']
-        );
-
-        // Check that internal plugins are extractable separately
-        $this->assertEquals(['plugin4', 'plugin5'], $c->getInternalPlugins());
+        ]);
     }
 
-    public function testDisablePluginsByString()
+    public static function provideGet(): array
     {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins('plugin1');
-        $c->disablePlugins('plugin1');
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
+        $configs = [
+            'empty-config' => ['elementRules' => []],
+            'special' => [
+                'elementRules' => [
+                    'p' => ['attributes' => ['id' => true]],
+                    'div' => true,
+                    'span' => [
+                        'removeIfEmpty' => true,
+                    ],
+                ],
+                'extraElementRules' => [
+                    // this 'p' overrides the main one, note they don't get merged!
+                    'p' => ['padEmpty' => true],
+                    // REMOVES the span! Not allowed anymore.
+                    'span' => null,
+                    'table' => true,
+                ],
+                'options' => [
+                    'something' => 'value',
+                    'somethingelse' => null,
+                    'another thing' => ['whatever'],
+                    'ints too' => 123,
+                ],
+            ],
+            'different-class-and-allow-all' => [
+                'configClass' => NullEditorConfig::class,
+                'elementRules' => [
+                    '_global' => ['attributes' => ['*' => true]],
+                    '*' => true,
+                ],
+            ],
+        ];
+        return [
+            'basically nothing set' => [
+                'predefinedConfigs' => $configs,
+                'identifier' => 'empty-config',
+                'expectedClass' => TextAreaConfig::class,
+                'expectedOptions' => [
+                    'editorIdentifier' => 'empty-config',
+                ],
+                'expectedElementRules' => [],
+            ],
+            'set all the things' => [
+                'predefinedConfigs' => $configs,
+                'identifier' => 'special',
+                'expectedClass' => TextAreaConfig::class,
+                'expectedOptions' => [
+                    'something' => 'value',
+                    'somethingelse' => null,
+                    'another thing' => ['whatever'],
+                    'ints too' => 123,
+                    'editorIdentifier' => 'special',
+                ],
+                'expectedElementRules' => [
+                    'p' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => true,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                    'div' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                    'table' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                ],
+            ],
+            'different class defined' => [
+                'predefinedConfigs' => $configs,
+                'identifier' => 'different-class-and-allow-all',
+                'expectedClass' => NullEditorConfig::class,
+                'expectedOptions' => [
+                    'editorIdentifier' => 'different-class-and-allow-all',
+                ],
+                'expectedElementRules' => [
+                    '_global' => [
+                        'attributes' => [
+                            '/^.*$/' => [
+                                'nameIsPattern' => true,
+                                'value' => [],
+                                'valueType' => HTMLEditorAttributeRule::VALUE_VALID,
+                            ],
+                        ],
+                    ],
+                    '/^.*$/' => [
+                        'nameIsPattern' => true,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                ],
+            ],
+        ];
     }
 
-    public function testDisablePluginsByArray()
-    {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins(['plugin1', 'plugin2']);
-        $c->disablePlugins(['plugin1', 'plugin2']);
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
-        $this->assertNotContains('plugin2', array_keys($c->getPlugins() ?? []));
+    #[DataProvider('provideGet')]
+    public function testGet(
+        array $predefinedConfigs,
+        string $identifier,
+        string $expectedClass,
+        array $expectedOptions,
+        array $expectedElementRules
+    ): void {
+        HTMLEditorConfig::config()->set('default_config_definitions', $predefinedConfigs);
+        $config = HTMLEditorConfig::get($identifier);
+
+        $this->assertSame($expectedClass, get_class($config));
+        $this->assertSame($expectedOptions, $config->getOptions());
+        $this->assertSame($expectedElementRules, $this->getElementRulesAsArray($config->getElementRuleSet()));
     }
 
-    public function testDisablePluginsByMultipleStringParameters()
+    public static function provideSetElementRulesFromArray(): array
     {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins('plugin1', 'plugin2');
-        $c->disablePlugins('plugin1', 'plugin2');
-        $this->assertNotContains('plugin1', array_keys($c->getPlugins() ?? []));
-        $this->assertNotContains('plugin2', array_keys($c->getPlugins() ?? []));
+        return [
+            'empty set' => [
+                'rulesArray' => [],
+                'expected' => [],
+            ],
+            'various rules 1' => [
+                'rulesArray' => [
+                    HTMLEditorElementRule::GLOBAL_NAME => ['attributes' => [
+                        'id' => true,
+                        'dir' => ['value' => ['ltr', 'rtl'], 'valueType' => HTMLEditorAttributeRule::VALUE_VALID]
+                    ]],
+                    'div' => true,
+                    'p' => ['convertTo' => 'div'],
+                    // Note "iframe" isn't included in $expected because "object" isn't an allowed element
+                    'iframe' => ['convertTo' => 'object'],
+                    'span' => [
+                        'padEmpty' => true,
+                        'removeIfEmpty' => true,
+                        'removeIfNoAttributes' => false,
+                    ],
+                    'dagger' => [
+                        'removeIfNoAttributes' => true,
+                        'attributes' => [
+                            'data-*' => true,
+                            'test' => ['value' => 'test', 'valueType' => HTMLEditorAttributeRule::VALUE_FORCED],
+                        ],
+                    ],
+                ],
+                'expected' => [
+                    HTMLEditorElementRule::GLOBAL_NAME => ['attributes' => [
+                        'id' => [
+                            'nameIsPattern' => false,
+                            'value' => [],
+                            'valueType' => HTMLEditorAttributeRule::VALUE_VALID,
+                        ],
+                        'dir' => [
+                            'nameIsPattern' => false,
+                            'value' => ['ltr', 'rtl'],
+                            'valueType' => HTMLEditorAttributeRule::VALUE_VALID,
+                        ],
+                    ]],
+                    'p' => ['convertTo' => 'div'],
+                    'div' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                    'span' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => true,
+                        'removeIfEmpty' => true,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                    'dagger' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => true,
+                        'attributes' => [
+                            'test' => [
+                                'nameIsPattern' => false,
+                                'value' => 'test',
+                                'valueType' => HTMLEditorAttributeRule::VALUE_FORCED,
+                            ],
+                            '/^data-.*$/' => [
+                                'nameIsPattern' => true,
+                                'value' => [],
+                                'valueType' => HTMLEditorAttributeRule::VALUE_VALID,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'various rules 2' => [
+                'rulesArray' => [
+                    'div' => null,
+                    'span' => false,
+                    'p' => [
+                        'attributes' => [
+                            // These don't get EXPLICITLY disallowed i.e. the global rules still apply
+                            // and may allow them separately.
+                            'id' => null,
+                            'class' => false,
+                            'style' => [
+                                'isRequired' => true,
+                                'value' => 'display: none;',
+                                'valueType' => HTMLEditorAttributeRule::VALUE_DEFAULT,
+                            ],
+                        ],
+                    ],
+                    's?met+g' => [],
+                ],
+                'expected' => [
+                    'p' => [
+                        'nameIsPattern' => false,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [
+                            'style' => [
+                                'nameIsPattern' => false,
+                                'value' => 'display: none;',
+                                'valueType' => HTMLEditorAttributeRule::VALUE_DEFAULT,
+                                'isRequired' => true,
+                            ],
+                        ],
+                    ],
+                    '/^s.?met.+g$/' => [
+                        'nameIsPattern' => true,
+                        'padEmpty' => false,
+                        'removeIfEmpty' => false,
+                        'removeIfNoAttributes' => false,
+                        'attributes' => [],
+                    ],
+                ],
+            ],
+        ];
     }
 
-    public function testDisablePluginsByArrayWithPaths()
+    #[DataProvider('provideSetElementRulesFromArray')]
+    public function testSetElementRulesFromArray(array $rulesArray, array $expected): void
     {
-        $c = new TinyMCEConfig();
-        $c->enablePlugins(['plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2']);
-        $c->disablePlugins(['plugin1', 'plugin2']);
-        $plugins = $c->getPlugins();
-        $this->assertNotContains('plugin1', array_keys($plugins ?? []));
-        $this->assertNotContains('plugin2', array_keys($plugins ?? []));
+        $config = new NullEditorConfig();
+        $config->setElementRulesFromArray($rulesArray);
+        $this->assertSame($expected, $this->getElementRulesAsArray($config->getElementRuleSet()));
     }
 
-    public function testRequireJSIncludesAllConfigs()
+    private function getElementRulesAsArray(HTMLEditorRuleSet $ruleset): array
     {
-        $a = HTMLEditorConfig::get('configA');
-        $c = HTMLEditorConfig::get('configB');
-
-        $aAttributes = $a->getAttributes();
-        $cAttributes = $c->getAttributes();
-
-        $this->assertNotEmpty($aAttributes['data-config']);
-        $this->assertNotEmpty($cAttributes['data-config']);
-    }
-
-    public function testExceptionThrownWhenBaseDirAbsent()
-    {
-        TinyMCEConfig::config()->remove('base_dir');
-        ModuleLoader::inst()->pushManifest(new ModuleManifest(__DIR__));
-
-        try {
-            $config = new TinyMCEConfig();
-            $this->expectException(Exception::class);
-            $this->expectExceptionMessageMatches('/module is not installed/');
-            $config->getScriptURL();
-        } finally {
-            ModuleLoader::inst()->popManifest();
+        $elementRules = [
+            HTMLEditorElementRule::GLOBAL_NAME => [
+                'attributes' => $this->getAttributeRulesAsArray($ruleset->getGlobalRule()),
+            ],
+        ];
+        if (empty($elementRules[HTMLEditorElementRule::GLOBAL_NAME]['attributes'])) {
+            unset($elementRules[HTMLEditorElementRule::GLOBAL_NAME]);
         }
+        foreach ($ruleset->getElementSubstitutionRules() as $from => $to) {
+            $elementRules[$from] = ['convertTo' => $to];
+        }
+        foreach ($ruleset->getElementRules() as $name => $elementRule) {
+            $elementRules[$name] = [
+                'nameIsPattern' => $elementRule->getNameIsPattern(),
+                'padEmpty' => $elementRule->getPadEmpty(),
+                'removeIfEmpty' => $elementRule->getRemoveIfEmpty(),
+                'removeIfNoAttributes' => $elementRule->getRemoveIfNoAttributes(),
+                'attributes' => $this->getAttributeRulesAsArray($elementRule),
+            ];
+        }
+        return $elementRules;
+    }
+
+    private function getAttributeRulesAsArray(HTMLEditorElementRule $elementRule): array
+    {
+        $attributeRules = [];
+        foreach ($elementRule->getAttributeRules() as $name => $attributeRule) {
+            $defaultValue = $attributeRule->getDefaultValue();
+            $forcedValue = $attributeRule->getForcedValue();
+            $validValues = $attributeRule->getValidValues();
+            if ($defaultValue) {
+                $value = $defaultValue;
+                $valueType = HTMLEditorAttributeRule::VALUE_DEFAULT;
+            } elseif ($forcedValue) {
+                $value = $forcedValue;
+                $valueType = HTMLEditorAttributeRule::VALUE_FORCED;
+            } else {
+                $value = $validValues;
+                $valueType = HTMLEditorAttributeRule::VALUE_VALID;
+            }
+            $attributeRules[$name] = [
+                'nameIsPattern' => $attributeRule->getNameIsPattern(),
+                'value' => $value,
+                'valueType' => $valueType,
+            ];
+            if ($attributeRule->getIsRequired()) {
+                $attributeRules[$name]['isRequired'] = true;
+            }
+        }
+        return $attributeRules;
     }
 }

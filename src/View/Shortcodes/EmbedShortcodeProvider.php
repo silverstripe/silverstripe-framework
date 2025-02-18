@@ -279,7 +279,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     private static function buildAttributeListFromArguments(array $arguments, array $exclude = []): ArrayList
     {
         // A whitelist of shortcode attributes which are allowed in the resultant markup.
-        // Note that the tinymce plugin restricts attributes on the client-side separately.
+        // Note that any WYSIWYG plugin may restrict attributes on the client-side separately.
         $whitelist = [
             'url',
             'thumbnail',
