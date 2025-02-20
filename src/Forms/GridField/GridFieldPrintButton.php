@@ -126,6 +126,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
      */
     public function handlePrint($gridField, $request = null)
     {
+        $orig = ini_get('max_execution_time');
         set_time_limit(60);
         Requirements::clear();
 
@@ -133,14 +134,18 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
 
         $this->extend('updatePrintData', $data);
 
+        $ret = null;
         if ($data) {
-            return $data->renderWith([
+            $ret = $data->renderWith([
                 get_class($gridField) . '_print',
                 GridField::class . '_print',
             ]);
         }
+        // Reset the time limit, this is done mainly to prevent the 60 second time limit from
+        // making unrelated unit-tests run out of execution time when running a testsuite.
+        set_time_limit($orig);
 
-        return null;
+        return $ret;
     }
 
     /**
