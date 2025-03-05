@@ -3,10 +3,10 @@ Name: coreextensions
 ---
 SilverStripe\Security\Member:
   extensions:
-    - SilverStripe\Security\InheritedPermissionFlusher
+    InheritedPermissionFlusher: SilverStripe\Security\InheritedPermissionFlusher
 SilverStripe\Security\Group:
   extensions:
-    - SilverStripe\Security\InheritedPermissionFlusher
+    InheritedPermissionFlusher: SilverStripe\Security\InheritedPermissionFlusher
 SilverStripe\Dev\Command\DbBuild:
   extensions:
-    - SilverStripe\Dev\Validation\DbBuildExtension
+    DbBuildExtension: SilverStripe\Dev\Validation\DbBuildExtension
