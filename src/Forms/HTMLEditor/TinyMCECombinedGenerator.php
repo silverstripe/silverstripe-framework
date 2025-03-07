@@ -9,10 +9,12 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ModuleResource;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Generates tinymce config using a combined file generated via a standard
  * SilverStripe {@link GeneratedAssetHandler}
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCECombinedGenerator
  */
 class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
 {
@@ -30,6 +32,15 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
      * @var GeneratedAssetHandler
      */
     protected $assetHandler = null;
+
+    public function __construct()
+    {
+        Deprecation::noticeWithNoReplacment(
+            '5.4.0',
+            'Will be replaced with SilverStripe\TinyMCE\TinyMCECombinedGenerator',
+            Deprecation::SCOPE_CLASS
+        );
+    }
 
     /**
      * Assign backend store for generated assets

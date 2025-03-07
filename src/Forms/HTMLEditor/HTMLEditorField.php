@@ -54,6 +54,7 @@ class HTMLEditorField extends TextareaField
      * Extra height per row
      *
      * @var int
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\HTMLEditor\HTMLEditorConfig.fixed_row_height
      */
     private static $fixed_row_height = 20;
 
