@@ -220,6 +220,7 @@ class Member extends DataObject
      * @config
      * @var String If this is set, then a session cookie with the given name will be set on log-in,
      * and cleared on logout.
+     * This cookie shares the same SameSite and Secure parameters as the main session cookie.
      */
     private static $login_marker_cookie = null;
 

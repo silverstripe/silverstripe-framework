@@ -169,20 +169,6 @@ class CookieJarTest extends SapphireTest
     }
 
     /**
-     * Check that the session cookie samesite configuration is used for session cookies.
-     */
-    public function testGetSameSite(): void
-    {
-        $cookieJar = new CookieJar();
-        $methodGetSameSite = new ReflectionMethod($cookieJar, 'getSameSite');
-        $methodGetSameSite->setAccessible(true);
-        Config::modify()->set(Session::class, 'cookie_samesite', 'None');
-
-        $this->assertSame('None', $methodGetSameSite->invoke($cookieJar, session_name()));
-        $this->assertSame('Lax', $methodGetSameSite->invoke($cookieJar, 'some-random-cookie'));
-    }
-
-    /**
      * Check that the cookies are correctly set as secure for samesite === "None"
      * The passed in value for secure should be respected otherwise.
      */

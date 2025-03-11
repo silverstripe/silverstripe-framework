@@ -79,8 +79,19 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         $session->set($this->getSessionVariable(), $member->ID);
 
         // This lets apache rules detect whether the user has logged in
-        if (Member::config()->get('login_marker_cookie')) {
-            Cookie::set(Member::config()->get('login_marker_cookie'), 1, 0);
+        $loginMarkerCookie = Member::config()->get('login_marker_cookie');
+        if ($loginMarkerCookie) {
+            $cookieParams = session_get_cookie_params();
+            Cookie::set(
+                $loginMarkerCookie,
+                1,
+                0,
+                $cookieParams['path'],
+                $cookieParams['domain'],
+                $cookieParams['secure'],
+                $cookieParams['httponly'],
+                $cookieParams['samesite']
+            );
         }
     }
 
@@ -113,11 +124,20 @@ class SessionAuthenticationHandler implements AuthenticationHandler
      */
     public function logOut(?HTTPRequest $request = null)
     {
+        $cookieParams = session_get_cookie_params();
         $request = $request ?: Controller::curr()->getRequest();
         $request->getSession()->destroy(true, $request);
 
-        if (Member::config()->get('login_marker_cookie')) {
-            Cookie::force_expiry(Member::config()->get('login_marker_cookie'));
+        $loginMarkerCookie = Member::config()->get('login_marker_cookie');
+        if ($loginMarkerCookie) {
+            Cookie::force_expiry(
+                $loginMarkerCookie,
+                $cookieParams['path'],
+                $cookieParams['domain'],
+                $cookieParams['secure'],
+                $cookieParams['httponly'],
+                $cookieParams['samesite']
+            );
         }
     }
 }

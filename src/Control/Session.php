@@ -327,7 +327,8 @@ class Session
                         $cookieParams['path'],
                         $cookieParams['domain'],
                         $cookieParams['secure'],
-                        true
+                        true,
+                        $cookieParams['samesite'],
                     );
                 }
             } else {
@@ -372,7 +373,7 @@ class Session
             }
         }
 
-        $sameSite = static::config()->get('cookie_samesite') ?? Cookie::SAMESITE_LAX;
+        $sameSite = $this->getCookieSamesite();
         Cookie::validateSameSite($sameSite);
         $secure = $this->isCookieSecure($sameSite, Director::is_https($request));
 
@@ -391,7 +392,7 @@ class Session
      */
     private function isCookieSecure(string $sameSite, bool $isHttps): bool
     {
-        if ($sameSite === 'None') {
+        if ($sameSite === Cookie::SAMESITE_NONE) {
             return true;
         }
         return $isHttps && $this->config()->get('cookie_secure');
@@ -410,10 +411,15 @@ class Session
                 if (!$request) {
                     $request = Controller::curr()->getRequest();
                 }
-                $path = $this->config()->get('cookie_path') ?: Director::baseURL();
-                $domain = $this->config()->get('cookie_domain');
-                $secure = Director::is_https($request) && $this->config()->get('cookie_secure');
-                Cookie::force_expiry(session_name(), $path, $domain, $secure, true);
+                $cookieParams = $this->buildCookieParams($request);
+                Cookie::force_expiry(
+                    session_name(),
+                    $cookieParams['path'],
+                    $cookieParams['domain'],
+                    $cookieParams['secure'],
+                    true,
+                    $cookieParams['samesite']
+                );
             }
             session_destroy();
         }
@@ -696,5 +702,10 @@ class Session
         if (!headers_sent() && session_status() === PHP_SESSION_ACTIVE) {
             session_regenerate_id(true);
         }
+    }
+
+    private function getCookieSamesite(): string
+    {
+        return static::config()->get('cookie_samesite') ?? Cookie::SAMESITE_STRICT;
     }
 }

@@ -1277,7 +1277,7 @@ class MemberTest extends FunctionalTest
 
         // First device
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
-        Cookie::set('alc_device', null);
+        Cookie::set('alc_device', false);
         // Second device
         Injector::inst()->get(IdentityStore::class)->logIn($m1, true);
 

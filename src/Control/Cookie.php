@@ -14,22 +14,16 @@ class Cookie
 {
     use Configurable;
 
-    public const SAMESITE_LAX = 'Lax';
-
     public const SAMESITE_STRICT = 'Strict';
+
+    public const SAMESITE_LAX = 'Lax';
 
     public const SAMESITE_NONE = 'None';
 
-    /**
-     * @config
-     *
-     * @var bool
-     */
-    private static $report_errors = true;
+    private static bool $report_errors = true;
 
     /**
      * Must be "Strict", "Lax", or "None"
-     * @config
      */
     private static string $default_samesite = Cookie::SAMESITE_LAX;
 
@@ -38,9 +32,9 @@ class Cookie
      *
      * @return Cookie_Backend
      */
-    public static function get_inst()
+    public static function get_inst(): Cookie_Backend
     {
-        return Injector::inst()->get('SilverStripe\\Control\\Cookie_Backend');
+        return Injector::inst()->get(Cookie_Backend::class);
     }
 
     /**
@@ -48,63 +42,61 @@ class Cookie
      *
      * Expiry time is set in days, and defaults to 90.
      *
-     * @param string $name
-     * @param mixed $value
-     * @param float $expiry
-     * @param string $path
-     * @param string $domain
-     * @param bool $secure
-     * @param bool $httpOnly
-     *
      * See http://php.net/set_session
      */
     public static function set(
-        $name,
-        $value,
-        $expiry = 90,
-        $path = null,
-        $domain = null,
-        $secure = false,
-        $httpOnly = true
+        string $name,
+        string|false $value,
+        int $expiry = 90,
+        ?string $path = null,
+        ?string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true,
+        string $sameSite = ''
     ) {
-        return Cookie::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
+        if ($sameSite === '') {
+            $sameSite = static::config()->get('default_samesite') ?? Cookie::SAMESITE_LAX;
+        }
+        static::validateSameSite($sameSite);
+        return Cookie::get_inst()->set($name, $value, $expiry, $path, $domain, $secure, $httpOnly, $sameSite);
     }
 
     /**
      * Get the cookie value by name. Returns null if not set.
-     *
-     * @param string $name
-     * @param bool $includeUnsent
-     *
-     * @return null|string
      */
-    public static function get($name, $includeUnsent = true)
+    public static function get(string $name, bool $includeUnsent = true): ?string
     {
         return Cookie::get_inst()->get($name, $includeUnsent);
     }
 
     /**
      * Get all the cookies.
-     *
-     * @param bool $includeUnsent
-     *
-     * @return array
      */
-    public static function get_all($includeUnsent = true)
+    public static function get_all(bool $includeUnsent = true): array
     {
         return Cookie::get_inst()->getAll($includeUnsent);
     }
 
     /**
-     * @param string $name
-     * @param null|string $path
-     * @param null|string $domain
-     * @param bool $secure
-     * @param bool $httpOnly
+     * Force the expiry of a cookie by name
      */
-    public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public static function force_expiry(
+        string $name,
+        ?string $path = null,
+        ?string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true,
+        string $sameSite = ''
+    ): void {
+        Cookie::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly, $sameSite);
+    }
+
+    /**
+     * Get the default value for the "samesite" cookie attribute.
+     */
+    public static function getDefaultSameSite(): string
     {
-        return Cookie::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
+        return static::config()->get('default_samesite') ?? Cookie::SAMESITE_LAX;
     }
 
     /**

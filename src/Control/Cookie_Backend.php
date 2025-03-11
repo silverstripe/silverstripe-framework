@@ -17,20 +17,31 @@ interface Cookie_Backend
      *
      * @param array $cookies The existing cookies to load into the cookie jar
      */
-    public function __construct($cookies = []);
+    public function __construct(array $cookies = []);
 
     /**
      * Set a cookie
      *
      * @param string $name The name of the cookie
-     * @param string $value The value for the cookie to hold
-     * @param float $expiry The number of days until expiry
-     * @param string $path The path to save the cookie on (falls back to site base)
-     * @param string $domain The domain to make the cookie available on
+     * @param string|false $value The value for the cookie to hold. Empty string or false will clear the cookie
+     * @param int $expiry The number of days until expiry; 0 means it will expire at the end of the session
+     * @param string|null $path The path to save the cookie on (falls back to site base)
+     * @param string|null $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
+     * @param string $sameSite The "SameSite" value for the cookie. Must be one of "None", "Lax", or "Strict".
+     * If $sameSite is left empty, the default will be used.
      */
-    public function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false, $httpOnly = true);
+    public function set(
+        string $name,
+        string|false $value,
+        int $expiry = 90,
+        ?string $path = null,
+        ?string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true,
+        string $sameSite = ''
+    ): void;
 
     /**
      * Get the cookie value by name
@@ -40,7 +51,7 @@ interface Cookie_Backend
      *
      * @return string|null The cookie value or null if unset
      */
-    public function get($name, $includeUnsent = true);
+    public function get(string $name, bool $includeUnsent = true): ?string;
 
     /**
      * Get all the cookies
@@ -48,16 +59,25 @@ interface Cookie_Backend
      * @param boolean $includeUnsent Include cookies we've yet to send
      * @return array All the cookies
      */
-    public function getAll($includeUnsent = true);
+    public function getAll(bool $includeUnsent = true): array;
 
     /**
      * Force the expiry of a cookie by name
      *
      * @param string $name The name of the cookie to expire
-     * @param string $path The path to save the cookie on (falls back to site base)
-     * @param string $domain The domain to make the cookie available on
+     * @param string|null $path The path to save the cookie on (falls back to site base)
+     * @param string|null $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
      * @param boolean $httpOnly Prevent the cookie being accessible by JS
+     * @param string $sameSite The "SameSite" value for the cookie. Must be one of "None", "Lax", or "Strict".
+     * If $sameSite is left empty, the default will be used.
      */
-    public function forceExpiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true);
+    public function forceExpiry(
+        string $name,
+        ?string $path = null,
+        ?string $domain = null,
+        bool $secure = false,
+        bool $httpOnly = true,
+        string $sameSite = ''
+    ): void;
 }
