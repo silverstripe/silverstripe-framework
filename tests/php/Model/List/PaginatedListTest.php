@@ -218,10 +218,14 @@ class PaginatedListTest extends SapphireTest
         $list = new PaginatedList($list);
 
         $list->setCurrentPage(3);
-        $this->assertEquals(10, count($list->toArray()));
+        // toArray uses the iterator while count is a discrete method that doesn't use the iterator.
+        // They should both give the same results.
+        $this->assertCount(10, $list->toArray());
+        $this->assertEquals(10, $list->count());
 
         $list->setLimitItems(false);
-        $this->assertEquals(50, count($list->toArray()));
+        $this->assertCount(50, $list->toArray());
+        $this->assertEquals(50, $list->count());
     }
 
     public function testCurrentPage()

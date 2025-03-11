@@ -143,11 +143,19 @@ class PaginatedList extends ListDecorator
     }
 
     /**
-     * Returns the total number of items in the unpaginated list.
-     *
-     * @return int
+     * Returns the number of items on the current page of the list.
+     * For the total number of items in the unpaginated list, use getTotalItems().
      */
-    public function getTotalItems()
+    public function count(): int
+    {
+        return count($this->getListForCurrentPage());
+    }
+
+    /**
+     * Returns the total number of items in the unpaginated list.
+     * For the number of items on the current page of the list, use count().
+     */
+    public function getTotalItems(): int
     {
         if ($this->totalItems === null) {
             $this->totalItems = count($this->list ?? []);
@@ -214,15 +222,7 @@ class PaginatedList extends ListDecorator
 
     public function getIterator(): Traversable
     {
-        $pageLength = $this->getPageLength();
-        if ($this->limitItems && $pageLength) {
-            $tmptList = clone $this->list;
-            return new IteratorIterator(
-                $tmptList->limit($pageLength, $this->getPageStart())
-            );
-        } else {
-            return new IteratorIterator($this->list);
-        }
+        return new IteratorIterator($this->getListForCurrentPage());
     }
 
     /**
@@ -533,16 +533,6 @@ class PaginatedList extends ListDecorator
     }
 
     /**
-     * Returns the total number of items in the list
-     * @depreated 5.4.0 Use getTotalItems() instead.
-     */
-    public function TotalItems()
-    {
-        Deprecation::notice('5.4.0', 'Use getTotalItems() instead.');
-        return $this->getTotalItems();
-    }
-
-    /**
      * Set the request object for this list
      *
      * @param HTTPRequest|ArrayAccess $request
@@ -558,5 +548,16 @@ class PaginatedList extends ListDecorator
     public function getRequest()
     {
         return $this->request;
+    }
+
+    private function getListForCurrentPage()
+    {
+        $pageLength = $this->getPageLength();
+        if ($this->limitItems && $pageLength) {
+            $tmptList = clone $this->list;
+            return $tmptList->limit($pageLength, $this->getPageStart());
+        } else {
+            return $this->list;
+        }
     }
 }

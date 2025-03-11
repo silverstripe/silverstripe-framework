@@ -126,19 +126,9 @@ abstract class ListDecorator extends ModelData implements SS_List
         return $this->list->last();
     }
 
-    public function getTotalItems()
+    public function getTotalItems(): int
     {
         return $this->list->count();
-    }
-
-    /**
-     * @return int
-     * @depreated 5.4.0 Use getTotalItems() instead.
-     */
-    public function TotalItems()
-    {
-        Deprecation::notice('5.4.0', 'Use getTotalItems() instead.');
-        return $this->getTotalItems();
     }
 
     public function count(): int
