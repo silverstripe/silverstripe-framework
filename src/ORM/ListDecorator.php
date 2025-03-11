@@ -133,12 +133,19 @@ abstract class ListDecorator extends ViewableData implements SS_List, Sortable, 
         return $this->list->last();
     }
 
+    public function getTotalItems()
+    {
+        return $this->list->count();
+    }
+
     /**
      * @return int
+     * @depreated 5.4.0 Use getTotalItems() instead.
      */
     public function TotalItems()
     {
-        return $this->list->count();
+        Deprecation::notice('5.4.0', 'Use getTotalItems() instead.');
+        return $this->getTotalItems();
     }
 
     public function Count(): int

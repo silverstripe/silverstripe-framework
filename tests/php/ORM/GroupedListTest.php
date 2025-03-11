@@ -193,6 +193,6 @@ class GroupedListTest extends SapphireTest
             )
         );
 
-        $this->assertEquals(4, $list->TotalItems());
+        $this->assertEquals(4, $list->getTotalItems());
     }
 }

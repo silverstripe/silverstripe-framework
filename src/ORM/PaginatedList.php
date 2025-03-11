@@ -540,9 +540,11 @@ class PaginatedList extends ListDecorator
 
     /**
      * Returns the total number of items in the list
+     * @depreated 5.4.0 Use getTotalItems() instead.
      */
     public function TotalItems()
     {
+        Deprecation::notice('5.4.0', 'Use getTotalItems() instead.');
         return $this->getTotalItems();
     }
 
