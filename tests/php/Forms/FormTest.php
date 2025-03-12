@@ -1282,9 +1282,7 @@ class FormTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideRequireSudoMode
-     */
+    #[DataProvider('provideRequireSudoMode')]
     public function testRequireSudoMode(string $class, bool $expected): void
     {
         $request = Controller::curr()->getRequest();

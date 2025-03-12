@@ -56,30 +56,35 @@ class NumericFieldTest extends SapphireTest
                 'locale' => 'de_CH',
                 'scale' => 0,
                 'input' => '13000',
+                'expDataValue' => '13000',
                 'expValue' => "13’000"
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => 0,
                 'input' => '15',
+                'expDataValue' => '15',
                 'expValue' => '15'
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => null,
                 'input' => '12.0',
+                'expDataValue' => '12',
                 'expValue' => '12.0'
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => null,
                 'input' => '12.1',
+                'expDataValue' => '12.1',
                 'expValue' => '12.1'
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => 1,
                 'input' => '14000.5',
+                'expDataValue' => '14000.5',
                 'expValue' => "14’000.5"
             ],
             // nl
@@ -357,7 +362,7 @@ class NumericFieldTest extends SapphireTest
                 'locale' => 'de_CH',
                 'scale' => 0,
                 'submittedValue' => '13000',
-                'dataValue' => 13000,
+                'dataValue' => '13000',
                 'cleanedInput' => '13’000'
             ],
             [
@@ -370,27 +375,27 @@ class NumericFieldTest extends SapphireTest
                 'locale' => 'de_CH',
                 'scale' => 2,
                 'submittedValue' => '12.00',
-                'dataValue' => 12.00
+                'dataValue' => '12'
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => 1,
                 'submittedValue' => '11 000',
-                'dataValue' => 11000,
+                'dataValue' => '11000',
                 'cleanedInput' => "11’000.0"
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => 0,
                 'submittedValue' => "11.000",
-                'dataValue' => 11,
+                'dataValue' => '11',
                 'cleanedInput' => "11"
             ],
             [
                 'locale' => 'de_CH',
                 'scale' => null,
                 'submittedValue' => '11,000',
-                'dataValue' => 11000.0,
+                'dataValue' => '11000',
                 'cleanedInput' => '11’000.0'
             ],
             [
@@ -403,7 +408,7 @@ class NumericFieldTest extends SapphireTest
                 'locale' => 'de_CH',
                 'scale' => 1,
                 'submittedValue' => "15 000.5",
-                'dataValue' => 15000.5,
+                'dataValue' => '15000.5',
                 'cleanedInput' => '15’000.5'
             ],
             [
@@ -416,7 +421,7 @@ class NumericFieldTest extends SapphireTest
                 'locale' => 'de_CH',
                 'scale' => 1,
                 'submittedValue' => '15,000.5',
-                'dataValue' => 15000.5,
+                'dataValue' => '15000.5',
                 'cleanedInput' => '15’000.5'
             ],
             // nl_nl (same as de)

@@ -148,7 +148,7 @@ class NumericField extends TextField
         $value = $formatter->parse($value, $this->getNumberType(), $parsed); // Note: may store literal `false` for invalid values
         // Ensure that entire string is parsed
         if ($parsed < mb_strlen($this->originalValue ?? '')) {
-            $this->value = false;
+            $value = false;
         }
         $this->value = $this->cast($value);
         return $this;
