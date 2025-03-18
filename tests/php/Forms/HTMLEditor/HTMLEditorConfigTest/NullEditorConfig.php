@@ -49,5 +49,8 @@ class NullEditorConfig extends HTMLEditorConfig
         return [];
     }
 
-    public function init(): void {}
+    public function init(): void
+    {
+        // no-op
+    }
 }
