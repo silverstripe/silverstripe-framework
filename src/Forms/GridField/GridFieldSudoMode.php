@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\GridField;
 use RuntimeException;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\SudoModePasswordField;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 use SilverStripe\View\SSViewer;
 
 /**
