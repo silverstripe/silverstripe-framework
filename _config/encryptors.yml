@@ -11,5 +11,7 @@ name: coreencryptors
       'SilverStripe\Security\PasswordEncryptor_PHPHash': md5
     sha1_v2.4:
       'SilverStripe\Security\PasswordEncryptor_PHPHash': sha1
+    pbkdf2_sha512:
+      'SilverStripe\Security\PasswordEncryptorPBKDF2': sha512
     blowfish:
       'SilverStripe\Security\PasswordEncryptor_Blowfish':
