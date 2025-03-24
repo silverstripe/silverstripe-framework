@@ -248,23 +248,42 @@ class SakeTest extends SapphireTest
         $this->assertSame($versionProvider->getVersion(), $sake->getVersion());
     }
 
-    public function testLegacyDevCommands(): void
+    public static function provideLegacyDevCommands(): array
+    {
+        return [
+            [
+                'command' => 'dev',
+                'correctName' => 'list',
+            ],
+            [
+                'command' => 'dev/config',
+                'correctName' => 'config:dump',
+            ],
+            [
+                'command' => 'dev/tasks',
+                'correctName' => 'tasks',
+            ],
+            // NOTE: Do not run `dev/build` as that will manipulate the database in a way that causes subsequent tests to fail.
+        ];
+    }
+
+    #[DataProvider('provideLegacyDevCommands')]
+    public function testLegacyDevCommands(string $command, string $correctName): void
     {
         $sake = new Sake(Injector::inst()->get(Kernel::class));
         $sake->setAutoExit(false);
-        $input = new ArrayInput(['dev/config']);
+        $input = new ArrayInput([$command, '--quiet' => 1]);
         $input->setInteractive(false);
         $output = new BufferedOutput();
 
         $deprecationsWereEnabled = Deprecation::isEnabled();
         Deprecation::enable();
         $this->expectException(DeprecationTestException::class);
-        $expectedErrorString = 'Using the command with the name \'dev/config\' is deprecated. Use \'config:dump\' instead';
+        $expectedErrorString = "Using the command with the name '$command' is deprecated. Use '$correctName' instead";
         $this->expectExceptionMessage($expectedErrorString);
 
         $exitCode = $sake->run($input, $output);
         $this->assertSame(0, $exitCode, 'command should run successfully');
-        // $this->assertStringContainsString('abababa', $output->fetch());
 
         $this->allowCatchingDeprecations($expectedErrorString);
         try {

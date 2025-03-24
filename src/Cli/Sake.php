@@ -185,7 +185,7 @@ class Sake extends Application
                 $suggestions->suggestValue(new Suggestion($command->getName(), $command->getDescription()));
                 foreach ($command->getAliases() as $name) {
                     // Skip legacy dev aliases
-                    if (str_starts_with($name, 'dev/')) {
+                    if ($name === 'dev' || str_starts_with($name, 'dev/')) {
                         continue;
                     }
                     $suggestions->suggestValue(new Suggestion($name, $command->getDescription()));
@@ -204,7 +204,7 @@ class Sake extends Application
     {
         $name = $command->getName() ?? '';
         $nameUsedAs = $input->getFirstArgument() ?? '';
-        if (str_starts_with($nameUsedAs, 'dev/')) {
+        if ($nameUsedAs === 'dev' || str_starts_with($nameUsedAs, 'dev/')) {
             Deprecation::notice(
                 '6.0.0',
                 "Using the command with the name '$nameUsedAs' is deprecated. Use '$name' instead",
@@ -242,6 +242,10 @@ class Sake extends Application
         foreach ($commands as $command) {
             if (in_array(get_class($command), $toHide)) {
                 $command->setHidden(true);
+            }
+            // Add deprecated alias "sake dev" for backwards compatibility
+            if ($command instanceof ListCommand) {
+                $command->setAliases([...$command->getAliases(), 'dev']);
             }
         }
 

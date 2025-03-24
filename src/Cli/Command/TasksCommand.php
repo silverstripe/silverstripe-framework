@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Note the description is blue so it stands out, to avoid developers missing it if they add a new
  * task and suddenly they don't see the tasks in their main commands list anymore.
  */
-#[AsCommand(name: 'tasks', description: '<fg=blue>See a list of build tasks to run</>')]
+#[AsCommand(name: 'tasks', description: '<fg=blue>See a list of build tasks to run</>', aliases: ['dev/tasks'])]
 class TasksCommand extends Command
 {
     private Command $listCommand;
