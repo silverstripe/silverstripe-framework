@@ -754,6 +754,9 @@ class Security extends Controller implements TemplateGlobalProvider
             }
 
             $handlers = [$authName => $authenticator];
+        } elseif ($authName) {
+            // Invalid auth name passed
+            throw new HTTPResponse_Exception('Invalid authenticator: ' . $authName, 400);
         } else {
             // Delegate to all of them, building a tabbed view - e.g. Security/login/
             $handlers = $this->getApplicableAuthenticators($service);
