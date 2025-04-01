@@ -83,7 +83,7 @@ class DB
 
     /**
      * The name of the last connection used. This is only used for unit-testing purposes.
-     * @interal
+     * @internal
      */
     private static string $lastConnectionName = '';
 
