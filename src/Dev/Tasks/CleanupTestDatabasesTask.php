@@ -34,6 +34,9 @@ class CleanupTestDatabasesTask extends BuildTask
         TempDatabase::create()->deleteAll();
     }
 
+    /**
+     * @deprecated 5.4.0 Will be replaced with canRunInBrowser()
+     */
     public function canView(): bool
     {
         Deprecation::withSuppressedNotice(function () {

@@ -4,6 +4,7 @@ namespace SilverStripe\Dev\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\ViewableData;
 use SilverStripe\Dev\SapphireTest;
@@ -11,6 +12,8 @@ use SilverStripe\Dev\SapphireTest;
 /**
  * Constraint for checking if a ViewableData (e.g. ArrayData or any DataObject) contains fields matching the given
  * key-value pairs.
+ *
+ * @deprecated 5.4.0 Will be renamed to ModelDataContains
  */
 class ViewableDataContains extends Constraint implements TestOnly
 {
@@ -24,6 +27,7 @@ class ViewableDataContains extends Constraint implements TestOnly
      */
     public function __construct(array $match)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be renamed to ModelDataContains', Deprecation::SCOPE_CLASS);
         if (!is_array($match)) {
             throw SapphireTest::createInvalidArgumentException(
                 1,

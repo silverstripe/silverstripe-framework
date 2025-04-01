@@ -9,6 +9,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
@@ -100,9 +101,11 @@ class DefaultCacheFactory implements CacheFactory
      * Determine if apcu is supported
      *
      * @return bool
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
      */
     protected function isAPCUSupported()
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         static $apcuSupported = null;
         if (null === $apcuSupported) {
             // Need to check for CLI because Symfony won't: https://github.com/symfony/symfony/pull/25080

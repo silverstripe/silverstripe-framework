@@ -22,6 +22,7 @@ use SilverStripe\ORM\RelationList;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\Core\Injector\Injector;
 use Psr\Log\LoggerInterface;
+use SilverStripe\Dev\Deprecation;
 
 trait SearchableDropdownTrait
 {
@@ -418,9 +419,11 @@ trait SearchableDropdownTrait
 
     /**
      * @param Validator $validator
+     * @deprecated 5.4.0 Will be removed in favour of the `FormField::validate()` method.
      */
     public function validate($validator): bool
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed in favour of the `FormField::validate()` method.');
         return $this->extendValidationResult(true, $validator);
     }
 

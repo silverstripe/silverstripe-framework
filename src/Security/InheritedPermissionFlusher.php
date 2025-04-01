@@ -7,6 +7,7 @@ use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Cache\MemberCacheFlusher;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * @extends DataExtension<Member|Group>
@@ -76,9 +77,11 @@ class InheritedPermissionFlusher extends DataExtension implements Flushable
 
     /**
      * Flushes all registered MemberCacheFlusher services
+     * @deprecated 5.4.0 Will be renamed to onFlushCache()
      */
     public function flushCache()
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be renamed to onFlushCache()');
         $ids = $this->getMemberIDList();
         foreach ($this->getServices() as $service) {
             $service->flushMemberCache($ids);

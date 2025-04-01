@@ -19,6 +19,9 @@ class SSListContainsOnlyMatchingItems extends Constraint implements TestOnly
      */
     private $match;
 
+    /**
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+     */
     protected SSListExporter $exporter;
 
     /**

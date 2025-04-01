@@ -43,7 +43,7 @@ abstract class BuildTask
     /**
      * @var bool $enabled If set to FALSE, keep it from showing in the list
      * and from being executable through URL or CLI.
-     * @deprecated - remove in CMS 6 and rely on $is_enabled instead
+     * @deprecated 5.1.0 Use the is_enabled configuration property instead.
      */
     protected $enabled = true;
 

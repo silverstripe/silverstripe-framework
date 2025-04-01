@@ -128,8 +128,12 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
         }
     }
 
+    /**
+     * @deprecated 5.4.0 Will be replaced with runRegisteredAction()
+     */
     public function runRegisteredController(HTTPRequest $request)
     {
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with runRegisteredAction()');
         $controllerClass = null;
 
         $baseUrlPart = $request->param('Action');

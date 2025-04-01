@@ -200,7 +200,7 @@ class VersionProvider
     /**
      * Load composer.lock's contents and return it
      *
-     * @deprecated 5.1 Has been replaced by composer-runtime-api
+     * @deprecated 5.1.0 Has been replaced by composer-runtime-api
      * @param bool $cache
      * @return array
      */

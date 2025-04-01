@@ -10,6 +10,7 @@ class ApcuCacheFactory implements CacheFactory
 {
     /**
      * @var string
+     * @deprecated 5.4.0 Will be replaced with a key in the $params argument
      */
     protected $version;
 

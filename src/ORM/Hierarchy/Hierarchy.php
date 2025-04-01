@@ -16,6 +16,7 @@ use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use Exception;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -115,9 +116,11 @@ class Hierarchy extends DataExtension
      * Validate the owner object - check for existence of infinite loops.
      *
      * @param ValidationResult $validationResult
+     * @deprecated 5.4.0 Will be renamed to updateValidate()
      */
     public function validate(ValidationResult $validationResult)
     {
+        Deprecation::notice('5.4.0', 'Will be renamed to updateValidate()');
         // The object is new, won't be looping.
         $owner = $this->owner;
         if (!$owner->ID) {
@@ -571,9 +574,12 @@ class Hierarchy extends DataExtension
      * Flush all Hierarchy caches:
      * - Children (instance)
      * - NumChildren (instance)
+     *
+     * @deprecated 5.4.0 Will be renamed to onFlushCache()
      */
     public function flushCache()
     {
+        Deprecation::notice('5.4.0', 'Will be renamed to onFlushCache()');
         $this->owner->_cache_children = null;
         Hierarchy::$cache_numChildren = [];
     }

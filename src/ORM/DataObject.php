@@ -4155,8 +4155,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         return is_numeric($this->ID) && $this->ID > 0;
     }
 
-    /*
-     * @ignore
+    /**
      * @deprecated 5.2.0 Will be removed without equivalent functionality
      */
     private static $subclass_access = true;
