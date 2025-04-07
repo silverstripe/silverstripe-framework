@@ -199,9 +199,11 @@ class Debug
     /**
      * Check if the user has permissions to run URL debug tools,
      * else redirect them to log in.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality.
      */
     public static function require_developer_login()
     {
+        Deprecation::noticeWithNoReplacment('5.4.0');
         // Don't require login for dev mode
         if (Director::isDev()) {
             return;
