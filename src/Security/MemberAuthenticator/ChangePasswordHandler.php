@@ -59,12 +59,22 @@ class ChangePasswordHandler extends RequestHandler
         parent::__construct();
     }
 
+
     /**
      * Handle the change password request
      *
      * @return array|HTTPResponse
      */
     public function changepassword()
+    {
+        $ret = $this->processChangePasswordUrlVars();
+        if ($ret) {
+            return $ret;
+        }
+        return $this->createChangePasswordHtml();
+    }
+
+    protected function processChangePasswordUrlVars(): mixed
     {
         $request = $this->getRequest();
 
@@ -74,19 +84,39 @@ class ChangePasswordHandler extends RequestHandler
             $member = Member::get()->filter(['ID' => (int)$request->getVar('m')])->first();
         }
         $token = $request->getVar('t');
-        if ($token !== null && $member && $member->validateAutoLoginToken($token)) {
-            // Redirect to current url, though with a temporary hash in the URL
-            // This will ensure that that the member ID and token will not appear in browser history
-            // Instead only a harmless temporary hash will appear in the browser history
-            // We do this instead of setting the session value at this point because if
-            // cookie SameSite is set to Strict, then  when clicking a password reset link via a
-            // webmail client, then the redirect will be treated as cross-origin request and value
-            // of the session cookie will not be accessible
-            $autoLoginTempHash = $this->createAutoLoginTempHash();
-            $member->AutoLoginTempHash = $autoLoginTempHash;
-            $member->write();
-            $response = $this->redirect($this->link . '?th=' . $autoLoginTempHash);
-            return $response;
+        if ($token !== null && $member) {
+            if ($member->validateAutoLoginToken($token)) {
+                // Redirect to current url, though with a temporary hash in the URL
+                // This will ensure that that the member ID and token will not appear in browser history
+                // Instead only a harmless temporary hash will appear in the browser history
+                // We do this instead of setting the session value at this point because if
+                // cookie SameSite is set to Strict, then  when clicking a password reset link via a
+                // webmail client, then the redirect will be treated as cross-origin request and value
+                // of the session cookie will not be accessible
+                $autoLoginTempHash = $this->createAutoLoginTempHash();
+                $member->AutoLoginTempHash = $autoLoginTempHash;
+                $member->write();
+                $response = $this->redirect($this->link . '?th=' . $autoLoginTempHash);
+                return $response;
+            } else {
+                // Show a friendly message saying the login token has expired
+                $message = DBField::create_field(
+                    'HTMLFragment',
+                    _t(
+                        'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
+                        '<p>The password reset link is invalid or expired.</p>'
+                        . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+                        . ' you <a href="{link2}">log in</a>.</p>',
+                        [
+                            'link1' => Security::lost_password_url(),
+                            'link2' => Security::login_url(),
+                        ]
+                    )
+                );
+                return [
+                    'Content' => $message,
+                ];
+            }
         }
 
         // Check the if we're processing a temp token redirect
@@ -104,7 +134,11 @@ class ChangePasswordHandler extends RequestHandler
                 $this->setSessionTokenShared($member, $encryptedToken, false);
             }
         }
+        return null;
+    }
 
+    protected function createChangePasswordHtml()
+    {
         // If there is AutoLoginHash in the session, then create a form
         // If the token is valid then Member will be automatically logined in
         // as part of doChangePassword() which is the form action handler of the change password form
@@ -138,26 +172,6 @@ class ChangePasswordHandler extends RequestHandler
             return [
                 'Content' => $message,
                 'Form'    => $this->changePasswordForm()
-            ];
-        }
-        // Show a friendly message saying the login token has expired
-        if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
-            $message = DBField::create_field(
-                'HTMLFragment',
-                _t(
-                    'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
-                    '<p>The password reset link is invalid or expired.</p>'
-                    . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                    . ' you <a href="{link2}">log in</a>.</p>',
-                    [
-                        'link1' => Security::lost_password_url(),
-                        'link2' => Security::login_url(),
-                    ]
-                )
-            );
-
-            return [
-                'Content' => $message,
             ];
         }
 
