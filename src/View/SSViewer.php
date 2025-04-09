@@ -353,13 +353,13 @@ class SSViewer
 
     private function rewriteHashLinks(string $output, bool $rewritePHP) : string
     {
-        if (!Injector::inst()->has(HTTPRequest::class)) {
-            Injector::inst()->get(LoggerInterface::class)->warning('No HTTPRequest is available to get the path for rewriting hash links.');
-            return $output;
-        }
-        $request = Injector::inst()->get(HTTPRequest::class);
-        $url = '/' . $request->getURL(true);
         if (strpos($output ?? '', '<base') !== false) {
+            if (!Injector::inst()->has(HTTPRequest::class)) {
+                Injector::inst()->get(LoggerInterface::class)->warning('No HTTPRequest is available to get the path for rewriting hash links.');
+                return $output;
+            }
+            $request = Injector::inst()->get(HTTPRequest::class);
+            $url = '/' . $request->getURL(true);
             if ($rewritePHP) {
                 $thisURLRelativeToBase = <<<PHP
                 <?php echo \\SilverStripe\\Core\\Convert::raw2att(preg_replace(
