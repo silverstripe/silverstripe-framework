@@ -466,7 +466,7 @@ class DataQueryTest extends SapphireTest
         $query->sort('"SortOrder"');
         $query->where(
             [
-            '"DataQueryTest_C"."Title" = ?' => ['First']
+                '"DataQueryTest_C"."Title" = ?' => ['First']
             ]
         );
         $result = $query->getFinalisedQuery(['Title']);
@@ -878,5 +878,51 @@ class DataQueryTest extends SapphireTest
         $dataQuery->innerJoin('test_implicit_joins', '"DataQueryTest_G"."ID" = "test_implicit_joins"."ID"');
         // This will throw an exception if it fails - it passes if there's no exception.
         $dataQuery->execute();
+    }
+
+    public function testDistinctCount()
+    {
+        // The COUNT(DISTINCT ...) is added in case a join is added to the query (to apply a filter on related records)
+        $distinct = new DataQueryTest\ObjectHasMultiRelationalHasMany();
+        $distinct->Name = 'Distinct';
+        $distinct->SortOrder =  2;
+        $distinct->write();
+
+        $otherDistinct = new DataQueryTest\ObjectHasMultiRelationalHasMany();
+        $otherDistinct->Name = 'OtherDistinct';
+        $otherDistinct->SortOrder =  1;
+        $otherDistinct->write();
+
+        $baseCount = DataQueryTest\ObjectHasMultiRelationalHasOne::get()->count();
+
+        $obj1 = new DataQueryTest\ObjectHasMultiRelationalHasOne();
+        $obj1->Name = 'sam';
+        $obj1->MultiRelationalID = $distinct->ID;
+        $obj1->write();
+
+        $obj2 = new DataQueryTest\ObjectHasMultiRelationalHasOne();
+        $obj2->Name = 'sam';
+        $obj2->MultiRelationalID = $distinct->ID;
+        $obj2->write();
+
+        $obj3 = new DataQueryTest\ObjectHasMultiRelationalHasOne();
+        $obj3->Name = 'john';
+        $obj3->MultiRelationalID = $otherDistinct->ID;
+        $obj3->write();
+
+        $newCount = DataQueryTest\ObjectHasMultiRelationalHasOne::get()->count();
+
+        $this->assertEquals($baseCount + 3, $newCount);
+
+        // This should return 1, not 2, even if we have two persons called 'sam' but only one 'Distinct' parent
+        $count = DataQueryTest\ObjectHasMultiRelationalHasMany::get()->filter('MultiRelational1.Name', 'sam')->count();
+        $this->assertEquals(1, $count);
+
+        // We have two 'sam' objects
+        $count = DataQueryTest\ObjectHasMultiRelationalHasOne::get()->filter('Name', 'sam')->count();
+        $this->assertEquals(2, $count);
+
+        $count = $distinct->MultiRelational1()->count();
+        $this->assertEquals(2, $count);
     }
 }
