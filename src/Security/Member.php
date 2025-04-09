@@ -103,6 +103,11 @@ class Member extends DataObject
 
     private static $indexes = [
         'Email' => true,
+        // Helps queries using default_sort
+        'SortedName'=> [
+            'type' => 'index',
+            'columns' => ['Surname', 'FirstName'],
+        ],
         //Removed due to duplicate null values causing MSSQL problems
         //'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true)
     ];
