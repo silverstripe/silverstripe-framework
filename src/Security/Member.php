@@ -75,12 +75,18 @@ class Member extends DataObject
     private static $db = [
         'FirstName' => 'Varchar',
         'Surname' => 'Varchar',
-        'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
-        'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
-        'TempIDExpired' => 'Datetime', // Expiry of temp login
+        // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
+        'Email' => 'Varchar(254)',
+        // Temporary id used for cms re-authentication
+        'TempIDHash' => 'Varchar(160)',
+        // Expiry of temp login
+        'TempIDExpired' => 'Datetime',
         'Password' => 'Varchar(160)',
-        'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
+        // Used to auto-login the user on password reset
+        'AutoLoginHash' => 'Varchar(160)',
         'AutoLoginExpired' => 'Datetime',
+        // Temporary hash used for auto-login to prevent leaking AutoLoginHash on redirect
+        'AutoLoginTempHash' => 'Varchar(64)',
         // This is an arbitrary code pointing to a PasswordEncryptor instance,
         // not an actual encryption algorithm.
         // Warning: Never change this field after its the first password hashing without
@@ -164,6 +170,7 @@ class Member extends DataObject
     private static $hidden_fields = [
         'AutoLoginHash',
         'AutoLoginExpired',
+        'AutoLoginTempHash',
         'PasswordEncryption',
         'PasswordExpiry',
         'LockedOutUntil',

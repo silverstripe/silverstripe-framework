@@ -15,6 +15,7 @@ use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Security\Security;
 
 class ChangePasswordHandler extends RequestHandler
@@ -47,6 +48,18 @@ class ChangePasswordHandler extends RequestHandler
     ];
 
     /**
+     * Keep track of whether a temporary hash is already generated during this request cycle.
+     * @internal
+     */
+    private static bool $tempHashAlreadyGenerated = false;
+
+    /**
+     * Keep track of whether a temporary hash has already been processed during this request cycle.
+     * @internal
+     */
+    private static bool $tempHashAlreadyProcessed = false;
+
+    /**
      * @param string $link The URL to recreate this request handler
      * @param MemberAuthenticator $authenticator
      */
@@ -64,73 +77,120 @@ class ChangePasswordHandler extends RequestHandler
      */
     public function changepassword()
     {
+        $ret = $this->processChangePasswordUrlVars();
+        if ($ret) {
+            return $ret;
+        }
+        return $this->createChangePasswordResponse();
+    }
+
+    /**
+     * Process the get URL variables for a change password request.
+     * If additional action is required, return a response for that action.
+     * Otherwise, return null which indicates the change password form should be presented.
+     */
+    protected function processChangePasswordUrlVars(): array|HTTPResponse|null
+    {
         $request = $this->getRequest();
 
-        // Extract the member from the URL.
+        // Check if we're resetting via a token in URL i.e. reset password email link
         $member = null;
         if ($request->getVar('m') !== null) {
             $member = Member::get()->filter(['ID' => (int)$request->getVar('m')])->first();
         }
+
+        // If we have a token and a member, a user is trying to reset their password.
+        // We'll set a temp token and redirect back here for the next round of processing.
         $token = $request->getVar('t');
-
-        // Check whether we are merely changing password, or resetting.
-        if ($token !== null && $member && $member->validateAutoLoginToken($token)) {
-            $this->setSessionToken($member, $token);
-
-            // Redirect to myself, but without the hash in the URL
-            return $this->redirect($this->link);
+        if ($token !== null && $member !== null) {
+            if (!$member->validateAutoLoginToken($token)) {
+                return $this->getInvalidTokenResponse();
+            }
+            // Redirect to current url, though with a temporary hash in the URL.
+            // This will ensure that that the member ID and token will not appear in browser history.
+            // Instead only a harmless temporary hash will appear in the browser history.
+            // We do this instead of setting the session value at this point because if
+            // cookie SameSite is set to Strict, then when clicking a password reset link via a
+            // webmail client the redirect will be treated as cross-origin request and value
+            // of the session cookie will not be accessible, so we have to set the session variable
+            // AFTER the redirect.
+            $autoLoginTempHash = $this->createAutoLoginTempHash($member);
+            $member->AutoLoginTempHash = $autoLoginTempHash;
+            $member->write();
+            $response = $this->redirect(Controller::join_links($this->link, '?th=' . $autoLoginTempHash));
+            return $response;
         }
 
+        // If a member or password reset token was included on its own, the URL was invalid.
+        if ($token !== null || $member !== null) {
+            return $this->getInvalidTokenResponse();
+        }
+
+        // If this request was a redirect which includes the temp token, set the session token.
+        $tempToken = $request->getVar('th');
+        if ($tempToken !== null && !ChangePasswordHandler::$tempHashAlreadyProcessed) {
+            $member = Member::get()->find('AutoLoginTempHash', $tempToken);
+            if (!$member) {
+                return $this->getInvalidTokenResponse();
+            }
+            // Delete the temp token from the member so that it cannot be used again
+            // This prevents the browser history from being used to access the change password form
+            $member->AutoLoginTempHash = '';
+            $member->write();
+            // Add the token to the session so that the change password form can be submitted
+            // with the token in the session, instead of the URL
+            $encryptedToken = $member->AutoLoginHash;
+            $this->setSessionToken($member, $encryptedToken, true);
+            ChangePasswordHandler::$tempHashAlreadyProcessed = true;
+        }
+
+        // If we get here, either the token is valid and we've just set it to the session,
+        // or a logged in user is changing their password with this form.
+        return null;
+    }
+
+    /**
+     * Get a response which either includes the change password form or a permission failure
+     * for when a user is trying to reset or change their password.
+     */
+    protected function createChangePasswordResponse(): array|HTTPResponse
+    {
+        // If there is AutoLoginHash in the session, then create a form.
+        // If the token is valid then Member will be automatically logined in
+        // as part of doChangePassword() which is the form action handler of the change password form.
         $session = $this->getRequest()->getSession();
-        if ($session->get('AutoLoginHash')) {
+        $hash = $session->get('AutoLoginHash');
+        if ($hash) {
+            if (!Member::get()->filter(['AutoLoginHash' => $hash])) {
+                return $this->getInvalidTokenResponse();
+            }
             $message = DBField::create_field(
                 'HTMLFragment',
                 '<p>' . _t(
-                    'SilverStripe\\Security\\Security.ENTERNEWPASSWORD',
+                    Security::class . '.ENTERNEWPASSWORD',
                     'Please enter a new password.'
                 ) . '</p>'
             );
 
-            // Subsequent request after the "first load with hash" (see previous if clause).
             return [
                 'Content' => $message,
-                'Form'    => $this->changePasswordForm()
+                'Form' => $this->changePasswordForm()
             ];
         }
 
+        // Logged in user requested a password change form.
         if (Security::getCurrentUser()) {
-            // Logged in user requested a password change form.
             $message = DBField::create_field(
                 'HTMLFragment',
                 '<p>' . _t(
-                    'SilverStripe\\Security\\Security.CHANGEPASSWORDBELOW',
+                    Security::class . '.CHANGEPASSWORDBELOW',
                     'You can change your password below.'
                 ) . '</p>'
             );
 
             return [
                 'Content' => $message,
-                'Form'    => $this->changePasswordForm()
-            ];
-        }
-        // Show a friendly message saying the login token has expired
-        if ($token !== null && $member && !$member->validateAutoLoginToken($token)) {
-            $message = DBField::create_field(
-                'HTMLFragment',
-                _t(
-                    'SilverStripe\\Security\\Security.NOTERESETLINKINVALID',
-                    '<p>The password reset link is invalid or expired.</p>'
-                    . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
-                    . ' you <a href="{link2}">log in</a>.</p>',
-                    [
-                        'link1' => Security::lost_password_url(),
-                        'link2' => Security::login_url(),
-                    ]
-                )
-            );
-
-            return [
-                'Content' => $message,
+                'Form' => $this->changePasswordForm()
             ];
         }
 
@@ -138,27 +198,31 @@ class ChangePasswordHandler extends RequestHandler
         return Security::permissionFailure(
             Controller::curr(),
             _t(
-                'SilverStripe\\Security\\Security.ERRORPASSWORDPERMISSION',
+                Security::class . '.ERRORPASSWORDPERMISSION',
                 'You must be logged in in order to change your password!'
             )
         );
     }
 
-
     /**
-     * @param Member $member
-     * @param string $token
+     * Set the encrypted session token for the member.
      */
-    protected function setSessionToken($member, $token)
+    protected function setSessionToken(Member $member, string $token, bool $alreadyEncrypted = false): void
     {
         // if there is a current member, they should be logged out
-        if ($curMember = Security::getCurrentUser()) {
+        if (Security::getCurrentUser()) {
             Injector::inst()->get(IdentityStore::class)->logOut();
         }
-
         $this->getRequest()->getSession()->regenerateSessionId();
+
+        if ($alreadyEncrypted) {
+            $autoLoginHash = $token;
+        } else {
+            $autoLoginHash = $member->encryptWithUserSettings($token);
+        }
+
         // Store the hash for the change password form. Will be unset after reload within the ChangePasswordForm.
-        $this->getRequest()->getSession()->set('AutoLoginHash', $member->encryptWithUserSettings($token));
+        $this->getRequest()->getSession()->set('AutoLoginHash', $autoLoginHash);
     }
 
     /**
@@ -217,8 +281,9 @@ class ChangePasswordHandler extends RequestHandler
 
         $session = $this->getRequest()->getSession();
         if (!$member) {
-            if ($session->get('AutoLoginHash')) {
-                $member = Member::member_from_autologinhash($session->get('AutoLoginHash'));
+            $autoLoginHash = $session->get('AutoLoginHash');
+            if ($autoLoginHash) {
+                $member = Member::member_from_autologinhash($autoLoginHash);
             }
 
             // The user is not logged in and no valid auto login hash is available
@@ -347,5 +412,50 @@ class ChangePasswordHandler extends RequestHandler
             }
         }
         return true;
+    }
+
+    /**
+     * Generate a temporary auto login hash for the member
+     */
+    private function createAutoLoginTempHash(Member $member): string
+    {
+        // If a second authenticator wants to set the temp hash, we should just use the existing hash.
+        if (ChangePasswordHandler::$tempHashAlreadyGenerated) {
+            return $member->AutoLoginTempHash;
+        }
+        // Generate a new random token. We do this instead of re-hashing the regular token
+        // because there is a slim edge-case that the member doesn't have a salt or hashing algorithm set
+        // (e.g. the member was created in code without a password) which would result in reusing the
+        // token in plain text.
+        $foundMember = null;
+        $autoLoginTempHash = '';
+        do {
+            $autoLoginTempHash = Injector::inst()->get(RandomGenerator::class)->randomToken('sha256');
+            $foundMember = Member::get()->find('AutoLoginTempHash', $autoLoginTempHash);
+        } while ($foundMember !== null);
+        ChangePasswordHandler::$tempHashAlreadyGenerated = true;
+        return $autoLoginTempHash;
+    }
+
+    /**
+     * Prepare a friendly message for if the login token is invalid or expired.
+     */
+    private function getInvalidTokenResponse(): array
+    {
+        return [
+            'Content' => DBField::create_field(
+                'HTMLFragment',
+                _t(
+                    Security::class . '.NOTERESETLINKINVALID',
+                    '<p>The password reset link is invalid or expired.</p>'
+                    . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
+                    . ' you <a href="{link2}">log in</a>.</p>',
+                    [
+                        'link1' => Security::lost_password_url(),
+                        'link2' => Security::login_url(),
+                    ]
+                )
+            ),
+        ];
     }
 }

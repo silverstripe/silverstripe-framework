@@ -655,7 +655,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @param null|HTTPRequest $request
      * @param int $service
-     * @return HTTPResponse|string Returns the "login" page as HTML code.
+     * @return HTTPResponse|RequestHandler|DBHTMLText|string Returns the "login" page as HTML code.
      * @throws HTTPResponse_Exception
      */
     public function login($request = null, $service = Authenticator::LOGIN)
@@ -701,7 +701,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @param null|HTTPRequest $request
      * @param int $service
-     * @return HTTPResponse|string
+     * @return HTTPResponse|RequestHandler|DBHTMLText|string
      */
     public function logout($request = null, $service = Authenticator::LOGOUT)
     {
@@ -850,7 +850,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param string $title The title of the form
      * @param array $templates
      * @param callable $aggregator
-     * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
+     * @return HTTPResponse|RequestHandler|DBHTMLText|string
      */
     protected function delegateToMultipleHandlers(array $handlers, $title, array $templates, callable $aggregator)
     {
@@ -884,7 +884,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @param RequestHandler $handler
      * @param string $title The title of the form
      * @param array $templates
-     * @return array|HTTPResponse|RequestHandler|DBHTMLText|string
+     * @return HTTPResponse|RequestHandler|DBHTMLText|string
      */
     protected function delegateToHandler(RequestHandler $handler, $title, array $templates = [])
     {
@@ -945,7 +945,7 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Show the "lost password" page
      *
-     * @return string Returns the "lost password" page as HTML code.
+     * @return HTTPResponse|RequestHandler|DBHTMLText|string Returns the "lost password" page as HTML code.
      */
     public function lostpassword()
     {
@@ -975,7 +975,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *
      * @see ChangePasswordForm
      *
-     * @return string|HTTPRequest Returns the "change password" page as HTML code, or a redirect response
+     * @return HTTPResponse|RequestHandler|DBHTMLText|string Returns the "change password" page as HTML code, or a redirect response
      */
     public function changepassword()
     {

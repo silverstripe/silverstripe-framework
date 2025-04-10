@@ -4,6 +4,7 @@ namespace SilverStripe\Security\Tests;
 
 use Page;
 use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionClass;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -20,8 +21,10 @@ use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Core\Validation\ValidationResult;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
+use SilverStripe\Security\MemberAuthenticator\ChangePasswordHandler;
 use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\SecurityToken;
@@ -65,6 +68,14 @@ class SecurityTest extends FunctionalTest
         parent::setUp();
 
         Director::config()->set('alternate_base_url', '/');
+    }
+
+    protected function tearDown(): void
+    {
+        $handlerReflection = new ReflectionClass(ChangePasswordHandler::class);
+        $handlerReflection->setStaticPropertyValue('tempHashAlreadyGenerated', false);
+        $handlerReflection->setStaticPropertyValue('tempHashAlreadyProcessed', false);
+        parent::tearDown();
     }
 
     public function testAccessingAuthenticatedPageRedirectsToLoginForm()
@@ -528,12 +539,13 @@ class SecurityTest extends FunctionalTest
         // Check.
         $response = $this->get('Security/changepassword/?m=' . $admin->ID . '&t=' . $token);
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals(
-            Director::absoluteURL('Security/changepassword'),
-            Director::absoluteURL((string) $response->getHeader('Location'))
+        $location = (string) $response->getHeader('Location');
+        $this->assertStringStartsWith(
+            Director::absoluteURL('Security/changepassword?th='),
+            Director::absoluteURL($location)
         );
-        // Follow redirection to form without hash in GET parameter
-        $this->get('Security/changepassword');
+        // Follow redirection
+        $this->get($location);
         $this->doTestChangepasswordForm('1nitialPassword', 'changedPassword#123');
         $this->assertEquals($this->idFromFixture(Member::class, 'test'), $this->session()->get('loggedInAs'));
 
@@ -546,6 +558,80 @@ class SecurityTest extends FunctionalTest
         $admin = DataObject::get_by_id(Member::class, $admin->ID, false);
         $this->assertNull($admin->LockedOutUntil);
         $this->assertEquals(0, $admin->FailedLoginCount);
+    }
+
+    public function testChangePasswordMultipleAuthenticators()
+    {
+        // Prepare member
+        $member = $this->objFromFixture(Member::class, 'test');
+        $member->AutoLoginHash = $member->encryptWithUserSettings('some-token');
+        $member->AutoLoginExpired = date('Y-m-d H:i:s', strtotime('+7 days'));
+        $member->write();
+
+        // Prepare dummy authenticator
+        $secondaryPasswordHandlerClass = get_class(
+            // Note we have to pass arguments into the constructor here - we can't just make an
+            // anonymous class without instantiating it unfortunately.
+            new class('', new MemberAuthenticator()) extends ChangePasswordHandler {
+                private static $allowed_actions = [
+                    'changepassword',
+                ];
+                protected function createChangePasswordResponse(): array|HTTPResponse
+                {
+                    // This is an invalid response, and is included to validate that the valid handler will be used
+                    // even if there's an invalid one in the group
+                    return [];
+                }
+            }
+        );
+        $secondaryAuthenticator = new class($secondaryPasswordHandlerClass) extends MemberAuthenticator {
+            public function __construct(private string $handlerClass)
+            {
+            }
+            public function getChangePasswordHandler($link)
+            {
+                return $this->handlerClass::create($link, $this);
+            }
+        };
+        $security = Security::singleton();
+        try {
+            // Add the dummy authenticator and prep request
+            $authenticators = $security->getAuthenticators();
+            $authenticators['test-auth'] = $secondaryAuthenticator;
+            $security->setAuthenticators($authenticators);
+            $params = [
+                't' => 'some-token',
+                'm' => $member->ID,
+            ];
+            // Don't include "/Security" because that would have been routed out by Security admin by now
+            $request = new HTTPRequest('GET', '/changepassword', $params);
+            $request->setSession(new Session([]));
+            $security->setRequest($request);
+
+            // Initial request should redirect to the form with a new temp hash
+            $response = $security->changepassword();
+            $this->assertInstanceOf(HTTPResponse::class, $response);
+            $this->assertSame(302, $response->getStatusCode());
+            $locationPrefix = Director::absoluteURL('/Security/changepassword?th=');
+            $actualLocation = $response->getHeader('Location');
+            $this->assertStringStartsWith($locationPrefix, $actualLocation);
+
+            // Second request should return the form
+            $params = [
+                'th' => str_replace($locationPrefix, '', $actualLocation),
+            ];
+            $request = new HTTPRequest('GET', '/changepassword', $params);
+            $request->setSession(new Session([]));
+            $security->setRequest($request);
+            $response = $security->changepassword();
+            $this->assertInstanceOf(DBHTMLText::class, $response);
+            $this->assertStringNotContainsString('The password reset link is invalid or expired', $response->getValue());
+            $this->assertStringContainsString('Please enter a new password', $response->getValue());
+        } finally {
+            $authenticators = $security->getAuthenticators();
+            unset($authenticators['test-auth']);
+            $security->setAuthenticators($authenticators);
+        }
     }
 
     public function testRepeatedLoginAttemptsLockingPeopleOut()

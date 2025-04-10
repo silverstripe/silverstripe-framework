@@ -91,7 +91,6 @@ class RequestHandler extends ModelData
         '$Action' => '$Action',
     ];
 
-
     /**
      * Define a list of action handling methods that are allowed to be called directly by URLs.
      * The variable should be an array of action names. This sample shows the different values that it can contain:
