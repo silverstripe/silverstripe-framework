@@ -117,6 +117,14 @@ class RequestHandler extends ModelData
      */
     private static $allowed_actions = null;
 
+    /**
+     * If the request is handed off to a nested request handler, and that handler returns an array,
+     * by default this handler will be customised with that returned array.
+     * Setting this to true will return the array directly instead, which treats it as through this handler
+     * returned the array from an action method directly.
+     */
+    private static bool $customise_array_return_value = true;
+
     public function __construct()
     {
         $this->brokenOnConstruct = false;
@@ -223,7 +231,7 @@ class RequestHandler extends ModelData
             $returnValue = $result->handleRequest($request);
 
             // Array results can be used to handle
-            if (is_array($returnValue)) {
+            if (is_array($returnValue) && static::config()->get('customise_array_return_value')) {
                 $returnValue = $this->customise($returnValue);
             }
 

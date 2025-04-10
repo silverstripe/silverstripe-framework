@@ -47,6 +47,8 @@ class ChangePasswordHandler extends RequestHandler
         '' => 'changepassword',
     ];
 
+    private static bool $customise_array_return_value = false;
+
     /**
      * Keep track of whether a temporary hash is already generated during this request cycle.
      * @internal
@@ -282,15 +284,16 @@ class ChangePasswordHandler extends RequestHandler
         $session = $this->getRequest()->getSession();
         if (!$member) {
             $autoLoginHash = $session->get('AutoLoginHash');
-            if ($autoLoginHash) {
-                $member = Member::member_from_autologinhash($autoLoginHash);
+            if (!$autoLoginHash) {
+                // The user is not logged in and had no reset token, so give them a login form.
+                return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
             }
 
-            // The user is not logged in and no valid auto login hash is available
+            $member = Member::member_from_autologinhash($autoLoginHash);
             if (!$member) {
+                // Hash was invalid or expired
                 $session->clear('AutoLoginHash');
-
-                return $this->redirect($this->addBackURLParam(Security::singleton()->Link('login')));
+                return $this->getInvalidTokenResponse();
             }
         }
 
