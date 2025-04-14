@@ -286,9 +286,8 @@ class SearchableDropdownTraitTest extends SapphireTest
      * Member has a method getTitle() that returns "Surname, FirstName"
      * The default label field on the field is "Title", which doesn't exist on the Member database table
      * It should fall back to using search context in this scenario
-     *
-     * @dataProvider provideSearchDataObjectWithMethodForLabelField
      */
+    #[DataProvider('provideSearchDataObjectWithMethodForLabelField')]
     public function testSearchDataObjectWithMethodForLabelField(string $term, string $expected): void
     {
         Member::config()->set('title_format', ['columns' => ['Surname', 'FirstName'], 'sep' => ', ']);

@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\Tests;
 
 use Page;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -804,7 +805,7 @@ class SecurityTest extends FunctionalTest
         );
     }
 
-    public function provideWithMinimumExecutionTime(): array
+    public static function provideWithMinimumExecutionTime(): array
     {
         return [
             'check default is used' => [
@@ -818,9 +819,7 @@ class SecurityTest extends FunctionalTest
         ];
     }
 
-    /**
-     * @dataProvider provideWithMinimumExecutionTime
-     */
+    #[DataProvider('provideWithMinimumExecutionTime')]
     public function testWithMinimumExecutionTime(bool $useDefault, int $minExecution): void
     {
         if ($useDefault) {

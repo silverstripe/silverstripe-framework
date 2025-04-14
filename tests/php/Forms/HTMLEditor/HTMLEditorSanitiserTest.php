@@ -218,8 +218,6 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 'validElements' => ['object' => ['attributes' => ['data' => true]]],
                 'input' => '<object data="' . HTMLEditorSanitiserTest::CHAR_BACKSPACE . 'javascript:alert()">',
                 'expected' => '<object></object>',
-
-                'object[data]',
             ],
             'remove text/html from data attribute' => [
                 'validElements' => ['object' => ['attributes' => ['data' => true]]],
