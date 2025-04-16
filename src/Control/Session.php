@@ -3,7 +3,9 @@
 namespace SilverStripe\Control;
 
 use BadMethodCallException;
+use SilverStripe\Control\SessionHandler\FileSessionHandler;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Handles all manipulation of the session.
@@ -119,6 +121,7 @@ class Session
     /**
      * @config
      * @var string
+     * @deprecated 6.1.0 Use `session.save_path` in ini configuration instead.
      */
     private static $session_store_path;
 
@@ -139,6 +142,7 @@ class Session
      *
      * @see https://secure.php.net/manual/en/function.session-cache-limiter.php
      * @var string|null
+     * @deprecated 6.1.0 Will be removed without equivalent functionality to replace it
      */
     private static $sessionCacheLimiter = '';
 
@@ -149,6 +153,12 @@ class Session
      * @config
      */
     private static $strict_user_agent_check = true;
+
+    /**
+     * FQCN or injector service name for the session save handler.
+     * If null, the save handler defined in `session.save_handler` ini configuration is used.
+     */
+    private static ?string $save_handler = FileSessionHandler::class;
 
     /**
      * Session data.
@@ -297,6 +307,13 @@ class Session
                 // Allow storing the session in a non standard location
                 if ($session_path) {
                     session_save_path($session_path);
+                }
+
+                // Set the session save handler if configured
+                $saveHandlerServiceName = static::config()->get('save_handler');
+                if ($saveHandlerServiceName !== null) {
+                    $saveHandler = Injector::inst()->get($saveHandlerServiceName);
+                    session_set_save_handler($saveHandler, true);
                 }
 
                 session_start();
