@@ -147,6 +147,9 @@ class HTMLEditorField extends TextareaField
         // optionally manipulate the HTML after a TinyMCE edit and prior to a save
         $this->extend('processHTML', $htmlValue);
 
+        $component = $record;
+        $fieldName = $this->name;
+
         // Allow for dot syntax
         if (($pos = strrpos($this->name ?? '', '.')) !== false) {
             $relation = substr($this->name ?? '', 0, $pos);
