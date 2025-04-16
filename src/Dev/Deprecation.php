@@ -144,7 +144,7 @@ class Deprecation
      */
     protected static function get_called_method_from_trace($backtrace, $level = 1)
     {
-        if ($backtrace === null) {
+        if (empty($backtrace)) {
             return '';
         }
         $level = (int)$level;
@@ -193,7 +193,7 @@ class Deprecation
 
     private static function isCalledFromSupportedCode(?array $backtrace): bool
     {
-        if ($backtrace === null) {
+        if (empty($backtrace)) {
             return false;
         }
         $called = Deprecation::get_called_from_trace($backtrace, 1);
