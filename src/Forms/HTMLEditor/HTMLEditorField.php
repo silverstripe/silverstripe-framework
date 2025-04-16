@@ -152,13 +152,13 @@ class HTMLEditorField extends TextareaField
             $relation = substr($this->name ?? '', 0, $pos);
             $fieldName = substr($this->name ?? '', $pos + 1);
             $component = $record->relObject($relation);
-		}
+        }
 
         // Store into record
-		if ($fieldName && $component) {
+        if ($fieldName && $component) {
             $component->{$fieldName} = $htmlValue->getContent();
         } else {
-			$record->{$fieldName} = $htmlValue->getContent();
+            $record->{$fieldName} = $htmlValue->getContent();
         }
     }
 
