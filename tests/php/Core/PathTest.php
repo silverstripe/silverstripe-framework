@@ -18,7 +18,7 @@ class PathTest extends SapphireTest
     #[DataProvider('providerTestJoinPaths')]
     public function testJoinPaths($args, $expected)
     {
-        $joined = Path::join($args);
+        $joined = Path::join(...$args);
         $this->assertEquals($expected, $joined);
     }
 
@@ -47,10 +47,18 @@ class PathTest extends SapphireTest
             [['', '/root', '/', ' ', '/', '\\'], '/root'],
             [['', 'root', '/', ' ', '/', '\\'], 'root'],
             [['\\', '', '/root', '/', ' ', '/', '\\'], '/root'],
+            [[' one ', ' ', 'two', null], 'one/two'],
             // join blocks of paths
             [['/root/dir', 'another/path\\to/join'], '/root/dir/another/path/to/join'],
             // Double dot is fine if it's not attempting directory traversal
             [['/root/my..name/', 'another/path\\to/join'], '/root/my..name/another/path/to/join'],
+            // Don't remove zero
+            [['0'], '0'],
+            [[0], '0'],
+            [['1', '0', 'a'], '1/0/a'],
+            [[1, 0, 'a'], '1/0/a'],
+            // first arg is array
+            [[['one', 'two', 'three']], 'one/two/three'],
         ];
 
         // Rewrite tests for other filesystems (output arg only)

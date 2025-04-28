@@ -29,8 +29,12 @@ class Path
             $parts = $parts[0];
         }
 
-        // Cleanup and join all parts
-        $parts = array_filter(array_map('trim', array_filter($parts ?? [])));
+        // Remove empty parts and trim all parts
+        // Explicitly allow zero as a segment in the path (e.g. /some/path/0/file.txt)
+        $notEmpty = fn(mixed $part) => ($part === 0 || $part === '0' || (bool) $part);
+        $parts = array_filter(array_map('trim', array_filter($parts ?? [], $notEmpty)), $notEmpty);
+
+        // Normalise and join parts
         $fullPath = static::normalise(implode(DIRECTORY_SEPARATOR, $parts));
 
         // Protect against directory traversal vulnerability (OTG-AUTHZ-001)
@@ -38,7 +42,11 @@ class Path
             throw new InvalidArgumentException('Can not collapse relative folders');
         }
 
-        return $fullPath ?: DIRECTORY_SEPARATOR;
+        if ($fullPath === '') {
+            return DIRECTORY_SEPARATOR;
+        }
+
+        return $fullPath;
     }
 
     /**
