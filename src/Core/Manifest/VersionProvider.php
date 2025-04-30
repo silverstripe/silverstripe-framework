@@ -239,7 +239,7 @@ class VersionProvider
 
     /**
      * @return string
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release.
      */
     protected function getComposerLockPath(): string
     {

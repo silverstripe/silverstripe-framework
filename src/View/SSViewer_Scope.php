@@ -118,7 +118,7 @@ class SSViewer_Scope
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\TemplateEngine\ScopeManager',
+            'Will be renamed to SilverStripe\TemplateEngine\ScopeManager in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $this->item = $item;

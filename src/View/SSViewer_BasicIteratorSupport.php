@@ -26,7 +26,7 @@ class SSViewer_BasicIteratorSupport implements TemplateIteratorProvider
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\TemplateEngine\BasicIteratorSupport',
+            'Will be renamed to SilverStripe\TemplateEngine\BasicIteratorSupport in a future major release',
             Deprecation::SCOPE_CLASS
         );
     }

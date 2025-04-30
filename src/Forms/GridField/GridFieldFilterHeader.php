@@ -33,7 +33,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     protected $throwExceptionOnBadDataType = true;
 
@@ -75,21 +75,21 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      * {@link GridFieldConfig} subclasses set this to false for flexibility.
      *
      * @param bool $throwExceptionOnBadDataType
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
     }
 
     /**
      * See {@link setThrowExceptionOnBadDataType()}
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public function getThrowExceptionOnBadDataType()
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         return $this->throwExceptionOnBadDataType;
     }
 
@@ -318,13 +318,13 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      *
      * @param GridField $gridfield
      * @return string
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\ORM\Search\SearchContextForm::getSchemaData()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\ORM\Search\SearchContextForm::getSchemaData() in a future major release
      */
     public function getSearchFieldSchema(GridField $gridField)
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with SilverStripe\ORM\Search\SearchContextForm::getSchemaData()'
+            'Will be replaced with SilverStripe\ORM\Search\SearchContextForm::getSchemaData() in a future major release'
         );
         $schemaUrl = Controller::join_links($gridField->Link(), 'schema/SearchForm');
         $inst = singleton($gridField->getModelClass());
@@ -429,13 +429,13 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
      *
      * @param GridField $gridfield
      * @return HTTPResponse
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\FormRequestHandler::getSchema()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Forms\FormRequestHandler::getSchema() in a future major release
      */
     public function getSearchFormSchema(GridField $gridField)
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with SilverStripe\Forms\FormRequestHandler::getSchema()'
+            'Will be replaced with SilverStripe\Forms\FormRequestHandler::getSchema() in a future major release'
         );
         $form = $this->getSearchForm($gridField);
 

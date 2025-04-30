@@ -49,7 +49,7 @@ class CompositeValidator extends Validator
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\\Forms\\Validation\\CompositeValidator',
+            'Will be renamed to SilverStripe\\Forms\\Validation\\CompositeValidator in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $this->validators = array_values($validators ?? []);

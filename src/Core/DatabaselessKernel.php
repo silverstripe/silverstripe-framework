@@ -36,7 +36,7 @@ class DatabaselessKernel extends BaseKernel
         parent::__construct($basePath);
         Deprecation::notice(
             '5.4.0',
-            'Use ' . CoreKernel::class . '::setBootDatabase() instead',
+            'Use ' . CoreKernel::class . '::setBootDatabase() instead in a future major release',
             Deprecation::SCOPE_CLASS
         );
     }

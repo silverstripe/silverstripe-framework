@@ -4158,26 +4158,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     private static $subclass_access = true;
 
     /**
      * Temporarily disable subclass access in data object qeur
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public static function disable_subclass_access()
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         DataObject::$subclass_access = false;
     }
 
     /**
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public static function enable_subclass_access()
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         DataObject::$subclass_access = true;
     }
 

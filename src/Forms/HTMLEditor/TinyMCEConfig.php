@@ -18,7 +18,7 @@ use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * Default configuration for HtmlEditor specific to tinymce
- * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCEConfig
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCEConfig in a future major release
  */
 class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
 {
@@ -358,7 +358,7 @@ class TinyMCEConfig extends HTMLEditorConfig implements i18nEntityProvider
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with SilverStripe\TinyMCE\TinyMCEConfig',
+            'Will be replaced with SilverStripe\TinyMCE\TinyMCEConfig in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $this->settings = static::config()->get('default_options');

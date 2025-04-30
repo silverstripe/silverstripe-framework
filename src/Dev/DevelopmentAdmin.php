@@ -54,7 +54,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      * ]
      *
      * @var array
-     * @deprecated 5.4.0 Will be replaced with "controllers" and "commands" configuration properties
+     * @deprecated 5.4.0 Will be replaced with "controllers" and "commands" configuration properties in a future major release
      */
     private static $registered_controllers = [];
 
@@ -129,11 +129,11 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
     }
 
     /**
-     * @deprecated 5.4.0 Will be replaced with runRegisteredAction()
+     * @deprecated 5.4.0 Will be replaced with runRegisteredAction() in a future major release
      */
     public function runRegisteredController(HTTPRequest $request)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with runRegisteredAction()');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with runRegisteredAction() in a future major release');
         $controllerClass = null;
 
         $baseUrlPart = $request->param('Action');
@@ -207,11 +207,11 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
     }
 
     /**
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release
      */
     protected function getRegisteredController($baseUrlPart)
     {
-        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it');
+        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it in a future major release');
         $reg = Config::inst()->get(static::class, 'registered_controllers');
 
         if (isset($reg[$baseUrlPart])) {
@@ -233,14 +233,14 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      * Should match the $url_handlers rule:
      *      'build/defaults' => 'buildDefaults',
      *
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\DbDefaults
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\DbDefaults in a future major release
      */
     public function buildDefaults()
     {
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\DbDefaults'
+                'Will be replaced with SilverStripe\Dev\Command\DbDefaults in a future major release'
             );
         });
 
@@ -266,14 +266,14 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
      * Generate a secure token which can be used as a crypto key.
      * Returns the token and suggests PHP configuration to set it.
      *
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\GenerateSecureToken
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Commands\GenerateSecureToken in a future major release
      */
     public function generatesecuretoken()
     {
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\GenerateSecureToken'
+                'Will be replaced with SilverStripe\Dev\Command\GenerateSecureToken in a future major release'
             );
         });
 

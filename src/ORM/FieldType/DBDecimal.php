@@ -29,7 +29,7 @@ class DBDecimal extends DBField
      * Default value
      *
      * @var string
-     * @deprecated 5.4.0 Will be replaced with getDefaultValue() and setDefaultValue()
+     * @deprecated 5.4.0 Will be replaced with getDefaultValue() and setDefaultValue() in a future major release
      */
     protected $defaultValue = 0;
 

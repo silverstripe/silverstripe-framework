@@ -14,7 +14,7 @@ class DeprecationTestObject extends DataObject implements TestOnly
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '1.2.3',
-                'Some class message',
+                'Some class message in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });

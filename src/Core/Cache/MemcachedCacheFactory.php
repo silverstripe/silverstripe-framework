@@ -12,7 +12,7 @@ class MemcachedCacheFactory implements CacheFactory
 
     /**
      * @var Memcached
-     * @deprecated 5.4.0 Will be replaced with setting the `SS_MEMCACHED_DSN` environment variable
+     * @deprecated 5.4.0 Will be replaced with setting the `SS_MEMCACHED_DSN` environment variable in a future major release
      */
     protected $memcachedClient;
 

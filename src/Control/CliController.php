@@ -15,14 +15,14 @@ use SilverStripe\Security\Security;
  * "sake DailyTask" from the commandline will call {@link process()} on every subclass
  * of DailyTask.
  *
- * @deprecated 5.4.0 Will be replaced with symfony/console commands
+ * @deprecated 5.4.0 Will be replaced with symfony/console commands in a future major release
  */
 abstract class CliController extends Controller
 {
     public function __construct()
     {
         parent::__construct();
-        Deprecation::notice('5.4.0', 'Will be replaced with symfony/console commands', Deprecation::SCOPE_CLASS);
+        Deprecation::notice('5.4.0', 'Will be replaced with symfony/console commands in a future major release', Deprecation::SCOPE_CLASS);
     }
 
     private static $allowed_actions = [

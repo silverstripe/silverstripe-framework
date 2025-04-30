@@ -34,7 +34,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
 
     /**
      * See {@link setThrowExceptionOnBadDataType()}
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     protected $throwExceptionOnBadDataType = true;
 
@@ -59,11 +59,11 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      *
      * @param bool $throwExceptionOnBadDataType
      * @return $this
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
         return $this;
     }
@@ -72,11 +72,11 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @return bool
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public function getThrowExceptionOnBadDataType()
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         return $this->throwExceptionOnBadDataType;
     }
 

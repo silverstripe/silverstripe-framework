@@ -11,13 +11,13 @@ use SilverStripe\Dev\Deprecation;
 
 /**
  * Triggers a call to flush() on all implementors of Flushable.
- * @deprecated 5.4.0 Will be replaced with flushing inside the Kernel directly.
+ * @deprecated 5.4.0 Will be replaced with flushing inside the Kernel directly in a future major release.
  */
 class FlushMiddleware implements HTTPMiddleware
 {
     public function __construct()
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with flushing inside the Kernel directly.');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be replaced with flushing inside the Kernel directly in a future major release.');
     }
 
     public function process(HTTPRequest $request, callable $delegate)
