@@ -464,7 +464,7 @@ class Deprecation
         int $scope = Deprecation::SCOPE_METHOD
     ): void {
         if ($message === '') {
-            $message = 'Will be removed without equivalent functionality to replace it.';
+            $message = 'Will be removed without equivalent functionality to replace it in a future major release.';
         }
         Deprecation::withSuppressedNotice(
             fn() => Deprecation::notice($atVersion, $message, $scope)
