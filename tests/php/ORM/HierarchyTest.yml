@@ -43,7 +43,11 @@ SilverStripe\ORM\Tests\HierarchyTest\TestObject:
     Title: Obj 3bb
   obj3ca:
     Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3c
-    Title: Obj 3c
+    Title: Obj 3ca
+SilverStripe\ORM\Tests\HierarchyTest\TestObjectHideFromHierarchy:
+  obj3HfH1:
+    Parent: =>SilverStripe\ORM\Tests\HierarchyTest\TestObject.obj3
+    Title: Obj 3HfH1
 SilverStripe\ORM\Tests\HierarchyTest\HideTestObject:
   obj4:
     Title: Obj 4

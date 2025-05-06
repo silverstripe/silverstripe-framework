@@ -52,7 +52,7 @@ class MarkedSet
     protected $rootNode = null;
 
     /**
-     * Method to use for getting children. Defaults to 'AllChildrenIncludingDeleted'
+     * Method to use for getting children. Defaults to Hierarchy.default_children_method config
      *
      * @var string
      */
@@ -180,7 +180,7 @@ class MarkedSet
      */
     public function getChildrenMethod()
     {
-        return $this->childrenMethod ?: 'AllChildrenIncludingDeleted';
+        return $this->childrenMethod ?: Hierarchy::config()->get('default_children_method');
     }
 
     /**

@@ -14,12 +14,14 @@ use SilverStripe\Core\Extension;
 use SilverStripe\ORM\DB;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\Core\Config\Config;
+use InvalidArgumentException;
 use SilverStripe\Core\Convert;
 use Exception;
 use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\HiddenClass;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
@@ -31,6 +33,8 @@ use SilverStripe\Security\Security;
  */
 class Hierarchy extends Extension
 {
+    use Configurable;
+
     /**
      * The name of the dedicated sort field, if there is one.
      * Will be null if there's no field for sorting this model.
@@ -128,6 +132,23 @@ class Hierarchy extends Extension
      * @var boolean
      */
     private static $prepopulate_numchildren_cache = true;
+
+    /**
+     * The default method called on the Hierarchy class to get children
+     */
+    private static string $default_children_method = 'getAllChildrenEvenIfDeleted';
+
+    /**
+     * Used to cache the children a node has in getAllChildrenEvenIfDeleted()
+     * @internal
+     */
+    private static array $all_children_child_ids_cache = [];
+
+    /**
+     * Used to cache child dataobjects in getAllChildrenEvenIfDeleted()
+     * @internal
+     */
+    private static array $all_children_obj_cache = [];
 
     /**
      * Prevent virtual page virtualising these fields
@@ -358,6 +379,121 @@ class Hierarchy extends Extension
         }
         $owner->extend("augmentAllChildrenIncludingDeleted", $stageChildren);
         return $stageChildren;
+    }
+
+    /**
+     * Return all children, including those that have been deleted but are still in live
+     *
+     * This achieves much the same result as AllChildrenIncludingDeleted(), and in intended to be far more
+     * performant, though there are some key differences:
+     * - Results will be cached in-memory to save on the number of database queries required
+     * - Database queries will be larger `WHERE "ID" IN (?, ?) style queries rather than many `WHERE "ID" = ?
+     * - While Hierarchy.node_threshold_total has not been exceeded, it will cache descendant record as
+     *   well to save future queries
+     * - It uses a totally different code path, e.g. it will not call stageChildren(), therefore some extension
+     *   hooks will not be fired
+     *
+     * Note that queries to retrieve data will only be done against the base data class, so any database fields defined
+     * on subclasses will be initially omitted, though these will be later fetched via DataObject::loadLazyFields() in separate inefficient DB queries
+     */
+    public function getAllChildrenEvenIfDeleted(): ArrayList
+    {
+        $owner = $this->getOwner();
+        $parentID = $owner->ID;
+        $dataClass = $owner->ClassName;
+        $baseDataClass = $owner->getSchema()->baseDataClass($dataClass);
+        Hierarchy::$all_children_child_ids_cache[$baseDataClass] ??= [];
+        Hierarchy::$all_children_obj_cache[$baseDataClass] ??= [];
+        if (!array_key_exists($parentID, Hierarchy::$all_children_obj_cache[$baseDataClass])) {
+            Hierarchy::$all_children_obj_cache[$baseDataClass][$parentID] = $owner;
+        }
+        $this->recursivelyCacheDescendants($baseDataClass, $parentID);
+        $childIDs = [];
+        if (array_key_exists($parentID, Hierarchy::$all_children_child_ids_cache[$baseDataClass])) {
+            $childIDs = Hierarchy::$all_children_child_ids_cache[$baseDataClass][$parentID];
+        }
+        $childNodes = [];
+        foreach ($childIDs as $childID) {
+            if (array_key_exists($childID, Hierarchy::$all_children_obj_cache[$baseDataClass])) {
+                $childNodes[] = Hierarchy::$all_children_obj_cache[$baseDataClass][$childID];
+            }
+        }
+        $children = ArrayList::create($childNodes);
+        $owner->extend('updateGetAllChildrenEvenIfDeleted', $children);
+        return $children;
+    }
+
+    /**
+     * Inner recursive method used by getAllChildrenEvenIfDeleted
+     * This will use a hierarchical query method where it will initially fetched from the "second level down"
+     * where the ParentID equals the single DataObject at the "top level" of the hierarchy
+     * It will then fetch from the "third level down" in the hierarchy where the ParentID is of the ParentIDs in
+     * the "second level down". In will continue querying like this until the total number of cached objects has
+     * exceeded the configured value `node_threshold_total`, or all object have been fetched
+     */
+    private function recursivelyCacheDescendants(
+        string $baseDataClass,
+        int|array $idOrIDs,
+    ): void {
+        if (!is_a($baseDataClass, DataObject::class, true)) {
+            throw new InvalidArgumentException("$baseDataClass is not a DataObject");
+        }
+        if (is_int($idOrIDs)) {
+            $parentIDs = [$idOrIDs];
+        } else {
+            $parentIDs = $idOrIDs;
+        }
+        $parentIDs = array_filter($parentIDs, function ($parentID) use ($baseDataClass) {
+            return !array_key_exists($parentID, Hierarchy::$all_children_child_ids_cache[$baseDataClass]);
+        });
+        if (empty($parentIDs)) {
+            return;
+        }
+        $config = $this->getOwner()->config();
+        $count = count(Hierarchy::$all_children_obj_cache[$baseDataClass]);
+        $threshold = $config->get('node_threshold_total');
+        if ($count >= $threshold) {
+            return;
+        }
+        $hideFromHierarchy = $config->get('hide_from_hierarchy');
+        $hideFromCMSTree = $config->get('hide_from_cms_tree');
+        $exclude = [];
+        if ($hideFromHierarchy) {
+            $exclude['ClassName'] = $hideFromHierarchy;
+        }
+        if ($hideFromCMSTree && $this->showingCMSTree()) {
+            $exclude['ClassName'] = $hideFromCMSTree;
+        }
+        $nextIDs = [];
+        /** @var DataList $children */
+        $children = $baseDataClass::get()->filter(['ParentID' => $parentIDs]);
+        if ($exclude) {
+            $children = $children->exclude($exclude);
+        }
+        if (class_exists(Versioned::class)) {
+            // This will also get Live records that are not on draft, so it's safe to save them
+            // to the same cache
+            // Though is an assumption that any children of a "live only" record
+            // should also be read and cached as "live only" records
+            $children = Versioned::updateListToAlsoIncludeDeleted($children);
+        }
+        foreach ($parentIDs as $parentID) {
+            Hierarchy::$all_children_child_ids_cache[$baseDataClass][$parentID] ??= [];
+        }
+        foreach ($children as $child) {
+            $childID = $child->ID;
+            $parentID = $child->ParentID;
+            Hierarchy::$all_children_child_ids_cache[$baseDataClass][$parentID][] = $childID;
+            Hierarchy::$all_children_obj_cache[$baseDataClass][$childID] = $child;
+            if (!array_key_exists($childID, Hierarchy::$all_children_child_ids_cache[$baseDataClass])
+                && !in_array($childID, $nextIDs)
+            ) {
+                $nextIDs[] = $childID;
+            }
+        }
+        if (count($nextIDs)) {
+            $this->recursivelyCacheDescendants($baseDataClass, $nextIDs);
+        }
     }
 
     /**

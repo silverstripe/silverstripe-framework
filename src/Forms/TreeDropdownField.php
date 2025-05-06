@@ -149,11 +149,11 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
     protected $baseID = 0;
 
     /**
-     * Default child method in Hierarchy->getChildrenAsUL
+     * Child method to use for Hierarchy->getChildrenAsUL - Hierarchy.default_children_method config
      *
      * @var string
      */
-    protected $childrenMethod = 'AllChildrenIncludingDeleted';
+    protected $childrenMethod = null;
 
     /**
      * Default child counting method in Hierarchy->getChildrenAsUL
@@ -392,7 +392,7 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
      */
     public function getChildrenMethod()
     {
-        return $this->childrenMethod;
+        return $this->childrenMethod ?: Hierarchy::config()->get('default_children_method');
     }
 
     /**
