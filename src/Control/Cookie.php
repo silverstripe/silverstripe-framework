@@ -47,7 +47,7 @@ class Cookie
     public static function set(
         string $name,
         string|false $value,
-        int $expiry = 90,
+        int|float $expiry = 90,
         ?string $path = null,
         ?string $domain = null,
         bool $secure = false,

@@ -24,7 +24,7 @@ interface Cookie_Backend
      *
      * @param string $name The name of the cookie
      * @param string|false $value The value for the cookie to hold. Empty string or false will clear the cookie
-     * @param int $expiry The number of days until expiry; 0 means it will expire at the end of the session
+     * @param int|float $expiry The number of days until expiry; 0 means it will expire at the end of the session
      * @param string|null $path The path to save the cookie on (falls back to site base)
      * @param string|null $domain The domain to make the cookie available on
      * @param boolean $secure Can the cookie only be sent over SSL?
@@ -35,7 +35,7 @@ interface Cookie_Backend
     public function set(
         string $name,
         string|false $value,
-        int $expiry = 90,
+        int|float $expiry = 90,
         ?string $path = null,
         ?string $domain = null,
         bool $secure = false,

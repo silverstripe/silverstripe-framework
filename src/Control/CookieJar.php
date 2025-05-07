@@ -54,7 +54,7 @@ class CookieJar implements Cookie_Backend
     public function set(
         string $name,
         string|false $value,
-        int $expiry = 90,
+        int|float $expiry = 90,
         ?string $path = null,
         ?string $domain = null,
         bool $secure = false,
@@ -152,7 +152,7 @@ class CookieJar implements Cookie_Backend
     protected function outputCookie(
         string $name,
         string|false $value,
-        int $expiry = 90,
+        int $expiry,
         ?string $path = null,
         ?string $domain = null,
         bool $secure = false,
