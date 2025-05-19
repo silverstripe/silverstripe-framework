@@ -67,6 +67,8 @@ ja_JP:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: 開始日
+    FILTER_WITHINRANGE_TO: 終了日
     PLURALNAME: データオブジェクト
     SINGULARNAME: データオブジェクト
   SilverStripe\ORM\FieldType\DBBoolean:

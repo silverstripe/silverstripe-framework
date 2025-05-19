@@ -90,6 +90,7 @@ et_EE:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Sisestage sobivas vormingus kellaaeg ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_TO: Kuni
     PLURALNAME: 'Andme objektid'
     SINGULARNAME: 'Andme objekt'
   SilverStripe\ORM\FieldType\DBBoolean:

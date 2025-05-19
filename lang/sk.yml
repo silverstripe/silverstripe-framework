@@ -25,6 +25,12 @@ sk:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Neplatná požiadavka'
     REQUEST_ABORTED: 'Požiadavka prerušená'
+  SilverStripe\Dev\Command\ConfigDump:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Môže vidieť /dev/config'
+    CAN_DEV_CONFIG_HELP: 'Môže zobraziť všetku konfiguráciu aplikácie (/dev/config).'
+  SilverStripe\Dev\Command\DbBuild:
+    CAN_DEV_BUILD_DESCRIPTION: 'Môže vykonať /dev/build'
+    CAN_DEV_BUILD_HELP: 'Môže vykonať príkaz build (/dev/build).'
   SilverStripe\Dev\DevBuildController:
     CAN_DEV_BUILD_DESCRIPTION: 'Môže vykonať /dev/build'
     CAN_DEV_BUILD_HELP: 'Môže vykonať príkaz build (/dev/build).'
@@ -163,6 +169,8 @@ sk:
   SilverStripe\Forms\UrlField:
     INVALID: 'Prosím zadajte platnú URL adresu'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Od
+    FILTER_WITHINRANGE_TO: Do
     GENERALSEARCH: 'Všeobecné vyhľadávanie'
     PLURALNAME: 'Dátové objekty'
     PLURALS:
@@ -220,6 +228,8 @@ sk:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Nekonečná smyčka sa nachádza v {type} hierarchii. Prosím zmeňte rodiča pre vyriešenie tohto problému'
     LIMITED_TITLE: 'Príliš veľa potomkov ({count})'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Otvorte vyhľadávanie a filter'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Chyba platnosti'
   SilverStripe\Security\BasicAuth:
@@ -488,5 +498,10 @@ sk:
     NOTERESETPASSWORD: 'Zadajte svoju e-mailovú adresu a my Vám pošleme odkaz na resetovanie hesla'
     PASSWORDRESETSENTHEADER: 'Odkaz na reset hesla bol odoslaný'
     PASSWORDRESETSENTTEXT: 'Ďakujeme. Odkaz na reset hesla bol odoslaný za predpokladu, že pre túto e-mailovú adresu existuje účet.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Už ste použili toto heslo v minulosti, vyberte nové heslo, prosím'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Prosím posilnite heslo pridaním z týchto niektorých znakov: {chars}'
+    TOOSHORT: 'Heslo je príliš krátke, musí byť {minimum} alebo viacej znakov dlhé'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Pri načítavaní média sa vyskytol problém.'

@@ -100,6 +100,8 @@ zh:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: 表格
+    FILTER_WITHINRANGE_TO: 到
     PLURALNAME: 数据对象
     SINGULARNAME: 数据对象
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -262,3 +264,8 @@ zh:
     LOSTPASSWORDHEADER: 忘记密码
     NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
     NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：{chars}'
+    TOOSHORT: '密码长度过短，必须为 {minimum} 个字符或更长'

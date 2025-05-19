@@ -33,6 +33,9 @@ hu:
     Page: Oldal
   SilverStripe\Forms\UrlField:
     INVALID: 'Kérjük adjon meg egy működő linket'
+  SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: '-tól'
+    FILTER_WITHINRANGE_TO: '-ig'
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Bármely
   SilverStripe\ORM\FieldType\DBEnum:

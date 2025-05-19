@@ -103,6 +103,8 @@ fa_IR:
   SilverStripe\Forms\UrlField:
     INVALID: 'لطفاً نشانی اینترنتی معتبر وارد نمایید'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: از
+    FILTER_WITHINRANGE_TO: تا
     PLURALNAME: 'داده‌های اشیاء'
     SINGULARNAME: 'داده اشیاء'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -250,3 +252,5 @@ fa_IR:
     LOGIN: ورود
     LOGOUT: خروج
     LOSTPASSWORDHEADER: 'فراموشی گذرواژه'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    TOOSHORT: 'گذرواژه بسیار کوتاه است، باید {minimum} کاراکتر یا بیشتر باشد'

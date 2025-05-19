@@ -60,6 +60,7 @@ de_DE:
     FIELDLABELCURRENCY: Währung
     INVALID_CURRENCY: 'Die Währung {currency} ist nicht in der Liste der erlauben Währungen'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Formular
     PLURALNAME: DatenObjekte
     PLURALS:
       one: 'Ein DatenObjekt'

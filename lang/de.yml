@@ -27,6 +27,12 @@ de:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Ungültige Anfrage'
     REQUEST_ABORTED: 'Anfrage abgebrochen'
+  SilverStripe\Dev\Command\ConfigDump:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Darf /dev/config anzeigen'
+    CAN_DEV_CONFIG_HELP: 'Darf die gesamte Anwendungskonfiguration einsehen (/dev/config).'
+  SilverStripe\Dev\Command\DbBuild:
+    CAN_DEV_BUILD_DESCRIPTION: 'Darf /dev/build ausführen'
+    CAN_DEV_BUILD_HELP: 'Darf den Build-Befehl ausführen (/dev/build).'
   SilverStripe\Dev\DevBuildController:
     CAN_DEV_BUILD_DESCRIPTION: 'Darf /dev/build ausführen'
     CAN_DEV_BUILD_HELP: 'Darf den Build-Befehl ausführen (/dev/build).'
@@ -154,7 +160,7 @@ de:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'ist NULL'
   SilverStripe\Forms\NumericField:
-    VALIDATION: "'{value}' ist kein numerischer Wert, nur nummerische Werte sind in diesem Feld erlaubt"
+    VALIDATION: "'{value}' ist kein numerischer Wert, nur numerische Werte sind in diesem Feld erlaubt"
   SilverStripe\Forms\SearchableDropdownTrait:
     SELECT: Auswählen...
     SELECT_OR_TYPE_TO_SEARCH: 'Auswählen oder tippen um zu suchen...'
@@ -166,6 +172,8 @@ de:
   SilverStripe\Forms\UrlField:
     INVALID: 'Bitte geben Sie eine gültige URL ein'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Von
+    FILTER_WITHINRANGE_TO: Bis
     GENERALSEARCH: 'Generelle Suche'
     PLURALNAME: DatenObjekte
     PLURALS:
@@ -210,6 +218,8 @@ de:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Es wurde eine Endlosschleife innerhalb der "{type}"-Hierarchie gefunden. Bitte ändern Sie die übergeordnete Seite, um den Fehler zu beheben'
     LIMITED_TITLE: 'Zu viele Kindelemente ({count})'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Suche und Filter öffnen'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: Validierungsfehler
   SilverStripe\Security\BasicAuth:
@@ -440,5 +450,10 @@ de:
     NOTERESETPASSWORD: 'Geben Sie Ihre E-Mail-Adresse ein und wir werden Ihnen einen Link zuschicken, mit dem Sie Ihr Passwort zurücksetzen können.'
     PASSWORDRESETSENTHEADER: 'Der Link zum Zurücksetzen des Passworts wurde gesendet'
     PASSWORDRESETSENTTEXT: 'Vielen Dank! Wenn ein Account zu der E-Mail Adresse existiert, wurde eine E-Mail mit dem Link zum Zurücksetzen des Passworts verschickt.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Sie haben dieses Passwort schon einmal verwendet. Bitte wählen Sie ein neues Passwort'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Bitte erhöhen Sie die Sicherheit des Passworts, indem Sie auch einige der folgenden Zeichen verwenden: {chars}'
+    TOOSHORT: 'Das Passwort ist zu kurz, es muss mindestens {minimum} Zeichen lang sein'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Es gab ein Problem beim Laden von Media-Ressourcen.'

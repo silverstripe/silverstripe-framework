@@ -44,6 +44,8 @@ ro:
   SilverStripe\Forms\UrlField:
     INVALID: 'Vă rugăm să introduceți un URL valid'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: 'De la'
+    FILTER_WITHINRANGE_TO: La
     PLURALNAME: 'Obiecte Data'
     SINGULARNAME: 'Obiect Data'
   SilverStripe\ORM\FieldType\DBBoolean:

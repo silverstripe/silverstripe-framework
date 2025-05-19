@@ -111,6 +111,8 @@ da:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Indtats venligst et gyldigt tidsformat ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Fra
+    FILTER_WITHINRANGE_TO: Til
     PLURALNAME: Dataobjekter
     PLURALS:
       one: 'Et dataobjekt'
@@ -333,3 +335,8 @@ da:
     NOTERESETPASSWORD: 'Indtast din email adresse, så sender vi dig et link som du kan nulstille dit kodeord med'
     PASSWORDRESETSENTHEADER: 'link til at nulstille kodeord afsendt'
     PASSWORDRESETSENTTEXT: 'Tak for det. Et link til at nulstille dit kodeord er afsendt, hvis der findes en bruger med denne email adresse.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Du har tidligere brugt dette kodeord, vælg venligst et nyt kodeord'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Forøg venligst kodeordets styrke, ved at tilføje nogle af følgende tegn: {chars}'
+    TOOSHORT: 'Kodeordet er for kort, det skal mindst være {minimum} eller flere tegn langt'

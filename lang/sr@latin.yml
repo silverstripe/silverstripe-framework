@@ -238,3 +238,8 @@ sr@latin:
     LOGOUT: 'Odjavi se'
     NOTEPAGESECURED: 'Ova strana je obezbeđena. Unesite svoje podatke i mi ćemo vam poslati sadržaj.'
     NOTERESETPASSWORD: 'Unesite svoju adresu e-pošte i mi ćemo vam poslati link pomoću kojeg možete da promenite svoju lozinku'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Već ste koristili navedenu lozinku u prošlosti. Stoga, izaberite drugu lozinku'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Pojačajte lozinku dodavanjem nekih od sledećih znakova: {chars}'
+    TOOSHORT: 'Lozinka je prekratka. Lozinka mora sadržati bar {minimum} znakova'

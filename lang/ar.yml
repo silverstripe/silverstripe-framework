@@ -97,6 +97,8 @@ ar:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'الرجاء إدخال صيغة وقت صحيحة ({صيغة})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: من
+    FILTER_WITHINRANGE_TO: إلى
     PLURALNAME: 'بيانات كائن'
     SINGULARNAME: 'بيانات كائن'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -253,3 +255,8 @@ ar:
     LOSTPASSWORDHEADER: 'كلمة مرور مفقودة'
     NOTEPAGESECURED: 'هذه الصفحة محمية بكلمة مرور ، أدخل بيانات دخولك بالأسفل ليتم السماح لك بالوصول للصفحة'
     NOTERESETPASSWORD: 'أدخل بريدك الإلكتروني و سيتم إرسال رابط إعادة تهيئة كلمة المرور '
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'لقد استخدمت كلمة المرور هذه في الماضي، يرجى اختيار كلمة مرور جديدة'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'يرجى زيادة قوة كلمة المرور بإضافة البعض من الأحرف التالية: {chars}'
+    TOOSHORT: 'إنّ كلمة السر قصيرة جدا، يجب أن تحتوي على {minimum} أو أكثر من الحروف'
