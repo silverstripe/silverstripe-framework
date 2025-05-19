@@ -113,6 +113,8 @@ bg:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: От
+    FILTER_WITHINRANGE_TO: До
     PLURALNAME: 'Обекти с данни'
     PLURALS:
       one: 'Обект с данни'
@@ -331,3 +333,8 @@ bg:
     LOSTPASSWORDHEADER: 'Забравена парола'
     NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
     NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Вече сте използвали тази парола. Моля, изберете нова.'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Добавете някои от следните символи: {chars}, за да увеличите силата на паролата си'
+    TOOSHORT: 'Паролата е прекалено къса. Трябва да е от поне {minimum} символа'

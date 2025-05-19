@@ -46,6 +46,7 @@ uk:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Від
     PLURALNAME: 'Об’єкти даних'
     SINGULARNAME: 'Об’єкт даних'
   SilverStripe\ORM\FieldType\DBBoolean:

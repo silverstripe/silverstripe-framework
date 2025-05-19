@@ -92,6 +92,8 @@ nb:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Vennligst skriv inn et gyldig tidsformat ({format}]'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Fra
+    FILTER_WITHINRANGE_TO: Til
     PLURALNAME: Dataobjekter
     SINGULARNAME: Dataobjekt
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -241,3 +243,8 @@ nb:
     LOSTPASSWORDHEADER: 'Mistet passord'
     NOTEPAGESECURED: 'Den siden er sikret. Skriv inn gyldig innloggingsinfo så kommer du inn.'
     NOTERESETPASSWORD: 'Skriv inn epostadressen din og vi vil sende deg en lenke som nullstiller passordet.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: {chars}'
+    TOOSHORT: 'Passordet er for kort, det må være {minimum} eller flere tegn langt'

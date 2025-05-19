@@ -27,6 +27,12 @@ eo:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Malvalida peto'
     REQUEST_ABORTED: 'Ĉesigis peton'
+  SilverStripe\Dev\Command\ConfigDump:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Povas vidi je /dev/config'
+    CAN_DEV_CONFIG_HELP: 'Povas vidi la tutan aranĝon (/dev/config)'
+  SilverStripe\Dev\Command\DbBuild:
+    CAN_DEV_BUILD_DESCRIPTION: 'Povas ruli je /dev/build'
+    CAN_DEV_BUILD_HELP: 'Povas ruli la komandon konstrui (/dev/build)'
   SilverStripe\Dev\DevBuildController:
     CAN_DEV_BUILD_DESCRIPTION: 'Povas ruli je /dev/build'
     CAN_DEV_BUILD_HELP: 'Povas ruli la komandon konstrui (/dev/build)'
@@ -168,6 +174,8 @@ eo:
   SilverStripe\Forms\UrlField:
     INVALID: 'Bonvole enigu validan URL-on'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: De
+    FILTER_WITHINRANGE_TO: Al
     GENERALSEARCH: 'Ĝenerala serĉo'
     PLURALNAME: 'Datumaj Objektoj'
     PLURALS:
@@ -211,6 +219,8 @@ eo:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Senfina iteracio troviĝis en la "{type}"-hierarkio. Bonvole ŝanĝu la patron por solvi tion.'
     LIMITED_TITLE: 'Tro da idoj ({count})'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Malfermi serĉon kaj filtrilon'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Validiga eraro'
   SilverStripe\Security\BasicAuth:
@@ -463,5 +473,10 @@ eo:
     NOTERESETPASSWORD: 'Enigu vian retpoŝtan adreson kaj ni sendos al vi ligilon per kiu vi povas reagordi vian pasvorton'
     PASSWORDRESETSENTHEADER: 'Pasvorta reagorda ligilo sendiĝis'
     PASSWORDRESETSENTTEXT: 'Dankon. Reagorda ligilo sendiĝis, kondiĉe ke konto ekzistas por ĉi tiu retadreso.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Vi jam uzis tiun pasvorton pasintece, do bonvole elektu novan pasvorton'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Bonvole plifortigu la pasvortan aldonante la jenajn signojn: {chars}'
+    TOOSHORT: 'Pasvorto estas tro mallonga; ĝi devas esti almenaŭ {minimum} signojn longa'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Okazis problemo ŝargi la aŭdvidaĵon.'

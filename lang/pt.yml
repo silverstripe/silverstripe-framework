@@ -58,6 +58,8 @@ pt:
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'é Vazio'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: De
+    FILTER_WITHINRANGE_TO: Para
     PLURALNAME: 'Objectos de Dados'
     SINGULARNAME: 'Objecto de Dados'
   SilverStripe\ORM\FieldType\DBBoolean:

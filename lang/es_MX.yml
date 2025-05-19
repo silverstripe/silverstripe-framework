@@ -79,6 +79,7 @@ es_MX:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_TO: Hasta
     PLURALNAME: 'Datos de objetos'
     SINGULARNAME: 'Datos del objeto'
   SilverStripe\ORM\FieldType\DBBoolean:

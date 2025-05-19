@@ -126,6 +126,8 @@ fi:
   SilverStripe\Forms\UrlField:
     INVALID: 'URL-osoitteen on oltava kelvollinen'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Alkaen
+    FILTER_WITHINRANGE_TO: Päättyen
     PLURALNAME: Dataobjektit
     PLURALS:
       one: Dataobjekti
@@ -166,6 +168,8 @@ fi:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
     LIMITED_TITLE: 'Liian monta lapsiobjektia ({count}}'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Avaa haku ja suodin'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: Validointivirhe
   SilverStripe\Security\BasicAuth:
@@ -359,3 +363,8 @@ fi:
     NOTERESETPASSWORD: 'Syötä sähköpostiosoitteesi ja lähetämme sinulle linkin, jonka avulla saat palautettua salasanasi'
     PASSWORDRESETSENTHEADER: 'Salasanan palautuslinkki lähetetty'
     PASSWORDRESETSENTTEXT: 'Kiitos, palautuslinkki on lähetetty käyttäjätilille asetettuun sähköpostiosoitteeseen.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Olet jo käyttänyt tätä salasanaa aikaisemmin, ole hyvä ja valitse uusi'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: {chars}'
+    TOOSHORT: 'Salasanan on oltava vähintään {minimum} merkkiä'

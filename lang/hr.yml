@@ -71,6 +71,8 @@ hr:
   SilverStripe\Forms\UrlField:
     INVALID: 'Molimo unesite ispravan link'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Od
+    FILTER_WITHINRANGE_TO: Do
     PLURALNAME: 'Podatkovni objekti'
     SINGULARNAME: 'Podatkovni objekt'
   SilverStripe\ORM\FieldType\DBBoolean:

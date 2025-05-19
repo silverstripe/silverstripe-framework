@@ -29,6 +29,9 @@ pl_PL:
     Page: Strona
   SilverStripe\Forms\UrlField:
     INVALID: 'Wprowadź poprawny adres URL'
+  SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Od
+    FILTER_WITHINRANGE_TO: Do
   SilverStripe\ORM\FieldType\DBBoolean:
     ANY: Jakikolwiek
     NOANSWER: Nie

@@ -146,6 +146,8 @@ pl:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Proszę wprowadź prawidłowy format czasu ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Od
+    FILTER_WITHINRANGE_TO: Do
     PLURALNAME: 'Obiekty danych'
     PLURALS:
       few: 'Obiektów danych'
@@ -202,6 +204,8 @@ pl:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Znaleziono nieskończoną pętlę wewnątrz hierarchii "{type}". Proszę zmień rodzica by to rozwiązać.'
     LIMITED_TITLE: 'Zbyt wiele dzieci ({count})'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Otwórz wyszukiwanie i filtruj'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Niepoprawne dane'
   SilverStripe\Security\BasicAuth:
@@ -413,5 +417,10 @@ pl:
     NOTERESETPASSWORD: 'Wpisz adres e-mail, na który mamy wysłać link gdzie możesz zresetować swoje hasło'
     PASSWORDRESETSENTHEADER: 'Link resetowania hasła wysłany'
     PASSWORDRESETSENTTEXT: "Dziękujemy! Link resetujący hasło został wysłany do '{email}', o ile konto użytkownika dla takiego e-maila istnieje."
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Użyłeś już tego hasła wcześniej, proszę wybrać nowe'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Proszę zwiększyć siłę hasła, dodając niektóre z następujących znaków: % s'
+    TOOSHORT: 'Hasło jest za krótkie, proszę podać {minimum} znaków lub więcej'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Podczas ładowania pliku wystąpił problem.'

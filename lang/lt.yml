@@ -103,6 +103,8 @@ lt:
   SilverStripe\Forms\UrlField:
     INVALID: 'Prašome įvesti teisingą URL adresą'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Nuo
+    FILTER_WITHINRANGE_TO: Iki
     PLURALNAME: 'Duomenų objektai'
     SINGULARNAME: 'Duomenų objektas'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -263,3 +265,8 @@ lt:
     LOSTPASSWORDHEADER: 'Slaptažodžio atstatymas'
     NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius.'
     NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: {chars}'
+    TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš {minimum} arba didesnio skaičiaus simbolių'

@@ -91,6 +91,8 @@ sr_RS@latin:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Unesite ispravan format vremena ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Od
+    FILTER_WITHINRANGE_TO: Za
     PLURALNAME: 'Objekti podataka'
     SINGULARNAME: 'Objekat podataka'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -236,3 +238,8 @@ sr_RS@latin:
     LOGOUT: Odjava
     NOTEPAGESECURED: 'Ova strana je obezbeđena. Unesite svoje podatke i mi ćemo vam poslati sadržaj.'
     NOTERESETPASSWORD: 'Unesite svoju adresu e-pošte i mi ćemo vam poslati link pomoću kojeg možete da promenite svoju lozinku'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Već ste koristili navedenu lozinku u prošlosti. Stoga, izaberite drugu lozinku'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Pojačajte lozinku dodavanjem nekih od sledećih znakova: {chars}'
+    TOOSHORT: 'Lozinka je prekratka. Lozinka mora sadržati bar {minimum} znakova'

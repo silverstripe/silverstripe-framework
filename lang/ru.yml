@@ -119,6 +119,8 @@ ru:
   SilverStripe\Forms\UrlField:
     INVALID: 'Пожалуйста, задайте действительный URL-адрес'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: От
+    FILTER_WITHINRANGE_TO: До
     PLURALNAME: Объекты
     PLURALS:
       few: '{count} объекта'
@@ -370,3 +372,8 @@ ru:
     LOSTPASSWORDHEADER: 'Восстановление пароля'
     NOTEPAGESECURED: 'Эта страница защищена. Пожалуйста, введите свои учетные данные для входа.'
     NOTERESETPASSWORD: 'Введите Ваш адрес email, и Вам будет отправлена ссылка, по которой Вы сможете переустановить свой пароль'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Вы уже использовали этот пароль прежде. Пожалуйста, выберите новый пароль.'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Пожалуйста, увеличьте сложность пароля, добавив один из следующих символов: {chars}'
+    TOOSHORT: 'Слишком короткий пароль, минимальная длина - {minimum} символов'
