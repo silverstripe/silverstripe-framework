@@ -46,6 +46,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mailer\Transport\NullTransport;
 use ReflectionMethod;
 use ReflectionClass;
+use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Exceptions\ExpectedErrorException;
 use SilverStripe\Dev\Exceptions\ExpectedNoticeException;
 use SilverStripe\Dev\Exceptions\ExpectedWarningException;
@@ -566,7 +567,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
         $filename = ClassLoader::inst()->getItemPath(static::class);
         if (!$filename) {
             throw new LogicException('getItemPath returned null for ' . static::class
-                . '. Try adding flush=1 to the test run.');
+                . '. Try setting the SS_PHPUNIT_FLUSH=1 environment variable.');
         }
         return dirname($filename ?? '');
     }
@@ -946,7 +947,7 @@ abstract class SapphireTest extends TestCase implements TestOnly
             $request = CLIRequestBuilder::createFromEnvironment();
 
             $app = new HTTPApplication($kernel);
-            $flush = array_key_exists('flush', $request->getVars() ?? []);
+            $flush = Environment::getEnv('SS_PHPUNIT_FLUSH') || array_key_exists('flush', $request->getVars() ?? []);
 
             // Custom application
             $res = $app->execute($request, function (HTTPRequest $request) {
@@ -969,10 +970,12 @@ abstract class SapphireTest extends TestCase implements TestOnly
             }
         } else {
             // Allow flush from the command line in the absence of HTTPApplication's special sauce
-            $flush = false;
-            foreach ($_SERVER['argv'] as $arg) {
-                if (preg_match('/^(--)?flush(=1)?$/', $arg ?? '')) {
-                    $flush = true;
+            $flush = Environment::getEnv('SS_PHPUNIT_FLUSH');
+            if (!$flush) {
+                foreach ($_SERVER['argv'] as $arg) {
+                    if (preg_match('/^(--)?flush(=1)?$/', $arg ?? '')) {
+                        $flush = true;
+                    }
                 }
             }
             $kernel->boot($flush);

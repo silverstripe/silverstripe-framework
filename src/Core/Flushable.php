@@ -4,7 +4,7 @@ namespace SilverStripe\Core;
 
 /**
  * Provides an interface for classes to implement their own flushing functionality
- * whenever flush=1 is requested.
+ * whenever a flush is requested in the kernel.
  */
 interface Flushable
 {

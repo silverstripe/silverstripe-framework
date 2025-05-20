@@ -219,7 +219,7 @@ class FixtureTestState implements TestState
         $filename = ClassLoader::inst()->getItemPath($class);
         if (!$filename) {
             throw new LogicException('getItemPath returned null for ' . $class
-                . '. Try adding flush=1 to the test run.');
+                . '. Try setting the SS_PHPUNIT_FLUSH=1 environment variable.');
         }
         return dirname($filename ?? '');
     }
