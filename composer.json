@@ -116,6 +116,7 @@
             "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
             "SilverStripe\\View\\": "src/View/",
             "SilverStripe\\View\\Tests\\": "tests/php/View/",
+            "SilverStripe\\Framework\\Tests\\Bootstrap\\": "tests/bootstrap/",
             "SilverStripe\\Framework\\Tests\\Behaviour\\": "tests/behat/src/"
         },
         "files": [
