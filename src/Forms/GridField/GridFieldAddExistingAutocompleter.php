@@ -375,30 +375,37 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
         if ($fieldSpecs = $obj->searchableFields()) {
             $customSearchableFields = $obj->config()->get('searchable_fields');
             foreach ($fieldSpecs as $name => $spec) {
-                if (is_array($spec) && array_key_exists('filter', $spec ?? [])) {
-                    // The searchableFields() spec defaults to PartialMatch,
-                    // so we need to check the original setting.
-                    // If the field is defined $searchable_fields = array('MyField'),
-                    // then default to StartsWith filter, which makes more sense in this context.
-                    if (!$customSearchableFields || array_search($name, $customSearchableFields ?? []) !== false) {
-                        $filter = 'StartsWith';
-                    } else {
-                        $filterName = $spec['filter'];
-                        // It can be an instance
-                        if ($filterName instanceof SearchFilter) {
-                            $filterName = get_class($filterName);
-                        }
-                        // It can be a fully qualified class name
-                        if (strpos($filterName ?? '', '\\') !== false) {
-                            $filterNameParts = explode("\\", $filterName ?? '');
-                            // We expect an alias matching the class name without namespace, see #coresearchaliases
-                            $filterName = array_pop($filterNameParts);
-                        }
-                        $filter = preg_replace('/Filter$/', '', $filterName ?? '');
+                if (is_array($spec)) {
+                    // Skip fields that shouldn't be used in a general search
+                    if (array_key_exists('general', $spec) && !$spec['general']) {
+                        continue;
                     }
-                    $fields[] = "{$name}:{$filter}";
-                } else {
-                    $fields[] = $name;
+                    // Set an appropriate filter
+                    if (array_key_exists('filter', $spec)) {
+                        // The searchableFields() spec defaults to PartialMatch,
+                        // so we need to check the original setting.
+                        // If the field is defined $searchable_fields = array('MyField'),
+                        // then default to StartsWith filter, which makes more sense in this context.
+                        if (!$customSearchableFields || array_search($name, $customSearchableFields ?? []) !== false) {
+                            $filter = 'StartsWith';
+                        } else {
+                            $filterName = $spec['filter'];
+                            // It can be an instance
+                            if ($filterName instanceof SearchFilter) {
+                                $filterName = get_class($filterName);
+                            }
+                            // It can be a fully qualified class name
+                            if (strpos($filterName ?? '', '\\') !== false) {
+                                $filterNameParts = explode("\\", $filterName ?? '');
+                                // We expect an alias matching the class name without namespace, see #coresearchaliases
+                                $filterName = array_pop($filterNameParts);
+                            }
+                            $filter = preg_replace('/Filter$/', '', $filterName ?? '');
+                        }
+                        $fields[] = "{$name}:{$filter}";
+                    } else {
+                        $fields[] = $name;
+                    }
                 }
             }
         }

@@ -14,7 +14,8 @@ class Stadium extends DataObject implements TestOnly
         'Name' => 'Varchar',
         'City' => 'Varchar',
         'Country' => 'Varchar',
-        'Type' => 'Varchar'
+        'Type' => 'Varchar',
+        'IgnoreMe' => 'Varchar',
     ];
 
     private static $searchable_fields = [
@@ -24,6 +25,9 @@ class Stadium extends DataObject implements TestOnly
         ],
         'Country' => [
             'filter' => 'ExactMatchFilter'
+        ],
+        'IgnoreMe' => [
+            'general' => false,
         ],
     ];
 
