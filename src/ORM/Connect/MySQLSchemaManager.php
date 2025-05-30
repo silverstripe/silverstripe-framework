@@ -93,7 +93,9 @@ class MySQLSchemaManager extends DBSchemaManager
         if ($alteredIndexes) {
             foreach ($alteredIndexes as $k => $v) {
                 $alterList[] = "DROP INDEX \"$k\"";
-                $alterList[] = "ADD " . $this->getIndexSqlDefinition($k, $v);
+                if (!array_key_exists('drop', $v) || !$v['drop']) {
+                    $alterList[] = "ADD " . $this->getIndexSqlDefinition($k, $v);
+                }
             }
         }
 

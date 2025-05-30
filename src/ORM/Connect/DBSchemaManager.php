@@ -351,8 +351,9 @@ abstract class DBSchemaManager
      * @param array $indexSchema A list of indexes to create. See {@link requireIndex()}
      * The values of the array can be one of:
      *   - true: Create a single column index on the field named the same as the index.
-     *   - ['fields' => ['A','B','C'], 'type' => 'index/unique/fulltext']: This gives you full
+     *   - ['columns' => ['A','B','C'], 'type' => 'index/unique/fulltext']: This gives you full
      *     control over the index.
+     *   - false to drop the index
      * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
      * @param array $options Create table options (ENGINE, etc.)
      * @param array|bool $extensions List of extensions
@@ -431,7 +432,11 @@ abstract class DBSchemaManager
         // Create custom indexes
         if ($indexSchema) {
             foreach ($indexSchema as $indexName => $indexSpec) {
-                $this->requireIndex($table, $indexName, $indexSpec);
+                if ($indexSpec === false) {
+                    $this->dontRequireIndex($table, $indexName);
+                } else {
+                    $this->requireIndex($table, $indexName, $indexSpec);
+                }
             }
         }
 
@@ -525,6 +530,28 @@ abstract class DBSchemaManager
             $this->alterationMessage(
                 "Index $table.$index: changed to $specString <i class=\"build-info-before\">(from $oldSpecString)</i>",
                 "changed"
+            );
+        }
+    }
+
+    public function dontRequireIndex(string $table, string $index): void
+    {
+        // Skip if this is a new table, since it just won't have that index
+        $newTable = !isset($this->tableList[strtolower($table)]);
+        if ($newTable) {
+            return;
+        }
+
+        $indexKey = $this->indexKey($table, $index, []);
+        $indexList = $this->indexList($table);
+        // Drop the index if it exists
+        if (isset($indexList[$indexKey])) {
+            $oldSpec = $indexList[$indexKey];
+            $oldSpecString = $this->convertIndexSpec($oldSpec);
+            $this->transAlterIndex($table, $index, ['drop' => true]);
+            $this->alterationMessage(
+                "Index $table.$index: dropped <i class=\"build-info-before\">(from $oldSpecString)</i>",
+                "deleted"
             );
         }
     }

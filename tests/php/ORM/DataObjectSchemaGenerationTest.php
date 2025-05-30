@@ -188,6 +188,23 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         );
     }
 
+    public function testIndexGetsDropped(): void
+    {
+        $table = DataObject::getSchema()->tableName(TestIndexObject::class);
+        $schema = DB::get_schema();
+        DB::quiet();
+        $originalIndexes = $schema->indexList($table);
+        $this->assertArrayHasKey('SearchFields', $originalIndexes);
+
+        TestIndexObject::config()->merge('indexes', ['SearchFields' => false]);
+        $schema->schemaUpdate(function () {
+            $obj = new TestIndexObject();
+            $obj->requireTable();
+        });
+        $currentIndexes = $schema->indexList($table);
+        $this->assertArrayNotHasKey('SearchFields', $currentIndexes);
+    }
+
     /**
      * Tests the generation of the ClassName spec and ensure it's not unnecessarily influenced
      * by the order of classnames of existing records

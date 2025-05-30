@@ -629,7 +629,7 @@ class DataObjectSchema
                         var_export($indexSpec['columns'], true)
                     ));
                 }
-            } else {
+            } elseif ($indexSpec !== false) {
                 $indexSpec = [
                     'type' => 'index',
                     'columns' => [$indexName],

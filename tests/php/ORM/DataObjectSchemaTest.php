@@ -324,6 +324,29 @@ class DataObjectSchemaTest extends SapphireTest
         $this->assertArrayNotHasKey('PolymorpheusClass', $indexes);
     }
 
+    public static function provideIndexCanBeDropped(): array
+    {
+        return [
+            [
+                'class' => AllIndexes::class,
+                'index' => 'Content',
+            ],
+            [
+                'class' => HasComposites::class,
+                'index' => 'Polymorpheus',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideIndexCanBeDropped')]
+    public function testIndexCanBeDropped(string $class, string $index): void
+    {
+        $class::config()->merge('indexes', [$index => false]);
+        $indexes = DataObject::getSchema()->databaseIndexes($class);
+        $this->assertArrayHasKey($index, $indexes);
+        $this->assertFalse($indexes[$index]);
+    }
+
     public function testCompositeFieldsCanBeIndexedByDefaultConfiguration()
     {
         Config::modify()->set(DBMoney::class, 'index', true);

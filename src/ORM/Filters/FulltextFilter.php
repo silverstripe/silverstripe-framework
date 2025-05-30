@@ -62,9 +62,10 @@ class FulltextFilter extends SearchFilter
     */
     public function getDbName()
     {
+        $name = $this->getName();
         $indexes = DataObject::getSchema()->databaseIndexes($this->model);
-        if (array_key_exists($this->getName(), $indexes ?? [])) {
-            $index = $indexes[$this->getName()];
+        if (array_key_exists($name, $indexes) && $indexes[$name] !== false) {
+            $index = $indexes[$name];
         } else {
             return parent::getDbName();
         }
@@ -73,7 +74,7 @@ class FulltextFilter extends SearchFilter
         } else {
             throw new Exception(sprintf(
                 "Invalid fulltext index format for '%s' on '%s'",
-                var_export($this->getName(), true),
+                var_export($name, true),
                 var_export($this->model, true)
             ));
         }
