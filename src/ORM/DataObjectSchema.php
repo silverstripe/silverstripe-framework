@@ -31,6 +31,30 @@ class DataObjectSchema
     public const HAS_ONE_MULTI_RELATIONAL = 'multirelational';
 
     /**
+     * Do not create any index for sort columns.
+     * You can also set the value to `null` to get this mode.
+     * Only select this mode if you intend to create your own indexes which cover sorting.
+     */
+    public const string SORT_INDEX_MODE_NONE = 'none';
+
+    /**
+     * Create an index for each individual column in the sort order.
+     * Do not create a composite index.
+     */
+    public const string SORT_INDEX_MODE_SINGLE = 'single';
+
+    /**
+     * Create a composite index with all columns in the sort order.
+     * Do not create individual indexes for each column.
+     */
+    public const string SORT_INDEX_MODE_COMPOSITE = 'composite';
+
+    /**
+     * Create both a composite index and a single index for each column in the sort order.
+     */
+    public const string SORT_INDEX_MODE_BOTH = 'both';
+
+    /**
      * Default separate for table namespaces. Can be set to any string for
      * databases that do not support some characters.
      *
@@ -642,27 +666,66 @@ class DataObjectSchema
 
     protected function buildSortDatabaseIndexes($class)
     {
+        $indexMode = $this->getSortIndexMode($class);
+        if ($indexMode === DataObjectSchema::SORT_INDEX_MODE_NONE) {
+            return [];
+        }
+
+        $shouldAddToComposite = in_array($indexMode, [DataObjectSchema::SORT_INDEX_MODE_BOTH, DataObjectSchema::SORT_INDEX_MODE_COMPOSITE]);
+        $shouldAddToSingle = in_array($indexMode, [DataObjectSchema::SORT_INDEX_MODE_BOTH, DataObjectSchema::SORT_INDEX_MODE_SINGLE]);
         $sort = Config::inst()->get($class, 'default_sort', Config::UNINHERITED);
         $indexes = [];
 
         if ($sort && is_string($sort)) {
             $sort = preg_split('/,(?![^()]*+\\))/', $sort ?? '');
+            $compositeCols = [];
             foreach ($sort as $value) {
                 try {
-                    list ($table, $column) = $this->parseSortColumn(trim($value ?? ''));
+                    list ($table, $column, $dir) = $this->parseSortColumn(trim($value ?? ''));
                     $table = trim($table ?? '', '"');
                     $column = trim($column ?? '', '"');
+                    // Skip and stop grabbing composite columns if the sort column is on a different table
                     if ($table && strtolower($table ?? '') !== strtolower(DataObjectSchema::tableName($class) ?? '')) {
+                        $shouldAddToComposite = false;
                         continue;
                     }
-                    if ($this->databaseField($class, $column, false)) {
+                    // ID is always the primary key, so we don't need a new index for it.
+                    if ($column === 'ID') {
+                        if ($shouldAddToComposite) {
+                            // We still need to include it in the composite index if it's part-way through
+                            $compositeCols[$column] = "$column $dir";
+                        }
+                        continue;
+                    }
+                    // Skip and stop grabbing composite columns if this isn't a column in the database.
+                    if (!$this->databaseField($class, $column, false)) {
+                        $shouldAddToComposite = false;
+                        continue;
+                    }
+                    // Add indexes as appropriate
+                    if ($shouldAddToSingle) {
                         $indexes[$column] = [
                             'type' => 'index',
                             'columns' => [$column],
                         ];
                     }
+                    if ($shouldAddToComposite) {
+                        $compositeCols[$column] = "$column $dir";
+                    }
                 } catch (InvalidArgumentException $e) {
                 }
+            }
+
+            // If ID is last, we can omit it since that gets implicitly added to all indexes
+            if (array_key_last($compositeCols) === 'ID') {
+                unset($compositeCols['ID']);
+            }
+            // Add a composite index if we either didn't already add a single column or have multiple columns.
+            if (!empty($compositeCols) && (!$shouldAddToSingle || count($compositeCols) > 1)) {
+                $indexes['default_sort_composite'] = [
+                    'type' => 'index',
+                    'columns' => array_values($compositeCols),
+                ];
             }
         }
         return $indexes;
@@ -673,19 +736,16 @@ class DataObjectSchema
      *
      * @param string $column String to parse containing the column name
      *
-     * @return array Resolved table and column.
+     * @return array Resolved table, column, and direction.
      */
     protected function parseSortColumn($column)
     {
         // Parse column specification, considering possible ansi sql quoting
         // Note that table prefix is allowed, but discarded
-        if (preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column ?? '', $match)) {
-            $table = $match['table'];
-            $column = $match['column'];
-        } else {
+        if (!preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>asc|desc)(ending)?)?$/i', $column ?? '', $match)) {
             throw new InvalidArgumentException("Invalid sort() column");
         }
-        return [$table, $column];
+        return [$match['table'], $match['column'], $match['direction'] ?? 'ASC'];
     }
 
     /**
@@ -1328,5 +1388,23 @@ class DataObjectSchema
                 . " which is not a subclass of " . DataObject::class
             );
         }
+    }
+
+    /**
+     * Get the mode that determines which indexes to create for default_sort.
+     */
+    private function getSortIndexMode(string $class): string
+    {
+        $mode = Config::inst()->get($class, 'default_sort_index_mode') ?? DataObjectSchema::SORT_INDEX_MODE_NONE;
+        $allowedModes = [
+            DataObjectSchema::SORT_INDEX_MODE_NONE,
+            DataObjectSchema::SORT_INDEX_MODE_SINGLE,
+            DataObjectSchema::SORT_INDEX_MODE_COMPOSITE,
+            DataObjectSchema::SORT_INDEX_MODE_BOTH,
+        ];
+        if (!in_array($mode, $allowedModes)) {
+            throw new LogicException("Invalid value for $class.default_sort_index_mode: '$mode'");
+        }
+        return $mode;
     }
 }

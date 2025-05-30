@@ -35,7 +35,7 @@ class DataObjectSchemaTest extends SapphireTest
         BaseDataClass::class,
         ChildClass::class,
         GrandChildClass::class,
-        HasFields::Class,
+        HasFields::class,
         NoFields::class,
         WithCustomTable::class,
         WithRelation::class,
@@ -272,7 +272,7 @@ class DataObjectSchemaTest extends SapphireTest
     public function testDatabaseIndexes()
     {
         $indexes = DataObject::getSchema()->databaseIndexes(AllIndexes::class);
-        $this->assertCount(5, $indexes);
+        $this->assertCount(6, $indexes);
         $this->assertArrayHasKey('ClassName', $indexes);
         $this->assertEquals([
             'type' => 'index',
@@ -302,6 +302,12 @@ class DataObjectSchemaTest extends SapphireTest
             'type' => 'index',
             'columns' => ['Title'],
         ], $indexes['IndexNormal']);
+
+        $this->assertArrayHasKey('IndexDesc', $indexes);
+        $this->assertEquals([
+            'type' => 'index',
+            'columns' => ['Title DESC'],
+        ], $indexes['IndexDesc']);
     }
 
     public function testCompositeDatabaseFieldIndexes()
@@ -425,7 +431,6 @@ class DataObjectSchemaTest extends SapphireTest
     }
 
     #[DataProvider('provideHasOneComponent')]
-
     public function testHasOneComponent(string $class, string $component, string $expected): void
     {
         $this->assertSame($expected, DataObject::getSchema()->hasOneComponent($class, $component));

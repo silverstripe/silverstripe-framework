@@ -301,9 +301,9 @@ class MySQLSchemaManager extends DBSchemaManager
     protected function getIndexSqlDefinition($indexName, $indexSpec)
     {
         if ($indexSpec['type'] == 'using') {
-            return sprintf('index "%s" using (%s)', $indexName, $this->implodeColumnList($indexSpec['columns']));
+            return sprintf('index "%s" using (%s)', $indexName, $this->implodeIndexColumnList($indexSpec['columns'], $indexSpec['type']));
         } else {
-            return sprintf('%s "%s" (%s)', $indexSpec['type'], $indexName, $this->implodeColumnList($indexSpec['columns']));
+            return sprintf('%s "%s" (%s)', $indexSpec['type'], $indexName, $this->implodeIndexColumnList($indexSpec['columns'], $indexSpec['type']));
         }
     }
 
@@ -315,7 +315,7 @@ class MySQLSchemaManager extends DBSchemaManager
             $tableName,
             $indexSpec['type'],
             $indexName,
-            $this->implodeColumnList($indexSpec['columns'])
+            $this->implodeIndexColumnList($indexSpec['columns'], $indexSpec['type'])
         ));
     }
 
@@ -332,7 +332,14 @@ class MySQLSchemaManager extends DBSchemaManager
         $indexList = [];
 
         foreach ($indexes as $index) {
-            $groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $index['Column_name'];
+            $column = $index['Column_name'];
+            if (isset($index['Collation']) && $index['Collation'] !== 'NULL') {
+                $column .= match ($index['Collation']) {
+                    'A' => ' ASC',
+                    'D' => ' DESC',
+                };
+            }
+            $groupedIndexes[$index['Key_name']]['fields'][$index['Seq_in_index']] = $column;
 
             if ($index['Index_type'] == 'FULLTEXT') {
                 $groupedIndexes[$index['Key_name']]['type'] = 'fulltext';

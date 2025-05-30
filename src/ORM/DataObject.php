@@ -4373,6 +4373,13 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     private static $default_sort = null;
 
     /**
+     * Determines whether to create indexes for the columns in the default_sort configuration value,
+     * and how many to create.
+     * See the SORT_INDEX_MODE_* constants on DataObjectSchema for options.
+     */
+    private static string $default_sort_index_mode = DataObjectSchema::SORT_INDEX_MODE_BOTH;
+
+    /**
      * Default list of fields that can be scaffolded by the ModelAdmin
      * search interface.
      *

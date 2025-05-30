@@ -30,5 +30,8 @@ class AllIndexes extends DataObject implements TestOnly
         'IndexNormal' => [
             'columns' => ['Title'],
         ],
+        'IndexDesc' => [
+            'columns' => ['Title DESC'],
+        ],
     ];
 }

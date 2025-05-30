@@ -589,6 +589,30 @@ abstract class DBSchemaManager
     }
 
     /**
+     * Like implodeColumnList() but allows for a direction to come after the quoted column for some index types.
+     */
+    protected function implodeIndexColumnList(array $columns, string $indexType): string
+    {
+        if (empty($columns)) {
+            return '';
+        }
+        if (!in_array($indexType, ['index', 'unique'])) {
+            return $this->implodeColumnList($columns);
+        }
+        $result = [];
+        foreach ($columns as $col) {
+            if (preg_match('/^(.*) (asc|desc)$/i', $col ?? '', $matches)) {
+                $column = trim($matches[1] ?? '');
+                $direction = strtoupper($matches[2] ?? '');
+                $result[] = "\"$column\" $direction";
+            } else {
+                $result[] = "\"$col\" ASC";
+            }
+        }
+        return implode(',', $result);
+    }
+
+    /**
      * Given an index specification in the form of a string ensure that each
      * column name is property quoted, stripping brackets and modifiers.
      * This index may also be in the form of a "CREATE INDEX..." sql fragment
@@ -650,7 +674,7 @@ abstract class DBSchemaManager
         }
 
         // Combine elements into standard string format
-        return sprintf('%s (%s)', $indexSpec['type'], $this->implodeColumnList($indexSpec['columns']));
+        return sprintf('%s (%s)', $indexSpec['type'], $this->implodeIndexColumnList($indexSpec['columns'], $indexSpec['type']));
     }
 
     /**
