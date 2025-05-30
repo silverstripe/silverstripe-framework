@@ -407,7 +407,7 @@ class SQLSelect extends SQLConditionalExpression
      */
     private function getDirectionFromString($value, $defaultDirection = null)
     {
-        if (preg_match('/^(.*)(asc|desc)$/i', $value ?? '', $matches)) {
+        if (preg_match('/^(.*) (asc|desc)$/i', $value ?? '', $matches)) {
             $column = trim($matches[1] ?? '');
             $direction = strtoupper($matches[2] ?? '');
         } else {

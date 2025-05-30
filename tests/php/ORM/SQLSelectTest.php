@@ -197,17 +197,61 @@ class SQLSelectTest extends SapphireTest
         $this->assertTrue($query->canSortBy('Name'));
     }
 
+    public static function provideAddOrderBy(): array
+    {
+        return [
+            'single basic clause' => [
+                'orderByClauses' => [
+                    ['Title'],
+                ],
+                'expectedQuery' => 'SELECT ID, Title FROM Page ORDER BY Title ASC',
+            ],
+            'single basic clause with order' => [
+                'orderByClauses' => [
+                    ['Title', 'desc'],
+                ],
+                'expectedQuery' => 'SELECT ID, Title FROM Page ORDER BY Title DESC',
+            ],
+            'single basic clause with order in first arg' => [
+                'orderByClauses' => [
+                    ['Title desc'],
+                ],
+                'expectedQuery' => 'SELECT ID, Title FROM Page ORDER BY Title DESC',
+            ],
+            'single clause column name ends with "asc"' => [
+                'orderByClauses' => [
+                    ['Flasc', 'DESC'],
+                ],
+                'expectedQuery' => 'SELECT ID, Title FROM Page ORDER BY Flasc DESC',
+            ],
+            'multiple clauses' => [
+                'orderByClauses' => [
+                    ['ID'],
+                    ['Title', 'DESC'],
+                ],
+                'expectedQuery' => 'SELECT ID, Title FROM Page ORDER BY ID ASC, Title DESC',
+            ],
+            'custom sort columns' => [
+                'orderByClauses' => [
+                    ['(ID % 2)  = 0', 'ASC'],
+                    ['ID > 50', 'ASC'],
+                ],
+                'expectedQuery' => 'SELECT ID, Title, (ID % 2)  = 0 AS "_SortColumn0", ID > 50 AS "_SortColumn1" FROM Page ORDER BY "_SortColumn0" ASC, "_SortColumn1" ASC',
+            ],
+        ];
+    }
+
     /**
-     * Test multiple order by SQL clauses.
+     * @dataProvider provideAddOrderBy
      */
-    public function testAddOrderBy()
+    public function testAddOrderBy(array $orderByClauses, string $expectedQuery): void
     {
         $query = new SQLSelect();
-        $query->setSelect('ID', "Title")->setFrom('Page')->addOrderBy('(ID % 2)  = 0', 'ASC')->addOrderBy('ID > 50', 'ASC');
-        $this->assertSQLEquals(
-            'SELECT ID, Title, (ID % 2)  = 0 AS "_SortColumn0", ID > 50 AS "_SortColumn1" FROM Page ORDER BY "_SortColumn0" ASC, "_SortColumn1" ASC',
-            $query->sql($parameters)
-        );
+        $query->setSelect('ID', "Title")->setFrom('Page');
+        foreach ($orderByClauses as $clause) {
+            $query->addOrderBy(...$clause);
+        }
+        $this->assertSQLEquals($expectedQuery, $query->sql($parameters));
     }
 
     public function testSelectWithChainedFilterParameters()
