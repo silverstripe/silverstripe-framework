@@ -25,9 +25,32 @@ nl:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Fout bij verwerken'
     REQUEST_ABORTED: 'Fout bij verwerken (geannuleerd)'
+  SilverStripe\Dev\BulkLoader:
+    CANNOT_CREATE: "Niet toegestaan om '{type}' items aan te maken"
+    CANNOT_DELETE: "Niet toegestaan om '{type}' items te verwijderen"
+    CANNOT_EDIT: "Niet toegestaan om '{type}' items te bewerken"
+  SilverStripe\Dev\Command\ConfigDump:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Mag /dev/config bekijken'
+    CAN_DEV_CONFIG_HELP: 'Mag alle applicatie configuratie variabelen bekijken (/dev/config)'
+  SilverStripe\Dev\Command\DbBuild:
+    CAN_DEV_BUILD_DESCRIPTION: 'Mag dev/build uitvoeren'
+    CAN_DEV_BUILD_HELP: 'Mag het build-commando uitvoeren (/dev/build)'
+  SilverStripe\Dev\DevBuildController:
+    CAN_DEV_BUILD_DESCRIPTION: 'Mag dev/build uitvoeren'
+    CAN_DEV_BUILD_HELP: 'Mag het build-commando uitvoeren (/dev/build)'
+  SilverStripe\Dev\DevConfigController:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Mag /dev/config bekijken'
+    CAN_DEV_CONFIG_HELP: 'Mag alle applicatie configuratie variabelen bekijken (/dev/config)'
   SilverStripe\Dev\DevConfirmationController:
     INFO_DESCRIPTION: 'Bevestig het uitvoeren van mogelijk gevaarlijke taak'
     INFO_TITLE: Beveiligingswaarschuwing
+  SilverStripe\Dev\DevelopmentAdmin:
+    ALL_DEV_ADMIN_DESCRIPTION: 'Mag alle /dev-endpoints bekijken en uitvoeren'
+    ALL_DEV_ADMIN_HELP: 'Mag alle /dev-endpoints bekijken en uitvoeren'
+    PERMISSIONS_CATEGORY: 'Dev toestemmingen'
+  SilverStripe\Dev\TaskRunner:
+    BUILDTASK_CAN_RUN_DESCRIPTION: 'Mag alle /dev/tasks bekijken en uitvoeren'
+    BUILDTASK_CAN_RUN_HELP: 'Mag alle build-taken bekijken en uitvoeren (/dev/tasks). Dit kan per taak nog overschreven zijn voor specifieke view-instellingen'
   SilverStripe\Forms\CheckboxField:
     NOANSWER: Nee
     YESANSWER: Ja
@@ -101,7 +124,7 @@ nl:
     Create: Aanmaken
     Delete: Verwijderen
     DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    Deleted: '{type} {name} verwijderd'
+    Deleted: '{type} "{name}" verwijderd'
     Save: Opslaan
     Saved: '{name} {link} opgeslagen'
   SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest:
@@ -109,6 +132,7 @@ nl:
     NEW: 'Nieuwe item toevoegen'
     NEXT: 'Naar volgende item'
     PREVIOUS: 'Naar vorige item'
+    SAVETOASTMESSAGE: '{type} "{name}" is opgeslagen'
     ViewPermissionsFailure: 'Onvoldoende rechten om "{ObjectTitle}" te bekijken'
   SilverStripe\Forms\GridField\GridFieldEditButton:
     EDIT: Bewerken
@@ -137,6 +161,10 @@ nl:
     IsNullLabel: 'Is null'
   SilverStripe\Forms\NumericField:
     VALIDATION: "'{value}' is geen getal, enkel getallen worden door dit veld geaccepteerd"
+  SilverStripe\Forms\SearchableDropdownTrait:
+    SELECT: Selecteer...
+    SELECT_OR_TYPE_TO_SEARCH: 'Selecteer of type om te zoeken...'
+    TYPE_TO_SEARCH: 'Type om te zoeken...'
   SilverStripe\Forms\TextField:
     VALIDATEMAXLENGTH: 'De waarde voor {name} mag niet langer zijn dan {maxLength} tekens.'
   SilverStripe\Forms\TimeField:
@@ -144,7 +172,12 @@ nl:
   SilverStripe\Forms\UrlField:
     INVALID: 'Vul een geldige URL in'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Afzender
+    FILTER_WITHINRANGE_TO: Tot
     GENERALSEARCH: 'Alles doorzoeken'
+    NO_DUPLICATE: 'Kan {type} niet dupliceren'
+    NO_DUPLICATE_MULTI_FIELD: 'Kan {type} niet dupliceren - ten minste één van de volgende velden moet aangepast worden: {fields}'
+    NO_DUPLICATE_SINGLE_FIELD: 'Kan geen kopie aanmaken van {type} wanneer "{field}" ingesteld is op "{value}"'
     PLURALNAME: 'Data objecten'
     PLURALS:
       one: 'Data object'
@@ -177,6 +210,25 @@ nl:
     YEARS_SHORT_PLURALS:
       one: '{count} jaar'
       other: '{count} jaren'
+  SilverStripe\ORM\FieldType\DBDatetime:
+    nDays:
+      one: 'één dag'
+      other: '{count} dagen'
+    nHours:
+      one: 'één uur'
+      other: '{count} uren'
+    nMinutes:
+      one: 'één minuut'
+      other: '{count} minuten'
+    nMonths:
+      one: 'één maand'
+      other: '{count} maanden'
+    nSeconds:
+      one: 'één seconde'
+      other: '{count} seconden'
+    nYears:
+      one: 'één jaar'
+      other: '{count} jaar'
   SilverStripe\ORM\FieldType\DBEnum:
     ANY: Elke
   SilverStripe\ORM\FieldType\DBForeignKey:
@@ -188,6 +240,8 @@ nl:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig het hogere niveau om dit op te lossen'
     LIMITED_TITLE: 'Teveel onderliggende items ({count})'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Zoeken en filteren openen'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: Validatiefout
   SilverStripe\Security\BasicAuth:
@@ -248,6 +302,7 @@ nl:
     has_one_Parent: Bovenliggende
     many_many_Members: Leden
     many_many_Roles: Rollen
+    many_many_SiteTreeContentReview: 'Sitetree content review'
   SilverStripe\Security\InheritedPermissionsExtension:
     db_CanEditType: 'Kan bewerken type'
     db_CanViewType: 'Kan bekijken type'
@@ -264,6 +319,7 @@ nl:
       one: 'Een inlogpoging'
       other: '{count} inlogpogingen'
     SINGULARNAME: Inlogpogingen
+    db_EmailHashed: 'Gehasde mailadres'
     has_one_Member: Lid
   SilverStripe\Security\Member:
     ADDGROUP: 'Groep toevoegen'
@@ -277,6 +333,7 @@ nl:
     CURRENT_PASSWORD: 'Huidige wachtwoord'
     EDIT_PASSWORD: 'Nieuw wachtwoord'
     EMAIL: E-mail
+    EMAIL_FAILED: 'Er is een fout opgetreden bij het versturen van de wachtwoord-reset e-mail.'
     EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
     ENTEREMAIL: 'Typ je e-mailadres om een link te ontvangen, waarmee je je wachtwoord opnieuw kan instellen.'
     ERRORLOCKEDOUT2: 'Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten opnieuw.'
@@ -318,6 +375,7 @@ nl:
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
     db_Surname: Achternaam
     has_one_BlogProfileImage: 'Blogprofiel afbeelding'
+    many_many_SiteTreeContentReview: 'Sitetree content review'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: Inlogformulier
     BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten'
@@ -403,5 +461,10 @@ nl:
     NOTERESETPASSWORD: 'Voer je e-mailadres in en we sturen een link waarmee je een nieuw wachtwoord kunt instellen.'
     PASSWORDRESETSENTHEADER: Verzonden
     PASSWORDRESETSENTTEXT: 'Bedankt! Er is een e-mail verstuurd om je wachtwoord opnieuw in te stellen - mits het e-mailadres reeds bekend is bij ons.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Dit wachtwoord is in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Maak a.u.b. het wachtwoord sterker door enkele van de volgende karakters te gebruiken: {chars}'
+    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal {minimum} karakters hebben'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Het inladen van de media-bestanden is mislukt.'

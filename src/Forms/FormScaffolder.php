@@ -36,7 +36,7 @@ class FormScaffolder
 
     /**
      * @var boolean $ajaxSafe
-     * @deprecated 5.3.0 Will be removed without equivalent functionality.
+     * @deprecated 5.3.0 Will be removed without equivalent functionality in a future major release.
      */
     public $ajaxSafe = false;
 

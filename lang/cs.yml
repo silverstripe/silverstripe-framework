@@ -108,6 +108,8 @@ cs:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Prosím zadejte platný formát času ({format})'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Od
+    FILTER_WITHINRANGE_TO: Do
     PLURALNAME: 'Datové objekty'
     SINGULARNAME: 'Datový objekt'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -270,3 +272,8 @@ cs:
     LOSTPASSWORDHEADER: 'Zapomenuté heslo'
     NOTEPAGESECURED: 'Tato stránka je zabezpečená. Vložte své přihlašovací údaje a my Vám zároveň pošleme práva.'
     NOTERESETPASSWORD: 'Zadejte svou e-mailovou adresu a bude vám zaslán nulovací odkaz pro Vaše heslo'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Již jste použil toto heslo v minulosti, vyberte nové heslo, prosím'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Prosím, posilněte heslo přidáním některých z následujících znaků: {chars}'
+    TOOSHORT: 'Heslo je příliš krátké, musí být {minimum} nebo více znaků dlouhé'

@@ -45,7 +45,7 @@ class DBForeignKey extends DBInt
      * Cache for multiple subsequent calls to scaffold form fields with the same foreign key object
      *
      * @var array
-     * @deprecated 5.2.0 Will be removed without equivalent functionality to replace it
+     * @deprecated 5.2.0 Will be removed without equivalent functionality to replace it in a future major release
      */
     protected static $foreignListCache = [];
 

@@ -183,11 +183,11 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
      * @return string Absolute path to resolved template file, or null if not resolved.
      * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
      * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release.
      */
     public function findTemplate($template, $themes = null)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it in a future major release.');
         if ($themes === null) {
             $themes = SSViewer::get_themes();
         }

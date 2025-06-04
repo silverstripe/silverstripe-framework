@@ -127,6 +127,8 @@ fr:
   SilverStripe\Forms\UrlField:
     INVALID: 'Saisissez une URl valide'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: De
+    FILTER_WITHINRANGE_TO: A
     PLURALNAME: 'Modèles de donnée'
     PLURALS:
       many: '{count} modèles de donnée'
@@ -364,3 +366,8 @@ fr:
     NOTERESETPASSWORD: 'Entrez votre adresse email et nous vous enverrons un lien pour modifier votre mot de passe'
     PASSWORDRESETSENTHEADER: 'Le lien de réinitialisation du mot de passe a été envoyé'
     PASSWORDRESETSENTTEXT: "Nous vous remercions. Un lien de réinitialisation a été envoyé, à condition qu'un compte existe pour cette adresse électronique."
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Vous avez déjà utilisé ce mot de passe par le passé, veuillez en choisir un autre'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Veuillez renforcer votre mot de passe en ajoutant certains des caractères suivants : {chars}'
+    TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins {minimum} caractères'

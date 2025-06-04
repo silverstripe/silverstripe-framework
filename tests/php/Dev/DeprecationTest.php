@@ -105,7 +105,7 @@ class DeprecationTest extends SapphireTest
     {
         $message = implode(' ', [
             'SilverStripe\Dev\Tests\DeprecationTest->myDeprecatedMethodNoReplacement is deprecated.',
-            'Will be removed without equivalent functionality to replace it.',
+            'Will be removed without equivalent functionality to replace it in a future major release.',
             'Called from SilverStripe\Dev\Tests\DeprecationTest->testNoticeNoReplacement.'
         ]);
         $this->expectDeprecation();

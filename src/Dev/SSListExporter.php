@@ -15,7 +15,7 @@ if (!class_exists(Exporter::class)) {
 /**
  * A custom exporter for prettier formatting of SilverStripe specific Objects in PHPUnit's failing test messages.
  *
- * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+ * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release
  */
 class SSListExporter extends Exporter implements TestOnly
 {
@@ -24,7 +24,7 @@ class SSListExporter extends Exporter implements TestOnly
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be removed without equivalent functionality to replace it',
+                'Will be removed without equivalent functionality to replace it in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });

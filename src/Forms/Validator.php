@@ -25,7 +25,7 @@ abstract class Validator
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\\Forms\\Validation\\Validator',
+            'Will be renamed to SilverStripe\\Forms\\Validation\\Validator in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $this->resetResult();

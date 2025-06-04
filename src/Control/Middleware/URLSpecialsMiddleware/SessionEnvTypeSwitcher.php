@@ -8,7 +8,7 @@ use SilverStripe\Control\HTTPRequest;
 
 /**
  * Implements switching user session into Test and Dev environment types
- * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+ * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release.
  */
 trait SessionEnvTypeSwitcher
 {

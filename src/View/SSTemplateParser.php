@@ -103,7 +103,7 @@ class SSTemplateParser extends Parser implements TemplateParser
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\TemplateEngine\SSTemplateParser',
+            'Will be renamed to SilverStripe\TemplateEngine\SSTemplateParser in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $res = parent::construct($matchrule, $name, $arguments);

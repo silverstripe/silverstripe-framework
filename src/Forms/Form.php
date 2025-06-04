@@ -1253,7 +1253,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($cast === null) {
             Deprecation::notice(
                 '5.4.0',
-                'Passing $cast as null is deprecated. Pass a ValidationResult::CAST_* constant instead.',
+                'Passing $cast as null is deprecated. Pass a ValidationResult::CAST_* constant instead in a future major release.',
                 Deprecation::SCOPE_GLOBAL
             );
             $cast = ValidationResult::CAST_TEXT;
@@ -1277,7 +1277,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($cast === null) {
             Deprecation::notice(
                 '5.4.0',
-                'Passing $cast as null is deprecated. Pass a ValidationResult::CAST_* constant instead.',
+                'Passing $cast as null is deprecated. Pass a ValidationResult::CAST_* constant instead in a future major release.',
                 Deprecation::SCOPE_GLOBAL
             );
             $cast = ValidationResult::CAST_TEXT;
@@ -1302,7 +1302,7 @@ class Form extends ViewableData implements HasRequestHandler
         if ($cast === null) {
             Deprecation::notice(
                 '5.4.0',
-                'Passing $cast as null is deprecated. Pass a ValidationResult::CAST_* constant instead.',
+                'Passing $cast as null is deprecated. Pass a ValidationResult::CAST_* constant instead in a future major release.',
                 Deprecation::SCOPE_GLOBAL
             );
             $cast = ValidationResult::CAST_TEXT;

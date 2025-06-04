@@ -52,11 +52,11 @@ class PolymorphicHasManyList extends HasManyList
     /**
      * Retrieve the name of the has_many relation this list is filtered by
      *
-     * @deprecated 5.2.0 Will be replaced with a parameter in the constructor
+     * @deprecated 5.2.0 Will be replaced with a parameter in the constructor in a future major release
      */
     public function setForeignRelation(string $relationName): static
     {
-        Deprecation::notice('5.2.0', 'Will be replaced with a parameter in the constructor');
+        Deprecation::notice('5.2.0', 'Will be replaced with a parameter in the constructor in a future major release');
         $foreignRelationColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass, $this->relationForeignKey);
         $this->dataQuery->where([$foreignRelationColumn => $relationName]);
         $this->dataQuery->setQueryParam('Foreign.Relation', $relationName);

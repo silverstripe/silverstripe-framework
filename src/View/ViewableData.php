@@ -441,11 +441,11 @@ class ViewableData implements IteratorAggregate
      *
      * @param string $field
      * @return string
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release.
      */
     public function castingClass($field)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it in a future major release.');
         // Strip arguments
         $spec = $this->castingHelper($field);
         return trim(strtok($spec ?? '', '(') ?? '');
@@ -456,11 +456,11 @@ class ViewableData implements IteratorAggregate
      *
      * @param string $field
      * @return string 'xml'|'raw'
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release.
      */
     public function escapeTypeForField($field)
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it.');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed without equivalent functionality to replace it in a future major release.');
         $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
         /** @var DBField $type */
@@ -568,7 +568,7 @@ class ViewableData implements IteratorAggregate
     public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null)
     {
         if ($cacheName !== null) {
-            Deprecation::noticeWithNoReplacment('5.4.0', 'The $cacheName parameter has been deprecated and will be removed');
+            Deprecation::noticeWithNoReplacment('5.4.0', 'The $cacheName parameter has been deprecated and will be removed in a future major release');
         }
         if (!$cacheName && $cache) {
             $cacheName = $this->objCacheName($fieldName, $arguments);
@@ -643,7 +643,7 @@ class ViewableData implements IteratorAggregate
      * @param array $arguments
      * @param bool $cache
      * @return string
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release
      */
     public function XML_val($field, $arguments = [], $cache = false)
     {
@@ -658,7 +658,7 @@ class ViewableData implements IteratorAggregate
      *
      * @param array $fields an array of field names
      * @return array
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release
      */
     public function getXMLValues($fields)
     {
@@ -680,13 +680,13 @@ class ViewableData implements IteratorAggregate
      * This is useful so you can use a single record inside a <% control %> block in a template - and then use
      * to access individual fields on this object.
      *
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      *
      * @return ArrayIterator
      */
     public function getIterator(): Traversable
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         return new ArrayIterator([$this]);
     }
 

@@ -132,7 +132,7 @@ class Session
     /**
      * @config
      * @var string
-     * @deprecated 5.4.3 Will be removed without equivalent functionality to replace it
+     * @deprecated 5.4.3 Will be removed without equivalent functionality to replace it in a future major release
      */
     private static $cookie_name_secure = 'SECSESSID';
 
@@ -274,7 +274,7 @@ class Session
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.3',
-            'The $request parameter is deprecated and will be removed',
+            'The $request parameter is deprecated and will be removed in a future major release',
             Deprecation::SCOPE_GLOBAL
         );
         $secure = Director::is_https($request) && $this->config()->get('cookie_secure');

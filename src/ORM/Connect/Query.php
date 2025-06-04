@@ -3,12 +3,18 @@
 namespace SilverStripe\ORM\Connect;
 
 use SilverStripe\Core\Convert;
-use Iterator;
 use Traversable;
 
 /**
- * Abstract query-result class. A query result provides an iterator that returns a map for each record of a query
- * result.
+ * Abstract query-result class. A query result is an iterable that returns a map for each record of a
+ * query result.
+ *
+ * This should be subclassed by an actual database implementation. It will only
+ * ever be constructed by a subclass of Database. The result of a database query - an iterable object
+ * that's returned by by various low-level ORM methods.
+ *
+ * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
+ * on providing the specific data-access methods that are required.
  *
  * The map should be keyed by the column names, and the values should use the following types:
  *
@@ -18,15 +24,8 @@ use Traversable;
  *  - strings returned as strings
  *  - dates / datetimes returned as strings
  *
- * Note that until SilverStripe 4.3, bugs meant that strings were used for every column type.
- *
- * Once again, this should be subclassed by an actual database implementation.  It will only
- * ever be constructed by a subclass of SS_Database.  The result of a database query - an iteratable object
- * that's returned by DB::SS_Query
- *
- * Primarily, the Query class takes care of the iterator plumbing, letting the subclasses focusing
- * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
- * and {@link seek()}
+ * @see PostgreSQLQuery class on the silverstripe/postgresql module for an example of how to implement this
+ * class on a non-MySQL database.
  */
 abstract class Query implements \IteratorAggregate
 {

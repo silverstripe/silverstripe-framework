@@ -10,7 +10,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Allows a bypass when the request has been run in CLI mode
  *
- * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it
+ * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release
  */
 class CliBypass implements Bypass
 {
@@ -19,7 +19,7 @@ class CliBypass implements Bypass
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be removed without equivalent functionality to replace it',
+                'Will be removed without equivalent functionality to replace it in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });

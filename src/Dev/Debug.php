@@ -199,7 +199,7 @@ class Debug
     /**
      * Check if the user has permissions to run URL debug tools,
      * else redirect them to log in.
-     * @deprecated 5.4.0 Will be removed without equivalent functionality.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality in a future major release.
      */
     public static function require_developer_login()
     {

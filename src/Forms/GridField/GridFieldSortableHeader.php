@@ -28,7 +28,7 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @var bool
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     protected $throwExceptionOnBadDataType = true;
 
@@ -48,11 +48,11 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      *
      * @param bool $throwExceptionOnBadDataType
      * @return $this
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public function setThrowExceptionOnBadDataType($throwExceptionOnBadDataType)
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         $this->throwExceptionOnBadDataType = $throwExceptionOnBadDataType;
         return $this;
     }
@@ -61,11 +61,11 @@ class GridFieldSortableHeader extends AbstractGridFieldComponent implements Grid
      * See {@link setThrowExceptionOnBadDataType()}
      *
      * @return bool
-     * @deprecated 5.2.0 Will be removed without equivalent functionality
+     * @deprecated 5.2.0 Will be removed without equivalent functionality in a future major release
      */
     public function getThrowExceptionOnBadDataType()
     {
-        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality');
+        Deprecation::notice('5.2.0', 'Will be removed without equivalent functionality in a future major release');
         return $this->throwExceptionOnBadDataType;
     }
 

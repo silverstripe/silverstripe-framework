@@ -427,11 +427,11 @@ trait SearchableDropdownTrait
 
     /**
      * @param Validator $validator
-     * @deprecated 5.4.0 Will be removed in favour of the `FormField::validate()` method.
+     * @deprecated 5.4.0 Will be removed in favour of the `FormField::validate()` method in a future major release.
      */
     public function validate($validator): bool
     {
-        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed in favour of the `FormField::validate()` method.');
+        Deprecation::noticeWithNoReplacment('5.4.0', 'Will be removed in favour of the `FormField::validate()` method in a future major release.');
         return $this->extendValidationResult(true, $validator);
     }
 

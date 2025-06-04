@@ -16,7 +16,7 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Outputs the full configuration.
  *
- * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\ConfigDump
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\ConfigDump in a future major release
  */
 class DevConfigController extends Controller implements PermissionProvider
 {
@@ -50,7 +50,7 @@ class DevConfigController extends Controller implements PermissionProvider
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\ConfigDump',
+                'Will be replaced with SilverStripe\Dev\Command\ConfigDump in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });

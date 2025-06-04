@@ -96,6 +96,8 @@ id:
   SilverStripe\Forms\UrlField:
     INVALID: 'Isikan URL yang valid'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Dari
+    FILTER_WITHINRANGE_TO: Ke
     PLURALNAME: 'Obyek Data'
     SINGULARNAME: 'Obyek Data'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -254,3 +256,8 @@ id:
     LOSTPASSWORDHEADER: 'Kata Kunci yang Terlupa'
     NOTEPAGESECURED: 'Laman ini diamankan. Isikan data berikut untuk dikirimkan hak akses Anda.'
     NOTERESETPASSWORD: 'Isikan alamat email Anda untuk mendapatkan tautan penggantian kata kunci'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Anda sudah pernah menggunakan kata kunci tersebut, mohon pilih kata kunci yang baru'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Mohon tingkatkan kekuatan kata kunci dengan menambah beberapa karakter berikut ini: {chars}'
+    TOOSHORT: 'Kata kunci terlalu singkat, setidaknya harus terdiri dari {minimum} karakter atau lebih'

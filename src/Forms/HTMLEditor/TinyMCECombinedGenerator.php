@@ -14,7 +14,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Generates tinymce config using a combined file generated via a standard
  * SilverStripe {@link GeneratedAssetHandler}
- * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCECombinedGenerator
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCECombinedGenerator in a future major release
  */
 class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
 {
@@ -37,7 +37,7 @@ class TinyMCECombinedGenerator implements TinyMCEScriptGenerator, Flushable
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with SilverStripe\TinyMCE\TinyMCECombinedGenerator',
+            'Will be replaced with SilverStripe\TinyMCE\TinyMCECombinedGenerator in a future major release',
             Deprecation::SCOPE_CLASS
         );
     }

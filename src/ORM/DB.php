@@ -68,7 +68,7 @@ class DB
 
     /**
      * Internal flag to keep track of when db connection was attempted.
-     * @deprecated 5.4.0 Will be removed without equivalent functionality.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality in a future major release.
      */
     private static $connection_attempted = false;
 

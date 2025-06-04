@@ -448,11 +448,11 @@ class FormField extends RequestHandler
      *
      * @see FormField::setSubmittedValue()
      * @return mixed
-     * @deprecated 5.4.0 Will be replaced by getFormattedValue() and getValue()
+     * @deprecated 5.4.0 Will be replaced by getFormattedValue() and getValue() in a future major release
      */
     public function Value()
     {
-        Deprecation::notice('5.4.0', 'Will be replaced by getFormattedValue() and getValue()');
+        Deprecation::notice('5.4.0', 'Will be replaced by getFormattedValue() and getValue() in a future major release');
         return $this->value;
     }
 
@@ -1246,7 +1246,7 @@ class FormField extends RequestHandler
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'This method will take zero arguments and return a ValidationResult'
+            'This method will take zero arguments and return a ValidationResult in a future major release'
             . ' object instead of a boolean in CMS 6.0.0'
         );
         return $this->extendValidationResult(true, $validator);

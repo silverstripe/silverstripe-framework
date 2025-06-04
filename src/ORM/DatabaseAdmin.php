@@ -27,7 +27,7 @@ use SilverStripe\Versioned\Versioned;
  * Utility functions for administrating the database. These can be accessed
  * via URL, e.g. http://www.yourdomain.com/db/build.
  *
- * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild in a future major release
  */
 class DatabaseAdmin extends Controller
 {
@@ -42,7 +42,7 @@ class DatabaseAdmin extends Controller
 
     /**
      * Obsolete classname values that should be remapped in dev/build
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild.classname_value_remapping
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild.classname_value_remapping in a future major release
      */
     private static $classname_value_remapping = [
         'File'               => 'SilverStripe\\Assets\\File',
@@ -60,7 +60,7 @@ class DatabaseAdmin extends Controller
 
     /**
      * Config setting to enabled/disable the display of record counts on the dev/build output
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild.show_record_counts
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild.show_record_counts in a future major release
      */
     private static $show_record_counts = true;
 
@@ -70,7 +70,7 @@ class DatabaseAdmin extends Controller
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\DbBuild',
+                'Will be replaced with SilverStripe\Dev\Command\DbBuild in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });
@@ -209,14 +209,14 @@ class DatabaseAdmin extends Controller
      * @return string Returns the timestamp of the time that the database was
      *                last built
      *
-     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt()
+     * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt() in a future major release
      */
     public static function lastBuilt()
     {
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt()'
+                'Will be replaced with SilverStripe\Dev\Command\DbBuild::lastBuilt() in a future major release'
             );
         });
 

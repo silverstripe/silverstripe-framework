@@ -24,7 +24,7 @@ class SSTemplateParseException extends Exception
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\TemplateEngine\Exception\SSTemplateParseException',
+            'Will be renamed to SilverStripe\TemplateEngine\Exception\SSTemplateParseException in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $prior = substr($parser->string ?? '', 0, $parser->pos);

@@ -415,7 +415,10 @@ class Deprecation
                 }
 
                 $level = Deprecation::$insideNoticeSuppression ? 4 : 2;
-                $string .= " Called from " . Deprecation::get_called_method_from_trace($backtrace, $level) . '.';
+                $calledFrom = Deprecation::get_called_method_from_trace($backtrace, $level);
+                if ($calledFrom) {
+                    $string .= " Called from $calledFrom.";
+                }
                 if ($caller) {
                     $string = $caller . ' is deprecated.' . ($string ? ' ' . $string : '');
                 }
@@ -464,7 +467,7 @@ class Deprecation
         int $scope = Deprecation::SCOPE_METHOD
     ): void {
         if ($message === '') {
-            $message = 'Will be removed without equivalent functionality to replace it.';
+            $message = 'Will be removed without equivalent functionality to replace it in a future major release.';
         }
         Deprecation::withSuppressedNotice(
             fn() => Deprecation::notice($atVersion, $message, $scope)

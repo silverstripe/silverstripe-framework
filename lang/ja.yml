@@ -89,6 +89,8 @@ ja:
   SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: '正しい時間フォーマット{{format}}を入力してください'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: 送信者
+    FILTER_WITHINRANGE_TO: 終了日
     PLURALNAME: データオブジェクト
     SINGULARNAME: データオブジェクト
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -237,3 +239,8 @@ ja:
     LOSTPASSWORDHEADER: パスワードの損失
     NOTEPAGESECURED: このページはセキュリティで保護されております証明書キーを下記に入力してください。こちらからすぐに送信します
     NOTERESETPASSWORD: メールアドレスを入力してください、パスワードをリセットするURLを送信致します
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: このパスワードは過去に使用されています、新しいパスワードを選択してください
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: '次の文字のいくつかを追加してパスワードを強化してください: {chars}'
+    TOOSHORT: パスワードが短すぎます、%文字以上でなければなりません

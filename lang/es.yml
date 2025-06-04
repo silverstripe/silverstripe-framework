@@ -112,6 +112,8 @@ es:
   SilverStripe\Forms\UrlField:
     INVALID: 'Por favor, ingrese una URL válida'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: De
+    FILTER_WITHINRANGE_TO: Hasta
     PLURALNAME: 'Objetos de Datos'
     PLURALS:
       many: '{count} Objetos de Datos'
@@ -336,3 +338,8 @@ es:
     LOSTPASSWORDHEADER: '¿Contraseña Perdida?'
     NOTEPAGESECURED: 'Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento.'
     NOTERESETPASSWORD: 'Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: {chars}'
+    TOOSHORT: 'Tu contraseña es muy corta'

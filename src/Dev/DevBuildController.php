@@ -12,7 +12,7 @@ use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 
 /**
- * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\Dev\Command\DbBuild in a future major release
  */
 class DevBuildController extends Controller implements PermissionProvider
 {
@@ -37,7 +37,7 @@ class DevBuildController extends Controller implements PermissionProvider
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with SilverStripe\Dev\Command\DbBuild',
+                'Will be replaced with SilverStripe\Dev\Command\DbBuild in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });

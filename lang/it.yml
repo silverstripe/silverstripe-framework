@@ -27,6 +27,12 @@ it:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Richiesta non valida'
     REQUEST_ABORTED: 'Richiesta annullata'
+  SilverStripe\Dev\Command\ConfigDump:
+    CAN_DEV_CONFIG_DESCRIPTION: 'Può vedere /dev/config'
+    CAN_DEV_CONFIG_HELP: "Può vedere l'intera configurazione dell'applicazione (/dev/config)."
+  SilverStripe\Dev\Command\DbBuild:
+    CAN_DEV_BUILD_DESCRIPTION: 'Può eseguire /dev/build'
+    CAN_DEV_BUILD_HELP: 'Può eseguire il comando di build (/dev/build).'
   SilverStripe\Dev\DevBuildController:
     CAN_DEV_BUILD_DESCRIPTION: 'Può eseguire /dev/build'
     CAN_DEV_BUILD_HELP: 'Può eseguire il comando di build (/dev/build).'
@@ -167,6 +173,8 @@ it:
   SilverStripe\Forms\UrlField:
     INVALID: 'Prego inserire un URL valido'
   SilverStripe\ORM\DataObject:
+    FILTER_WITHINRANGE_FROM: Da
+    FILTER_WITHINRANGE_TO: A
     GENERALSEARCH: 'Ricerca Generale'
     PLURALNAME: 'Data Object'
     PLURALS:
@@ -239,6 +247,8 @@ it:
   SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
     LIMITED_TITLE: 'Troppi figli ({count})'
+  SilverStripe\ORM\Search\SearchContextForm:
+    OpenFilter: 'Apri ricerca e filtro'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Errore di validazione'
   SilverStripe\Security\BasicAuth:
@@ -493,5 +503,10 @@ it:
     NOTERESETPASSWORD: 'Inserisci il tuo indirizzo e-mail e ti verrà inviato un link per poter azzerare la tua password.'
     PASSWORDRESETSENTHEADER: 'Link per la reimpostazione della password inviato'
     PASSWORDRESETSENTTEXT: 'Grazie. È stato inviato un link di ripristino, a condizione che esista un account per questo indirizzo email.'
+  SilverStripe\Security\Validation\PasswordValidator:
+    PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
+  SilverStripe\Security\Validation\RulesPasswordValidator:
+    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: {chars}'
+    TOOSHORT: 'La password è troppo corta, deve essere lunga {minimum} o più caratteri'
   SilverStripe\View\Shortcodes\EmbedShortcodeProvider:
     INVALID_URL: 'Problema durante il caricamento del media.'

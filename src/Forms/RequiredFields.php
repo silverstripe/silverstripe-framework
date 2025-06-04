@@ -44,7 +44,7 @@ class RequiredFields extends Validator
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be renamed to SilverStripe\\Forms\\Validation\\RequiredFieldsValidator',
+            'Will be renamed to SilverStripe\\Forms\\Validation\\RequiredFieldsValidator in a future major release',
             Deprecation::SCOPE_CLASS
         );
         $required = func_get_args();

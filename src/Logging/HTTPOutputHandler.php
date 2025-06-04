@@ -41,7 +41,7 @@ class HTTPOutputHandler extends AbstractProcessingHandler
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be renamed to ErrorOutputHandler',
+                'Will be renamed to ErrorOutputHandler in a future major release',
                 Deprecation::SCOPE_CLASS
             );
         });

@@ -35,14 +35,14 @@ class CleanupTestDatabasesTask extends BuildTask
     }
 
     /**
-     * @deprecated 5.4.0 Will be replaced with canRunInBrowser()
+     * @deprecated 5.4.0 Will be replaced with canRunInBrowser() in a future major release
      */
     public function canView(): bool
     {
         Deprecation::withSuppressedNotice(function () {
             Deprecation::notice(
                 '5.4.0',
-                'Will be replaced with canRunInBrowser()'
+                'Will be replaced with canRunInBrowser() in a future major release'
             );
         });
         return Permission::check('ADMIN') || Director::is_cli();

@@ -7,7 +7,7 @@ use SilverStripe\Dev\Deprecation;
 /**
  * Validates the internal state of all fields in the form.
  *
- * @deprecated 5.4.0 Will be replaced with functionality inside SilverStripe\Forms\Form::validate()
+ * @deprecated 5.4.0 Will be replaced with functionality inside SilverStripe\Forms\Form::validate() in a future major release
  */
 class FieldsValidator extends Validator
 {
@@ -15,7 +15,7 @@ class FieldsValidator extends Validator
     {
         Deprecation::noticeWithNoReplacment(
             '5.4.0',
-            'Will be replaced with functionality inside SilverStripe\Forms\Form::validate()',
+            'Will be replaced with functionality inside SilverStripe\Forms\Form::validate() in a future major release',
             Deprecation::SCOPE_CLASS
         );
         parent::__construct();

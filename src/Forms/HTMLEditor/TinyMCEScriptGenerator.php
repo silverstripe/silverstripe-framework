@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\HTMLEditor;
 
 /**
  * Declares a service which can generate a script URL for a given HTMLEditor config
- * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCEScriptGenerator
+ * @deprecated 5.4.0 Will be replaced with SilverStripe\TinyMCE\TinyMCEScriptGenerator in a future major release
  */
 interface TinyMCEScriptGenerator
 {

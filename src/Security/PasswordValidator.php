@@ -82,7 +82,7 @@ class PasswordValidator
     {
         Deprecation::notice(
             '5.4.0',
-            'Will be renamed to SilverStripe\Security\Validation\RulesPasswordValidator',
+            'Will be renamed to SilverStripe\Security\Validation\RulesPasswordValidator in a future major release',
             Deprecation::SCOPE_CLASS
         );
     }

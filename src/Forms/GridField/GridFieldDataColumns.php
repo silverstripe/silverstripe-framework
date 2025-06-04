@@ -256,11 +256,11 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
      * @param ViewableData $record
      * @param string $columnName
      * @return string|null - returns null if it could not found a value
-     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it.
+     * @deprecated 5.4.0 Will be removed without equivalent functionality to replace it in a future major release.
      */
     protected function getValueFromRelation($record, $columnName)
     {
-        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it.');
+        Deprecation::notice('5.4.0', 'Will be removed without equivalent functionality to replace it in a future major release.');
         $fieldNameParts = explode('.', $columnName ?? '');
         $tmpItem = clone($record);
         for ($idx = 0; $idx < sizeof($fieldNameParts ?? []); $idx++) {
