@@ -473,14 +473,13 @@ class DataQuery
     {
         $quotedColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
         $finalisedQuery = $this->getFinalisedQuery();
-        // The COUNT(DISTINCT ...) is added in case a join is added to the query (to apply a filter on related records)
-        $countColumn = "DISTINCT {$quotedColumn}";
         // COUNT(DISTINCT ...) can be slower compared to COUNT(...) because it requires sorting and removing duplicates to find the unique values
         // When using only one table and counting by ID (and since there are no NULL IDs), we can ignore DISTINCT
         if (count($finalisedQuery->getFrom()) === 1) {
-            $countColumn = "{$quotedColumn}";
+            return $finalisedQuery->count($quotedColumn);
         }
-        return $finalisedQuery->count($countColumn);
+        // The COUNT(DISTINCT ...) is added in case a join is added to the query (to apply a filter on related records)
+        return $finalisedQuery->count("DISTINCT {$quotedColumn}");
     }
 
     /**
