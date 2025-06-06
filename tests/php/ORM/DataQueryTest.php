@@ -27,6 +27,8 @@ class DataQueryTest extends SapphireTest
         DataQueryTest\ObjectG::class,
         DataQueryTest\ObjectH::class,
         DataQueryTest\ObjectI::class,
+        DataQueryTest\ObjectJ::class,
+        DataQueryTest\ObjectK::class,
         DataQueryTest\ObjectHasMultiRelationalHasOne::class,
         DataQueryTest\ObjectHasMultiRelationalHasMany::class,
         SQLSelectTest\CteRecursiveObject::class,
@@ -882,15 +884,15 @@ class DataQueryTest extends SapphireTest
 
     public function testDistinctCount()
     {
-        // This should return 1, not 2. We have two records in the "TestAs" relation called 'sam' but only one 'Distinct' ObjectC parent record
-        $count = DataQueryTest\ObjectC::get()->filter("TestAs.Name", 'sam')->count();
+        // This should return 1, not 2. We have two records in the "TestKs" relation called 'sam' but only one 'Distinct' ObjectJ parent record
+        $count = DataQueryTest\ObjectJ::get()->filter("TestKs.Name", 'sam')->count();
         $this->assertEquals(1, $count);
 
         // We have two 'sam' objects
-        $count = DataQueryTest\ObjectA::get()->filter('Name', 'sam')->count();
+        $count = DataQueryTest\ObjectK::get()->filter('Name', 'sam')->count();
         $this->assertEquals(2, $count);
 
-        $distinct = $this->objFromFixture(DataQueryTest\ObjectC::class, 'distinct1');
+        $distinct = $this->objFromFixture(DataQueryTest\ObjectJ::class, 'distinct1');
         $count = $distinct->TestAs()->count();
         $this->assertEquals(2, $count);
     }
