@@ -893,7 +893,7 @@ class DataQueryTest extends SapphireTest
         $this->assertEquals(2, $count);
 
         $distinct = $this->objFromFixture(DataQueryTest\ObjectJ::class, 'distinct1');
-        $count = $distinct->TestAs()->count();
+        $count = $distinct->TestKs()->count();
         $this->assertEquals(2, $count);
     }
 }
