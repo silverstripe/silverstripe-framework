@@ -912,7 +912,7 @@ class DataQueryTest extends SapphireTest
 
         $this->assertEquals($baseCount + 3, $newCount);
 
-        // This should return 1, not 2. We have two persons called 'sam' but only one 'Distinct' parent
+        // This should return 1, not 2. We have two records in the "TestAs" relation called 'sam' but only one 'Distinct' ObjectC parent record
         $count = DataQueryTest\ObjectC::get()->filter("TestAs.Name", 'sam')->count();
         $this->assertEquals(1, $count);
 
