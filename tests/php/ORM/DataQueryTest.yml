@@ -1,3 +1,20 @@
+SilverStripe\ORM\Tests\DataQueryTest\ObjectC:
+  distinct1:
+    Title: 'Distinct'
+  distinct2:
+    Title: 'OtherDistinct'
+
+SilverStripe\ORM\Tests\DataQueryTest\ObjectA:
+  sam1:
+    Title: 'sam'
+    TestC: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectC.distinct1
+  sam2:
+    Title: 'sam'
+    TestC: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectC.distinct1
+  john1:
+    Title: 'john'
+    TestC: =>SilverStripe\ORM\Tests\DataQueryTest\ObjectC.distinct2
+
 SilverStripe\ORM\Tests\DataQueryTest\ObjectE:
   query1:
     Title: 'Last'
