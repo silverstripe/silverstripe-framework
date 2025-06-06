@@ -14,6 +14,6 @@ class ObjectK extends DataObject implements TestOnly
     ];
 
     private static $has_one = [
-        'TestI' => ObjectJ::class,
+        'TestJ' => ObjectJ::class,
     ];
 }
