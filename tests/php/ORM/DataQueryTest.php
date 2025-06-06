@@ -882,36 +882,6 @@ class DataQueryTest extends SapphireTest
 
     public function testDistinctCount()
     {
-        // The COUNT(DISTINCT ...) is added in case a join is added to the query (to apply a filter on related records)
-        $distinct = new DataQueryTest\ObjectC();
-        $distinct->Title = 'Distinct';
-        $distinct->write();
-
-        $otherDistinct = new DataQueryTest\ObjectC();
-        $otherDistinct->Title = 'OtherDistinct';
-        $otherDistinct->write();
-
-        $baseCount = DataQueryTest\ObjectA::get()->count();
-
-        $obj1 = new DataQueryTest\ObjectA();
-        $obj1->Name = 'sam';
-        $obj1->TestCID = $distinct->ID;
-        $obj1->write();
-
-        $obj2 = new DataQueryTest\ObjectA();
-        $obj2->Name = 'sam';
-        $obj2->TestCID = $distinct->ID;
-        $obj2->write();
-
-        $obj3 = new DataQueryTest\ObjectA();
-        $obj3->Name = 'john';
-        $obj3->TestCID = $otherDistinct->ID;
-        $obj3->write();
-
-        $newCount = DataQueryTest\ObjectA::get()->count();
-
-        $this->assertEquals($baseCount + 3, $newCount);
-
         // This should return 1, not 2. We have two records in the "TestAs" relation called 'sam' but only one 'Distinct' ObjectC parent record
         $count = DataQueryTest\ObjectC::get()->filter("TestAs.Name", 'sam')->count();
         $this->assertEquals(1, $count);
@@ -920,6 +890,7 @@ class DataQueryTest extends SapphireTest
         $count = DataQueryTest\ObjectA::get()->filter('Name', 'sam')->count();
         $this->assertEquals(2, $count);
 
+        $distinct = $this->objFromFixture(DataQueryTest\ObjectC::class, 'distinct1');
         $count = $distinct->TestAs()->count();
         $this->assertEquals(2, $count);
     }
