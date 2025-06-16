@@ -107,6 +107,8 @@ class Sake extends Application
                 }
                 $this->kernel->boot($flush);
             }
+            // Register sake in the injector so we can access it from anywhere in the execution chain
+            Injector::inst()->registerService($this, Sake::class);
             // Allow developers to hook into symfony/console events
             /** @var EventDispatcherInterface $dispatcher */
             $dispatcher = Injector::inst()->get(EventDispatcherInterface::class . '.sake');
@@ -202,6 +204,9 @@ class Sake extends Application
 
     protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output): int
     {
+        // Register current command in the injector so we can access it from anywhere in the execution chain
+        Injector::inst()->registerService($command, Command::class);
+        // Add deprecation notice if using deprecated `dev/something` syntax
         $name = $command->getName() ?? '';
         $nameUsedAs = $input->getFirstArgument() ?? '';
         if ($nameUsedAs === 'dev' || str_starts_with($nameUsedAs, 'dev/')) {
