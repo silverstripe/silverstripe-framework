@@ -488,7 +488,7 @@ abstract class SearchFilter
      */
     protected function getCaseSensitiveByCollation(): ?bool
     {
-        if (!SearchFilter::$caseSensitiveByCollation) {
+        if (SearchFilter::$caseSensitiveByCollation === null) {
             if (!DB::is_active()) {
                 return null;
             }
