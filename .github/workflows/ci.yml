@@ -10,7 +10,7 @@ jobs:
     name: CI
     # Do not run if this is a pull-request from same repo i.e. not a fork repo
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.repository
-    uses: silverstripe/gha-ci/.github/workflows/ci.yml@v1
+    uses: silverstripe/gha-ci/.github/workflows/ci.yml@v2
     with:
       # Turn phpcoverage off because it causes a segfault
       phpcoverage_force_off: true
