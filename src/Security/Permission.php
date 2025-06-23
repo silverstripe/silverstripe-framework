@@ -37,7 +37,10 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
     ];
 
     private static $indexes = [
-        "Code" => true
+        'Code_GroupID' => [
+            'Code',
+            'GroupID',
+        ],
     ];
 
     private static $defaults = [

@@ -28,9 +28,12 @@ class PermissionRoleCode extends DataObject
     private static bool $must_use_primary_db = true;
 
     private static bool $require_sudo_mode = true;
-    
+
     private static $indexes = [
-        "Code" => true,
+        'Code_RoleID' => [
+            'Code',
+            'RoleID',
+        ],
     ];
 
     public function validate(): ValidationResult
