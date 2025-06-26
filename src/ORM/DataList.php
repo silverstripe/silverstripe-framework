@@ -199,6 +199,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
     {
         $clone = clone $this;
         $clone->dataQuery = $dataQuery;
+        $clone->dataClass = $dataQuery->dataClass();
         return $clone;
     }
 

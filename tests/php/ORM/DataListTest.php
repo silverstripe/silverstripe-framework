@@ -180,6 +180,22 @@ class DataListTest extends SapphireTest
         $teamsComments->subtract($teams);
     }
 
+    public function testSetDataQuery(): void
+    {
+        $list = Team::get();
+        $numTeams = $list->count();
+        $numTeamComments = TeamComment::get()->count();
+        $this->assertNotSame($numTeams, $numTeamComments, 'If these are the same, we need to update the test');
+
+        $newList = $list->setDataQuery(new DataQuery(TeamComment::class));
+        // Original list unaffected
+        $this->assertNotSame($list, $newList);
+        $this->assertSame(Team::class, $list->dataClass());
+        // New list is using the new data query
+        $this->assertSame(TeamComment::class, $newList->dataClass());
+        $this->assertSame($numTeamComments, $newList->count());
+    }
+
     public function testListCreationSortAndLimit()
     {
         // By default, a DataList will contain all items of that class
