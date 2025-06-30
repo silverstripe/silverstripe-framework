@@ -644,8 +644,8 @@ class DataObjectSchema
         $sort = Config::inst()->get($class, 'default_sort', Config::UNINHERITED);
         $indexes = [];
 
-        if ($sort && is_string($sort)) {
-            $sort = preg_split('/,(?![^()]*+\\))/', $sort ?? '');
+        if ($sort && (is_string($sort) || is_array($sort))) {
+            $sort = $this->normaliseSort($sort);
             foreach ($sort as $value) {
                 try {
                     list ($table, $column) = $this->parseSortColumn(trim($value ?? ''));
@@ -665,6 +665,20 @@ class DataObjectSchema
             }
         }
         return $indexes;
+    }
+
+    private function normaliseSort(string|array $sort): array
+    {
+        if (is_string($sort)) {
+            return preg_split('/,(?![^()]*+\\))/', $sort ?? '');
+        }
+        // Change associative arrays so the field and sort are both in the value
+        foreach ($sort as $key => $value) {
+            if (!is_numeric($key)) {
+                $sort[$key] = $key . ' ' . $value;
+            }
+        }
+        return $sort;
     }
 
     /**
