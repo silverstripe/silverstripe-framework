@@ -128,15 +128,22 @@ class DBTime extends DBField
 
     public function requireField(): void
     {
+        DB::require_field($this->tableName, $this->name, $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $parts = [
             'datatype' => 'time',
             'arrayValue' => $this->arrayValue
         ];
-        $values = [
+        return [
             'type' => 'time',
             'parts' => $parts
         ];
-        DB::require_field($this->tableName, $this->name, $values);
     }
 
     public function scaffoldFormField(?string $title = null, array $params = []): ?FormField

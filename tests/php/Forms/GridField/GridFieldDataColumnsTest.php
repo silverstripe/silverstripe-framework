@@ -13,6 +13,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig_Base;
 use SilverStripe\Forms\Tests\GridField\GridFieldDataColumnsTest\TestStatusFlagsObject;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\Model\ArrayData;
+use SilverStripe\ORM\FieldType\DBField;
 use stdClass;
 
 class GridFieldDataColumnsTest extends SapphireTest
@@ -89,6 +90,61 @@ class GridFieldDataColumnsTest extends SapphireTest
         );
 
         $component->getDisplayFields($gridField);
+    }
+
+    public static function provideGetColumnContent(): array
+    {
+        return [
+            [
+                'fieldSpec' => 'Varchar(255)',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '&lt;a href=&quot;https://example.com&quot;&gt;text here&lt;a&gt;',
+            ],
+            [
+                'fieldSpec' => 'Text',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '&lt;a href=&quot;https://example.com&quot;&gt;text here&lt;a&gt;',
+            ],
+            [
+                'fieldSpec' => 'HTMLVarchar',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '<a href="https://example.com">text here<a>',
+            ],
+            [
+                'fieldSpec' => 'HTMLText',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '<a href="https://example.com">text here<a>',
+            ],
+            [
+                'fieldSpec' => 'HTMLFragment',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '<a href="https://example.com">text here<a>',
+            ],
+            [
+                'fieldSpec' => 'Generated("Varchar(255)", "anything")',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '&lt;a href=&quot;https://example.com&quot;&gt;text here&lt;a&gt;',
+            ],
+            [
+                'fieldSpec' => 'Generated("HTMLText", "anything")',
+                'value' => '<a href="https://example.com">text here<a>',
+                'expected' => '<a href="https://example.com">text here<a>',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideGetColumnContent')]
+    public function testGetColumnContent(string $fieldSpec, string $value, string $expected): void
+    {
+        $field = DBField::create_field($fieldSpec, $value);
+        $record = new ArrayData(['MyField' => $field]);
+        $component = new GridFieldDataColumns();
+        $component->setDisplayFields(['MyField']);
+        $config = new GridFieldConfig_Base();
+        $config->addComponent($component);
+        $gridField = new GridField('dummy', 'dummy', new ArrayList([$record]), $config);
+
+        $this->assertSame($expected, $component->getColumnContent($gridField, $record, 'MyField'));
     }
 
     public static function provideGetColumnContentHasStatusFlags(): array

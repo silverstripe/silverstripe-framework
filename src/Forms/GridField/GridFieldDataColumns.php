@@ -7,6 +7,7 @@ use InvalidArgumentException;
 use LogicException;
 use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBGenerated;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBHTMLVarchar;
 
@@ -329,8 +330,7 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
             } else {
                 if (!$this->getDoEscapeFields()
                     && is_a($value, DBField::class, false)
-                    && !is_a($value, DBHTMLText::class, false)
-                    && !is_a($value, DBHTMLVarchar::class, false)
+                    && !$this->fieldIsHtml($value)
                 ) {
                     // For DBFields other than HTML variants, if we're not escaping values, get the raw value.
                     $value = $value->RAW();
@@ -390,5 +390,13 @@ class GridFieldDataColumns extends AbstractGridFieldComponent implements GridFie
             $value = str_replace($search ?? '', $replace ?? '', $value ?? '');
         }
         return $value;
+    }
+
+    private function fieldIsHtml(DBField $field): bool
+    {
+        if ($field instanceof DBGenerated) {
+            $field = $field->getChildField();
+        }
+        return is_a($field, DBHTMLText::class) || is_a($field, DBHTMLVarchar::class);
     }
 }

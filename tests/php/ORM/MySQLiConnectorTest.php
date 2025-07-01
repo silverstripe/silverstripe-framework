@@ -13,6 +13,7 @@ use SilverStripe\ORM\Tests\MySQLiConnectorTest\MySQLiConnector;
 use SilverStripe\Tests\ORM\Utf8\Utf8TestHelper;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
+use SilverStripe\ORM\Connect\GeneratedColumnValueException;
 
 #[RequiresPhpExtension('mysqli')]
 class MySQLiConnectorTest extends SapphireTest implements TestOnly
@@ -50,9 +51,9 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
             $this->markTestSkipped("The test only relevant for MySQL - but $config[type] is in use");
         }
 
-        // Build a table for the duplicate entry tests
         DB::get_schema()->schemaUpdate(function () {
             DB::quiet(true);
+            // Build a table for the duplicate entry tests
             DB::require_table(
                 'duplicate_entry_table',
                 [
@@ -68,6 +69,17 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
                 ],
                 options: DataObject::config()->get('create_table_options')
             );
+            // Build a table for the generated column tests
+            DB::require_table(
+                'generated_columns_table',
+                [
+                    'ID' => 'PrimaryKey',
+                    'BaseColumn' => 'Varchar',
+                    'GeneratedColumn1' => 'Generated("Varchar(255)", "CONCAT(\\"BaseColumn\\", \'_etc\')", "VIRTUAL")',
+                    'GeneratedColumn2' => 'Generated("Varchar(255)", "CONCAT(\\"BaseColumn\\", \'_etc\')", "STORED")',
+                ],
+                options: DataObject::config()->get('create_table_options')
+            );
         });
 
         $this->config = $config;
@@ -78,6 +90,7 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         DB::get_schema()->schemaUpdate(function () {
             DB::quiet(true);
             DB::get_schema()->dontRequireTable('duplicate_entry_table');
+            DB::get_schema()->dontRequireTable('generated_columns_table');
         });
         parent::tearDown();
     }
@@ -174,11 +187,11 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
     public static function provideQueryThrowsException()
     {
         return [
-            [
+            'errors, no exceptions' => [
                 // Uses errors, not exceptions
                 'reportMode' => MYSQLI_REPORT_OFF,
             ],
-            [
+            'always exceptions' => [
                 // Uses exceptions. This is the default since PHP 8.1
                 // See https://www.php.net/manual/en/mysqli-driver.report-mode.php
                 'reportMode' => MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT,
@@ -235,6 +248,39 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $this->expectException(DuplicateEntryException::class);
         // Create the duplicate item
         $connector->preparedQuery('INSERT INTO duplicate_entry_table (Title, Name) VALUES (?, ?);', ['My Title', 'My Name']);
+    }
+
+    public static function providePreparedQueryThrowsGeneratedColumnValueException(): array
+    {
+        $baseScenarios = static::provideQueryThrowsException();
+        $scenarios = [];
+        foreach ($baseScenarios as $key => $scenario) {
+            $scenario['columnName'] = 'GeneratedColumn1';
+            $scenarios[$key . ' - virtual column'] = $scenario;
+            $scenario['columnName'] = 'GeneratedColumn2';
+            $scenarios[$key . ' - stored column'] = $scenario;
+        }
+        return $scenarios;
+    }
+
+    #[DataProvider('providePreparedQueryThrowsGeneratedColumnValueException')]
+    public function testPreparedQueryThrowsGeneratedColumnValueException(int $reportMode, string $columnName): void
+    {
+        if (preg_match('/mariadb/i', DB::get_conn()->getVersion())) {
+            $this->markTestSkipped('This test is only relevant for MySQL specifically.');
+        }
+        $connector = $this->getConnector();
+        $driver = new mysqli_driver();
+        $driver->report_mode = $reportMode;
+        $connector = DB::get_conn();
+        // Create the base item
+        $connector->preparedQuery('INSERT INTO generated_columns_table (BaseColumn) VALUES (?);', ['My value']);
+        $this->expectException(GeneratedColumnValueException::class);
+        // Try to update the generated column directly
+        $connector->preparedQuery(
+            'UPDATE generated_columns_table SET ' . $columnName . ' = ? WHERE BaseColumn = ?;',
+            ['My generated value', 'My value']
+        );
     }
 
     #[DataProvider('provideQueryThrowsException')]

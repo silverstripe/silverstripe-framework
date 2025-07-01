@@ -63,6 +63,14 @@ class DBInt extends DBField
 
     public function requireField(): void
     {
+        DB::require_field($this->tableName, $this->name, $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $parts = [
             'datatype' => 'int',
             'precision' => 11,
@@ -70,8 +78,7 @@ class DBInt extends DBField
             'default' => $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
-        $values = ['type' => 'int', 'parts' => $parts];
-        DB::require_field($this->tableName, $this->name, $values);
+        return ['type' => 'int', 'parts' => $parts];
     }
 
     public function Nice(): string

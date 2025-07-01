@@ -28,9 +28,16 @@ class DBYear extends DBField
 
     public function requireField(): void
     {
+        DB::require_field($this->tableName, $this->name, $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $parts = ['datatype' => 'year', 'precision' => 4, 'arrayValue' => $this->arrayValue];
-        $values = ['type' => 'year', 'parts' => $parts];
-        DB::require_field($this->tableName, $this->name, $values);
+        return ['type' => 'year', 'parts' => $parts];
     }
 
     public function scaffoldFormField(?string $title = null, array $params = []): ?FormField

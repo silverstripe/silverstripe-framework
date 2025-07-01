@@ -5,6 +5,12 @@ namespace SilverStripe\ORM\Connect;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use LogicException;
+use PHPSQLParser\Options;
+use PHPSQLParser\PHPSQLCreator;
+use PHPSQLParser\PHPSQLParser;
+use PHPSQLParser\utils\ExpressionType;
+use PHPSQLParser\utils\PHPSQLParserConstants;
+use SilverStripe\ORM\FieldType\DBGenerated;
 
 /**
  * Represents schema management object for MySQL
@@ -87,6 +93,9 @@ class MySQLSchemaManager extends DBSchemaManager
         }
         if ($alteredFields) {
             foreach ($alteredFields as $k => $v) {
+                if (isset($advancedOptions['rebuildCols'][$k]) && $advancedOptions['rebuildCols'][$k] === true) {
+                    continue;
+                }
                 $alterList[] = "CHANGE \"$k\" \"$k\" $v";
             }
         }
@@ -96,6 +105,16 @@ class MySQLSchemaManager extends DBSchemaManager
                 if (!array_key_exists('drop', $v) || !$v['drop']) {
                     $alterList[] = "ADD " . $this->getIndexSqlDefinition($k, $v);
                 }
+            }
+        }
+        if (isset($advancedOptions['rebuildCols'])) {
+            foreach ($advancedOptions['rebuildCols'] as $k => $v) {
+                if ($v !== true || !isset($alteredFields[$k])) {
+                    continue;
+                }
+                $v = $alteredFields[$k];
+                $alterList[] = "DROP \"$k\"";
+                $alterList[] = "ADD \"$k\" $v";
             }
         }
 
@@ -270,7 +289,14 @@ class MySQLSchemaManager extends DBSchemaManager
                 $fieldSpec .= " default " . $this->database->quoteString($field['Default']);
             }
             if ($field['Extra']) {
-                $fieldSpec .= " " . $field['Extra'];
+                $extra = $field['Extra'];
+                if (str_ends_with($extra, ' GENERATED')) {
+                    $expression = $this->query(
+                        "SELECT GENERATION_EXPRESSION FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{$table}' AND COLUMN_NAME = '{$field['Field']}'"
+                    )->record()['GENERATION_EXPRESSION'];
+                    $extra =  'AS (' . $this->normaliseGeneratedColumnExpression($expression) . ') ' . $extra;
+                }
+                $fieldSpec .= ' ' . str_replace(' GENERATED', '', $extra);
             }
 
             $fieldList[$field['Field']] = $fieldSpec;
@@ -404,6 +430,16 @@ class MySQLSchemaManager extends DBSchemaManager
         }
     }
 
+    public function makeGenerated(string $spec, array $origSpec, string $expression, string $generationType): string
+    {
+        $expression = $this->normaliseGeneratedColumnExpression($expression);
+        // Remove any default and nullability from the schema
+        $default = $this->defaultClause($origSpec['parts'] ?? []);
+        $spec = str_replace([$default, ' not null'], '', $spec);
+        // Add generated column bits
+        return "$spec AS ($expression) $generationType";
+    }
+
     /**
      * Return a boolean type-formatted string
      *
@@ -449,22 +485,10 @@ class MySQLSchemaManager extends DBSchemaManager
         //DB::requireField($this->tableName, $this->name, "decimal($this->wholeSize,$this->decimalSize)");
         // Avoid empty strings being put in the db
         if ($values['precision'] == '') {
-            $precision = 1;
-        } else {
-            $precision = $values['precision'];
+            $values['precision'] = 1;
         }
 
-        // Fix format of default value to match precision
-        if (isset($values['default']) && is_numeric($values['default'])) {
-            $decs = strpos($precision ?? '', ',') !== false
-                    ? (int) substr($precision, strpos($precision, ',') + 1)
-                    : 0;
-            $values['default'] = number_format($values['default'] ?? 0.0, $decs ?? 0, '.', '');
-        } else {
-            unset($values['default']);
-        }
-
-        return "decimal($precision) not null" . $this->defaultClause($values);
+        return 'decimal(' . $values['precision'] . ') not null' . $this->defaultClause($values);
     }
 
     /**
@@ -643,8 +667,162 @@ class MySQLSchemaManager extends DBSchemaManager
     protected function defaultClause($values)
     {
         if (isset($values['default'])) {
+            // Update default for decimal data type
+            if (isset($values['datatype']) && $values['datatype'] === 'decimal') {
+                if (!is_numeric($values['default']) || !isset($values['precision'])) {
+                    return '';
+                }
+                // Fix format of default value to match precision
+                $precision = $values['precision'];
+                $decs = strpos($precision ?? '', ',') !== false
+                    ? (int) substr($precision, strpos($precision, ',') + 1)
+                    : 0;
+                $values['default'] = number_format($values['default'] ?? 0.0, $decs ?? 0, '.', '');
+            }
             return ' default ' . $this->database->quoteString($values['default']);
         }
         return '';
+    }
+
+    /**
+     * Check whether a column needs to be rebuilt.
+     * Logic based on https://dev.mysql.com/doc/refman/8.4/en/alter-table-generated-columns.html
+     */
+    protected function needRebuildColumn(string $existingSpec, string $newSpec): bool
+    {
+        // Virtual generated columns cannot be altered to stored generated columns, or vice versa
+        // Non-generated columns can be altered to stored but not virtual generated columns
+        // Stored but not virtual generated columns can be altered to non-generated columns
+        $existingSpecType = $this->getGeneratedType($existingSpec);
+        $newSpecType = $this->getGeneratedType($newSpec);
+
+        // If neither spec is generated, we can just use ALTER
+        if (!$existingSpecType && !$newSpecType) {
+            return false;
+        }
+
+        // Virtual generated columns cannot be altered to stored generated columns
+        // Virtual generated columns cannot be altered to non-generated columns
+        if ($existingSpecType === DBGenerated::GENERATION_VIRTUAL) {
+            if ($newSpecType !== DBGenerated::GENERATION_VIRTUAL) {
+                return true;
+            }
+            return false;
+        }
+
+        // Stored generated columns cannot be altered to virtual generated columns
+        // Stored generated columns can be altered to non-generated columns
+        if ($existingSpecType === DBGenerated::GENERATION_STORED) {
+            if ($newSpecType === DBGenerated::GENERATION_VIRTUAL) {
+                return true;
+            }
+            return false;
+        }
+
+        // Non-generated columns can be altered to stored but not virtual generated columns
+        return $newSpecType === DBGenerated::GENERATION_VIRTUAL;
+    }
+
+    /**
+     * Get what type of storage is used for a generated column, or null if not a generated column.
+     */
+    private function getGeneratedType(string $spec): ?string
+    {
+        // If it ends with "STORED" or "VIRTUAL", it's a generated column spec.
+        preg_match('/(STORED|VIRTUAL)$/i', $spec, $matches);
+        return strtoupper($matches[1] ?? '');
+    }
+
+    /**
+     * Normalises a MySQL generated column expression.
+     * This is needed to robustly validate whether the expression we want matches the expression
+     * that's already in the database, because MySQL sometimes makes changes internally that we
+     * need to normalise out, such as:
+     * - escaping quotes
+     * - double-escaping backslashes
+     * - adding the charset before explicit strings
+     * - changing case of keywords
+     * - using backticks instead of ANSI quotes around columns names
+     * - adding spaces around operators
+     */
+    private function normaliseGeneratedColumnExpression(string $expression): string
+    {
+        // Clean up string literals. Easier to do here than in the AST because the
+        // escaped quotes MySQL gives us change the representation of the parsed string.
+        $expression = preg_replace_callback(
+            // Both \' and '' are valid escape sequences for a single quote in a string literal
+            // see https://dev.mysql.com/doc/refman/8.4/en/string-literals.html
+            "/\\\\'(?:[^']|''|\\\\\\\\')*\\\\'/",
+            function ($matches) {
+                // Replace escaped quotes around the string literal with single unescaped quotes
+                $x = preg_replace("/^\\\\'(.*)\\\\'$/", "'$1'", $matches[0]);
+                // Tidy up escaped backslashes, e.g. for FQCN
+                return str_replace('\\\\\\\\', '\\\\', $x);
+            },
+            $expression
+        );
+
+        // Parse and normalise the AST (needs to be a valid SQL command so prepend with SELECT)
+        $parser = new PHPSQLParser(options: [Options::ANSI_QUOTES => true]);
+        $parsed = $parser->parse('SELECT ' . $expression);
+        $this->normaliseExpressionAST($parsed);
+        // Render back out as an SQL expression string
+        $sqlCreator = new PHPSQLCreator($parsed);
+        return preg_replace('/^SELECT /', '', $sqlCreator->created);
+    }
+
+    private function normaliseExpressionAST(array &$ast, ?array &$parent = null, string|int $i = 'root'): void
+    {
+        if (isset($ast['base_expr']) && isset($ast['expr_type'])) {
+            // Normalise casing for reserved keywords
+            if (PHPSQLParserConstants::getInstance()->isReserved(strtoupper($ast['base_expr']))) {
+                $ast['base_expr'] = strtoupper($ast['base_expr']);
+            }
+
+            // Normalise column references
+            if ($ast['expr_type'] === ExpressionType::COLREF) {
+                // Remove unnecessary charset references
+                $charset = '_' . MySQLDatabase::config()->get('charset');
+                if ($ast['base_expr'] === $charset) {
+                    unset($parent[$i]);
+                // Normalise column references to be ANSI quotes
+                } elseif (isset($ast['no_quotes'])
+                    // If a column reference starts with an underscore and precedes a constant value, it's a charset (e.g. _utf8)
+                    && !(str_starts_with($ast['base_expr'], '_') && isset($parent[$i + 1]['expr_type']) && $parent[$i + 1]['expr_type'] === ExpressionType::CONSTANT)) {
+                    // Replace backtick quotes from around column references with ANSI quotes
+                    $ast['base_expr'] = $this->quoteColumnSpecString(implode($ast['no_quotes']['delim'] ?: '', $ast['no_quotes']['parts']));
+                }
+            }
+
+            // MySQL sometimes puts unnecessary brackets around various clauses.
+            // We need to remove those in case we didn't put them in our original expression.
+            // We target specific clauses because these are known scenarios where brackets are added but not necessary.
+            // We can't just blindly collapse all bracket expressions because in many cases brackets will affect
+            // operation order, e.g. "2 x (1 + 3)"
+            if (is_int($i) && $ast['expr_type'] === ExpressionType::BRACKET_EXPRESSION && is_array($ast['sub_tree'])) {
+                $children = $ast['sub_tree'];
+                // e.g. "(x + y * z)" as the whole expression
+                if ($i === 0 && !isset($parent[$i + 1])
+                    // e.g. "(CASE WHEN x=y THEN x ELSE y END)"
+                    || (strtoupper($children[0]['base_expr']) === 'CASE' && strtoupper($children[array_key_last($children)]['base_expr']) === 'END')
+                ) {
+                    $ast['expr_type'] = ExpressionType::EXPRESSION;
+                // e.g. "CASE WHEN (x=y) THEN"
+                } elseif (isset($parent[$i - 1]['base_expr']) && strtoupper($parent[$i - 1]['base_expr']) === 'WHEN') {
+                    $this->normaliseExpressionAST($children, $ast, 'sub_tree');
+                    array_splice($parent, $i, 1, $children);
+                    // No need to recurse into children, we already normalised them before popping them back into the parent AST
+                    return;
+                }
+            }
+        }
+
+        // Recurse into sub-elements.
+        for ($n = count($ast) - 1; $n >= 0; $n--) {
+            $childIndex = array_keys($ast)[$n];
+            if (is_array($ast[$childIndex])) {
+                $this->normaliseExpressionAST($ast[$childIndex], $ast, $n);
+            }
+        }
     }
 }

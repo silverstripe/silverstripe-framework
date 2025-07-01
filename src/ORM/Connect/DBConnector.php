@@ -83,6 +83,23 @@ abstract class DBConnector
         throw new DuplicateEntryException($msg, $keyName, $duplicatedValue, $sql, $parameters);
     }
 
+    protected function valueForGeneratedColumnError(
+        string $msg,
+        ?string $column,
+        ?string $table,
+        ?string $sql = null,
+        array $parameters = []
+    ): void {
+        // Format query if given
+        if (!empty($sql)) {
+            $formatter = SQLFormatter::create();
+            $formattedSQL = $formatter->formatPlain($sql);
+            $msg = "Couldn't run query:\n\n{$formattedSQL}\n\n{$msg}";
+        }
+
+        throw new GeneratedColumnValueException($msg, $column, $table, $sql, $parameters);
+    }
+
     /**
      * Determine if this SQL statement is a destructive operation (write or ddl)
      *

@@ -16,6 +16,7 @@ use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBGenerated;
 
 /**
  * Provides dataobject and database schema mapping functionality
@@ -90,6 +91,11 @@ class DataObjectSchema
      * @var array
      */
     protected $compositeFields = [];
+
+    /**
+     * Cache of generated database column specs
+     */
+    protected array $generatedFields = [];
 
     /**
      * Cache of table names
@@ -495,6 +501,31 @@ class DataObjectSchema
     }
 
     /**
+     * Returns a list of all the generated database columns on the class.
+     * Will check all applicable ancestor classes and aggregate results if $aggregated is true.
+     *
+     * @param string $class Name of class to check
+     * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+     */
+    public function generatedFields(string $class, bool $aggregated = true): array
+    {
+        $class = ClassInfo::class_name($class);
+        if ($class === DataObject::class) {
+            return [];
+        }
+        $this->cacheDatabaseFields($class);
+
+        $generatedFields = $this->generatedFields[$class];
+        if (!$aggregated) {
+            return $generatedFields;
+        }
+
+        // Recursively merge
+        $parentFields = $this->generatedFields(get_parent_class($class));
+        return array_merge($generatedFields, array_diff_key($parentFields, $generatedFields));
+    }
+
+    /**
      * Cache all database and composite fields for the given class.
      * Will do nothing if already cached
      *
@@ -507,6 +538,7 @@ class DataObjectSchema
             return;
         }
         $compositeFields = [];
+        $generatedFields = [];
         $dbFields = [];
 
         // Ensure fixed fields appear at the start
@@ -522,8 +554,12 @@ class DataObjectSchema
         $db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: [];
         foreach ($db as $fieldName => $fieldSpec) {
             $fieldClass = strtok($fieldSpec ?? '', '(');
-            if (singleton($fieldClass) instanceof DBComposite) {
+            $singleton = singleton($fieldClass);
+            if ($singleton instanceof DBComposite) {
                 $compositeFields[$fieldName] = $fieldSpec;
+            } elseif ($singleton instanceof DBGenerated) {
+                $generatedFields[$fieldName] = $fieldSpec;
+                $dbFields[$fieldName] = $fieldSpec;
             } else {
                 $dbFields[$fieldName] = $fieldSpec;
             }
@@ -570,6 +606,7 @@ class DataObjectSchema
         // Return cached results
         $this->databaseFields[$class] = $dbFields;
         $this->compositeFields[$class] = $compositeFields;
+        $this->generatedFields[$class] = $generatedFields;
     }
 
     /**

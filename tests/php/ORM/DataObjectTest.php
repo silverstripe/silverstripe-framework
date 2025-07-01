@@ -39,6 +39,8 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\FieldType\DBInt;
 use SilverStripe\ORM\Filters\WithinRangeFilter;
+use SilverStripe\ORM\Tests\DataObjectTest\TestGeneratedColumns;
+use SilverStripe\ORM\Tests\DataObjectTest\TestGeneratedColumnsManipulationExtension;
 use stdClass;
 
 class DataObjectTest extends SapphireTest
@@ -82,6 +84,7 @@ class DataObjectTest extends SapphireTest
         DataObjectTest\InjectedDataObject::class,
         DataObjectTest\SettersAndGetters::class,
         DataObjectTest\UniqueIndexObject::class,
+        DataObjectTest\TestGeneratedColumns::class,
     ];
 
     protected function setUp(): void
@@ -3091,6 +3094,40 @@ class DataObjectTest extends SapphireTest
         $record2->write();
     }
 
+    public static function provideExceptionForSetValueOnGeneratedColumn(): array
+    {
+        return [
+            // Check both STORED and VIRTUAL columns behave the same way
+            ['columnName' => 'GeneratedField1'],
+            ['columnName' => 'GeneratedField2'],
+        ];
+    }
+
+    #[DataProvider('provideExceptionForSetValueOnGeneratedColumn')]
+    public function testExceptionForSetValueOnGeneratedColumn(string $columnName): void
+    {
+        if (preg_match('/mariadb/i', DB::get_conn()->getVersion())) {
+            $this->markTestSkipped('This test is only relevant for MySQL specifically.');
+        }
+        $record = new TestGeneratedColumns();
+        // Expect no exception on first write
+        $record->write();
+        // Expect no exception on normal edit
+        $record->$columnName = 'some value';
+        $record->write();
+
+        // Add extension and work around issue with extension instances not being static
+        TestGeneratedColumns::add_extension(TestGeneratedColumnsManipulationExtension::class);
+        TestGeneratedColumnsManipulationExtension::setUpdateColumn($columnName);
+        $record = TestGeneratedColumns::get()->byID($record->ID);
+
+        // Expect an exception if something is manually trying to update the manipulation (e.g. versioned)
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Cannot set a value for generated field "' . $record->fieldLabel($columnName) . '"');
+        $record->$columnName = 'new value';
+        $record->write();
+    }
+
     public static function provideProvideI18nEntities(): array
     {
         return [
@@ -3185,5 +3222,30 @@ class DataObjectTest extends SapphireTest
         $this->assertSame($cachedTeamComment2, DataObjectTest\TeamComment::get()->setUseCache(true)->first());
         $queryCounter->stopCounting();
         $this->assertSame(0, $queryCounter->getCount());
+    }
+
+    public function testFetchGeneratedColumnAfterWrite(): void
+    {
+        $record = new DataObjectTest\TestGeneratedColumns(['BaseField' => 'Some Value']);
+        $record->write();
+        $this->assertSame('Some Value_etc', $record->GeneratedField1);
+        $this->assertSame('Some Value_etc', $record->GeneratedField2);
+
+        $record->BaseField = 'changed';
+        $record->write();
+        $this->assertSame('changed_etc', $record->GeneratedField1);
+        $this->assertSame('changed_etc', $record->GeneratedField2);
+
+        DataObjectTest\TestGeneratedColumns::config()->set('skip_fetch_generated_columns_after_write', true);
+        $record->BaseField = 'new value';
+        $record->write();
+        $this->assertSame('changed_etc', $record->GeneratedField1);
+        $this->assertSame('changed_etc', $record->GeneratedField2);
+
+        DataObjectTest\TestGeneratedColumns::config()->set('skip_fetch_generated_columns_after_write', ['GeneratedField1']);
+        $record->BaseField = 'another value';
+        $record->write();
+        $this->assertSame('changed_etc', $record->GeneratedField1);
+        $this->assertSame('another value_etc', $record->GeneratedField2);
     }
 }

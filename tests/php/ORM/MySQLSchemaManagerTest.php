@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionMethod;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Dev\SapphireTest;
@@ -206,4 +208,131 @@ class MySQLSchemaManagerTest extends SapphireTest
             'mariadb IdColumn forced off has no width'
         );
     }
+
+    public static function provideNeedRebuildColumn(): array
+    {
+        return [
+            'normal column matching' => [
+                'existingSpec' => 'tinyint 1 unsigned not null default 0',
+                'newSpec' => 'tinyint 1 unsigned not null default 0',
+                'expected' => false,
+            ],
+            'normal column not matching' => [
+                'existingSpec' => 'varchar 255 default \'oogabooga\'',
+                'newSpec' => 'tinyint 1 unsigned not null default 0',
+                'expected' => false,
+            ],
+            'generated column matching' => [
+                'existingSpec' => 'double AS ("Price" * 0.25) STORED',
+                'newSpec' => 'double AS ("Price" * 0.25) STORED',
+                'expected' => false,
+            ],
+            'generated column different expression' => [
+                'existingSpec' => 'double AS ("Price" * "Discount") STORED',
+                'newSpec' => 'double AS ("Price" * 0.25) STORED',
+                'expected' => false,
+            ],
+            'generated column different datatype' => [
+                'existingSpec' => 'varchar 255 AS ("Price" * 0.25) STORED',
+                'newSpec' => 'double AS ("Price" * 0.25) STORED',
+                'expected' => false,
+            ],
+            'generated column stored to virtual' => [
+                'existingSpec' => 'double AS ("Price" * 0.25) STORED',
+                'newSpec' => 'double AS ("Price" * 0.25) VIRTUAL',
+                'expected' => true,
+            ],
+            'generated column virtual to stored' => [
+                'existingSpec' => 'double AS ("Price" * 0.25) VIRTUAL',
+                'newSpec' => 'double AS ("Price" * 0.25) STORED',
+                'expected' => true,
+            ],
+            'generated column stored to non-generated' => [
+                'existingSpec' => 'double AS ("Price" * 0.25) STORED',
+                'newSpec' => 'double',
+                'expected' => false,
+            ],
+            'generated column virtual to non-generated' => [
+                'existingSpec' => 'double AS ("Price" * 0.25) VIRTUAL',
+                'newSpec' => 'double',
+                'expected' => true,
+            ],
+            'normal column to stored generated' => [
+                'existingSpec' => 'varchar 255 default \'oogabooga\'',
+                'newSpec' => 'varchar 255 AS (CONCAT("FirstName", "LastName")) STORED',
+                'expected' => false,
+            ],
+            'normal column to virtual generated' => [
+                'existingSpec' => 'varchar 255 default \'oogabooga\'',
+                'newSpec' => 'varchar 255 AS (CONCAT("FirstName", "LastName")) VIRTUAL',
+                'expected' => true,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideNeedRebuildColumn')]
+    public function testNeedRebuildColumn(string $existingSpec, string $newSpec, bool $expected): void
+    {
+        $manager = new MySQLSchemaManager();
+        $reflectionMethod = new ReflectionMethod($manager, 'needRebuildColumn');
+        $this->assertSame($expected, $reflectionMethod->invoke($manager, $existingSpec, $newSpec));
+    }
+
+    public static function provideNormaliseGeneratedColumnExpression(): array
+    {
+        return [
+            'expression with no thrills' => [
+                'expression' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'backtick quotes' => [
+                'expression' => 'CASE WHEN `Surname` IS NULL THEN \'\' ELSE `Surname` END',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'no quotes at all' => [
+                'expression' => 'CASE WHEN Surname IS NULL THEN \'\' ELSE Surname END',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'explicitcharset before string matches default' => [
+                'expression' => 'CASE WHEN "Surname" IS NULL THEN _utf8mb4\'\' ELSE "Surname" END',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'explicitcharset before string DOESNT match default' => [
+                'expression' => 'CASE WHEN "Surname" IS NULL THEN _utf8\'\' ELSE "Surname" END',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN _utf8 \'\' ELSE "Surname" END',
+            ],
+            'mixed case reserved keywords' => [
+                'expression' => 'CASE when "Surname" IS nUlL THEN \'\' ElSe "Surname" end',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'unnecessary brackets around when' => [
+                'expression' => 'CASE WHEN ("Surname" IS NULL) THEN \'\' ELSE "Surname" END',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'unnecessary brackets around case' => [
+                'expression' => '(CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END)',
+                'expected' => 'CASE WHEN "Surname" IS NULL THEN \'\' ELSE "Surname" END',
+            ],
+            'quotes that actually matter are not touched' => [
+                'expression' => '2 * ((1 + 3) / 4)',
+                'expected' => '2 * ((1 + 3) / 4)',
+            ],
+            // If more scenarios are added above, make sure they're represented in this one below.
+            // This scenario includes all of the above and ensures the logic works as expected in a complex expression.
+            'all the trimmings' => [
+                'expression' => '(trim(concat((2 * ((1 + 3) / 4)), `FirstName`,_utf8mb4\' \',(case when ("Surname" IS null) then _utf8\'\' ELSE Surname end))))',
+                'expected' => 'TRIM(CONCAT((2 * ((1 + 3) / 4)),"FirstName",\' \',CASE WHEN "Surname" IS NULL THEN _utf8 \'\' ELSE "Surname" END))',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideNormaliseGeneratedColumnExpression')]
+    public function testNormaliseGeneratedColumnExpression(string $expression, string $expected): void
+    {
+        $manager = new MySQLSchemaManager();
+        $reflectionMethod = new ReflectionMethod($manager, 'normaliseGeneratedColumnExpression');
+        $this->assertSame($expected, $reflectionMethod->invoke($manager, $expression));
+    }
+
+    // public function testMakeGenerated(): void
 }

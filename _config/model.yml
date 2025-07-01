@@ -28,6 +28,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBFloat
   ForeignKey:
     class: SilverStripe\ORM\FieldType\DBForeignKey
+  Generated:
+    class: SilverStripe\ORM\FieldType\DBGenerated
   HTMLText:
     class: SilverStripe\ORM\FieldType\DBHTMLText
     properties:

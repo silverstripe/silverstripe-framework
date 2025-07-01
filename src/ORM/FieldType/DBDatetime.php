@@ -8,14 +8,12 @@ use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\FormField;
-use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\View\TemplateGlobalProvider;
 use SilverStripe\Model\ModelData;
 use SilverStripe\Core\Validation\FieldValidation\DateFieldValidator;
 use SilverStripe\Core\Validation\FieldValidation\DatetimeFieldValidator;
-use SilverStripe\ORM\Tests\Search\SearchContextTest\WithinRangeFilterModel;
 
 /**
  * Represents a date-time field.
@@ -157,17 +155,15 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         return $this->Format($dateFormat . ' ' . $timeFormat, $member->getLocale());
     }
 
-    public function requireField(): void
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
     {
-        $parts = [
-            'datatype' => 'datetime',
-            'arrayValue' => $this->arrayValue
-        ];
-        $values = [
-            'type' => 'datetime',
-            'parts' => $parts
-        ];
-        DB::require_field($this->tableName, $this->name, $values);
+        $spec = parent::getFieldSpec();
+        $spec['type'] = 'datetime';
+        $spec['parts']['datatype'] = 'datetime';
+        return $spec;
     }
 
     /**

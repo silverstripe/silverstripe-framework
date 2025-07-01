@@ -47,6 +47,7 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\Connect\GeneratedColumnValueException;
 use SilverStripe\ORM\Filters\WithinRangeFilter;
 use stdClass;
 
@@ -156,6 +157,13 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      * This will not be enforced when using low-level ORM functionality to query data e.g. SQLSelect or DB::query()
      */
     private static bool $must_use_primary_db = false;
+
+    /**
+     * Allows you to skip fetching generated columns in onAfterWrite.
+     * Setting this to true will skip fetching ALL generated columns for this class.
+     * Setting this to an array lets you name specific columns to skip, while still fetching others.
+     */
+    private static bool|array $skip_fetch_generated_columns_after_write = false;
 
     /**
      * Data stored in this objects database record. An array indexed by fieldname.
@@ -1296,6 +1304,32 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      */
     protected function onAfterWrite()
     {
+        // Fetch values from any generated columns
+        // since we may have updated the columns they are based on
+        $skipGeneratedColumns = static::config()->get('skip_fetch_generated_columns_after_write');
+        if ($skipGeneratedColumns !== true) {
+            $schema = DataObject::getSchema();
+            $generatedFields = array_keys($schema->generatedFields(static::class));
+            if (is_array($skipGeneratedColumns)) {
+                $generatedFields = array_diff($generatedFields, $skipGeneratedColumns);
+            }
+            // Only fetch if we have generated columns that aren't skipped
+            if (!empty($generatedFields)) {
+                $select = static::get()
+                    ->filter(['ID' => $this->ID])
+                    ->sort(null)
+                    ->limit(1)
+                    ->dataQuery()
+                    ->getFinalisedQuery();
+                $columns = [];
+                foreach ($generatedFields as $fieldName) {
+                    $columns[] = $schema->sqlColumnForField(static::class, $fieldName);
+                }
+                $select->setSelect($columns);
+                $this->update($select->execute()->record());
+            }
+        }
+
         $dummy = null;
         $this->extend('onAfterWrite', $dummy);
     }
@@ -1639,8 +1673,11 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                 $this->writeBaseRecord($baseTable, $now);
                 // Write the DB manipulation for all changed fields
                 $this->writeManipulation($baseTable, $now, $isNewRecord);
-            } catch (DuplicateEntryException $e) {
-                throw new ValidationException($this->buildValidationResultForDuplicateEntry($e));
+            } catch (DuplicateEntryException|GeneratedColumnValueException $e) {
+                if ($e instanceof DuplicateEntryException) {
+                    throw new ValidationException($this->buildValidationResultForDuplicateEntry($e));
+                }
+                throw new ValidationException($this->buildValidationResultForGeneratedColumnError($e));
             }
 
             // If there's any relations that couldn't be saved before, save them now (we have an ID here)
@@ -4718,6 +4755,21 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                 ['type' => $singleName, 'fields' => implode(', ', $duplicateFieldNames)]
             ));
         }
+        return $validationResult;
+    }
+
+    private function buildValidationResultForGeneratedColumnError(GeneratedColumnValueException $exception): ValidationResult
+    {
+        $column = $exception->getColumn();
+        $validationResult = ValidationResult::create();
+        $validationResult->addFieldError(
+            $column,
+            _t(
+                __CLASS__ . '.VALUE_SET_FOR_GENERATED_COLUMN',
+                'Cannot set a value for generated field "{field}"',
+                ['field' => $this->fieldLabel($column)]
+            )
+        );
         return $validationResult;
     }
 }

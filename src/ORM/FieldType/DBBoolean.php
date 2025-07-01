@@ -27,6 +27,14 @@ class DBBoolean extends DBField
 
     public function requireField(): void
     {
+        DB::require_field($this->tableName, $this->name, $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $parts = [
             'datatype' => 'tinyint',
             'precision' => 1,
@@ -35,8 +43,7 @@ class DBBoolean extends DBField
             'default' => (int) $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
-        $values = ['type' => 'boolean', 'parts' => $parts];
-        DB::require_field($this->tableName, $this->name, $values);
+        return ['type' => 'boolean', 'parts' => $parts];
     }
 
     public function setDefaultValue(mixed $defaultValue): static

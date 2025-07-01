@@ -66,6 +66,14 @@ class DBVarchar extends DBString
 
     public function requireField(): void
     {
+        DB::require_field($this->tableName, $this->name, $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
@@ -77,12 +85,10 @@ class DBVarchar extends DBString
             'arrayValue' => $this->arrayValue
         ];
 
-        $values = [
+        return [
             'type' => 'varchar',
             'parts' => $parts
         ];
-
-        DB::require_field($this->tableName, $this->name, $values);
     }
 
     /**

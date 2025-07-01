@@ -13,6 +13,7 @@ use SilverStripe\Security\Security;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\View\Requirements;
 use SilverStripe\Model\ModelData;
+use SilverStripe\ORM\FieldType\DBGenerated;
 
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
@@ -250,7 +251,7 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
 
                     // The value is used in a template, so to prevent XSS attacks we can't allow an HTML field here.
                     // Getting the raw string here means it will end up being default-casted to DBText which is safe.
-                    if (is_a($value, DBHTMLText::class, false) || is_a($value, DBHTMLVarchar::class, false)) {
+                    if ($this->valueIsHtmlField($value)) {
                         $value = $value->__toString();
                     }
                     $itemRow->push(new ArrayData([
@@ -316,5 +317,13 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
         $this->printHasHeader = $bool;
 
         return $this;
+    }
+
+    private function valueIsHtmlField(mixed $value): bool
+    {
+        if ($value instanceof DBGenerated) {
+            $value = $value->getChildField();
+        }
+        return is_a($value, DBHTMLText::class) || is_a($value, DBHTMLVarchar::class);
     }
 }

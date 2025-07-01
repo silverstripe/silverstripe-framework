@@ -9,7 +9,6 @@ use SilverStripe\Core\Validation\FieldValidation\StringFieldValidator;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\MultiSelectField;
 use SilverStripe\ORM\Connect\MySQLDatabase;
-use SilverStripe\ORM\DB;
 
 /**
  * Represents an multi-select enumeration field.
@@ -59,25 +58,17 @@ class DBMultiEnum extends DBEnum
         return $value;
     }
 
-    public function requireField(): void
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
     {
-        $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
-        $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
-        $values = [
-            'type' => 'set',
-            'parts' => [
-                'enums' => $this->enum,
-                'character set' => $charset,
-                'collate' => $collation,
-                'default' => $this->default,
-                'table' => $this->tableName,
-                'arrayValue' => $this->arrayValue,
-            ],
-        ];
-
-        DB::require_field($this->tableName, $this->name, $values);
+        $schema = parent::getFieldSpec();
+        $schema['type'] = 'set';
+        $schema['parts']['enums'] = $this->enum;
+        unset($schema['parts']['datatype']);
+        return $schema;
     }
-
 
     /**
      * Return a form field suitable for editing this field

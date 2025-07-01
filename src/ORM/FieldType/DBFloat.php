@@ -25,14 +25,21 @@ class DBFloat extends DBField
 
     public function requireField(): void
     {
+        DB::require_field($this->tableName, $this->name, $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $parts = [
             'datatype' => 'float',
             'null' => 'not null',
             'default' => $this->getDefaultValue(),
             'arrayValue' => $this->arrayValue
         ];
-        $values = ['type' => 'float', 'parts' => $parts];
-        DB::require_field($this->tableName, $this->name, $values);
+        return ['type' => 'float', 'parts' => $parts];
     }
 
     public function setValue(mixed $value, null|array|ModelData $record = null, bool $markChanged = true): static

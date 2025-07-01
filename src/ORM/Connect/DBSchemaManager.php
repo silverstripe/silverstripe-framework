@@ -528,7 +528,7 @@ abstract class DBSchemaManager
             // Updated index
             $this->transAlterIndex($table, $index, $spec);
             $this->alterationMessage(
-                "Index $table.$index: changed to $specString <i class=\"build-info-before\">(from $oldSpecString)</i>",
+                "Index $table.$index: changed to '$specString' <i class=\"build-info-before\">(from '$oldSpecString')</i>",
                 "changed"
             );
         }
@@ -761,13 +761,21 @@ abstract class DBSchemaManager
         // Get the version of the field as we would create it. This is used for comparison purposes to see if the
         // existing field is different to what we now want
         if (is_array($spec_orig)) {
-            $spec_orig = $this->{$spec_orig['type']}($spec_orig['parts']);
+            $specArray = $spec_orig;
+            $generated = $specArray['generated'] ?? false;
+            $spec_orig = $this->{$specArray['type']}($specArray['parts']);
+            // Update the spec to include the generation expression and storage type
+            if ($generated !== false) {
+                $specValue = $this->makeGenerated($specValue, $specArray, $generated['expression'], $generated['type']);
+                $spec_orig = $this->makeGenerated($spec_orig, $specArray, $generated['expression'], $generated['type']);
+            }
+            unset($specArray);
         }
 
         if ($newTable || $fieldValue == '') {
             $this->transCreateField($table, $field, $spec_orig);
             $this->alterationMessage("Field $table.$field: created as $spec_orig", "created");
-        } elseif ($fieldValue != $specValue) {
+        } elseif ($fieldValue !== $specValue) {
             // If enums/sets are being modified, then we need to fix existing data in the table.
             // Update any records where the enum is set to a legacy value to be set to the default.
             $enumValuesExpr = "/^(enum|set)\\s*\\(['\"](?<values>[^'\"]+)['\"]\\).*/i";
@@ -800,11 +808,33 @@ abstract class DBSchemaManager
                 }
             }
             $this->transAlterField($table, $field, $spec_orig);
+            if ($this->needRebuildColumn($fieldValue, $spec_orig)) {
+                if (!isset($this->schemaUpdateTransaction[$table]['advancedOptions'])) {
+                    $this->schemaUpdateTransaction[$table]['advancedOptions'] = [];
+                }
+                $this->schemaUpdateTransaction[$table]['advancedOptions'] = array_merge(
+                    $this->schemaUpdateTransaction[$table]['advancedOptions'],
+                    ['rebuildCols' => [$field => true]],
+                );
+            }
             $this->alterationMessage(
-                "Field $table.$field: changed to $specValue <i class=\"build-info-before\">(from {$fieldValue})</i>",
+                "Field $table.$field: changed to '$specValue' <i class=\"build-info-before\">(from '$fieldValue')</i>",
                 "changed"
             );
         }
+    }
+
+    /**
+     * Check whether a column needs to be rebuilt by comparing the existing column spec and the new column spec.
+     *
+     * Subclasses should implement this method to match logic for their SQL server.
+     * For example some servers may have different rules about whether a generated column
+     * can swap between stored and virtual using CHANGE COLUMN
+     */
+    protected function needRebuildColumn(string $existingSpec, string $newSpec): bool
+    {
+        // Assume columns don't need rebuilding for BC. A future major release will make this method abstract.
+        return false;
     }
 
     /**
@@ -885,6 +915,17 @@ abstract class DBSchemaManager
                 echo "<li class=\"$class\">$message</li>";
             }
         }
+    }
+
+    /**
+     * Take the column spec and convert it into the spec for a generated column.
+     */
+    public function makeGenerated(string $spec, array $origSpec, string $expression, string $generationType): string
+    {
+        // Just return the original spec, for BC. A future major release will make this method abstract.
+        // No value will actually get generated if subclasses don't implement this method, so this will just
+        // be taking space in the DB for no value but at least the site won't just fail to build altogether.
+        return $spec;
     }
 
     /**

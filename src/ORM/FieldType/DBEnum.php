@@ -100,6 +100,14 @@ class DBEnum extends DBString implements Resettable
 
     public function requireField(): void
     {
+        DB::require_field($this->getTable(), $this->getName(), $this->getFieldSpec());
+    }
+
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
+    {
         $charset = Config::inst()->get(MySQLDatabase::class, 'charset');
         $collation = Config::inst()->get(MySQLDatabase::class, 'collation');
 
@@ -113,12 +121,10 @@ class DBEnum extends DBString implements Resettable
             'arrayValue' => $this->arrayValue
         ];
 
-        $values = [
+        return [
             'type' => 'enum',
             'parts' => $parts
         ];
-
-        DB::require_field($this->getTable(), $this->getName(), $values);
     }
 
     /**

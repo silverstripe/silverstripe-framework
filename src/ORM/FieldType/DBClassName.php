@@ -2,8 +2,6 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\ORM\DB;
-
 /**
  * Represents a classname selector, which respects obsolete clasess.
  */
@@ -11,24 +9,15 @@ class DBClassName extends DBEnum
 {
     use DBClassNameTrait;
 
-    public function requireField(): void
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
     {
-        $parts = [
-            'datatype' => 'enum',
-            'enums' => $this->getEnumObsolete(),
-            'character set' => 'utf8',
-            'collate' => 'utf8_general_ci',
-            'default' => $this->getDefault(),
-            'table' => $this->getTable(),
-            'arrayValue' => $this->arrayValue
-        ];
-
-        $values = [
-            'type' => 'enum',
-            'parts' => $parts
-        ];
-
-        DB::require_field($this->getTable(), $this->getName(), $values);
+        $spec = parent::getFieldSpec();
+        $spec['parts']['character set'] = 'utf8';
+        $spec['parts']['collate'] = 'utf8_general_ci';
+        return $spec;
     }
 
     public function getDefault(): string

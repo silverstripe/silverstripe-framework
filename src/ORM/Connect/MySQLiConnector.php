@@ -408,21 +408,36 @@ class MySQLiConnector extends DBConnector
      */
     private function throwRelevantError(string $message, int $code, int $errorLevel, ?string $sql, array $parameters): void
     {
-        if ($errorLevel === E_USER_ERROR && ($code === 1062 || $code === 1586)) {
-            // error 1062 is for a duplicate entry
-            // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry
-            // error 1586 is ALSO for a duplicate entry and uses the same error message
-            // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry_with_key_name
-            preg_match('/Duplicate entry \'(?P<val>[^\']+)\' for key \'?(?P<key>[^\']+)\'?/', $message, $matches);
-            // MySQL includes the table name in the key, but MariaDB doesn't.
-            $key = $matches['key'];
-            if (str_contains($key ?? '', '.')) {
-                $parts = explode('.', $key);
-                $key = array_pop($parts);
+        if ($errorLevel === E_USER_ERROR) {
+            switch ($code) {
+                // error 1062 is for a duplicate entry
+                // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry
+                // see https://mariadb.com/docs/general-resources/development-articles/mariadb-internals/using-mariadb-with-your-programs-api/error-codes/mariadb-error-codes-1000-to-1099/e1062
+                case 1062:
+                // error 1586 is ALSO for a duplicate entry and uses the same error message
+                // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry_with_key_name
+                // see https://mariadb.com/docs/general-resources/development-articles/mariadb-internals/using-mariadb-with-your-programs-api/error-codes/mariadb-error-codes-1500-to-1599/e1586
+                case 1586:
+                    preg_match('/Duplicate entry \'(?P<val>[^\']+)\' for key \'?(?P<key>[^\']+)\'?/', $message, $matches);
+                    // MySQL includes the table name in the key, but MariaDB doesn't.
+                    $key = $matches['key'];
+                    if (str_contains($key ?? '', '.')) {
+                        $parts = explode('.', $key);
+                        $key = array_pop($parts);
+                    }
+                    $this->duplicateEntryError($message, $key, $matches['val'], $sql, $parameters);
+                    return;
+                // error 3105 is for trying to set a value for a generated column in MySQL
+                // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_non_default_value_for_generated_column
+                // Note this error is for MySQL - MariaDB has no error with this code, it emits a warning instead.
+                case 3105:
+                    preg_match('/The value specified for generated column \'(?P<col>[^\']+)\' in table \'(?P<table>[^\']+)\' is not allowed/', $message, $matches);
+                    $this->valueForGeneratedColumnError($message, $matches['col'], $matches['table'], $sql, $parameters);
+                    return;
             }
-            $this->duplicateEntryError($message, $key, $matches['val'], $sql, $parameters);
-        } else {
-            $this->databaseError($message, $errorLevel, $sql, $parameters);
         }
+
+        // Fallback on a generic database error
+        $this->databaseError($message, $errorLevel, $sql, $parameters);
     }
 }

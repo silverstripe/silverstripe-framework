@@ -4,7 +4,6 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Core\Validation\FieldValidation\IntFieldValidator;
 use SilverStripe\Core\Validation\FieldValidation\BigIntFieldValidator;
-use SilverStripe\ORM\DB;
 
 /**
  * Represents a signed 8 byte integer field with a range between -9223372036854775808 and 9223372036854775807
@@ -35,16 +34,15 @@ class DBBigInt extends DBInt
         BigIntFieldValidator::class,
     ];
 
-    public function requireField(): void
+    /**
+     * Get the specifications which will be used to generate this column in the database.
+     */
+    public function getFieldSpec(): string|array
     {
-        $parts = [
-            'datatype' => 'bigint',
-            'precision' => 8,
-            'null' => 'not null',
-            'default' => $this->defaultVal,
-            'arrayValue' => $this->arrayValue
-        ];
-        $values = ['type' => 'bigint', 'parts' => $parts];
-        DB::require_field($this->tableName, $this->name, $values);
+        $spec = parent::getFieldSpec();
+        $spec['type'] = 'bigint';
+        $spec['parts']['datatype'] = 'bigint';
+        $spec['parts']['precision'] = 8;
+        return $spec;
     }
 }

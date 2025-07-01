@@ -149,7 +149,7 @@ class GridFieldPrintButtonTest extends SapphireTest
                 'useGridFieldDataColumns' => true,
                 'expected' => 'before&amp;lt;script&amp;gt;alert("hehehe");&amp;lt;/script&amp;gt;after&amp;amp;',
             ],
-            'raw string pre-escaped with datacolumns' => [
+            'raw string as HTML with datacolumns' => [
                 'value' => 'before<script>alert("hehehe");</script>after&amp;',
                 'useGridFieldDataColumns' => true,
                 'expected' => 'beforealert("hehehe");after&amp;amp;',
@@ -230,6 +230,46 @@ class GridFieldPrintButtonTest extends SapphireTest
 
         $this->assertCount(1, $cellContent);
         $this->assertSame("<td>{$expected}</td>", $cellContent[0]->asXML());
+    }
+
+    public static function provideHandlePrintEscapingWithGeneratedColumns(): array
+    {
+        // This has to be separate from provideHandlePrintEscaping because we can't instantiate a
+        // DBGenerated in a provider because it uses injector to create the child field
+        return [
+            'non-HTML-field' => [
+                'fieldSpec' => 'Generated("Varchar(255)", "anything")',
+                'value' => 'before<script>alert("hehehe");</script>after&amp;',
+                'useGridFieldDataColumns' => false,
+                'expected' => 'before&lt;script&gt;alert("hehehe");&lt;/script&gt;after&amp;amp;',
+            ],
+            'HTML-field' => [
+                'fieldSpec' => 'Generated("HTMLText", "anything")',
+                'value' => 'before<script>alert("hehehe");</script>after&amp;',
+                'useGridFieldDataColumns' => false,
+                'expected' => 'before&lt;script&gt;alert("hehehe");&lt;/script&gt;after&amp;amp;',
+            ],
+            // With data columns component
+            'non-HTML-field with datacolumns' => [
+                'fieldSpec' => 'Generated("Varchar(255)", "anything")',
+                'value' => 'before<script>alert("hehehe");</script>after&amp;',
+                'useGridFieldDataColumns' => true,
+                'expected' => 'beforealert("hehehe");after&amp;amp;',
+            ],
+            'HTML-field with datacolumns' => [
+                'fieldSpec' => 'Generated("HTMLText", "anything")',
+                'value' => 'before<script>alert("hehehe");</script>after&amp;',
+                'useGridFieldDataColumns' => true,
+                'expected' => 'beforealert("hehehe");after&amp;amp;',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideHandlePrintEscapingWithGeneratedColumns')]
+    public function testHandlePrintEscapingWithGeneratedColumns(string $fieldSpec, string $value, bool $useGridFieldDataColumns, string $expected): void
+    {
+        $field = DBField::create_field($fieldSpec, $value);
+        $this->testHandlePrintEscaping($field, $useGridFieldDataColumns, $expected);
     }
 
     public function testGetPrintColumnsForGridFieldThrowsException()

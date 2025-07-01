@@ -58,6 +58,7 @@ use SilverStripe\Core\Validation\FieldValidation\DatetimeFieldValidator;
 use SilverStripe\ORM\FieldType\DBClassNameVarchar;
 use SilverStripe\Core\Validation\FieldValidation\NumericFieldValidator;
 use SilverStripe\Core\Validation\FieldValidation\NumericNonStringFieldValidator;
+use SilverStripe\ORM\FieldType\DBGenerated;
 
 /**
  * Tests for DBField objects.
@@ -439,6 +440,10 @@ class DBFieldTest extends SapphireTest
             if (!str_starts_with($class, 'SilverStripe\ORM\FieldType')) {
                 continue;
             }
+            if (is_a($class, DBGenerated::class, true)) {
+                // This is a special case and will be tested explicitly in its own test class
+                continue;
+            }
             $reflector = new ReflectionClass($class);
             if ($reflector->isAbstract()) {
                 continue;
@@ -564,6 +569,10 @@ class DBFieldTest extends SapphireTest
                 continue;
             }
             if (!str_starts_with($class, 'SilverStripe\ORM\FieldType')) {
+                continue;
+            }
+            if (is_a($class, DBGenerated::class, true)) {
+                // This is a special case and will be tested explicitly in its own test class
                 continue;
             }
             $reflector = new ReflectionClass($class);
