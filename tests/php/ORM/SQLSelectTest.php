@@ -236,9 +236,7 @@ class SQLSelectTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideAddOrderBy
-     */
+    #[DataProvider('provideAddOrderBy')]
     public function testAddOrderBy(array $orderByClauses, string $expectedQuery): void
     {
         $query = new SQLSelect();

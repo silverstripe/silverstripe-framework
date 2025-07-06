@@ -764,9 +764,7 @@ class DataListTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideDefaultSort
-     */
+    #[DataProvider('provideDefaultSort')]
     public function testDefaultSort(string|array $defaultSort, array $expected): void
     {
         // Prepare fixtures - we need some comments to be identical for the "two items" scenarios

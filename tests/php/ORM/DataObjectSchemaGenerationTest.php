@@ -10,6 +10,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\SortedObject;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestIndexObject;
 use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DataObjectSchemaGenerationTest extends SapphireTest
 {
@@ -332,9 +333,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideSortFieldBecomesIndexes
-     */
+    #[DataProvider('provideSortFieldBecomesIndexes')]
     public function testSortFieldBecomeIndexes(string|array $defaultSort, array $expected)
     {
         $indexes = DataObject::getSchema()->databaseIndexes(SortedObject::class);
