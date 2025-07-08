@@ -133,7 +133,7 @@ abstract class SelectField extends FormField
      */
     protected function castSubmittedValue(mixed $value): mixed
     {
-        if (!is_string($value) || !is_numeric($value) || !ctype_digit($value)) {
+        if (!is_string($value) || !is_numeric($value)) {
             return $value;
         }
         $sourceValues = $this->getSourceValues();

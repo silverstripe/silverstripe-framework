@@ -24,6 +24,17 @@ class SelectFieldTest extends SapphireTest
                 'value' => '1',
                 'expected' => 1,
             ],
+            'negative-int-keys' => [
+                'source' => [-1 => 'cat', -2 => 'dog'],
+                'value' => '-2',
+                'expected' => -2,
+            ],
+            'string-negative-int-keys' => [
+                // note that string int are converted to int by PHP
+                'source' => ['-1' => 'cat', '-2' => 'dog'],
+                'value' => '-2',
+                'expected' => -2
+            ],
             'string-keys' => [
                 'source' => ['cat' => 'cat', 'dog' => 'dog'],
                 'value' => 'cat',
