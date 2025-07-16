@@ -181,6 +181,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * checks again.
      *
      * @var bool
+     * @deprecated 6.1 Use `DataObject::getSchema()->tableReadyClasses()` instead
      */
     protected static $database_is_ready = false;
 
@@ -1103,41 +1104,19 @@ class Security extends Controller implements TemplateGlobalProvider
             return Security::$database_is_ready;
         }
 
-        $requiredClasses = ClassInfo::dataClassesFor(Member::class);
-        $requiredClasses[] = Group::class;
-        $requiredClasses[] = Permission::class;
+        $toCheck = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
         $schema = DataObject::getSchema();
-        foreach ($requiredClasses as $class) {
-            // Skip test classes, as not all test classes are scaffolded at once
-            if (is_a($class, TestOnly::class, true)) {
-                continue;
-            }
-
-            // if any of the tables aren't created in the database
-            $table = $schema->tableName($class);
-            if (!ClassInfo::hasTable($table)) {
-                return false;
-            }
-
-            // HACK: Extensions aren't applied until a class is instantiated for
-            // the first time, so create an instance here.
-            singleton($class);
-
-            // if any of the tables don't have all fields mapped as table columns
-            $dbFields = DB::field_list($table);
-            if (!$dbFields) {
-                return false;
-            }
-
-            $objFields = $schema->databaseFields($class, false);
-            $missingFields = array_diff_key($objFields ?? [], $dbFields);
-
-            if ($missingFields) {
+        foreach ($toCheck as $class) {
+            if (!$schema->tablesAreReadyForClass($class)) {
                 return false;
             }
         }
-        Security::$database_is_ready = true;
 
+        Security::$database_is_ready = true;
         return true;
     }
 
@@ -1148,6 +1127,15 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         Security::$database_is_ready = null;
         Security::$force_database_is_ready = null;
+        $toClear = [
+            Member::class,
+            Group::class,
+            Permission::class,
+        ];
+        $schema = DataObject::getSchema();
+        foreach ($toClear as $class) {
+            $schema->clearTableReadyForClass($class);
+        }
     }
 
     /**

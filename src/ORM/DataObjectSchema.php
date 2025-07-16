@@ -99,6 +99,15 @@ class DataObjectSchema
     protected $tableNames = [];
 
     /**
+     * Array of classes that have been confirmed ready for database queries.
+     * Once the database has been verified as ready, it will not do the
+     * checks again.
+     *
+     * @var array<string, boolean>
+     */
+    protected array $tableReadyClasses = [];
+
+    /**
      * Clear cached table names
      */
     public function reset()
@@ -108,6 +117,7 @@ class DataObjectSchema
         $this->databaseIndexes = [];
         $this->defaultDatabaseIndexes = [];
         $this->compositeFields = [];
+        $this->tableReadyClasses = [];
     }
 
     /**
@@ -760,6 +770,89 @@ class DataObjectSchema
             throw new InvalidArgumentException("Invalid sort() column");
         }
         return [$match['table'], $match['column'], $match['direction'] ?? 'ASC'];
+    }
+
+    /**
+     * Check if all tables and field columns for a class exist in the database.
+     */
+    public function tablesAreReadyForClass(string $class): bool
+    {
+        if (!is_subclass_of($class, DataObject::class)) {
+            throw new InvalidArgumentException("$class is not a subclass of " . DataObject::class);
+        }
+
+        // Bail if there's no active database connection yet
+        if (!DB::connection_attempted() || !DB::is_active()) {
+            return false;
+        }
+
+        // Don't check again if we already know the db is ready for this class.
+        // Necessary here before the loop to catch situations where a subclass
+        // is forced as ready without having to check all the superclasses.
+        if (!empty($this->tableReadyClasses[$class])) {
+            return true;
+        }
+
+        // Check if all tables and fields required for the class exist in the database.
+        $requiredClasses = ClassInfo::dataClassesFor($class);
+        foreach ($requiredClasses as $required) {
+            // Skip test classes, as not all test classes are scaffolded at once
+            if (is_a($required, TestOnly::class, true)) {
+                continue;
+            }
+
+            // Don't check again if we already know the db is ready for this class.
+            if (!empty($this->tableReadyClasses[$class])) {
+                continue;
+            }
+
+            // if any of the tables aren't created in the database
+            $table = $this->tableName($required);
+            if (!ClassInfo::hasTable($table)) {
+                return false;
+            }
+
+            // Extensions aren't applied until a class is instantiated for
+            // the first time, so create a singleton to ensure extensions are applied.
+            singleton($required);
+
+            // if any of the tables haven't had columns added yet
+            $dbFields = DB::field_list($table);
+            if (empty($dbFields)) {
+                return false;
+            }
+
+            // if any columns are missing from the db
+            $objFields = $this->databaseFields($required, false);
+            $missingFields = array_diff_key($objFields, $dbFields);
+            if ($missingFields) {
+                return false;
+            }
+
+            // Add each ready class to the cached array.
+            $this->tableReadyClasses[$required] = true;
+        }
+
+        return true;
+    }
+
+    /**
+     * Resets the cache for tablesAreReadyForClass.
+     *
+     * @param string|null $class The specific class to be cleared.
+     * If not passed, the cache for all classes is cleared.
+     * If passed, the class and all classes in its hierarchy will be cleared.
+     */
+    public function clearTableReadyForClass(?string $class = null): void
+    {
+        if ($class) {
+            $clearClasses = ClassInfo::dataClassesFor($class);
+            foreach ($clearClasses as $clear) {
+                unset($this->tableReadyClasses[$clear]);
+            }
+        } else {
+            $this->tableReadyClasses = [];
+        }
     }
 
     /**

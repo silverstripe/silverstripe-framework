@@ -9,6 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectSchema;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\AdditionalFieldsExtension;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\AllIndexes;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseDataClass;
@@ -22,6 +23,10 @@ use SilverStripe\ORM\Tests\DataObjectSchemaTest\NoFields;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithCustomTable;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
 use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Image;
+use SilverStripe\ORM\DB;
 
 /**
  * Tests schema inspection of DataObjects
@@ -41,6 +46,10 @@ class DataObjectSchemaTest extends SapphireTest
         WithRelation::class,
         DefaultTableName::class,
         AllIndexes::class,
+    ];
+
+    protected static $required_extensions = [
+        Folder::class => [AdditionalFieldsExtension::class],
     ];
 
     /**
@@ -121,7 +130,7 @@ class DataObjectSchemaTest extends SapphireTest
 
         $this->assertEquals(
             'DataObjectSchemaTest_HasFields',
-            $schema->tableForField(HasFields::Class, 'Description')
+            $schema->tableForField(HasFields::class, 'Description')
         );
 
         // Class and table differ for this model
@@ -495,5 +504,54 @@ class DataObjectSchemaTest extends SapphireTest
                 'expected' => true,
             ],
         ];
+    }
+
+    public function testTablesAreReadyForClass(): void
+    {
+        $schema = DataObject::getSchema();
+        // The database schema should be fully created by the time the test runs
+        $this->assertTrue($schema->tablesAreReadyForClass(File::class), 'File table should be ready at start');
+        // Note that Image doesn't have its own table but should still return true
+        $this->assertTrue($schema->tablesAreReadyForClass(Image::class), 'Image table should be ready at start');
+        $this->assertTrue($schema->tablesAreReadyForClass(Folder::class), 'Folder table should be ready at start');
+
+        // Reset cache and drop a column from the subclass. See AdditionalFieldsExtension
+        $schema->clearTableReadyForClass();
+        DB::query(sprintf(
+            'ALTER TABLE "%s" DROP COLUMN "SomeField";',
+            DataObject::getSchema()->tableForField(Folder::class, 'SomeField')
+        ));
+        $this->assertTrue($schema->tablesAreReadyForClass(File::class), 'File table should be ready after drop column');
+        $this->assertTrue($schema->tablesAreReadyForClass(Image::class), 'Image table should be ready after drop column');
+        $this->assertFalse($schema->tablesAreReadyForClass(Folder::class), 'Folder table should NOT be ready after drop column');
+
+        // build the expected database schema and reset cache
+        static::resetDBSchema();
+        $schema->clearTableReadyForClass();
+        // Drop a table
+        DB::query(sprintf(
+            'DROP TABLE "%s";',
+            DataObject::getSchema()->baseDataTable(File::class)
+        ));
+        $this->assertFalse($schema->tablesAreReadyForClass(File::class), 'File table should NOT be ready after drop table');
+        $this->assertFalse($schema->tablesAreReadyForClass(Image::class), 'Image table should NOT be ready after drop table');
+        $this->assertFalse($schema->tablesAreReadyForClass(Folder::class), 'Folder table should NOT be ready after drop table');
+
+        // build the expected database schema and reset cache (fully reset so e.g. list of expected fields is pulled from extension)
+        static::resetDBSchema();
+        $schema->reset();
+        // Add an extension that adds new columns
+        Image::add_extension(AdditionalFieldsExtension::class);
+        $this->assertTrue($schema->tablesAreReadyForClass(File::class), 'File table should be ready after add extension');
+        $this->assertFalse($schema->tablesAreReadyForClass(Image::class), 'Image table should NOT be ready after add extension');
+        $this->assertTrue($schema->tablesAreReadyForClass(Folder::class), 'Folder table should be ready after add extension');
+
+        // build the expected database schema and reset cache
+        static::resetDBSchema();
+        $schema->clearTableReadyForClass();
+        // Should all be true again
+        $this->assertTrue($schema->tablesAreReadyForClass(File::class), 'File table should be ready at end');
+        $this->assertTrue($schema->tablesAreReadyForClass(Image::class), 'Image table should be ready at end');
+        $this->assertTrue($schema->tablesAreReadyForClass(Folder::class), 'Folder table should be ready at end');
     }
 }
