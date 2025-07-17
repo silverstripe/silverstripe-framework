@@ -1382,7 +1382,7 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
                 // Only get joins relevant for the parent list
                 . '" WHERE "' . $parentIDField . '" IN (' . implode(',', $parentIDs) . ')'
                 // Exclude any children that got filtered out
-                . ' AND ' . $childIDField . ' IN (' . implode(',', $fetchedIDs) . ')'
+                . ' AND "' . $childIDField . '" IN (' . implode(',', $fetchedIDs) . ')'
                 // Respect sort order of fetched items
                 . ' ORDER BY ' . $orderByClause;
 

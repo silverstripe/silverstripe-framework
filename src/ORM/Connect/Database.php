@@ -970,7 +970,7 @@ abstract class Database
         $caseStatements = [];
         foreach ($values as $index => $value) {
             $escaped = is_int($value) ? $value : "'" . addslashes($value) . "'";
-            $caseStatements[] = "CASE {$field} = {$escaped} THEN {$index}";
+            $caseStatements[] = "WHEN \"{$field}\" = {$escaped} THEN {$index}";
         }
         $count = count($caseStatements);
         $sqlCase = implode(' ', $caseStatements);
