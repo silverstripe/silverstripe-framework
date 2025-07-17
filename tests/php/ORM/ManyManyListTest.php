@@ -17,6 +17,7 @@ use SilverStripe\ORM\DataList;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\CliDebugView;
+use SilverStripe\ORM\DB;
 
 class ManyManyListTest extends SapphireTest
 {
@@ -716,6 +717,73 @@ class ManyManyListTest extends SapphireTest
         list($reverseFirst, $reverseSecond) = $obj->Clients();
         $this->assertEquals('B', $reverseFirst->Reference);
         $this->assertEquals('A', $reverseSecond->Reference);
+    }
+
+    public static function provideDefaultSortIndexes(): array
+    {
+        return [
+            'string sort' => [
+                'defaultSort' => 'Reference ASC',
+                'newParentColumns' => ['Reference ASC'],
+                'newChildColumns' => ['Reference ASC'],
+            ],
+            'array sort' => [
+                'defaultSort' => ['Reference' => 'DESC'],
+                'newParentColumns' => ['Reference DESC'],
+                'newChildColumns' => ['Reference DESC'],
+            ],
+            'parent column not duplicated' => [
+                'defaultSort' => ['ManyManyListTest_ExtraFieldsID', 'Reference' => 'DESC'],
+                'newParentColumns' => ['Reference DESC'],
+                'newChildColumns' => ['ManyManyListTest_ExtraFieldsID ASC', 'Reference DESC'],
+            ],
+            'child column not duplicated' => [
+                'defaultSort' => ['ChildID' => 'DESC', 'Reference'],
+                'newParentColumns' => ['ChildID DESC', 'Reference ASC'],
+                'newChildColumns' => ['Reference ASC'],
+            ],
+        ];
+    }
+
+    #[DataProvider('provideDefaultSortIndexes')]
+    public function testDefaultSortIndexes(string|array $defaultSort, array $newParentColumns, array $newChildColumns): void
+    {
+        $expectedParentSpec = [
+            'name' => 'ManyManyListTest_ExtraFieldsID',
+            'columns' => ['ManyManyListTest_ExtraFieldsID ASC'],
+            'type' => 'index',
+        ];
+        $expectedChildSpec = [
+            'name' => 'ChildID',
+            'columns' => ['ChildID ASC'],
+            'type' => 'index',
+        ];
+
+        // Indexes should only have a single column each by default
+        $indexes = DB::get_schema()->indexList('ManyManyListTest_ExtraFields_Clients');
+        // Use assertEqualsCanonicalizing because the order doesn't matter
+        // and the indexes in the `columns` array are different.
+        $this->assertEqualsCanonicalizing($expectedParentSpec, $indexes['ManyManyListTest_ExtraFieldsID']);
+        $this->assertEqualsCanonicalizing($expectedChildSpec, $indexes['ChildID']);
+
+        // Set default_sort config and rebuild the table
+        Config::inst()->set('ManyManyListTest_ExtraFields_Clients', 'default_sort', $defaultSort);
+        $obj = new ManyManyListTest\ExtraFieldsObject();
+        DB::get_schema()->schemaUpdate(fn () => $obj->requireTable());
+
+        // Index should be there now.
+        $expectedParentSpec['columns'] = array_merge($expectedParentSpec['columns'], $newParentColumns);
+        $expectedChildSpec['columns'] = array_merge($expectedChildSpec['columns'], $newChildColumns);
+        try {
+            $indexes = DB::get_schema()->indexList('ManyManyListTest_ExtraFields_Clients');
+            $this->assertEqualsCanonicalizing($expectedParentSpec, $indexes['ManyManyListTest_ExtraFieldsID']);
+            $this->assertEqualsCanonicalizing($expectedChildSpec, $indexes['ChildID']);
+        } finally {
+            // Indexes aren't included in transactions, which means they aren't reset after the test is torn down.
+            // Because of that, we need to reset the index manually by rebuilding the table.
+            Config::inst()->set('ManyManyListTest_ExtraFields_Clients', 'default_sort', null);
+            DB::get_schema()->schemaUpdate(fn () => $obj->requireTable());
+        }
     }
 
     public function testFilteringOnPreviouslyJoinedTable()

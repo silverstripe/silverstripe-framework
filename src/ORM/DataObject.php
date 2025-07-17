@@ -3844,7 +3844,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                 }
 
                 // Build index list
-                $manymanyIndexes = [
+                $manyManyIndexes = [
                     $parentField => [
                         'type' => 'index',
                         'name' => $parentField,
@@ -3856,7 +3856,33 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                         'columns' => [$childField],
                     ],
                 ];
-                DB::require_table($tableOrClass, $manymanyFields, $manymanyIndexes, true, null, $extensions);
+                // Add index for sort. MySQL (and probably others) can only use a single index at a time,
+                // so instead of adding a separate index for sort, add the relevant columns to the parent and
+                // child indexes.
+                $joinSort = Config::inst()->get($tableOrClass, 'default_sort');
+                if (is_string($joinSort) || is_array($joinSort)) {
+                    $sortIndex = $schema->deriveIndexFromSort(
+                        $tableOrClass,
+                        array_keys($manymanyFields),
+                        $joinSort,
+                        DataObjectSchema::SORT_INDEX_MODE_COMPOSITE
+                    );
+                    if (isset($sortIndex['default_sort_composite'])) {
+                        // We don't want to have the same column listed twice
+                        $newParentCols = $sortIndex['default_sort_composite']['columns'];
+                        if (str_starts_with($newParentCols[0], $parentField . ' ')) {
+                            // Remove the reference without a direction - this allows for e.g. ParentID DESC in default sort
+                            unset($manyManyIndexes[$parentField]['columns'][0]);
+                        }
+                        $manyManyIndexes[$parentField]['columns'] = array_merge($manyManyIndexes[$parentField]['columns'], $newParentCols);
+                        $newChildCols = $sortIndex['default_sort_composite']['columns'];
+                        if (str_starts_with($newChildCols[0], $childField . ' ')) {
+                            unset($newChildCols[0]);
+                        }
+                        $manyManyIndexes[$childField]['columns'] = array_merge($manyManyIndexes[$childField]['columns'], $newChildCols);
+                    }
+                }
+                DB::require_table($tableOrClass, $manymanyFields, $manyManyIndexes, true, null, $extensions);
             }
         }
 

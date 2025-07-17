@@ -167,7 +167,7 @@ class DataObjectSchema
      *
      * @param string $class
      *
-     * @return string Returns the table name, or null if there is no table
+     * @return string|null Returns the table name, or null if there is no table
      */
     public function tableName($class)
     {
@@ -713,67 +713,90 @@ class DataObjectSchema
 
     protected function buildSortDatabaseIndexes($class)
     {
-        $indexMode = $this->getSortIndexMode($class);
-        if ($indexMode === DataObjectSchema::SORT_INDEX_MODE_NONE) {
+        $sort = Config::inst()->get($class, 'default_sort', Config::UNINHERITED);
+        if (!is_string($sort) && !is_array($sort)) {
+            return [];
+        }
+        return $this->deriveIndexFromSort(
+            DataObjectSchema::tableName($class) ?? '',
+            array_keys($this->databaseFields($class, false)),
+            $sort,
+            $this->getSortIndexMode($class)
+        );
+    }
+
+    /**
+     * Derive the index spec for default_sort, e.g. for a DataObject table or for a many_many join table.
+     */
+    public function deriveIndexFromSort(string $tableName, array $fieldNames, string|array $sort, string $indexMode): array
+    {
+        $indexModes = [
+            DataObjectSchema::SORT_INDEX_MODE_NONE,
+            DataObjectSchema::SORT_INDEX_MODE_BOTH,
+            DataObjectSchema::SORT_INDEX_MODE_COMPOSITE,
+            DataObjectSchema::SORT_INDEX_MODE_SINGLE,
+        ];
+        if (!in_array($indexMode, $indexModes)) {
+            throw new InvalidArgumentException('$indexMode must be one of the DataObjectSchema::SORT_INDEX_MODE_* constant values');
+        }
+
+        if (empty($sort) || $indexMode === DataObjectSchema::SORT_INDEX_MODE_NONE) {
             return [];
         }
 
         $shouldAddToComposite = in_array($indexMode, [DataObjectSchema::SORT_INDEX_MODE_BOTH, DataObjectSchema::SORT_INDEX_MODE_COMPOSITE]);
         $shouldAddToSingle = in_array($indexMode, [DataObjectSchema::SORT_INDEX_MODE_BOTH, DataObjectSchema::SORT_INDEX_MODE_SINGLE]);
-        $sort = Config::inst()->get($class, 'default_sort', Config::UNINHERITED);
+        $compositeCols = [];
         $indexes = [];
 
-        if ($sort && (is_string($sort) || is_array($sort))) {
-            $sort = $this->normaliseSort($sort);
-            $compositeCols = [];
-            foreach ($sort as $value) {
-                try {
-                    list ($table, $column, $dir) = $this->parseSortColumn(trim($value ?? ''));
-                    $table = trim($table ?? '', '"');
-                    $column = trim($column ?? '', '"');
-                    // Skip and stop grabbing composite columns if the sort column is on a different table
-                    if ($table && strtolower($table ?? '') !== strtolower(DataObjectSchema::tableName($class) ?? '')) {
-                        $shouldAddToComposite = false;
-                        continue;
-                    }
-                    // ID is always the primary key, so we don't need a new index for it.
-                    if ($column === 'ID') {
-                        if ($shouldAddToComposite) {
-                            // We still need to include it in the composite index if it's part-way through
-                            $compositeCols[$column] = "$column $dir";
-                        }
-                        continue;
-                    }
-                    // Skip and stop grabbing composite columns if this isn't a column in the database.
-                    if (!$this->databaseField($class, $column, false)) {
-                        $shouldAddToComposite = false;
-                        continue;
-                    }
-                    // Add indexes as appropriate
-                    if ($shouldAddToSingle) {
-                        $indexes[$column] = [
-                            'type' => 'index',
-                            'columns' => [$column],
-                        ];
-                    }
+        $sort = $this->normaliseSort($sort);
+        foreach ($sort as $value) {
+            try {
+                list ($table, $column, $dir) = $this->parseSortColumn(trim($value ?? ''));
+                $table = trim($table ?? '', '"');
+                $column = trim($column ?? '', '"');
+                // Skip and stop grabbing composite columns if the sort column is on a different table
+                if ($table && strtolower($table ?? '') !== strtolower($tableName)) {
+                    $shouldAddToComposite = false;
+                    continue;
+                }
+                // ID is always the primary key, so we don't need a new index for it.
+                if ($column === 'ID') {
                     if ($shouldAddToComposite) {
+                        // We still need to include it in the composite index if it's part-way through
                         $compositeCols[$column] = "$column $dir";
                     }
-                } catch (InvalidArgumentException $e) {
+                    continue;
                 }
+                // Skip and stop grabbing composite columns if this isn't a column in the database.
+                if (!in_array($column, $fieldNames)) {
+                    $shouldAddToComposite = false;
+                    continue;
+                }
+                // Add indexes as appropriate
+                if ($shouldAddToSingle) {
+                    $indexes[$column] = [
+                        'type' => 'index',
+                        'columns' => [$column],
+                    ];
+                }
+                if ($shouldAddToComposite) {
+                    $compositeCols[$column] = "$column $dir";
+                }
+            } catch (InvalidArgumentException $e) {
             }
+        }
 
-            // If ID is last, we can omit it since that gets implicitly added to all indexes
-            if (array_key_last($compositeCols) === 'ID') {
-                unset($compositeCols['ID']);
-            }
-            // Add a composite index if we either didn't already add a single column or have multiple columns.
-            if (!empty($compositeCols) && (!$shouldAddToSingle || count($compositeCols) > 1)) {
-                $indexes['default_sort_composite'] = [
-                    'type' => 'index',
-                    'columns' => array_values($compositeCols),
-                ];
-            }
+        // If ID is last, we can omit it since that gets implicitly added to all indexes
+        if (array_key_last($compositeCols) === 'ID') {
+            unset($compositeCols['ID']);
+        }
+        // Add a composite index if we either didn't already add a single column or have multiple columns.
+        if (!empty($compositeCols) && (!$shouldAddToSingle || count($compositeCols) > 1)) {
+            $indexes['default_sort_composite'] = [
+                'type' => 'index',
+                'columns' => array_values($compositeCols),
+            ];
         }
         return $indexes;
     }
