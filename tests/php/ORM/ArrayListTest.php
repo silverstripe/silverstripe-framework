@@ -1832,14 +1832,44 @@ class ArrayListTest extends SapphireTest
         $this->assertNull($element);
     }
 
-    public function testDataClass()
+    public static function provideDataClass(): array
     {
-        $list = new ArrayList([
-            new DataObject(['Title' => 'one']),
-        ]);
-        $this->assertEquals(DataObject::class, $list->dataClass());
+        return [
+            'empty list' => [
+                'items' => [],
+                'expected' => null,
+            ],
+            'stdclass first in list' => [
+                'items' => [new stdClass(['Title' => 'one']), new stdClass(['Title' => 'two'])],
+                'expected' => stdClass::class,
+            ],
+            'associative array first in list' => [
+                'items' => [['Title' => 'one'], ['Title' => 'two']],
+                'expected' => ArrayData::class,
+            ],
+            'arbitrary stuff in list' => [
+                'items' => [1, 2, 3],
+                'expected' => null,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideDataClass
+     */
+    public function testDataClass(array $items, ?string $expected): void
+    {
+        $list = new ArrayList($items);
+        $this->assertEquals($expected, $list->dataClass());
+        // removing item 1 shouldn't cause any problems
+        if (count($items) > 1) {
+            $list->remove($items[0]);
+            $this->assertEquals($expected, $list->dataClass());
+        }
+        // Removing the last item should mean we get `null` as a result
         $list->pop();
         $this->assertNull($list->dataClass());
+        // If we set an explicit value, even empty classes use the explicit value
         $list->setDataClass(DataObject::class);
         $this->assertEquals(DataObject::class, $list->dataClass());
     }
