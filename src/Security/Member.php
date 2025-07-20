@@ -117,8 +117,10 @@ class Member extends DataObject
 
     private static $indexes = [
         'Email' => true,
-        //Removed due to duplicate null values causing MSSQL problems
-        //'AutoLoginHash' => Array('type'=>'unique', 'value'=>'AutoLoginHash', 'ignoreNulls'=>true)
+        // Not a unique index due to duplicate null values causing MSSQL problems
+        'AutoLoginHash' => true,
+        'AutoLoginTempHash' => true,
+        'TempIDHash' => true,
     ];
 
     private static bool $require_sudo_mode = true;
