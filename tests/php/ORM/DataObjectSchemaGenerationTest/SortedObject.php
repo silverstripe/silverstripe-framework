@@ -12,6 +12,9 @@ class SortedObject extends DataObject implements TestOnly
     private static $db = [
         'Title' => 'Varchar',
         'Sort' => 'Int',
+        'SomeDBText' => 'Text',
+        'SomeDBHtmlText' => 'HTMLText',
+        'SomeDBHtmlVarchar' => 'HTMLVarchar',
     ];
 
     private static $default_sort = 'Sort';
