@@ -3863,7 +3863,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                 if (is_string($joinSort) || is_array($joinSort)) {
                     $sortIndex = $schema->deriveIndexFromSort(
                         $tableOrClass,
-                        array_keys($manymanyFields),
+                        $manymanyFields,
                         $joinSort,
                         DataObjectSchema::SORT_INDEX_MODE_COMPOSITE
                     );

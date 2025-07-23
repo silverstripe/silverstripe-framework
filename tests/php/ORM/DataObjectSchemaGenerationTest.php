@@ -625,7 +625,21 @@ class DataObjectSchemaGenerationTest extends SapphireTest
                     'SomeDBHtmlVarchar' => 'ASC',
                     'Title' => 'ASC'
                 ],
-                'expectedIndexes' => ['Sort', 'SomeDBHtmlVarchar', 'Title'],
+                'expectedIndexes' => [
+                    'Sort' => [
+                        'type' => 'index',
+                        'columns' => ['Sort'],
+                    ],
+                    'SomeDBHtmlVarchar' => [
+                        'type' => 'index',
+                        'columns' => ['SomeDBHtmlVarchar'],
+                    ],
+                    'Title' => [
+                        'type' => 'index',
+                        'columns' => ['Title'],
+                    ],
+                    'default_sort_composite' => null,
+                ],
             ],
         ];
     }
