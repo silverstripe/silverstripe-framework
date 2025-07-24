@@ -778,6 +778,7 @@ class DataObjectSchema
                 $fieldSpec = $fields[$column];
                 $dbField = Injector::inst()->create($fieldSpec, $column);
                 if ($dbField instanceof DBText) {
+                    $shouldAddToComposite = false;
                     continue;
                 }
                 // Add indexes as appropriate

@@ -620,9 +620,9 @@ class DataObjectSchemaGenerationTest extends SapphireTest
             'a few different field types in sort' => [
                 'defaultSort' => [
                     '"Sort"' => 'DESC',
+                    'SomeDBHtmlVarchar' => 'ASC',
                     '"SomeDBText"' => 'DESC',
                     '"SomeDBHtmlText"' => 'ASC',
-                    'SomeDBHtmlVarchar' => 'ASC',
                     'Title' => 'ASC'
                 ],
                 'expectedIndexes' => [
@@ -638,7 +638,10 @@ class DataObjectSchemaGenerationTest extends SapphireTest
                         'type' => 'index',
                         'columns' => ['Title'],
                     ],
-                    'default_sort_composite' => null,
+                    'default_sort_composite' => [
+                        'type' => 'index',
+                        'columns' => ['Sort DESC', 'SomeDBHtmlVarchar ASC'],
+                    ],
                 ],
             ],
         ];
