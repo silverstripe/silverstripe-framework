@@ -78,8 +78,28 @@ class SecurityTest extends FunctionalTest
         parent::tearDown();
     }
 
-    public function testAccessingAuthenticatedPageRedirectsToLoginForm()
+    public static function provideAccessingAuthenticatedPageRedirectsToLoginForm(): array
     {
+        return [
+            [
+                'baseUrl' => null,
+                'expectedBackUrl' => '/SecurityTest_SecuredController',
+            ],
+            [
+                'baseUrl' => 'https://www.example.com/subfolder',
+                'expectedBackUrl' => '/subfolder/SecurityTest_SecuredController',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideAccessingAuthenticatedPageRedirectsToLoginForm')]
+    public function testAccessingAuthenticatedPageRedirectsToLoginForm(?string $baseUrl, string $expectedBackUrl): void
+    {
+        if ($baseUrl) {
+            // We can't set `SS_BASE_URL` because that gets consumed to define the `BASE_URL` constant way before this point.
+            // Instead set alternate_base_url which at least checks the director logic is being used correctly.
+            Director::config()->set('alternate_base_url', $baseUrl);
+        }
         $this->autoFollowRedirection = false;
 
         $response = $this->get('SecurityTest_SecuredController');
@@ -88,6 +108,10 @@ class SecurityTest extends FunctionalTest
             Config::inst()->get(Security::class, 'login_url'),
             $response->getHeader('Location')
         );
+
+        parse_str(parse_url($response->getHeader('Location'), PHP_URL_QUERY), $query);
+        $this->assertArrayHasKey('BackURL', $query);
+        $this->assertSame($expectedBackUrl, $query['BackURL']);
 
         $this->logInWithPermission('ADMIN');
         $response = $this->get('SecurityTest_SecuredController');

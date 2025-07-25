@@ -649,7 +649,7 @@ class Director implements TemplateGlobalProvider
         // Check if BASE_SCRIPT_URL is defined
         // e.g. `index.php/`
         if (defined('BASE_SCRIPT_URL')) {
-            return $baseURL . BASE_SCRIPT_URL;
+            return rtrim($baseURL . BASE_SCRIPT_URL, '/') . '/';
         }
 
         return $baseURL;

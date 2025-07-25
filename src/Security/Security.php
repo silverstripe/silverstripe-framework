@@ -415,7 +415,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $message = $messageSet['default'];
 
         $request = $controller->getRequest();
-        $requestUrl = '/' . ltrim($request->getURL(true), '/');
+        $requestUrl = Director::baseURL() . ltrim($request->getURL(true), '/');
         if ($request->hasSession()) {
             list($messageText, $messageCast) = $parseMessage($message);
             static::singleton()->setSessionMessage($messageText, ValidationResult::TYPE_WARNING, $messageCast);
