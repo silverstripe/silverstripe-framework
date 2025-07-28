@@ -850,7 +850,7 @@ class DataObjectSchema
         }
 
         // Bail if there's no active database connection yet
-        if (!DB::connection_attempted() || !DB::is_active()) {
+        if (!DB::is_active()) {
             return false;
         }
 
@@ -870,7 +870,7 @@ class DataObjectSchema
             }
 
             // Don't check again if we already know the db is ready for this class.
-            if (!empty($this->tableReadyClasses[$class])) {
+            if (!empty($this->tableReadyClasses[$required])) {
                 continue;
             }
 

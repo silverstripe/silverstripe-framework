@@ -516,12 +516,13 @@ class DataObjectSchemaTest extends SapphireTest
         $this->assertTrue($schema->tablesAreReadyForClass(Folder::class), 'Folder table should be ready at start');
 
         // Reset cache and drop a column from the subclass. See AdditionalFieldsExtension
+        // Note that the superclass also reports as not ready because File::get() will return images as well.
         $schema->clearTableReadyForClass();
         DB::query(sprintf(
             'ALTER TABLE "%s" DROP COLUMN "SomeField";',
             DataObject::getSchema()->tableForField(Folder::class, 'SomeField')
         ));
-        $this->assertTrue($schema->tablesAreReadyForClass(File::class), 'File table should be ready after drop column');
+        $this->assertFalse($schema->tablesAreReadyForClass(File::class), 'File table should NOT be ready after drop column');
         $this->assertTrue($schema->tablesAreReadyForClass(Image::class), 'Image table should be ready after drop column');
         $this->assertFalse($schema->tablesAreReadyForClass(Folder::class), 'Folder table should NOT be ready after drop column');
 
@@ -542,7 +543,7 @@ class DataObjectSchemaTest extends SapphireTest
         $schema->reset();
         // Add an extension that adds new columns
         Image::add_extension(AdditionalFieldsExtension::class);
-        $this->assertTrue($schema->tablesAreReadyForClass(File::class), 'File table should be ready after add extension');
+        $this->assertFalse($schema->tablesAreReadyForClass(File::class), 'File table should NOT be ready after add extension');
         $this->assertFalse($schema->tablesAreReadyForClass(Image::class), 'Image table should NOT be ready after add extension');
         $this->assertTrue($schema->tablesAreReadyForClass(Folder::class), 'Folder table should be ready after add extension');
 
