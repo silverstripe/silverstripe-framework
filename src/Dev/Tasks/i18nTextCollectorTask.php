@@ -55,9 +55,7 @@ class i18nTextCollectorTask extends BuildTask
      */
     protected function getIsMerge(InputInterface $input): bool
     {
-        $merge = $input->getOption('merge');
-        // merge=0 or merge=false will disable merge
-        return !in_array($merge, ['0', 'false']);
+        return (bool)$input->getOption('merge');
     }
 
     public function getOptions(): array
@@ -66,7 +64,7 @@ class i18nTextCollectorTask extends BuildTask
             new InputOption('locale', null, InputOption::VALUE_REQUIRED, 'Sets default locale'),
             new InputOption('writer', null, InputOption::VALUE_REQUIRED, 'Custom writer class (must implement the <info>SilverStripe\i18n\Messages\Writer</> interface)'),
             new InputOption('module', null, InputOption::VALUE_REQUIRED, 'One or more modules to limit collection (comma-separated)'),
-            new InputOption('merge', null, InputOption::VALUE_NEGATABLE, 'Merge new strings with existing ones already defined in language files', true),
+            new InputOption('merge', null, InputOption::VALUE_NEGATABLE, 'Merge new strings with existing ones already defined in language files <comment>[default: true]</comment>', true),
         ];
     }
 }
