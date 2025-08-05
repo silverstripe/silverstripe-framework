@@ -105,6 +105,9 @@ class SearchContext
      */
     public function __construct($modelClass, $fields = null, $filters = null)
     {
+        if ($fields !== null && !is_a($fields, FieldList::class)) {
+            throw new InvalidArgumentException('$fields must be a ' . FieldList::class . ' or null');
+        }
         $this->modelClass = $modelClass;
         $this->fields = ($fields) ? $fields : new FieldList();
         $this->filters = ($filters) ? $filters : [];
