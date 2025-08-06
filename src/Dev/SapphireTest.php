@@ -240,6 +240,9 @@ abstract class SapphireTest extends TestCase implements TestOnly
     protected static function set_is_running_test($bool)
     {
         SapphireTest::$is_running_test = $bool;
+        // Setting this to true means a local copy of silverstripe/supported-modules repositories.json
+        // is used rather than making a live HTTP request to the repository during the unit test
+        MetaData::$isRunningUnitTests = $bool;
     }
 
     /**
