@@ -1553,17 +1553,32 @@ class Member extends DataObject
             return false;
         }
 
-        // HACK: we should not allow for an non-Admin to edit an Admin
-        if (!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) {
-            return false;
-        }
         // members can usually edit their own record
         if ($this->ID == $member->ID) {
             return true;
         }
 
-        //standard check
-        return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
+        // Admins have permission automatically.
+        if (Permission::checkMember($member, 'ADMIN')) {
+            return true;
+        }
+
+        // This is the main check - put this before the admin check because it gets cached and $member is
+        // usually the currently logged in user.
+        if (!Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')) {
+            return false;
+        }
+
+        // Don't not allow for an non-Admin to edit an Admin
+        // Note the above checks against $member MUST come first, as that will usually be the current member
+        // and permissions get cached.
+        // This is important for performance when calling canEdit on multiple members.
+        if (Permission::checkMember($this, 'ADMIN')) {
+            return false;
+        }
+
+        // If we get to this point we're good to go
+        return true;
     }
 
     /**
@@ -1594,17 +1609,26 @@ class Member extends DataObject
             return false;
         }
 
-        // HACK: if you want to delete a member, you have to be a member yourself.
-        // this is a hack because what this should do is to stop a user
-        // deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
-        if (Permission::checkMember($this, 'ADMIN')) {
-            if (!Permission::checkMember($member, 'ADMIN')) {
-                return false;
-            }
+        // Admins have permission automatically.
+        if (Permission::checkMember($member, 'ADMIN')) {
+            return true;
         }
 
-        //standard check
-        return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
+        // This is the main check - put this before the admin check because it gets cached and $member is
+        // usually the currently logged in user.
+        if (!Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')) {
+            return false;
+        }
+
+        // Don't not allow for an non-Admin to delete an Admin
+        // Note the above checks against $member MUST come first, as that will usually be the current member
+        // and permissions get cached.
+        if (Permission::checkMember($this, 'ADMIN')) {
+            return false;
+        }
+
+        // If we get to this point we're good to go
+        return true;
     }
 
     /**
