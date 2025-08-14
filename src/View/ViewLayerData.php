@@ -182,7 +182,7 @@ class ViewLayerData implements IteratorAggregate, Stringable
 
     private function getValueFromData(object $data, string $name, array $arguments): mixed
     {
-        // Values from ModelData can be cached
+        // Values from ModelData can be fetched in a more specific way.
         if ($data instanceof ModelData) {
             $cached = $data->objCacheGet($name, $arguments);
             if ($cached !== null) {
@@ -234,9 +234,16 @@ class ViewLayerData implements IteratorAggregate, Stringable
 
     private function callDataMethod(object $data, string $name, array $arguments, bool &$valueWasFetched = false): mixed
     {
+        $isModelData = $data instanceof ModelData;
         $hasDynamicMethods = method_exists($data, '__call');
         $hasMethod = ClassInfo::hasMethod($data, $name);
-        if ($hasMethod || $hasDynamicMethods) {
+        // ModelData has dynamic methods, though they should only be called if hasMethod returns true.
+        // We don't have a reliable way of checking for the existence of dynamic methods on other classes.
+        $doCallMethod = match ($isModelData) {
+            true => $hasMethod,
+            false => $hasMethod || $hasDynamicMethods,
+        };
+        if ($doCallMethod) {
             try {
                 $value = $data->$name(...$arguments);
                 $valueWasFetched = true;
