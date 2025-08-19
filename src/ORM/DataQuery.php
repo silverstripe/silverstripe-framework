@@ -204,7 +204,7 @@ class DataQuery implements Resettable
 
         // Build our initial query
         $this->query = new SQLSelect([]);
-        $this->query->setDistinct(true);
+        // $this->query->setDistinct(true);
 
         if ($sort = singleton($this->dataClass)->config()->get('default_sort')) {
             $this->sort($sort);
@@ -1040,6 +1040,7 @@ class DataQuery implements Resettable
                 if ($linearOnly) {
                     throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
                 }
+                $this->distinct(true);
                 // Join via has_many
                 $this->joinHasManyRelation($modelClass, $rel, $component, $parentPrefix, $tablePrefix, 'has_many');
                 $modelClass = $component;
@@ -1104,6 +1105,7 @@ class DataQuery implements Resettable
             throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
         }
         $schema = DataObject::getSchema();
+        $this->distinct(true);
 
         // Skip if already joined
         // Note: don't just check base class, since we need to join on the table with the actual relation key
@@ -1243,6 +1245,7 @@ class DataQuery implements Resettable
         $componentPrefix = null
     ) {
         $schema = DataObject::getSchema();
+        $this->distinct(true);
 
         if (class_exists($relationClassOrTable ?? '')) {
             // class is provided

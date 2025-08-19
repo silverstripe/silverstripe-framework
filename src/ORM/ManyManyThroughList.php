@@ -44,6 +44,7 @@ class ManyManyThroughList extends RelationList
         $parentClass = null
     ) {
         parent::__construct($dataClass);
+        $this->dataQuery->distinct(true);
 
         // Inject manipulator
         $this->manipulator = ManyManyThroughQueryManipulator::create(

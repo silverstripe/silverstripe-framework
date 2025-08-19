@@ -65,6 +65,7 @@ class ManyManyList extends RelationList
     public function __construct($dataClass, $joinTable, $localKey, $foreignKey, $extraFields = [])
     {
         parent::__construct($dataClass);
+        $this->dataQuery->distinct(true);
 
         $this->joinTable = $joinTable;
         $this->localKey = $localKey;

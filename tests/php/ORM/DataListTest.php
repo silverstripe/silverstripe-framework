@@ -210,7 +210,7 @@ class DataListTest extends SapphireTest
         $queryCounter->startCounting();
         $this->assertEquals(2, $newList->Count(), 'List should only contain two objects after subtraction');
         $queryCounter->stopCounting();
-        // First time through isn't cached
+        // Uses the cached query instead of re-counting
         $this->assertSame(0, $queryCounter->getCount());
     }
 
@@ -617,7 +617,7 @@ class DataListTest extends SapphireTest
     public function testDistinct()
     {
         $list = TeamComment::get();
-        $this->assertStringContainsString('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query is set as distinct by default');
+        $this->assertStringNotContainsString('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query is not set as distinct by default');
 
         $list = $list->distinct(false);
         $this->assertStringNotContainsString('SELECT DISTINCT', $list->dataQuery()->sql($params), 'Query does not contain distinct');
@@ -664,7 +664,7 @@ class DataListTest extends SapphireTest
     {
         $db = DB::get_conn();
         $list = TeamComment::get();
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+        $expected = 'SELECT "DataObjectTest_TeamComment"."ClassName", '
             . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
             . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
             . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
@@ -706,7 +706,7 @@ class DataListTest extends SapphireTest
             'Team'
         );
 
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+        $expected = 'SELECT "DataObjectTest_TeamComment"."ClassName", '
             . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
             . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
             . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '
@@ -737,7 +737,7 @@ class DataListTest extends SapphireTest
             ['Team%']
         );
 
-        $expected = 'SELECT DISTINCT "DataObjectTest_TeamComment"."ClassName", '
+        $expected = 'SELECT "DataObjectTest_TeamComment"."ClassName", '
             . '"DataObjectTest_TeamComment"."LastEdited", "DataObjectTest_TeamComment"."Created", '
             . '"DataObjectTest_TeamComment"."Name", "DataObjectTest_TeamComment"."Comment", '
             . '"DataObjectTest_TeamComment"."TeamID", "DataObjectTest_TeamComment"."ID", '

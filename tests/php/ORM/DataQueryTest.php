@@ -340,7 +340,7 @@ class DataQueryTest extends SapphireTest
     public function testDistinct()
     {
         $query = new DataQuery(DataQueryTest\ObjectE::class);
-        $this->assertStringContainsString('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
+        $this->assertStringNotContainsString('SELECT DISTINCT', $query->sql($params), 'Query is not set as distinct by default');
 
         $query = $query->distinct(false);
         $this->assertStringNotContainsString('SELECT DISTINCT', $query->sql($params), 'Query does not contain distinct');
