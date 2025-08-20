@@ -455,19 +455,24 @@ class ArrayList extends ModelData implements SS_List
      */
     public function sort(...$args): static
     {
-        if (count($args ?? [])==0) {
+        $numArgs = count($args);
+        // If explicitly not sorting, just return the list back
+        if ($numArgs == 0) {
             return $this;
         }
-        if (count($args ?? [])>2) {
+        if ($numArgs === 1 && $args[0] === null) {
+            return $this;
+        }
+        if ($numArgs > 2) {
             throw new InvalidArgumentException('This method takes zero, one or two arguments');
         }
         $columnsToSort = [];
 
         // One argument and it's a string
-        if (count($args ?? [])==1 && is_string($args[0])) {
+        if ($numArgs === 1 && is_string($args[0])) {
             list($column, $direction) = $this->parseSortColumn($args[0]);
             $columnsToSort[$column] = $direction;
-        } elseif (count($args ?? [])==2) {
+        } elseif ($numArgs === 2) {
             list($column, $direction) = $this->parseSortColumn($args[0], $args[1]);
             $columnsToSort[$column] = $direction;
         } elseif (is_array($args[0])) {

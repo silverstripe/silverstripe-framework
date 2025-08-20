@@ -12,4 +12,6 @@ class RelationParent extends DataObject implements TestOnly
     private static $db = [
         'Title' => 'Varchar(255)',
     ];
+
+    private static string $default_sort = 'Title';
 }

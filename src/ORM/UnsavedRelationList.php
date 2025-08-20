@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use ArrayIterator;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use Traversable;
@@ -211,9 +212,11 @@ class UnsavedRelationList extends ArrayList implements Relation
      * Returns an array with both the keys and values set to the IDs of the records in this list.
      * Does not respect sort order. Use ->column("ID") to get an ID list with the current sort.
      * Does not return the IDs for unsaved DataObjects.
+     * @deprecated 6.2.0 Use `$list->column('ID')` instead.
      */
     public function getIDList()
     {
+        Deprecation::notice('6.2.0', 'Use `$list->column(\'ID\')` instead.');
         // Get a list of IDs of our current items - if it's not a number then object then assume it's a DO.
         $ids = array_map(function ($obj) {
             return is_numeric($obj) ? $obj : $obj->ID;

@@ -460,7 +460,8 @@ class Hierarchy extends Extension
         foreach ($parentIDs as $parentID) {
             Hierarchy::$children_for_tree_ids_cache[$baseClass][$parentID] = [];
         }
-        foreach ($children as $child) {
+        // Disabling sort improves performance
+        foreach ($children->sort(null) as $child) {
             $childID = $child->ID;
             $parentID = $child->ParentID;
             Hierarchy::$children_for_tree_ids_cache[$baseClass][$parentID][] = $childID;
@@ -560,7 +561,7 @@ class Hierarchy extends Extension
     {
         if (empty($options['numChildrenMethod']) || $options['numChildrenMethod'] === 'numChildren') {
             $idList = is_array($recordList) ? $recordList :
-                ($recordList instanceof DataList ? $recordList->column('ID') : null);
+                ($recordList instanceof DataList ? $recordList->sort(null)->column('ID') : null);
             Hierarchy::prepopulate_numchildren_cache($this->getHierarchyBaseClass(), $idList);
         }
 

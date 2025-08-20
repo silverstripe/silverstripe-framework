@@ -34,6 +34,7 @@ interface Relation extends SS_List
      * Does not return the IDs for unsaved DataObjects
      *
      * @return array<int>
+     * @deprecated 6.2.0 Use `$list->sort(null)->column('ID')` instead.
      */
     public function getIDList();
 

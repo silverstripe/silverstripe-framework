@@ -771,7 +771,7 @@ class TreeDropdownField extends FormField implements HasOneRelationFieldInterfac
             }
             $this->searchIds[$row->ID] = true;
         }
-        $this->realSearchIds = $res->column();
+        $this->realSearchIds = $res->sort(null)->column('ID');
 
         $sourceObject = $this->getSourceObject();
 

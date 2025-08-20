@@ -1913,12 +1913,8 @@ class DataList extends ModelData implements SS_List, Resettable
      */
     public function setByIDList($idList)
     {
-        $has = [];
-
-        // Index current data
-        foreach ($this->column() as $id) {
-            $has[$id] = true;
-        }
+        // Track current data
+        $has = array_fill_keys($this->sort(null)->column('ID'), true);
 
         // Keep track of items to delete
         $itemsToDelete = $has;
@@ -1943,9 +1939,11 @@ class DataList extends ModelData implements SS_List, Resettable
      * Does not respect sort order. Use ->column("ID") to get an ID list with the current sort.
      *
      * @return array<int>
+     * @deprecated 6.2.0 Use `$list->sort(null)->column('ID')` instead.
      */
     public function getIDList()
     {
+        Deprecation::notice('6.2.0', 'Use `$list->sort(null)->column(\'ID\')` instead.');
         $ids = $this->column("ID");
         return $ids ? array_combine($ids, $ids) : [];
     }
@@ -2012,7 +2010,8 @@ class DataList extends ModelData implements SS_List, Resettable
      */
     public function removeByFilter($filter)
     {
-        foreach ($this->where($filter) as $item) {
+        // Disabling sort improves performance
+        foreach ($this->sort(null)->where($filter) as $item) {
             $this->remove($item);
         }
         return $this;
@@ -2035,7 +2034,8 @@ class DataList extends ModelData implements SS_List, Resettable
      */
     public function removeAll()
     {
-        foreach ($this as $item) {
+        // Disabling sort improves performance
+        foreach ($this->sort(null) as $item) {
             $this->remove($item);
         }
         return $this;
@@ -2188,12 +2188,12 @@ class DataList extends ModelData implements SS_List, Resettable
      * Prepopulate any extension caches with the current dataclass and IDs of records
      *
      * Note that because this calls column() and may result in other database queries based on
-     * the IDs that returns, this should be called after all filtering, sorting, etc has already
+     * the IDs that returns, this should be called after all filtering, etc has already
      * been set for this list.
      */
     public function prepopulateCaches(): void
     {
-        $ids = $this->column('ID');
+        $ids = $this->sort(null)->column('ID');
         $this->extend('onPrepopulateCaches', $ids);
     }
 

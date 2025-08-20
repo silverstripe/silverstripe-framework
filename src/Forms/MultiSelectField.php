@@ -127,7 +127,7 @@ abstract class MultiSelectField extends SelectField
         // Detect DB relation or field
         if ($relation instanceof Relation) {
             // Load ids from relation
-            $value = array_values($relation->getIDList() ?? []);
+            $value = $relation->sort(null)->column('ID');
             parent::setValue($value);
         } elseif ($record->hasField($fieldName)) {
             // Load dataValue from field... a CSV for DBMultiEnum

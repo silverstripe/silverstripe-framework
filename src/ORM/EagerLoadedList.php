@@ -172,8 +172,12 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
         return singleton($this->dataClass)->dbObject($fieldName);
     }
 
+    /**
+     * @deprecated 6.2.0 Use `$list->column('ID')` instead.
+     */
     public function getIDList(): array
     {
+        Deprecation::notice('6.2.0', 'Use `$list->column(\'ID\')` instead.');
         $ids = $this->column('ID');
         return array_combine($ids, $ids);
     }

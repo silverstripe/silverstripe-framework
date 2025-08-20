@@ -291,7 +291,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         // Get the groups that the given member belongs to
         $groupIDsSQLList = '0';
         if ($memberID) {
-            $groupIDs = $member->Groups()->column("ID");
+            $groupIDs = $member->Groups()->sort(null)->column('ID');
             $groupIDsSQLList = implode(", ", $groupIDs) ?: '0';
         }
 
@@ -355,7 +355,7 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
         ?Member $member = null
     ) {
         // Initialise all IDs to false
-        $result = array_fill_keys($stageRecords->column('ID') ?? [], false);
+        $result = array_fill_keys($stageRecords->sort(null)->column('ID'), false);
 
         // Get the uninherited permissions
         $typeField = $this->getPermissionField($type);
@@ -385,14 +385,16 @@ class InheritedPermissions implements PermissionChecker, MemberCacheFlusher
                     )->leftJoin(
                         $memberJoinTable,
                         "\"$memberJoinTable\".\"{$baseTable}ID\" = \"{$baseTable}\".\"ID\" AND " . "\"$memberJoinTable\".\"MemberID\" = {$member->ID}"
-                    )->column('ID');
+                    )->sort(null)
+                    ->column('ID');
             } else {
-                $uninheritedPermissions = $stageRecords->column('ID');
+                $uninheritedPermissions = $stageRecords->sort(null)->column('ID');
             }
         } else {
             // Only view pages with ViewType = Anyone if not logged in
             $uninheritedPermissions = $stageRecords
                 ->filter($typeField, InheritedPermissions::ANYONE)
+                ->sort(null)
                 ->column('ID');
         }
 

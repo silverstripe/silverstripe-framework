@@ -103,14 +103,14 @@ class GroupTest extends FunctionalTest
 
         // Can save user to unsaved group
         $group->Members()->add($member);
-        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList() ?? []));
+        $this->assertEquals([$member->ID], $group->Members()->sort(null)->column('ID'));
 
         // Persists after writing to DB
         $group->write();
 
         /** @var Group $group */
         $group = Group::get()->byID($group->ID);
-        $this->assertEquals([$member->ID], array_values($group->Members()->getIDList() ?? []));
+        $this->assertEquals([$member->ID], $group->Members()->sort(null)->column('ID'));
     }
 
     public function testCollateAncestorIDs()

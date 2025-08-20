@@ -2858,6 +2858,17 @@ class DataListTest extends SapphireTest
         ];
     }
 
+    public function testRelationSort(): void
+    {
+        $expected = [
+            ['Title' => 'Test 3'],
+            ['Title' => 'Test 2'],
+            ['Title' => 'Test 1'],
+        ];
+        $list = RelationChildFirst::get()->reverse()->relation('ManyNext');
+        $this->assertListEquals($expected, $list);
+    }
+
     #[DataProvider('provideCreateDataObject')]
     public function testCreateDataObject(string $dataClass, string $realClass, array $row)
     {

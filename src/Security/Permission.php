@@ -358,7 +358,8 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
 
         if ($member) {
             // Build a list of the IDs of the groups.
-            $groupIDs = $member->Groups()->column();
+            // Disabling sort improves performance
+            $groupIDs = $member->Groups()->sort(null)->column('ID');
 
             // Session caching
             if (!$memberID) {

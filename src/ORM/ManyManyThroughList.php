@@ -153,7 +153,7 @@ class ManyManyThroughList extends RelationList
     public function removeAll()
     {
         // Get the IDs of records in the current list
-        $affectedIds = $this->limit(null)->column('ID');
+        $affectedIds = $this->limit(null)->sort(null)->column('ID');
         if (empty($affectedIds)) {
             return;
         }
@@ -164,8 +164,8 @@ class ManyManyThroughList extends RelationList
             $this->manipulator->getLocalKey() => $affectedIds,
         ]);
 
-        /** @var DataObject $record */
-        foreach ($records as $record) {
+        // Disabling sort improves performance
+        foreach ($records->sort(null) as $record) {
             $record->delete();
         }
 
@@ -218,7 +218,8 @@ class ManyManyThroughList extends RelationList
         $foreignKey = $this->manipulator->getForeignIDKey();
         $hasManyList = $this->manipulator->getParentRelationship($this->dataQuery());
         $records = $hasManyList->filter($localKey, $itemID);
-        foreach ($records as $record) {
+        // Disabling sort improves performance
+        foreach ($records->sort(null) as $record) {
             if ($extraFields) {
                 foreach ($extraFields as $field => $value) {
                     $record->$field = $value;

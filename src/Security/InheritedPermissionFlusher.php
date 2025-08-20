@@ -98,7 +98,8 @@ class InheritedPermissionFlusher extends Extension implements Flushable
         }
 
         if ($this->owner instanceof Group) {
-            return $this->owner->Members()->column('ID');
+            // Disabling sort improves performance
+            return $this->owner->Members()->sort(null)->column('ID');
         }
 
         return [$this->owner->ID];

@@ -640,7 +640,8 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
             $extraFieldNames = [];
         }
 
-        foreach ($source as $item) {
+        // Disabling sort improves performance
+        foreach ($source->sort(null) as $item) {
             // Merge extra fields
             $extraFields = [];
             foreach ($extraFieldNames as $fieldName => $fieldType) {
@@ -663,7 +664,8 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
         $source = $sourceObject->getComponents($relation);
         $dest = $destinationObject->getComponents($relation);
 
-        foreach ($source as $item) {
+        // Disabling sort improves performance
+        foreach ($source->sort(null) as $item) {
             // Don't write on duplicate; Wait until ParentID is available later.
             // writeRelations() will eventually write these records when converting
             // from UnsavedRelationList
@@ -1208,7 +1210,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                     $leftComponents = $leftObj->getManyManyComponents($relationship);
                     $rightComponents = $rightObj->getManyManyComponents($relationship);
                     if ($rightComponents && $rightComponents->exists()) {
-                        $leftComponents->addMany($rightComponents->column('ID'));
+                        $leftComponents->addMany($rightComponents->sort(null)->column('ID'));
                     }
                     $leftComponents->write();
                 }
@@ -1219,7 +1221,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
                     $leftComponents = $leftObj->getComponents($relationship);
                     $rightComponents = $rightObj->getComponents($relationship);
                     if ($rightComponents && $rightComponents->exists()) {
-                        $leftComponents->addMany($rightComponents->column('ID'));
+                        $leftComponents->addMany($rightComponents->sort(null)->column('ID'));
                     }
                     $leftComponents->write();
                 }

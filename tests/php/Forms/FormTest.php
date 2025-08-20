@@ -414,7 +414,7 @@ class FormTest extends FunctionalTest
             ]
         );
         $form->saveInto($object);
-        $playersIds = $object->Players()->getIDList();
+        $playersIds = $object->Players()->sort(null)->column('ID');
 
         $this->assertTrue($form->validate()->isValid());
         $this->assertEquals(

@@ -50,7 +50,8 @@ class Member_GroupSet extends ManyManyList
         $allGroupIDs = [];
         while ($groupIDs) {
             $allGroupIDs = array_merge($allGroupIDs, $groupIDs);
-            $groupIDs = DataObject::get(Group::class)->byIDs($groupIDs)->column("ParentID");
+            // Disabling sort improves performance
+            $groupIDs = DataObject::get(Group::class)->sort(null)->byIDs($groupIDs)->column("ParentID");
             $groupIDs = array_filter($groupIDs ?? []);
         }
 

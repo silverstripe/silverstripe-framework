@@ -48,8 +48,8 @@ class DataObjectDuplicationTest extends SapphireTest
         );
         $this->assertEmpty(
             array_intersect(
-                $orig->bobcats()->getIDList() ?? [],
-                $duplicate->bobcats()->getIDList()
+                $orig->bobcats()->column('ID') ?? [],
+                $duplicate->bobcats()->column('ID')
             )
         );
         /** @var DataObjectDuplicationTest\Bobcat $twoTwoDuplicate */
@@ -92,8 +92,8 @@ class DataObjectDuplicationTest extends SapphireTest
         );
         // Ids of each record are the same (only mapping content is duplicated)
         $this->assertEquals(
-            $orig->caribou()->getIDList(),
-            $duplicate->caribou()->getIDList()
+            $orig->caribou()->column('ID'),
+            $duplicate->caribou()->column('ID')
         );
 
         // Ensure 'five' belongs_to is duplicated
