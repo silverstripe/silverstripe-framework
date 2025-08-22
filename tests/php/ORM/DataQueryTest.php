@@ -8,6 +8,8 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\ORM\Tests\DataQueryTest\AugmentSQLExtension;
+use SilverStripe\ORM\Tests\DataQueryTest\ObjectC;
 use SilverStripe\ORM\Tests\DataQueryTest\ObjectE;
 use SilverStripe\Security\Member;
 
@@ -448,7 +450,7 @@ class DataQueryTest extends SapphireTest
         static::resetDBSchema(true);
     }
 
-    public function testAddToQueryIsCalled()
+    public function testFinalisedQueryCallsAddToQuery()
     {
         // Including filter on parent table only doesn't pull in second
         $query = new DataQuery(DataQueryTest\DataObjectAddsToQuery::class);
@@ -461,7 +463,7 @@ class DataQueryTest extends SapphireTest
     /**
      * Tests that getFinalisedQuery can include all tables
      */
-    public function testConditionsIncludeTables()
+    public function testFinalisedQueryCanIncludeAllTables()
     {
         // Including filter on parent table only doesn't pull in second
         $query = new DataQuery(DataQueryTest\ObjectC::class);
@@ -496,6 +498,99 @@ class DataQueryTest extends SapphireTest
         $this->assertNotNull($second);
         $this->assertEquals('Last', $second['Title']);
         $this->assertEmpty(array_shift($arrayResult));
+    }
+
+    public static function provideFinalisedQueryResolvesSortColumns(): array
+    {
+        return [
+            'missing field' => [
+                'selectField' => '',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT "DataQueryTest_C"."Title" FROM "DataQueryTest_C" ORDER BY "DataQueryTest_C"."Title" ASC',
+            ],
+            'missing field (fully qualified sort)' => [
+                'selectField' => '',
+                'sortField' => '"DataQueryTest_C"."Title"',
+                'expectedSQL' => 'SELECT DISTINCT "DataQueryTest_C"."Title" AS "_SortColumn0" FROM "DataQueryTest_C" ORDER BY "_SortColumn0" ASC',
+            ],
+            'select field alone' => [
+                'selectField' => 'Title',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT Title FROM "DataQueryTest_C" ORDER BY "DataQueryTest_C"."Title" ASC',
+            ],
+            'select field alone (ANSI quotes)' => [
+                'selectField' => '"Title"',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT "Title" FROM "DataQueryTest_C" ORDER BY "DataQueryTest_C"."Title" ASC',
+            ],
+            'select field with table' => [
+                'selectField' => 'DataQueryTest_C.Title',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT DataQueryTest_C.Title AS "Title" FROM "DataQueryTest_C" ORDER BY "DataQueryTest_C"."Title" ASC',
+            ],
+            'select field with table (ANSI quotes)' => [
+                'selectField' => '"DataQueryTest_C"."Title"',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT "DataQueryTest_C"."Title" FROM "DataQueryTest_C" ORDER BY "DataQueryTest_C"."Title" ASC',
+            ],
+            'select field with table (ANSI quotes, fully qualified table)' => [
+                'selectField' => '"DataQueryTest_C"."Title"',
+                'sortField' => '"DataQueryTest_C"."Title"',
+                'expectedSQL' => 'SELECT DISTINCT "DataQueryTest_C"."Title" FROM "DataQueryTest_C" ORDER BY "DataQueryTest_C"."Title" ASC',
+            ],
+            'case statement' => [
+                'selectField' => 'CASE WHEN "DataQueryTest_C"."ID" IS NOT NULL THEN "DataQueryTest_C"."Title" ELSE \'this value\' END',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT CASE WHEN "DataQueryTest_C"."ID" IS NOT NULL THEN "DataQueryTest_C"."Title" ELSE \'this value\' END AS "Title"'
+                    . ' FROM "DataQueryTest_C" ORDER BY "Title" ASC',
+            ],
+            'SQL function call' => [
+                'selectField' => 'CONCAT("DataQueryTest_C"."Title",\'something\')',
+                'sortField' => 'Title',
+                'expectedSQL' => 'SELECT DISTINCT CONCAT("DataQueryTest_C"."Title",\'something\') AS "Title" FROM "DataQueryTest_C" ORDER BY "Title" ASC',
+            ],
+            'SQL function call (fully qualified sort)' => [
+                'selectField' => 'CONCAT("DataQueryTest_C"."Title",\'something\')',
+                'sortField' => '"DataQueryTest_C"."Title"',
+                'expectedSQL' => 'SELECT DISTINCT CONCAT("DataQueryTest_C"."Title",\'something\') AS "Title", "DataQueryTest_C"."Title" AS "_SortColumn0" FROM "DataQueryTest_C" ORDER BY "_SortColumn0" ASC',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideFinalisedQueryResolvesSortColumns
+     * See also testCustomFieldWithAliasSort
+     */
+    public function testFinalisedQueryResolvesSortColumns(string $selectField, string $sortField, string $expectedSQL): void
+    {
+        ObjectC::add_extension(AugmentSQLExtension::class);
+        AugmentSQLExtension::setAugmentCallback(function (SQLSelect $select) use ($selectField) {
+            if ($selectField) {
+                $select->selectField($selectField, 'Title');
+            } else {
+                $selectFields = $select->getSelect();
+                unset($selectFields['Title']);
+                $select->setSelect($selectFields);
+            }
+        });
+        $query = new DataQuery(DataQueryTest\ObjectC::class);
+        $query->sort($sortField);
+        $finalisedQuery = $query->getFinalisedQuery();
+
+        // Remove unnecessary fields so the expected SQL can be more succinct
+        $selectFields = $finalisedQuery->getSelect();
+        unset($selectFields['RecordClassName']);
+        unset($selectFields['ClassName']);
+        unset($selectFields['LastEdited']);
+        unset($selectFields['Created']);
+        unset($selectFields['ID']);
+        unset($selectFields['TestAID']);
+        unset($selectFields['TestBID']);
+        $finalisedQuery->setSelect($selectFields);
+
+        // Normalise whitespace to a single space
+        $sql = preg_replace('/\s{2,}/', ' ', $finalisedQuery->sql());
+        $this->assertSame($expectedSQL, $sql);
     }
 
     public function testColumnReturnsAllValues()

@@ -84,7 +84,7 @@ abstract class SQLExpression
      * Generate the SQL statement for this query.
      *
      * @param array $parameters Out variable for parameters required for this query
-     * @return string The completed SQL query
+     * @return string|null The completed SQL query or null if there's no DB connector or the query was empty
      */
     public function sql(&$parameters = [])
     {

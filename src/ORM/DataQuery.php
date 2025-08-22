@@ -394,6 +394,17 @@ class DataQuery
                     continue;
                 }
 
+                // If we're already selecting the value with an expression (for example using a case statement or function call,
+                // which may select values in dynamic ways), just make sure the sort column is quotes and move on.
+                $selects = $query->getSelect();
+                // This regex looks for anything that isn't a single column (with optional table name and ANSI quotes).
+                if (isset($selects[$col]) && !preg_match('/^\s*"?[^.("]+"?\.?"?[^("]*"?\s*$/', $selects[$col])) {
+                    unset($newOrderby[$k]);
+                    $newOrderby['"' . $col . '"'] = $dir;
+                    continue;
+                }
+
+                // Make sure we select the correct column, and both fully qualify and ANSI quote the sort reference.
                 if (count($parts ?? []) == 1) {
                     // Get expression for sort value
                     $qualCol = "\"{$parts[0]}\"";
@@ -410,7 +421,6 @@ class DataQuery
 
                     // To-do: Remove this if block once SQLSelect::$select has been refactored to store getSelect()
                     // format internally; then this check can be part of selectField()
-                    $selects = $query->getSelect();
                     if (!isset($selects[$col]) && !in_array($qualCol, $selects ?? [])) {
                         // Use the original select if possible.
                         if (array_key_exists($col, $originalSelect ?? [])) {
