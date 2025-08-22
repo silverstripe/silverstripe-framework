@@ -419,6 +419,9 @@ class Hierarchy extends Extension
             }
         }
         $children = ArrayList::create($childNodes);
+        // $includeDeleted was included by accident but now that it is part of the method signature of the extension
+        // hook we can't remove it for backwards compatibility reasons.
+        $includeDeleted = false;
         $owner->extend('updateGetChildrenForTree', $includeDeleted, $children);
         return $children;
     }
