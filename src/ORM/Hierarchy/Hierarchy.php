@@ -303,21 +303,13 @@ class Hierarchy extends Extension
     {
         $owner = $this->getOwner();
         $clone = $owner->duplicate();
-        $children = $owner->AllChildren();
-        $sortField = $owner->getSortField();
-
-        $sort = 1;
+        // Disabling sort improves performance
+        $children = $owner->AllChildren()->sort(null);
         foreach ($children as $child) {
             $childClone = $child->duplicateWithChildren();
             $childClone->ParentID = $clone->ID;
-            if ($sortField) {
-                //retain sort order by manually setting sort values
-                $childClone->$sortField = $sort;
-                $sort++;
-            }
             $childClone->write();
         }
-
         return $clone;
     }
 

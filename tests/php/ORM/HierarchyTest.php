@@ -591,13 +591,13 @@ class HierarchyTest extends SapphireTest
         $child1 = new HierarchyTest\SortableHierarchyModel();
         $child1->ParentID = $parent->ID;
         $child1->Title = 'Child 1';
-        $child1->Sort = 2;
+        $child1->Sort = 7;
         $child1->write();
 
         $child2 = new HierarchyTest\SortableHierarchyModel();
         $child2->ParentID = $parent->ID;
         $child2->Title = 'Child 2';
-        $child2->Sort = 1;
+        $child2->Sort = 3;
         $child2->write();
 
         $duplicateParent = $parent->duplicateWithChildren();
@@ -612,6 +612,10 @@ class HierarchyTest extends SapphireTest
         $this->assertEquals($child2->Title, $duplicateChild2->Title);
         $this->assertNotEquals($duplicateChild1->ID, $child1->ID);
         $this->assertNotEquals($duplicateChild2->ID, $child2->ID);
+
+        // Sort values match the original records
+        $this->assertSame($child1->Sort, $duplicateChild1->Sort);
+        $this->assertSame($child2->Sort, $duplicateChild2->Sort);
 
         // assertGreaterThan works by having the LOWER value first
         $this->assertGreaterThan($duplicateChild2->Sort, $duplicateChild1->Sort);
