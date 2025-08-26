@@ -558,9 +558,9 @@ class DataQueryTest extends SapphireTest
     }
 
     /**
-     * @dataProvider provideFinalisedQueryResolvesSortColumns
      * See also testCustomFieldWithAliasSort
      */
+    #[DataProvider('provideFinalisedQueryResolvesSortColumns')]
     public function testFinalisedQueryResolvesSortColumns(string $selectField, string $sortField, string $expectedSQL): void
     {
         ObjectC::add_extension(AugmentSQLExtension::class);
