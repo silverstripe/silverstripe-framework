@@ -3565,7 +3565,7 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
      */
     public static function get_one($callerClass = null, $filter = "", $cache = true, $sort = "")
     {
-        Deprecation::notice('6.1.0', 'Use `DataObject::get($className)->setUseCache(true)` instead.');
+        Deprecation::notice('6.1.0', 'Use `DataObject::get($className)->setUseCache(true)->first()` instead.');
         if ($callerClass === null) {
             $callerClass = static::class;
         }
