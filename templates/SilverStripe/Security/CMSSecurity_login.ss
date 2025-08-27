@@ -15,7 +15,7 @@
         <div class="cms-security__container container fill-height">
             <div class="row">
                 <h1>
-                    <span class="icon font-icon-back-in-time"></span>
+                    <span class="icon font-icon-back-in-time" aria-hidden="true"></span>
                     <%t SilverStripe\\Security\\CMSSecurity.LOGIN_TITLE 'Return to where you left off by logging back in' %>
                 </h1>
             </div>
