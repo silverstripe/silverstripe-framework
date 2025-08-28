@@ -27,7 +27,7 @@ trait FlushScheduler
      */
     public function scheduleFlush(HTTPRequest $request)
     {
-        if ($request->getURL() === 'dev/build') {
+        if (array_key_exists('flush', $request->getVars()) || $request->getURL() === 'dev/build') {
             $kernel = Injector::inst()->get(Kernel::class);
             if (!$kernel->isFlushed()) {
                 ScheduledFlushDiscoverer::scheduleFlush($kernel);

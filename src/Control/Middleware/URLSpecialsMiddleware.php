@@ -17,8 +17,6 @@ use SilverStripe\Security\RandomGenerator;
  *
  * The rules are:
  *  - flush GET parameter
- *  - isDev GET parameter
- *  - isTest GET parameter
  *  - dev/build URL
  *
  * @see https://docs.silverstripe.org/en/developer_guides/debugging/url_variable_tools/ special variables docs
