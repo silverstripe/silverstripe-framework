@@ -27,6 +27,7 @@ use SilverStripe\Model\ModelData;
 use SilverStripe\Security\SudoMode\SudoModeServiceInterface;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\GridField\GridFieldViewButton;
+use SilverStripe\Forms\GridField\GridField_ActionMenu;
 
 /**
  * Displays a {@link SS_List} in a grid format.
@@ -561,8 +562,14 @@ class GridField extends FormField
             }
         }
 
-        $columns = $this->getColumns();
+        // Conditionally filter out components before rendering them
+        foreach ($this->getComponents() as $component) {
+            if (is_a($component, GridField_ActionMenu::class) && empty($component->getItems($this))) {
+                $this->config->removeComponentsByType(GridField_ActionMenu::class);
+            }
+        }
 
+        $columns = $this->getColumns();
         $list = $this->getManipulatedList();
         $total = null; // can be populated by GridFieldPaginator
 
