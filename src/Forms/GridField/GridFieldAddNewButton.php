@@ -62,7 +62,7 @@ class GridFieldAddNewButton extends AbstractGridFieldComponent implements GridFi
         if (!$this->buttonName) {
             // provide a default button name, can be changed by calling {@link setButtonName()} on this component
             $objectName = $singleton->hasMethod('i18n_singular_name') ? $singleton->i18n_singular_name() : ClassInfo::shortName($singleton);
-            $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.Add', 'Add {name}', ['name' => $objectName]);
+            $this->buttonName = _t('SilverStripe\\Forms\\GridField\\GridField.AddNew', 'Add new {name}', ['name' => $objectName]);
         }
 
         $data = new ArrayData([

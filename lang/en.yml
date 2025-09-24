@@ -143,6 +143,7 @@ en:
     TABMAIN: Main
   SilverStripe\Forms\GridField\GridField:
     Add: 'Add {name}'
+    AddNew: 'Add new {name}'
     CSVEXPORT: 'Export to CSV'
     CSVIMPORT: 'Import CSV'
     Filter: Filter
