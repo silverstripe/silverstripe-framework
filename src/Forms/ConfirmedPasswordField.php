@@ -164,7 +164,10 @@ class ConfirmedPasswordField extends FormField
 
         // has to be called in constructor because Field() isn't triggered upon saving the instance
         if ($showOnClick) {
-            $this->getChildren()->push($this->hiddenField = HiddenField::create("{$name}[_PasswordFieldVisible]"));
+            $this->getChildren()->push(
+                $this->hiddenField = HiddenField::create("{$name}[_PasswordFieldVisible]")
+                    ->addExtraClass('no-change-track') // ignore in changetracker
+            );
         }
 
         // disable auto complete
