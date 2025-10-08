@@ -84,9 +84,12 @@ class GridFieldLevelup extends AbstractGridFieldComponent implements GridField_H
         }
 
         // Attributes
+        $levelUpText = _t(__CLASS__ . '.NavigateUp', 'Navigate up a level');
         $attrs = array_merge($this->attributes, [
             'href' => sprintf($this->linkSpec ?? '', $parentID),
-            'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
+            'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup',
+            'title' => $levelUpText,
+            'aria-label' => $levelUpText,
         ]);
         $linkTag = HTML::createTag('a', $attrs);
 

@@ -28,9 +28,11 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
      */
     protected $extraClass = [
         'grid-field__icon-action--hidden-on-hover' => true,
-        'font-icon-edit' => true,
         'btn--icon-large' => true,
-        'action-menu--handled' => true
+        'action-menu--handled' => true,
+        // font-icon is allowed here because the default template uses aria-label,
+        // so the font icon text won't be read out by screen readers
+        'font-icon-edit' => true,
     ];
 
     /**
@@ -55,7 +57,8 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
     public function getExtraData($gridField, $record, $columnName)
     {
         return [
-            "classNames" => "font-icon-edit action-detail edit-link"
+            'classNames' => 'action-detail edit-link',
+            'icon' => 'edit',
         ];
     }
 
@@ -148,6 +151,7 @@ class GridFieldEditButton extends AbstractGridFieldComponent implements GridFiel
         // which can make the form readonly if no edit permissions are available.
 
         $data = new ArrayData([
+            'Title' => $this->getTitle($gridField, $record, $columnName),
             'Link' => $this->getURL($gridField, $record, $columnName),
             'ExtraClass' => $this->getExtraClass()
         ]);

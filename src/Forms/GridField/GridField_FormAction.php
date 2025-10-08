@@ -104,6 +104,7 @@ class GridField_FormAction extends FormAction
             'name' => $name,
             'data-url' => $this->gridField->Link(),
             'type' => "button",
+            'icon' => $this->getIcon(),
         ];
 
         // Create a "store" for the "state" of this action

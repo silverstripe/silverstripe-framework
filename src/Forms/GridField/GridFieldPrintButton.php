@@ -69,8 +69,8 @@ class GridFieldPrintButton extends AbstractGridFieldComponent implements GridFie
             null
         );
         $button->setForm($gridField->getForm());
-
-        $button->addExtraClass('font-icon-print grid-print-button btn btn-secondary');
+        $button->setIcon('print');
+        $button->addExtraClass('grid-print-button btn btn-secondary');
 
         return [
             $this->targetFragment =>  $button->Field(),

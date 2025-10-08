@@ -143,8 +143,8 @@ class GridFieldAddExistingAutocompleter extends AbstractGridFieldComponent imple
             'addto',
             'addto'
         );
-        $addAction->setAttribute('data-icon', 'chain--plus');
-        $addAction->addExtraClass('btn btn-outline-secondary font-icon-link action_gridfield_relationadd');
+        $addAction->setIcon('link');
+        $addAction->addExtraClass('btn btn-outline-secondary action_gridfield_relationadd');
 
         // If an object is not found, disable the action
         if (!is_int($gridField->State->GridFieldAddRelation(null))) {

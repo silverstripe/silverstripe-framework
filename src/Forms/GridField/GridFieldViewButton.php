@@ -48,7 +48,8 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
     public function getExtraData($gridField, $record, $columnName)
     {
         return [
-            "classNames" => "font-icon-eye action-detail view-link"
+            'classNames' => 'action-detail view-link',
+            'icon' => 'eye',
         ];
     }
 
@@ -84,6 +85,7 @@ class GridFieldViewButton extends AbstractGridFieldComponent implements GridFiel
             return null;
         }
         $data = new ArrayData([
+            'Title' => $this->getTitle($field, $record, $col),
             'Link' => $this->getURL($field, $record, $col),
         ]);
         $template = SSViewer::get_templates_by_class($this, '', __CLASS__);

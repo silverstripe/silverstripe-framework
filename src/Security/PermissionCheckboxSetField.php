@@ -254,7 +254,7 @@ class PermissionCheckboxSetField extends FormField
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
                             . "<label class=\"form-label\" {$title}for=\"$itemID\">"
-                            . "<span class=\"font-icon-$icon\"></span>"
+                            . "<span class=\"font-icon-$icon\" aria-hidden=\"true\"></span>"
                             . "{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     } else {

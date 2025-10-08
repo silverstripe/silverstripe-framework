@@ -449,10 +449,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     throw new LogicException(get_class($this->record) . ' must implement ' . DataObjectInterface::class);
                 }
 
-                $noChangesClasses = 'btn-outline-primary font-icon-tick';
+                $noChangesClasses = 'btn-outline-primary';
                 $majorActions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
+                    ->setIcon('tick')
+                    ->setAttribute('data-icon-alternate', 'save')
                     ->addExtraClass($noChangesClasses)
-                    ->setAttribute('data-btn-alternate-add', 'btn-primary font-icon-save')
+                    ->setAttribute('data-btn-alternate-add', 'btn-primary')
                     ->setAttribute('data-btn-alternate-remove', $noChangesClasses)
                     ->setUseButtonTag(true)
                     ->setAttribute('data-text-alternate', _t('SilverStripe\\CMS\\Controllers\\CMSMain.SAVEDRAFT', 'Save')));
@@ -464,7 +466,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 }
                 $actions->insertAfter('MajorActions', FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
-                    ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
+                    ->setIcon('trash-bin')
+                    ->addExtraClass('btn-outline-danger btn-hide-outline action--delete'));
             }
 
             $gridState = $this->gridField->getState(false);
@@ -475,7 +478,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             //Change the Save label to 'Create'
             $majorActions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create'))
                 ->setUseButtonTag(true)
-                ->addExtraClass('btn-primary font-icon-plus-thin'));
+                ->setIcon('plus-thin')
+                ->addExtraClass('btn-primary'));
 
             // Add a Cancel link which is a button-like link and link back to one level up.
             $crumbs = $this->Breadcrumbs();

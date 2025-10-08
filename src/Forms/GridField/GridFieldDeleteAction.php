@@ -243,8 +243,9 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
                 "unlinkrelation",
                 ['RecordID' => $record->ID]
             )
-                ->addExtraClass('action--unlink btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink action-menu--handled')
-                ->setAttribute('classNames', 'action--unlink gridfield-button-unlink font-icon-link-broken')
+                ->setIcon('link-broken')
+                ->addExtraClass('action--unlink btn btn--no-text btn--icon-md grid-field__icon-action gridfield-button-unlink action-menu--handled')
+                ->setAttribute('classNames', 'action--unlink gridfield-button-unlink')
                 ->setDescription($title)
                 ->setAttribute('aria-label', $title);
         } else {
@@ -263,8 +264,9 @@ class GridFieldDeleteAction extends AbstractGridFieldComponent implements GridFi
                 "deleterecord",
                 ['RecordID' => $record->ID]
             )
-                ->addExtraClass('action--delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action action-menu--handled')
-                ->setAttribute('classNames', 'action--delete font-icon-trash')
+                ->setIcon('trash')
+                ->addExtraClass('action--delete btn--icon-md btn--no-text grid-field__icon-action action-menu--handled')
+                ->setAttribute('classNames', 'action--delete')
                 ->setDescription($title)
                 ->setAttribute('aria-label', $title);
         }

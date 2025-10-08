@@ -73,7 +73,8 @@ class GridFieldImportButton extends AbstractGridFieldComponent implements GridFi
             null
         );
         $button
-            ->addExtraClass('btn btn-secondary font-icon-upload btn--icon-large action_import')
+            ->setIcon('upload')
+            ->addExtraClass('btn btn-secondary btn--icon-large action_import')
             ->setForm($gridField->getForm())
             ->setAttribute('data-toggle', 'modal')
             ->setAttribute('aria-controls', $modalID)

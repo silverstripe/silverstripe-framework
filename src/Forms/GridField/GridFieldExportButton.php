@@ -78,7 +78,8 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
             'export',
             null
         );
-        $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export');
+        $button->setIcon('down-circled');
+        $button->addExtraClass('btn btn-secondary no-ajax action_export');
         $button->setForm($gridField->getForm());
         return [
             $this->targetFragment => $button->Field(),
