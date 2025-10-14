@@ -36,6 +36,10 @@ class FileSessionHandlerTest extends SapphireTest
     public static function provideOpen(): array
     {
         return [
+            'empty string path' => [
+                'path' => '',
+                'expected' => true,
+            ],
             'valid path on its own' => [
                 'path' => static::$sessionSavePath,
                 'expected' => true,
@@ -62,6 +66,12 @@ class FileSessionHandlerTest extends SapphireTest
     public static function provideSetSavePath(): array
     {
         return [
+            'empty string path' => [
+                'sessionSavePath' => '',
+                'baseDir' => sys_get_temp_dir(),
+                'numSubDirs' => 0,
+                'mode' => 0600,
+            ],
             'just a path' => [
                 'sessionSavePath' => static::$sessionSavePath,
                 'baseDir' => static::$sessionSavePath,

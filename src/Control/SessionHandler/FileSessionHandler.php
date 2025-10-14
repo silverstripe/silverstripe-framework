@@ -232,6 +232,10 @@ class FileSessionHandler extends AbstractSessionHandler
      */
     private function setSavePath(string $path): void
     {
+        // If session.save-path is empty, we should use the tmp dir.
+        if (!$path) {
+            $path = sys_get_temp_dir();
+        }
         // Handle configuration for depth and mode arguments
         // $path can have up to two optional params ending with semi-colon defining
         // 1) the number of subdirs and 2) the octal mode e.g. N;MODE;/path
