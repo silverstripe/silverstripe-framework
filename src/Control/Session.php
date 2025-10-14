@@ -8,6 +8,7 @@ use SilverStripe\Control\SessionHandler\FileSessionHandler;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Handles all manipulation of the session.
@@ -304,7 +305,7 @@ class Session
             throw new BadMethodCallException("Session has already started");
         }
 
-        $session_path = $this->config()->get('session_store_path');
+        $session_path = Deprecation::withSuppressedNotice(fn () => $this->config()->get('session_store_path'));
 
         // If the session cookie is already set, then the session can be read even if headers_sent() = true
         // This helps with edge-case such as debugging.
@@ -314,7 +315,7 @@ class Session
                 $cookieParams = $this->buildCookieParams($request);
                 session_set_cookie_params($cookieParams);
 
-                $limiter = $this->config()->get('sessionCacheLimiter');
+                $limiter = Deprecation::withSuppressedNotice(fn () => $this->config()->get('sessionCacheLimiter'));
                 if (isset($limiter)) {
                     session_cache_limiter($limiter);
                 }
