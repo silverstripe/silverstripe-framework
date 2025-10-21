@@ -701,11 +701,10 @@ class GridField extends FormField
 
                 $rowContent = '';
 
-                foreach ($this->getColumns() as $column) {
+                foreach ($columns as $column) {
                     $colContent = $this->getColumnContent($record, $column);
 
                     // Null means this columns should be skipped altogether.
-
                     if ($colContent === null) {
                         continue;
                     }
@@ -1117,11 +1116,7 @@ class GridField extends FormField
      */
     public function getColumnCount()
     {
-        if (!$this->columnDispatch) {
-            $this->buildColumnDispatch();
-        }
-
-        return count($this->columnDispatch ?? []);
+        return count($this->getColumns());
     }
 
     /**

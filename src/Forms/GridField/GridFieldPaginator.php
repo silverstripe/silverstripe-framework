@@ -303,7 +303,7 @@ class GridFieldPaginator extends AbstractGridFieldComponent implements GridField
         return [
             'footer' => $forTemplate->renderWith(
                 $template,
-                ['Colspan' => count($gridField->getColumns() ?? [])]
+                ['Colspan' => $gridField->getColumnCount()]
             )
         ];
     }
