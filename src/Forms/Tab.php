@@ -40,6 +40,11 @@ class Tab extends CompositeField
     protected $id;
 
     /**
+     * Identifier of icon, if supported on the frontend
+     */
+    private string $icon = '';
+
+    /**
      * @uses FormField::name_to_label()
      *
      * @param string $name Identifier of the tab, without characters like dots or spaces
@@ -106,6 +111,25 @@ class Tab extends CompositeField
             $this->setID(Convert::raw2htmlid($name));
         }
         return parent::setName($name);
+    }
+
+    /**
+     * Get button icon, if supported
+     */
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * Sets button icon
+     *
+     * @param string $icon Icon identifier (not path)
+     */
+    public function setIcon(string $icon)
+    {
+        $this->icon = $icon;
+        return $this;
     }
 
     /**
