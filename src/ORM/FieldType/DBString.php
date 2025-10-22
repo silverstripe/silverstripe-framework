@@ -30,8 +30,13 @@ abstract class DBString extends DBField
      */
     public function __construct($name = null, $options = [])
     {
-        $this->options['nullifyEmpty'] = true;
-        $this->options['default'] = '';
+        $options = is_array($options) ? $options : [];
+        if (!array_key_exists('nullifyEmpty', $options)) {
+            $options['nullifyEmpty'] = true;
+        }
+        if (!array_key_exists('default', $options)) {
+            $options['default'] = '';
+        }
         parent::__construct($name, $options);
     }
 

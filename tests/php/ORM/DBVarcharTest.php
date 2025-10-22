@@ -26,5 +26,11 @@ class DBVarcharTest extends SapphireTest
         $innerField = $nullable->valueField;
         $this->assertInstanceOf(TextField::class, $innerField);
         $this->assertEquals(111, $innerField->getMaxLength());
+
+        /** @var TextField $field */
+        $field = $obj->dbObject('HasDefaultOne')->scaffoldFormField();
+        $this->assertInstanceOf(TextField::class, $field);
+        $this->assertEquals(50, $field->getMaxLength());
+        $this->assertSame('DefaultOne', $obj->HasDefaultOne);
     }
 }
