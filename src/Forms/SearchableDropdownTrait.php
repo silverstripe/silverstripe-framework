@@ -603,4 +603,9 @@ trait SearchableDropdownTrait
 
         return $field;
     }
+
+    protected function getSourceValues()
+    {
+        return $this->sourceList->sort(null)->column('ID');
+    }
 }
