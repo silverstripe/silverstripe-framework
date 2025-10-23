@@ -81,6 +81,7 @@ class BasicSearchContext extends SearchContext
 
     private function applySearchFilters(array $searchParams): array
     {
+        $this->setSearchParams($searchParams);
         $applied = [];
         foreach ($searchParams as $fieldName => $searchTerm) {
             // Ignore the general search field - we'll deal with that in a special way.
