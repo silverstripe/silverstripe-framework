@@ -131,4 +131,11 @@ class GridState extends HiddenField
     {
         return $this->getValue();
     }
+
+    public function __clone(): void
+    {
+        if ($this->data !== null) {
+            $this->data = clone $this->data;
+        }
+    }
 }

@@ -699,7 +699,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 
         if ($position === 0 && $currentPage > 1) {
             $page = $currentPage - 1;
-        } elseif ($hasMorePages && $position >= $itemsPerPage + 1) {
+        } elseif ($hasMorePages && $position >= $itemsPerPage) {
             $page = $currentPage + 1;
         }
         $state->GridFieldPaginator->currentPage = (int)$page;

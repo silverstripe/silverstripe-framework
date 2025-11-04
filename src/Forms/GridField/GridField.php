@@ -1363,6 +1363,9 @@ class GridField extends FormField
     public function __clone(): void
     {
         $this->config = clone $this->config;
+        if ($this->state !== null) {
+            $this->state = clone $this->state;
+        }
     }
 
     /**
