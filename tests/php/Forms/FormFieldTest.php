@@ -97,6 +97,7 @@ use SilverStripe\Forms\SegmentField;
 use SilverStripe\Core\Validation\FieldValidation\TimeFieldValidator;
 use SilverStripe\Core\Validation\FieldValidation\DatetimeFieldValidator;
 use SilverStripe\Forms\SudoModePasswordField;
+use SilverStripe\Forms\UnsavedChangesIndicator;
 
 class FormFieldTest extends SapphireTest
 {
@@ -967,6 +968,7 @@ class FormFieldTest extends SapphireTest
             TreeDropdownField_Readonly::class => [],
             TreeMultiselectField::class => [],
             TreeMultiselectField_Readonly::class => [],
+            UnsavedChangesIndicator::class => [],
             UrlField::class => [
                 StringFieldValidator::class,
             ],

@@ -33,6 +33,7 @@ use SilverStripe\View\HTML;
 use SilverStripe\View\SSViewer;
 use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Forms\UnsavedChangesIndicator;
 
 class GridFieldDetailForm_ItemRequest extends RequestHandler
 {
@@ -468,6 +469,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     ->setIcon('trash-bin')
                     ->addExtraClass('btn-outline-danger btn-hide-outline action--delete'));
             }
+            $actions->push(UnsavedChangesIndicator::create('UnsavedChangesIndicator'));
 
             $gridState = $this->gridField->getState(false);
             $actions->push(HiddenField::create($manager->getStateKey($this->gridField), null, $gridState));
