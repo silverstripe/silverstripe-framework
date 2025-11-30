@@ -9,6 +9,7 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\Form;
 
 class CompositeFieldTest extends SapphireTest
 {
@@ -269,5 +270,16 @@ class CompositeFieldTest extends SapphireTest
         $this->assertStringContainsString(CompositeField::class . ' (TestComposite)', $result);
         $this->assertStringContainsString('TestTextField', $result);
         $this->assertStringContainsString('<ul', $result, 'Result should be formatted as a <ul>');
+    }
+
+    public function testLink(): void
+    {
+        $fieldOne = TextField::create('One');
+        $fieldTwo = TextField::create('Two');
+        $field = new CompositeField($fieldOne, $fieldTwo);
+        $form = new Form(null, 'Test', new FieldList(), new FieldList());
+        $form->setFormAction('foo');
+        $field->setForm($form);
+        $this->assertSame('foo/field/OneTwo/bar', $field->Link('bar'));
     }
 }

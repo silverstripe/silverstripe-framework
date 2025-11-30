@@ -635,7 +635,7 @@ class FormFieldTest extends SapphireTest
     public function testLinkWithForm()
     {
         $field = new FormField('Test');
-        $form = new Form(null, 'Test', new FieldList, new FieldList);
+        $form = new Form(null, 'Test', new FieldList(), new FieldList());
         $form->setFormAction('foo');
         $field->setForm($form);
         $this->assertSame('foo/field/Test/bar', $field->Link('bar'));
