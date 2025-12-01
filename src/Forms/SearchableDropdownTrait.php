@@ -435,6 +435,18 @@ trait SearchableDropdownTrait
         return $this->extendValidationResult(true, $validator);
     }
 
+    public function dataValue()
+    {
+        $name = $this->getName();
+        $ids = $this->getValueArray();
+        // This is how we distinguish between single and multi fields in saveInto()
+        // so use the same logic here.
+        if (substr($name, -2) === 'ID') {
+            return $ids[0] ?? 0;
+        }
+        return $ids;
+    }
+
     public function getSchemaDataType(): string
     {
         if ($this->isMultiple) {
