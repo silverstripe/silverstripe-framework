@@ -247,9 +247,7 @@ class SearchableDropdownTraitTest extends SapphireTest
         ];
     }
 
-    /**
-     * @dataProvider provideDataValue
-     */
+    #[DataProvider('provideDataValue')]
     public function testDataValue(string $name, mixed $value, int|array $expected): void
     {
         $field = new SearchableDropdownField($name, 'MyField', Team::get());

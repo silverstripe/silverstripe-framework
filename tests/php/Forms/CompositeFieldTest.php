@@ -282,6 +282,9 @@ class CompositeFieldTest extends SapphireTest
 
     public function testLink(): void
     {
+        $fieldOne = TextField::create('One');
+        $fieldTwo = TextField::create('Two');
+        $field = new CompositeField($fieldOne, $fieldTwo);
         $form = new Form(null, 'Test', new FieldList(), new FieldList());
         $form->setFormAction('foo');
         $field->setForm($form);
