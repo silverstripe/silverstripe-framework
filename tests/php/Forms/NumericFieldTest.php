@@ -7,6 +7,7 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\i18n\i18n;
 use PHPUnit\Framework\Attributes\DataProvider;
+use stdClass;
 
 class NumericFieldTest extends SapphireTest
 {
@@ -723,6 +724,35 @@ class NumericFieldTest extends SapphireTest
             $cleanedInput = $submittedValue;
         }
         $this->assertSame($cleanedInput, $field->getFormattedValue(), 'getFormattedValue()');
+    }
+
+    public static function provideSetSubmittedValueNonString(): array
+    {
+        return [
+            'array' => [
+                'value' => [1234],
+            ],
+            'object' => [
+                'value' => new stdClass(),
+            ],
+            'boolean true' => [
+                'value' => true,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSetSubmittedValueNonString')]
+    public function testSetSubmittedValueNonString(mixed $value): void
+    {
+        $expectedFormatted = $value;
+        if ($value === true) {
+            // explicit true is an exception to the rule - it gets formatted to string 1
+            $expectedFormatted = '1';
+        }
+        $field = new NumericField('Number');
+        $field->setSubmittedValue($value);
+        $this->assertSame($value, $field->dataValue());
+        $this->assertSame($expectedFormatted, $field->getFormattedValue());
     }
 
     public static function provideDataType(): array

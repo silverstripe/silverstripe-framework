@@ -136,21 +136,29 @@ class NumericField extends TextField
         // Save original value in case parse fails
         $this->originalValue = $value;
 
-        // Empty string is no-number (not 0)
-        if (mb_strlen($value ?? '') === 0) {
-            $this->value = null;
-            return $this;
+        // Handle string values (which is the normal case)
+        if (is_string($value)) {
+            // Empty string is no-number (not 0)
+            if (mb_strlen($value ?? '') === 0) {
+                $this->value = null;
+                return $this;
+            }
+
+            // Format number
+            $formatter = $this->getFormatter();
+            $parsed = 0;
+            // Note: may store literal `false` for invalid values
+            $value = $formatter->parse($value, $this->getNumberType(), $parsed);
+            // Ensure that entire string is parsed
+            if ($parsed < mb_strlen($this->originalValue ?? '')) {
+                $value = false;
+            }
         }
 
-        // Format number
-        $formatter = $this->getFormatter();
-        $parsed = 0;
-        $value = $formatter->parse($value, $this->getNumberType(), $parsed); // Note: may store literal `false` for invalid values
-        // Ensure that entire string is parsed
-        if ($parsed < mb_strlen($this->originalValue ?? '')) {
-            $value = false;
-        }
+        // Try to cast whatever the value currently is
+        // Any failures will be caught in the validation step
         $this->value = $this->cast($value);
+
         return $this;
     }
 
@@ -161,8 +169,9 @@ class NumericField extends TextField
      */
     public function getFormattedValue(): mixed
     {
-        // Show invalid value back to user in case of error
-        if ($this->value === null || $this->value === false) {
+        // Show invalid value back to user in case of error.
+        // Note that explicit "true" value should get transformed.
+        if (!is_string($this->value) && !is_numeric($this->value) && $this->value !== true) {
             return $this->originalValue;
         }
         $formatter = $this->getFormatter();
