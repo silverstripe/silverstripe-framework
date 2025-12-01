@@ -397,6 +397,9 @@ class ConfirmedPasswordField extends FormField
         $expectedChildren = $this->getRequireExistingPassword() ? 3 : 2;
         if (is_array($titles) && count($titles ?? []) === $expectedChildren) {
             foreach ($this->getChildren() as $field) {
+                if ($field instanceof DatalessField) {
+                    continue;
+                }
                 if (isset($titles[0])) {
                     $field->setTitle($titles[0]);
 
@@ -496,11 +499,11 @@ class ConfirmedPasswordField extends FormField
         }
         $this->beforeExtending('updateValidate', function (ValidationResult $result) {
             $name = $this->name;
-    
+
             $this->getPasswordField()->setValue($this->value);
             $this->getConfirmPasswordField()->setValue($this->confirmValue);
             $value = $this->getPasswordField()->getValue();
-    
+
             // both password-fields should be the same
             if ($value != $this->getConfirmPasswordField()->getValue()) {
                 $result->addFieldError(
@@ -510,7 +513,7 @@ class ConfirmedPasswordField extends FormField
                 );
                 return;
             }
-    
+
             if (!$this->canBeEmpty) {
                 // both password-fields shouldn't be empty
                 if (!$value || !$this->getConfirmPasswordField()->getValue()) {
@@ -522,7 +525,7 @@ class ConfirmedPasswordField extends FormField
                     return;
                 }
             }
-    
+
             // lengths
             $minLength = $this->getMinLength();
             $maxLength = $this->getMaxLength();
@@ -561,7 +564,7 @@ class ConfirmedPasswordField extends FormField
                     return;
                 }
             }
-    
+
             if ($this->getRequireStrongPassword()) {
                 $strongEnough = ConstraintValidator::validate(
                     $value,
@@ -579,7 +582,7 @@ class ConfirmedPasswordField extends FormField
                     return;
                 }
             }
-    
+
             // Check if current password is valid
             if (!empty($value) && $this->getRequireExistingPassword()) {
                 if (!$this->currentPasswordValue) {
@@ -593,7 +596,7 @@ class ConfirmedPasswordField extends FormField
                     );
                     return;
                 }
-    
+
                 // Check this password is valid for the current user
                 $member = Security::getCurrentUser();
                 if (!$member) {
@@ -607,7 +610,7 @@ class ConfirmedPasswordField extends FormField
                     );
                     return;
                 }
-    
+
                 // With a valid user and password, check the password is correct
                 $authenticators = Security::singleton()->getApplicableAuthenticators(Authenticator::CHECK_PASSWORD);
                 foreach ($authenticators as $authenticator) {

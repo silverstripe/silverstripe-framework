@@ -326,19 +326,38 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         }
     }
 
-    public function testSetChildrenTitles()
+    public static function provideSetChildrenTitles(): array
+    {
+        return [
+            [true],
+            [false],
+        ];
+    }
+
+    #[DataProvider('provideSetChildrenTitles')]
+    public function testSetChildrenTitles(bool $requireExistingPassword)
     {
         $field = new ConfirmedPasswordField('Test');
-        $field->setRequireExistingPassword(true);
-        $field->setChildrenTitles([
-            'Current Password',
-            'Password',
-            'Confirm Password',
-        ]);
+        $field->setRequireExistingPassword($requireExistingPassword);
+        $setValues = [
+            'New Password field',
+            'Confirm Password field',
+        ];
 
-        $this->assertSame('Current Password', $field->getChildren()->shift()->Title());
-        $this->assertSame('Password', $field->getChildren()->shift()->Title());
-        $this->assertSame('Confirm Password', $field->getChildren()->shift()->Title());
+        if ($requireExistingPassword) {
+            array_unshift($setValues, 'Original Password field');
+        }
+
+        $field->setChildrenTitles($setValues);
+
+        $children = $field->getChildren();
+        $children->removeByName('Test[_PasswordStrength]');
+
+        if ($requireExistingPassword) {
+            $this->assertSame('Original Password field', $children->shift()->Title());
+        }
+        $this->assertSame('New Password field', $children->shift()->Title());
+        $this->assertSame('Confirm Password field', $children->shift()->Title());
     }
 
     public function testPerformReadonlyTransformation()
@@ -604,7 +623,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest
         $expectedContentType = $expectedBody ? 'application/json' : $defaultContentType;
         $this->assertSame($expectedContentType, $response->getHeader('Content-Type'));
     }
-    
+
     public static function provideDataAttributes(): array
     {
         return [
