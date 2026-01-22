@@ -124,6 +124,8 @@ class CmsUiContext implements Context
     }
 
     /**
+     * Asserts that a toast exists with certain actions.
+     * Using $not will assert the toast does not exist at all, ignoring the actions.
      * @Then /^I should (not |)see a "(.+)" (\w+) toast with these actions: (.+)$/
      */
     public function iShouldSeeAToastWithAction($not, $notice, $type, $actions)
@@ -139,6 +141,16 @@ class CmsUiContext implements Context
                 );
             }
         }
+    }
+
+    /**
+     * Assert thats a toast exists, but does not contain any actions.
+     * @Then /^I should see a "(.+)" (\w+) toast with no actions$/
+     */
+    public function iShouldSeeAToastWithoutAction($notice, $type)
+    {
+        $this->iShouldSeeAToast('', $notice, $type);
+        $this->getMainContext()->assertElementNotOnPage(sprintf('.toast--%s .toast__action', $type));
     }
 
     /**
