@@ -300,6 +300,7 @@ class FieldList extends ArrayList
             }
 
             if (($childName == $fieldName) && (!$dataFieldOnly || $child->hasData())) {
+                $child->setContainerFieldList(null);
                 array_splice($this->items, $i ?? 0, 1);
                 break;
             } elseif ($child instanceof CompositeField) {
@@ -326,6 +327,8 @@ class FieldList extends ArrayList
         foreach ($this as $i => $field) {
             if ($field->getName() == $fieldName && (!$dataFieldOnly || $field->hasData())) {
                 $this->items[$i] = $newField;
+                $newField->setContainerFieldList($this);
+                $field->setContainerFieldList(null);
                 return true;
             } elseif ($field instanceof CompositeField) {
                 if ($field->replaceField($fieldName, $newField)) {
@@ -495,12 +498,12 @@ class FieldList extends ArrayList
     public function insertBefore(string $name, FormField $item, bool $appendIfMissing = true): ?FormField
     {
         $this->onBeforeInsert($item);
-        $item->setContainerFieldList($this);
 
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
                 array_splice($this->items, $i ?? 0, 0, [$item]);
+                $item->setContainerFieldList($this);
                 return $item;
             } elseif ($child instanceof CompositeField) {
                 $ret = $child->insertBefore($name, $item, false);
@@ -527,12 +530,12 @@ class FieldList extends ArrayList
     public function insertAfter(string $name, FormField $item, bool $appendIfMissing = true): ?FormField
     {
         $this->onBeforeInsert($item);
-        $item->setContainerFieldList($this);
 
         $i = 0;
         foreach ($this as $child) {
             if ($name == $child->getName() || $name == $child->id) {
                 array_splice($this->items, $i+1, 0, [$item]);
+                $item->setContainerFieldList($this);
                 return $item;
             } elseif ($child instanceof CompositeField) {
                 $ret = $child->insertAfter($name, $item, false);
@@ -563,6 +566,20 @@ class FieldList extends ArrayList
         $item->setContainerFieldList($this);
 
         return parent::push($item);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @return FormField|null
+     */
+    public function shift()
+    {
+        $removedItem = parent::shift();
+        if ($removedItem) {
+            $removedItem->setContainerFieldList(null);
+        }
+        return $removedItem;
     }
 
     /**

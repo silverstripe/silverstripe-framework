@@ -161,7 +161,7 @@ class FormField extends RequestHandler implements FieldValidationInterface
     /**
      * Stores a reference to the FieldList that contains this object.
      *
-     * @var FieldList
+     * @var null|FieldList
      */
     protected $containerFieldList;
 
@@ -1316,7 +1316,7 @@ class FormField extends RequestHandler implements FieldValidationInterface
     /**
      * Set the FieldList that contains this field.
      *
-     * @param FieldList $containerFieldList
+     * @param null|FieldList $containerFieldList
      * @return $this
      */
     public function setContainerFieldList($containerFieldList)
@@ -1328,7 +1328,7 @@ class FormField extends RequestHandler implements FieldValidationInterface
     /**
      * Get the FieldList that contains this field.
      *
-     * @return FieldList
+     * @return null|FieldList
      */
     public function getContainerFieldList()
     {

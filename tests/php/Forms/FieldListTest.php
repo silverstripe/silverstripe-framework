@@ -1209,4 +1209,85 @@ class FieldListTest extends SapphireTest
         $fieldlist->setContainerField(null);
         $this->assertNull($fieldlist->getContainerField());
     }
+
+    /**
+     * When adding a field to a FieldList, the container fieldlist should always be set.
+     * This is true regardless of how it gets added.
+     */
+    public function testSettingContainerFieldList(): void
+    {
+        $fieldList = new FieldList();
+        $fieldList->add(new TabSet('Root'));
+        $expected = $fieldList;
+
+        // add()
+        $field = new TextField('add');
+        $fieldList->add($field);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: add()');
+
+        // push()
+        $field = new TextField('push');
+        $fieldList->push($field);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: push()');
+
+        // unshift()
+        $field = new TextField('unshift');
+        $fieldList->unshift($field);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: unshift()');
+
+        // insertBefore()
+        $field = new TextField('insertBeforeA');
+        $fieldList->add(new TextField('insertBeforeB'));
+        $fieldList->insertBefore('insertBeforeB', $field);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: insertBefore()');
+
+        // insertAfter()
+        $field = new TextField('insertAfterA');
+        $fieldList->add(new TextField('insertAfterB'));
+        $fieldList->insertAfter('insertAfterB', $field);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: insertAfter()');
+
+        // replaceField()
+        $oldField = new TextField('replaceField');
+        $fieldList->add($oldField);
+        $field = new TextField('replaceField');
+        $fieldList->replaceField('replaceField', $field);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: replaceField()');
+        $this->assertNull($oldField->getContainerFieldList(), 'replaceField() should reset field list for removed field');
+
+        // addFieldToTab()
+        $field = new TextField('addFieldToTab');
+        $fieldList->addFieldToTab('Root.Main', $field);
+        $expected = $fieldList->findTab('Root.Main')->FieldList();
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: addFieldToTab()');
+
+        // addFieldsToTab()
+        $field = new TextField('addFieldsToTab');
+        $fieldList->addFieldsToTab('Root.Main', [$field]);
+        $this->assertSame($expected, $field->getContainerFieldList(), 'method called: addFieldsToTab()');
+
+        // shift()
+        $field = new TextField('shift');
+        $fieldList->unshift($field);
+        $fieldList->shift();
+        $this->assertNull($field->getContainerFieldList(), 'shift() should reset field list for removed field');
+
+        // removeFieldFromTab()
+        $field = new TextField('removeFieldFromTab');
+        $fieldList->addFieldToTab('Root.Main', $field);
+        $fieldList->removeFieldFromTab('Root.Main', 'removeFieldFromTab');
+        $this->assertNull($field->getContainerFieldList(), 'removeFieldFromTab() should reset field list for removed field');
+
+        // removeFieldsFromTab()
+        $field = new TextField('removeFieldsFromTab');
+        $fieldList->addFieldToTab('Root.Main', $field);
+        $fieldList->removeFieldsFromTab('Root.Main', ['removeFieldsFromTab']);
+        $this->assertNull($field->getContainerFieldList(), 'removeFieldsFromTab() should reset field list for removed field');
+
+        // removeByName()
+        $field = new TextField('removeByName');
+        $fieldList->add($field);
+        $fieldList->removeByName('removeByName');
+        $this->assertNull($field->getContainerFieldList(), 'removeByName() should reset field list for removed field');
+    }
 }
