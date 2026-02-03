@@ -99,9 +99,15 @@ nl:
     CURRENT_PASSWORD_MISSING: 'Voer je huidige wachtwoord in.'
     LOGGED_IN_ERROR: 'Je moet ingelogd zijn om je wachtwoord te kunnen veranderen!'
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
+    MEDIUM: Gemiddeld
     RANDOM_IF_EMPTY: 'Als je dit veld leeg laat, wordt er automatisch een willekeurig wachtwoord gegenereerd.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
+    STRENGTH: 'Wachtwoordsterkte: {strengthLabel}'
+    STRONG: Sterk
     VALIDATIONSTRONGPASSWORD: 'Het wachtwoord is te eenvoudig. Gebruik een sterker wachtwoord.'
+    VERYSTRONG: 'Zeer sterk'
+    VERYWEAK: 'Zeer zwak'
+    WEAK: Zwak
   SilverStripe\Forms\DateField:
     NOTSET: 'niet ingesteld'
     TODAY: vandaag
@@ -136,6 +142,7 @@ nl:
     TABMAIN: Hoofdgedeelte
   SilverStripe\Forms\GridField\GridField:
     Add: '{name} toevoegen'
+    AddNew: 'Toevoegen {name}'
     CSVEXPORT: 'Exporteer naar CSV'
     CSVIMPORT: 'CSV importeren'
     FilterBy: Filteren
@@ -182,7 +189,13 @@ nl:
     UnlinkSelfFailure: 'Je kan jezelf niet verwijderen van deze groep, omdat je dan geen admin-rechten meer hebt.'
   SilverStripe\Forms\GridField\GridFieldImportButton:
     CLOSE_MODAL: Sluiten
+  SilverStripe\Forms\GridField\GridFieldLevelUp:
+    NavigateUp: 'Naar bovenliggend niveau'
+  SilverStripe\Forms\GridField\GridFieldLevelup:
+    NavigateUp: 'Naar bovenliggend niveau'
   SilverStripe\Forms\GridField\GridFieldPaginator:
+    First: Eerste
+    Last: Laatste
     Next: Volgende
     OF: van
     Page: Pagina
@@ -228,6 +241,7 @@ nl:
       one: 'Data object'
       other: '{count} Data objecten'
     SINGULARNAME: 'Data object'
+    VALUE_SET_FOR_GENERATED_COLUMN: 'Kan geen waarde instellen voor gegenereerd veld "{field}"'
     many_many_FileTracking: 'Bestanden volgen'
     many_many_LinkTracking: 'Links volgen'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -415,14 +429,27 @@ nl:
     db_AccountResetExpired: 'Het opnieuw instellen van het account is verlopen'
     db_BlogProfileSummary: 'Blogprofiel samenvatting'
     db_Email: E-mail
+    db_FailedLoginCount: 'Mislukte inlogpogingen'
     db_FirstName: Voornaam
+    db_HasSkippedMFARegistration: 'MFA-registration overgeslagen'
+    db_IsExpired: 'Is verlopen'
     db_LastSynced: 'Laatst gesynchroniseerd'
     db_Locale: 'Interface taal'
     db_LockedOutUntil: 'Gesloten tot'
     db_Password: Wachtwoord
+    db_PasswordEncryption: 'Wachtwoord encryptie'
     db_PasswordExpiry: 'Wachtwoord vervaldatum'
     db_Surname: Achternaam
+    db_TempIDExpired: 'TempID verlopen'
+    db_Username: Gebruikersnaam
+    has_many_LoggedPasswords: 'Gelogde wachtwoorden'
+    has_many_LoginSessions: Inlogsessies
+    has_many_RegisteredMFAMethods: 'Geregistreerde MFA-methodes'
+    has_many_RememberLoginHashes: 'Onthouden login hashes'
+    has_one_AFile: 'Een bestand'
+    has_one_AImage: 'Een afbeelding'
     has_one_BlogProfileImage: 'Blogprofiel afbeelding'
+    has_one_FavouritePage: 'Favoriete pagina'
     many_many_SiteTreeContentReview: 'Sitetree content review'
   SilverStripe\Security\MemberAuthenticator\CMSMemberLoginForm:
     AUTHENTICATORNAME: Inlogformulier
@@ -441,6 +468,7 @@ nl:
       other: '{count} Gebruikerswachtwoorden'
     SINGULARNAME: Gebruikerswachtwoord
     db_Password: Wachtwoord
+    db_PasswordEncryption: 'Wachtwoord encryptie'
     has_one_Member: Lid
   SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Maak a.u.b. het wachtwoord sterker door enkele van de volgende karakters te gebruiken: {chars}'
@@ -491,6 +519,7 @@ nl:
       one: 'Een versleutelde login'
       other: '{count} loginsleutels'
     SINGULARNAME: Loginsleutel
+    db_ExpiryDate: Verloopdatum
     has_one_LoginSession: inlogsessie
     has_one_Member: Lid
   SilverStripe\Security\Security:

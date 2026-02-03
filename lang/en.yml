@@ -197,10 +197,13 @@ en:
     NavigateUp: 'Navigate up a level'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     First: First
+    InputTitle: 'Current page, currently {current} of {total}'
     Last: Last
     Next: Next
     OF: of
     Page: Page
+    Pagination: Pagination
+    PaginationForTitle: 'Pagination for {title}'
     Previous: Previous
     View: View
   SilverStripe\Forms\GridField\GridFieldViewButton:
