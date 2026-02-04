@@ -1336,7 +1336,7 @@ class IntlLocales implements Locales, Resettable
         'tm' => 'Turkmenistan',
         'tn' => 'Tunisia',
         'to' => 'Tonga',
-        'tr' => 'Turkey',
+        'tr' => 'Republic of Türkiye',
         'tt' => 'Trinidad and Tobago',
         'tv' => 'Tuvalu',
         'tw' => 'Taiwan',
