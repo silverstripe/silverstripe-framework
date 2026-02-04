@@ -1356,6 +1356,7 @@ class IntlLocales implements Locales, Resettable
         'vu' => 'Vanuatu',
         'wf' => 'Wallis and Futuna',
         'ws' => 'Samoa',
+        'xk' => 'Republic of Kosovo',
         'ye' => 'Yemen',
         'yt' => 'Mayotte',
         'za' => 'South Africa',
