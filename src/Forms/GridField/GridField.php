@@ -559,7 +559,6 @@ class GridField extends FormField
         $columns = $this->getColumns();
 
         $list = $this->getManipulatedList();
-        $total = null; // can be populated by GridFieldPaginator
 
         $content = [
             'before' => '',
@@ -583,9 +582,6 @@ class GridField extends FormField
                         $content[$fragmentKey] .= $fragmentValue . "\n";
                     }
                 }
-            }
-            if ($item instanceof GridFieldPaginator) {
-                $total = $item->getTotalItems();
             }
             if ($sudoModeTransformation) {
                 // Modify the GridFieldViewButton on any GridFields so that it doesn't suffix the view URL with 'view'
@@ -676,10 +672,9 @@ class GridField extends FormField
             }
         }
 
-        if ($total === null) {
-            $total = count($list ?? []);
-        }
-
+        // Note we can't rely on GridFieldPaginator to get the total, because
+        // it may get that count before other components edit the list.
+        $total = count($list ?? []);
         if ($total > 0) {
             $rows = [];
 
