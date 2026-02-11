@@ -36,6 +36,43 @@ class DatabaseTest extends SapphireTest
         );
 
         static::resetDBSchema(true);
+
+        // Clean up _obsolete_ column left over from the direct call above
+        $schema->clearCachedFieldlist();
+        if (array_key_exists('_obsolete_MyField', $schema->fieldList('DatabaseTest_MyObject'))) {
+            DB::query('ALTER TABLE "DatabaseTest_MyObject" DROP COLUMN "_obsolete_MyField"');
+            $schema->clearCachedFieldlist();
+        }
+
+        // Transactional: dontRequireField inside schemaUpdate() on existing field
+        $this->assertArrayHasKey('MyField', $schema->fieldList('DatabaseTest_MyObject'));
+
+        DB::quiet();
+        $schema->schemaUpdate(function () use ($schema) {
+            $schema->dontRequireField('DatabaseTest_MyObject', 'MyField');
+        });
+
+        $schema->clearCachedFieldlist();
+        $fields = $schema->fieldList('DatabaseTest_MyObject');
+        $this->assertArrayNotHasKey(
+            'MyField',
+            $fields,
+            'Field is renamed inside schemaUpdate() transaction'
+        );
+        $this->assertArrayHasKey(
+            '_obsolete_MyField',
+            $fields,
+            'Field renamed to _obsolete_<fieldname> inside schemaUpdate() transaction'
+        );
+
+        static::resetDBSchema(true);
+
+        // Transactional: dontRequireField on non-existent table should silently skip
+        DB::quiet();
+        $schema->schemaUpdate(function () use ($schema) {
+            $schema->dontRequireField('NonExistent_Table', 'SomeField');
+        });
+        $this->assertTrue(true, 'dontRequireField on non-existent table does not error inside schemaUpdate()');
     }
 
     public function testRenameField()
@@ -58,6 +95,37 @@ class DatabaseTest extends SapphireTest
         );
 
         static::resetDBSchema(true);
+
+        // Transactional: dontRequireTable on non-existent table should silently skip
+        DB::quiet();
+        $schema->schemaUpdate(function () use ($schema) {
+            $schema->dontRequireTable('NonExistent_Table');
+        });
+        $this->assertTrue(true, 'dontRequireTable on non-existent table does not error inside schemaUpdate()');
+
+        // Transactional: dontRequireTable on existing table should rename it
+        DB::query(
+            'CREATE TABLE "DatabaseTest_Disposable"'
+            . ' ("ID" int not null auto_increment, primary key ("ID"))'
+        );
+        $this->assertTrue($schema->hasTable('DatabaseTest_Disposable'));
+
+        DB::quiet();
+        $schema->schemaUpdate(function () use ($schema) {
+            $schema->dontRequireTable('DatabaseTest_Disposable');
+        });
+
+        $this->assertFalse(
+            $schema->hasTable('DatabaseTest_Disposable'),
+            'Table is removed after transactional dontRequireTable()'
+        );
+        $this->assertTrue(
+            $schema->hasTable('_obsolete_DatabaseTest_Disposable'),
+            'Table is renamed to _obsolete_* after transactional dontRequireTable()'
+        );
+
+        // Clean up
+        DB::query('DROP TABLE IF EXISTS "_obsolete_DatabaseTest_Disposable"');
     }
 
     public function testMySQLCreateTableOptions()

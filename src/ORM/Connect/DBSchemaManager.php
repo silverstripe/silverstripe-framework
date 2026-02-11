@@ -198,6 +198,16 @@ abstract class DBSchemaManager
                             $changes['alteredOptions'],
                             $advancedOptions
                         );
+                        // Process any queued field renames for this table
+                        if (!empty($changes['renamedFields'])) {
+                            foreach ($changes['renamedFields'] as $oldName => $newName) {
+                                $this->renameField($tableName, $oldName, $newName);
+                            }
+                        }
+                        break;
+
+                    case 'rename':
+                        $this->renameTable($tableName, $changes['newName']);
                         break;
                 }
             }
@@ -323,6 +333,33 @@ abstract class DBSchemaManager
     }
 
     /**
+     * Instruct the schema manager to record a field rename to later execute
+     *
+     * @param string $table Name of the table containing the field
+     * @param string $oldName Current name of the field
+     * @param string $newName New name for the field
+     */
+    public function transRenameField($table, $oldName, $newName)
+    {
+        $this->transInitTable($table);
+        $this->schemaUpdateTransaction[$table]['renamedFields'][$oldName] = $newName;
+    }
+
+    /**
+     * Instruct the schema manager to record a table rename to later execute
+     *
+     * @param string $oldTableName The current table name
+     * @param string $newTableName The new table name
+     */
+    public function transRenameTable($oldTableName, $newTableName)
+    {
+        $this->schemaUpdateTransaction[$oldTableName] = [
+            'command' => 'rename',
+            'newName' => $newTableName,
+        ];
+    }
+
+    /**
      * Handler for the other transXXX methods - mark the given table as being altered
      * if it doesn't already exist
      *
@@ -337,7 +374,8 @@ abstract class DBSchemaManager
                 'newIndexes' => [],
                 'alteredFields' => [],
                 'alteredIndexes' => [],
-                'alteredOptions' => ''
+                'alteredOptions' => '',
+                'renamedFields' => [],
             ];
         }
     }
@@ -479,7 +517,13 @@ abstract class DBSchemaManager
             $renameTo = $prefix . $suffix;
         }
         $renameFrom = $this->tableList[strtolower($table)];
-        $this->renameTable($renameFrom, $renameTo);
+        // Use transactional rename when inside a schemaUpdate() call,
+        // otherwise fall back to direct execution
+        if ($this->schemaUpdateTransaction !== null) {
+            $this->transRenameTable($renameFrom, $renameTo);
+        } else {
+            $this->renameTable($renameFrom, $renameTo);
+        }
         $this->alterationMessage("Table $table: renamed to $renameTo", "obsolete");
     }
 
@@ -844,6 +888,10 @@ abstract class DBSchemaManager
      */
     public function dontRequireField($table, $fieldName)
     {
+        // During a schema update, if the table doesn't exist yet there's nothing to rename
+        if ($this->schemaIsUpdating && !isset($this->tableList[strtolower($table)])) {
+            return;
+        }
         $fieldList = $this->fieldList($table);
         if (array_key_exists($fieldName, $fieldList ?? [])) {
             $suffix = '';
@@ -852,9 +900,16 @@ abstract class DBSchemaManager
                         ? ((int)$suffix + 1)
                         : 2;
             }
-            $this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
+            $newName = "_obsolete_{$fieldName}$suffix";
+            // Use transactional rename when inside a schemaUpdate() call,
+            // otherwise fall back to direct execution
+            if ($this->schemaUpdateTransaction !== null) {
+                $this->transRenameField($table, $fieldName, $newName);
+            } else {
+                $this->renameField($table, $fieldName, $newName);
+            }
             $this->alterationMessage(
-                "Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix",
+                "Field $table.$fieldName: renamed to $table.$newName",
                 "obsolete"
             );
         }
