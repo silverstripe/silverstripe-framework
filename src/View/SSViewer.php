@@ -394,7 +394,7 @@ class SSViewer
      */
     public static function getBaseTag(bool $isXhtml = false): string
     {
-        if (!static::config()->get('enable_base_tag')) {
+        if (!Deprecation::withSuppressedNotice(fn() => static::config()->get('enable_base_tag'))) {
             return '';
         }
 
