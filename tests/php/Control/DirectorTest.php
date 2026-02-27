@@ -800,17 +800,59 @@ class DirectorTest extends SapphireTest
 
         // nothing available
         $headers = [
-            'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
+            'HTTP_X_FORWARDED_PROTOCOL',
+            'HTTP_X_FORWARDED_PROTO',
+            'HTTPS',
+            'SSL',
         ];
         foreach ($headers as $header) {
             if (isset($_SERVER[$header])) {
-                unset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']);
+                unset($_SERVER[$header]);
             }
         }
 
         $this->assertEquals(
             'no',
             Director::test('TestController/returnIsSSL')->getBody()
+        );
+
+        $this->assertEquals(
+            'yes',
+            Director::test(
+                'TestController/returnIsSSL',
+                null,
+                null,
+                null,
+                null,
+                ['X-Forwarded-Proto' => 'https']
+            )->getBody()
+        );
+
+        $this->assertEquals(
+            'no',
+            Director::test(
+                'TestController/returnIsSSL',
+                null,
+                null,
+                null,
+                null,
+                ['X-Forwarded-Proto' => 'http']
+            )->getBody()
+        );
+
+        $this->assertEquals(
+            'yes',
+            Director::test(
+                'TestController/returnIsSSL',
+                null,
+                null,
+                null,
+                null,
+                [
+                    'X-Forwarded-Proto' => 'https',
+                    'X-Forwarded-Protocol' => 'http',
+                ]
+            )->getBody()
         );
 
         $this->assertEquals(

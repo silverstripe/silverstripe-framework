@@ -87,12 +87,12 @@ class HTTPTest extends FunctionalTest
         $response = new HTTPResponse($body, 200);
         HTTPCacheControlMiddleware::singleton()
             ->setMaxAge(30)
-            ->setVary('X-Requested-With, X-Forwarded-Protocol');
+            ->setVary('X-Requested-With, X-Forwarded-Proto');
         $this->addCacheHeaders($response);
 
         // Vary set properly
         $v = $response->getHeader('Vary');
-        $this->assertStringContainsString("X-Forwarded-Protocol", $v);
+        $this->assertStringContainsString("X-Forwarded-Proto", $v);
         $this->assertStringContainsString("X-Requested-With", $v);
         $this->assertStringNotContainsString("Cookie", $v);
         $this->assertStringNotContainsString("User-Agent", $v);

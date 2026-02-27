@@ -18,6 +18,29 @@ class HTTPCacheControlMiddlewareTest extends SapphireTest
         HTTPCacheControlMiddleware::reset();
     }
 
+    public function testDefaultVaryIsXForwardedProto()
+    {
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+        $vary = $response->getHeader('Vary');
+        $this->assertNotEmpty($vary);
+        $this->assertStringContainsString('X-Forwarded-Proto', $vary);
+        $this->assertStringNotContainsString('X-Forwarded-Protocol', $vary);
+    }
+
+    public function testDefaultVaryCanBeDisabledViaConfig()
+    {
+        HTTPCacheControlMiddleware::config()->set('defaultVary', []);
+        HTTPCacheControlMiddleware::reset();
+
+        $cc = HTTPCacheControlMiddleware::singleton();
+        $response = new HTTPResponse();
+        $cc->applyToResponse($response);
+
+        $this->assertEmpty($response->getHeader('Vary'));
+    }
+
     public function provideCacheStates()
     {
         return [

@@ -43,8 +43,8 @@ class TrustedProxyMiddleware implements HTTPMiddleware
      * @var array
      */
     private $proxySchemeHeaders = [
-        'X-Forwarded-Protocol',
         'X-Forwarded-Proto',
+        'X-Forwarded-Protocol',
     ];
 
     /**
