@@ -327,7 +327,7 @@ class FileSessionHandler extends AbstractSessionHandler
     /**
      * Check if a session file is expired.
      *
-     * This method is necessary becuse garbage collection may not have run yet.
+     * This method is necessary because garbage collection may not have run yet.
      *
      * @throws RuntimeException if the modified time of the file can't be read
      */

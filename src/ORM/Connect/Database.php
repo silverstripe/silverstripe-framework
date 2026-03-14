@@ -378,7 +378,7 @@ abstract class Database
      * and the values are map containing 'command' and 'fields'.  Command should be 'insert' or 'update',
      * and fields should be a map of field names to field values, NOT including quotes.
      *
-     * The field values could also be in paramaterised format, such as
+     * The field values could also be in parameterised format, such as
      * array('MAX(?,?)' => array(42, 69)), allowing the use of raw SQL values such as
      * array('NOW()' => array()).
      *

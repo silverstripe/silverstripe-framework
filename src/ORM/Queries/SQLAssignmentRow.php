@@ -41,7 +41,7 @@ class SQLAssignmentRow
 
     /**
      * Given a key / value pair, extract the predicate and any potential parameters
-     * in a format suitable for storing internally as a list of paramaterised conditions.
+     * in a format suitable for storing internally as a list of parameterised conditions.
      *
      * @param mixed $value Either a literal field value, or an array with
      * placeholder => parameter(s) as a pair

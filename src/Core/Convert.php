@@ -188,7 +188,7 @@ class Convert
 
     /**
      * Safely encodes a SQL symbolic identifier (or list of identifiers), such as a database,
-     * table, or column name. Supports encoding of multi identfiers separated by
+     * table, or column name. Supports encoding of multi identifiers separated by
      * a delimiter (e.g. ".")
      *
      * @param string|array $identifier The identifier to escape. E.g. 'SiteTree.Title' or list of identifiers

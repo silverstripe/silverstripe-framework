@@ -132,7 +132,7 @@ class Hierarchy extends Extension
 
     /**
      * The default method called on the Hierarchy class to get children
-     * This can be overriden on classes that use the Hierarchy extension, though it should only be
+     * This can be overridden on classes that use the Hierarchy extension, though it should only be
      * defined on the base class that has the hierarchy extension applied to it. For instance:
      * - MyBaseClass has the Hierarchy extension applied
      * - MySubClass extends MyBaseClass

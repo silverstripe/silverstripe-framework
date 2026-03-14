@@ -57,7 +57,7 @@ class SudoModePasswordField extends PasswordField
      * Set whether the field should be collapsed when initially rendered
      *
      * When collapsed the rendered component will include a way to expand the field
-     * When not collapsed the rendered component will not be collapsable
+     * When not collapsed the rendered component will not be collapsible
      */
     public function setInitiallyCollapsed(bool $initiallyCollapsed): static
     {

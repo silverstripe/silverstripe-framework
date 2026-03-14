@@ -482,7 +482,7 @@ class ModelData
             }
 
             // Return null early if there's no backing for this field
-            // i.e. no poperty, no method, etc - it just doesn't exist on this model.
+            // i.e. no property, no method, etc - it just doesn't exist on this model.
             if (!$hasObj && $value === null) {
                 return null;
             }

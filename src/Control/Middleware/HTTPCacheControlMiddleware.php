@@ -219,8 +219,8 @@ class HTTPCacheControlMiddleware implements HTTPMiddleware, Resettable
      */
     public function addVary($vary)
     {
-        $combied = $this->combineVary($this->getVary(), $vary);
-        $this->setVary($combied);
+        $combined = $this->combineVary($this->getVary(), $vary);
+        $this->setVary($combined);
         return $this;
     }
 

@@ -229,7 +229,7 @@ class NumericField extends TextField
             // e.g. 1.00 will be cast to 1, 1.20 will be cast to 1
             $value = (int) $value;
         } else {
-            // Otherwise, cast to float. This will remove any trailing deciaml zeros.
+            // Otherwise, cast to float. This will remove any trailing decimal zeros.
             // e.g. 1.00 will be cast to 1, 1.20 will be cast to 1.2
             $value = (float) $value;
         }

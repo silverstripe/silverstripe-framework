@@ -125,7 +125,7 @@ class DBText extends DBString
             return '';
         }
 
-        // If no $elipsis string is provided, use the default one.
+        // If no $ellipsis string is provided, use the default one.
         if ($add === false) {
             $add = $this->defaultEllipsis();
         }

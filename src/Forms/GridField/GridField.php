@@ -145,10 +145,10 @@ class GridField extends FormField
 
     /**
      * Intentionally not set to FormField::SCHEMA_DATA_TYPE_STRUCTURAL even though there is no corresponding
-     * react component because we want a hard exception thrown for devleopers to see rather than have
+     * react component because we want a hard exception thrown for developers to see rather than have
      * them wonder why the field is not rendering.
      *
-     * Marked as @interal to allow change in a minor release as a react GridField may be implemented in the future
+     * Marked as @internal to allow change in a minor release as a react GridField may be implemented in the future
      *
      * @internal
      */
@@ -555,7 +555,7 @@ class GridField extends FormField
                         $sudoModeTransformation = true;
                     }
                 } else {
-                    // explicity set to false to update state for AJAX requests that refresh the gridfield after activating sudo mode
+                    // explicitly set to false to update state for AJAX requests that refresh the gridfield after activating sudo mode
                     $this->setReadonly(false);
                 }
             }

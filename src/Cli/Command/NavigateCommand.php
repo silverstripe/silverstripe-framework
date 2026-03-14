@@ -25,7 +25,7 @@ class NavigateCommand extends Command
         $app = new HTTPApplication(Injector::inst()->get(Kernel::class));
         $request = CLIRequestBuilder::createFromInput($input);
 
-        // Handle request and output resonse body
+        // Handle request and output response body
         $response = $app->handle($request);
         $output->writeln($response->getBody() ?? '', OutputInterface::OUTPUT_RAW);
 

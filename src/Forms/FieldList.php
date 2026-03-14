@@ -141,7 +141,7 @@ class FieldList extends ArrayList
         // Recursively add managed fields.
         // Note that we explicitly don't cache these fields because the field manager
         // is allowed to swap out field implementations for the same named field
-        // inbetween calls to this method.
+        // between calls to this method.
         $addDataField = function (FormField $field) use (&$dataFields, &$addDataField) {
             if (!is_a($field, ChildFieldManager::class)) {
                 return;

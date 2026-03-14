@@ -127,7 +127,7 @@ class Sake extends Application
     public function all(?string $namespace = null): array
     {
         $commands = parent::all($namespace);
-        // If number of tasks is greater than the limit, hide them from the main comands list.
+        // If number of tasks is greater than the limit, hide them from the main commands list.
         $maxTasks = Sake::config()->get('max_tasks_to_display');
         if (!$this->ignoreTaskLimit && $maxTasks > 0 && $namespace === null) {
             $tasks = [];
@@ -281,9 +281,9 @@ class Sake extends Application
     {
         $command = new Command('flush');
         $command->setDescription('Flush the cache (or use the <info>--flush</info> flag with any command)');
-        $command->setCode(function (InputInterface $input, OutputInterface $ouput) {
+        $command->setCode(function (InputInterface $input, OutputInterface $output) {
             // Actual flushing happens in `run()` when booting the kernel, so there's nothing to do here.
-            $ouput->writeln('Cache flushed.');
+            $output->writeln('Cache flushed.');
             return Command::SUCCESS;
         });
         return $command;

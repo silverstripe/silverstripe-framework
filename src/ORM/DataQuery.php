@@ -507,7 +507,7 @@ class DataQuery implements Resettable
      * Return this query's SQL
      *
      * @param array $parameters Out variable for parameters required for this query
-     * @return string The resulting SQL query (may be paramaterised)
+     * @return string The resulting SQL query (may be parameterised)
      */
     public function sql(&$parameters = [])
     {
@@ -847,7 +847,7 @@ class DataQuery implements Resettable
      * won't expand multiple arguments as SQLSelect does.
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
-     * paramaterised queries
+     * parameterised queries
      * @return $this
      */
     public function where($filter)
@@ -865,7 +865,7 @@ class DataQuery implements Resettable
      * won't expand multiple method arguments as SQLSelect does.
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
-     * paramaterised queries
+     * parameterised queries
      * @return $this
      */
     public function whereAny($filter)

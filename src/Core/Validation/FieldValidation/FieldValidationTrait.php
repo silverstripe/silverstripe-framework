@@ -27,9 +27,9 @@ trait FieldValidationTrait
      * b) Will create a MyFieldValidator and pass the name, value, and pass additional args, where each null values
      *    will be passed as null, and non-null values will call a method on the field e.g. will pass null for the first
      *    additional arg and call $field->getSomething() to get a value for the second additional arg
-     *    Keys are used to speicify the arg name, which is done to prevents duplicate
+     *    Keys are used to specify the arg name, which is done to prevents duplicate
      *    args being add to config when a subclass defines the same FieldValidator as a parent class.
-     *    Note that keys are not named args, they are simply arbitary keys - though best practice is
+     *    Note that keys are not named args, they are simply arbitrary keys - though best practice is
      *    for the keys to match constructor argument names.
      * c) Will disable a previously set MyFieldValidator. This is useful to disable a FieldValidator that was set
      *    on a parent class

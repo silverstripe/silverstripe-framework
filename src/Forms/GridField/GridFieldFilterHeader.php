@@ -180,7 +180,7 @@ class GridFieldFilterHeader extends AbstractGridFieldComponent implements GridFi
             $summaryFields = array_keys($singleton->summaryFields());
             sort($searchableFields);
             sort($summaryFields);
-            // searchable_fields has been explictily defined i.e. searchableFields() is not falling back to summary_fields
+            // searchable_fields has been explicitly defined i.e. searchableFields() is not falling back to summary_fields
             if (!empty($searchableFields) && ($searchableFields !== $summaryFields)) {
                 return true;
             }

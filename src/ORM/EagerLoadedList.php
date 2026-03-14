@@ -398,7 +398,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
      */
     public function offsetSet(mixed $key, mixed $value): void
     {
-        // Throw exception for compatability with DataList
+        // Throw exception for compatibility with DataList
         throw new BadMethodCallException("Can't alter items in an EagerLoadedList using array-access");
     }
 
@@ -408,7 +408,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
      */
     public function offsetUnset(mixed $key): void
     {
-        // Throw exception for compatability with DataList
+        // Throw exception for compatibility with DataList
         throw new BadMethodCallException("Can't alter items in an EagerLoadedList using array-access");
     }
 
@@ -667,7 +667,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
      * object or array.
      *
      * @param string $key They key for the value to be extracted. Implied mixed type
-     * for compatability with DataList.
+     * for compatibility with DataList.
      */
     private function extractValue(array $row, $key): mixed
     {
@@ -835,7 +835,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
             }
         }
 
-        // If $columnName is equal to $col it means that it was orginally raw sql or otherwise invalid.
+        // If $columnName is equal to $col it means that it was originally raw sql or otherwise invalid.
         if ($columnName === $column) {
             throw new InvalidArgumentException("Invalid sort column $column");
         }
@@ -866,7 +866,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
             throw new InvalidArgumentException("\$offset can not be negative. $offset was provided.");
         }
 
-        // We don't actually apply the limit immediately, for compatability with the way it works in DataList
+        // We don't actually apply the limit immediately, for compatibility with the way it works in DataList
         $list = clone $this;
         $list->limitOffset = [$length, $offset];
         return $list;
@@ -942,7 +942,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
      * Find the extra field data for a single row of the relationship join
      * table for many_many relations, given the known child ID.
      *
-     * @param string $componentName The name of the component (unused, but kept for compatability with ManyManyList)
+     * @param string $componentName The name of the component (unused, but kept for compatibility with ManyManyList)
      * @param int|string $itemID The ID of the child for the relationship
      *
      * @return array Map of fieldName => fieldValue
@@ -955,7 +955,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
             throw new BadMethodCallException('Cannot have extra fields on this list type');
         }
 
-        // Allow string IDs for compatability with ManyManyList
+        // Allow string IDs for compatibility with ManyManyList
         if (!is_numeric($itemID)) {
             throw new InvalidArgumentException('$itemID must be an integer or numeric string');
         }

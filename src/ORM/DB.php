@@ -842,7 +842,7 @@ class DB
 
     /**
      * Get a random replica database configuration key from the available replica configurations
-     * The replica choosen will be used for the rest of the request, unless the primary connection
+     * The replica chosen will be used for the rest of the request, unless the primary connection
      * is forced
      */
     private static function getRandomReplicaConfigKey(): string

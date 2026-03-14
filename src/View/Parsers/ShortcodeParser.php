@@ -339,7 +339,7 @@ class ShortcodeParser
                         $name = '';
                         $value = '';
                         $parts = array_values(array_filter($attr ?? []));
-                        //the first element in the array is the complete delcaration (`id=1`) - we don't need this
+                        //the first element in the array is the complete declaration (`id=1`) - we don't need this
                         array_shift($parts);
 
                         //the next two parts are what we care about (id and 1 from `id=1`)

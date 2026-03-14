@@ -22,7 +22,7 @@ class ValidationException extends Exception
     use Configurable;
 
     /**
-     * List of controllers to show additioanl info when not in CLI
+     * List of controllers to show additional info when not in CLI
      * Subclasses of these controllers will also show additional info
      */
     private static array $show_additional_info_non_cli_controllers = [

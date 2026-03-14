@@ -208,7 +208,7 @@ abstract class DBConnector
      * connector. Note that this does not quote the value.
      *
      * @param string $value The value to be escaped
-     * @return string The appropritaely escaped string for value
+     * @return string The appropriately escaped string for value
      */
     abstract public function escapeString($value);
 

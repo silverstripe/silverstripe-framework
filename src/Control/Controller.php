@@ -702,7 +702,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             list($url, $querystring) = explode('?', $url, 2);
         }
 
-        // Normlise trailing slash
+        // Normalise trailing slash
         $shouldHaveTrailingSlash = Controller::config()->uninherited('add_trailing_slash');
         if ($shouldHaveTrailingSlash && !str_ends_with($url, '/')) {
             $url .= '/';

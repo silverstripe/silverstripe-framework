@@ -680,7 +680,7 @@ class ArrayList extends ModelData implements SS_List
         $hasNullFilter = false;
 
         foreach ($filters as $filterKey => $filterValue) {
-            // Check if we have any null filter values for backwards compatability, since nulls are treated specially
+            // Check if we have any null filter values for backwards compatibility, since nulls are treated specially
             // in the ExactMatchFilter
             if (is_array($filterValue)) {
                 foreach ($filterValue as $value) {

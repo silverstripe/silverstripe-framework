@@ -965,7 +965,7 @@ class Injector implements ContainerInterface
     }
 
     /**
-     * Returns the service, or `null` if it doesnt' exist. See {@link get()} for main usage.
+     * Returns the service, or `null` if it doesn't exist. See {@link get()} for main usage.
      *
      * @template T of object
      * @param class-string<T>|string $name The name of the service to retrieve. If not a registered
@@ -1143,7 +1143,7 @@ class Injector implements ContainerInterface
         $hasBacticks = false;
         $allMissing = true;
         // $value must start and end with backticks, though there can be multiple
-        // things being subsituted within $value e.g. "`VAR_ONE`:`VAR_TWO`:`VAR_THREE`"
+        // things being substituted within $value e.g. "`VAR_ONE`:`VAR_TWO`:`VAR_THREE`"
         if (preg_match('/^`.+`$/', $value ?? '')) {
             $hasBacticks = true;
             preg_match_all('/`(?<name>[^`]+)`/', $value, $matches);
@@ -1161,7 +1161,7 @@ class Injector implements ContainerInterface
                 }
             }
         }
-        // silverstripe sometimes explictly expects a null value rather than just an empty string
+        // silverstripe sometimes explicitly expects a null value rather than just an empty string
         if ($hasBacticks && $allMissing && $value === '') {
             return null;
         }

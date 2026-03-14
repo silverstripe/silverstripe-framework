@@ -40,7 +40,7 @@ class EmbedShortcodeProvider implements ShortcodeHandler
     /**
      * Attributes to add to the iframe when sandboxing
      * Note that the 'src' attribute cannot be set via config
-     * If a style attribute is set via config, width and height values will be overriden by
+     * If a style attribute is set via config, width and height values will be overridden by
      * any shortcode width and height arguments
      */
     private static array $sandboxed_iframe_attributes = [];

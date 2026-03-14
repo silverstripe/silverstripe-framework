@@ -58,9 +58,9 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     ];
 
     /**
-     * Flag idicating if this field is considered immutable
+     * Flag indicating if this field is considered immutable
      * when this is enabled setting the value of this field will return a new field instance
-     * instead updatin the old one
+     * instead updating the old one
      */
     protected bool $immutable = false;
 
@@ -198,7 +198,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     }
 
     /**
-     * Get the amount of time inbetween two datetimes.
+     * Get the amount of time between two datetimes.
      */
     public static function getTimeBetween(DBDateTime $from, DBDateTime $to): string
     {

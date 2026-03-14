@@ -52,7 +52,7 @@ use SilverStripe\Model\ArrayData;
  *
  * @see CheckboxSetField for multiple selections through checkboxes instead.
  * @see DropdownField for a simple <select> field with a single element.
- * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
+ * @see TreeDropdownField for a rich and customizable UI that can visualize a tree of selectable elements
  */
 class OptionsetField extends SingleSelectField
 {

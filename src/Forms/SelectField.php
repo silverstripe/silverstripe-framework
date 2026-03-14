@@ -128,7 +128,7 @@ abstract class SelectField extends FormField
     }
 
     /**
-     * Convert a submitted value, which should probalby always be a string, to the correct type
+     * Convert a submitted value, which should probably always be a string, to the correct type
      * Currently this will only convert string int to int
      */
     protected function castSubmittedValue(mixed $value): mixed

@@ -94,7 +94,7 @@ class BasicAuthMiddleware implements HTTPMiddleware
      * @param HTTPRequest $request
      * @return bool|string|array|null boolean value if enabled/disabled explicitly for this request,
      * or null if should fall back to config value. Can also provide an explicit string / array of permission
-     * codes to require for this requset.
+     * codes to require for this request.
      */
     protected function checkMatchingURL(HTTPRequest $request)
     {

@@ -32,7 +32,7 @@ class Deprecation
      * Must be configured outside of the config API, as deprecation API
      * must be available before this to avoid infinite loops.
      *
-     * This will be overriden by the SS_DEPRECATION_ENABLED environment variable if present
+     * This will be overridden by the SS_DEPRECATION_ENABLED environment variable if present
      *
      * @internal - Marked as internal so this and other private static's are not treated as config
      */
@@ -96,7 +96,7 @@ class Deprecation
      * Enable throwing deprecation warnings. By default, this excludes warnings for
      * deprecated code which is called by core Silverstripe modules.
      *
-     * This will be overriden by the SS_DEPRECATION_ENABLED environment variable if present.
+     * This will be overridden by the SS_DEPRECATION_ENABLED environment variable if present.
      *
      * @param bool $showNoReplacementNotices If true, deprecation warnings will also be thrown
      * for deprecated code which is called by core Silverstripe modules.
@@ -110,7 +110,7 @@ class Deprecation
     /**
      * Disable throwing deprecation warnings.
      *
-     * This will be overriden by the SS_DEPRECATION_ENABLED environment variable if present.
+     * This will be overridden by the SS_DEPRECATION_ENABLED environment variable if present.
      */
     public static function disable(): void
     {
@@ -262,7 +262,7 @@ class Deprecation
      * Determine whether deprecation warnings should be included in HTTP responses.
      * Does not affect logging.
      *
-     * This will be overriden by the SS_DEPRECATION_SHOW_HTTP environment variable if present.
+     * This will be overridden by the SS_DEPRECATION_SHOW_HTTP environment variable if present.
      */
     public static function setShouldShowForHttp(bool $value): void
     {
@@ -273,7 +273,7 @@ class Deprecation
      * Determine whether deprecation warnings should be included in CLI responses.
      * Does not affect logging.
      *
-     * This will be overriden by the SS_DEPRECATION_SHOW_CLI environment variable if present.
+     * This will be overridden by the SS_DEPRECATION_SHOW_CLI environment variable if present.
      */
     public static function setShouldShowForCli(bool $value): void
     {
@@ -425,7 +425,7 @@ class Deprecation
                 Deprecation::$userErrorMessageBuffer[$data['key']] = $data;
 
                 // Use a shutdown function rather than immediately calling user_error() so that notices
-                // do not interfere with setting session varibles i.e. headers already sent error
+                // do not interfere with setting session variables i.e. headers already sent error
                 // it also means the deprecation notices appear below all phpunit output in CI
                 // which is far nicer than having it spliced between phpunit output
                 if (!Deprecation::$haveSetShutdownFunction && Deprecation::isEnabled()) {

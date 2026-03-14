@@ -114,7 +114,7 @@ abstract class HTMLEditorConfig
     /**
      * Default set of rules to define which elements and attributes are allowed, and how to treat them.
      *
-     * Every element that is allowed in the HTML content must be expicitly allowed, either on its own
+     * Every element that is allowed in the HTML content must be explicitly allowed, either on its own
      * or as part of a pattern.
      * Element names or patterns are keys in the associative array. Patterns can use the following special characters:
      * - `*` Matches between zero and unlimited characters (equivalent to `.*` in regex).
@@ -133,7 +133,7 @@ abstract class HTMLEditorConfig
      * - `"padEmpty"`: Set to `true` to add a non-breaking space to elements which have no child nodes.
      * - `"removeIfEmpty"`: Set to `true` to remove elements which have no child nodes.
      * - `"removeIfNoAttributes"`: Set to `true` to remove elements which have no attributes.
-     * - `"convertTo"`: Set to the string name of a specific attrbiute this element should be converted to. For example
+     * - `"convertTo"`: Set to the string name of a specific attribute this element should be converted to. For example
      * convert `<b>` to `<strong>`.
      * - `"attributes"`: An associative array of attributes allowed on this element and rules for them.
      *
@@ -142,7 +142,7 @@ abstract class HTMLEditorConfig
      * Patterns work the same way for attribute rules as they do for element rules.
      *
      * Like with elements, an attribute can have `true` or an associative array to mark it as allowed,
-     * or it can be ommitted, or have a `false` or `null` value to disallow it.
+     * or it can be omitted, or have a `false` or `null` value to disallow it.
      *
      * The array of attribute rules is associative. The following can be included in the array:
      * - `"isRequired"`: Set to `true` to make this attribute mandatory. If the attribute is missing, the element will

@@ -50,7 +50,7 @@ class DataList extends ModelData implements SS_List, Resettable
     use SearchFilterable;
 
     /**
-     * Whether to use placeholders for integer IDs on Primary and Foriegn keys during a WHERE IN query
+     * Whether to use placeholders for integer IDs on Primary and Foreign keys during a WHERE IN query
      * It is significantly faster to not use placeholders
      */
     private static bool $use_placeholders_for_integer_ids = false;
@@ -310,7 +310,7 @@ class DataList extends ModelData implements SS_List, Resettable
      *
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
-     * paramaterised queries
+     * parameterised queries
      * @return static<T>
      */
     public function where($filter)
@@ -332,7 +332,7 @@ class DataList extends ModelData implements SS_List, Resettable
      * won't expand multiple method arguments as SQLSelect does.
      *
      * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
-     * paramaterised queries
+     * parameterised queries
      * @return static<T>
      */
     public function whereAny($filter)
@@ -491,7 +491,7 @@ class DataList extends ModelData implements SS_List, Resettable
         }
         // $columnName is a param that is passed by reference so is essentially as a return type
         // it will be returned in quoted SQL "TableName"."ColumnName" notation
-        // if it's equal to $col however it means that it WAS orginally raw sql, which is disallowed for sort()
+        // if it's equal to $col however it means that it WAS originally raw sql, which is disallowed for sort()
         //
         // applyRelation() will also throw an InvalidArgumentException if $column is not raw sql but
         // the Relation.FieldName is not a valid model relationship

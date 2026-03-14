@@ -1011,7 +1011,7 @@ abstract class DBSchemaManager
     /*
      * This is a lookup table for data types.
      * For instance, Postgres uses 'INT', while MySQL uses 'UNSIGNED'
-     * So this is a DB-specific list of equivilents.
+     * So this is a DB-specific list of equivalents.
      *
      * @param string $type
      * @return string

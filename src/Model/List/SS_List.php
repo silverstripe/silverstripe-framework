@@ -37,7 +37,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate
     /**
      * Removes an item from the list.
      *
-     * Note that a return type is not specified on the interface as different impelementations
+     * Note that a return type is not specified on the interface as different implementations
      * have different return types.
      */
     public function remove(mixed $item);

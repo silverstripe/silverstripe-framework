@@ -8,7 +8,7 @@ use SilverStripe\Core\ArrayLib;
 
 /**
  * Rules used to define whether a given attribute or regex pattern of attributes is allowed in the content of an HTMLEditorField.
- * Each attribute rule is applied to a single HTMLEditorElementRule matching an element or a regex patter of elements.
+ * Each attribute rule is applied to a single HTMLEditorElementRule matching an element or a regex pattern of elements.
  */
 class HTMLEditorAttributeRule
 {
@@ -182,7 +182,7 @@ class HTMLEditorAttributeRule
     }
 
     /**
-     * Check wither the given attribute is allowed or not according to this rule.
+     * Check whether the given attribute is allowed or not according to this rule.
      *
      * Note that this method assumes this rule applies to the attribute - it does
      * not check the name of the attribute as part of its conditional logic.

@@ -244,7 +244,7 @@ class TaskRunner extends Controller implements PermissionProvider
         return [
             'BUILDTASK_CAN_RUN' => [
                 'name' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_DESCRIPTION', 'Can view and execute all /dev/tasks'),
-                'help' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_HELP', 'Can view and execute all Build Tasks (/dev/tasks). This may still be overriden by individual task view permissions'),
+                'help' => _t(__CLASS__ . '.BUILDTASK_CAN_RUN_HELP', 'Can view and execute all Build Tasks (/dev/tasks). This may still be overridden by individual task view permissions'),
                 'category' => DevelopmentAdmin::permissionsCategory(),
                 'sort' => 70
             ],

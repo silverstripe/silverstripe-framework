@@ -198,7 +198,7 @@ class Environment
             return static::$env[$name];
         }
         // isset() is used for $_ENV and $_SERVER instead of array_key_exists() to fix a very strange issue that
-        // occured in CI running silverstripe/recipe-kitchen-sink where PHP would timeout due apparently due to an
+        // occurred in CI running silverstripe/recipe-kitchen-sink where PHP would timeout due apparently due to an
         // excessively high number of array method calls. isset() is not used for static::$env above because
         // values there may be null, and isset() will return false for null values
         // Symfony also uses isset() for reading $_ENV and $_SERVER values

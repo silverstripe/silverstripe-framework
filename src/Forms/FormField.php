@@ -723,8 +723,8 @@ class FormField extends RequestHandler implements FieldValidationInterface
      */
     public function setValue($value, $data = null)
     {
-        // Note that unlike setSubmittedValue(), we are explicity not casting blank strings to null here.
-        // This is because setValue() is used when programatically setting a value on a field
+        // Note that unlike setSubmittedValue(), we are explicitly not casting blank strings to null here.
+        // This is because setValue() is used when programmatically setting a value on a field
         // and we want to enforce type strictness
         $this->value = $value;
         return $this;

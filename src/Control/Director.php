@@ -306,7 +306,7 @@ class Director implements TemplateGlobalProvider
         Injector::inst()->registerService($request, HTTPRequest::class);
 
         // Check if primary database must be used based on request rules
-        // Note this check must happend before the rules are processed as
+        // Note this check must happened before the rules are processed as
         // $shiftOnSuccess param is passed as true in `$request->match($pattern, true)` later on in
         // this method, which modifies `$this->dirParts`, thus affecting `$request->match($rule)` directly below
         $primaryDbOnlyRules = Director::config()->uninherited('rule_patterns_must_use_primary_db');

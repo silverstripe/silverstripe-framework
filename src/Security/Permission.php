@@ -113,7 +113,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
      *
      * @param string|array $code Code of the permission to check (case-sensitive)
      * @param string $arg Optional argument (e.g. a permissions for a specific page)
-     * @param int|Member $member Optional member instance or ID. If set to NULL, the permssion
+     * @param int|Member $member Optional member instance or ID. If set to NULL, the permission
      *  will be checked for the current user
      * @param bool $strict Use "strict" checking (which means a permission
      *  will be granted if the key does not exist at all)?
@@ -310,7 +310,7 @@ class Permission extends DataObject implements TemplateGlobalProvider, Resettabl
                         'GroupID' => $groupIDs,
                     ]);
 
-                    // Get permission codes from roles these groups are assigned to, exluding the denied list above.
+                    // Get permission codes from roles these groups are assigned to, excluding the denied list above.
                     $permissionRoleCodes = PermissionRoleCode::get()
                         ->filter(['GroupID' => $groupIDs])
                         ->excludeByList($denied, 'Code', 'Code')

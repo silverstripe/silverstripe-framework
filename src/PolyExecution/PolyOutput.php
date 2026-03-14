@@ -24,7 +24,7 @@ class PolyOutput extends Output
 
     /** Use this if you want HTML markup in the output */
     public const FORMAT_HTML = 'Html';
-    /** Use this for outputing to a terminal, or for plain text output */
+    /** Use this for outputting to a terminal, or for plain text output */
     public const FORMAT_ANSI = 'Ansi';
 
     private string $outputFormat;
