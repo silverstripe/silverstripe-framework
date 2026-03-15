@@ -10,11 +10,14 @@ use SilverStripe\Security\Member;
  * Validates passwords based on a set of regex rules about what the password must contain.
  *
  * <code>
- * $pwdVal = new PasswordValidator();
+ * use SilverStripe\Security\Validation\RulesPasswordValidator;
+ * use SilverStripe\Security\Member;
+ *
+ * $pwdValidator = new RulesPasswordValidator();
  * $pwdValidator->setMinLength(7);
  * $pwdValidator->setHistoricCount(6);
  * $pwdValidator->setMinTestScore(3);
- * $pwdValidator->setTestNames(array("lowercase", "uppercase", "digits", "punctuation"));
+ * $pwdValidator->setTestNames(["lowercase", "uppercase", "digits", "punctuation"]);
  *
  * Member::set_password_validator($pwdValidator);
  * </code>
