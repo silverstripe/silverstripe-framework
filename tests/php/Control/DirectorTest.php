@@ -270,6 +270,21 @@ class DirectorTest extends SapphireTest
         $this->assertEquals('9090', Director::port());
     }
 
+    public function testHostNameWithoutPort()
+    {
+        // Reproduces the case where the Host header contains a bare hostname (no port,
+        // no protocol) — the RFC 7230 compliant form. parse_url cannot resolve such
+        // strings to a host on its own, so hostName() must normalise first.
+        Director::config()->set('alternate_base_url', null);
+
+        $request = new HTTPRequest('GET', '/');
+        $request->addHeader('Host', 'www.mysite.com');
+
+        $this->assertEquals('www.mysite.com', Director::host($request));
+        $this->assertEquals('www.mysite.com', Director::hostName($request));
+        $this->assertNull(Director::port($request));
+    }
+
     public function testIsRelativeUrl()
     {
         $this->assertFalse(Director::is_relative_url('http://test.com'));
