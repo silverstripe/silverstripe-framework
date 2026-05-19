@@ -250,7 +250,7 @@ class RequiredFieldsValidator extends Validator
      */
     public function fieldIsRequired($fieldName)
     {
-        return isset($this->required[$fieldName]);
+        return isset($this->required[$fieldName ?? '']);
     }
 
     /**
