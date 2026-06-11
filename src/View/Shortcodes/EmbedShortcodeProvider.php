@@ -388,7 +388,8 @@ class EmbedShortcodeProvider implements ShortcodeHandler
             // and <iframe></iframe><unsafe stuff here/><iframe></iframe>
             // If there's more than 2 HTML tags then sandbox it
             if (substr_count($html, '<') <= 2) {
-                return $html;
+                // Returned as-is into the main document, so strip unsafe attributes first
+                return EmbedShortcodeProvider::removeDangerousAttributes($html);
             }
         }
         // Sandbox the html in an iframe
@@ -411,6 +412,60 @@ class EmbedShortcodeProvider implements ShortcodeHandler
         }
         $html = HTML::createTag('iframe', $attrs);
         return $html;
+    }
+
+    /**
+     * Strip unsafe attributes from the opening tag of an iframe that is not being sandboxed
+     *
+     * A non-sandboxed iframe runs in the context of the main document, so its attributes are
+     * attacker-controlled. Only known-safe attributes are kept; everything else (e.g. onload,
+     * srcdoc) is removed. The "src" attribute is also rejected if it uses a scheme that can
+     * execute script or render arbitrary content (e.g. javascript:, data:).
+     */
+    private static function removeDangerousAttributes(string $html): string
+    {
+        // "allow" and the *allowfullscreen variants are needed by mainstream video embeds
+        // (YouTube, Vimeo, etc); they only delegate Permissions-Policy and cannot run script
+        // Deliberately excludes style/class/id: a non-sandboxed iframe shares the main document,
+        // so an attacker-controlled style (e.g. position:fixed;inset:0;opacity:0) enables
+        // clickjacking overlays. Mainstream providers (YouTube, Vimeo, SoundCloud, etc.) don't
+        // emit style/class/id on the iframe - sizing comes from width/height attributes.
+        $allowed = [
+            'src', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen',
+            'webkitallowfullscreen', 'mozallowfullscreen', 'referrerpolicy', 'loading',
+            'scrolling', 'allowtransparency', 'title',
+        ];
+        $dangerousSchemes = ['javascript', 'data', 'vbscript', 'file'];
+        // The opening-tag pattern skips over quoted values so a ">" inside a value cannot end the
+        // match early. Attributes are matched after whitespace or "/", since the HTML tokenizer
+        // treats both as separators - <iframe/onload=...> parses the same as <iframe onload=...>
+        return preg_replace_callback(
+            '#^<iframe(?:"[^"]*"|\'[^\']*\'|[^>])*>#i',
+            function (array $matches) use ($allowed, $dangerousSchemes): string {
+                return preg_replace_callback(
+                    '#[\s/]+([a-zA-Z_:][a-zA-Z0-9_:.\-]*)(\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?#',
+                    function (array $attr) use ($allowed, $dangerousSchemes): string {
+                        $name = strtolower($attr[1]);
+                        if (!in_array($name, $allowed, true)) {
+                            return '';
+                        }
+                        // Decode entities and strip whitespace/control chars the browser ignores
+                        // when resolving the scheme (e.g. "java\tscript:" or "&#106;avascript:")
+                        if ($name === 'src' && isset($attr[3])) {
+                            $value = html_entity_decode(trim($attr[3], "\"'"), ENT_QUOTES | ENT_HTML5);
+                            $value = preg_replace('/[\x00-\x20]+/', '', $value);
+                            $scheme = strtolower((string) parse_url($value, PHP_URL_SCHEME));
+                            if (in_array($scheme, $dangerousSchemes, true)) {
+                                return '';
+                            }
+                        }
+                        return $attr[0];
+                    },
+                    $matches[0]
+                );
+            },
+            $html
+        );
     }
 
     /**

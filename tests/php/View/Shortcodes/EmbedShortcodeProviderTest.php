@@ -304,6 +304,219 @@ class EmbedShortcodeProviderTest extends EmbedUnitTest
                 'exception' => false,
                 'expected' => '<div style="width:100px;"><iframe src="https://example.com/content"></iframe></div>',
             ],
+            'iframe-with-onload' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe onload="alert(document.cookie)" src="about:blank"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            'iframe-with-multiple-event-handlers' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe onLoad="alert(1)" src="about:blank" onmouseover=\'alert(2)\'></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            'iframe-with-unquoted-event-handler' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="about:blank" onload=alert(1)></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            'iframe-with-onload-excluded-domain' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => ['example.com'],
+                'html' => '<iframe onload="alert(document.cookie)" src="about:blank"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe onload="alert(document.cookie)" src="about:blank"></iframe></div>',
+            ],
+            // "/" is an attribute separator, so <iframe/onload=...> must also be stripped
+            'iframe-onload-slash-separated' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe/onload="alert(document.cookie)" src="about:blank"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            // Whitespace separators and whitespace around "=" are handled
+            'iframe-onload-whitespace-around-equals' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => "<iframe\tonload\t=\t\"alert(1)\" src=\"about:blank\"></iframe>",
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            // A ">" inside a quoted value must not end the opening-tag match early
+            'iframe-gt-in-src-then-onload' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="about:blank?a=1>2" onload="alert(1)"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank?a=1>2"></iframe></div>',
+            ],
+            // ...and a ">" inside the stripped attribute's own value
+            'iframe-gt-in-onload-value' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe onload="if(1>0)alert(1)" src="about:blank"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            // A non-breaking space is not HTML whitespace, so "\u{00A0}onload" is inert and left as-is
+            'iframe-nbsp-prefixed-onload-is-inert' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => "<iframe\u{00A0}onload=\"alert(1)\" src=\"about:blank\"></iframe>",
+                'attrs' => [],
+                'exception' => false,
+                'expected' => "<div style=\"width:100px;\"><iframe\u{00A0}onload=\"alert(1)\" "
+                . "src=\"about:blank\"></iframe></div>",
+            ],
+            // A protocol-relative src ("//host") has no scheme and must be kept
+            'iframe-protocol-relative-src' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="//example.com/embed"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="//example.com/embed"></iframe></div>',
+            ],
+            // A normal https src is kept, including paths containing "on"
+            'iframe-src-path-contains-on' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="https://example.com/online/video"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="https://example.com/online/video">'
+                . '</iframe></div>',
+            ],
+            // style/class/id are stripped: an attacker-controlled inline style on a non-sandboxed
+            // iframe enables clickjacking overlays (position:fixed;inset:0;opacity:0). src is kept.
+            'iframe-style-class-id-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="about:blank" style="position:fixed;inset:0;width:100vw;'
+                . 'height:100vh;z-index:2147483647;opacity:0" class="overlay" id="x"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            // data-* attributes are not on the allowlist and are stripped
+            'iframe-data-attribute-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe data-online="1" src="about:blank"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            // srcdoc would run script in the host origin; payload is entity-encoded to stay a
+            // single iframe and hit this non-sandboxed branch
+            'iframe-srcdoc-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe srcdoc="&lt;script&gt;alert(document.cookie)&lt;/script&gt;" '
+                . 'src="about:blank"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
+            // A "javascript:" src is stripped, leaving an inert iframe
+            'iframe-javascript-src-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="javascript:alert(document.cookie)"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe></iframe></div>',
+            ],
+            // A "data:" src is stripped too
+            'iframe-data-src-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="data:text/html,&lt;script&gt;alert(1)&lt;/script&gt;"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe></iframe></div>',
+            ],
+            // A "vbscript:" src is also rejected
+            'iframe-vbscript-src-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="vbscript:msgbox(1)"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe></iframe></div>',
+            ],
+            // An obfuscated "java&#9;script:" src is still rejected after decoding
+            'iframe-obfuscated-javascript-src-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="java&#9;script:alert(1)"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe></iframe></div>',
+            ],
+            // Regression guard: a YouTube-style embed keeps allow/allowfullscreen/referrerpolicy
+            'iframe-allow-attributes-kept' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe width="560" height="315" src="https://www.youtube.com/embed/abc" '
+                . 'title="YouTube video" frameborder="0" allow="accelerometer; autoplay; '
+                . 'clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" '
+                . 'referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                // width is rewritten to the inherited 100 by videoEmbed
+                'expected' => '<div style="width:100px;"><iframe width="100" height="315" '
+                . 'src="https://www.youtube.com/embed/abc" title="YouTube video" frameborder="0" '
+                . 'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; '
+                . 'picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" '
+                . 'allowfullscreen></iframe></div>',
+            ],
+            // allow is kept while onload on the same tag is stripped
+            'iframe-allow-kept-onload-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="https://player.vimeo.com/video/1" '
+                . 'allow="autoplay; fullscreen; picture-in-picture" allowfullscreen '
+                . 'onload="alert(1)"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="https://player.vimeo.com/video/1" '
+                . 'allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe></div>',
+            ],
+            // Legacy vendor-prefixed fullscreen attributes are kept
+            'iframe-legacy-fullscreen-kept' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="https://example.com/v" allowfullscreen webkitallowfullscreen '
+                . 'mozallowfullscreen></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="https://example.com/v" '
+                . 'allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe></div>',
+            ],
+            // Other non-allowlisted attributes (e.g. name, csp) are stripped
+            'iframe-name-and-csp-stripped' => [
+                'url' => 'http://example.com/embed',
+                'excluded' => [],
+                'html' => '<iframe src="about:blank" name="win" csp="default-src none"></iframe>',
+                'attrs' => [],
+                'exception' => false,
+                'expected' => '<div style="width:100px;"><iframe src="about:blank"></iframe></div>',
+            ],
             'iframe-short' => [
                 'url' => 'http://example.com/embed',
                 'excluded' => [],
