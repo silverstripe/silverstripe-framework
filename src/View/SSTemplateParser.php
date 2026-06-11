@@ -987,12 +987,32 @@ class SSTemplateParser extends Parser implements TemplateParser
 
     function Translate_Default(&$res, $sub)
     {
-        $res['php'] .= ",$sub[text]";
+        $res['php'] .= ',' . $this->getQuotedStringAsPhpLiteral($sub);
     }
 
     function Translate_Context(&$res, $sub)
     {
-        $res['php'] .= ",$sub[text]";
+        $res['php'] .= ',' . $this->getQuotedStringAsPhpLiteral($sub);
+    }
+
+    /**
+     * Convert a matched QuotedString into a safe single-quoted PHP string literal.
+     *
+     * The default and context strings of a <%t %> block are author controlled. Emitting the raw
+     * matched text (which is a double-quoted literal) directly into the compiled template allowed
+     * PHP within the string - e.g. "{${'shell_exec'('id')}}" - to be evaluated when the template
+     * ran, resulting in remote code execution. Decoding the template level backslash escapes and
+     * re-emitting as a single-quoted literal ensures the string is treated as inert text.
+     */
+    private function getQuotedStringAsPhpLiteral($sub)
+    {
+        // The inner string (without the surrounding quotes), with template level escape sequences intact.
+        $string = $sub['String']['text'] ?? '';
+        // Decode the backslash escapes permitted by the QuotedString grammar (\\ and \<char>) so that
+        // the resulting value matches what the previous double-quoted handling produced for common cases.
+        $string = preg_replace('/\\\\(.)/', '$1', $string ?? '');
+        // Emit as a single-quoted PHP literal, which does not interpolate variables or expressions.
+        return "'" . str_replace(['\\', "'"], ['\\\\', "\\'"], $string) . "'";
     }
 
     function Translate_InjectionVariables(&$res, $sub)

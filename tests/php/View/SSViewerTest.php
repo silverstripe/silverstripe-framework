@@ -103,6 +103,51 @@ class SSViewerTest extends SapphireTest
         $this->assertEquals('Test partial template: phpinfo', trim(preg_replace("/<!--.*-->/U", '', $result ?? '') ?? ''));
     }
 
+    /**
+     * Ensures that the default and context strings of a <%t %> translation block are emitted into the
+     * compiled template as safe single-quoted PHP string literals, rather than being pasted verbatim.
+     * Pasting them verbatim allowed an attacker who controls the default/context string to inject
+     * arbitrary PHP (e.g. via "{${'shell_exec'('id')}}") which would be executed when the compiled
+     * template ran - a remote code execution vulnerability.
+     */
+    public function provideTranslateDefaultDoesNotEvaluatePhp(): array
+    {
+        return [
+            'php-variable-variable-rce' => [
+                'template' => '<%t Foo.Bar "{${\'strrev\'(\'ec3pr\')}}" %>',
+                // The default string should be returned verbatim, with no PHP evaluation.
+                'expected' => '{${\'strrev\'(\'ec3pr\')}}',
+            ],
+            'simple-variable-interpolation' => [
+                'template' => '<%t Foo.Bar "Hello $foo world" %>',
+                'expected' => 'Hello $foo world',
+            ],
+            'escaped-quote' => [
+                'template' => '<%t Foo.Bar "Quote \" here" %>',
+                'expected' => 'Quote " here',
+            ],
+            'context-string-rce' => [
+                'template' => '<%t Foo.Bar "default text" is "{${\'strrev\'(\'ec3pr\')}}" %>',
+                'expected' => 'default text',
+            ],
+            // A trailing backslash must be escaped when emitted as a single-quoted literal, otherwise it
+            // would escape the closing quote and break out of the string.
+            'trailing-backslash' => [
+                'template' => '<%t Foo.Bar "foo\\\\" %>',
+                'expected' => 'foo\\',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideTranslateDefaultDoesNotEvaluatePhp
+     */
+    public function testTranslateDefaultDoesNotEvaluatePhp(string $template, string $expected): void
+    {
+        $result = $this->render($template);
+        $this->assertEquals($expected, trim($result ?? ''));
+    }
+
     public function testIncludeScopeInheritance()
     {
         $data = $this->getScopeInheritanceTestData();
