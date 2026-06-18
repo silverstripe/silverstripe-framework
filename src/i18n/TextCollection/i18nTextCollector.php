@@ -938,7 +938,7 @@ class i18nTextCollector
             );
         } elseif (preg_match('/^\"(?<text>.*)\"$/s', $text ?? '', $matches)) {
             $text = preg_replace_callback(
-                '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|\x[0-9A-Fa-f]{1,2})/s', // rich replacement
+                '/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|x[0-9A-Fa-f]{1,2})/s', // rich replacement
                 function ($input) {
                     return stripcslashes($input[0] ?? '');
                 },
