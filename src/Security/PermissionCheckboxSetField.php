@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
@@ -194,7 +195,7 @@ class PermissionCheckboxSetField extends FormField
             // loop through all available categorized permissions and see if they're assigned for the given groups
             $hasMultipleRecords = $this->records?->count() > 1;
             foreach ($this->source as $categoryName => $permissions) {
-                $options .= "<li><h5>$categoryName</h5></li>";
+                $options .= '<li><h5>' . Convert::raw2xml($categoryName) . '</h5></li>';
                 foreach ($permissions as $code => $permission) {
                     if (in_array($code, $this->hiddenPermissions ?? [])) {
                         continue;
@@ -203,11 +204,11 @@ class PermissionCheckboxSetField extends FormField
                         continue;
                     }
 
-                    $value = $permission['name'];
+                    $value = Convert::raw2xml($permission['name']);
 
                     $odd = ($odd + 1) % 2;
                     $extraClass = $odd ? 'odd' : 'even';
-                    $extraClass .= ' val' . str_replace([' ', '\\'], ['', '-'], $code ?? '');
+                    $extraClass .= ' val' . Convert::raw2att(str_replace([' ', '\\'], ['', '-'], $code ?? ''));
                     $itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code ?? '');
                     $disabled = $inheritMessage = '';
                     $checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code]))
@@ -250,17 +251,19 @@ class PermissionCheckboxSetField extends FormField
                             $icon = 'plus-circled';
                         }
 
+                        $attCode = Convert::raw2att($code);
                         $options .= "<li class=\"$extraClass\">"
-                            . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
-                            . " value=\"$code\"$checked class=\"checkbox\" />"
+                            . "<input id=\"$itemID\"$disabled name=\"$this->name[$attCode]\" type=\"checkbox\""
+                            . " value=\"$attCode\"$checked class=\"checkbox\" />"
                             . "<label class=\"form-label\" {$title}for=\"$itemID\">"
                             . "<span class=\"font-icon-$icon\" aria-hidden=\"true\"></span>"
                             . "{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     } else {
+                        $attCode = Convert::raw2att($code);
                         $options .= "<li class=\"$extraClass\">"
-                            . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
-                            . " value=\"$code\"$checked class=\"checkbox\" />"
+                            . "<input id=\"$itemID\"$disabled name=\"$this->name[$attCode]\" type=\"checkbox\""
+                            . " value=\"$attCode\"$checked class=\"checkbox\" />"
                             . "<label class=\"form-label\" {$title}for=\"$itemID\">{$value}{$inheritMessage}</label>"
                             . "</li>\n";
                     }
@@ -325,8 +328,16 @@ class PermissionCheckboxSetField extends FormField
             }
 
             if (is_array($this->value) || $this->value instanceof Traversable) {
+                // Build the allow-list of codes this field actually offered (flatten the
+                // categorised source). Anything outside this set is a forged submission key
+                // and must never be written to Permission.Code (stored XSS / arbitrary code).
+                $validCodes = [];
+                foreach (($this->source ?? []) as $permissions) {
+                    $validCodes = array_merge($validCodes, array_keys($permissions ?? []));
+                }
+
                 foreach ($this->value as $id => $bool) {
-                    if ($bool) {
+                    if ($bool && in_array($id, $validCodes, true)) {
                         $perm = new $managedClass();
                         $perm->{$this->filterField} = $record->ID;
                         $perm->Code = $id;
