@@ -10,10 +10,14 @@ Requires PHPUnit ^9
         </testsuite>
         <!-- Framework ORM tests are split up to run in parallel -->
         <testsuite name="framework-core">
-            <directory>tests/php</directory>
-            <exclude>
-                <directory>tests/php/ORM</directory>
-            </exclude>
+            <directory>tests/php/Control</directory>
+            <directory>tests/php/Core</directory>
+            <directory>tests/php/Dev</directory>
+            <directory>tests/php/Forms</directory>
+            <directory>tests/php/i18n</directory>
+            <directory>tests/php/Logging</directory>
+            <directory>tests/php/Security</directory>
+            <directory>tests/php/View</directory>
         </testsuite>
         <testsuite name="framework-orm">
             <directory>tests/php/ORM</directory>
@@ -22,13 +26,13 @@ Requires PHPUnit ^9
             <directory>vendor/silverstripe/cms/tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist addUncoveredFilesFromWhitelist="true">
+    <coverage>
+        <include>
             <directory suffix=".php">.</directory>
-            <exclude>
-                <directory suffix=".php">tests/</directory>
-                <directory suffix=".php">thirdparty/</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+        </include>
+        <exclude>
+            <directory suffix=".php">tests/</directory>
+            <directory suffix=".php">thirdparty/</directory>
+        </exclude>
+    </coverage>
 </phpunit>
