@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests;
 
+use DOMDocument;
 use DOMElement;
 use SilverStripe\Core\XssSanitiser;
 use SilverStripe\Dev\SapphireTest;
@@ -12,6 +13,10 @@ class XssSanitiserTest extends SapphireTest
 {
     // This is the backspace character. It needs to be escaped in double-quotes.
     private const CHAR_BACKSPACE = "\x08";
+
+    // This is the SOH control byte. Browsers strip control characters out of URLs before
+    // parsing, so a link whose href begins with (or contains) one must still be sanitised.
+    private const CHAR_SOH = "\x01";
 
     protected $usesDatabase = false;
 
@@ -84,6 +89,32 @@ class XssSanitiserTest extends SapphireTest
             [
                 'input' => '<a href="javascript:alert(\'ok\')' . XssSanitiserTest::CHAR_BACKSPACE . '">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a>',
                 'expected' => '<a>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a>',
+            ],
+            [
+                // Leading SOH (0x01) control byte before the scheme - browsers ignore it, so it must still be stripped
+                'input' => '<a href="' . XssSanitiserTest::CHAR_SOH . 'javascript:alert(document.domain)">click me</a>',
+                'expected' => '<a>click me</a>',
+            ],
+            [
+                // Control byte interleaved within the scheme keyword - browsers ignore it, so it must still be stripped
+                'input' => '<a href="ja' . XssSanitiserTest::CHAR_SOH . 'vascript:alert(1)">click me</a>',
+                'expected' => '<a>click me</a>',
+            ],
+            [
+                // Assorted C0 control bytes before the scheme must be stripped
+                'input' => '<IMG SRC="' . "\x02\x1f\x1b" . 'javascript:alert(\'XSS\')">',
+                'expected' => '<img>',
+            ],
+            [
+                // DEL (0x7F) before the scheme must be stripped
+                'input' => '<IMG SRC="' . "\x7f" . 'javascript:alert(\'XSS\')">',
+                'expected' => '<img>',
+            ],
+            [
+                // Leading SOH (0x01) control byte in an <iframe src> - iframe is not a removed
+                // element and its src auto-loads on page render, so the scheme must still be stripped
+                'input' => '<iframe src="' . XssSanitiserTest::CHAR_SOH . 'javascript:alert(document.domain)"></iframe>',
+                'expected' => '<iframe></iframe>',
             ],
             [
                 // Not exploitable XSS
@@ -353,6 +384,38 @@ class XssSanitiserTest extends SapphireTest
             $element = $sanitiser->sanitiseElement($element);
         }
         $this->assertSame($expected, $htmlValue->getContent());
+    }
+
+    public static function provideSanitiseElementInvalidUtf8(): array
+    {
+        return [
+            'scheme hidden behind a control byte, invalid utf-8 later in the value' => [
+                'href' => XssSanitiserTest::CHAR_SOH . "javascript:alert(document.domain)#\xC3\x28",
+                'expectedHasAttribute' => false,
+            ],
+            'plain scheme, invalid utf-8 later in the value' => [
+                'href' => "javascript:alert(document.domain)#\xC3\x28",
+                'expectedHasAttribute' => false,
+            ],
+            'safe url with invalid utf-8' => [
+                'href' => "https://example.com/#\xC3\x28",
+                'expectedHasAttribute' => true,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSanitiseElementInvalidUtf8')]
+    public function testSanitiseElementInvalidUtf8(string $href, bool $expectedHasAttribute): void
+    {
+        // Can't go through HTMLValue for these - its parser drops the invalid bytes before the
+        // sanitiser sees them, so invalid UTF-8 only reaches it via a hand-built DOMElement
+        $document = new DOMDocument();
+        $element = $document->createElement('a');
+        $document->appendChild($element);
+        $element->setAttribute('href', $href);
+        $sanitiser = new XssSanitiser();
+        $sanitiser->sanitiseElement($element);
+        $this->assertSame($expectedHasAttribute, $element->hasAttribute('href'));
     }
 
     public static function provideSanitiseElementsAllowed(): array

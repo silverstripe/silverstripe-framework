@@ -185,12 +185,29 @@ class XssSanitiser
         $regex = $this->getStripAttributeContentsRegex();
         foreach (['lowsrc', 'src', 'href', 'data'] as $dangerAttribute) {
             if ($element->hasAttribute($dangerAttribute)) {
-                $attrContent = $element->getAttribute($dangerAttribute);
+                $attrContent = $this->normaliseAttributeContent($element->getAttribute($dangerAttribute));
                 if (preg_match($regex, $attrContent)) {
                     $element->removeAttribute($dangerAttribute);
                 }
             }
         }
+    }
+
+    /**
+     * Get a copy of the attribute content to run scheme detection against. This never changes the
+     * attribute value itself - `stripAttributeContents()` either keeps it or removes it outright.
+     * Substitute invalid UTF-8, because the `u` modifier makes preg_* bail out on an invalid
+     * subject and skip detection entirely.
+     * Remove the control characters that browsers ignore when parsing a URL. Otherwise a scheme
+     * can hide behind (or inside) one - e.g. `\x01javascript:` or `ja\x01vascript:` - and the
+     * browser strips it back down to `javascript:` before executing it.
+     * Keep the whitespace control characters (tab, LF, VT, FF, CR), because the scheme-detection
+     * regex already accounts for them via `\s`.
+     */
+    private function normaliseAttributeContent(string $content): string
+    {
+        $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
+        return preg_replace('#[\x00-\x08\x0E-\x1F\x7F]#u', '', $content) ?? $content;
     }
 
     private function getStripAttributeContentsRegex(): string
