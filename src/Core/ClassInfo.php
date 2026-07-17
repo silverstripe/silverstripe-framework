@@ -3,16 +3,17 @@
 namespace SilverStripe\Core;
 
 use Exception;
+use Psr\SimpleCache\CacheInterface;
+use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionObject;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Model\ModelData;
-use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
 
 /**
  * Provides introspection information about the class tree.
@@ -205,6 +206,43 @@ class ClassInfo implements Flushable
     }
 
     /**
+     * Get the list of classes which are annonated by a given attribute
+     *
+     * @param class-string $attribute Name of a attribute class or an interface
+     * @param bool $instanceOf Should subclasses of the Attribute be included?
+     * @param "classes"|"interfaces"|"traits"|"enums" $type Which type of structure should returned, defaults to "classes"
+     * @return array
+     */
+    public static function annotatedBy(string $attribute, bool $instanceOf = true, string $type = 'classes'): array
+    {
+        return ClassLoader::inst()->getManifest()->getAnnotatedBy($attribute, $instanceOf, $type);
+    }
+
+    /**
+     * @param string $className
+     * @param string $attributeName
+     * @param bool $instanceOf
+     * @return array
+     */
+    public static function getAttributes(string|object $className, string $attributeName, bool $instanceOf = true): array
+    {
+        if (is_object($className)) {
+            $reflection = new ReflectionObject($className);
+        } else {
+            $reflection = new ReflectionClass($className);
+        }
+
+        $filter = $instanceOf ? ReflectionAttribute::IS_INSTANCEOF : 0;
+        $attributes = [];
+
+        foreach ($reflection->getAttributes($attributeName, $filter) as $attribute) {
+            $attributes[] = $attribute->newInstance();
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Convert a class name in any case and return it as it was defined in PHP
      *
      * eg: ClassInfo::class_name('dataobJEct'); //returns 'DataObject'
@@ -279,6 +317,16 @@ class ClassInfo implements Flushable
     }
 
     /**
+     * @param string $interfaceName
+     * @return array A self-keyed array of class names with lowercase keys and correct-case values.
+     * Note that this is only available with Silverstripe classes and not built-in PHP classes.
+     */
+    public static function implementorsOfIncludingChildren(string $interfaceName): array
+    {
+        return ClassLoader::inst()->getManifest()->getImplementorsOfIncludingChildren($interfaceName);
+    }
+
+    /**
      * Returns true if the given class implements the given interface
      *
      * @param string $className
@@ -289,6 +337,20 @@ class ClassInfo implements Flushable
     {
         $lowerClassName = strtolower($className ?? '');
         $implementors = ClassInfo::implementorsOf($interfaceName);
+        return isset($implementors[$lowerClassName]);
+    }
+
+    /**
+     * Returns true if the given class implements the given interface
+     *
+     * @param string $className
+     * @param string $interfaceName
+     * @return bool
+     */
+    public static function classImplementsIncludingChildren($className, $interfaceName)
+    {
+        $lowerClassName = strtolower($className ?? '');
+        $implementors = ClassInfo::implementorsOfIncludingChildren($interfaceName);
         return isset($implementors[$lowerClassName]);
     }
 
