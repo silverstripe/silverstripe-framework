@@ -474,6 +474,24 @@ PHP;
         );
     }
 
+    public function testHexEscapesInEntityValues()
+    {
+        $c = i18nTextCollector::create();
+        $mymodule = ModuleLoader::inst()->getManifest()->getModule('i18ntestmodule');
+
+        // Double-quoted string literals support \xHH hex escapes; \x43 is the letter 'C'.
+        $php = <<<'PHP'
+_t(
+'Test.HEXESCAPE',
+"AB\x43DE"
+);
+PHP;
+        $this->assertEquals(
+            [ 'Test.HEXESCAPE' => 'ABCDE' ],
+            $c->collectFromCode($php, null, $mymodule)
+        );
+    }
+
     /**
      * Test extracting entities from the new _t method signature
      */
