@@ -2290,6 +2290,21 @@ class DataListTest extends SapphireTest
         $this->assertSame(['Test 1', 'Test 2', 'Test 3'], $list->columnUnique('Title'));
     }
 
+    /**
+     * Regression test for https://github.com/silverstripe/silverstripe-framework/issues/11941
+     * columnUnique() must deduplicate the fetched column even when the list is sorted by a
+     * different column. Relying on SQL DISTINCT fails here because column() adds the ORDER BY
+     * columns to the SELECT, so the DISTINCT spans multiple columns and never makes the
+     * fetched column unique.
+     */
+    public function testColumnUniqueWithDifferentSort()
+    {
+        // 'test3' and 'test3-duplicate' share the Title 'Test 3'; sorting by ID means the
+        // ORDER BY column differs from the fetched Title column.
+        $list = RelationChildSecond::get()->sort('ID');
+        $this->assertSame(['Test 1', 'Test 2', 'Test 3'], $list->columnUnique('Title'));
+    }
+
     public function testColumnFailureInvalidColumn()
     {
         $this->expectException(InvalidArgumentException::class);
