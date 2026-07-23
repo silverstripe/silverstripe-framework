@@ -3824,8 +3824,8 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
 
                 // Build fields
                 $manymanyFields = [
-                    $parentField => "Int",
-                    $childField => "Int",
+                    $parentField => "ForeignKey",
+                    $childField => "ForeignKey",
                 ];
                 if (isset($extras[$component])) {
                     $manymanyFields = array_merge($manymanyFields, $extras[$component]);
