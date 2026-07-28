@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Tests;
 
 use DOMElement;
+use ReflectionProperty;
 use SilverStripe\Core\XssSanitiser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\HTMLValue;
@@ -198,9 +199,35 @@ class XssSanitiserTest extends SapphireTest
             ],
             [
                 // Decodes to a SVG with `<script type="text/ecmascript">alert("XSS");</script>` inside it
-                // But that's not actually exploitable XSS
                 'input' => '<IMG SRC="data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==">',
-                'expected' => '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==">',
+                'expected' => '<img>',
+            ],
+            [
+                // Decodes to `<svg onload=alert(1)>` - in a navigational context this is a script-capable document
+                'input' => '<a href="data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">click</a>',
+                'expected' => '<a>click</a>',
+            ],
+            [
+                'input' => '<iframe src="data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                'input' => '<IMG LOWSRC="DATA:IMAGE/SVG+XML;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">',
+                'expected' => '<img>',
+            ],
+            [
+                // Whitespace between the characters of the media type must not bypass the check
+                'input' => '<a href=" d a t a : i m a g e / s v g + x m l ;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">click</a>',
+                'expected' => '<a>click</a>',
+            ],
+            [
+                'input' => '<a href="' . XssSanitiserTest::CHAR_BACKSPACE . 'data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">click</a>',
+                'expected' => '<a>click</a>',
+            ],
+            [
+                // Data URIs for media types which cannot carry script are left alone
+                'input' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
+                'expected' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
             ],
             [
                 'input' => '<IMG LOWSRC="javascript:alert(\'XSS\')">',
@@ -431,6 +458,47 @@ class XssSanitiserTest extends SapphireTest
         $sanitiser = new XssSanitiser();
         if ($removeAttributes !== null) {
             $sanitiser->setAttributesToRemove($removeAttributes);
+        }
+        $this->assertSame($expected, $sanitiser->sanitiseString($input));
+    }
+
+    public static function provideSanitiseRemoveDataSvg(): array
+    {
+        $payload = 'data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+';
+        return [
+            'removed by default' => [
+                'input' => '<a href="' . $payload . '">click</a>',
+                'removeDataSvg' => null,
+                'expected' => '<a>click</a>',
+            ],
+            'removed explicitly' => [
+                'input' => '<a href="' . $payload . '">click</a>',
+                'removeDataSvg' => true,
+                'expected' => '<a>click</a>',
+            ],
+            'kept when disabled' => [
+                'input' => '<a href="' . $payload . '">click</a>',
+                'removeDataSvg' => false,
+                'expected' => '<a href="' . $payload . '">click</a>',
+            ],
+            'data:text/html is removed even when disabled' => [
+                'input' => '<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">click</a>',
+                'removeDataSvg' => false,
+                'expected' => '<a>click</a>',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSanitiseRemoveDataSvg')]
+    public function testSanitiseRemoveDataSvg(string $input, ?bool $removeDataSvg, string $expected): void
+    {
+        $sanitiser = new XssSanitiser();
+        // There's no public API for this flag, so use reflection to read and set it
+        $property = new ReflectionProperty($sanitiser, 'removeDataSvg');
+        if ($removeDataSvg === null) {
+            $this->assertTrue($property->getValue($sanitiser));
+        } else {
+            $property->setValue($sanitiser, $removeDataSvg);
         }
         $this->assertSame($expected, $sanitiser->sanitiseString($input));
     }
