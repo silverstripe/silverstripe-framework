@@ -4,6 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Environment;
 
 /**
  * Backtrace helper
@@ -114,7 +115,7 @@ class Backtrace
      */
     public static function backtrace($returnVal = false, $ignoreAjax = false, $ignoredFunctions = null)
     {
-        $plainText = Director::is_cli() || (Director::is_ajax() && !$ignoreAjax);
+        $plainText = Environment::isCli() || (Director::is_ajax() && !$ignoreAjax);
         $result = Backtrace::get_rendered_backtrace(debug_backtrace(), $plainText, $ignoredFunctions);
         if ($returnVal) {
             return $result;

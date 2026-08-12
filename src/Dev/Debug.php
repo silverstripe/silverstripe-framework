@@ -4,6 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 
 /**
@@ -158,7 +159,7 @@ class Debug
     protected static function supportsHTML(?HTTPRequest $request = null)
     {
         // No HTML output in CLI
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             return false;
         }
         $accepted = [];

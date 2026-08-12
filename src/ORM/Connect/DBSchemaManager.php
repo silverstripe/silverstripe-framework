@@ -3,9 +3,9 @@
 namespace SilverStripe\ORM\Connect;
 
 use Exception;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -869,7 +869,7 @@ abstract class DBSchemaManager
     public function alterationMessage($message, $type = "")
     {
         if (!$this->supressOutput) {
-            if (Director::is_cli()) {
+            if (Environment::isCli()) {
                 switch ($type) {
                     case 'created':
                     case 'changed':

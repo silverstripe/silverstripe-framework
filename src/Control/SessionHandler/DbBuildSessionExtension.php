@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Control\SessionHandler;
 
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\PolyExecution\PolyOutput;
@@ -26,7 +26,7 @@ class DbBuildSessionExtension extends Extension
         }
 
         $output = PolyOutput::create(
-            Director::is_cli() ? PolyOutput::FORMAT_ANSI : PolyOutput::FORMAT_HTML,
+            Environment::isCli() ? PolyOutput::FORMAT_ANSI : PolyOutput::FORMAT_HTML,
             PolyOutput::VERBOSITY_QUIET
         );
         $output->startList();

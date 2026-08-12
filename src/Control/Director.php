@@ -12,6 +12,7 @@ use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Core\Path;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\PolyExecution\PolyCommand;
 use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
@@ -1035,9 +1036,11 @@ class Director implements TemplateGlobalProvider
      * Returns true if this script is being run from the command line rather than the web server.
      *
      * @return bool
+     * @deprecated 6.4.0 Use Environment::isCli() instead.
      */
     public static function is_cli()
     {
+        Deprecation::notice('6.4.0', 'Use ' . Environment::class . '::isCli() instead.');
         return Environment::isCli();
     }
 
