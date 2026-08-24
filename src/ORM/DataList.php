@@ -1800,7 +1800,9 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         // Deduplicate in PHP rather than relying on SQL DISTINCT: column() adds the
         // ORDER BY columns to the SELECT, so a DISTINCT would span multiple columns and
         // fail to make $colName unique. This matches the other SS_List implementations.
-        return array_unique($this->column($colName));
+        // array_unique() preserves keys, so a duplicate that is not last would leave
+        // gaps in the returned list; array_values() re-indexes it.
+        return array_values(array_unique($this->column($colName)));
     }
 
     // Member altering methods
