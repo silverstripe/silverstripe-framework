@@ -8,6 +8,7 @@ it:
     REMOVE: Elimina
   SilverStripe\Control\ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: "La password per l'account con l'email {email} è cambiata. Se non l'hai ancora fatto, prego cambiare la password usando il link sottostante"
+    CHANGEPASSWORDFOREMAIL2: "La password dell'account del tuo indirizzo email {email} deve essere cambiata. Se non l'hai ancora fatto, procedere usando il link sottostante"
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT3: 'Cambia password'
     HELLO: Salve
@@ -16,6 +17,7 @@ it:
     TEXT1: 'Questo è il tuo'
     TEXT2: "link per l'azzeramento della password"
     TEXT3: per
+    TEXT4: 'Se il link sopra non dovesse funzionare, provare a copiarlo nella barra degli indirizzi del tuo browser.'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\GetParameter:
     CONFIRMATION_NAME: '"{key}" parametro GET'
   SilverStripe\Control\Middleware\ConfirmationMiddleware\Url:
@@ -27,6 +29,44 @@ it:
   SilverStripe\Control\RequestProcessor:
     INVALID_REQUEST: 'Richiesta non valida'
     REQUEST_ABORTED: 'Richiesta annullata'
+  SilverStripe\Core\Validation\FieldValidation\BooleanFieldValidator:
+    INVALID: 'Valore non valido'
+  SilverStripe\Core\Validation\FieldValidation\DateFieldValidator:
+    INVALID: 'Data non valida'
+    TOOLARGE: 'Il valore non può essere più recente di {maxValue}'
+    TOOSMALL: 'Il valore non può essere più vecchio di {minValue}'
+  SilverStripe\Core\Validation\FieldValidation\DatetimeFieldValidator:
+    INVALID: 'Data/ora non valida'
+  SilverStripe\Core\Validation\FieldValidation\DecimalFieldValidator:
+    TOOLARGE: 'Non può avere più di {wholeSize} cifre includendo le {decimalSize} cifre decimali'
+  SilverStripe\Core\Validation\FieldValidation\EmailFieldValidator:
+    INVALID: 'Indirizzo email non valido'
+  SilverStripe\Core\Validation\FieldValidation\IntFieldValidator:
+    WRONGTYPE: 'Deve essere un intero'
+  SilverStripe\Core\Validation\FieldValidation\IpFieldValidator:
+    INVALID: 'Indirizzo IP non valido'
+  SilverStripe\Core\Validation\FieldValidation\LocaleFieldValidator:
+    INVALID: 'Lingua non valida'
+  SilverStripe\Core\Validation\FieldValidation\NumericFieldValidator:
+    NOTNUMERIC: 'Deve essere un numero'
+    TOOLARGE: 'Il valore non può essere maggiore di {maxValue}'
+    TOOSMALL: 'Il valore non può essere minore di {minValue}'
+  SilverStripe\Core\Validation\FieldValidation\NumericNonStringFieldValidator:
+    WRONGTYPE: 'Deve essere un numero e non una stringa'
+  SilverStripe\Core\Validation\FieldValidation\OptionFieldValidator:
+    NOTALLOWED: 'Valore non consentito'
+  SilverStripe\Core\Validation\FieldValidation\StringFieldValidator:
+    TOOLONG: 'Non può avere più di {maxLength} caratteri'
+    TOOSHORT: 'Può avere al massimo {minLength} caratteri'
+    WRONGTYPE: 'Deve essere una stringa'
+  SilverStripe\Core\Validation\FieldValidation\TimeFieldValidator:
+    INVALID: 'Ora non valida'
+  SilverStripe\Core\Validation\FieldValidation\UrlFieldValidator:
+    INVALID: 'URL non valido'
+  SilverStripe\Dev\BulkLoader:
+    CANNOT_CREATE: "Creazione record '{type}' non consentita"
+    CANNOT_DELETE: "Cancellazione record '{type}' non consentita"
+    CANNOT_EDIT: "Modifica record '{type}' non consentita"
   SilverStripe\Dev\Command\ConfigDump:
     CAN_DEV_CONFIG_DESCRIPTION: 'Può vedere /dev/config'
     CAN_DEV_CONFIG_HELP: "Può vedere l'intera configurazione dell'applicazione (/dev/config)."
@@ -60,8 +100,15 @@ it:
     CURRENT_PASSWORD_MISSING: 'Devi inserire la tua password attuale.'
     LOGGED_IN_ERROR: 'Devi essere autenticato per poter cambiare la tua password.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
+    MEDIUM: Media
     RANDOM_IF_EMPTY: 'Se lasciato vuoto una password casuale verrà generata automaticamente.'
     SHOWONCLICKTITLE: 'Cambia password'
+    STRENGTH: 'Sicurezza password: {strengthLabel}'
+    STRONG: Forte
+    VALIDATIONSTRONGPASSWORD: 'La sicurezza password è troppo bassa. Si prega di usare una password più sicura.'
+    VERYSTRONG: 'Molto forte'
+    VERYWEAK: 'Molto debole'
+    WEAK: Debole
   SilverStripe\Forms\DateField:
     NOTSET: 'non impostato'
     TODAY: oggi
@@ -97,6 +144,7 @@ it:
     TABMAIN: Principale
   SilverStripe\Forms\GridField\GridField:
     Add: 'Aggiungi {name}'
+    AddNew: 'Aggiungi nuovo {name}'
     CSVEXPORT: 'Esporta come CSV'
     CSVIMPORT: 'Importa CSV'
     Filter: Filtra
@@ -131,7 +179,7 @@ it:
     NEW: 'Aggiungi un nuovo record'
     NEXT: 'Vai al prossimo record'
     PREVIOUS: 'Vai al record precedente'
-    SAVEDUP: 'Salvato correttamente.'
+    SAVEDUP: 'Salvato correttamente'
     SAVETOASTMESSAGE: '{type} "{title}" salvato correttamente.'
     ViewPermissionsFailure: 'Pare tu non abbia i privilegi necessari per visualizzare "{ObjectTitle}"'
   SilverStripe\Forms\GridField\GridFieldEditButton:
@@ -144,10 +192,19 @@ it:
     UnlinkSelfFailure: 'Non è possibile rimuovere te stesso da questo gruppo, perderesti i diritti di admin'
   SilverStripe\Forms\GridField\GridFieldImportButton:
     CLOSE_MODAL: Chiudi
+  SilverStripe\Forms\GridField\GridFieldLevelUp:
+    NavigateUp: 'Vai su di un livello'
+  SilverStripe\Forms\GridField\GridFieldLevelup:
+    NavigateUp: 'Vai su di un livello'
   SilverStripe\Forms\GridField\GridFieldPaginator:
+    First: Primo
+    InputTitle: 'Pagina attuale, numero {current} di {total}'
+    Last: Ultimo
     Next: Seguente
     OF: di
     Page: Pagina
+    Pagination: Paginazione
+    PaginationForTitle: 'Paginazione per {title}'
     Previous: Precedente
     View: Visualizza
   SilverStripe\Forms\GridField\GridFieldViewButton:
@@ -160,11 +217,13 @@ it:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
     INVALID_CURRENCY: "La valuta {currency} non è nell'elenco delle valute disponibili"
+    INVALID_CURRENCY_2: 'La valuta {currency} non è nella lista delle valute consentite. Le valute consentite sono: {currencies}.'
   SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: "Per favore selezionare un valore tra quelli forniti. È stata fornita l'opzione non valida {value}"
   SilverStripe\Forms\NullableField:
     IsNullLabel: 'è nullo.'
   SilverStripe\Forms\NumericField:
+    INVALID: 'Numero non valido'
     VALIDATION: "'{value}' non è un numero, solo numeri possono essere accettati per questo campo"
   SilverStripe\Forms\SearchableDropdownTrait:
     SELECT: Seleziona...
@@ -176,15 +235,20 @@ it:
     VALIDATEFORMAT: "Inserisci un formato d'ora valido ({format})"
   SilverStripe\Forms\UrlField:
     INVALID: 'Prego inserire un URL valido'
+    INVALID_WITH_PROTOCOL: 'Si prega di inserire un URL valido con protocollo incluso, per esempio {protocol}://example.com'
   SilverStripe\ORM\DataObject:
     FILTER_WITHINRANGE_FROM: Da
     FILTER_WITHINRANGE_TO: A
     GENERALSEARCH: 'Ricerca Generale'
+    NO_DUPLICATE: 'Non posso creare {type} duplicato'
+    NO_DUPLICATE_MULTI_FIELD: 'Non posso creare un duplicato {type} - almeno uno dei seguenti campi deve essere modificato: {fields}'
+    NO_DUPLICATE_SINGLE_FIELD: 'Non posso creare un duplicato {type} con "{field}" impostato a "{value}"'
     PLURALNAME: 'Data Object'
     PLURALS:
       many: '{count} Data Object'
       one: 'Un Data Object'
       other: '{count} Data Object'
+    VALUE_SET_FOR_GENERATED_COLUMN: 'Non posso impostare un valore nel campo generato "{field}"'
     many_many_FileTracking: 'Monitoraggio file'
     many_many_LinkTracking: 'Monitoraggio link'
   SilverStripe\ORM\FieldType\DBBoolean:
@@ -249,9 +313,12 @@ it:
   SilverStripe\ORM\Hierarchy:
     LIMITED_TITLE: 'Troppi figli ({count})'
   SilverStripe\ORM\Hierarchy\Hierarchy:
+    ChildTypeNotAllowed: 'Modello tipo "{type}" non consentito come figlio di questo record'
     InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
     LIMITED_TITLE: 'Troppi figli ({count})'
+    TypeOnRootNotAllowed: 'Modello tipo "{type}" non consentito nel livello radice'
   SilverStripe\ORM\Search\SearchContextForm:
+    FILTERLABELTEXT: 'Cerca "{model}"'
     OpenFilter: 'Apri ricerca e filtro'
   SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Errore di validazione'
@@ -385,6 +452,7 @@ it:
     db_AccountResetHash: 'Hash per il reset delle credenziali'
     db_AutoLoginExpired: 'Auto login scaduto'
     db_AutoLoginHash: "Hash per l'auto login"
+    db_AutoLoginTempHash: "Hash temporaneo per l'auto login"
     db_BlogProfileSummary: 'Riassunto profilo per il blog'
     db_DefaultRegisteredMethodID: 'ID metodo di registrazione di default'
     db_Email: E-mail
@@ -393,7 +461,7 @@ it:
     db_HasSkippedMFARegistration: 'Ha registrazione con skippedMFA'
     db_IsExpired: 'È scaduto'
     db_LastSynced: 'Ultima sincronizzazione'
-    db_Locale: 'Localizzazione interfaccia'
+    db_Locale: 'Lingua interfaccia'
     db_LockedOutUntil: 'Bloccato fino al'
     db_PasswordEncryption: 'Password criptata'
     db_PasswordExpiry: 'Data di scadenza della password'

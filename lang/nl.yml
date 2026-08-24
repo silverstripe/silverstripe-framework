@@ -195,10 +195,13 @@ nl:
     NavigateUp: 'Naar bovenliggend niveau'
   SilverStripe\Forms\GridField\GridFieldPaginator:
     First: Eerste
+    InputTitle: 'Huidige pagina, momenteel {current} van {total}'
     Last: Laatste
     Next: Volgende
     OF: van
     Page: Pagina
+    Pagination: Paginering
+    PaginationForTitle: 'Pagineren van {title}'
     Previous: Vorige
     View: Bekijk
   SilverStripe\Forms\GridField\GridFieldViewButton:
