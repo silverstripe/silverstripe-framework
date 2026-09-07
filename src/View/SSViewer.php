@@ -7,6 +7,7 @@ use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\FieldType\DBField;
@@ -370,14 +371,14 @@ class SSViewer
             $url = '/' . $request->getURL(true);
             if ($rewritePHP) {
                 $thisURLRelativeToBase = <<<PHP
-                <?php echo \\SilverStripe\\Core\\Convert::raw2att(preg_replace(
+                <?php echo \\SilverStripe\\Core\\Convert::raw2att(\\SilverStripe\\Control\\Controller::normaliseTrailingSlash(preg_replace(
                     "/^(\\\\/)+/",
                     "/",
                     \$_SERVER['REQUEST_URI'] ?? SilverStripe\\Control\\Controller::curr()?->getRequest()?->getURL(true) ?? '$url'
-                )); ?>
+                ))); ?>
                 PHP;
             } else {
-                $thisURLRelativeToBase = Convert::raw2att($url);
+                $thisURLRelativeToBase = Convert::raw2att(Controller::normaliseTrailingSlash($url));
             }
 
             $output = preg_replace('/(<a[^>]+href *= *)"#/i', '\\1"' . $thisURLRelativeToBase . '#', $output ?? '');

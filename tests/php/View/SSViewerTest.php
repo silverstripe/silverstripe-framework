@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
@@ -239,11 +240,11 @@ class SSViewerTest extends SapphireTest
         }
 
         $code = <<<'EOC'
-        <a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(preg_replace(
+        <a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(\SilverStripe\Control\Controller::normaliseTrailingSlash(preg_replace(
             "/^(\/)+/",
             "/",
             $_SERVER['REQUEST_URI'] ?? SilverStripe\Control\Controller::curr()?->getRequest()?->getURL(true) ?? '/about-us'
-        )); ?>#anchor">InsertedLink</a>
+        ))); ?>#anchor">InsertedLink</a>
         EOC;
         $this->assertStringContainsString($code, $result);
         $this->assertStringContainsString(
@@ -251,6 +252,82 @@ class SSViewerTest extends SapphireTest
             $result,
             'SSTemplateParser should only rewrite anchor hrefs'
         );
+    }
+
+    public static function provideRewriteHashlinksTrailingSlash(): array
+    {
+        return [
+            'no trailing slash' => [
+                'addTrailingSlash' => false,
+                'url' => 'about-us',
+                'expected' => '/about-us',
+            ],
+            'trailing slash' => [
+                'addTrailingSlash' => true,
+                'url' => 'about-us',
+                'expected' => '/about-us/',
+            ],
+            'no trailing slash with query string' => [
+                'addTrailingSlash' => false,
+                'url' => 'about-us?foo=bar',
+                'expected' => '/about-us?foo=bar',
+            ],
+            'trailing slash with query string' => [
+                'addTrailingSlash' => true,
+                'url' => 'about-us?foo=bar',
+                'expected' => '/about-us/?foo=bar',
+            ],
+            'no trailing slash with a dot in the query string' => [
+                'addTrailingSlash' => false,
+                'url' => 'about-us?foo=bar.baz',
+                'expected' => '/about-us?foo=bar.baz',
+            ],
+            'trailing slash with a dot in the query string' => [
+                'addTrailingSlash' => true,
+                'url' => 'about-us?foo=bar.baz',
+                'expected' => '/about-us/?foo=bar.baz',
+            ],
+            'no trailing slash on home page' => [
+                'addTrailingSlash' => false,
+                'url' => '',
+                'expected' => '/',
+            ],
+            'trailing slash on home page' => [
+                'addTrailingSlash' => true,
+                'url' => '',
+                'expected' => '/',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideRewriteHashlinksTrailingSlash')]
+    public function testRewriteHashlinksTrailingSlash(bool $addTrailingSlash, string $url, string $expected): void
+    {
+        Controller::config()->set('add_trailing_slash', $addTrailingSlash);
+        SSViewer::setRewriteHashLinksDefault(true);
+
+        $origRequest = Injector::inst()->has(HTTPRequest::class)
+            ? Injector::inst()->get(HTTPRequest::class)
+            : null;
+        Injector::inst()->registerService(new HTTPRequest('GET', $url), HTTPRequest::class);
+
+        try {
+            $engine = new DummyTemplateEngine();
+            $engine->setOutput(
+                '<html><head><base href="http://www.example.com/"></head>'
+                . '<body><a href="#anchor">Link</a></body></html>'
+            );
+            $tmpl = new SSViewer([], $engine);
+            $result = $tmpl->process('pretend this is a model');
+        } finally {
+            if ($origRequest) {
+                Injector::inst()->registerService($origRequest, HTTPRequest::class);
+            } else {
+                Injector::inst()->unregisterNamedObject(HTTPRequest::class);
+            }
+        }
+
+        $this->assertStringContainsString('<a href="' . Convert::raw2att($expected) . '#anchor">Link</a>', $result);
     }
 
     public function testGetBaseTag()
