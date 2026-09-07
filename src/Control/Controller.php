@@ -684,12 +684,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             return $url;
         }
 
-        // Do not modify files
-        $extension = pathinfo(Director::makeRelative($url), PATHINFO_EXTENSION);
-        if ($extension) {
-            return $url;
-        }
-
         $querystring = null;
         $fragmentIdentifier = null;
 
@@ -702,17 +696,23 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
             list($url, $querystring) = explode('?', $url, 2);
         }
 
-        // Normalise trailing slash
-        $shouldHaveTrailingSlash = Controller::config()->uninherited('add_trailing_slash');
-        if ($shouldHaveTrailingSlash && !str_ends_with($url, '/')) {
-            $url .= '/';
-        } elseif (!$shouldHaveTrailingSlash) {
-            $url = rtrim($url, '/');
-        }
+        // Do not modify files
+        // The extension is checked against the path only, as a dot in the querystring or fragment
+        // identifier does not make the URL a file
+        $extension = pathinfo(Director::makeRelative($url), PATHINFO_EXTENSION);
+        if (!$extension) {
+            // Normalise trailing slash
+            $shouldHaveTrailingSlash = Controller::config()->uninherited('add_trailing_slash');
+            if ($shouldHaveTrailingSlash && !str_ends_with($url, '/')) {
+                $url .= '/';
+            } elseif (!$shouldHaveTrailingSlash) {
+                $url = rtrim($url, '/');
+            }
 
-        // Ensure relative root URLs are represented with a slash
-        if ($url === '') {
-            $url = '/';
+            // Ensure relative root URLs are represented with a slash
+            if ($url === '') {
+                $url = '/';
+            }
         }
 
         // Add back fragment identifier and querystrings

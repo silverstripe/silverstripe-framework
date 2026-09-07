@@ -634,6 +634,22 @@ class ControllerTest extends FunctionalTest
                 'withSlash' => 'some/path/?key=value&key2=value2#some-id',
                 'withoutSlash' => 'some/path?key=value&key2=value2#some-id',
             ],
+            // A dot in the query string or fragment identifier doesn't make the URL a file
+            [
+                'path' => 'some/path?key=value.ext',
+                'withSlash' => 'some/path/?key=value.ext',
+                'withoutSlash' => 'some/path?key=value.ext',
+            ],
+            [
+                'path' => 'some/path#some.id',
+                'withSlash' => 'some/path/#some.id',
+                'withoutSlash' => 'some/path#some.id',
+            ],
+            [
+                'path' => 'some/path?key=value.ext#some.id',
+                'withSlash' => 'some/path/?key=value.ext#some.id',
+                'withoutSlash' => 'some/path?key=value.ext#some.id',
+            ],
             // Don't ever add a trailing slash to the end of a URL that looks like a file
             [
                 'path' => 'https://www.example.com/some/file.txt',
