@@ -12,11 +12,13 @@ class TreeDropdownField_Readonly extends TreeDropdownField
         if ($this->value) {
             $keyObj = $this->objectForKey($this->value);
             $title = $keyObj ? $keyObj->$fieldName : '';
+            $source = [$this->value => $title];
         } else {
-            $title = null;
+            // Using null as an array offset is deprecated in PHP 8.5. An empty
+            // source renders the same "(none)" placeholder LookupField produced
+            // for the previous [null => null] source.
+            $source = [];
         }
-
-        $source = [ $this->value => $title ];
         $field = LookupField::create($this->name, $this->title, $source);
         $field->setValue($this->value);
         $field->setForm($this->form);
