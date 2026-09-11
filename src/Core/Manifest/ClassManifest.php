@@ -11,6 +11,7 @@ use PhpParser\ParserFactory;
 use PhpParser\ErrorHandler\ErrorHandler;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\TestOnly;
 
 /**
@@ -75,10 +76,13 @@ class ClassManifest
         'interfaces',
         'interfaceNames',
         'implementors',
+        'annotated',
         'traits',
         'traitNames',
         'enums',
         'enumNames',
+        'attributes',
+        'attributeNames',
     ];
 
     /**
@@ -126,6 +130,36 @@ class ClassManifest
     protected $descendants = [];
 
     /**
+     * List of root interface with no parent interface
+     * Keys are lowercase, values are correct case.
+     *
+     * Note: Only used while regenerating cache
+     *
+     * @var array
+     */
+    protected array $interfaceRoots = [];
+
+    /**
+     * List of direct children for any interface.
+     * Keys are lowercase, values are arrays.
+     * Each item-value array has lowercase keys and correct case for values.
+     *
+     * Note: Only used while regenerating cache
+     *
+     * @var array
+     */
+    protected array $interfaceChildren = [];
+
+    /**
+     * List of descendents for any interface (direct + indirect children)
+     * Keys are lowercase, values are arrays.
+     * Each item-value array has lowercase keys and correct case for values.
+     *
+     * @var array
+     */
+    protected $interfaceDescendants = [];
+
+    /**
      * Map of lowercase interface name to path those files
      *
      * @var array
@@ -147,6 +181,15 @@ class ClassManifest
      * @var array
      */
     protected $implementors = [];
+
+    /**
+     * List of classes which are annoated by an attribute
+     * Keys are lowercase, values are arrays.
+     * Each item-value array has lowercase keys and correct case for values.
+     *
+     * @var array
+     */
+    protected array $annotated = [];
 
     /**
      * Map of lowercase trait names to paths
@@ -175,6 +218,20 @@ class ClassManifest
      * @var array
      */
     protected $enumNames = [];
+
+    /**
+     * Map of lowercase attribute names to paths
+     *
+     * @var array
+     */
+    protected array $attributes = [];
+
+    /**
+     * Map of lowercase attribute names to proper case
+     *
+     * @var array
+     */
+    protected array $attributeNames = [];
 
     /**
      * PHP Parser for parsing found files
@@ -360,11 +417,12 @@ class ClassManifest
     {
         $lowerName = strtolower($name ?? '');
         foreach ([
-                     $this->classes,
-                     $this->interfaces,
-                     $this->traits,
-                     $this->enums,
-                 ] as $source) {
+            $this->classes,
+            $this->interfaces,
+            $this->traits,
+            $this->enums,
+            $this->attributes,
+        ] as $source) {
             if (isset($source[$lowerName]) && file_exists($source[$lowerName] ?? '')) {
                 return $source[$lowerName];
             }
@@ -382,11 +440,12 @@ class ClassManifest
     {
         $lowerName = strtolower($name ?? '');
         foreach ([
-                     $this->classNames,
-                     $this->interfaceNames,
-                     $this->traitNames,
-                     $this->enumNames,
-                 ] as $source) {
+            $this->classNames,
+            $this->interfaceNames,
+            $this->traitNames,
+            $this->enumNames,
+            $this->attributeNames,
+        ] as $source) {
             if (isset($source[$lowerName])) {
                 return $source[$lowerName];
             }
@@ -455,6 +514,26 @@ class ClassManifest
     }
 
     /**
+     * Returns a map of lowercased attribute names to file paths.
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Returns a map of lowercase attribute names to proper attribute names in the manifest
+     *
+     * @return array
+     */
+    public function getAttributeNames()
+    {
+        return $this->attributeNames;
+    }
+
+    /**
      * Returns an array of all the descendant data.
      *
      * @return array
@@ -462,6 +541,16 @@ class ClassManifest
     public function getDescendants()
     {
         return $this->descendants;
+    }
+
+    /**
+     * Returns an array of all the descendant data.
+     *
+     * @return array
+     */
+    public function getInterfaceDescendants(): array
+    {
+        return $this->interfaceDescendants;
     }
 
     /**
@@ -480,6 +569,24 @@ class ClassManifest
         $lClass = strtolower($class ?? '');
         if (array_key_exists($lClass, $this->descendants ?? [])) {
             return $this->descendants[$lClass];
+        }
+
+        return [];
+    }
+
+    /**
+     * Returns an array containing all the descendants (direct and indirect)
+     * of a class.
+     *
+     * @param  string $interface
+     * @return array
+     */
+    public function getDescendantsOfInterface(string $interface): array
+    {
+        $lowerInterface = strtolower($interface);
+
+        if (array_key_exists($lowerInterface, $this->interfaceDescendants)) {
+            return $this->interfaceDescendants[$lowerInterface];
         }
 
         return [];
@@ -534,6 +641,74 @@ class ClassManifest
     }
 
     /**
+     * @param string $interface
+     * @return void
+     */
+    public function getImplementorsOfIncludingChildren(string $interface): array
+    {
+        $results = $this->getImplementorsOf($interface);
+
+        foreach ($this->getDescendantsOfInterface($interface) as $subInterface) {
+            $results = array_merge($results, $this->getImplementorsOf($subInterface));
+        }
+
+        return $results;
+    }
+
+    /**
+     * Get an array containing a list of attributes and classes which are annotated by them
+     *
+     * @return array
+     */
+    public function getAnnotated(): array
+    {
+        return $this->annotated;
+    }
+
+    /**
+     * Get the list of classes which are annonated by a given attribute
+     *
+     * @param class-string $attribute
+     * @param bool $instanceOf
+     * @param 'classes'|'traits'|'interfaces'|'enums' $type
+     * @return array
+     */
+    public function getAnnotatedBy(string $attribute, bool $instanceOf = true, string $type = 'classes'): array
+    {
+        if (!in_array($type, ['classes', 'interfaces', 'traits', 'enums'], true)) {
+            throw new \InvalidArgumentException('$type must be one of classes, interfaces, traits, or enums');
+        }
+
+        $isInterface = (
+            interface_exists($attribute)
+            || isset($this->interfaces[strtolower($attribute)]) // Extra check to support internal lower case class-names
+        );
+
+        if ($instanceOf || $isInterface) {
+            if ($isInterface) {
+                $attributeClasses = $this->getImplementorsOfIncludingChildren($attribute);
+            } else {
+                $attributeClasses = $this->getDescendantsOf($attribute);
+                array_unshift($attributeClasses, $attribute);
+            }
+        } else {
+            $attributeClasses = [$attribute];
+        }
+
+        $classes = [];
+
+        foreach ($attributeClasses as $attributeClass) {
+            $lowerAttributeClass = strtolower($attributeClass);
+
+            if (array_key_exists($lowerAttributeClass, $this->annotated)) {
+                $classes = array_merge($classes, $this->annotated[$lowerAttributeClass][$type] ?? []);
+            }
+        }
+
+        return $classes;
+    }
+
+    /**
      * Get module that owns this class
      *
      * @param string $class Class name
@@ -570,6 +745,10 @@ class ClassManifest
 
         foreach ($this->roots as $root) {
             $this->coalesceDescendants($root);
+        }
+
+        foreach ($this->interfaceRoots as $root) {
+            $this->coalesceInterfaceDescendants($root);
         }
 
         if ($this->cache) {
@@ -657,24 +836,6 @@ class ClassManifest
             $this->classes[$lowerClassName] = $pathname;
             $this->classNames[$lowerClassName] = $className;
 
-            // Add to children
-            if ($classInfo['extends']) {
-                foreach ($classInfo['extends'] as $ancestor) {
-                    $lowerAncestor = strtolower($ancestor ?? '');
-                    if (!isset($this->children[$lowerAncestor])) {
-                        $this->children[$lowerAncestor] = [];
-                    }
-                    $this->children[$lowerAncestor][$lowerClassName] = $className;
-                }
-
-                // If the class extends a core class, add class to roots
-                if (strpos($ancestor, 'SilverStripe\\Control') === 0) {
-                    $this->roots[$lowerAncestor] = $ancestor;
-                }
-            } else {
-                $this->roots[$lowerClassName] = $className;
-            }
-
             // Load interfaces
             foreach ($classInfo['interfaces'] as $interface) {
                 $lowerInterface = strtolower($interface ?? '');
@@ -683,6 +844,22 @@ class ClassManifest
                 }
                 $this->implementors[$lowerInterface][$lowerClassName] = $className;
             }
+
+            $this->handleChildren(
+                $this->roots,
+                $this->children,
+                $className,
+                $lowerClassName,
+                $classInfo
+            );
+
+            $this->handleAttributes(
+                'classes',
+                $pathname,
+                $className,
+                $lowerClassName,
+                $classInfo
+            );
         }
 
         // Merge all found interfaces into list
@@ -690,6 +867,22 @@ class ClassManifest
             $lowerInterface = strtolower($interfaceName ?? '');
             $this->interfaces[$lowerInterface] = $pathname;
             $this->interfaceNames[$lowerInterface] = $interfaceName;
+
+            $this->handleChildren(
+                $this->interfaceRoots,
+                $this->interfaceChildren,
+                $interfaceName,
+                $lowerInterface,
+                $interfaceInfo
+            );
+
+            $this->handleAttributes(
+                'interfaces',
+                $pathname,
+                $interfaceName,
+                $lowerInterface,
+                $interfaceInfo,
+            );
         }
 
         // Merge all traits
@@ -697,6 +890,14 @@ class ClassManifest
             $lowerTrait = strtolower($traitName ?? '');
             $this->traits[$lowerTrait] = $pathname;
             $this->traitNames[$lowerTrait] = $traitName;
+
+            $this->handleAttributes(
+                'traits',
+                $pathname,
+                $traitName,
+                $lowerTrait,
+                $traitInfo,
+            );
         }
 
         // Merge all enums
@@ -704,6 +905,14 @@ class ClassManifest
             $lowerEnum = strtolower($enumName ?? '');
             $this->enums[$lowerEnum] = $pathname;
             $this->enumNames[$lowerEnum] = $enumName;
+
+            $this->handleAttributes(
+                'enums',
+                $pathname,
+                $enumName,
+                $lowerEnum,
+                $enumInfo,
+            );
         }
 
         // Save back to cache if configured
@@ -716,6 +925,66 @@ class ClassManifest
             ];
 
             $this->filesCache[$key] = $cache;
+        }
+    }
+
+    protected function handleChildren(
+        array &$roots,
+        array &$children,
+        string $className,
+        string $lowerClassName,
+        array $classInfo
+    ): void {
+        // Add to children
+        if ($classInfo['extends']) {
+            $ancestor = '';
+            $lowerAncestor = '';
+
+            foreach ($classInfo['extends'] as $ancestor) {
+                $lowerAncestor = strtolower($ancestor ?? '');
+                if (!isset($children[$lowerAncestor])) {
+                    $children[$lowerAncestor] = [];
+                }
+                $children[$lowerAncestor][$lowerClassName] = $className;
+            }
+
+            // If the class extends a core class, add class to roots
+            if (str_starts_with($ancestor, 'SilverStripe\\Control')) {
+                $roots[$lowerAncestor] = $ancestor;
+            }
+        } else {
+            $roots[$lowerClassName] = $className;
+        }
+    }
+
+    protected function handleAttributes(
+        string $type,
+        string $pathname,
+        string $className,
+        string $lowerClassName,
+        array $classInfo
+    ): void {
+        if (isset($classInfo['attributes'])) {
+            foreach ($classInfo['attributes'] as $attributeName) {
+                $lowerAttributeName = strtolower($attributeName);
+
+                if (!isset($this->annotated[$lowerAttributeName])) {
+                    $this->annotated[$lowerAttributeName] = [
+                        'classes' => [],
+                        'interfaces' => [],
+                        'traits' => [],
+                        'enums' => [],
+                    ];
+                }
+
+                $this->annotated[$lowerAttributeName][$type][$lowerClassName] = $className;
+
+                // Class is a attribute append it to the list of attribute classes
+                if ($type === 'classes' && $lowerAttributeName == 'attribute') {
+                    $this->attributes[$lowerClassName] = $pathname;
+                    $this->attributeNames[$lowerClassName] = $className;
+                }
+            }
         }
     }
 
@@ -744,6 +1013,33 @@ class ClassManifest
             );
         }
         return $this->descendants[$lowerClass];
+    }
+
+    /**
+     * Recursively coalesces direct child information into full descendant
+     * information.
+     *
+     * @param string $interface
+     * @return array
+     */
+    protected function coalesceInterfaceDescendants(string $interface): array
+    {
+        // Reset descendents to immediate children initially
+        $lowerInterface = strtolower($interface);
+        if (empty($this->interfaceChildren[$lowerInterface])) {
+            return [];
+        }
+
+        // Coalesce children into descendent list
+        $this->interfaceDescendants[$lowerInterface] = $this->interfaceChildren[$lowerInterface];
+        foreach ($this->interfaceChildren[$lowerInterface] as $childInterface) {
+            // Merge all nested descendants
+            $this->interfaceDescendants[$lowerInterface] = array_merge(
+                $this->interfaceDescendants[$lowerInterface],
+                $this->coalesceInterfaceDescendants($childInterface)
+            );
+        }
+        return $this->interfaceDescendants[$lowerInterface];
     }
 
     /**
@@ -801,10 +1097,17 @@ class ClassManifest
             if (!is_array($data[$key])) {
                 return false;
             }
-            // Detect legacy cache keys (non-associative)
             $array = $data[$key];
-            if (!empty($array) && is_numeric(key($array ?? []))) {
-                return false;
+            if (!empty($array)) {
+                $key = key($array ?? []);
+                // Detect legacy cache keys (non-associative)
+                if (is_numeric($key)) {
+                    return false;
+                }
+                // Detect missing attributes
+                if (!isset($array[$key]['attributes'])) {
+                    return false;
+                }
             }
         }
         return true;
