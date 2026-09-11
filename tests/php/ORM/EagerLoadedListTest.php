@@ -2422,4 +2422,26 @@ class EagerLoadedListTest extends SapphireTest
         }
         $this->assertCount($numExpected, $result, 'contents: ' . implode(', ', $result));
     }
+
+    public function testEmptyList()
+    {
+        $list = Category::get()->eagerLoad('Products');
+        $categoryA = $this->idFromFixture(Category::class, 'categorya');
+        $sawEmptyList = false;
+
+        /** @var Category $category */
+        foreach ($list as $category) {
+            $products = $category->Products();
+            $expected = $category->ID == $categoryA ? 2 : 0;
+            $sawEmptyList = $sawEmptyList || $products->count() === 0;
+
+            $this->assertInstanceOf(EagerLoadedList::class, $products);
+            $this->assertEquals($expected, $products->filter('Title:StartsWith', 'Product')->count());
+            $this->assertEquals($expected, $products->filterAny('Title:StartsWith', 'Product')->count());
+            $this->assertEquals(0, $products->exclude('Title:StartsWith', 'Product')->count());
+            $this->assertEquals(0, $products->excludeAny('Title:StartsWith', 'Product')->count());
+        }
+
+        $this->assertTrue($sawEmptyList, 'Expected at least one Category with an empty eager-loaded Products list');
+    }
 }
