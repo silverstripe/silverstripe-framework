@@ -3,7 +3,6 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
@@ -88,7 +87,7 @@ class BasicAuth
         $permissionCode = null,
         $tryUsingSessionLogin = true
     ) {
-        if ((Director::is_cli() && static::config()->get('ignore_cli'))) {
+        if ((Environment::isCli() && static::config()->get('ignore_cli'))) {
             return true;
         }
 

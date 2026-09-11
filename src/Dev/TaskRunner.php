@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Model\List\ArrayList;
@@ -201,7 +202,7 @@ class TaskRunner extends Controller implements PermissionProvider
         return (
             Director::isDev()
             // We need to ensure that unit tests can simulate permission failures when navigating to "dev/tasks"
-            || (Director::is_cli() && DevelopmentAdmin::config()->get('allow_all_cli'))
+            || (Environment::isCli() && DevelopmentAdmin::config()->get('allow_all_cli'))
             || Permission::check(static::config()->get('init_permissions'))
         );
     }

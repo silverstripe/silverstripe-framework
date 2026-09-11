@@ -3,9 +3,9 @@
 namespace SilverStripe\Control\Middleware;
 
 use InvalidArgumentException;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Environment;
 
 /**
  * Secures requests by only allowing a whitelist of Host values
@@ -62,7 +62,7 @@ class AllowedHostsMiddleware implements HTTPMiddleware
         // check allowed hosts
         if ($allowedHosts
             && $allowedHosts !== ['*']
-            && !Director::is_cli()
+            && !Environment::isCli()
             && !in_array($request->getHeader('Host'), $allowedHosts ?? [])
         ) {
             return new HTTPResponse('Invalid Host', 400);

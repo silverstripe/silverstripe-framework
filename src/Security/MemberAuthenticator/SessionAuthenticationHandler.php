@@ -4,8 +4,8 @@ namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
+use SilverStripe\Core\Environment;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
@@ -105,7 +105,7 @@ class SessionAuthenticationHandler implements AuthenticationHandler
         }
 
         // This can be called via CLI during testing.
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             return;
         }
 
