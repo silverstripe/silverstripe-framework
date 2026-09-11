@@ -149,14 +149,15 @@ abstract class DBConnector
      */
     protected function isQueryType($sql, $type)
     {
-        if (!preg_match('/^(?<operation>\w+)\b/', $sql ?? '', $matches)) {
+        $sql = trim($sql ?? '');
+        if (!preg_match('/^(?<operation>\w+)\b/', $sql, $matches)) {
             return false;
         }
-        $operation = $matches['operation'];
+        $operation = strtolower($matches['operation']);
         if (is_array($type)) {
-            return in_array(strtolower($operation ?? ''), $type ?? []);
+            return in_array($operation, $type, true);
         }
-        return strcasecmp($sql ?? '', $type ?? '') === 0;
+        return $operation === $type;
     }
 
     /**
