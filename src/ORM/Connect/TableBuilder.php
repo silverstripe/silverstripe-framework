@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
@@ -44,7 +44,7 @@ class TableBuilder
                         $countSuffix = "";
                     }
 
-                    if (Director::is_cli()) {
+                    if (Environment::isCli()) {
                         echo " * $tableName$countSuffix\n";
                     } else {
                         echo "<li>$tableName$countSuffix</li>\n";

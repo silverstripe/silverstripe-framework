@@ -5,7 +5,6 @@ namespace SilverStripe\Core\Cache;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\SimpleCache\CacheInterface;
 use RuntimeException;
-use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
 use Symfony\Component\Cache\Adapter\ApcuAdapter;
 
@@ -57,7 +56,7 @@ class ApcuCacheFactory extends AbstractCacheFactory implements InMemoryCacheFact
         static $isSupported = null;
         if (null === $isSupported) {
             // Need to check for CLI because Symfony won't: https://github.com/symfony/symfony/pull/25080
-            $isSupported = Director::is_cli()
+            $isSupported = Environment::isCli()
                 ? filter_var(ini_get('apc.enable_cli'), FILTER_VALIDATE_BOOL) && ApcuAdapter::isSupported()
                 : ApcuAdapter::isSupported();
         }

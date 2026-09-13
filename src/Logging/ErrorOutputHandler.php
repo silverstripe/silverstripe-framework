@@ -6,8 +6,8 @@ use Monolog\Formatter\FormatterInterface;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\LogRecord;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\Environment;
 use SilverStripe\Dev\Deprecation;
 
 /**
@@ -78,7 +78,7 @@ class ErrorOutputHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Set a formatter to use if Director::is_cli() is true
+     * Set a formatter to use if Environment::isCli() is true
      *
      * @param FormatterInterface $cliFormatter
      * @return ErrorOutputHandler Return $this to allow chainable calls
@@ -91,7 +91,7 @@ class ErrorOutputHandler extends AbstractProcessingHandler
     }
 
     /**
-     * Return the formatter use if Director::is_cli() is true
+     * Return the formatter use if Environment::isCli() is true
      * If none has been set, null is returned, and the getFormatter() result will be used instead
      *
      * @return FormatterInterface
@@ -103,13 +103,13 @@ class ErrorOutputHandler extends AbstractProcessingHandler
 
     /**
      * Return the formatter to use in this case.
-     * May be the getCliFormatter() value if one is provided and Director::is_cli() is true.
+     * May be the getCliFormatter() value if one is provided and Environment::isCli() is true.
      *
      * @return FormatterInterface
      */
     public function getFormatter(): FormatterInterface
     {
-        if (Director::is_cli() && ($cliFormatter = $this->getCLIFormatter())) {
+        if (Environment::isCli() && ($cliFormatter = $this->getCLIFormatter())) {
             return $cliFormatter;
         }
 
@@ -145,7 +145,7 @@ class ErrorOutputHandler extends AbstractProcessingHandler
         // or our deprecations when the relevant shouldShow method returns true
         return $errorCode !== E_USER_DEPRECATED
             || !Deprecation::isTriggeringError()
-            || (Director::is_cli() ? Deprecation::shouldShowForCli() : Deprecation::shouldShowForHttp());
+            || (Environment::isCli() ? Deprecation::shouldShowForCli() : Deprecation::shouldShowForHttp());
     }
 
     /**
@@ -164,7 +164,7 @@ class ErrorOutputHandler extends AbstractProcessingHandler
             }
         }
 
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             echo $record['formatted'];
             return;
         }

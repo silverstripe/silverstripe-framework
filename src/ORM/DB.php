@@ -270,7 +270,7 @@ class DB
             return;
         }
         // Skip if CLI
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             return;
         }
         // Validate name
@@ -305,7 +305,7 @@ class DB
             return false;
         }
         // Skip if CLI
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             return false;
         }
         // Skip if there's no request object yet

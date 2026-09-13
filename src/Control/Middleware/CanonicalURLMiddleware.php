@@ -512,7 +512,7 @@ class CanonicalURLMiddleware implements HTTPMiddleware
         }
 
         // If CLI, EnabledEnvs must contain CLI
-        if (Director::is_cli() && !in_array('cli', $enabledEnvs ?? [])) {
+        if (Environment::isCli() && !in_array('cli', $enabledEnvs ?? [])) {
             return false;
         }
 

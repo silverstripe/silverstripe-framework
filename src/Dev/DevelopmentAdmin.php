@@ -9,6 +9,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Command\DevCommand;
 use SilverStripe\PolyExecution\HtmlOutputFormatter;
@@ -82,7 +83,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
     {
         parent::init();
 
-        if (static::config()->get('deny_non_cli') && !Director::is_cli()) {
+        if (static::config()->get('deny_non_cli') && !Environment::isCli()) {
             return $this->httpError(404);
         }
 
@@ -351,7 +352,7 @@ class DevelopmentAdmin extends Controller implements PermissionProvider
         // Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
         return (
             Director::isDev()
-            || (Director::is_cli() && static::config()->get('allow_all_cli'))
+            || (Environment::isCli() && static::config()->get('allow_all_cli'))
             // Its important that we don't run this check if dev/build was requested
             || Permission::check(['ADMIN', 'ALL_DEV_ADMIN'])
         );

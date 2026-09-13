@@ -4,8 +4,8 @@ namespace SilverStripe\Core\Validation;
 
 use Exception;
 use InvalidArgumentException;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Control\Director;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Control\Controller;
@@ -104,7 +104,7 @@ class ValidationException extends Exception
      */
     private function doShowAdditionalInfo(): bool
     {
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             return true;
         }
         $currentController = Controller::curr();

@@ -4,8 +4,8 @@ namespace SilverStripe\Dev\Tests;
 
 use Exception;
 use LogicException;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Kernel;
 use SilverStripe\Dev\Command\DevCommand;
@@ -168,7 +168,7 @@ class DevAdminControllerTest extends FunctionalTest
     {
         $this->logInWithPermission('ADMIN');
 
-        if (Director::is_cli()) {
+        if (Environment::isCli()) {
             // when in CLI the admin controller throws exceptions
             ob_start();
             try {
