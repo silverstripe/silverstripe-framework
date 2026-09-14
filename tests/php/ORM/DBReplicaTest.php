@@ -2,18 +2,18 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use ReflectionClass;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\ORM\DB;
 use SilverStripe\Control\Director;
-use SilverStripe\Security\Security;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Tests\DBReplicaTest\TestController;
 use SilverStripe\ORM\Tests\DBReplicaTest\TestObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
-use SilverStripe\ORM\DataQuery;
-use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\Security\Security;
 
 class DBReplicaTest extends FunctionalTest
 {
@@ -42,7 +42,7 @@ class DBReplicaTest extends FunctionalTest
         (new ReflectionClass(DB::class))->setStaticPropertyValue('mustUsePrimary', true);
         parent::tearDown();
     }
-    
+
     public function testUsesReplica(): void
     {
         // Assert uses replica by default
@@ -68,6 +68,51 @@ class DBReplicaTest extends FunctionalTest
         // Assert that now all subsequent queries use primary
         TestObject::get()->count();
         $this->assertSame(DB::CONN_PRIMARY, $this->getLastConnectionName());
+    }
+
+    public static function provideQueriesWithType(): array
+    {
+        return [
+            'select' => ['SELECT "ID" FROM "DBReplicaTest_TestObject"', false],
+            'select whitespace' => ['    SELECT "ID" FROM "DBReplicaTest_TestObject"', false],
+            'select tabs' => ["\t" . 'SELECT "ID" FROM "DBReplicaTest_TestObject"', false],
+            'select newlines' => ["\n" . 'SELECT "ID" FROM "DBReplicaTest_TestObject"', false],
+
+            'insert' => ['INSERT INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'insert whitespace' => ['   INSERT INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'insert tabs' => ["\t" . 'INSERT INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'insert newlines' => ["\n" . 'INSERT INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+
+            'replace' => ['REPLACE INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'replace whitespace' => ['   REPLACE INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'replace tabs' => ["\t" . 'REPLACE INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'replace newlines' => ["\n" . 'REPLACE INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+
+            'update' => ['UPDATE "DBReplicaTest_TestObject" SET "Title" = ?', true],
+            'update whitespace' => ['   UPDATE "DBReplicaTest_TestObject" SET "Title" = ?', true],
+            'update tabs' => ["\t" . 'UPDATE "DBReplicaTest_TestObject" SET "Title" = ?', true],
+            'update newlines' => ["\n" . 'UPDATE "DBReplicaTest_TestObject" SET "Title" = ?', true],
+
+            'delete' => ['DELETE FROM "DBReplicaTest_TestObject"', true],
+            'delete whitespace' => ['   DELETE FROM "DBReplicaTest_TestObject"', true],
+            'delete tabs' => ["\t" . 'DELETE FROM "DBReplicaTest_TestObject"', true],
+            'delete newlines' => ["\n" . 'DELETE FROM "DBReplicaTest_TestObject"', true],
+
+            'create table' => ['CREATE TABLE "DBReplicaTest_TestObject" ("ID" int primary key)', true],
+            'create table whitespace' => ['  CREATE TABLE "DBReplicaTest_TestObject" ("ID" int primary key)', true],
+
+            'drop table' => ['DROP TABLE "DBReplicaTest_TestObject"', true],
+            'drop table whitespace' => ['  DROP TABLE "DBReplicaTest_TestObject"', true],
+
+            'alter table' => ['ALTER TABLE "DBReplicaTest_TestObject" ADD COLUMN "Foo" INT', true],
+            'alter table whitespace' => ['  ALTER TABLE "DBReplicaTest_TestObject" ADD COLUMN "Foo" INT', true],
+        ];
+    }
+
+    #[DataProvider('provideQueriesWithType')]
+    public function testQueryType(string $query, bool $mutable): void
+    {
+        self::assertSame($mutable, DB::get_connector()->isQueryMutable($query));
     }
 
     public function testMutableSqlDbQuery(): void
