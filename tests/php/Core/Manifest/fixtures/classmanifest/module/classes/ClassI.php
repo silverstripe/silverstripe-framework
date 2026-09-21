@@ -3,4 +3,8 @@
  * @ignore
  */
 #[CustomAttributeA]
-enum EnumB {  }
+#[CustomAttributeC]
+class ClassI
+{
+
+}
