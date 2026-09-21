@@ -382,6 +382,32 @@ EOT;
         $this->assertEquals('unexpanded jstree-closed closed', $nodeClass, 'obj2 should have children in the sitetree');
     }
 
+    public function testGetChildrenAsArrayIncludesLevel(): void
+    {
+        $obj3 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3');
+        $obj3a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3a');
+        $obj3aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3aa');
+
+        $set = new MarkedSet(HierarchyTest\TestObject::singleton(), 'AllChildrenIncludingDeleted', 'numChildren');
+        $set->markPartialTree();
+        $set->markToExpose($obj3aa);
+
+        $tree = $set->getChildrenAsArray(function ($node) {
+            return [
+                'id' => $node->ID,
+                'title' => $node->Title,
+            ];
+        });
+        $node3 = $this->findTreeNodeById($tree, $obj3->ID);
+        $node3a = $this->findTreeNodeById($tree, $obj3a->ID);
+        $node3aa = $this->findTreeNodeById($tree, $obj3aa->ID);
+
+        $this->assertSame(0, $tree['level']);
+        $this->assertSame(1, $node3['level']);
+        $this->assertSame(2, $node3a['level']);
+        $this->assertSame(3, $node3aa['level']);
+    }
+
 
     /**
      * @param string $html    [description]
@@ -434,6 +460,22 @@ EOT;
             }
         }
         return '';
+    }
+
+    protected function findTreeNodeById(array $tree, int $id): array
+    {
+        if (($tree['id'] ?? null) === $id) {
+            return $tree;
+        }
+
+        foreach ($tree['children'] ?? [] as $child) {
+            $result = $this->findTreeNodeById($child, $id);
+            if ($result) {
+                return $result;
+            }
+        }
+
+        return [];
     }
 
     protected function assertHTMLSame($expected, $actual, $message = '')
