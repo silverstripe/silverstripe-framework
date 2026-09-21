@@ -117,7 +117,7 @@ class HTTPResponse
      * @var array
      */
     protected $headers = [
-        "content-type" => "text/html; charset=utf-8",
+        "charset" => "utf-8",
     ];
 
     /**
