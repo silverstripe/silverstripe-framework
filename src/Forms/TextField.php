@@ -101,17 +101,15 @@ class TextField extends FormField implements TippableFieldInterface
     {
         $maxLength = $this->getMaxLength();
 
-        $attributes = [];
-
+        $attributes = parent::getAttributes();
         if ($maxLength) {
             $attributes['maxLength'] = $maxLength;
-            $attributes['size'] = min($maxLength, 30);
+            if (!array_key_exists('size', $attributes)) {
+                $attributes['size'] = min($maxLength, 30);
+            }
         }
 
-        return array_merge(
-            parent::getAttributes(),
-            $attributes
-        );
+        return $attributes;
     }
 
     public function getSchemaDataDefaults()

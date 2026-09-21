@@ -34,6 +34,43 @@ class TextFieldTest extends SapphireTest
     }
 
     /**
+     * Ensures the size attribute is set when maxLength is specified
+     */
+    public function testFallbackSize()
+    {
+        $textField = new TextField('TestField');
+        $textField->setMaxLength(5);
+        $attributes = $textField->getAttributes();
+        $this->assertArrayHasKey('size', $attributes);
+        $this->assertEquals(5, $attributes['size']);
+    }
+
+    /**
+     * Ensures the fallback size attribute is capped at 30
+     */
+    public function testFallbackSizeCappedAt30()
+    {
+        $textField = new TextField('TestField');
+        $textField->setMaxLength(35);
+        $attributes = $textField->getAttributes();
+        $this->assertArrayHasKey('size', $attributes);
+        $this->assertEquals(30, $attributes['size']);
+    }
+
+    /**
+     * #12011 Ensures explicit size attribute is not overwritten
+     */
+    public function testSizeNotOverwrittenByFallbackSize()
+    {
+        $textField = new TextField('TestField');
+        $textField->setMaxLength(5);
+        $textField->setAttribute('size', 12);
+        $attributes = $textField->getAttributes();
+        $this->assertArrayHasKey('size', $attributes);
+        $this->assertEquals(12, $attributes['size']);
+    }
+
+    /**
      * Ensures that when a Tip is applied to the field, it outputs it in the schema
      */
     public function testTipIsIncludedInSchema()
