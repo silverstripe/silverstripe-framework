@@ -502,7 +502,7 @@ class Form extends ModelData implements HasRequestHandler, ValidationInterface
     {
         $resultData = $this->getSession()->get("FormInfo.{$this->FormName()}.result");
         if (isset($resultData)) {
-            return unserialize($resultData ?? '');
+            return unserialize($resultData ?? '', ['allowed_classes' => [ValidationResult::class]]);
         }
         return null;
     }
