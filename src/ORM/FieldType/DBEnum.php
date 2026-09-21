@@ -213,9 +213,42 @@ class DBEnum extends DBString implements Resettable
 
         // Get all enum values
         $enumValues = $this->getEnum();
-        if (DB::get_schema()->hasField($table, $name)) {
-            $existing = DB::query("SELECT DISTINCT \"{$name}\" FROM \"{$table}\"")->column();
-            $enumValues = array_unique(array_merge($enumValues, $existing));
+
+        if (!DB::get_schema()->hasField($table, $name)) {
+            DBEnum::$enum_cache[$table][$name] = $enumValues;
+            return $enumValues;
+        }
+
+        $currentConstraintValues = DB::get_schema()->enumValuesForField($table, $name);
+        $removedValues = array_diff($currentConstraintValues, $enumValues);
+
+        if (empty($removedValues)) {
+            DBEnum::$enum_cache[$table][$name] = $enumValues;
+            return $enumValues;
+        }
+
+        $obsoleteValues = [];
+        foreach ($removedValues as $value) {
+            $exists = DB::prepared_query(
+                "SELECT EXISTS(
+                    SELECT 1 FROM \"{$table}\"
+                    WHERE \"{$name}\" = ?
+                    LIMIT 1
+                ) as \"_exists\"",
+                [$value]
+            )->value();
+
+            if ($exists) {
+                $obsoleteValues[] = $value;
+            }
+        }
+
+        if (!empty($obsoleteValues)) {
+            DB::alteration_message(
+                "Found obsolete {$name} values in {$table}: " . implode(', ', $obsoleteValues),
+                'notice'
+            );
+            $enumValues = array_merge($enumValues, $obsoleteValues);
         }
 
         // Cache and return
