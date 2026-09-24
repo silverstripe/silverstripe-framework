@@ -358,7 +358,8 @@ class ClassManifest
      */
     public function getItemPath($name)
     {
-        $lowerName = strtolower($name ?? '');
+        // Accept a leading backslash, as class_exists() does: the manifest keys have none
+        $lowerName = strtolower(ltrim($name ?? '', '\\'));
         foreach ([
                      $this->classes,
                      $this->interfaces,

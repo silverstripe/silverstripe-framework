@@ -53,6 +53,8 @@ class ClassManifestTest extends SapphireTest
             ['interfacea', 'module/interfaces/InterfaceA.php'],
             ['TestTraitA', 'module/traits/TestTraitA.php'],
             ['TestNamespace\\Testing\\TestTraitB', 'module/traits/TestTraitB.php'],
+            ['\\ClassA', 'module/classes/ClassA.php'],
+            ['\\TestNamespace\\Testing\\TestTraitB', 'module/traits/TestTraitB.php'],
             ['VendorClassA', 'vendor/silverstripe/modulec/code/VendorClassA.php'],
             ['VendorTraitA', 'vendor/silverstripe/modulec/code/VendorTraitA.php'],
         ];
