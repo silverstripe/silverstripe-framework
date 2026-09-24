@@ -2,8 +2,11 @@
 
 namespace SilverStripe\Security;
 
+use PHPSQLParser\Test\Parser\mixedQuotesTest;
 use SilverStripe\Admin\SecurityAdmin;
 use SilverStripe\Core\Convert;
+use SilverStripe\Forms\SearchableDropdownField;
+use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\Forms\Validation\CompositeValidator;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
@@ -31,11 +34,13 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\Forms\TreeMultiselectField;
 use SilverStripe\Model\List\ArrayList;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\Core\Validation\ValidationResult;
 
@@ -99,6 +104,68 @@ class Group extends DataObject
 
     private static bool $require_sudo_mode = true;
 
+    /**
+     * Specify the limit from when groups should be lazyloaded for the SearchableDropdownField
+     */
+    private static int $dropdown_field_threshold = 100;
+
+    /**
+     * Create a search context which is used for the SearchableDropdownField
+     * in {@see Group::getCMSFields()} and {@see Member::getCMSFields()}
+     */
+    private static function getSearchContextForDropdown(): SearchContext
+    {
+        $group = static::singleton();
+
+        return SearchContext::create(
+            static::class,
+            FieldList::create(
+                TextField::create('Title', $group->fieldLabel('Title')),
+                TextField::create('Description', $group->fieldLabel('Description')),
+            ),
+            [
+                'Title' => 'PartialFilter',
+                'Description' => 'PartialFilter',
+            ]
+        );
+    }
+
+    /**
+     * Get a search dropdown fields for groups
+     *
+     * @param DataList<Group> $groups Prefiltered list of groups
+     * @param string $name Name of the created field
+     * @param string $title Title of the created field
+     * @param mixed $value Value of the group field
+     * @param bool $multi Return a multi select field instead
+     */
+    public static function getSearchDropdownField(
+        DataList $groups,
+        string $name,
+        string $title,
+        mixed $value,
+        bool $multi = false
+    ): SearchableMultiDropdownField|SearchableDropdownField {
+        $threshold = static::config()->get('dropdown_field_threshold');
+        $overThreshold = $groups->count() > $threshold;
+
+        /** @var class-string<SearchableMultiDropdownField|SearchableDropdownField> $fieldClass */
+        $fieldClass = $multi ? SearchableMultiDropdownField::class : SearchableDropdownField::class;
+
+        return $fieldClass::create(
+            $name,
+            $title,
+            $groups,
+            $value,
+            'SearchDropdownTitle'
+        )
+            ->setIsSearchable(true)
+            ->setUseSearchContext(true)
+            ->setSearchContext(static::getSearchContextForDropdown())
+            ->setIsLazyLoaded($overThreshold)
+            ->setLazyLoadLimit($threshold);
+    }
+
     public function getAllChildren()
     {
         $doSet = new ArrayList();
@@ -112,14 +179,12 @@ class Group extends DataObject
         return $doSet;
     }
 
-    private function getDecodedBreadcrumbs()
+    /**
+     * Title for the SearchableDropdownField in {@see Group::getSearchDropdownField()}
+     */
+    public function getSearchDropdownTitle(): string
     {
-        $list = Group::get()->exclude('ID', $this->ID);
-        $groups = ArrayList::create();
-        foreach ($list as $group) {
-            $groups->push(['ID' => $group->ID, 'Title' => $group->getBreadcrumbs(' » ')]);
-        }
-        return $groups;
+        return $this->getBreadcrumbs(' » ');
     }
 
     /**
@@ -137,11 +202,17 @@ class Group extends DataObject
                     'Members',
                     _t(__CLASS__ . '.MEMBERS', 'Members'),
                     new TextField("Title", $this->fieldLabel('Title')),
-                    $parentidfield = DropdownField::create(
+                    $parentidfield = static::getSearchDropdownField(
+                        static::get()->exclude('ID', $this->ID),
                         'ParentID',
                         $this->fieldLabel('Parent'),
-                        $this->getDecodedBreadcrumbs()
-                    )->setEmptyString(' '),
+                        $this->ParentID
+                    )
+                        ->setPlaceholder(_t(
+                            __CLASS__ . '.PARENT_GROUP_PLACEHOLDER',
+                            'Select parent group',
+                            'Placeholder text for a dropdown'
+                        )),
                     new TextareaField('Description', $this->fieldLabel('Description'))
                 ),
                 $permissionsTab = new Tab(
@@ -268,9 +339,9 @@ class Group extends DataObject
             }
 
             $rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
-                    ->setDefaultItems($groupRoleIDs)
-                    ->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
-                    ->setDisabledItems($inheritedRoleIDs);
+                ->setDefaultItems($groupRoleIDs)
+                ->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.AddRole', 'Add a role for this group'))
+                ->setDisabledItems($inheritedRoleIDs);
             if (!$allRoles->count()) {
                 $rolesField->setAttribute('data-placeholder', _t('SilverStripe\\Security\\Group.NoRoles', 'No roles found'));
             }
@@ -529,12 +600,13 @@ class Group extends DataObject
             }
         }
 
-        $currentGroups = Group::get()
-            ->filter('ID:not', $this->ID)
-            ->map('Code', 'Title')
-            ->toArray();
+        $groupExists = Group::get()
+            ->setUseCache(true)
+            ->filter('Title', $this->Title)
+            ->exclude('ID', $this->ID)
+            ->exists();
 
-        if (in_array($this->Title, $currentGroups)) {
+        if ($groupExists) {
             $result->addError(
                 _t(
                     'SilverStripe\\Security\\Group.ValidationIdentifierAlreadyExists',
@@ -552,7 +624,7 @@ class Group extends DataObject
         $validator = parent::getCMSCompositeValidator();
 
         $validator->addValidator(RequiredFieldsValidator::create([
-            'Title'
+            'Title',
         ]));
 
         return $validator;
@@ -770,16 +842,28 @@ class Group extends DataObject
      */
     private function dedupeCode(): void
     {
-        $currentGroups = Group::get()
-            ->exclude('ID', $this->ID)
-            ->map('Code', 'Title')
-            ->toArray();
-        $code = $this->Code;
+        $code = $base = $this->Code;
         $count = 2;
-        while (isset($currentGroups[$code ?? ''])) {
-            $code = $this->Code . '-' . $count;
-            $count++;
+
+        if ($code) {
+            while ($this->checkDuplicateCode($code)) {
+                $code = $base . '-' . $count;
+                $count++;
+            }
+
+            $this->setField('Code', $code);
         }
-        $this->setField('Code', $code);
+    }
+
+    /**
+     * Check for existing group with the same code.
+     */
+    private function checkDuplicateCode(string $code): bool
+    {
+        return Group::get()
+            ->setUseCache(true)
+            ->filter('Code', $code)
+            ->exclude('ID', $this->ID)
+            ->exists();
     }
 }

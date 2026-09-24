@@ -3,23 +3,25 @@
 namespace SilverStripe\Security\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionMethod;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Validation\ValidationException;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\i18n\i18n;
+use SilverStripe\Model\List\Map;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\Model\List\Map;
-use SilverStripe\Core\Validation\ValidationException;
-use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\Member;
@@ -32,11 +34,9 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Tests\MemberTest\FieldsExtension;
-use SilverStripe\SessionManager\Models\LoginSession;
-use ReflectionMethod;
-use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Security\Validation\EntropyPasswordValidator;
 use SilverStripe\Security\Validation\RulesPasswordValidator;
+use SilverStripe\SessionManager\Models\LoginSession;
 
 class MemberTest extends FunctionalTest
 {
@@ -911,19 +911,21 @@ class MemberTest extends FunctionalTest
         $this->logInWithPermission('EDIT_PERMISSIONS');
 
         // Non-admin member field contains non-admin groups
-        /** @var ListboxField $staffListbox */
-        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
-        $this->assertArrayNotHasKey($adminGroup->ID, $staffListbox->getSource());
+        $this->assertNotContains((int) $adminGroup->ID, $this->getDirectGroupsFieldValues($staffMember));
 
         // admin member field contains admin group
-        /** @var ListboxField $adminListbox */
-        $adminListbox = $adminMember->getCMSFields()->dataFieldByName('DirectGroups');
-        $this->assertArrayHasKey($adminGroup->ID, $adminListbox->getSource());
+        $this->assertContains((int) $adminGroup->ID, $this->getDirectGroupsFieldValues($adminMember));
 
         // If logged in as admin, staff listbox has admin group
         $this->logInWithPermission('ADMIN');
-        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
-        $this->assertArrayHasKey($adminGroup->ID, $staffListbox->getSource());
+        $this->assertContains((int) $adminGroup->ID, $this->getDirectGroupsFieldValues($staffMember));
+    }
+
+    private function getDirectGroupsFieldValues(Member $member): array
+    {
+        /** @var SearchableMultiDropdownField $dropdownField */
+        $dropdownField = $member->getCMSFields()->dataFieldByName('DirectGroups');
+        return array_map('intval', $dropdownField->getSourceList()->column('ID'));
     }
 
     /**
