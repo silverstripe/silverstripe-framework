@@ -150,6 +150,11 @@ abstract class DBConnector
     protected function isQueryType($sql, $type)
     {
         $sql = trim($sql ?? '');
+        // Skip any leading SQL comments before looking for the operation, e.g. the
+        // "/* Query executed from ... */" trace comment which DBQueryBuilder prepends
+        // when trace_query_origin is enabled - otherwise every traced statement,
+        // including INSERT/UPDATE/DELETE, is classified as non-mutable.
+        $sql = ltrim(preg_replace('#^(?:\s*(?:/\*.*?\*/|--[^\r\n]*(?:\r\n|\r|\n|$)))+#s', '', $sql) ?? $sql);
         if (!preg_match('/^(?<operation>\w+)\b/', $sql, $matches)) {
             return false;
         }
