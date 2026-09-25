@@ -218,11 +218,14 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $driver = new mysqli_driver();
         $driver->report_mode = $reportMode;
         $connector = DB::get_conn();
-        // Create the first item
-        $connector->query('INSERT INTO duplicate_entry_table (Title, Name) VALUES (\'My Title\', \'My Name\');');
-        $this->expectException(DuplicateEntryException::class);
-        // Create the duplicate item
-        $connector->query('INSERT INTO duplicate_entry_table (Title, Name) VALUES (\'My Title\', \'My Name\');');
+
+        foreach (['', 'My Title'] as $duplicateValue) {
+            // Create the first item
+            $connector->query("INSERT INTO duplicate_entry_table (Title, Name) VALUES ('$duplicateValue', 'My Name');");
+            $this->expectException(DuplicateEntryException::class);
+            // Create the duplicate item
+            $connector->query("INSERT INTO duplicate_entry_table (Title, Name) VALUES ('$duplicateValue', 'My Name');");
+        }
     }
 
     #[DataProvider('provideQueryThrowsException')]
