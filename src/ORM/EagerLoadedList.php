@@ -495,17 +495,15 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
 
     public function filter(...$args): static
     {
-        $filters = $this->normaliseFilterArgs($args, __FUNCTION__);
         $list = clone $this;
-        $list->rows = $this->getMatches($filters);
+        $list->rows = $this->getMatchesFromArgs($args, __FUNCTION__);
         return $list;
     }
 
     public function filterAny(...$args): static
     {
-        $filters = $this->normaliseFilterArgs($args, __FUNCTION__);
         $list = clone $this;
-        $list->rows = $this->getMatches($filters, true);
+        $list->rows = $this->getMatchesFromArgs($args, __FUNCTION__, true);
         return $list;
     }
 
@@ -527,8 +525,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
 
     public function exclude(...$args): static
     {
-        $filters = $this->normaliseFilterArgs($args, __FUNCTION__);
-        $toRemove = $this->getMatches($filters);
+        $toRemove = $this->getMatchesFromArgs($args, __FUNCTION__);
         $list = clone $this;
         foreach ($toRemove as $id => $row) {
             unset($list->rows[$id]);
@@ -543,8 +540,7 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
      */
     public function excludeAny(...$args): static
     {
-        $filters = $this->normaliseFilterArgs($args, __FUNCTION__);
-        $toRemove = $this->getMatches($filters, true);
+        $toRemove = $this->getMatchesFromArgs($args, __FUNCTION__, true);
         $list = clone $this;
         foreach ($toRemove as $id => $row) {
             unset($list->rows[$id]);
@@ -660,6 +656,17 @@ class EagerLoadedList extends ModelData implements Relation, SS_List
             }
         }
         return $matches;
+    }
+
+    private function getMatchesFromArgs(array $args, string $function, bool $any = false): array
+    {
+        if (empty($this->rows)) {
+            return [];
+        }
+
+        $filters = $this->normaliseFilterArgs($args, $function);
+
+        return $this->getMatches($filters, $any);
     }
 
     /**
