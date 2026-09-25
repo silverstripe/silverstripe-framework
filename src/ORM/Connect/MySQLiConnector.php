@@ -418,7 +418,7 @@ class MySQLiConnector extends DBConnector
                 // see https://dev.mysql.com/doc/mysql-errors/8.4/en/server-error-reference.html#error_er_dup_entry_with_key_name
                 // see https://mariadb.com/docs/general-resources/development-articles/mariadb-internals/using-mariadb-with-your-programs-api/error-codes/mariadb-error-codes-1500-to-1599/e1586
                 case 1586:
-                    preg_match('/Duplicate entry \'(?P<val>[^\']+)\' for key \'?(?P<key>[^\']+)\'?/', $message, $matches);
+                    preg_match('/Duplicate entry \'(?P<val>[^\']*)\' for key \'?(?P<key>[^\']+)\'?/', $message, $matches);
                     // MySQL includes the table name in the key, but MariaDB doesn't.
                     $key = $matches['key'];
                     if (str_contains($key ?? '', '.')) {
