@@ -93,6 +93,15 @@ class DataObjectSchemaTest extends SapphireTest
             WithCustomTable::class,
             $schema->tableClass('DOSTWithCustomTable')
         );
+
+        $this->assertEquals(
+            WithRelation::class,
+            $schema->tableClass('DataObjectSchemaTest_WithRelation_Localised_Live')
+        );
+        $this->assertEquals(
+            WithRelation::class,
+            $schema->tableClass('DataObjectSchemaTest_WithRelation_Localised_Versions')
+        );
     }
 
     public function testTableForObjectField()
