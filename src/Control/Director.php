@@ -567,8 +567,8 @@ class Director implements TemplateGlobalProvider
      */
     public static function hostName(?HTTPRequest $request = null)
     {
-        $host = static::host($request);
-        return parse_url($host ?? '', PHP_URL_HOST) ?: null;
+        $host = parse_url(static::protocolAndHost($request), PHP_URL_HOST);
+        return is_string($host) && $host !== '' ? $host : null;
     }
 
     /**
