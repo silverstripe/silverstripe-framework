@@ -320,8 +320,9 @@ class DataObjectSchema
         }
 
         // If there is no class for this table, strip table modifiers (e.g. _Live / _Versions)
-        // from the end and re-attempt a search.
-        if (preg_match('/^(?<class>.+)(_[^_]+)$/i', $table ?? '', $matches)) {
+        // from the end and re-attempt a search. Repeat until no more modifiers left, supports
+        // tables with multiple suffixes e.g. `_Localised_Live` with Fluent and Versioned.
+        while (preg_match('/^(?<class>.+)(_[^_]+)$/i', $table ?? '', $matches)) {
             $table = $matches['class'];
             $class = array_search($table, $tables ?? [], true);
             if ($class) {

@@ -19,6 +19,7 @@ class ManifestFileFinder extends FileFinder
     const CONFIG_FILE = '_config.php';
     const CONFIG_DIR = '_config';
     const COMPOSER_FILE = 'composer.json';
+    const COMPOSER_DIR = 'composer';
     const COMPOSER_TYPES = [
         'silverstripe-vendormodule',
         'silverstripe-theme',
@@ -245,6 +246,14 @@ class ManifestFileFinder extends FileFinder
 
         // Check if manifest-ignored is present
         if (file_exists($pathname . '/' . ManifestFileFinder::EXCLUDE_FILE)) {
+            return true;
+        }
+
+        // files in vendor/composer can be huge with --optimize-autoloader
+        if ($depth === 2
+            && $basename === ManifestFileFinder::COMPOSER_DIR
+            && $this->isInsideVendor($basename, $pathname, $depth)
+        ) {
             return true;
         }
 
