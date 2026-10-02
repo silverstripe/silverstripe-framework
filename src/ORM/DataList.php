@@ -1169,6 +1169,10 @@ class DataList extends ModelData implements SS_List, Resettable
             $chainToDate = [];
             $polymorphicEncountered = false;
             foreach (explode('.', $relationChain) as $relationName) {
+                // Skip sub relations if no parent IDs are available
+                if (empty($parentIDs)) {
+                    break;
+                }
                 if ($polymorphicEncountered) {
                     $polymorphicRelation = $chainToDate[array_key_last($chainToDate)];
                     throw new InvalidArgumentException(

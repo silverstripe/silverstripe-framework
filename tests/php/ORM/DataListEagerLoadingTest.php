@@ -861,9 +861,10 @@ class DataListEagerLoadingTest extends SapphireTest
     {
         EagerLoadObject::create(['Title' => 'test object'])->write();
         $dataList = EagerLoadObject::get()->eagerLoad($eagerLoadRelation);
+        $firstRelation = strtok($eagerLoadRelation, '.');
         $this->startCountingSelectQueries();
         foreach ($dataList as $record) {
-            $relation = $record->$eagerLoadRelation();
+            $relation = $record->$firstRelation();
             if ($relation instanceof SS_List) {
                 // The list should be an empty eagerloaded list
                 $this->assertInstanceOf(EagerLoadedList::class, $relation);
@@ -906,6 +907,30 @@ class DataListEagerLoadingTest extends SapphireTest
             ],
             'belongs_many_many' => [
                 'eagerLoadRelation' => 'BelongsManyManyEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'has_one sub relation' => [
+                'eagerLoadRelation' => 'HasOneEagerLoadObject.HasOneSubEagerLoadObject',
+                'expectedNumQueries' => 1,
+            ],
+            'belongs_to sub relation' => [
+                'eagerLoadRelation' => 'BelongsToEagerLoadObject.BelongsToSubEagerLoadObject',
+                'expectedNumQueries' => 2,
+            ],
+            'has_many sub relation' => [
+                'eagerLoadRelation' => 'HasManyEagerLoadObjects.HasManySubEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'many_many sub relation' => [
+                'eagerLoadRelation' => 'ManyManyEagerLoadObjects.ManyManySubEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'many_many through sub relation' => [
+                'eagerLoadRelation' => 'ManyManyThroughEagerLoadObjects.ManyManyThroughSubEagerLoadObjects',
+                'expectedNumQueries' => 2,
+            ],
+            'belongs_many_many sub relation' => [
+                'eagerLoadRelation' => 'BelongsManyManyEagerLoadObjects.BelongsManyManySubEagerLoadObjects',
                 'expectedNumQueries' => 2,
             ],
         ];
