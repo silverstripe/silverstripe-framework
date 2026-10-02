@@ -8,6 +8,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\Connect\DBQueryBuilder;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Tests\DBReplicaTest\TestController;
 use SilverStripe\ORM\Tests\DBReplicaTest\TestObject;
@@ -106,6 +107,17 @@ class DBReplicaTest extends FunctionalTest
 
             'alter table' => ['ALTER TABLE "DBReplicaTest_TestObject" ADD COLUMN "Foo" INT', true],
             'alter table whitespace' => ['  ALTER TABLE "DBReplicaTest_TestObject" ADD COLUMN "Foo" INT', true],
+
+            // Leading comments, as prepended by DBQueryBuilder when trace_query_origin is on
+            'select block comment' => ['/* Query executed from Foo.php line 1 */' . "\n" . 'SELECT "ID" FROM "DBReplicaTest_TestObject"', false],
+            'insert block comment' => ['/* Query executed from Foo.php line 1 */' . "\n" . 'INSERT INTO "DBReplicaTest_TestObject" ("Title") VALUES (?)', true],
+            'update block comment' => ['/* Query executed from Foo.php line 1 */' . "\n" . 'UPDATE "DBReplicaTest_TestObject" SET "Title" = ?', true],
+            'delete block comment' => ['/* Query executed from Foo.php line 1 */' . "\n" . 'DELETE FROM "DBReplicaTest_TestObject"', true],
+            'delete multiline block comment' => ["/* line one\n * line two */\nDELETE FROM \"DBReplicaTest_TestObject\"", true],
+            'update two block comments' => ['/* one */ /* two */ UPDATE "DBReplicaTest_TestObject" SET "Title" = ?', true],
+            'update line comment' => ["-- a comment\nUPDATE \"DBReplicaTest_TestObject\" SET \"Title\" = ?", true],
+            'select line comment' => ["-- a comment\nSELECT \"ID\" FROM \"DBReplicaTest_TestObject\"", false],
+            'unterminated comment' => ['/* not closed DELETE FROM "DBReplicaTest_TestObject"', false],
         ];
     }
 
@@ -113,6 +125,21 @@ class DBReplicaTest extends FunctionalTest
     public function testQueryType(string $query, bool $mutable): void
     {
         self::assertSame($mutable, DB::get_connector()->isQueryMutable($query));
+    }
+
+    public function testMutableSqlWithTraceComment(): void
+    {
+        // A write built through DBQueryBuilder with trace_query_origin enabled starts with
+        // a "/* ... */" comment; it must still be routed to the primary connection.
+        Config::modify()->set(DBQueryBuilder::class, 'trace_query_origin', true);
+        $obj = new TestObject();
+        $obj->Title = 'traced write';
+        $obj->write();
+        $this->assertSame(DB::CONN_PRIMARY, $this->getLastConnectionName());
+        // and a traced read is still free to use the replica
+        (new ReflectionClass(DB::class))->setStaticPropertyValue('mustUsePrimary', false);
+        TestObject::get()->count();
+        $this->assertSame('replica_01', $this->getLastConnectionName());
     }
 
     public function testMutableSqlDbQuery(): void
