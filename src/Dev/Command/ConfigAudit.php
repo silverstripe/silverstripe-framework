@@ -73,7 +73,8 @@ class ConfigAudit extends DevCommand
         $output->write($body);
         $output->writeForHtml('</pre>');
 
-        return Command::SUCCESS;
+        // Fail when anything is missing, so the audit can be used to fail a CI job
+        return count($missing) ? Command::FAILURE : Command::SUCCESS;
     }
 
     protected function getHeading(): string
