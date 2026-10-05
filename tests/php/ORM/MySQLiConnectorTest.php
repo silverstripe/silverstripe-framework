@@ -60,11 +60,16 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
                     'ID' => 'PrimaryKey',
                     'Title' => 'Varchar',
                     'Name' => 'Varchar',
+                    'Code' => 'Varchar',
                 ],
                 [
                     'MyIndex' => [
                         'type' => 'unique',
                         'columns' => ['Title', 'Name'],
+                    ],
+                    'CodeIndex' => [
+                        'type' => 'unique',
+                        'columns' => ['Code'],
                     ],
                 ],
                 options: DataObject::config()->get('create_table_options')
@@ -211,18 +216,36 @@ class MySQLiConnectorTest extends SapphireTest implements TestOnly
         $connector->query('force an error with invalid SQL');
     }
 
-    #[DataProvider('provideQueryThrowsException')]
-    public function testQueryThrowsDuplicateEntryException(int $reportMode): void
+    public static function provideQueryThrowsDuplicateEntryException(): array
+    {
+        $baseScenarios = static::provideQueryThrowsException();
+        $scenarios = [];
+        foreach ($baseScenarios as $key => $scenario) {
+            $scenarios[$key . ' - composite key'] = [
+                ...$scenario,
+                'sql' => "INSERT INTO duplicate_entry_table (Title, Name) VALUES ('My Title', 'My Name');",
+            ];
+            $scenarios[$key . ' - empty value'] = [
+                ...$scenario,
+                'sql' => "INSERT INTO duplicate_entry_table (Code) VALUES ('');",
+            ];
+        }
+        return $scenarios;
+    }
+
+    #[DataProvider('provideQueryThrowsDuplicateEntryException')]
+    public function testQueryThrowsDuplicateEntryException(int $reportMode, string $sql): void
     {
         $connector = $this->getConnector();
         $driver = new mysqli_driver();
         $driver->report_mode = $reportMode;
         $connector = DB::get_conn();
+
         // Create the first item
-        $connector->query('INSERT INTO duplicate_entry_table (Title, Name) VALUES (\'My Title\', \'My Name\');');
+        $connector->query($sql);
         $this->expectException(DuplicateEntryException::class);
         // Create the duplicate item
-        $connector->query('INSERT INTO duplicate_entry_table (Title, Name) VALUES (\'My Title\', \'My Name\');');
+        $connector->query($sql);
     }
 
     #[DataProvider('provideQueryThrowsException')]
