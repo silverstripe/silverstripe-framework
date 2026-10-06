@@ -3,4 +3,7 @@
  * @ignore
  */
 #[CustomAttributeA]
-enum EnumB {  }
+class ClassF implements InterfaceD
+{
+
+}

@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Manifest;
 
 use PhpParser\Node;
+use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
@@ -47,33 +48,52 @@ class ClassManifestVisitor extends NodeVisitorAbstract
                 $extends = [(string)$node->extends];
             }
 
-            if ($node->implements) {
-                foreach ($node->implements as $interface) {
-                    $interfaces[] = (string)$interface;
-                }
-            }
-
             $this->classes[(string)$node->namespacedName] = [
                 'extends' => $extends,
-                'interfaces' => $interfaces,
+                'interfaces' => $this->getClassNames($node->implements),
+                'attributes' => $this->getAttributes($node),
             ];
         } elseif ($node instanceof Node\Stmt\Trait_) {
-            $this->traits[(string)$node->namespacedName] = [];
+            $this->traits[(string)$node->namespacedName] = [
+                'attributes' => $this->getAttributes($node),
+            ];
         } elseif ($this->includeEnums && $node instanceof Node\Stmt\Enum_) {
-            $this->enums[(string)$node->namespacedName] = [];
+            $this->enums[(string)$node->namespacedName] = [
+                'attributes' => $this->getAttributes($node),
+            ];
         } elseif ($node instanceof Node\Stmt\Interface_) {
-            $extends = [];
-            foreach ($node->extends as $ancestor) {
-                $extends[] = (string)$ancestor;
-            }
             $this->interfaces[(string)$node->namespacedName] = [
-                'extends' => $extends,
+                'extends' => $this->getClassNames($node->extends),
+                'attributes' => $this->getAttributes($node),
             ];
         }
         if (!$node instanceof Node\Stmt\Namespace_) {
             //break out of traversal as we only need highlevel information here!
             return NodeTraverser::DONT_TRAVERSE_CHILDREN;
         }
+    }
+
+    private function getClassNames(array $list): array
+    {
+        return array_map(
+            static fn ($classLike) => (string)$classLike,
+            $list
+        );
+    }
+
+    private function getAttributes(ClassLike $classLike): array
+    {
+        $attributes = [];
+
+        if ($classLike->attrGroups) {
+            foreach ($classLike->attrGroups as $group) {
+                foreach ($group->attrs as $attr) {
+                    $attributes[] = (string)$attr->name;
+                }
+            }
+        }
+
+        return $attributes;
     }
 
     public function getClasses()

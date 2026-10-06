@@ -3,4 +3,6 @@
  * @ignore
  */
 #[CustomAttributeA]
-enum EnumB {  }
+interface InterfaceC
+{
+}
