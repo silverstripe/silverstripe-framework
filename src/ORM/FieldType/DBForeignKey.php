@@ -38,7 +38,7 @@ class DBForeignKey extends DBInt
 
     private static string $default_search_filter_class = 'ExactMatchFilter';
 
-    public function __construct(?string $name, ?DataObject $object = null)
+    public function __construct(?string $name = null, ?DataObject $object = null)
     {
         $this->object = $object;
         parent::__construct($name);
