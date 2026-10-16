@@ -73,4 +73,13 @@ EOS
             $view->debugVariable(ObjectWithDebug::class, $this->caller)
         );
     }
+
+    public function testRenderErrorWithoutErrorNumber()
+    {
+        $view = new CliDebugView();
+        $output = $view->renderError('GET /', null, 'A logged message', __FILE__, 1);
+
+        $this->assertStringContainsString('UNKNOWN TYPE', $output);
+        $this->assertStringContainsString('A logged message', $output);
+    }
 }

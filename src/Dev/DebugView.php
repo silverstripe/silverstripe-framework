@@ -210,7 +210,7 @@ class DebugView
      */
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
     {
-        $errorType = isset(DebugView::$error_types[$errno]) ? DebugView::$error_types[$errno] : DebugView::$unknown_error;
+        $errorType = DebugView::$error_types[$errno ?? ''] ?? DebugView::$unknown_error;
         $httpRequestEnt = htmlentities($httpRequest ?? '', ENT_COMPAT, 'UTF-8');
         if (filter_var(ini_get('html_errors'), FILTER_VALIDATE_BOOL)) {
             $errstr = strip_tags($errstr ?? '');
