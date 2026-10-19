@@ -43,7 +43,7 @@ class CliDebugView extends DebugView
      */
     public function renderError($httpRequest, $errno, $errstr, $errfile, $errline)
     {
-        if (!isset(CliDebugView::$error_types[$errno])) {
+        if (!isset(CliDebugView::$error_types[$errno ?? ''])) {
             $errorTypeTitle = "UNKNOWN TYPE, ERRNO $errno";
         } else {
             $errorTypeTitle = CliDebugView::$error_types[$errno]['title'];
