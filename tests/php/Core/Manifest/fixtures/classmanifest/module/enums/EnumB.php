@@ -2,4 +2,5 @@
 /**
  * @ignore
  */
+#[CustomAttributeA]
 enum EnumB {  }
