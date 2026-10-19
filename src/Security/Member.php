@@ -15,17 +15,16 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\TestMailer;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TreeMultiselectField;
 use SilverStripe\Forms\Validation\CompositeValidator;
 use SilverStripe\Forms\ConfirmedPasswordField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
-use SilverStripe\Forms\ListboxField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\i18n\i18n;
 use SilverStripe\Model\List\ArrayList;
-use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -42,7 +41,6 @@ use Symfony\Component\Mime\Exception\RfcComplianceException;
 use Closure;
 use RuntimeException;
 use SilverStripe\Forms\FormField;
-use SilverStripe\Forms\SearchableDropdownField;
 use SilverStripe\Forms\SearchableMultiDropdownField;
 use SilverStripe\ORM\FieldType\DBForeignKey;
 use SilverStripe\Security\Validation\PasswordValidator;
@@ -1373,28 +1371,28 @@ class Member extends DataObject
             $fields->removeByName('RememberLoginHashes');
 
             if (Permission::check('EDIT_PERMISSIONS')) {
-                // Filter allowed groups
-                $groups = Group::get();
-                $disallowedGroupIDs = $this->disallowedGroups();
-                if ($disallowedGroupIDs) {
-                    $groups = $groups->exclude('ID', $disallowedGroupIDs);
-                }
-                $groupsMap = [];
-                foreach ($groups as $group) {
-                    // Listboxfield values are escaped, use ASCII char instead of &raquo;
-                    $groupsMap[$group->ID] = $group->getBreadcrumbs(' > ');
-                }
-                asort($groupsMap);
-                $fields->addFieldToTab(
-                    'Root.Main',
-                    ListboxField::create('DirectGroups', Group::singleton()->i18n_plural_name())
-                        ->setSource($groupsMap)
-                        ->setAttribute(
-                            'data-placeholder',
-                            _t(__CLASS__ . '.ADDGROUP', 'Add group', 'Placeholder text for a dropdown')
-                        )
+                $tree = TreeMultiselectField::create(
+                    'DirectGroups',
+                    Group::singleton()->i18n_plural_name()
                 );
 
+                $tree->setSearchFunction(function ($sourceObject, $labelField, $search) {
+                    $groups = Group::get();
+
+                    if ($disallowedGroupIDs = $this->disallowedGroups()) {
+                        $groups = $groups->exclude('ID', $disallowedGroupIDs);
+                    }
+
+                    if ($search) {
+                        $groups = $groups->filterAny([
+                            $labelField . ':PartialMatch' => $search,
+                        ]);
+                    }
+
+                    return $groups;
+                });
+
+                $fields->addFieldToTab('Root.Main', $tree);
 
                 // Add permission field (readonly to avoid complicated group assignment logic).
                 // This should only be available for existing records, as new records start
