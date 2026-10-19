@@ -23,6 +23,11 @@ class TempFolder
         // Append php version to username folder to avoid issues when upgrading php
         $folderName .= '-' . preg_replace('/[^\w\-\.+]+/', '-', PHP_VERSION);
 
+        // Append paratest token to the folder name
+        if (($token = getenv('TEST_TOKEN')) !== false) {
+            $folderName .= '-' . $token;
+        }
+
         // The actual temp folder is a subfolder of getTempParentFolder()
         $subfolder = Path::join($parent, $folderName);
 
