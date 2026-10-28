@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Core\Tests;
 
+use DOMDocument;
 use DOMElement;
+use ReflectionProperty;
 use SilverStripe\Core\XssSanitiser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\HTMLValue;
@@ -12,6 +14,10 @@ class XssSanitiserTest extends SapphireTest
 {
     // This is the backspace character. It needs to be escaped in double-quotes.
     private const CHAR_BACKSPACE = "\x08";
+
+    // This is the SOH control byte. Browsers strip control characters out of URLs before
+    // parsing, so a link whose href begins with (or contains) one must still be sanitised.
+    private const CHAR_SOH = "\x01";
 
     protected $usesDatabase = false;
 
@@ -84,6 +90,32 @@ class XssSanitiserTest extends SapphireTest
             [
                 'input' => '<a href="javascript:alert(\'ok\')' . XssSanitiserTest::CHAR_BACKSPACE . '">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a>',
                 'expected' => '<a>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</a>',
+            ],
+            [
+                // Leading SOH (0x01) control byte before the scheme - browsers ignore it, so it must still be stripped
+                'input' => '<a href="' . XssSanitiserTest::CHAR_SOH . 'javascript:alert(document.domain)">click me</a>',
+                'expected' => '<a>click me</a>',
+            ],
+            [
+                // Control byte interleaved within the scheme keyword - browsers ignore it, so it must still be stripped
+                'input' => '<a href="ja' . XssSanitiserTest::CHAR_SOH . 'vascript:alert(1)">click me</a>',
+                'expected' => '<a>click me</a>',
+            ],
+            [
+                // Assorted C0 control bytes before the scheme must be stripped
+                'input' => '<IMG SRC="' . "\x02\x1f\x1b" . 'javascript:alert(\'XSS\')">',
+                'expected' => '<img>',
+            ],
+            [
+                // DEL (0x7F) before the scheme must be stripped
+                'input' => '<IMG SRC="' . "\x7f" . 'javascript:alert(\'XSS\')">',
+                'expected' => '<img>',
+            ],
+            [
+                // Leading SOH (0x01) control byte in an <iframe src> - iframe is not a removed
+                // element and its src auto-loads on page render, so the scheme must still be stripped
+                'input' => '<iframe src="' . XssSanitiserTest::CHAR_SOH . 'javascript:alert(document.domain)"></iframe>',
+                'expected' => '<iframe></iframe>',
             ],
             [
                 // Not exploitable XSS
@@ -198,9 +230,35 @@ class XssSanitiserTest extends SapphireTest
             ],
             [
                 // Decodes to a SVG with `<script type="text/ecmascript">alert("XSS");</script>` inside it
-                // But that's not actually exploitable XSS
                 'input' => '<IMG SRC="data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==">',
-                'expected' => '<img src="data:image/svg+xml;base64,PHN2ZyB4bWxuczpzdmc9Imh0dH A6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcv MjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hs aW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjAiIHk9IjAiIHdpZHRoPSIxOTQiIGhlaWdodD0iMjAw IiBpZD0ieHNzIj48c2NyaXB0IHR5cGU9InRleHQvZWNtYXNjcmlwdCI+YWxlcnQoIlh TUyIpOzwvc2NyaXB0Pjwvc3ZnPg==">',
+                'expected' => '<img>',
+            ],
+            [
+                // Decodes to `<svg onload=alert(1)>` - in a navigational context this is a script-capable document
+                'input' => '<a href="data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">click</a>',
+                'expected' => '<a>click</a>',
+            ],
+            [
+                'input' => '<iframe src="data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                'input' => '<IMG LOWSRC="DATA:IMAGE/SVG+XML;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">',
+                'expected' => '<img>',
+            ],
+            [
+                // Whitespace between the characters of the media type must not bypass the check
+                'input' => '<a href=" d a t a : i m a g e / s v g + x m l ;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">click</a>',
+                'expected' => '<a>click</a>',
+            ],
+            [
+                'input' => '<a href="' . XssSanitiserTest::CHAR_BACKSPACE . 'data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+">click</a>',
+                'expected' => '<a>click</a>',
+            ],
+            [
+                // Data URIs for media types which cannot carry script are left alone
+                'input' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
+                'expected' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
             ],
             [
                 'input' => '<IMG LOWSRC="javascript:alert(\'XSS\')">',
@@ -213,6 +271,44 @@ class XssSanitiserTest extends SapphireTest
             [
                 'input' => '<img src="javascript:" alt="Image alternative text" title="Image title">',
                 'expected' => '<img alt="Image alternative text" title="Image title">',
+            ],
+            [
+                // Stored XSS via data:application/xhtml+xml - XHTML documents execute inline scripts
+                'input' => '<iframe src="data:application/xhtml+xml,%3Chtml%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cbody%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E%3C%2Fbody%3E%3C%2Fhtml%3E"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // Case-insensitive and with leading whitespace
+                'input' => '<iframe src="  DATA:APPLICATION/XHTML+XML,<script>alert(1)</script>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // The `+` in the media type must be matched literally, not as a regex quantifier
+                'input' => '<iframe src="data:application/xhtml+xml;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // Whitespace between the characters of the media type must not bypass the check
+                'input' => '<iframe src="d a t a : a p p l i c a t i o n / x h t m l + x m l,<script>alert(1)</script>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                'input' => '<iframe src="' . XssSanitiserTest::CHAR_BACKSPACE . 'data:application/xhtml+xml,<script>alert(1)</script>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // XML in the XHTML namespace is parsed as XHTML, so text/xml is the same attack
+                'input' => '<iframe src="data:text/xml,<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;><script>alert(1)</script></html>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                'input' => '<iframe src="data:application/xml,<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;><script>alert(1)</script></html>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // Data URIs for media types which cannot carry script are left alone
+                'input' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
+                'expected' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
             ],
             [
                 'input' => '<svg/onload=alert(\'XSS\')>',
@@ -355,6 +451,38 @@ class XssSanitiserTest extends SapphireTest
         $this->assertSame($expected, $htmlValue->getContent());
     }
 
+    public static function provideSanitiseElementInvalidUtf8(): array
+    {
+        return [
+            'scheme hidden behind a control byte, invalid utf-8 later in the value' => [
+                'href' => XssSanitiserTest::CHAR_SOH . "javascript:alert(document.domain)#\xC3\x28",
+                'expectedHasAttribute' => false,
+            ],
+            'plain scheme, invalid utf-8 later in the value' => [
+                'href' => "javascript:alert(document.domain)#\xC3\x28",
+                'expectedHasAttribute' => false,
+            ],
+            'safe url with invalid utf-8' => [
+                'href' => "https://example.com/#\xC3\x28",
+                'expectedHasAttribute' => true,
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSanitiseElementInvalidUtf8')]
+    public function testSanitiseElementInvalidUtf8(string $href, bool $expectedHasAttribute): void
+    {
+        // Can't go through HTMLValue for these - its parser drops the invalid bytes before the
+        // sanitiser sees them, so invalid UTF-8 only reaches it via a hand-built DOMElement
+        $document = new DOMDocument();
+        $element = $document->createElement('a');
+        $document->appendChild($element);
+        $element->setAttribute('href', $href);
+        $sanitiser = new XssSanitiser();
+        $sanitiser->sanitiseElement($element);
+        $this->assertSame($expectedHasAttribute, $element->hasAttribute('href'));
+    }
+
     public static function provideSanitiseElementsAllowed(): array
     {
         return [
@@ -431,6 +559,47 @@ class XssSanitiserTest extends SapphireTest
         $sanitiser = new XssSanitiser();
         if ($removeAttributes !== null) {
             $sanitiser->setAttributesToRemove($removeAttributes);
+        }
+        $this->assertSame($expected, $sanitiser->sanitiseString($input));
+    }
+
+    public static function provideSanitiseRemoveDataSvg(): array
+    {
+        $payload = 'data:image/svg+xml;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+';
+        return [
+            'removed by default' => [
+                'input' => '<a href="' . $payload . '">click</a>',
+                'removeDataSvg' => null,
+                'expected' => '<a>click</a>',
+            ],
+            'removed explicitly' => [
+                'input' => '<a href="' . $payload . '">click</a>',
+                'removeDataSvg' => true,
+                'expected' => '<a>click</a>',
+            ],
+            'kept when disabled' => [
+                'input' => '<a href="' . $payload . '">click</a>',
+                'removeDataSvg' => false,
+                'expected' => '<a href="' . $payload . '">click</a>',
+            ],
+            'data:text/html is removed even when disabled' => [
+                'input' => '<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">click</a>',
+                'removeDataSvg' => false,
+                'expected' => '<a>click</a>',
+            ],
+        ];
+    }
+
+    #[DataProvider('provideSanitiseRemoveDataSvg')]
+    public function testSanitiseRemoveDataSvg(string $input, ?bool $removeDataSvg, string $expected): void
+    {
+        $sanitiser = new XssSanitiser();
+        // There's no public API for this flag, so use reflection to read and set it
+        $property = new ReflectionProperty($sanitiser, 'removeDataSvg');
+        if ($removeDataSvg === null) {
+            $this->assertTrue($property->getValue($sanitiser));
+        } else {
+            $property->setValue($sanitiser, $removeDataSvg);
         }
         $this->assertSame($expected, $sanitiser->sanitiseString($input));
     }

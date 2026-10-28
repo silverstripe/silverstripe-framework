@@ -35,9 +35,10 @@ class XssSanitiser
 
     private bool $keepInnerHtmlOnRemoveElement = true;
 
+    /**
+     * This is not config and only used for unit testing
+     */
     private bool $removeDataSvg = true;
-
-    private bool $removeSvgFile = true;
 
     /**
      * Remove XSS attack vectors from an HTML fragment string
@@ -185,7 +186,7 @@ class XssSanitiser
         $regex = $this->getStripAttributeContentsRegex();
         foreach (['lowsrc', 'src', 'href', 'data'] as $dangerAttribute) {
             if ($element->hasAttribute($dangerAttribute)) {
-                $attrContent = $element->getAttribute($dangerAttribute);
+                $attrContent = $this->normaliseAttributeContent($element->getAttribute($dangerAttribute));
                 if (preg_match($regex, $attrContent)) {
                     $element->removeAttribute($dangerAttribute);
                 }
@@ -193,13 +194,43 @@ class XssSanitiser
         }
     }
 
+    /**
+     * Get a copy of the attribute content to run scheme detection against. This never changes the
+     * attribute value itself - `stripAttributeContents()` either keeps it or removes it outright.
+     * Substitute invalid UTF-8, because the `u` modifier makes preg_* bail out on an invalid
+     * subject and skip detection entirely.
+     * Remove the control characters that browsers ignore when parsing a URL. Otherwise a scheme
+     * can hide behind (or inside) one - e.g. `\x01javascript:` or `ja\x01vascript:` - and the
+     * browser strips it back down to `javascript:` before executing it.
+     * Keep the whitespace control characters (tab, LF, VT, FF, CR), because the scheme-detection
+     * regex already accounts for them via `\s`.
+     */
+    private function normaliseAttributeContent(string $content): string
+    {
+        $content = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
+        return preg_replace('#[\x00-\x08\x0E-\x1F\x7F]#u', '', $content) ?? $content;
+    }
+
     private function getStripAttributeContentsRegex(): string
     {
         $regexes = [
             $this->splitWithWhitespaceRegex('javascript:'),
+            // Data URIs whose MIME type is rendered as a scriptable document can execute JavaScript
+            // (e.g. inline <script> in an XHTML document), so they must be blocked just like data:text/html.
+            // An XML document whose root element is in the XHTML namespace is parsed as XHTML regardless
+            // of which of these XML media types declares it, so all three are equally exploitable.
             $this->splitWithWhitespaceRegex('data:text/html'),
+            $this->splitWithWhitespaceRegex('data:application/xhtml+xml'),
+            $this->splitWithWhitespaceRegex('data:text/xml'),
+            $this->splitWithWhitespaceRegex('data:application/xml'),
             $this->splitWithWhitespaceRegex('vbscript:'),
         ];
+        if ($this->removeDataSvg) {
+            // SVG documents can carry scripts, so an SVG data URI is a script-capable document reference.
+            // Note the media type is matched as a prefix so that `data:image/svg+xml` and any other
+            // `data:image/svg*` variation are both caught.
+            $regexes[] = $this->splitWithWhitespaceRegex('data:image/svg');
+        }
         // Regex is "starts with any of these, with optional whitespace at the start, case insensitive"
         // \x08 is the backspace character, though it only causes vulnerabilities if it's at the start
         // or end of a string
@@ -210,6 +241,9 @@ class XssSanitiser
     {
         // Note that `\s` explicitly includes ALL invisible characters when used with the `u` modifier.
         // That includes unicode characters like the non-breaking space.
-        return implode('\s*', str_split($string));
+        // Each character is escaped so regex-special characters (e.g. the `+` in a MIME type) are
+        // matched literally rather than treated as quantifiers.
+        $chars = array_map(fn (string $char): string => preg_quote($char, '#'), str_split($string));
+        return implode('\s*', $chars);
     }
 }
