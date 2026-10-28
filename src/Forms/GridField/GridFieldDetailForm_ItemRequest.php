@@ -826,12 +826,40 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         // Check object matches the correct classname
         if (isset($data['ClassName']) && $data['ClassName'] != $this->record->ClassName) {
             $newClassName = $data['ClassName'];
+            // The ClassName is read straight from request data, so it must be validated before
+            // it is honoured. Only allow conversion to a class within the list's own hierarchy,
+            // otherwise an attacker could inject an arbitrary DataObject subclass and induce
+            // type confusion or create a record of a type outside the GridField's intended scope.
+            if (!is_a($newClassName, $list->dataClass(), true)) {
+                $this->httpError(403, _t(
+                    __CLASS__ . '.ClassNameNotAllowed',
+                    'Cannot change record type to "{ClassName}"',
+                    ['ClassName' => $newClassName]
+                ));
+                return null;
+            }
             // The records originally saved attribute was overwritten by $form->saveInto($record) before.
             // This is necessary for newClassInstance() to work as expected, and trigger change detection
             // on the ClassName attribute
             $this->record->setClassName($this->record->ClassName);
             // Replace $record with a new instance
             $this->record = $this->record->newClassInstance($newClassName);
+            // A ClassName change both creates a record of the new type and writes the form data into it,
+            // so it requires create and edit authorisation on the new class. The only permission check in
+            // doSave() ran against the original class, before the conversion, so it does not cover the new
+            // type - without this an editor could convert a record into a type they cannot create.
+            $canConvert = $this->record->hasMethod('canCreate')
+                && $this->record->canCreate(null, $this->getCreateContext())
+                && $this->record->hasMethod('canEdit')
+                && $this->record->canEdit();
+            if (!$canConvert) {
+                $this->httpError(403, _t(
+                    __CLASS__ . '.ClassNamePermissionFailure',
+                    'It seems you don\'t have the necessary permissions to save "{ObjectTitle}" as "{ClassName}"',
+                    ['ObjectTitle' => $this->getModelName(), 'ClassName' => $newClassName]
+                ));
+                return null;
+            }
         }
 
         // Save form and any extra saved data into this record.
