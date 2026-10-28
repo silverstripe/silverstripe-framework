@@ -214,7 +214,14 @@ class XssSanitiser
     {
         $regexes = [
             $this->splitWithWhitespaceRegex('javascript:'),
+            // Data URIs whose MIME type is rendered as a scriptable document can execute JavaScript
+            // (e.g. inline <script> in an XHTML document), so they must be blocked just like data:text/html.
+            // An XML document whose root element is in the XHTML namespace is parsed as XHTML regardless
+            // of which of these XML media types declares it, so all three are equally exploitable.
             $this->splitWithWhitespaceRegex('data:text/html'),
+            $this->splitWithWhitespaceRegex('data:application/xhtml+xml'),
+            $this->splitWithWhitespaceRegex('data:text/xml'),
+            $this->splitWithWhitespaceRegex('data:application/xml'),
             $this->splitWithWhitespaceRegex('vbscript:'),
         ];
         // Regex is "starts with any of these, with optional whitespace at the start, case insensitive"
@@ -227,6 +234,9 @@ class XssSanitiser
     {
         // Note that `\s` explicitly includes ALL invisible characters when used with the `u` modifier.
         // That includes unicode characters like the non-breaking space.
-        return implode('\s*', str_split($string));
+        // Each character is escaped so regex-special characters (e.g. the `+` in a MIME type) are
+        // matched literally rather than treated as quantifiers.
+        $chars = array_map(fn (string $char): string => preg_quote($char, '#'), str_split($string));
+        return implode('\s*', $chars);
     }
 }

@@ -246,6 +246,44 @@ class XssSanitiserTest extends SapphireTest
                 'expected' => '<img alt="Image alternative text" title="Image title">',
             ],
             [
+                // Stored XSS via data:application/xhtml+xml - XHTML documents execute inline scripts
+                'input' => '<iframe src="data:application/xhtml+xml,%3Chtml%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cbody%3E%3Cscript%3Ealert(1)%3C%2Fscript%3E%3C%2Fbody%3E%3C%2Fhtml%3E"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // Case-insensitive and with leading whitespace
+                'input' => '<iframe src="  DATA:APPLICATION/XHTML+XML,<script>alert(1)</script>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // The `+` in the media type must be matched literally, not as a regex quantifier
+                'input' => '<iframe src="data:application/xhtml+xml;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // Whitespace between the characters of the media type must not bypass the check
+                'input' => '<iframe src="d a t a : a p p l i c a t i o n / x h t m l + x m l,<script>alert(1)</script>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                'input' => '<iframe src="' . XssSanitiserTest::CHAR_BACKSPACE . 'data:application/xhtml+xml,<script>alert(1)</script>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // XML in the XHTML namespace is parsed as XHTML, so text/xml is the same attack
+                'input' => '<iframe src="data:text/xml,<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;><script>alert(1)</script></html>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                'input' => '<iframe src="data:application/xml,<html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;><script>alert(1)</script></html>"></iframe>',
+                'expected' => '<iframe></iframe>',
+            ],
+            [
+                // Data URIs for media types which cannot carry script are left alone
+                'input' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
+                'expected' => '<img src="data:image/png;base64,iVBORw0KGgo=" alt="Image alternative text">',
+            ],
+            [
                 'input' => '<svg/onload=alert(\'XSS\')>',
                 'expected' => '',
             ],
