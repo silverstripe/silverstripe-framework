@@ -332,6 +332,20 @@ class TreeDropdownFieldTest extends SapphireTest
         );
     }
 
+    public function testReadonlyWithoutValue()
+    {
+        // Rendering without a value used a null array offset for the LookupField
+        // source, which PHP 8.5 deprecates (fatal in dev environments)
+        $field = new TreeDropdownField('TestTree', 'Test tree', File::class);
+        $readonly = $field->performReadonlyTransformation();
+        $this->assertXmlStringEqualsXmlString(
+            $this->toXml('<span class="readonly" id="TestTree" role="textbox" aria-readonly="true" tabindex="0">'
+            . '<i>(none)</i></span>'
+            . '<input type="hidden" name="TestTree" value="" />'),
+            $this->toXml((string) $readonly->Field())
+        );
+    }
+
     /**
      * This is to test setting $key to an Object in the protected function objectForKey()
      * This is to fix an issue where postgres will not fail gracefully when you do this
