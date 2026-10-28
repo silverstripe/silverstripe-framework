@@ -770,6 +770,19 @@ class InjectorTest extends SapphireTest
         $this->assertEquals($obj->one, 'the one');
     }
 
+    public function testAliasToClassWithoutExplicitInjectorConfig()
+    {
+        $injector = new Injector(['locator' => SilverStripeServiceConfigurationLocator::class]);
+        Config::modify()->set(
+            Injector::class,
+            'MyAliasedService',
+            '%$' . MyParentClass::class
+        );
+
+        $obj = $injector->get('MyAliasedService');
+        $this->assertInstanceOf(MyParentClass::class, $obj);
+    }
+
     public function testSameNamedSingeltonPrototype()
     {
         $injector = new Injector();
