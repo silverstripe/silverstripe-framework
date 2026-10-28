@@ -578,10 +578,22 @@ class Member extends DataObject
      */
     public function validateAutoLoginToken($autologinToken)
     {
-        $hash = $this->encryptWithUserSettings($autologinToken);
-        $member = Member::member_from_autologinhash($hash, false);
+        if (!$this->ID) {
+            return false;
+        }
 
-        return (bool)$member;
+        $hash = $this->encryptWithUserSettings($autologinToken);
+        if (!$hash) {
+            return false;
+        }
+
+        // The token must belong to this member - a global lookup would let a token issued to one
+        // member authorise another whenever both encrypt it to the same hash (see encryptWithUserSettings())
+        return Member::get()->filter([
+            'ID' => $this->ID,
+            'AutoLoginHash' => $hash,
+            'AutoLoginExpired:GreaterThan' => DBDatetime::now()->getValue(),
+        ])->exists();
     }
 
     /**
