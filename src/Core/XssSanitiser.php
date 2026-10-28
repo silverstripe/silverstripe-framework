@@ -35,9 +35,10 @@ class XssSanitiser
 
     private bool $keepInnerHtmlOnRemoveElement = true;
 
+    /**
+     * This is not config and only used for unit testing
+     */
     private bool $removeDataSvg = true;
-
-    private bool $removeSvgFile = true;
 
     /**
      * Remove XSS attack vectors from an HTML fragment string
@@ -224,6 +225,12 @@ class XssSanitiser
             $this->splitWithWhitespaceRegex('data:application/xml'),
             $this->splitWithWhitespaceRegex('vbscript:'),
         ];
+        if ($this->removeDataSvg) {
+            // SVG documents can carry scripts, so an SVG data URI is a script-capable document reference.
+            // Note the media type is matched as a prefix so that `data:image/svg+xml` and any other
+            // `data:image/svg*` variation are both caught.
+            $regexes[] = $this->splitWithWhitespaceRegex('data:image/svg');
+        }
         // Regex is "starts with any of these, with optional whitespace at the start, case insensitive"
         // \x08 is the backspace character, though it only causes vulnerabilities if it's at the start
         // or end of a string
