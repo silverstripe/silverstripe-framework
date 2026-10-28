@@ -821,6 +821,17 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
      */
     protected function saveFormIntoRecord($data, $form)
     {
+        if (!$this->record->ID
+            && (!$this->record->hasMethod('canCreate') || !$this->record->canCreate(null, $this->getCreateContext()))
+        ) {
+            $this->httpError(403, _t(
+                __CLASS__ . '.CreatePermissionsFailure',
+                'It seems you don\'t have the necessary permissions to create "{ObjectTitle}"',
+                ['ObjectTitle' => $this->getModelName()]
+            ));
+            return null;
+        }
+
         $list = $this->gridField->getList();
 
         // Check object matches the correct classname
