@@ -133,6 +133,14 @@ class DBBoolean extends DBField
                     return true;
             }
         }
+        if (is_float($value)) {
+            if ($value === 0.0) {
+                return false;
+            }
+            if ($value === 1.0) {
+                return true;
+            }
+        }
         if ($value === 0) {
             return false;
         }
