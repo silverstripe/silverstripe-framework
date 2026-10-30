@@ -12,6 +12,7 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Model\List\SS_List;
 use SilverStripe\Model\ArrayData;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Contains a set of hierarchical objects generated from a marking compilation run.
@@ -312,6 +313,14 @@ class MarkedSet
         $tree = $this->getSubtree($this->rootNode, 0);
 
         return $this->getSubtreeAsArray($tree, $serialiseEval);
+    }
+
+    /**
+     * Get tree data for the root node
+     */
+    public function getRootTree()
+    {
+        return $this->getSubtree($this->rootNode);
     }
 
     /**
