@@ -4,6 +4,7 @@ namespace SilverStripe\Security\MemberAuthenticator;
 
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\Validation\ValidationResult;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\AuthenticationHandler;
 use SilverStripe\Security\IdentityStore;
@@ -170,6 +171,15 @@ class CookieAuthenticationHandler implements AuthenticationHandler
         $now = DBDatetime::now();
         $now = new \DateTime($now->Rfc2822());
         if ($now > $expiryDate) {
+            return null;
+        }
+
+        // Skip Member::validateCanLogin() so failed password attempts by others can't lock out a remembered device
+        $result = ValidationResult::create();
+        $member->extend('canLogIn', $result);
+        if (!$result->isValid()) {
+            $this->clearCookies();
+            $rememberLoginHash->delete();
             return null;
         }
 
