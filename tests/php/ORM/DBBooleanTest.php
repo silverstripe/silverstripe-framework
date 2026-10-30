@@ -79,11 +79,11 @@ class DBBooleanTest extends SapphireTest
             ],
             '0.0' => [
                 'value' => 0.0,
-                'expected' => 0.0,
+                'expected' => false,
             ],
             '1.0' => [
                 'value' => 1.0,
-                'expected' => 1.0,
+                'expected' => true,
             ],
             'null' => [
                 'value' => null,
