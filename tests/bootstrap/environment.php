@@ -8,7 +8,7 @@ if (!Environment::getEnv('SS_DATABASE_CLASS') && !Environment::getEnv('SS_DATABA
     // The default settings let us define the database config via environment vars
     // Database connection, including legacy ORM support
     switch (Environment::getEnv('DB')) {
-        case "PGSQL";
+        case "PGSQL":
             $pgDatabaseClass = 'PostgreSQLDatabase';
             Environment::setEnv('SS_DATABASE_CLASS', $pgDatabaseClass);
             Environment::setEnv('SS_DATABASE_USERNAME', 'postgres');
