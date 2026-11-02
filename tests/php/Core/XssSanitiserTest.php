@@ -421,11 +421,18 @@ class XssSanitiserTest extends SapphireTest
         ];
     }
 
+    private function removeVoidClosingTags(string $html): string
+    {
+        // libxml versions differ in whether they write a closing tag for these elements
+        return str_replace(['</bgsound>', '</embed>'], '', $html);
+    }
+
     #[DataProvider('provideSanitise')]
     public function testSanitiseString(string $input, string $expected): void
     {
         $sanitiser = new XssSanitiser();
-        $this->assertSame($expected, $sanitiser->sanitiseString($input));
+        $actual = $sanitiser->sanitiseString($input);
+        $this->assertSame($this->removeVoidClosingTags($expected), $this->removeVoidClosingTags($actual));
     }
 
     #[DataProvider('provideSanitise')]
@@ -434,7 +441,8 @@ class XssSanitiserTest extends SapphireTest
         $sanitiser = new XssSanitiser();
         $htmlValue = new HTMLValue($input);
         $sanitiser->sanitiseHtmlValue($htmlValue);
-        $this->assertSame($expected, $htmlValue->getContent());
+        $actual = $htmlValue->getContent();
+        $this->assertSame($this->removeVoidClosingTags($expected), $this->removeVoidClosingTags($actual));
     }
 
     #[DataProvider('provideSanitise')]
@@ -448,7 +456,8 @@ class XssSanitiserTest extends SapphireTest
             }
             $element = $sanitiser->sanitiseElement($element);
         }
-        $this->assertSame($expected, $htmlValue->getContent());
+        $actual = $htmlValue->getContent();
+        $this->assertSame($this->removeVoidClosingTags($expected), $this->removeVoidClosingTags($actual));
     }
 
     public static function provideSanitiseElementInvalidUtf8(): array
@@ -511,7 +520,8 @@ class XssSanitiserTest extends SapphireTest
         if ($removeElements !== null) {
             $sanitiser->setElementsToRemove($removeElements);
         }
-        $this->assertSame($expected, $sanitiser->sanitiseString($input));
+        $actual = $sanitiser->sanitiseString($input);
+        $this->assertSame($this->removeVoidClosingTags($expected), $this->removeVoidClosingTags($actual));
     }
 
     public static function provideSanitiseAttributesAllowed(): array

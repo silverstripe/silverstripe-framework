@@ -254,8 +254,15 @@ class NumericFieldTest extends SapphireTest
         $field->setScale($scale);
         $field->setValue($input);
         $this->assertSame($expDataValue, $field->dataValue());
-        $this->assertSame($expValue, $field->getFormattedValue());
+        $actual = $field->getFormattedValue();
+        $this->assertSame($this->normaliseGroupSeparators($expValue), $this->normaliseGroupSeparators($actual));
         $this->assertTrue($field->validate()->isValid());
+    }
+
+    private function normaliseGroupSeparators(string $value): string
+    {
+        // ICU versions differ in the group separator they use for some locales, e.g. de_CH and de_DE
+        return str_replace(["\u{2019}", "\u{00A0}", "\u{202F}"], ["'", ' ', ' '], $value);
     }
 
     public function testReadonly()
@@ -710,6 +717,10 @@ class NumericFieldTest extends SapphireTest
             $field->setLocale($locale);
         }
         $field->setScale($scale);
+        if ($locale === 'de_DE') {
+            // Newer ICU versions only accept a no-break space as the group separator
+            $submittedValue = str_replace(' ', "\u{00A0}", $submittedValue);
+        }
         $field->setSubmittedValue($submittedValue);
         // Check failure specific behaviour
         if ($dataValue === false) {
@@ -723,7 +734,12 @@ class NumericFieldTest extends SapphireTest
         if (!$cleanedInput) {
             $cleanedInput = $submittedValue;
         }
-        $this->assertSame($cleanedInput, $field->getFormattedValue(), 'getFormattedValue()');
+        $actual = $field->getFormattedValue();
+        $this->assertSame(
+            $this->normaliseGroupSeparators($cleanedInput),
+            $this->normaliseGroupSeparators($actual),
+            'getFormattedValue()'
+        );
     }
 
     public static function provideSetSubmittedValueNonString(): array
