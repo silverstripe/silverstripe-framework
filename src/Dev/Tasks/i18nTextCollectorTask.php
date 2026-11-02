@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Dev\Tasks;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BuildTask;
 use SilverStripe\PolyExecution\PolyOutput;
+use SilverStripe\i18n\Messages\Writer;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,6 +38,9 @@ class i18nTextCollectorTask extends BuildTask
         // Custom writer
         $writerName = $input->getOption('writer');
         if ($writerName) {
+            if (!is_a($writerName, Writer::class, true)) {
+                throw new InvalidArgumentException('The writer option must be the name of a class that implements ' . Writer::class);
+            }
             $writer = Injector::inst()->get($writerName);
             $collector->setWriter($writer);
         }

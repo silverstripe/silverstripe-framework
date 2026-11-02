@@ -43,6 +43,11 @@ class DevelopmentAdminConfirmationMiddleware extends PermissionAwareConfirmation
 
         $url = rtrim($request->getURL(), '/');
         $registeredRoutes = DevelopmentAdmin::singleton()->getLinks();
+        // Walk up the path until we find a registered route, e.g.
+        // dev/tasks/queue/MyTask -> dev/tasks/queue -> dev/tasks
+        while (!isset($registeredRoutes[$url]) && strpos($url, '/') !== false) {
+            $url = substr($url, 0, strrpos($url, '/'));
+        }
         // Permissions were already checked when generating the links list, so if
         // it's in the list the user has access.
         return isset($registeredRoutes[$url]);

@@ -229,10 +229,22 @@ class HTMLEditorSanitiserTest extends FunctionalTest
                 'input' => '<object data="' . implode("\n", str_split(' DATA:TEXT/HTML;')) . 'base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
                 'expected' => '<object></object>',
             ],
-            'keep text/xml content in data attribute' => [
+            'remove text/xml from data attribute' => [
+                // XML in the XHTML namespace is parsed as XHTML by the browser and executes inline
+                // <script>, so the media type is removed regardless of what the payload declares
                 'validElements' => ['object' => ['attributes' => ['data' => true]]],
                 'input' => '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
-                'expected' => '<object data="data:text/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4="></object>',
+                'expected' => '<object></object>',
+            ],
+            'remove application/xml from data attribute' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="data:application/xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                'expected' => '<object></object>',
+            ],
+            'remove application/xhtml+xml from data attribute' => [
+                'validElements' => ['object' => ['attributes' => ['data' => true]]],
+                'input' => '<object data="data:application/xhtml+xml;base64,PHNjcmlwdD5hbGVydChkb2N1bWVudC5sb2NhdGlvbik8L3NjcmlwdD4=">',
+                'expected' => '<object></object>',
             ],
         ];
     }

@@ -1112,6 +1112,40 @@ class MemberTest extends FunctionalTest
         $this->assertFalse($m2->validateAutoLoginToken($m1Token), 'Fails token validity test against other member.');
     }
 
+    public function testValidateAutoLoginTokenWithoutSalt()
+    {
+        $m1 = new Member();
+        $m1->Email = 'legacy-one@example.com';
+        $m1->Password = 'awesome-bicycle-chicken-delivery';
+        $m1->write();
+
+        $m2 = new Member();
+        $m2->Email = 'legacy-two@example.com';
+        $m2->Password = 'awesome-bicycle-chicken-delivery';
+        $m2->write();
+
+        // Salt is only regenerated when the password changes, so a legacy record can persist without one
+        foreach ([$m1, $m2] as $member) {
+            $member->Salt = '';
+            $member->write();
+        }
+
+        $m1Token = $m1->generateAutologinTokenAndStoreHash();
+        $m2->generateAutologinTokenAndStoreHash();
+
+        $this->assertTrue($m1->validateAutoLoginToken($m1Token));
+        $this->assertFalse($m2->validateAutoLoginToken($m1Token));
+    }
+
+    public function testValidateAutoLoginTokenWithEmptyToken()
+    {
+        $member = new Member();
+        $member->Email = 'empty-token@example.com';
+        $member->write();
+
+        $this->assertFalse($member->validateAutoLoginToken(''));
+    }
+
     public function testRememberMeHashGeneration()
     {
         /** @var Member $m1 */

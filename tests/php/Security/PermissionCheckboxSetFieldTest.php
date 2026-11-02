@@ -31,6 +31,96 @@ class PermissionCheckboxSetFieldTest extends SapphireTest
         $this->assertStringNotContainsString('NON-ADMIN', $f->Field());
     }
 
+    public function testSaveIntoIgnoresForgedCodes()
+    {
+        /** @var Group $group */
+        $group = $this->objFromFixture(Group::class, 'group');
+
+        $field = new PermissionCheckboxSetField(
+            'Permissions',
+            'Permissions',
+            Permission::class,
+            'GroupID',
+            $group
+        );
+
+        // A forged/unknown code that was never offered by the field (not registered, not in the DB).
+        $forgedCode = '<svg onload=alert(document.cookie)>';
+
+        $field->setValue([
+            'ADMIN' => true,
+            $forgedCode => true,
+        ]);
+        $field->saveInto($group);
+        $group->flushCache();
+
+        $this->assertSame(
+            0,
+            (int) Permission::get()->filter('Code', $forgedCode)->count()
+        );
+        $this->assertSame(
+            1,
+            (int) $group->Permissions()->filter('Code', 'ADMIN')->count()
+        );
+    }
+
+    public function testSaveIntoAllowsExistingDatabaseCodes()
+    {
+        /** @var Group $group */
+        $group = $this->objFromFixture(Group::class, 'group');
+
+        // NON-ADMIN exists only in the DB (fixture perm2); it surfaces in the "Other" category
+        // of $this->source, so it is a legitimate offered code and must still be saveable.
+        $field = new PermissionCheckboxSetField(
+            'Permissions',
+            'Permissions',
+            Permission::class,
+            'GroupID',
+            $group
+        );
+
+        $field->setValue(['NON-ADMIN' => true]);
+        $field->saveInto($group);
+        $group->flushCache();
+
+        $this->assertSame(
+            1,
+            (int) $group->Permissions()->filter('Code', 'NON-ADMIN')->count()
+        );
+    }
+
+    public function testFieldEncodesMaliciousValues()
+    {
+        // Seed a malicious permission code into the database so it surfaces in the "Other" category.
+        $payloadCode = '<svg onload=alert(1)>"broken';
+        $perm = new Permission();
+        $perm->Code = $payloadCode;
+        $perm->write();
+
+        $group = new Group();
+        $group->Title = '<script>alert(2)</script>';
+        $group->write();
+
+        $field = new PermissionCheckboxSetField(
+            'Permissions',
+            'Permissions',
+            Permission::class,
+            'GroupID',
+            $group
+        );
+        $html = $field->Field();
+
+        $this->assertStringNotContainsString('<svg onload=alert(1)>', $html);
+        $this->assertStringNotContainsString('value="<svg', $html);
+        $this->assertStringContainsString('&lt;svg', $html);
+
+        // Readonly render path inherits Field() and must be encoded too.
+        $readonly = $field->performReadonlyTransformation();
+        $readonlyHtml = $readonly->Field();
+        $this->assertStringNotContainsString('<svg onload=alert(1)>', $readonlyHtml);
+        $this->assertStringContainsString('&lt;svg', $readonlyHtml);
+    }
+
     public function testSaveInto()
     {
         /**

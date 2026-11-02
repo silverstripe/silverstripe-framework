@@ -358,7 +358,8 @@ class ClassManifest
      */
     public function getItemPath($name)
     {
-        $lowerName = strtolower($name ?? '');
+        // Normalise the name to match against manifest keys
+        $lowerName = strtolower(ltrim($name ?? '', '\\'));
         foreach ([
                      $this->classes,
                      $this->interfaces,

@@ -517,11 +517,7 @@ class Group extends DataObject
         if ($this->Parent()->exists() && !Permission::check('ADMIN')) {
             $privilegedCodes = Permission::config()->get('privileged_permissions');
             if (!empty($privilegedCodes)) {
-                $inheritedCodes = Permission::get()->filter([
-                    'GroupID' => $this->Parent()->collateAncestorIDs(),
-                    'Code' => $privilegedCodes,
-                ]);
-                if ($inheritedCodes->exists()) {
+                if ($this->anyGroupGrantsPermission($this->Parent()->collateAncestorIDs(), $privilegedCodes)) {
                     $result->addError(
                         _t(
                             'SilverStripe\\Security\\Group.HierarchyPermsError',
@@ -594,7 +590,7 @@ class Group extends DataObject
 
     /**
      * Checks for permission-code CMS_ACCESS_SecurityAdmin.
-     * If the group has ADMIN permissions, it requires the user to have ADMIN permissions as well.
+     * If the group grants a permission leading to ADMIN, it requires the user to have ADMIN permissions as well.
      *
      * @param Member $member Member
      * @return boolean
@@ -614,17 +610,50 @@ class Group extends DataObject
         if (// either we have an ADMIN
             (bool)Permission::checkMember($member, "ADMIN")
             || (
-                // or a privileged CMS user and a group without ADMIN permissions.
+                // or a privileged CMS user and a group that does not grant a permission leading to ADMIN.
                 // without this check, a user would be able to add himself to an administrators group
                 // with just access to the "Security" admin interface
                 Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin") &&
-                !Permission::get()->filter(['GroupID' => $this->ID, 'Code' => 'ADMIN'])->exists()
+                !$this->grantsEscalatingPermissions()
             )
         ) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Determine whether a member of this group would receive a permission that leads to ADMIN, whether granted
+     * directly, via an assigned PermissionRole, or inherited from an ancestor group. Used to stop a non-admin user
+     * with only CMS_ACCESS_SecurityAdmin from editing an admin-equivalent group and escalating their own privileges.
+     */
+    private function grantsEscalatingPermissions(): bool
+    {
+        if (!$this->exists()) {
+            return false;
+        }
+        $privilegedCodes = Permission::config()->get('privileged_permissions') ?? [];
+        // EDIT_PERMISSIONS is privileged but cannot reach ADMIN - PermissionCheckboxSetField::saveInto()
+        // strips every privileged code from a non-admin's submission
+        $escalatingCodes = array_diff($privilegedCodes, ['EDIT_PERMISSIONS']);
+        return $this->anyGroupGrantsPermission($this->collateAncestorIDs(), $escalatingCodes);
+    }
+
+    /**
+     * Determine whether any of the given groups grants any of the given permission codes to its members,
+     * whether the code is assigned to the group directly or via an assigned PermissionRole.
+     *
+     * @param int[] $groupIDs
+     * @param string|string[] $codes
+     */
+    private function anyGroupGrantsPermission(array $groupIDs, array|string $codes): bool
+    {
+        if (empty($groupIDs) || empty($codes)) {
+            return false;
+        }
+        $grantingGroupIDs = Permission::get_groups_by_permission($codes)->columnUnique('ID');
+        return !empty(array_intersect($groupIDs, $grantingGroupIDs));
     }
 
     /**

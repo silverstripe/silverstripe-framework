@@ -3,7 +3,9 @@
 namespace SilverStripe\Security\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\Model\List\ArrayList;
@@ -11,6 +13,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionRole;
+use SilverStripe\Security\PermissionRoleCode;
 use SilverStripe\Security\Tests\GroupTest\TestMember;
 
 class GroupTest extends FunctionalTest
@@ -372,5 +376,196 @@ class GroupTest extends FunctionalTest
         $group->Code = $previousCode;
         $group->write();
         $this->assertEquals($previousCode, $group->Code);
+    }
+
+    /**
+     * A user with only CMS_ACCESS_SecurityAdmin (and not ADMIN) must not be able to edit any group that
+     * grants an effective permission leading to ADMIN - whether that permission is assigned directly, via
+     * an assigned PermissionRole, or inherited from an ancestor group. Otherwise that user could add their
+     * own account to such a group and escalate to full ADMIN, either immediately or by then applying an
+     * ADMIN role with the APPLY_ROLES permission they gained.
+     */
+    public static function provideCannotEditEscalatingGroup(): array
+    {
+        return [
+            'direct ADMIN permission' => ['direct', 'ADMIN'],
+            'ADMIN granted via role' => ['role', 'ADMIN'],
+            'ADMIN inherited from ancestor' => ['inherited', 'ADMIN'],
+            'ADMIN inherited from ancestor via role' => ['inherited-role', 'ADMIN'],
+            'direct APPLY_ROLES permission' => ['direct', 'APPLY_ROLES'],
+            'APPLY_ROLES granted via role' => ['role', 'APPLY_ROLES'],
+        ];
+    }
+
+    #[DataProvider('provideCannotEditEscalatingGroup')]
+    public function testCannotEditEscalatingGroup(string $adminSource, string $code): void
+    {
+        // Setting up privileged groups/roles itself requires ADMIN access, so do it as an admin
+        $this->logInWithPermission('ADMIN');
+
+        $securityAdmin = new Member();
+        $securityAdmin->write();
+        $securityAdminGroup = new Group();
+        $securityAdminGroup->Title = 'Security Admin Group';
+        $securityAdminGroup->write();
+        $securityAdminGroup->Members()->add($securityAdmin);
+        Permission::grant($securityAdminGroup->ID, 'CMS_ACCESS_SecurityAdmin');
+
+        $privilegedGroup = $this->createGroupGrantingPermission($adminSource, $code);
+
+        // Evaluate canEdit() as the SecurityAdmin-only user, not the admin used for setup
+        $this->logOut();
+
+        $this->assertFalse($privilegedGroup->canEdit($securityAdmin));
+    }
+
+    /**
+     * EDIT_PERMISSIONS is a privileged permission, but it is not a route to ADMIN - a non-admin saving
+     * PermissionCheckboxSetField has every privileged code stripped from their submission. Groups granting
+     * it must stay editable, otherwise a delegated security admin cannot administer their own group.
+     */
+    public static function provideCanEditGroupGrantingEditPermissions(): array
+    {
+        return [
+            'direct EDIT_PERMISSIONS permission' => ['direct'],
+            'EDIT_PERMISSIONS granted via role' => ['role'],
+            'EDIT_PERMISSIONS inherited from ancestor' => ['inherited'],
+        ];
+    }
+
+    #[DataProvider('provideCanEditGroupGrantingEditPermissions')]
+    public function testCanEditGroupGrantingEditPermissions(string $source): void
+    {
+        $this->logInWithPermission('ADMIN');
+
+        $securityAdmin = new Member();
+        $securityAdmin->write();
+        $securityAdminGroup = new Group();
+        $securityAdminGroup->Title = 'Security Admin Group';
+        $securityAdminGroup->write();
+        $securityAdminGroup->Members()->add($securityAdmin);
+        Permission::grant($securityAdminGroup->ID, 'CMS_ACCESS_SecurityAdmin');
+
+        $group = $this->createGroupGrantingPermission($source, 'EDIT_PERMISSIONS');
+
+        $this->logOut();
+
+        $this->assertTrue($group->canEdit($securityAdmin));
+    }
+
+    /**
+     * A non-admin user must not be able to reparent a group they may legitimately edit underneath a group
+     * that grants privileged permissions, since the child group's members - including that user - would
+     * then inherit those permissions. Effective grants count, not just permissions assigned to the parent
+     * chain directly.
+     */
+    public static function provideValidatesEffectivePrivilegeLevelOfParent(): array
+    {
+        return [
+            'ADMIN granted via role' => ['role', 'ADMIN'],
+            'ADMIN inherited from ancestor via role' => ['inherited-role', 'ADMIN'],
+            'APPLY_ROLES granted via role' => ['role', 'APPLY_ROLES'],
+            'EDIT_PERMISSIONS granted via role' => ['role', 'EDIT_PERMISSIONS'],
+        ];
+    }
+
+    #[DataProvider('provideValidatesEffectivePrivilegeLevelOfParent')]
+    public function testValidatesEffectivePrivilegeLevelOfParent(string $source, string $code): void
+    {
+        $this->logInWithPermission('ADMIN');
+        $privilegedGroup = $this->createGroupGrantingPermission($source, $code);
+        $ordinaryGroup = new Group();
+        $ordinaryGroup->Title = 'Ordinary Group';
+        $ordinaryGroup->write();
+
+        $this->logInWithPermission('CMS_ACCESS_SecurityAdmin');
+        $ordinaryGroup->ParentID = $privilegedGroup->ID;
+
+        $this->expectException(ValidationException::class);
+        $ordinaryGroup->write();
+    }
+
+    public function testCanReparentUnderNonPrivilegedGroup(): void
+    {
+        $this->logInWithPermission('CMS_ACCESS_SecurityAdmin');
+        $parentGroup = new Group();
+        $parentGroup->Title = 'Ordinary Parent Group';
+        $parentGroup->write();
+        $childGroup = new Group();
+        $childGroup->Title = 'Ordinary Child Group';
+        $childGroup->ParentID = $parentGroup->ID;
+        $childGroup->write();
+
+        $this->assertSame($parentGroup->ID, Group::get()->byID($childGroup->ID)->ParentID);
+    }
+
+    /**
+     * Build a group whose members effectively receive $code through the given source
+     */
+    private function createGroupGrantingPermission(string $source, string $code): Group
+    {
+        $group = new Group();
+        $group->Title = "{$source} {$code} group";
+        switch ($source) {
+            case 'direct':
+                $group->write();
+                Permission::grant($group->ID, $code);
+                break;
+            case 'role':
+                $group->write();
+                $group->Roles()->add($this->createRoleGrantingPermission($code));
+                break;
+            case 'inherited':
+                $parentGroup = new Group();
+                $parentGroup->Title = "{$source} {$code} parent group";
+                $parentGroup->write();
+                Permission::grant($parentGroup->ID, $code);
+                $group->ParentID = $parentGroup->ID;
+                $group->write();
+                break;
+            case 'inherited-role':
+                $parentGroup = new Group();
+                $parentGroup->Title = "{$source} {$code} parent group";
+                $parentGroup->write();
+                $parentGroup->Roles()->add($this->createRoleGrantingPermission($code));
+                $group->ParentID = $parentGroup->ID;
+                $group->write();
+                break;
+            default:
+                throw new InvalidArgumentException("Unknown permission source {$source}");
+        }
+        return $group;
+    }
+
+    private function createRoleGrantingPermission(string $code): PermissionRole
+    {
+        $role = new PermissionRole();
+        $role->Title = "{$code} role";
+        $role->write();
+        $roleCode = new PermissionRoleCode();
+        $roleCode->Code = $code;
+        $roleCode->RoleID = $role->ID;
+        $roleCode->write();
+        return $role;
+    }
+
+    /**
+     * A SecurityAdmin-only user should still be able to edit ordinary, non-admin groups.
+     */
+    public function testCanEditNonAdminGroup(): void
+    {
+        $securityAdmin = new Member();
+        $securityAdmin->write();
+        $securityAdminGroup = new Group();
+        $securityAdminGroup->Title = 'Security Admin Group';
+        $securityAdminGroup->write();
+        $securityAdminGroup->Members()->add($securityAdmin);
+        Permission::grant($securityAdminGroup->ID, 'CMS_ACCESS_SecurityAdmin');
+
+        $ordinaryGroup = new Group();
+        $ordinaryGroup->Title = 'Ordinary Group';
+        $ordinaryGroup->write();
+
+        $this->assertTrue($ordinaryGroup->canEdit($securityAdmin));
     }
 }
