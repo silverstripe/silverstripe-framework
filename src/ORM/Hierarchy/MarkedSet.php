@@ -420,6 +420,7 @@ class MarkedSet
             'expanded' => $expanded,
             'opened' => $opened,
             'depth' => $depth,
+            'level' => $depth,
             'count' => $count, // Count of DB children
             'limited' => $limited, // Flag whether 'items' has been limited
             'children' => [], // Children to return in this request
