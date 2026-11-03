@@ -56,11 +56,13 @@ class TempDatabase
      */
     protected function isDBTemp($name)
     {
-        $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
+        $prefix = preg_quote(Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_', '/') . '([0-9]+_)?';
+
         $result = preg_match(
-            sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', preg_quote($prefix ?? '', '/')),
+            sprintf('/^%stmpdb_[0-9]+_[0-9]+$/i', $prefix),
             $name ?? ''
         );
+
         return $result === 1;
     }
 
@@ -198,6 +200,11 @@ class TempDatabase
         // Create a temporary database, and force the connection to use UTC for time
         $dbConn = $this->getConn();
         $prefix = Environment::getEnv('SS_DATABASE_PREFIX') ?: 'ss_';
+
+        if (($token = getenv('TEST_TOKEN')) !== false) {
+            $prefix .= $token . '_';
+        }
+
         do {
             $dbname = strtolower(sprintf('%stmpdb_%s_%s', $prefix, time(), rand(1000000, 9999999)));
         } while ($dbConn->databaseExists($dbname));
