@@ -225,7 +225,12 @@ class ThemeResourceLoader implements Flushable, TemplateGlobalProvider
             // If we have an .ss extension, this is a path, not a template name. We should
             // pass in templates without extensions in order for template manifest to find
             // files dynamically.
-            if (substr($template ?? '', -3) == '.ss' && file_exists($template ?? '')) {
+            // A template path must be local - a stream wrapper such as ftp:// or php:// would
+            // otherwise be fetched and compiled to PHP, so reject any scheme-prefixed path.
+            if (substr($template ?? '', -3) == '.ss'
+                && !preg_match('#^[a-z][a-z0-9+.\-]*://#i', $template ?? '')
+                && file_exists($template ?? '')
+            ) {
                 $this->getCache()->set($cacheKey, $template);
                 return $template;
             }
