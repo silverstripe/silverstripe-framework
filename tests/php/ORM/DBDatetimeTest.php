@@ -111,13 +111,14 @@ class DBDatetimeTest extends SapphireTest
      */
     public function testHindiNumerals()
     {
+        // The ar-u-nu-arab locale asks for Arabic-Indic digits, because the default digits for ar depend on the ICU version
         // Parent locale is english; Can be localised to arabic
         $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
         $this->assertEquals('10 Oct 1600 15 32 24', $date->Format('d MMM y H m s'));
-        $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s', 'ar'));
+        $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s', 'ar-u-nu-arab'));
 
         // Parent locale is arabic; Datavalue uses ISO date
-        i18n::set_locale('ar');
+        i18n::set_locale('ar-u-nu-arab');
         $date = DBDatetime::create_field('Datetime', '1600-10-10 15:32:24');
         $this->assertEquals('١٠ أكتوبر ١٦٠٠ ١٥ ٣٢ ٢٤', $date->Format('d MMM y H m s'));
         $this->assertEquals('1600-10-10 15:32:24', $date->getValue());
