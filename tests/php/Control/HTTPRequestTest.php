@@ -342,6 +342,32 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals('home', $req->getURL());
     }
 
+    public static function provideMatchRootURL(): array
+    {
+        return [
+            'root' => ['/', true, null],
+            'empty' => ['', true, null],
+            'zero' => ['0', false, null],
+            'zero with trailing slash' => ['0/', false, null],
+            'zero with extension' => ['0.php', false, 'php'],
+            'dotfile' => ['.env', false, null],
+            'dotfile with leading slash' => ['/.htaccess', false, null],
+            'extension only' => ['.php', false, null],
+            'page' => ['about-us', false, null],
+        ];
+    }
+
+    /**
+     * Check that only an empty URL matches the root URL rule
+     */
+    #[DataProvider('provideMatchRootURL')]
+    public function testMatchRootURL(string $url, bool $matchesRoot, ?string $extension): void
+    {
+        $request = new HTTPRequest('GET', $url);
+        $this->assertSame($matchesRoot ? ['Matched' => true] : false, $request->match(''));
+        $this->assertSame($extension, $request->getExtension());
+    }
+
     public function testSetIPFromHeaderValue()
     {
         $req = new TrustedProxyMiddleware();
