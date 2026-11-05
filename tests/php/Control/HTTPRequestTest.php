@@ -342,6 +342,9 @@ class HTTPRequestTest extends SapphireTest
         $this->assertEquals('home', $req->getURL());
     }
 
+    /**
+     * URLs with whether each should match the root URL rule, and the extension it should have
+     */
     public static function provideMatchRootURL(): array
     {
         return [
