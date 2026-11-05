@@ -128,4 +128,40 @@ class PathTest extends SapphireTest
         }
         return $tests;
     }
+
+    #[DataProvider('provideResolveLocalFile')]
+    public function testResolveLocalFile(string $path, bool $expectResolved): void
+    {
+        $expected = $expectResolved ? realpath(__FILE__) : null;
+        $this->assertSame($expected, Path::resolveLocalFile($path));
+    }
+
+    public static function provideResolveLocalFile(): array
+    {
+        return [
+            'absolute path' => [__FILE__, true],
+            'path with dot segments' => [__DIR__ . '/../Core/' . basename(__FILE__), true],
+            'directory' => [__DIR__, false],
+            'missing file' => [__DIR__ . '/does-not-exist.php', false],
+            'empty string' => ['', false],
+            'null byte' => [__FILE__ . "\0.ss", false],
+            'file wrapper' => ['file://' . __FILE__, false],
+            'ftp wrapper' => ['ftp://127.0.0.1/' . basename(__FILE__), false],
+            'php filter wrapper' => ['php://filter/resource=' . __FILE__, false],
+            'compress.zlib wrapper' => ['compress.zlib://' . __FILE__, false],
+            'glob wrapper' => ['glob://' . __FILE__, false],
+            'data uri' => ['data:text/plain,hello', false],
+        ];
+    }
+
+    public function testResolveLocalFileRelativePath(): void
+    {
+        $cwd = getcwd();
+        try {
+            chdir(__DIR__);
+            $this->assertSame(realpath(__FILE__), Path::resolveLocalFile(basename(__FILE__)));
+        } finally {
+            chdir($cwd);
+        }
+    }
 }

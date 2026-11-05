@@ -66,4 +66,30 @@ class Path
             return rtrim($path ?? '', Path::TRIM_CHARS ?? '');
         }
     }
+
+    /**
+     * Resolve a path to an existing file on the local filesystem.
+     *
+     * Use this instead of file_exists() where a path must refer to a file on disk, for example
+     * a template that will be compiled and executed. file_exists() also accepts stream wrapper
+     * paths such as ftp:// and phar://, which would let a remote or crafted file stand in for a
+     * local one. realpath() only resolves plain filesystem paths, so every stream wrapper
+     * (including file://) is rejected without having to recognise its syntax.
+     *
+     * Relative paths resolve against the current working directory, as they do for file_exists().
+     *
+     * @return string|null The canonical absolute path, or null if $path is not an existing local file
+     */
+    public static function resolveLocalFile(string $path): ?string
+    {
+        // realpath('') returns the working directory, and realpath() throws on null bytes
+        if ($path === '' || str_contains($path, "\0")) {
+            return null;
+        }
+        $resolved = realpath($path);
+        if ($resolved === false || !is_file($resolved)) {
+            return null;
+        }
+        return $resolved;
+    }
 }
