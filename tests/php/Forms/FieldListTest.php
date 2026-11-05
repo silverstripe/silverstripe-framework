@@ -296,11 +296,15 @@ class FieldListTest extends SapphireTest
         $this->assertEquals(Tab::class, get_class($tab2));
 
         $fields->addFieldToTab('Root.Tab1', new TextField('Field1'));
-        $this->expectException(RuntimeException::class);
-        $message = "Root.Tab1.Field1 is an instance of 'SilverStripe\Forms\TextField', not Tab or TabSet";
-        $this->expectExceptionMessage($message);
-        $fields->findOrMakeTab('Root.Tab1.Field1');
         $this->assertNull($fields->findTab('This.Doesnt.Exist'));
+
+        $message = "Root.Tab1.Field1 is an instance of 'SilverStripe\Forms\TextField', not Tab or TabSet";
+        try {
+            $fields->findOrMakeTab('Root.Tab1.Field1');
+            $this->fail('findOrMakeTab() should throw when the path resolves to a non-Tab field.');
+        } catch (RuntimeException $e) {
+            $this->assertSame($message, $e->getMessage());
+        }
     }
 
     /**

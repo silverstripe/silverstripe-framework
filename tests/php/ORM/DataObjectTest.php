@@ -2783,11 +2783,15 @@ class DataObjectTest extends SapphireTest
 
     public function testSetFieldWithArrayOnScalarOnlyField()
     {
-        $this->expectException(\InvalidArgumentException::class);
         $do = Company::singleton();
         $do->FoundationYear = '1984';
-        $do->FoundationYear = ['Amount' => 123, 'Currency' => 'CAD'];
-        $this->assertEmpty($do->FoundationYear);
+        try {
+            $do->FoundationYear = ['Amount' => 123, 'Currency' => 'CAD'];
+            $this->fail('Setting an array on a scalar-only field should be rejected.');
+        } catch (\InvalidArgumentException $e) {
+        }
+        // The rejected assignment must leave the previous value intact.
+        $this->assertSame('1984', $do->FoundationYear);
     }
 
     public function testSetFieldWithArrayOnCompositeField()

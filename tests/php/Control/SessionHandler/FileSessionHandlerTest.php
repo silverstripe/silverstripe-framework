@@ -241,9 +241,12 @@ class FileSessionHandlerTest extends SapphireTest
 
         $handler = new FileSessionHandler();
         $reflectionIsSessionExpired = new ReflectionMethod($handler, 'isSessionExpired');
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Could not read modified time of session file');
-        $reflectionIsSessionExpired->invoke($handler, $sessionFilePath);
+        try {
+            $reflectionIsSessionExpired->invoke($handler, $sessionFilePath);
+            $this->fail('isSessionExpired() should throw for a missing session file.');
+        } catch (RuntimeException $e) {
+            $this->assertStringContainsString('Could not read modified time of session file', $e->getMessage());
+        }
 
         // Make sure the file didn't get inadvertently created
         $this->assertFileDoesNotExist($sessionFilePath);
