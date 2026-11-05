@@ -395,7 +395,7 @@ class PolymorphicHasManyListTest extends SapphireTest
         $this->assertSame('FavouriteClass', $list->getForeignClassKey());
     }
 
-    public function getGetForeignRelationKey(): void
+    public function testGetForeignRelationKey(): void
     {
         $team = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
         $list = $team->Fans();
