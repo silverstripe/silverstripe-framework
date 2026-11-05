@@ -180,11 +180,11 @@ class HTTPRequest implements ArrayAccess
         if (Director::is_relative_url($url) || preg_match('/^\//', $url ?? '')) {
             $this->url = preg_replace(['/\/+/','/^\//', '/\/$/'], ['/','',''], $this->url ?? '');
         }
-        if (preg_match('/^(.*)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url ?? '', $matches)) {
+        if (preg_match('/^(.+)\.([A-Za-z][A-Za-z0-9]*)$/', $this->url ?? '', $matches)) {
             $this->url = $matches[1];
             $this->extension = $matches[2];
         }
-        if ($this->url) {
+        if ($this->url !== null && $this->url !== '') {
             $this->dirParts = preg_split('|/+|', $this->url ?? '');
         } else {
             $this->dirParts = [];
