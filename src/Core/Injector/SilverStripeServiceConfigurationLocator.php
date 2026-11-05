@@ -31,7 +31,17 @@ class SilverStripeServiceConfigurationLocator implements ServiceConfigurationLoc
         // If config is in `%$Source` format then inherit from the named config
         if (is_string($config) && stripos($config ?? '', '%$') === 0) {
             $name = substr($config ?? '', 2);
-            return $this->locateConfigFor($name);
+            $inheritedConfig = $this->locateConfigFor($name);
+            if ($inheritedConfig) {
+                return $inheritedConfig;
+            }
+
+            // No explicit config for the referenced service, but it's a real class, so alias to it directly.
+            if (class_exists($name)) {
+                return ['class' => $name];
+            }
+
+            return null;
         }
 
         // Return the located config
