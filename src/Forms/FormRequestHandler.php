@@ -247,8 +247,15 @@ class FormRequestHandler extends RequestHandler
                 return $this->invokeFormHandler($this, ...$args);
             }
 
-            // Otherwise, try a handler method on the form itself
+            // A form method is only dispatched when it is an allowed action; otherwise any
+            // public method on the Form is callable through an action_ field.
             if ($this->form->hasMethod($funcName)) {
+                if (!$this->checkAccessAction($funcName)) {
+                    $this->httpError(
+                        403,
+                        sprintf('Action "%s" not allowed on form (Class: "%s")', $funcName, get_class($this->form))
+                    );
+                }
                 return $this->invokeFormHandler($this->form, ...$args);
             }
 
