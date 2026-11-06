@@ -1363,19 +1363,20 @@ class DataList extends ModelData implements SS_List, Resettable
         $fetchedRecords = DataObject::get($relationDataClass)->filter([$belongsToIDField => $parentIDs])->toArray();
         $fetchedIDs = [];
         $foundParentIDs = [];
+        $parentMap = $this->getEagerLoadParentMap($parents, $parentIDs, $relationName, $relationType);
 
         // Add fetched record to the correct place
         foreach ($fetchedRecords as $fetched) {
             $fetchedIDs[] = $fetched->ID;
             $parentID = $fetched->$belongsToIDField;
             $foundParentIDs[] = $parentID;
-            $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $fetched, $relationType);
+            $this->addEagerLoadedDataToParent($parentMap, $parentID, $relationChain, $relationName, $fetched, $relationType);
         }
 
         // Load empty DataObject records into any parents which have no child records
         $missingParentIDs = array_diff($parentIDs, $foundParentIDs);
         $this->fillEmptyEagerLoadedRelations(
-            $parents,
+            $parentMap,
             $missingParentIDs,
             $relationChain,
             $relationName,
@@ -1404,6 +1405,7 @@ class DataList extends ModelData implements SS_List, Resettable
         $fetchedRows = $fetchList->getFinalisedQuery();
         $fetchedIDs = [];
         $eagerLoadedLists = [];
+        $parentMap = $this->getEagerLoadParentMap($parents, $parentIDs, $relationName, $relationType);
 
         // Store the children in an EagerLoadedList against the correct parent
         foreach ($fetchedRows as $row) {
@@ -1415,7 +1417,7 @@ class DataList extends ModelData implements SS_List, Resettable
                 // If we haven't created a list yet, create it and add it to the correct parent list/record
                 $eagerLoadedList = EagerLoadedList::create($relationDataClass, HasManyList::class, $parentID);
                 $eagerLoadedLists[$parentID] = $eagerLoadedList;
-                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, $relationType);
+                $this->addEagerLoadedDataToParent($parentMap, $parentID, $relationChain, $relationName, $eagerLoadedList, $relationType);
             }
             // Add this row to the list
             $eagerLoadedList->addRow($row);
@@ -1424,7 +1426,7 @@ class DataList extends ModelData implements SS_List, Resettable
         // Load empty EagerLoadedLists into any parents which have no child records
         $missingParentIDs = array_diff($parentIDs, array_keys($eagerLoadedLists));
         $this->fillEmptyEagerLoadedRelations(
-            $parents,
+            $parentMap,
             $missingParentIDs,
             $relationChain,
             $relationName,
@@ -1511,6 +1513,8 @@ class DataList extends ModelData implements SS_List, Resettable
             $joinRows = DB::query($joinQuery);
         }
 
+        $parentMap = $this->getEagerLoadParentMap($parents, $parentIDs, $relationName, $relationType);
+
         // Store the children in an EagerLoadedList against the correct parent
         foreach ($joinRows as $row) {
             $parentID = $row[$parentIDField];
@@ -1523,7 +1527,7 @@ class DataList extends ModelData implements SS_List, Resettable
                 // If we haven't created a list yet, create it and add it to the correct parent list/record
                 $eagerLoadedList = EagerLoadedList::create($relationDataClass, $relationListClass, $parentID, $manyManyLastComponent);
                 $eagerLoadedLists[$parentID] = $eagerLoadedList;
-                $this->addEagerLoadedDataToParent($parents, $parentID, $relationChain, $relationName, $eagerLoadedList, $relationType);
+                $this->addEagerLoadedDataToParent($parentMap, $parentID, $relationChain, $relationName, $eagerLoadedList, $relationType);
             }
             // Add this row to the list
             $eagerLoadedList->addRow($relationItem);
@@ -1532,7 +1536,7 @@ class DataList extends ModelData implements SS_List, Resettable
         // Load empty EagerLoadedLists into any parents which have no child records
         $missingParentIDs = array_diff($parentIDs, array_keys($eagerLoadedLists));
         $this->fillEmptyEagerLoadedRelations(
-            $parents,
+            $parentMap,
             $missingParentIDs,
             $relationChain,
             $relationName,
@@ -1546,52 +1550,68 @@ class DataList extends ModelData implements SS_List, Resettable
     }
 
     /**
+     * Map each parent ID to the places that eager loaded data for that parent must be added to.
+     * Build this map one time for each relation, so that each lookup does not iterate over all the parents.
+     *
+     * A value of true means the parent is a record in this DataList.
+     *
+     * @param array $parentIDs IDs of all records in $parents
+     * @return array<int, array<true|DataObject|EagerLoadedList>>
+     */
+    private function getEagerLoadParentMap(
+        Query|array $parents,
+        array $parentIDs,
+        string $relationName,
+        string $relationType
+    ): array {
+        // $parents represents the records in this DataList.
+        // Use the known IDs so that we do not iterate over the query again.
+        if ($parents instanceof Query) {
+            return array_fill_keys($parentIDs, [true]);
+        }
+        $parentMap = [];
+        foreach ($parents as $parentData) {
+            if ($parentData instanceof DataObject) {
+                // $parentData represents another has_one record
+                $parentMap[$parentData->ID] ??= [$parentData];
+            } elseif ($parentData instanceof EagerLoadedList) {
+                // $parentData represents a has_many or many_many relation.
+                // The parent might be in multiple relation lists.
+                foreach ($parentData->column('ID') as $id) {
+                    $parentMap[$id][] = $parentData;
+                }
+            } else {
+                throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
+            }
+        }
+        return $parentMap;
+    }
+
+    /**
      * Adds eager loaded data to the correct parent list or record
+     *
+     * @param array<int, array<true|DataObject|EagerLoadedList>> $parentMap from getEagerLoadParentMap()
      */
     private function addEagerLoadedDataToParent(
-        Query|array $parents,
+        array $parentMap,
         int $parentID,
         string $relationChain,
         string $relationName,
         DataObject|EagerLoadedList $eagerLoadedData,
         string $relationType
     ): void {
-        $added = false;
-        foreach ($parents as $parentData) {
-            if (is_array($parentData)) {
-                // $parentData represents a record in this DataList
-                if ($parentData['ID'] === $parentID) {
-                    $this->eagerLoadedData[$relationChain][$parentID][$relationName] = $eagerLoadedData;
-                    $added = true;
-                    // Reset the query if we can - but if not, we have to iterate over the whole result set
-                    // so that we will be starting from the beginning again on the next iteration
-                    if (method_exists($parents, 'rewind')) {
-                        /** @var Query $parents */
-                        $parents->rewind();
-                        break;
-                    }
-                }
-            } elseif ($parentData instanceof DataObject) {
-                // $parentData represents another has_one record
-                if ($parentData->ID === $parentID) {
-                    $parentData->setEagerLoadedData($relationName, $eagerLoadedData);
-                    $added = true;
-                    break;
-                }
-            } elseif ($parentData instanceof EagerLoadedList) {
-                // $parentData represents a has_many or many_many relation
-                if ($parentData->hasID($parentID)) {
-                    $parentData->addEagerLoadedData($relationName, $parentID, $eagerLoadedData);
-                    $added = true;
-                    // can't break here, because the parent might be in multiple relation lists
-                }
-            } else {
-                throw new LogicException("Invalid parent for eager loading $relationType relation $relationName");
-            }
+        if (empty($parentMap[$parentID])) {
+            throw new LogicException("Couldn't find parent for $relationType relation $relationName");
         }
 
-        if (!$added) {
-            throw new LogicException("Couldn't find parent for $relationType relation $relationName");
+        foreach ($parentMap[$parentID] as $parent) {
+            if ($parent === true) {
+                $this->eagerLoadedData[$relationChain][$parentID][$relationName] = $eagerLoadedData;
+            } elseif ($parent instanceof DataObject) {
+                $parent->setEagerLoadedData($relationName, $eagerLoadedData);
+            } else {
+                $parent->addEagerLoadedData($relationName, $parentID, $eagerLoadedData);
+            }
         }
     }
 
@@ -1623,7 +1643,7 @@ class DataList extends ModelData implements SS_List, Resettable
     }
 
     private function fillEmptyEagerLoadedRelations(
-        Query|array $parents,
+        array $parentMap,
         array $missingParentIDs,
         string $relationChain,
         string $relationName,
@@ -1658,7 +1678,7 @@ class DataList extends ModelData implements SS_List, Resettable
                     throw new LogicException("Unexpected relation type $relationType");
             }
             // Add the empty list or record to this parent
-            $this->addEagerLoadedDataToParent($parents, $id, $relationChain, $relationName, $dummyData, $relationType);
+            $this->addEagerLoadedDataToParent($parentMap, $id, $relationChain, $relationName, $dummyData, $relationType);
         }
     }
 
