@@ -237,8 +237,16 @@ class FormRequestHandler extends RequestHandler
                 return $this->invokeFormHandler($this, ...$args);
             }
 
-            // Otherwise, try a handler method on the form itself
+            // Otherwise, try a handler method on the form itself, provided it is backed by a
+            // declared form action - otherwise an arbitrary public method could be invoked
+            // via an action_ field (e.g. setTemplate() leading to remote template inclusion).
             if ($this->form->hasMethod($funcName)) {
+                if (!$this->checkAccessAction($funcName)) {
+                    $this->httpError(
+                        403,
+                        sprintf('Action "%s" not allowed on form (Class: "%s")', $funcName, get_class($this->form))
+                    );
+                }
                 return $this->invokeFormHandler($this->form, ...$args);
             }
 
