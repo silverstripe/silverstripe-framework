@@ -208,6 +208,15 @@ class ThemeResourceLoaderTest extends SapphireTest
         );
     }
 
+    public function testRejectsStreamWrapperPaths()
+    {
+        $realTemplate = "$this->base/themes/theme/templates/Page.ss";
+        $this->assertEquals($realTemplate, $this->loader->findTemplate($realTemplate, ['theme']));
+        // file_exists() honours the wrapper, so the guard is what stops the remote path resolving
+        $this->assertTrue(file_exists('file://' . $realTemplate));
+        $this->assertNull($this->loader->findTemplate('file://' . $realTemplate, ['theme']));
+    }
+
     /**
      * Test that 'main' and 'Layout' templates are loaded from project without a set theme
      */
