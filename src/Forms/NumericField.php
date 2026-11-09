@@ -16,6 +16,8 @@ use SilverStripe\Core\Validation\ValidationResult;
  */
 class NumericField extends TextField
 {
+    private const REMOVED_GROUP_SEPARATORS = [' ', "\u{00A0}", "\u{202F}", "'", "\u{2019}"];
+
     private static array $field_validators = [
         NumericFieldValidator::class => [
             'minValue' => null,
@@ -146,11 +148,17 @@ class NumericField extends TextField
 
             // Format number
             $formatter = $this->getFormatter();
+            $valueToParse = $value;
+            if (!$this->getHTML5()) {
+                // Newer ICU versions reject a group separator that the locale does not use.
+                // No locale uses these separators as a decimal separator, so removing them keeps the value.
+                $valueToParse = str_replace(NumericField::REMOVED_GROUP_SEPARATORS, '', $valueToParse);
+            }
             $parsed = 0;
             // Note: may store literal `false` for invalid values
-            $value = $formatter->parse($value, $this->getNumberType(), $parsed);
+            $value = $formatter->parse($valueToParse, $this->getNumberType(), $parsed);
             // Ensure that entire string is parsed
-            if ($parsed < mb_strlen($this->originalValue ?? '')) {
+            if ($parsed < mb_strlen($valueToParse)) {
                 $value = false;
             }
         }
