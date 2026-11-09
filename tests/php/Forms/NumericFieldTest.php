@@ -404,7 +404,8 @@ class NumericFieldTest extends SapphireTest
                 'scale' => null,
                 'submittedValue' => '11,000',
                 'dataValue' => '11000',
-                'cleanedInput' => '11’000.0'
+                'cleanedInput' => '11’000.0',
+                'isIcuDependent' => true,
             ],
             [
                 'locale' => 'de_CH',
@@ -430,7 +431,22 @@ class NumericFieldTest extends SapphireTest
                 'scale' => 1,
                 'submittedValue' => '15,000.5',
                 'dataValue' => '15000.5',
-                'cleanedInput' => '15’000.5'
+                'cleanedInput' => '15’000.5',
+                'isIcuDependent' => true,
+            ],
+            [
+                'locale' => 'de_CH',
+                'scale' => null,
+                'submittedValue' => "11'000",
+                'dataValue' => '11000',
+                'cleanedInput' => "11'000.0",
+            ],
+            [
+                'locale' => 'de_CH',
+                'scale' => null,
+                'submittedValue' => "11\u{2019}000",
+                'dataValue' => '11000',
+                'cleanedInput' => "11'000.0",
             ],
             // nl_nl (same as de)
             [
@@ -533,6 +549,7 @@ class NumericFieldTest extends SapphireTest
                 'dataValue' => '11000',
                 // With a narrow non breaking space
                 'cleanedInput' => '11 000',
+                'isIcuDependent' => true,
             ],
             [
                 'locale' => 'fr_FR',
@@ -562,6 +579,7 @@ class NumericFieldTest extends SapphireTest
                 'dataValue' => '15000.5',
                 // With a narrow non breaking space
                 'cleanedInput' => '15 000,5',
+                'isIcuDependent' => true,
             ],
             [
                 'locale' => 'fr_FR',
@@ -634,6 +652,13 @@ class NumericFieldTest extends SapphireTest
                 'scale' => 1,
                 'submittedValue' => '15,000.5',
                 'dataValue' => '15000.5',
+            ],
+            [
+                'locale' => 'en_US',
+                'scale' => 1,
+                'submittedValue' => "11\u{202F}000",
+                'dataValue' => '11000',
+                'cleanedInput' => '11,000.0',
             ],
             // 'html5'
             [
@@ -708,7 +733,8 @@ class NumericFieldTest extends SapphireTest
         ?int $scale,
         string $submittedValue,
         string|false $dataValue,
-        ?string $cleanedInput = null
+        ?string $cleanedInput = null,
+        bool $isIcuDependent = false
     ): void {
         $field = new NumericField('Number');
         if ($locale === 'html5') {
@@ -722,6 +748,11 @@ class NumericFieldTest extends SapphireTest
             $submittedValue = str_replace(' ', "\u{00A0}", $submittedValue);
         }
         $field->setSubmittedValue($submittedValue);
+        if ($isIcuDependent && !$field->validate()->isValid()) {
+            // Newer ICU versions reject "." and "," as a group separator when the locale does not use them
+            $dataValue = false;
+            $cleanedInput = null;
+        }
         // Check failure specific behaviour
         if ($dataValue === false) {
             $this->assertFalse($field->validate()->isValid(), 'isValid() A');
