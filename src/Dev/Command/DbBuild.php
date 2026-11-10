@@ -131,6 +131,9 @@ class DbBuild extends DevCommand implements PermissionProvider
         // Build the database.  Most of the hard work is handled by DataObject
         $dataClasses = ClassInfo::subclassesFor(DataObject::class);
         array_shift($dataClasses);
+        // The manifest can list classes that never get declared, e.g. when their file returns early
+        // because an optional dependency is missing
+        $dataClasses = array_filter($dataClasses, 'class_exists');
 
         $output->writeln(['<options=bold>Creating database tables</>', '']);
         $output->startList(PolyOutput::LIST_UNORDERED);
@@ -154,9 +157,8 @@ class DbBuild extends DevCommand implements PermissionProvider
 
             // Require all default records
             foreach ($dataClasses as $dataClass) {
-                // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
                 // Test_ indicates that it's the data class is part of testing system
-                if (strpos($dataClass ?? '', 'Test_') === false && class_exists($dataClass ?? '')) {
+                if (strpos($dataClass ?? '', 'Test_') === false) {
                     $output->writeListItem($dataClass);
                     DataObject::singleton($dataClass)->requireDefaultRecords();
                 }
