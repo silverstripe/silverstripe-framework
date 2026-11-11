@@ -165,6 +165,13 @@ class DataObject extends ModelData implements DataObjectInterface, i18nEntityPro
     private static bool|array $skip_fetch_generated_columns_after_write = false;
 
     /**
+     * Fields that must never be exposed through a GraphQL schema, as a map of field name to boolean.
+     * This applies to every schema, including when a model exposes all of its fields with "*".
+     * Only used when silverstripe/graphql is installed.
+     */
+    private static array $graphql_blacklisted_fields = [];
+
+    /**
      * Data stored in this objects database record. An array indexed by fieldname.
      *
      * Use {@link toMap()} if you want an array representation
