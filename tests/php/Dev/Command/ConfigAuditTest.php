@@ -29,14 +29,44 @@ class ConfigAuditTest extends SapphireTest
         $this->assertStringContainsStringIgnoringCase(TestObject::class . '::$orphaned_setting', $output);
     }
 
+    public function testInternalConfigKeysAreIgnored(): void
+    {
+        // "__deprecated" is written by the config system itself whenever a private static is
+        // marked as deprecated, so it must not be reported as a class with a missing property
+        $exitCode = $this->runAudit(
+            ['defined_setting' => ['a' => 1]],
+            $output,
+            ['__deprecated' => ['config' => [strtolower(TestObject::class) => 'Some deprecation notice']]]
+        );
+        $this->assertSame(Command::SUCCESS, $exitCode);
+        $this->assertStringNotContainsString('__deprecated', $output);
+    }
+
+    public function testConfigForMissingClassReturnsFailure(): void
+    {
+        // Config for a class that doesn't exist (e.g. a typo, or a class removed in a newer version
+        // of a module) is never applied to anything, so it is still reported
+        $missingClass = 'SilverStripe\\Dev\\Tests\\Command\\ConfigAuditTest\\DoesNotExist';
+        $exitCode = $this->runAudit(
+            ['defined_setting' => ['a' => 1]],
+            $output,
+            [$missingClass => ['some_setting' => ['a' => 1]]]
+        );
+        $this->assertSame(Command::FAILURE, $exitCode);
+        $this->assertStringContainsStringIgnoringCase($missingClass . '::$some_setting', $output);
+    }
+
     /**
-     * Run the audit against a config collection that only holds the given config for TestObject,
-     * so that config from other modules can't affect the result.
+     * Run the audit against a config collection that only holds the given config for TestObject
+     * (plus any extra keys), so that config from other modules can't affect the result.
      */
-    private function runAudit(array $config, ?string &$result): int
+    private function runAudit(array $config, ?string &$result, array $extraConfig = []): int
     {
         $collection = new MemoryConfigCollection();
         $collection->set(TestObject::class, null, $config);
+        foreach ($extraConfig as $key => $value) {
+            $collection->set($key, null, $value);
+        }
         ConfigLoader::inst()->pushManifest($collection);
         try {
             $buffer = new BufferedOutput();
