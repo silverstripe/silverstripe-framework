@@ -46,6 +46,13 @@ class ConfigAudit extends DevCommand
                 continue;
             }
 
+            if (str_starts_with($className, '__')) {
+                // Keys starting with a double underscore are internal to the config system
+                // (e.g. "__deprecated", which holds the deprecation notices for private statics).
+                // PHP reserves names starting with "__", so these can never be a class.
+                continue;
+            }
+
             foreach ($props as $prop) {
                 $defined = false;
                 // Check ancestry (private properties don't inherit natively)
@@ -73,7 +80,8 @@ class ConfigAudit extends DevCommand
         $output->write($body);
         $output->writeForHtml('</pre>');
 
-        return Command::SUCCESS;
+        // Fail when anything is missing, so the audit can be used to fail a CI job
+        return count($missing) ? Command::FAILURE : Command::SUCCESS;
     }
 
     protected function getHeading(): string
