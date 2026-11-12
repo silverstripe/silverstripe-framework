@@ -304,4 +304,21 @@ class TreeMultiselectFieldTest extends SapphireTest
             $field->getItems()
         );
     }
+
+    /**
+     * Check that `Field()` renders the selected IDs, sorted, in the hidden input when the value is a list,
+     * as when the field is loaded from a record's relation
+     */
+    public function testFieldWithListValue()
+    {
+        $field = $this->field;
+        $field->setValue(File::get()->byIDs($this->folderIds));
+        $sortedIds = $this->folderIds;
+        sort($sortedIds);
+
+        $this->assertStringContainsString(
+            sprintf('name="%s" value="%s"', $this->fieldName, implode(',', $sortedIds)),
+            (string) $field->Field()
+        );
+    }
 }

@@ -194,6 +194,19 @@ class TreeMultiselectField extends TreeDropdownField
     }
 
     /**
+     * The IDs of the selected items, sorted and comma-separated, for the field's hidden input
+     */
+    public function getFormattedValue(): string
+    {
+        $ids = [];
+        foreach ($this->getItems() as $item) {
+            $ids[] = $item->ID;
+        }
+        sort($ids);
+        return implode(',', $ids);
+    }
+
+    /**
      * We overwrite the field attribute to add our hidden fields, as this
      * formfield can contain multiple values.
      *
@@ -217,8 +230,7 @@ class TreeMultiselectField extends TreeDropdownField
             }
 
             $title = implode(", ", $titleArray);
-            sort($idArray);
-            $value = implode(",", $idArray);
+            $value = $this->getFormattedValue();
         } else {
             $title = $emptyTitle;
         }
