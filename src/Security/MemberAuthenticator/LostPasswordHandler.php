@@ -7,6 +7,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Cache\RateLimiter;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\Form;
@@ -47,6 +48,19 @@ class LostPasswordHandler extends RequestHandler
         'LostPasswordForm',
         'passwordsent',
     ];
+
+    /**
+     * Number of password reset requests from one IP address for one member after which further
+     * requests are blocked, until lock_out_delay_mins have passed since the first request.
+     * Set to 0 to disable the lockout.
+     */
+    private static int $lock_out_after_reset_requests = 3;
+
+    /**
+     * Minutes, from the first password reset request, over which lock_out_after_reset_requests is counted.
+     * Only applies if lock_out_after_reset_requests is greater than 0.
+     */
+    private static int $lock_out_delay_mins = 15;
 
     /**
      * Link to this handler
@@ -168,6 +182,11 @@ class LostPasswordHandler extends RequestHandler
 
             $member = $this->getMemberFromData($data);
 
+            // A rate-limited request gets the normal success page, so the response does not show the limit
+            if ($this->isRateLimited($member, $data)) {
+                return $this->redirectToSuccess($data);
+            }
+
             // Allow vetoing forgot password requests
             $results = $this->extend('onForgotPassword', $member);
             if ($results && is_array($results) && in_array(false, $results ?? [], true)) {
@@ -205,6 +224,54 @@ class LostPasswordHandler extends RequestHandler
 
             return $this->redirectToLostPassword();
         }
+    }
+
+    /**
+     * Count a password reset request from one IP address for one member, or for one address with no member,
+     * and return whether it is over the limit
+     */
+    private function isRateLimited(?Member $member, array $data): bool
+    {
+        $maxAttempts = (int) $this->config()->get('lock_out_after_reset_requests');
+        if ($maxAttempts <= 0) {
+            return false;
+        }
+        $target = 'email-' . strtolower(trim((string) $data['Email']));
+        if ($member) {
+            // MySQL's default utf8mb4_unicode_ci collation matches mémber@example.com to member@example.com,
+            // so keying on the submitted address would give each accented spelling of one member its own limit
+            $target = 'member-' . $member->ID;
+        }
+        // Include the IP address so requests from one IP address do not use up the limit for another
+        $ip = $this->getRateLimitIP();
+        $limiter = RateLimiter::create(
+            'lostpassword-' . md5($target . '|' . $ip),
+            $maxAttempts,
+            (int) $this->config()->get('lock_out_delay_mins')
+        );
+        if (!$limiter->canAccess()) {
+            return true;
+        }
+        $limiter->hit();
+        return false;
+    }
+
+    /**
+     * Get the IP address of the request, reduced to its /64 network for an IPv6 address
+     */
+    private function getRateLimitIP(): string
+    {
+        $ip = (string) $this->getRequest()->getIP();
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return $ip;
+        }
+        $packedIP = inet_pton($ip);
+        // An IPv4-mapped address (::ffff:192.0.2.1) is one IPv4 caller, and its /64 prefix is all zeros
+        if (str_starts_with($packedIP, str_repeat("\0", 10) . "\xff\xff")) {
+            return inet_ntop($packedIP);
+        }
+        // One IPv6 connection is usually given a whole /64, so a caller could rotate addresses inside it
+        return bin2hex(substr($packedIP, 0, 8)) . '::/64';
     }
 
     /**
