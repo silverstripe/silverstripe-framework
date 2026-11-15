@@ -867,4 +867,14 @@ class HierarchyTest extends SapphireTest
         }
         $this->assertSame($expected, $actual);
     }
+
+    public function testGetChildrenForTreeBeyondThreshold(): void
+    {
+        // Caching Obj 3's children passes the threshold, so Obj 3a's children are not pre-cached
+        HierarchyTest\TestObject::config()->set('node_threshold_total', 1);
+        $obj3 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3');
+        $obj3->getChildrenForTree();
+        $obj3a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3a');
+        $this->assertSame(['Obj 3aa', 'Obj 3ab'], $obj3a->getChildrenForTree()->column('Title'));
+    }
 }
