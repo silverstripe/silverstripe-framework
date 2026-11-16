@@ -35,8 +35,10 @@ class HTTPRequestBuilder
     {
         // Infer URL from REQUEST_URI unless explicitly provided
         if (!isset($url)) {
+            // Collapse leading slashes so parse_url() doesn't read the first path segment as a host
+            $requestURI = preg_replace('#^/{2,}#', '/', $variables['_SERVER']['REQUEST_URI'] ?? '');
             // Remove query parameters (they're retained separately through $server['_GET']
-            $url = parse_url($variables['_SERVER']['REQUEST_URI'] ?? '', PHP_URL_PATH);
+            $url = parse_url($requestURI ?? '', PHP_URL_PATH);
 
             // Remove base folders from the URL if webroot is hosted in a subfolder
             if (substr(strtolower($url ?? ''), 0, strlen(BASE_URL)) === strtolower(BASE_URL)) {

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use SilverStripe\Control\HTTPRequestBuilder;
 use SilverStripe\Dev\SapphireTest;
 
@@ -85,5 +86,35 @@ class HTTPRequestBuilderTest extends SapphireTest
             HTTPRequestBuilder::extractRequestHeaders($request),
             'Prefer HTTP_AUTHORIZATION over REDIRECT_HTTP_AUTHORIZATION'
         );
+    }
+
+    /**
+     * Request URIs with the URL each should resolve to
+     */
+    public static function provideCreateFromVariablesURL(): array
+    {
+        return [
+            'root' => ['/', ''],
+            'single slash' => ['/adminfuns.php', 'adminfuns.php'],
+            'two leading slashes' => ['//adminfuns.php', 'adminfuns.php'],
+            'three leading slashes' => ['///adminfuns.php', 'adminfuns.php'],
+            'two leading slashes with a path' => ['//anything/about-us/', 'anything/about-us'],
+            'two leading slashes with a query string' => ['//about-us?q=1', 'about-us'],
+            'query string' => ['/about-us?q=1', 'about-us'],
+        ];
+    }
+
+    /**
+     * Check that the URL keeps every path segment of the request URI
+     */
+    #[DataProvider('provideCreateFromVariablesURL')]
+    public function testCreateFromVariablesURL(string $requestURI, string $expectedURL): void
+    {
+        $request = HTTPRequestBuilder::createFromVariables([
+            '_SERVER' => ['REQUEST_URI' => $requestURI, 'REQUEST_METHOD' => 'GET'],
+            '_GET' => [],
+            '_POST' => [],
+        ], '');
+        $this->assertSame($expectedURL, $request->getURL());
     }
 }
