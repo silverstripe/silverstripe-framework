@@ -7,6 +7,7 @@ use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Dev\Command\ConfigAudit;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\Command\ConfigAuditTest\TestObject;
+use SilverStripe\Dev\Tests\Command\ConfigAuditTest\TestSubObject;
 use SilverStripe\PolyExecution\PolyOutput;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -54,6 +55,42 @@ class ConfigAuditTest extends SapphireTest
         );
         $this->assertSame(Command::FAILURE, $exitCode);
         $this->assertStringContainsStringIgnoringCase($missingClass . '::$some_setting', $output);
+    }
+
+    public function testDependenciesAreIgnored(): void
+    {
+        // "dependencies" is read by the injector for any class, so it is never declared on the class
+        $exitCode = $this->runAudit(['dependencies' => ['someService' => '%$SomeService']], $output);
+        $this->assertSame(Command::SUCCESS, $exitCode);
+        $this->assertStringNotContainsString('dependencies', $output);
+    }
+
+    public function testIgnoredPropertiesAreNotReported(): void
+    {
+        $exitCode = $this->runAudit(
+            ['orphaned_setting' => ['a' => 1], 'other_orphaned_setting' => ['a' => 1]],
+            $output,
+            [ConfigAudit::class => ['ignored_properties' => [TestObject::class => ['orphaned_setting']]]]
+        );
+        // Only the property that isn't ignored is reported
+        $this->assertSame(Command::FAILURE, $exitCode);
+        $this->assertStringNotContainsString('$orphaned_setting', $output);
+        $this->assertStringContainsStringIgnoringCase(TestObject::class . '::$other_orphaned_setting', $output);
+    }
+
+    public function testIgnoredPropertiesApplyToSubclasses(): void
+    {
+        $exitCode = $this->runAudit(
+            ['defined_setting' => ['a' => 1]],
+            $output,
+            [
+                TestSubObject::class => ['orphaned_setting' => ['a' => 1]],
+                // Class names in config are case insensitive
+                ConfigAudit::class => ['ignored_properties' => [strtoupper(TestObject::class) => ['orphaned_setting']]],
+            ]
+        );
+        $this->assertSame(Command::SUCCESS, $exitCode);
+        $this->assertStringContainsString('All configured properties are defined', $output);
     }
 
     /**
