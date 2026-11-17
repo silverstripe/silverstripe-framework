@@ -61,6 +61,11 @@ class DbBuild extends DevCommand implements PermissionProvider
         // The default time limit of 30 seconds is normally not enough
         Environment::increaseTimeLimitTo(600);
 
+        // Via sake there is no DevelopmentAdmin::init() to default to draft, which requireDefaultRecords() expects
+        if (class_exists(Versioned::class)) {
+            Versioned::set_stage(Versioned::DRAFT);
+        }
+
         // If this code is being run without a flush, we need to at least flush the class manifest
         if (!$input->getOption('flush')) {
             ClassLoader::inst()->getManifest()->regenerate(false);
