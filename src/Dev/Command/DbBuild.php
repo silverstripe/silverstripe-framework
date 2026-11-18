@@ -220,40 +220,42 @@ class DbBuild extends DevCommand implements PermissionProvider
     protected function updateLegacyClassNameField(string $dataClass, string $fieldName, array $mapping): void
     {
         $schema = DataObject::getSchema();
-        // Check first to ensure that the class has the specified field to update
-        if (!$schema->databaseField($dataClass, $fieldName, false)) {
+
+        if (!$schema->databaseField($dataClass, $fieldName, false) || empty($mapping)) {
             return;
         }
 
-        // Load a list of any records that have obsolete class names
-        $table = $schema->tableName($dataClass);
-        $currentClassNameList = DB::query("SELECT DISTINCT(\"{$fieldName}\") FROM \"{$table}\"")->column();
-
-        // Get all invalid classes for this field
-        $invalidClasses = array_intersect($currentClassNameList ?? [], array_keys($mapping ?? []));
-        if (!$invalidClasses) {
-            return;
-        }
-
-        $numberClasses = count($invalidClasses ?? []);
-        DB::alteration_message(
-            "Correcting obsolete {$fieldName} values for {$numberClasses} outdated types",
-            'obsolete'
-        );
-
-        // Build case assignment based on all intersected legacy classnames
         $cases = [];
         $params = [];
-        foreach ($invalidClasses as $invalidClass) {
+        $wherePlaceholders = [];
+        $whereParams = [];
+
+        foreach ($mapping as $oldClass => $newClass) {
             $cases[] = "WHEN \"{$fieldName}\" = ? THEN ?";
-            $params[] = $invalidClass;
-            $params[] = $mapping[$invalidClass];
+            $params[] = $oldClass;
+            $params[] = $newClass;
+
+            $wherePlaceholders[] = '?';
+            $whereParams[] = $oldClass;
         }
 
+        $casesSQL = implode(' ', $cases);
+        $wherePlaceholders = implode(',', $wherePlaceholders);
+        $params = array_merge($params, $whereParams);
+
         foreach ($this->getClassTables($dataClass) as $table) {
-            $casesSQL = implode(' ', $cases);
-            $sql = "UPDATE \"{$table}\" SET \"{$fieldName}\" = CASE {$casesSQL} ELSE \"{$fieldName}\" END";
+            $sql = "UPDATE \"{$table}\"
+                    SET \"{$fieldName}\" = CASE {$casesSQL} ELSE \"{$fieldName}\" END
+                    WHERE \"{$fieldName}\" IN ({$wherePlaceholders})";
+
             DB::prepared_query($sql, $params);
+
+            if (DB::get_conn()->affectedRows() > 0) {
+                DB::alteration_message(
+                    "Corrected obsolete {$fieldName} values in {$table}",
+                    'obsolete'
+                );
+            }
         }
     }
 
