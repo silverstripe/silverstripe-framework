@@ -156,7 +156,24 @@ class MemberAuthenticator implements Authenticator
         }
 
         $encryptor = PasswordEncryptor::create_for_algorithm($member->PasswordEncryption);
-        if (!$encryptor->check($member->Password, $password, $member->Salt, $member)) {
+        // $password is the submitted password, not the stored hash. A member saved without a password still
+        // stores a hash, because Member::onBeforeWrite() hashes the empty string. That hash is not empty, so the
+        // "no password" check above does not catch it, and the encryptor would match it to a blank password.
+        if (// The default admin member only accepts the configured password, checked above. Its stored hash is
+            // of '', and the member lookup by email ignores case, so "Admin" would otherwise reach that hash.
+            DefaultAdminService::isDefaultAdmin($member->Email)
+            // Reject an array or other non-string value, such as from Password[]= in a request
+            || !is_string($password)
+            // Reject a blank password, which matches the stored hash of a member without a password
+            || $password === ''
+            // Reject a NUL byte anywhere. The blowfish encryptor uses crypt(), which stops reading at the first
+            // NUL byte, so "\0x" hashes the same as '' and matches a member without a password. The blank
+            // check above does not catch it, because "\0x" is not ''. NUL is the only byte crypt() treats
+            // specially. Every other byte, including whitespace and non-ASCII, changes the hash, so this check
+            // and the blank check together reject every password that matches the hash of ''.
+            || str_contains($password, "\0")
+            || !$encryptor->check($member->Password, $password, $member->Salt, $member)
+        ) {
             $result->addError(_t(
                 __CLASS__ . '.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'
