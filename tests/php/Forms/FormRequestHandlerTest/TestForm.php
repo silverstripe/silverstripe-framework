@@ -11,4 +11,9 @@ class TestForm extends Form
     {
         return new HTTPResponse('success', 200);
     }
+
+    public function mySubmitWithData(array $data): HTTPResponse
+    {
+        return new HTTPResponse(json_encode($data), 200);
+    }
 }
