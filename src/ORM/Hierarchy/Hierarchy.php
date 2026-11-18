@@ -20,7 +20,6 @@ use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\HiddenClass;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\Dev\Deprecation;
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
