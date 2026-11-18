@@ -159,7 +159,7 @@ class MemberTest extends FunctionalTest
         );
         $auth = new MemberAuthenticator();
         $result = $auth->checkPassword($member, '');
-        $this->assertTrue($result->isValid());
+        $this->assertFalse($result->isValid());
     }
 
     public function testSetPassword()
