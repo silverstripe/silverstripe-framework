@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\Tests;
 
 use InvalidArgumentException;
+use ReflectionObject;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Config\Config;
@@ -13,6 +14,7 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\TreeMultiselectField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -911,19 +913,22 @@ class MemberTest extends FunctionalTest
         $this->logInWithPermission('EDIT_PERMISSIONS');
 
         // Non-admin member field contains non-admin groups
-        /** @var ListboxField $staffListbox */
-        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
-        $this->assertArrayNotHasKey($adminGroup->ID, $staffListbox->getSource());
+        $this->assertNotContains($adminGroup->ID, $this->getTreeValues($staffMember));
 
         // admin member field contains admin group
-        /** @var ListboxField $adminListbox */
-        $adminListbox = $adminMember->getCMSFields()->dataFieldByName('DirectGroups');
-        $this->assertArrayHasKey($adminGroup->ID, $adminListbox->getSource());
+        $this->assertContains($adminGroup->ID, $this->getTreeValues($adminMember));
 
         // If logged in as admin, staff listbox has admin group
         $this->logInWithPermission('ADMIN');
-        $staffListbox = $staffMember->getCMSFields()->dataFieldByName('DirectGroups');
-        $this->assertArrayHasKey($adminGroup->ID, $staffListbox->getSource());
+        $this->assertContains($adminGroup->ID, $this->getTreeValues($staffMember));
+    }
+
+    private function getTreeValues(Member $member): array
+    {
+        /** @var TreeMultiselectField $treeField */
+        $treeField = $member->getCMSFields()->dataFieldByName('DirectGroups');
+        $reflection = new ReflectionObject($treeField);
+        return $reflection->getMethod('getSearchResults')->invoke($treeField)->column();
     }
 
     /**
