@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\MemberAuthenticator\MemberAuthenticator;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\Permission;
@@ -127,5 +129,78 @@ class SecurityDefaultAdminTest extends SapphireTest
         $this->assertEquals($admin->Email, DefaultAdminService::getDefaultAdminUsername());
         $this->assertTrue(DefaultAdminService::isDefaultAdmin($admin->Email));
         $this->assertStringStartsWith('$2y$10$', $admin->Password);
+    }
+
+    public static function provideAuthenticateDefaultAdmin(): array
+    {
+        return [
+            'same case with the default admin password' => [
+                'email' => 'admin',
+                'password' => 'default-admin-password',
+                'expectSuccess' => true,
+            ],
+            'different case with the default admin password' => [
+                'email' => 'Admin',
+                'password' => 'default-admin-password',
+                'expectSuccess' => true,
+            ],
+            'same case with an empty password' => [
+                'email' => 'admin',
+                'password' => '',
+                'expectSuccess' => false,
+            ],
+            'different case with an empty password' => [
+                'email' => 'Admin',
+                'password' => '',
+                'expectSuccess' => false,
+            ],
+            'trailing space with a NUL byte password' => [
+                'email' => 'admin ',
+                'password' => "\0x",
+                'expectSuccess' => false,
+            ],
+            'accented letter with a NUL byte password' => [
+                'email' => 'àdmin',
+                'password' => "\0x",
+                'expectSuccess' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideAuthenticateDefaultAdmin
+     */
+    public function testAuthenticateDefaultAdmin(string $email, string $password, bool $expectSuccess): void
+    {
+        DefaultAdminService::clearDefaultAdmin();
+        DefaultAdminService::setDefaultAdmin('admin', 'default-admin-password');
+        DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+        $data = ['Email' => $email, 'Password' => $password];
+        $member = (new MemberAuthenticator())->authenticate($data, Controller::curr()->getRequest());
+        $this->assertSame($expectSuccess, $member !== null);
+    }
+
+    public static function provideAuthenticateUnconfiguredDefaultAdmin(): array
+    {
+        return [
+            'NUL byte password' => [
+                'password' => "\0x",
+            ],
+            'empty password' => [
+                'password' => '',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideAuthenticateUnconfiguredDefaultAdmin
+     */
+    public function testAuthenticateUnconfiguredDefaultAdmin(string $password): void
+    {
+        DefaultAdminService::singleton()->findOrCreateDefaultAdmin();
+        DefaultAdminService::clearDefaultAdmin();
+        $data = ['Email' => 'admin', 'Password' => $password];
+        $member = (new MemberAuthenticator())->authenticate($data, Controller::curr()->getRequest());
+        $this->assertNull($member);
     }
 }
