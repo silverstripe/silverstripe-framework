@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Model\Tests;
 
+use BadMethodCallException;
 use ReflectionMethod;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
@@ -199,6 +200,40 @@ class ModelDataTest extends SapphireTest
         $container->setFailover($failover);
         $this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
         $this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
+    }
+
+    public function testFailoverMethodsAreKeptPerInstance()
+    {
+        $withMethod = new ModelDataTest\Container();
+        $withMethod->setFailover(new ModelDataTest\Failover());
+        $this->assertTrue($withMethod->hasMethod('testMethod'));
+
+        // Another instance of the same class must not see the first instance's failover methods
+        $withoutMethod = new ModelDataTest\Container();
+        $withoutMethod->setFailover(new ModelData());
+        $this->assertFalse($withoutMethod->hasMethod('testMethod'));
+        $this->assertArrayNotHasKey('testmethod', $withoutMethod->allMethodNames(true));
+        $this->assertArrayHasKey('testmethod', $withMethod->allMethodNames(true));
+
+        // Replacing one instance's failover must not remove methods another instance's failover offers
+        $withoutMethod->setFailover(new ModelDataTest\Failover());
+        $withoutMethod->setFailover(new ModelData());
+        $this->assertTrue($withMethod->hasMethod('testMethod'));
+        $this->assertFalse($withoutMethod->hasMethod('testMethod'));
+
+        $this->expectException(BadMethodCallException::class);
+        $withoutMethod->testMethod();
+    }
+
+    public function testFailoverMethodsFromNestedFailover()
+    {
+        $inner = new ModelData();
+        $inner->setFailover(new ModelDataTest\Failover());
+        $outer = new ModelDataTest\Container();
+        $outer->setFailover($inner);
+
+        $this->assertTrue($outer->hasMethod('testMethod'));
+        $this->assertArrayHasKey('testmethod', $outer->allMethodNames(true));
     }
 
     public function testIsAccessibleMethod()
