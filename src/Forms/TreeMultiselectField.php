@@ -236,7 +236,8 @@ class TreeMultiselectField extends TreeDropdownField
                 'Title' => $title,
                 'EmptyTitle' => $emptyTitle,
                 'Link' => $dataUrlTree,
-                'Value' => $value
+                'Value' => $value,
+                'FormattedValue' => $value,
             ]
         );
         return FormField::Field($properties);
