@@ -32,6 +32,8 @@ class ModelData
 {
     use Extensible {
         defineMethods as extensibleDefineMethods;
+        getExtraMethodConfig as extensibleGetExtraMethodConfig;
+        allMethodNames as extensibleAllMethodNames;
     }
     use Injectable;
     use Configurable;
@@ -157,11 +159,6 @@ class ModelData
      */
     public function setFailover(ModelData $failover): void
     {
-        // Ensure cached methods from previous failover are removed
-        if ($this->failover) {
-            $this->removeMethodsFrom('failover');
-        }
-
         $this->failover = $failover;
         $this->defineMethods();
     }
@@ -281,8 +278,6 @@ class ModelData
             throw new LogicException("ModelData::\$failover set to a non-object");
         }
         if ($this->failover) {
-            $this->addMethodsFrom('failover');
-
             if (isset($_REQUEST['debugfailover'])) {
                 $class = static::class;
                 $failoverClass = get_class($this->failover);
@@ -290,6 +285,51 @@ class ModelData
             }
         }
         $this->extensibleDefineMethods();
+    }
+
+    /**
+     * Get meta-data details on a named method, including methods offered by this instance's failover.
+     *
+     * Methods from extensions are shared by every instance of a class, so they are held in a static
+     * table keyed by class. A failover belongs to one instance, so its methods are looked up on the
+     * failover itself and are never visible to another instance of the same class.
+     *
+     * @param string $method
+     * @return array|null
+     */
+    protected function getExtraMethodConfig($method)
+    {
+        $config = $this->extensibleGetExtraMethodConfig($method);
+        if ($config !== null || empty($method)) {
+            return $config;
+        }
+        if ($this->failover && $this->failover->hasMethod($method)) {
+            return [
+                'property' => 'failover',
+                'index' => null,
+            ];
+        }
+        return null;
+    }
+
+    /**
+     * Return the names of all the methods available on this object,
+     * including those offered by this instance's failover when $custom is true.
+     *
+     * @param bool $custom include methods added dynamically at runtime
+     * @return array Map of method names with lowercase keys
+     */
+    public function allMethodNames($custom = false)
+    {
+        $methods = $this->extensibleAllMethodNames($custom);
+        if ($custom && $this->failover) {
+            $failoverMethods = array_fill_keys(
+                array_keys($this->failover->allMethodNames(true)),
+                ['property' => 'failover', 'index' => null]
+            );
+            $methods = array_merge($failoverMethods, $methods);
+        }
+        return $methods;
     }
 
     /**
