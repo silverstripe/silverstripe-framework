@@ -130,6 +130,25 @@ class FormRequestHandler extends RequestHandler
             $vars = $request->requestVars();
         }
 
+        // Determine the action button clicked before loading the form, so the form validates the merged vars
+        $funcName = null;
+        foreach ($vars as $paramName => $paramVal) {
+            if (substr($paramName ?? '', 0, 7) == 'action_') {
+                // Break off querystring arguments included in the action
+                if (strpos($paramName ?? '', '?') !== false) {
+                    list($paramName, $paramVars) = explode('?', $paramName ?? '', 2);
+                    $newRequestParams = [];
+                    parse_str($paramVars ?? '', $newRequestParams);
+                    // Submitted values take precedence, so the action name can only add values
+                    $vars = array_merge((array)$newRequestParams, (array)$vars);
+                }
+
+                // Cleanup action_, _x and _y from image fields
+                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName ?? '');
+                break;
+            }
+        }
+
         // Ensure we only process saveable fields (non structural, readonly, or disabled)
         $allowedFields = array_keys($this->form->Fields()->saveableFields() ?? []);
 
@@ -159,24 +178,6 @@ class FormRequestHandler extends RequestHandler
                     ));
                 // Return the user
                 return $this->redirectBack();
-            }
-        }
-
-        // Determine the action button clicked
-        $funcName = null;
-        foreach ($vars as $paramName => $paramVal) {
-            if (substr($paramName ?? '', 0, 7) == 'action_') {
-                // Break off querystring arguments included in the action
-                if (strpos($paramName ?? '', '?') !== false) {
-                    list($paramName, $paramVars) = explode('?', $paramName ?? '', 2);
-                    $newRequestParams = [];
-                    parse_str($paramVars ?? '', $newRequestParams);
-                    $vars = array_merge((array)$vars, (array)$newRequestParams);
-                }
-
-                // Cleanup action_, _x and _y from image fields
-                $funcName = preg_replace(['/^action_/','/_x$|_y$/'], '', $paramName ?? '');
-                break;
             }
         }
 
