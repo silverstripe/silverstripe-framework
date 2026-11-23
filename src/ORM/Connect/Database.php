@@ -155,12 +155,16 @@ abstract class Database
 
         // Benchmark query
         $connector = $this->connector;
-        return $this->benchmarkQuery(
-            $sql,
-            function ($sql) use ($connector, $errorLevel) {
-                return $connector->query($sql, $errorLevel);
-            }
-        );
+        try {
+            return $this->benchmarkQuery(
+                $sql,
+                function ($sql) use ($connector, $errorLevel) {
+                    return $connector->query($sql, $errorLevel);
+                }
+            );
+        } finally {
+            $this->clearSchemaMetadataAfterDDL($sql);
+        }
     }
 
 
@@ -181,13 +185,30 @@ abstract class Database
 
         // Benchmark query
         $connector = $this->connector;
-        return $this->benchmarkQuery(
-            $sql,
-            function ($sql) use ($connector, $parameters, $errorLevel) {
-                return $connector->preparedQuery($sql, $parameters, $errorLevel);
-            },
-            $parameters
-        );
+        try {
+            return $this->benchmarkQuery(
+                $sql,
+                function ($sql) use ($connector, $parameters, $errorLevel) {
+                    return $connector->preparedQuery($sql, $parameters, $errorLevel);
+                },
+                $parameters
+            );
+        } finally {
+            $this->clearSchemaMetadataAfterDDL($sql);
+        }
+    }
+
+    /**
+     * The schema manager keeps field, index and table lists while the schema is
+     * updating. A DDL statement can change any of them, so they are discarded after one.
+     * The check is skipped outside a schema update, when nothing is kept.
+     */
+    private function clearSchemaMetadataAfterDDL(string $sql): void
+    {
+        if (!$this->schemaManager?->isSchemaUpdating() || !$this->connector->isQueryDDL($sql)) {
+            return;
+        }
+        $this->schemaManager->clearSchemaMetadata();
     }
 
     /**

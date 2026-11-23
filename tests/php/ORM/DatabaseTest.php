@@ -60,6 +60,30 @@ class DatabaseTest extends SapphireTest
         static::resetDBSchema(true);
     }
 
+    public function testSchemaUpdateSeesColumnsChangedByDDLStatements()
+    {
+        $schema = DB::get_schema();
+        $table = 'DatabaseTest_MyObject';
+        $results = [];
+
+        $schema->schemaUpdate(function () use ($schema, $table, &$results) {
+            $results['before'] = $schema->hasField($table, 'AddedByQuery');
+            DB::query("ALTER TABLE \"$table\" ADD COLUMN \"AddedByQuery\" INT");
+            $results['afterQuery'] = $schema->hasField($table, 'AddedByQuery');
+            DB::prepared_query("ALTER TABLE \"$table\" ADD COLUMN \"AddedByPreparedQuery\" INT", []);
+            $results['afterPreparedQuery'] = $schema->hasField($table, 'AddedByPreparedQuery');
+            $schema->cancelSchemaUpdate();
+        });
+
+        $this->assertSame(
+            ['before' => false, 'afterQuery' => true, 'afterPreparedQuery' => true],
+            $results,
+            'A DDL statement run during a schema update discards the field lists read before it'
+        );
+
+        static::resetDBSchema(true);
+    }
+
     public function testMySQLCreateTableOptions()
     {
         if (!(DB::get_conn() instanceof MySQLDatabase)) {
