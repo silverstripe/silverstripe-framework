@@ -13,10 +13,12 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\Validation\RequiredFieldsValidator;
 use SilverStripe\Forms\TreeDropdownField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestObject;
 use SilverStripe\ORM\Tests\HierarchyTest\HierarchyOnSubclassTestSubObject;
 use SilverStripe\ORM\Tests\HierarchyTest\TestObject;
 use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionProperty;
 
 class TreeDropdownFieldTest extends SapphireTest
 {
@@ -28,6 +30,15 @@ class TreeDropdownFieldTest extends SapphireTest
         HierarchyOnSubclassTestObject::class,
         HierarchyOnSubclassTestSubObject::class,
     ];
+
+    protected function tearDown(): void
+    {
+        $reflectionIdsCache = new ReflectionProperty(Hierarchy::class, 'children_for_tree_ids_cache');
+        $reflectionObjCache = new ReflectionProperty(Hierarchy::class, 'children_for_tree_obj_cache');
+        $reflectionIdsCache->setValue(null, []);
+        $reflectionObjCache->setValue(null, []);
+        parent::tearDown();
+    }
 
     public function testSchemaStateDefaults()
     {
@@ -188,6 +199,24 @@ class TreeDropdownFieldTest extends SapphireTest
         sort($expectedNodeIDs);
 
         $this->assertEquals($expectedNodeIDs, $actualNodeIDs);
+    }
+
+    public function testTreeSearchJsonBeyondNodeThreshold()
+    {
+        // The root's children pass the threshold, so nodes further down are not pre-cached for the tree
+        TestObject::config()->set('node_threshold_total', 1);
+        $field = new TreeDropdownField('TestTree', 'Test tree', TestObject::class);
+        $request = new HTTPRequest('GET', 'url', ['search' => 'Grandchild', 'format' => 'json']);
+        $request->setSession(new Session([]));
+        $response = $field->tree($request);
+        $tree = json_decode($response->getBody() ?? '', true);
+
+        $two = $this->objFromFixture(TestObject::class, 'two');
+        $twoA = $this->objFromFixture(TestObject::class, 'twoA');
+        $twoAi = $this->objFromFixture(TestObject::class, 'twoAi');
+        $twoNode = array_values(array_filter($tree['children'], fn ($node) => $node['id'] === $two->ID))[0];
+        $this->assertSame([$twoA->ID], array_column($twoNode['children'], 'id'));
+        $this->assertSame([$twoAi->ID], array_column($twoNode['children'][0]['children'], 'id'));
     }
 
     public function testTreeSearch()

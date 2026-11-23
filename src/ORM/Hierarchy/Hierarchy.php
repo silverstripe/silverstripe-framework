@@ -400,6 +400,15 @@ class Hierarchy extends Extension
             Hierarchy::$children_for_tree_obj_cache[$baseClass][$parentID] = $owner;
         }
         $this->recursivelyCacheDescendantsForTree($baseClass, [$parentID]);
+        // Past node_threshold_total nothing more is pre-cached, so query this parent's own children directly
+        // rather than report it as childless, unless numChildren() already shows it has none
+        if (!array_key_exists($parentID, Hierarchy::$children_for_tree_ids_cache[$baseClass])) {
+            if ($owner->numChildren() > 0) {
+                $this->cacheChildrenForTree($baseClass, [$parentID]);
+            } else {
+                Hierarchy::$children_for_tree_ids_cache[$baseClass][$parentID] = [];
+            }
+        }
         $childIDs = [];
         if (array_key_exists($parentID, Hierarchy::$children_for_tree_ids_cache[$baseClass])) {
             $childIDs = Hierarchy::$children_for_tree_ids_cache[$baseClass][$parentID];
@@ -436,12 +445,26 @@ class Hierarchy extends Extension
         if ($count > $threshold) {
             return;
         }
-        $nextIDs = [];
         // This will use a hierarchical query method where it will initially fetched from the "second level down"
         // where the ParentID equals the single DataObject at the "top level" of the hierarchy
         // It will then fetch from the "third level down" in the hierarchy where the ParentID is of the ParentIDs in
         // the "second level down". In will continue querying like this until the total number of cached objects has
         // exceeded the configured value `node_threshold_total`, or all object have been fetched
+        $nextIDs = $this->cacheChildrenForTree($baseClass, $parentIDs);
+        if (count($nextIDs)) {
+            $this->recursivelyCacheDescendantsForTree($baseClass, $nextIDs);
+        }
+    }
+
+    /**
+     * Query and cache the direct children of the given parents, used by getChildrenForTree()
+     *
+     * @return array IDs of the children whose own children are not yet cached
+     */
+    private function cacheChildrenForTree(string $baseClass, array $parentIDs): array
+    {
+        $config = $this->getOwner()->config();
+        $nextIDs = [];
         /** @var DataList $children */
         $children = $baseClass::get()->filter(['ParentID' => $parentIDs]);
         $hideFromHierarchy = $config->get('hide_from_hierarchy');
@@ -469,9 +492,7 @@ class Hierarchy extends Extension
                 $nextIDs[] = $childID;
             }
         }
-        if (count($nextIDs)) {
-            $this->recursivelyCacheDescendantsForTree($baseClass, $nextIDs);
-        }
+        return $nextIDs;
     }
 
     /**
