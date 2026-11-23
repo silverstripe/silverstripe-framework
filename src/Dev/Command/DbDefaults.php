@@ -31,6 +31,9 @@ class DbDefaults extends DevCommand
     {
         $dataClasses = ClassInfo::subclassesFor(DataObject::class);
         array_shift($dataClasses);
+        // The manifest can list classes that never get declared, e.g. when their file returns early
+        // because an optional dependency is missing
+        $dataClasses = array_filter($dataClasses, 'class_exists');
 
         $output->startList(PolyOutput::LIST_UNORDERED);
         foreach ($dataClasses as $dataClass) {
