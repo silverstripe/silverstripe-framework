@@ -423,6 +423,7 @@ class ClassInfo implements Flushable
         $bucketStack = [];
         $lastTokenWasNSSeparator = false;
         $currentKey = null;
+        $prevToken = null;
 
         foreach ($tokens as $token) {
             // $forceResult used to allow null result to be detected
@@ -471,11 +472,19 @@ class ClassInfo implements Flushable
                         break;
 
                     case T_DNUMBER:
-                        $result = (double)$token[1];
+                        if ($prevToken === '-') {
+                            $result = -((double)$token[1]);
+                        } else {
+                            $result = (double)$token[1];
+                        }
                         break;
 
                     case T_LNUMBER:
-                        $result = (int)$token[1];
+                        if ($prevToken === '-') {
+                            $result = -((int)$token[1]);
+                        } else {
+                            $result = (int)$token[1];
+                        }
                         break;
 
                     case T_DOUBLE_ARROW:
@@ -551,6 +560,8 @@ class ClassInfo implements Flushable
                     $bucket = &$bucket[$key];
                 }
             }
+
+            $prevToken = $token;
         }
 
         $result = [$class, $args];

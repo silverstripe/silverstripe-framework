@@ -366,6 +366,30 @@ class ClassInfoTest extends SapphireTest
                 'Foo\\Bar\\NamespacedClass.withmodifier(["and-arg" => true])',
                 ['Foo\\Bar\\NamespacedClass.withmodifier', [["and-arg" => true]]],
             ],
+            'Number' => [
+                'Foo(1)',
+                ['Foo', [1]]
+            ],
+            'Negative integer' => [
+                'Foo(-1)',
+                ['Foo', [-1]]
+            ],
+            'Negative integer in array' => [
+                'Foo([-1])',
+                ['Foo', [[-1]]]
+            ],
+            'Multiple integers' => [
+                'Foo(-1, 5, 4, -2)',
+                ['Foo', [-1, 5, 4, -2]]
+            ],
+            'Negative double' => [
+                'Foo(-1.5)',
+                ['Foo', [-1.5]]
+            ],
+            'Minus in strings' => [
+                'Foo("-")',
+                ['Foo', ['-']]
+            ],
         ];
     }
 }
