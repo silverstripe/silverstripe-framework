@@ -890,7 +890,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
 
         if ($this->record && $this->record->ID) {
-            $title = ($this->record->Title) ? $this->record->Title : "#{$this->record->ID}";
+            $title = ($this->record->Title) ? $this->record->obj('Title') : "#{$this->record->ID}";
             $items->push(ArrayData::create([
                 'Title' => $title,
                 'Link' => $this->Link()
