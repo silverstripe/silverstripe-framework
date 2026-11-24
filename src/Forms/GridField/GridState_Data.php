@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Core\ClassInfo;
+
 /**
  * Simple set of data, similar to stdClass, but without the notice-level
  * errors.
@@ -10,29 +12,33 @@ namespace SilverStripe\Forms\GridField;
  */
 class GridState_Data
 {
+    use GridFieldStateAware;
 
     /**
      * @var array
      */
     protected $data;
 
+    protected ?GridState $state;
+
     protected $defaults = [];
 
-    public function __construct($data = [])
+    public function __construct($data = [], ?GridState $state = null)
     {
         $this->data = $data;
+        $this->state = $state;
     }
 
     public function __get($name)
     {
-        return $this->getData($name, new GridState_Data());
+        return $this->getData($name, new GridState_Data([], $this->state));
     }
 
     public function __call($name, $arguments)
     {
         // Assume first parameter is default value
         if (empty($arguments)) {
-            $default = new GridState_Data();
+            $default = new GridState_Data([], $this->state);
         } else {
             $default = $arguments[0];
         }
@@ -72,16 +78,25 @@ class GridState_Data
             $this->data[$name] = $default;
         } else {
             if (is_array($this->data[$name])) {
-                $this->data[$name] = new GridState_Data($this->data[$name]);
+                $this->data[$name] = new GridState_Data($this->data[$name], $this->state);
             }
         }
 
         return $this->data[$name];
     }
 
+    public function storeData()
+    {
+        $stateManager = $this->getStateManager();
+        if (ClassInfo::hasMethod($stateManager, 'storeState') && $this->state) {
+            $stateManager->storeState($this->state->getGridField(), $this->state->Value());
+        }
+    }
+
     public function __set($name, $value)
     {
         $this->data[$name] = $value;
+        $this->storeData();
     }
 
     public function __isset($name)
@@ -92,6 +107,7 @@ class GridState_Data
     public function __unset($name)
     {
         unset($this->data[$name]);
+        $this->storeData();
     }
 
     public function __toString()

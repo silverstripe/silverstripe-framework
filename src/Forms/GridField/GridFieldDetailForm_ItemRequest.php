@@ -466,8 +466,16 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     ->addExtraClass('btn-outline-danger btn-hide-outline font-icon-trash-bin action--delete'));
             }
 
-            $gridState = $this->gridField->getState(false);
-            $actions->push(HiddenField::create($manager->getStateKey($this->gridField), null, $gridState));
+            if (ClassInfo::hasMethod($manager, 'getStateRequestVar')) {
+                $stateRequestVar = $manager->getStateRequestVar();
+                $stateValue = $this->getRequest()->requestVar($stateRequestVar);
+                if ($stateValue) {
+                    $actions->push(HiddenField::create($stateRequestVar, '', $stateValue));
+                }
+            } else {
+                $gridState = $this->gridField->getState(false);
+                $actions->push(HiddenField::create($manager->getStateKey($this->gridField), null, $gridState));
+            }
 
             $actions->push($this->getRightGroupField());
         } else { // adding new record
