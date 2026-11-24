@@ -9,13 +9,13 @@ use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView;
 use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\View\ArrayData;
 
@@ -32,6 +32,16 @@ class GridFieldExportButtonTest extends SapphireTest
      */
     protected $gridField;
 
+    /**
+     * @var GridFieldConfig
+     */
+    protected $gridFieldConfig;
+
+    /**
+     * @var GridFieldExportButton
+     */
+    protected $exportButton;
+
     protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
     protected static $extra_dataobjects = [
@@ -45,8 +55,10 @@ class GridFieldExportButtonTest extends SapphireTest
 
         $this->list = new DataList(Team::class);
         $this->list = $this->list->sort('Name');
-        $config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
-        $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
+        $this->gridFieldConfig = GridFieldConfig::create()->addComponent(
+            $this->exportButton = new GridFieldExportButton()
+        );
+        $this->gridField = new GridField('testfield', 'testfield', $this->list, $this->gridFieldConfig);
     }
 
     public function testCanView()
@@ -161,8 +173,8 @@ class GridFieldExportButtonTest extends SapphireTest
         $button = new GridFieldExportButton();
         $columns = new GridFieldDataColumns();
         $columns->setDisplayFields(['ID' => 'ID']);
-        $this->gridField->getConfig()->addComponent($columns);
-        $this->gridField->getConfig()->addComponent(new GridFieldPaginator());
+        $this->gridFieldConfig->addComponent($columns);
+        $this->gridFieldConfig->addComponent(new GridFieldPaginator());
 
         //Create an ArrayList 1 greater the Paginator's default 15 rows
         $arrayList = new ArrayList();
@@ -216,6 +228,64 @@ class GridFieldExportButtonTest extends SapphireTest
         $reflectionMethod = new ReflectionMethod($component, 'getExportColumnsForGridField');
         $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($component, $gridField);
+    }
+
+    public function testSetExportFileName()
+    {
+        $this->exportButton->setExportFileName('export.csv');
+
+        $this->assertEquals(
+            'export.csv',
+            $this->exportButton->getExportFileName($this->gridField)
+        );
+
+        $this->exportButton->setExportFileName('[classname]-export.csv');
+
+        $this->assertEquals(
+            'team-export.csv',
+            $this->exportButton->getExportFileName($this->gridField)
+        );
+
+        $mockDate = '2024-12-31 22:10:59';
+        DBDatetime::set_mock_now($mockDate);
+        
+        $this->exportButton->setExportFileName('export-[timestamp].csv');
+        
+        $this->assertEquals(
+            'export-2024-12-31-22-10-59.csv',
+            $this->exportButton->getExportFileName($this->gridField)
+        );
+        
+        $this->exportButton->setExportFileName('[classname]-export-[timestamp].csv');
+        
+        $this->assertEquals(
+            'team-export-2024-12-31-22-10-59.csv',
+            $this->exportButton->getExportFileName($this->gridField)
+        );
+
+        DBDatetime::clear_mock_now();
+    }
+
+    public function testSetTimeStampFormat()
+    {
+        $mockDate = '2024-12-31 22:10:59';
+        DBDatetime::set_mock_now($mockDate);
+        
+        $this->exportButton->setTimeStampFormat('yyyyMMdd-HHmmss');
+        
+        $this->assertEquals(
+            'team-export-20241231-221059.csv',
+            $this->exportButton->getExportFileName($this->gridField)
+        );
+        
+        $this->exportButton->setTimeStampFormat('dd-MM-yyyy');
+        
+        $this->assertEquals(
+            'team-export-31-12-2024.csv',
+            $this->exportButton->getExportFileName($this->gridField)
+        );
+
+        DBDatetime::clear_mock_now();
     }
 
     protected function createReader($string)

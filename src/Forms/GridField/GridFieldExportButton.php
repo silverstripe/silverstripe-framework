@@ -6,9 +6,9 @@ use League\Csv\Writer;
 use LogicException;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -43,6 +43,16 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     protected $targetFragment;
 
     /**
+     * Export file name
+     */
+    protected $exportFileName = '[classname]-export-[timestamp].csv';
+    
+    /**
+     * Export file name timestamp format
+     */
+    protected $timeStampFormat = 'yyyy-MM-dd-HH-mm-ss';
+
+    /**
      * Set to true to disable XLS sanitisation
      * [SS-2017-007] Ensure all cells with leading [@=+] have a leading tab
      *
@@ -54,11 +64,25 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     /**
      * @param string $targetFragment The HTML fragment to write the button into
      * @param array $exportColumns The columns to include in the export
+     * @param string $exportFileName Export file name
+     * @param string $timeStampFormat Export file name timestamp format
      */
-    public function __construct($targetFragment = "after", $exportColumns = null)
-    {
+    public function __construct(
+        $targetFragment = 'after',
+        $exportColumns = null,
+        $exportFileName = null,
+        $timeStampFormat = null
+    ) {
         $this->targetFragment = $targetFragment;
         $this->exportColumns = $exportColumns;
+
+        if ($exportFileName) {
+            $this->exportFileName = $exportFileName;
+        }
+
+        if ($timeStampFormat) {
+            $this->timeStampFormat = $timeStampFormat;
+        }
     }
 
     /**
@@ -128,8 +152,7 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
      */
     public function handleExport($gridField, $request = null)
     {
-        $now = date("d-m-Y-H-i");
-        $fileName = "export-$now.csv";
+        $fileName = $this->getExportFileName($gridField);
 
         if ($fileData = $this->generateExportFileData($gridField)) {
             return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
@@ -349,6 +372,71 @@ class GridFieldExportButton extends AbstractGridFieldComponent implements GridFi
     public function setCsvHasHeader($bool)
     {
         $this->csvHasHeader = $bool;
+        return $this;
+    }
+
+    /**
+     * @param string $exportFileName
+     *
+     * @return $this
+     */
+    public function setExportFileName($exportFileName): GridFieldExportButton
+    {
+        $this->exportFileName = $exportFileName;
+
+        return $this;
+    }
+
+    /**
+     * @param GridField $gridField
+     *
+     * @return string
+     */
+    public function getExportFileName(GridField $gridField): string
+    {
+        $exportFileName = $this->exportFileName;
+
+        if (!$exportFileName) {
+            return null;
+        }
+
+        if (str_contains($exportFileName, '[classname]')) {
+            $className = strtolower(
+                preg_replace(
+                    '/(?<!^)[A-Z]/',
+                    '-$0',
+                    ClassInfo::shortName(
+                        $gridField->getModelClass()
+                    )
+                )
+            );
+            $exportFileName = str_replace(
+                '[classname]',
+                $className,
+                $exportFileName
+            );
+        }
+
+        if (str_contains($exportFileName, '[timestamp]')) {
+            $exportFileName = str_replace(
+                '[timestamp]',
+                DBDatetime::now()->Format($this->timeStampFormat),
+                $exportFileName
+            );
+        }
+        
+        return $exportFileName;
+    }
+
+    /**
+     * @param string $timeStampFormat
+     *
+     * @return $this
+     */
+    public function setTimeStampFormat($timeStampFormat): GridFieldExportButton
+    {
+        $this->timeStampFormat = $timeStampFormat;
+
         return $this;
     }
 }
