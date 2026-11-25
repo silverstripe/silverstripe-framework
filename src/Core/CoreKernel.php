@@ -209,7 +209,8 @@ class CoreKernel extends BaseKernel
             $key = $this->getReplicaEnvKey($key, $replica);
         }
         if (Environment::hasEnv($key)) {
-            return Environment::getEnv($key);
+            // An unquoted empty value in .env (e.g. `SS_DATABASE_PASSWORD=`) is loaded as null
+            return (string) Environment::getEnv($key);
         }
         return '';
     }

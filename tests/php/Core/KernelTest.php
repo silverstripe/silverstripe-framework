@@ -119,6 +119,31 @@ class KernelTest extends SapphireTest
         ], $configs['replica_01']);
     }
 
+    public function testEmptyDatabaseVarsLoaded()
+    {
+        // An unquoted empty value in .env (e.g. `SS_DATABASE_PASSWORD=`) is loaded as null
+        Environment::setEnv('SS_DATABASE_SERVER_REPLICA_01', 'the-moon');
+        Environment::setEnv('SS_DATABASE_USERNAME_REPLICA_01', 'alien');
+        Environment::setEnv('SS_DATABASE_PASSWORD_REPLICA_01', null);
+        /** @var Kernel $kernel */
+        $kernel = Injector::inst()->get(Kernel::class);
+        /** @var CoreKernel $coreKernel */
+        $coreKernel = $kernel->nest();
+        // Boot the database environment variables
+        $reflector = new ReflectionObject($coreKernel);
+        $method = $reflector->getMethod('bootDatabaseEnvVars');
+        $method->invoke($coreKernel);
+        // Assert the empty value is treated as not set
+        $default = DB::getConfig(DB::CONN_PRIMARY);
+        $configs = (new ReflectionClass(DB::class))->getStaticPropertyValue('configs');
+        $this->assertSame([
+            'type' => $default['type'],
+            'server' => 'the-moon',
+            'username' => 'alien',
+            'password' => null,
+        ], $configs['replica_01']);
+    }
+
     public function testImplementorsAreCalled()
     {
         TestFlushable::$flushed = false;
