@@ -603,7 +603,7 @@ class Requirements_Backend
     {
         $file = ModuleResourceLoader::singleton()->resolvePath($file);
         $absolutePath = Director::getAbsFile($file);
-        if (!file_exists($absolutePath ?? '')) {
+        if (Path::resolveLocalFile($absolutePath) === null) {
             throw new InvalidArgumentException("Javascript template file {$file} does not exist");
         }
 
@@ -1012,7 +1012,7 @@ class Requirements_Backend
         foreach ($candidates as $candidate) {
             $relativePath = Path::join($langDir, $candidate);
             $absolutePath = Director::getAbsFile($relativePath);
-            if (file_exists($absolutePath ?? '')) {
+            if (Path::resolveLocalFile($absolutePath) !== null) {
                 $files[] = $relativePath;
             }
         }
@@ -1323,7 +1323,7 @@ class Requirements_Backend
                     $combinedData = '';
                     foreach ($fileList as $file) {
                         $filePath = Director::getAbsFile($file);
-                        if (!file_exists($filePath ?? '')) {
+                        if (Path::resolveLocalFile($filePath) === null) {
                             throw new InvalidArgumentException("Combined file {$file} does not exist");
                         }
                         $fileContent = file_get_contents($filePath ?? '');
@@ -1426,7 +1426,7 @@ class Requirements_Backend
         $hash = '';
         foreach ($fileList as $file) {
             $absolutePath = Director::getAbsFile($file);
-            if (file_exists($absolutePath ?? '')) {
+            if (Path::resolveLocalFile($absolutePath) !== null) {
                 $hash .= sha1_file($absolutePath ?? '');
             } else {
                 throw new InvalidArgumentException("Combined file {$file} does not exist");

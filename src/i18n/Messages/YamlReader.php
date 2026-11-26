@@ -2,6 +2,7 @@
 
 namespace SilverStripe\i18n\Messages;
 
+use SilverStripe\Core\Path;
 use SilverStripe\Dev\Debug;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -28,7 +29,7 @@ class YamlReader implements Reader
     public function read($locale, $path)
     {
         try {
-            if (!file_exists($path ?? '')) {
+            if (!$path || Path::resolveLocalFile($path) === null) {
                 return [];
             }
             // Load

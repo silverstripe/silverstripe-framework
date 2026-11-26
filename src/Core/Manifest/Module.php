@@ -182,7 +182,7 @@ class Module
     public function activate()
     {
         $config = "{$this->path}/_config.php";
-        if (file_exists($config ?? '')) {
+        if (Path::resolveLocalFile($config) !== null) {
             requireFile($config);
         }
     }
