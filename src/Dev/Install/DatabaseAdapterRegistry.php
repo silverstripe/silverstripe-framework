@@ -7,6 +7,7 @@ use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Kernel;
+use SilverStripe\Core\Path;
 
 /**
  * This class keeps track of the available database adapters
@@ -123,7 +124,7 @@ class DatabaseAdapterRegistry implements Flushable
         // Search through all composer packages in vendor
         foreach (glob(BASE_PATH . '/vendor/*', GLOB_ONLYDIR) as $vendor) {
             foreach (glob($vendor . '/*', GLOB_ONLYDIR) as $directory) {
-                if (file_exists($directory . '/_register_database.php')) {
+                if (Path::resolveLocalFile($directory . '/_register_database.php') !== null) {
                     include_once($directory . '/_register_database.php');
                 }
             }

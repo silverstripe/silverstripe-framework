@@ -21,7 +21,7 @@ class EnvironmentLoader
     public function loadFile($path, $overload = false)
     {
         // Not readable
-        if (!file_exists($path ?? '') || !is_readable($path ?? '')) {
+        if (!$path || Path::resolveLocalFile($path) === null || !is_readable($path)) {
             return null;
         }
 

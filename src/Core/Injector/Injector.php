@@ -11,6 +11,7 @@ use ReflectionObject;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
+use SilverStripe\Core\Path;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -417,7 +418,7 @@ class Injector implements ContainerInterface
             }
 
             // okay, actually include it now we know we're going to use it
-            if (file_exists($file ?? '')) {
+            if ($file && Path::resolveLocalFile($file) !== null) {
                 require_once $file;
             }
 
