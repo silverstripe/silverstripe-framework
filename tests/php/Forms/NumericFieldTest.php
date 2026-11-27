@@ -660,6 +660,74 @@ class NumericFieldTest extends SapphireTest
                 'dataValue' => '11000',
                 'cleanedInput' => '11,000.0',
             ],
+            // multi-byte characters with trailing text (byte vs UTF-16 parse offset)
+            [
+                'locale' => 'en_US',
+                'scale' => 0,
+                'submittedValue' => "\u{2212}15",
+                'dataValue' => '-15',
+                'cleanedInput' => '-15',
+            ],
+            [
+                'locale' => 'en_US',
+                'scale' => 0,
+                'submittedValue' => "\u{2212}15kg",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'nb_NO',
+                'scale' => 0,
+                'submittedValue' => "\u{2212}15kg",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'fi_FI',
+                'scale' => 0,
+                'submittedValue' => "\u{2212}15 \u{20AC}",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'sv_SE',
+                'scale' => 1,
+                'submittedValue' => "\u{2212}1\u{00A0}500,5 kr",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'sv_SE',
+                'scale' => 0,
+                'submittedValue' => "\u{2212}15 kr",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'he_IL',
+                'scale' => 0,
+                'submittedValue' => "\u{200E}-15kg",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'ar_EG',
+                'scale' => 0,
+                'submittedValue' => "\u{0661}\u{0665}\u{0660}\u{0660}x",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'fa_IR',
+                'scale' => 0,
+                'submittedValue' => "\u{06F1}\u{06F2}\u{06F3}abc",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'hi_IN',
+                'scale' => 0,
+                'submittedValue' => "\u{0967}\u{0968}\u{0969}x",
+                'dataValue' => false,
+            ],
+            [
+                'locale' => 'fr_FR',
+                'scale' => 1,
+                'submittedValue' => "1\u{202F}500.5",
+                'dataValue' => false,
+            ],
             // 'html5'
             [
                 'locale' => 'html5',

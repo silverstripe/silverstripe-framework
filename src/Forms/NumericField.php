@@ -158,7 +158,10 @@ class NumericField extends TextField
             // Note: may store literal `false` for invalid values
             $value = $formatter->parse($valueToParse, $this->getNumberType(), $parsed);
             // Ensure that entire string is parsed
-            if ($parsed < mb_strlen($valueToParse)) {
+            $expectedLength = NumericField::isParsePositionInBytes()
+                ? strlen($valueToParse)
+                : mb_strlen($valueToParse);
+            if ($parsed < $expectedLength) {
                 $value = false;
             }
         }
@@ -168,6 +171,23 @@ class NumericField extends TextField
         $this->value = $this->cast($value);
 
         return $this;
+    }
+
+    /**
+     * PHP 8.4.26+ and 8.5.11+ changed NumberFormatter::parse() to report the
+     * parsed position as a byte offset instead of a UTF-16 code unit offset.
+     */
+    private static function isParsePositionInBytes(): bool
+    {
+        static $isBytes = null;
+        if ($isBytes === null) {
+            $formatter = NumberFormatter::create('en_US', NumberFormatter::DECIMAL);
+            $probe = "\u{2212}1";
+            $parsed = 0;
+            $formatter->parse($probe, NumberFormatter::TYPE_DOUBLE, $parsed);
+            $isBytes = $parsed === strlen($probe);
+        }
+        return $isBytes;
     }
 
     /**
