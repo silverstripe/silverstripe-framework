@@ -17,6 +17,13 @@ use SilverStripe\ORM\FieldType\DBPrimaryKey;
  */
 abstract class DBSchemaManager
 {
+    private const string METADATA_FIELDS = 'fields';
+
+    private const string METADATA_INDEXES = 'indexes';
+
+    private const string METADATA_TABLES = 'tables';
+
+    private const string METADATA_HAS_TABLE = 'hasTable';
 
     /**
      * Check tables when building the db, and repair them if necessary.
@@ -108,6 +115,19 @@ abstract class DBSchemaManager
     protected $schemaUpdateTransaction;
 
     /**
+     * Field, index and table lists read from the database during schemaUpdate(),
+     * keyed by metadata type and then by table name.
+     *
+     * A build asks for the same table's fields once per field and its indexes once
+     * per index, so the lists are read once and reused for the rest of the update.
+     * Only populated while the schema is updating. Cleared when an update starts
+     * and finishes, and by any DDL statement run through the database meanwhile.
+     *
+     * @var array<string, array<string, mixed>>
+     */
+    private array $schemaMetadata = [];
+
+    /**
      * Enable suppression of database messages.
      *
      * @param bool $quiet
@@ -153,6 +173,7 @@ abstract class DBSchemaManager
     public function schemaUpdate($callback)
     {
         // Begin schema update
+        $this->clearSchemaMetadata();
         $this->schemaIsUpdating = true;
 
         // Update table list
@@ -204,6 +225,7 @@ abstract class DBSchemaManager
         } finally {
             $this->schemaUpdateTransaction = null;
             $this->schemaIsUpdating = false;
+            $this->clearSchemaMetadata();
         }
     }
 
@@ -214,6 +236,20 @@ abstract class DBSchemaManager
     {
         $this->schemaUpdateTransaction = null;
         $this->schemaIsUpdating = false;
+        $this->clearSchemaMetadata();
+    }
+
+    /**
+     * Discard the field, index and table lists kept during a schema update,
+     * so the next request for each one reads the database again.
+     *
+     * Database calls this after running a DDL statement while the schema is updating,
+     * and the methods here that rename tables or fields call it directly, so the lists
+     * stay correct for database drivers that run queries without going through Database.
+     */
+    public function clearSchemaMetadata(): void
+    {
+        $this->schemaMetadata = [];
     }
 
     /**
@@ -480,6 +516,7 @@ abstract class DBSchemaManager
         }
         $renameFrom = $this->tableList[strtolower($table)];
         $this->renameTable($renameFrom, $renameTo);
+        $this->clearSchemaMetadata();
         $this->alterationMessage("Table $table: renamed to $renameTo", "obsolete");
     }
 
@@ -510,7 +547,7 @@ abstract class DBSchemaManager
         $indexKey = null;
         if (!$newTable) {
             $indexKey = $this->indexKey($table, $index, $spec);
-            $indexList = $this->indexList($table);
+            $indexList = $this->getIndexListForUpdate($table);
             if (isset($indexList[$indexKey])) {
                 // $oldSpec should be in standard array format
                 $oldSpec = $indexList[$indexKey];
@@ -542,7 +579,7 @@ abstract class DBSchemaManager
         }
 
         $indexKey = $this->indexKey($table, $index, []);
-        $indexList = $this->indexList($table);
+        $indexList = $this->getIndexListForUpdate($table);
         // Drop the index if it exists
         if (isset($indexList[$indexKey])) {
             $oldSpec = $indexList[$indexKey];
@@ -693,10 +730,10 @@ abstract class DBSchemaManager
      */
     public function hasField($tableName, $fieldName)
     {
-        if (!$this->hasTable($tableName)) {
+        if (!$this->hasTableForUpdate($tableName)) {
             return false;
         }
-        $fields = $this->fieldList($tableName);
+        $fields = $this->getFieldListForUpdate($tableName);
         return array_key_exists($fieldName, $fields ?? []);
     }
 
@@ -747,7 +784,7 @@ abstract class DBSchemaManager
         }
 
         if (!$newTable) {
-            $fieldList = $this->fieldList($table);
+            $fieldList = $this->getFieldListForUpdate($table);
             if (isset($fieldList[$field])) {
                 if (is_array($fieldList[$field])) {
                     $fieldValue = $fieldList[$field]['data_type'];
@@ -844,7 +881,7 @@ abstract class DBSchemaManager
      */
     public function dontRequireField($table, $fieldName)
     {
-        $fieldList = $this->fieldList($table);
+        $fieldList = $this->getFieldListForUpdate($table);
         if (array_key_exists($fieldName, $fieldList ?? [])) {
             $suffix = '';
             while (isset($fieldList[strtolower("_obsolete_{$fieldName}$suffix")])) {
@@ -853,6 +890,7 @@ abstract class DBSchemaManager
                         : 2;
             }
             $this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
+            $this->clearSchemaMetadata();
             $this->alterationMessage(
                 "Field $table.$fieldName: renamed to $table._obsolete_{$fieldName}$suffix",
                 "obsolete"
@@ -976,7 +1014,7 @@ abstract class DBSchemaManager
     public function fixTableCase($tableName)
     {
         // Check if table exists
-        $tables = $this->tableList();
+        $tables = $this->getTableListForUpdate();
         if (!array_key_exists(strtolower($tableName ?? ''), $tables ?? [])) {
             return;
         }
@@ -996,6 +1034,7 @@ abstract class DBSchemaManager
         $tempTable = "__TEMP__{$tableName}";
         $this->renameTable($currentName, $tempTable);
         $this->renameTable($tempTable, $tableName);
+        $this->clearSchemaMetadata();
     }
 
     /**
@@ -1176,7 +1215,80 @@ abstract class DBSchemaManager
      */
     public function clearCachedFieldlist($tableName = null)
     {
+        if ($tableName) {
+            unset($this->schemaMetadata[DBSchemaManager::METADATA_FIELDS][$tableName]);
+        } else {
+            unset($this->schemaMetadata[DBSchemaManager::METADATA_FIELDS]);
+        }
         return true;
+    }
+
+    /**
+     * Get the field list for a table, read once per schema update.
+     * Outside a schema update this reads the database every time, as fieldList() does.
+     */
+    protected function getFieldListForUpdate(string $table): array
+    {
+        return $this->rememberSchemaMetadata(
+            DBSchemaManager::METADATA_FIELDS,
+            $table,
+            fn () => $this->fieldList($table) ?? []
+        );
+    }
+
+    /**
+     * Get the index list for a table, read once per schema update.
+     * Outside a schema update this reads the database every time, as indexList() does.
+     */
+    protected function getIndexListForUpdate(string $table): array
+    {
+        return $this->rememberSchemaMetadata(
+            DBSchemaManager::METADATA_INDEXES,
+            $table,
+            fn () => $this->indexList($table) ?? []
+        );
+    }
+
+    /**
+     * Get the table list, read once per schema update.
+     * Outside a schema update this reads the database every time, as tableList() does.
+     */
+    protected function getTableListForUpdate(): array
+    {
+        return $this->rememberSchemaMetadata(
+            DBSchemaManager::METADATA_TABLES,
+            '',
+            fn () => $this->tableList() ?? []
+        );
+    }
+
+    /**
+     * Check whether a table exists, read once per table per schema update.
+     * Outside a schema update this reads the database every time, as hasTable() does.
+     */
+    protected function hasTableForUpdate(string $table): bool
+    {
+        return $this->rememberSchemaMetadata(
+            DBSchemaManager::METADATA_HAS_TABLE,
+            $table,
+            fn () => (bool) $this->hasTable($table)
+        );
+    }
+
+    /**
+     * Return the stored value for this metadata type and key while the schema is
+     * updating, loading and storing it first if needed. Outside a schema update
+     * the loader is always called and nothing is stored, as no DDL hook clears it.
+     */
+    private function rememberSchemaMetadata(string $type, string $key, callable $loader): mixed
+    {
+        if (!$this->isSchemaUpdating()) {
+            return $loader();
+        }
+        if (!array_key_exists($key, $this->schemaMetadata[$type] ?? [])) {
+            $this->schemaMetadata[$type][$key] = $loader();
+        }
+        return $this->schemaMetadata[$type][$key];
     }
 
 
