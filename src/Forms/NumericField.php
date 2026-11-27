@@ -158,7 +158,7 @@ class NumericField extends TextField
             // Note: may store literal `false` for invalid values
             $value = $formatter->parse($valueToParse, $this->getNumberType(), $parsed);
             // Ensure that entire string is parsed
-            $expectedLength = self::isParsePositionInBytes()
+            $expectedLength = NumericField::isParsePositionInBytes()
                 ? strlen($valueToParse)
                 : mb_strlen($valueToParse);
             if ($parsed < $expectedLength) {
