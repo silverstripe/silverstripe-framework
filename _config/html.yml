@@ -81,6 +81,20 @@ SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
       removeIfEmpty: true
       attributes:
         class: true
+    figure:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        class: true
+        style: true
+        dir: true
+    figcaption:
+      removeIfEmpty: true
+      attributes:
+        id: true
+        class: true
+        style: true
+        dir: true
     h1:
       removeIfEmpty: true
       attributes:
