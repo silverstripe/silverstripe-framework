@@ -748,6 +748,7 @@ class Group extends DataObject
             Permission::grant($authorGroup->ID, 'CMS_ACCESS_AssetAdmin');
             Permission::grant($authorGroup->ID, 'CMS_ACCESS_ReportAdmin');
             Permission::grant($authorGroup->ID, 'SITETREE_REORGANISE');
+            Permission::grant($authorGroup->ID, 'FILE_EDIT_ALL');
         }
 
         // Add default admin group if none with permission code ADMIN exists

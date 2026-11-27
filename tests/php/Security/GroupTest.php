@@ -30,6 +30,17 @@ class GroupTest extends FunctionalTest
         parent::setUp();
     }
 
+    public function testDefaultContentAuthorsGroupCanEditFiles()
+    {
+        foreach (Group::get() as $group) {
+            $group->delete();
+        }
+        singleton(Group::class)->requireDefaultRecords();
+        $authorGroup = Group::get()->find('Code', 'content-authors');
+        $this->assertNotNull($authorGroup);
+        $this->assertSame('FILE_EDIT_ALL', Permission::get()->filter(['GroupID' => $authorGroup->ID, 'Code' => 'FILE_EDIT_ALL'])->first()?->Code);
+    }
+
     public function testGroupCodeDefaultsToTitle()
     {
         $g1 = new Group();
