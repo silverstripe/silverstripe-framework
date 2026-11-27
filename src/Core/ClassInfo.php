@@ -3,16 +3,21 @@
 namespace SilverStripe\Core;
 
 use Exception;
+use Psr\SimpleCache\CacheInterface;
+use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionException;
+use ReflectionObject;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Attributes\OwnerAware;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Model\ModelData;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\Model\ModelData;
-use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Core\Flushable;
-use SilverStripe\Core\Injector\Injector;
+
+use function is_object;
 
 /**
  * Provides introspection information about the class tree.
@@ -205,6 +210,177 @@ class ClassInfo implements Flushable
     }
 
     /**
+     * Get the list of classes which are annotated by a given attribute
+     *
+     * @param class-string<Attr> $attribute Name of a attribute class or an interface
+     * @param bool $includeSubClasses Should subclasses of the Attribute be included?
+     * @return Attr[]
+     * @template Attr of object
+     */
+    public static function classesWithAttribute(string $attribute, bool $includeSubClasses = true): array
+    {
+        return ClassLoader::inst()->getManifest()->getAttributesFor($attribute, $includeSubClasses, 'classes');
+    }
+
+    /**
+     * Get the list of interfaces which are annotated by a given attribute
+     *
+     * @param class-string<Attr> $attribute Name of a attribute class or an interface
+     * @param bool $includeSubClasses Should subclasses of the Attribute be included?
+     * @return Attr[]
+     * @template Attr of object
+     */
+    public static function interfaceWithAttribute(string $attribute, bool $includeSubClasses = true): array
+    {
+        return ClassLoader::inst()->getManifest()->getAttributesFor($attribute, $includeSubClasses, 'interfaces');
+    }
+
+    /**
+     * Get the list of traits which are annotated by a given attribute
+     *
+     * @param class-string<Attr> $attribute Name of a attribute class or an interface
+     * @param bool $includeSubClasses Should subclasses of the Attribute be included?
+     * @return Attr[]
+     * @template Attr of object
+     */
+    public static function traitsWithAttribute(string $attribute, bool $includeSubClasses = true): array
+    {
+        return ClassLoader::inst()->getManifest()->getAttributesFor($attribute, $includeSubClasses, 'traits');
+    }
+
+    /**
+     * Get the list of enums which are annotated by a given attribute
+     *
+     * @param class-string<Attr> $attribute Name of a attribute class or an interface
+     * @param bool $includeSubClasses Should subclasses of the Attribute be included?
+     * @return Attr[]
+     * @template Attr of object
+     */
+    public static function enumsWithAttribute(string $attribute, bool $includeSubClasses = true): array
+    {
+        return ClassLoader::inst()->getManifest()->getAttributesFor($attribute, $includeSubClasses, 'enums');
+    }
+
+    /**
+     * Get attributes for a given class or object
+     *
+     * @param class-string $className
+     * @param class-string<Attr> $attributeName
+     * @param bool $includeSubClasses
+     * @return Attr[]
+     * @template Attr of object
+     * @throws ReflectionException
+     */
+    public static function getClassAttributes(
+        string|object $className,
+        string $attributeName,
+        bool $includeSubClasses = true
+    ): array {
+        if (is_object($className)) {
+            $reflection = new ReflectionObject($className);
+        } else {
+            $reflection = new ReflectionClass($className);
+        }
+
+        $attributeFilter = $includeSubClasses ? ReflectionAttribute::IS_INSTANCEOF : 0;
+        $attributes = [];
+
+        foreach ($reflection->getAttributes($attributeName, $attributeFilter) as $attribute) {
+            $attr = $attribute->newInstance();
+
+            if ($attr instanceof OwnerAware) {
+                $attr->setOwner($reflection);
+            }
+
+            $attributes[] = $attr;
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Get methods with a given attribute
+     *
+     * @param class-string $className
+     * @param class-string<Attr> $attributeName
+     * @param int|null $methodFilter
+     * @param bool $includeSubClasses
+     * @return Attr[]
+     * @template Attr of object
+     * @throws ReflectionException
+     */
+    public static function getMethodsWithAttribute(
+        string|object $className,
+        string $attributeName,
+        ?int $methodFilter = null,
+        bool $includeSubClasses = true
+    ): array {
+        if (is_object($className)) {
+            $reflection = new ReflectionObject($className);
+        } else {
+            $reflection = new ReflectionClass($className);
+        }
+
+        $attributeFilter = $includeSubClasses ? ReflectionAttribute::IS_INSTANCEOF : 0;
+        $attributes = [];
+
+        foreach ($reflection->getMethods($methodFilter) as $method) {
+            foreach ($method->getAttributes($attributeName, $attributeFilter) as $attribute) {
+                $attr = $attribute->newInstance();
+
+                if ($attr instanceof OwnerAware) {
+                    $attr->setOwner($method);
+                }
+
+                $attributes[$method->name][] = $attr;
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * Get properties with a given attribute
+     *
+     * @param class-string $className
+     * @param class-string<Attr> $attributeName
+     * @param int|null $propertyFilter
+     * @param bool $includeSubClasses
+     * @return Attr[]
+     * @template Attr of object
+     * @throws ReflectionException
+     */
+    public static function getPropertiesWithAttribute(
+        string|object $className,
+        string $attributeName,
+        ?int $propertyFilter = null,
+        bool $includeSubClasses = true
+    ): array {
+        if (is_object($className)) {
+            $reflection = new ReflectionObject($className);
+        } else {
+            $reflection = new ReflectionClass($className);
+        }
+
+        $attributeFilter = $includeSubClasses ? ReflectionAttribute::IS_INSTANCEOF : 0;
+        $attributes = [];
+
+        foreach ($reflection->getProperties($propertyFilter) as $property) {
+            foreach ($property->getAttributes($attributeName, $attributeFilter) as $attribute) {
+                $attr = $attribute->newInstance();
+
+                if ($attr instanceof OwnerAware) {
+                    $attr->setOwner($property);
+                }
+
+                $attributes[$property->name][] = $attr;
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Convert a class name in any case and return it as it was defined in PHP
      *
      * eg: ClassInfo::class_name('dataobJEct'); //returns 'DataObject'
@@ -279,6 +455,17 @@ class ClassInfo implements Flushable
     }
 
     /**
+     * @param string $interfaceName
+     * @param bool $includeSubClasses
+     * @return array<string, string> A self-keyed array of class names with lowercase keys and correct-case values.
+     * Note that this is only available with Silverstripe classes and not built-in PHP classes.
+     */
+    public static function implementorsOfIncludingChildren(string $interfaceName, bool $includeSubClasses = true): array
+    {
+        return ClassLoader::inst()->getManifest()->getImplementorsOfIncludingChildren($interfaceName, $includeSubClasses);
+    }
+
+    /**
      * Returns true if the given class implements the given interface
      *
      * @param string $className
@@ -289,6 +476,20 @@ class ClassInfo implements Flushable
     {
         $lowerClassName = strtolower($className ?? '');
         $implementors = ClassInfo::implementorsOf($interfaceName);
+        return isset($implementors[$lowerClassName]);
+    }
+
+    /**
+     * Returns true if the given class implements the given interface
+     *
+     * @param string $className
+     * @param string $interfaceName
+     * @return bool
+     */
+    public static function classImplementsIncludingChildren($className, $interfaceName)
+    {
+        $lowerClassName = strtolower($className ?? '');
+        $implementors = ClassInfo::implementorsOfIncludingChildren($interfaceName);
         return isset($implementors[$lowerClassName]);
     }
 

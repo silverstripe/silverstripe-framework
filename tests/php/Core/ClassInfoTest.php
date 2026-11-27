@@ -4,11 +4,22 @@ namespace SilverStripe\Core\Tests;
 
 use DateTime;
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Tests\ClassInfoTest\AttributeInterface;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
 use SilverStripe\Core\Tests\ClassInfoTest\BaseObject;
 use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
+use SilverStripe\Core\Tests\ClassInfoTest\ClassAttribute1;
+use SilverStripe\Core\Tests\ClassInfoTest\ClassAttribute2;
+use SilverStripe\Core\Tests\ClassInfoTest\ClassAttribute3;
+use SilverStripe\Core\Tests\ClassInfoTest\ClassWithAttributes1;
+use SilverStripe\Core\Tests\ClassInfoTest\ClassWithAttributes2;
+use SilverStripe\Core\Tests\ClassInfoTest\ClassWithAttributes3;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest1;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest2;
 use SilverStripe\Core\Tests\ClassInfoTest\ExtendTest3;
@@ -18,12 +29,19 @@ use SilverStripe\Core\Tests\ClassInfoTest\GrandChildClass;
 use SilverStripe\Core\Tests\ClassInfoTest\HasFields;
 use SilverStripe\Core\Tests\ClassInfoTest\HasMethod;
 use SilverStripe\Core\Tests\ClassInfoTest\NoFields;
+use SilverStripe\Core\Tests\ClassInfoTest\MethodAttribute1;
+use SilverStripe\Core\Tests\ClassInfoTest\MethodAttribute2;
+use SilverStripe\Core\Tests\ClassInfoTest\MethodAttribute3;
+use SilverStripe\Core\Tests\ClassInfoTest\PropertyAttribute1;
+use SilverStripe\Core\Tests\ClassInfoTest\PropertyAttribute2;
+use SilverStripe\Core\Tests\ClassInfoTest\PropertyAttribute3;
 use SilverStripe\Core\Tests\ClassInfoTest\WithCustomTable;
 use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Model\ModelData;
-use PHPUnit\Framework\Attributes\DataProvider;
+use SilverStripe\ORM\DataObject;
+
+use function strtolower;
 
 class ClassInfoTest extends SapphireTest
 {
@@ -353,5 +371,155 @@ class ClassInfoTest extends SapphireTest
                 ['Foo\\Bar\\NamespacedClass.withmodifier', [["and-arg" => true]]],
             ],
         ];
+    }
+
+    public function testClassesWithAttribute(): void
+    {
+        $this->assertEquals(
+            [
+                strtolower(ClassWithAttributes1::class) => ClassWithAttributes1::class,
+            ],
+            ClassInfo::classesWithAttribute(ClassAttribute1::class)
+        );
+
+        $this->assertEquals(
+            [
+                strtolower(ClassWithAttributes1::class) => ClassWithAttributes1::class,
+                strtolower(ClassWithAttributes2::class) => ClassWithAttributes2::class,
+            ],
+            ClassInfo::classesWithAttribute(ClassAttribute2::class, false)
+        );
+
+        $this->assertEquals(
+            [
+                strtolower(ClassWithAttributes1::class) => ClassWithAttributes1::class,
+                strtolower(ClassWithAttributes2::class) => ClassWithAttributes2::class,
+                strtolower(ClassWithAttributes3::class) => ClassWithAttributes3::class,
+            ],
+            ClassInfo::classesWithAttribute(ClassAttribute2::class)
+        );
+
+        $this->assertEquals(
+            [
+                strtolower(ClassWithAttributes1::class) => ClassWithAttributes1::class,
+                strtolower(ClassWithAttributes3::class) => ClassWithAttributes3::class,
+            ],
+            ClassInfo::classesWithAttribute(ClassAttribute3::class)
+        );
+
+        $this->assertEquals(
+            [
+                strtolower(ClassWithAttributes1::class) => ClassWithAttributes1::class,
+                strtolower(ClassWithAttributes2::class) => ClassWithAttributes2::class,
+                strtolower(ClassWithAttributes3::class) => ClassWithAttributes3::class,
+            ],
+            ClassInfo::classesWithAttribute(AttributeInterface::class)
+        );
+
+        $this->assertEquals(
+            [
+                strtolower(ClassWithAttributes1::class) => ClassWithAttributes1::class,
+                strtolower(ClassWithAttributes2::class) => ClassWithAttributes2::class,
+            ],
+            ClassInfo::classesWithAttribute(AttributeInterface::class, false)
+        );
+    }
+
+    public function testClassAttributes(): void
+    {
+        $attributes1 = ClassInfo::getClassAttributes(ClassWithAttributes1::class, ClassAttribute1::class);
+        $attributes2 = ClassInfo::getClassAttributes(ClassWithAttributes1::class, ClassAttribute2::class);
+        $attributes3 = ClassInfo::getClassAttributes(ClassWithAttributes1::class, ClassAttribute2::class, false);
+        $attributes4 = ClassInfo::getClassAttributes(ClassWithAttributes1::class, ClassAttribute3::class);
+        $attributes5 = ClassInfo::getClassAttributes(ClassWithAttributes1::class, AttributeInterface::class);
+
+        $reflection1 = new ReflectionClass(ClassWithAttributes1::class);
+
+        $attr1 = new ClassAttribute1('Test1');
+        $attr1->setOwner($reflection1);
+
+        $attr2 = new ClassAttribute2('Test2');
+        $attr2->setOwner($reflection1);
+
+        $attr3 = new ClassAttribute3('Test3');
+        $attr3->setOwner($reflection1);
+
+        $this->assertEquals([$attr1], $attributes1);
+        $this->assertEquals([$attr2, $attr3], $attributes2);
+        $this->assertEquals([$attr2], $attributes3);
+        $this->assertEquals([$attr3], $attributes4);
+        $this->assertEquals([$attr1, $attr2, $attr3], $attributes5);
+    }
+
+    public function testMethodAttributes(): void
+    {
+        $attributes1 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, MethodAttribute1::class);
+        $attributes2 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, MethodAttribute2::class);
+        $attributes3 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, MethodAttribute2::class, includeSubClasses: false);
+        $attributes4 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, MethodAttribute3::class);
+        $attributes5 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, AttributeInterface::class);
+        $attributes6 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, AttributeInterface::class, ReflectionMethod::IS_PUBLIC);
+        $attributes7 = ClassInfo::getMethodsWithAttribute(ClassWithAttributes1::class, AttributeInterface::class, ReflectionMethod::IS_PROTECTED);
+
+        $reflection1 = new ReflectionClass(ClassWithAttributes1::class);
+        $method1 = $reflection1->getMethod('firstMethod');
+        $method2 = $reflection1->getMethod('secondMethod');
+        $method3 = $reflection1->getMethod('thirdMethod');
+
+        $attr1 = new MethodAttribute1('Test1');
+        $attr1->setOwner($method1);
+
+        $attr2 = new MethodAttribute2('Test2');
+        $attr2->setOwner($method1);
+
+        $attr3 = new MethodAttribute1('Test3');
+        $attr3->setOwner($method2);
+
+        $attr4 = new MethodAttribute3('Test4');
+        $attr4->setOwner($method3);
+
+        $this->assertEquals(['firstMethod' => [$attr1], 'secondMethod' => [$attr3]], $attributes1);
+        $this->assertEquals(['firstMethod' => [$attr2], 'thirdMethod' => [$attr4]], $attributes2);
+        $this->assertEquals(['firstMethod' => [$attr2]], $attributes3);
+        $this->assertEquals(['thirdMethod' => [$attr4]], $attributes4);
+        $this->assertEquals(['firstMethod' => [$attr1, $attr2], 'secondMethod' => [$attr3], 'thirdMethod' => [$attr4]], $attributes5);
+        $this->assertEquals(['firstMethod' => [$attr1, $attr2]], $attributes6);
+        $this->assertEquals(['secondMethod' => [$attr3], 'thirdMethod' => [$attr4]], $attributes7);
+    }
+
+    public function testPropertyAttributes(): void
+    {
+        $attributes1 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, PropertyAttribute1::class);
+        $attributes2 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, PropertyAttribute2::class);
+        $attributes3 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, PropertyAttribute2::class, includeSubClasses: false);
+        $attributes4 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, PropertyAttribute3::class);
+        $attributes5 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, AttributeInterface::class);
+        $attributes6 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, AttributeInterface::class, ReflectionProperty::IS_PUBLIC);
+        $attributes7 = ClassInfo::getPropertiesWithAttribute(ClassWithAttributes1::class, AttributeInterface::class, ReflectionProperty::IS_PROTECTED);
+
+        $reflection1 = new ReflectionClass(ClassWithAttributes1::class);
+        $property1 = $reflection1->getProperty('prop1');
+        $property2 = $reflection1->getProperty('prop2');
+        $property3 = $reflection1->getProperty('prop3');
+
+        $attr1 = new PropertyAttribute1('Test1');
+        $attr1->setOwner($property1);
+
+        $attr2 = new PropertyAttribute2('Test2');
+        $attr2->setOwner($property1);
+
+        $attr3 = new PropertyAttribute1('Test3');
+        $attr3->setOwner($property2);
+
+        $attr4 = new PropertyAttribute3('Test4');
+        $attr4->setOwner($property3);
+
+        $this->assertEquals(['prop1' => [$attr1], 'prop2' => [$attr3]], $attributes1);
+        $this->assertEquals(['prop1' => [$attr2], 'prop3' => [$attr4]], $attributes2);
+        $this->assertEquals(['prop1' => [$attr2]], $attributes3);
+        $this->assertEquals(['prop3' => [$attr4]], $attributes4);
+        $this->assertEquals(['prop1' => [$attr1, $attr2], 'prop2' => [$attr3], 'prop3' => [$attr4]], $attributes5);
+        $this->assertEquals(['prop1' => [$attr1, $attr2]], $attributes6);
+        $this->assertEquals(['prop2' => [$attr3], 'prop3' => [$attr4]], $attributes7);
     }
 }
